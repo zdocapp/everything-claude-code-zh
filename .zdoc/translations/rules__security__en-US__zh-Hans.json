@@ -1,0 +1,42 @@
+{
+  "sourceFile": "rules/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Security Guidelines",
+      "zh-Hans": "# 安全指南"
+    },
+    {
+      "en-US": "## Mandatory Security Checks",
+      "zh-Hans": "## 强制性安全检查"
+    },
+    {
+      "en-US": "Before ANY commit:",
+      "zh-Hans": "在**任何**提交之前："
+    },
+    {
+      "en-US": "- [ ] No hardcoded secrets (API keys, passwords, tokens)\n- [ ] All user inputs validated\n- [ ] SQL injection prevention (parameterized queries)\n- [ ] XSS prevention (sanitized HTML)\n- [ ] CSRF protection enabled\n- [ ] Authentication/authorization verified\n- [ ] Rate limiting on all endpoints\n- [ ] Error messages don't leak sensitive data",
+      "zh-Hans": "* \\[ ] 没有硬编码的密钥（API 密钥、密码、令牌）\n* \\[ ] 所有用户输入都经过验证\n* \\[ ] 防止 SQL 注入（使用参数化查询）\n* \\[ ] 防止 XSS（净化 HTML）\n* \\[ ] 已启用 CSRF 保护\n* \\[ ] 已验证身份验证/授权\n* \\[ ] 所有端点都实施速率限制\n* \\[ ] 错误信息不泄露敏感数据"
+    },
+    {
+      "en-US": "## Secret Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "```typescript\n// NEVER: Hardcoded secrets\nconst apiKey = \"sk-proj-xxxxx\"\n\n// ALWAYS: Environment variables\nconst apiKey = process.env.OPENAI_API_KEY\n\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```",
+      "zh-Hans": "```typescript\n// NEVER: Hardcoded secrets\nconst apiKey = \"sk-proj-xxxxx\"\n\n// ALWAYS: Environment variables\nconst apiKey = process.env.OPENAI_API_KEY\n\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```"
+    },
+    {
+      "en-US": "## Security Response Protocol",
+      "zh-Hans": "## 安全响应协议"
+    },
+    {
+      "en-US": "If security issue found:",
+      "zh-Hans": "如果发现安全问题："
+    },
+    {
+      "en-US": "1. STOP immediately\n2. Use **security-reviewer** agent\n3. Fix CRITICAL issues before continuing\n4. Rotate any exposed secrets\n5. Review entire codebase for similar issues",
+      "zh-Hans": "1. 立即**停止**\n2. 使用 **security-reviewer** 代理\n3. 在继续之前修复**关键**问题\n4. 轮换任何已暴露的密钥\n5. 审查整个代码库是否存在类似问题"
+    }
+  ]
+}

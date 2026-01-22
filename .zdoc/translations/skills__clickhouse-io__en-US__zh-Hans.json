@@ -1,0 +1,238 @@
+{
+  "sourceFile": "skills/clickhouse-io.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: clickhouse-io\ndescription: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for high-performance analytical workloads.\n---",
+      "zh-Hans": "---\nname: clickhouse-io\ndescription: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for high-performance analytical workloads.\n---"
+    },
+    {
+      "en-US": "# ClickHouse Analytics Patterns",
+      "zh-Hans": "# ClickHouse 分析模式"
+    },
+    {
+      "en-US": "ClickHouse-specific patterns for high-performance analytics and data engineering.",
+      "zh-Hans": "用于高性能分析和数据工程的 ClickHouse 特定模式。"
+    },
+    {
+      "en-US": "## Overview",
+      "zh-Hans": "## 概述"
+    },
+    {
+      "en-US": "ClickHouse is a column-oriented database management system (DBMS) for online analytical processing (OLAP). It's optimized for fast analytical queries on large datasets.",
+      "zh-Hans": "ClickHouse 是一个用于在线分析处理（OLAP）的列式数据库管理系统（DBMS）。它针对大型数据集的快速分析查询进行了优化。"
+    },
+    {
+      "en-US": "**Key Features:**",
+      "zh-Hans": "**主要特性：**"
+    },
+    {
+      "en-US": "- Column-oriented storage\n- Data compression\n- Parallel query execution\n- Distributed queries\n- Real-time analytics",
+      "zh-Hans": "* 列式存储\n* 数据压缩\n* 并行查询执行\n* 分布式查询\n* 实时分析"
+    },
+    {
+      "en-US": "## Table Design Patterns",
+      "zh-Hans": "## 表设计模式"
+    },
+    {
+      "en-US": "### MergeTree Engine (Most Common)",
+      "zh-Hans": "### MergeTree 引擎（最常用）"
+    },
+    {
+      "en-US": "```sql\nCREATE TABLE markets_analytics (\n    date Date,\n    market_id String,\n    market_name String,\n    volume UInt64,\n    trades UInt32,\n    unique_traders UInt32,\n    avg_trade_size Float64,\n    created_at DateTime\n) ENGINE = MergeTree()\nPARTITION BY toYYYYMM(date)\nORDER BY (date, market_id)\nSETTINGS index_granularity = 8192;\n```",
+      "zh-Hans": "```sql\nCREATE TABLE markets_analytics (\n    date Date,\n    market_id String,\n    market_name String,\n    volume UInt64,\n    trades UInt32,\n    unique_traders UInt32,\n    avg_trade_size Float64,\n    created_at DateTime\n) ENGINE = MergeTree()\nPARTITION BY toYYYYMM(date)\nORDER BY (date, market_id)\nSETTINGS index_granularity = 8192;\n```"
+    },
+    {
+      "en-US": "### ReplacingMergeTree (Deduplication)",
+      "zh-Hans": "### ReplacingMergeTree（去重）"
+    },
+    {
+      "en-US": "```sql\n-- For data that may have duplicates (e.g., from multiple sources)\nCREATE TABLE user_events (\n    event_id String,\n    user_id String,\n    event_type String,\n    timestamp DateTime,\n    properties String\n) ENGINE = ReplacingMergeTree()\nPARTITION BY toYYYYMM(timestamp)\nORDER BY (user_id, event_id, timestamp)\nPRIMARY KEY (user_id, event_id);\n```",
+      "zh-Hans": "```sql\n-- For data that may have duplicates (e.g., from multiple sources)\nCREATE TABLE user_events (\n    event_id String,\n    user_id String,\n    event_type String,\n    timestamp DateTime,\n    properties String\n) ENGINE = ReplacingMergeTree()\nPARTITION BY toYYYYMM(timestamp)\nORDER BY (user_id, event_id, timestamp)\nPRIMARY KEY (user_id, event_id);\n```"
+    },
+    {
+      "en-US": "### AggregatingMergeTree (Pre-aggregation)",
+      "zh-Hans": "### AggregatingMergeTree（预聚合）"
+    },
+    {
+      "en-US": "```sql\n-- For maintaining aggregated metrics\nCREATE TABLE market_stats_hourly (\n    hour DateTime,\n    market_id String,\n    total_volume AggregateFunction(sum, UInt64),\n    total_trades AggregateFunction(count, UInt32),\n    unique_users AggregateFunction(uniq, String)\n) ENGINE = AggregatingMergeTree()\nPARTITION BY toYYYYMM(hour)\nORDER BY (hour, market_id);\n\n-- Query aggregated data\nSELECT\n    hour,\n    market_id,\n    sumMerge(total_volume) AS volume,\n    countMerge(total_trades) AS trades,\n    uniqMerge(unique_users) AS users\nFROM market_stats_hourly\nWHERE hour >= toStartOfHour(now() - INTERVAL 24 HOUR)\nGROUP BY hour, market_id\nORDER BY hour DESC;\n```",
+      "zh-Hans": "```sql\n-- For maintaining aggregated metrics\nCREATE TABLE market_stats_hourly (\n    hour DateTime,\n    market_id String,\n    total_volume AggregateFunction(sum, UInt64),\n    total_trades AggregateFunction(count, UInt32),\n    unique_users AggregateFunction(uniq, String)\n) ENGINE = AggregatingMergeTree()\nPARTITION BY toYYYYMM(hour)\nORDER BY (hour, market_id);\n\n-- Query aggregated data\nSELECT\n    hour,\n    market_id,\n    sumMerge(total_volume) AS volume,\n    countMerge(total_trades) AS trades,\n    uniqMerge(unique_users) AS users\nFROM market_stats_hourly\nWHERE hour >= toStartOfHour(now() - INTERVAL 24 HOUR)\nGROUP BY hour, market_id\nORDER BY hour DESC;\n```"
+    },
+    {
+      "en-US": "## Query Optimization Patterns",
+      "zh-Hans": "## 查询优化模式"
+    },
+    {
+      "en-US": "### Efficient Filtering",
+      "zh-Hans": "### 高效过滤"
+    },
+    {
+      "en-US": "```sql\n-- ✅ GOOD: Use indexed columns first\nSELECT *\nFROM markets_analytics\nWHERE date >= '2025-01-01'\n  AND market_id = 'market-123'\n  AND volume > 1000\nORDER BY date DESC\nLIMIT 100;\n\n-- ❌ BAD: Filter on non-indexed columns first\nSELECT *\nFROM markets_analytics\nWHERE volume > 1000\n  AND market_name LIKE '%election%'\n  AND date >= '2025-01-01';\n```",
+      "zh-Hans": "```sql\n-- ✅ GOOD: Use indexed columns first\nSELECT *\nFROM markets_analytics\nWHERE date >= '2025-01-01'\n  AND market_id = 'market-123'\n  AND volume > 1000\nORDER BY date DESC\nLIMIT 100;\n\n-- ❌ BAD: Filter on non-indexed columns first\nSELECT *\nFROM markets_analytics\nWHERE volume > 1000\n  AND market_name LIKE '%election%'\n  AND date >= '2025-01-01';\n```"
+    },
+    {
+      "en-US": "### Aggregations",
+      "zh-Hans": "### 聚合"
+    },
+    {
+      "en-US": "```sql\n-- ✅ GOOD: Use ClickHouse-specific aggregation functions\nSELECT\n    toStartOfDay(created_at) AS day,\n    market_id,\n    sum(volume) AS total_volume,\n    count() AS total_trades,\n    uniq(trader_id) AS unique_traders,\n    avg(trade_size) AS avg_size\nFROM trades\nWHERE created_at >= today() - INTERVAL 7 DAY\nGROUP BY day, market_id\nORDER BY day DESC, total_volume DESC;\n\n-- ✅ Use quantile for percentiles (more efficient than percentile)\nSELECT\n    quantile(0.50)(trade_size) AS median,\n    quantile(0.95)(trade_size) AS p95,\n    quantile(0.99)(trade_size) AS p99\nFROM trades\nWHERE created_at >= now() - INTERVAL 1 HOUR;\n```",
+      "zh-Hans": "```sql\n-- ✅ GOOD: Use ClickHouse-specific aggregation functions\nSELECT\n    toStartOfDay(created_at) AS day,\n    market_id,\n    sum(volume) AS total_volume,\n    count() AS total_trades,\n    uniq(trader_id) AS unique_traders,\n    avg(trade_size) AS avg_size\nFROM trades\nWHERE created_at >= today() - INTERVAL 7 DAY\nGROUP BY day, market_id\nORDER BY day DESC, total_volume DESC;\n\n-- ✅ Use quantile for percentiles (more efficient than percentile)\nSELECT\n    quantile(0.50)(trade_size) AS median,\n    quantile(0.95)(trade_size) AS p95,\n    quantile(0.99)(trade_size) AS p99\nFROM trades\nWHERE created_at >= now() - INTERVAL 1 HOUR;\n```"
+    },
+    {
+      "en-US": "### Window Functions",
+      "zh-Hans": "### 窗口函数"
+    },
+    {
+      "en-US": "```sql\n-- Calculate running totals\nSELECT\n    date,\n    market_id,\n    volume,\n    sum(volume) OVER (\n        PARTITION BY market_id\n        ORDER BY date\n        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS cumulative_volume\nFROM markets_analytics\nWHERE date >= today() - INTERVAL 30 DAY\nORDER BY market_id, date;\n```",
+      "zh-Hans": "```sql\n-- Calculate running totals\nSELECT\n    date,\n    market_id,\n    volume,\n    sum(volume) OVER (\n        PARTITION BY market_id\n        ORDER BY date\n        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS cumulative_volume\nFROM markets_analytics\nWHERE date >= today() - INTERVAL 30 DAY\nORDER BY market_id, date;\n```"
+    },
+    {
+      "en-US": "## Data Insertion Patterns",
+      "zh-Hans": "## 数据插入模式"
+    },
+    {
+      "en-US": "### Bulk Insert (Recommended)",
+      "zh-Hans": "### 批量插入（推荐）"
+    },
+    {
+      "en-US": "```typescript\nimport { ClickHouse } from 'clickhouse'\n\nconst clickhouse = new ClickHouse({\n  url: process.env.CLICKHOUSE_URL,\n  port: 8123,\n  basicAuth: {\n    username: process.env.CLICKHOUSE_USER,\n    password: process.env.CLICKHOUSE_PASSWORD\n  }\n})\n\n// ✅ Batch insert (efficient)\nasync function bulkInsertTrades(trades: Trade[]) {\n  const values = trades.map(trade => `(\n    '${trade.id}',\n    '${trade.market_id}',\n    '${trade.user_id}',\n    ${trade.amount},\n    '${trade.timestamp.toISOString()}'\n  )`).join(',')\n\n  await clickhouse.query(`\n    INSERT INTO trades (id, market_id, user_id, amount, timestamp)\n    VALUES ${values}\n  `).toPromise()\n}\n\n// ❌ Individual inserts (slow)\nasync function insertTrade(trade: Trade) {\n  // Don't do this in a loop!\n  await clickhouse.query(`\n    INSERT INTO trades VALUES ('${trade.id}', ...)\n  `).toPromise()\n}\n```",
+      "zh-Hans": "```typescript\nimport { ClickHouse } from 'clickhouse'\n\nconst clickhouse = new ClickHouse({\n  url: process.env.CLICKHOUSE_URL,\n  port: 8123,\n  basicAuth: {\n    username: process.env.CLICKHOUSE_USER,\n    password: process.env.CLICKHOUSE_PASSWORD\n  }\n})\n\n// ✅ Batch insert (efficient)\nasync function bulkInsertTrades(trades: Trade[]) {\n  const values = trades.map(trade => `(\n    '${trade.id}',\n    '${trade.market_id}',\n    '${trade.user_id}',\n    ${trade.amount},\n    '${trade.timestamp.toISOString()}'\n  )`).join(',')\n\n  await clickhouse.query(`\n    INSERT INTO trades (id, market_id, user_id, amount, timestamp)\n    VALUES ${values}\n  `).toPromise()\n}\n\n// ❌ Individual inserts (slow)\nasync function insertTrade(trade: Trade) {\n  // Don't do this in a loop!\n  await clickhouse.query(`\n    INSERT INTO trades VALUES ('${trade.id}', ...)\n  `).toPromise()\n}\n```"
+    },
+    {
+      "en-US": "### Streaming Insert",
+      "zh-Hans": "### 流式插入"
+    },
+    {
+      "en-US": "```typescript\n// For continuous data ingestion\nimport { createWriteStream } from 'fs'\nimport { pipeline } from 'stream/promises'\n\nasync function streamInserts() {\n  const stream = clickhouse.insert('trades').stream()\n\n  for await (const batch of dataSource) {\n    stream.write(batch)\n  }\n\n  await stream.end()\n}\n```",
+      "zh-Hans": "```typescript\n// For continuous data ingestion\nimport { createWriteStream } from 'fs'\nimport { pipeline } from 'stream/promises'\n\nasync function streamInserts() {\n  const stream = clickhouse.insert('trades').stream()\n\n  for await (const batch of dataSource) {\n    stream.write(batch)\n  }\n\n  await stream.end()\n}\n```"
+    },
+    {
+      "en-US": "## Materialized Views",
+      "zh-Hans": "## 物化视图"
+    },
+    {
+      "en-US": "### Real-time Aggregations",
+      "zh-Hans": "### 实时聚合"
+    },
+    {
+      "en-US": "```sql\n-- Create materialized view for hourly stats\nCREATE MATERIALIZED VIEW market_stats_hourly_mv\nTO market_stats_hourly\nAS SELECT\n    toStartOfHour(timestamp) AS hour,\n    market_id,\n    sumState(amount) AS total_volume,\n    countState() AS total_trades,\n    uniqState(user_id) AS unique_users\nFROM trades\nGROUP BY hour, market_id;\n\n-- Query the materialized view\nSELECT\n    hour,\n    market_id,\n    sumMerge(total_volume) AS volume,\n    countMerge(total_trades) AS trades,\n    uniqMerge(unique_users) AS users\nFROM market_stats_hourly\nWHERE hour >= now() - INTERVAL 24 HOUR\nGROUP BY hour, market_id;\n```",
+      "zh-Hans": "```sql\n-- Create materialized view for hourly stats\nCREATE MATERIALIZED VIEW market_stats_hourly_mv\nTO market_stats_hourly\nAS SELECT\n    toStartOfHour(timestamp) AS hour,\n    market_id,\n    sumState(amount) AS total_volume,\n    countState() AS total_trades,\n    uniqState(user_id) AS unique_users\nFROM trades\nGROUP BY hour, market_id;\n\n-- Query the materialized view\nSELECT\n    hour,\n    market_id,\n    sumMerge(total_volume) AS volume,\n    countMerge(total_trades) AS trades,\n    uniqMerge(unique_users) AS users\nFROM market_stats_hourly\nWHERE hour >= now() - INTERVAL 24 HOUR\nGROUP BY hour, market_id;\n```"
+    },
+    {
+      "en-US": "## Performance Monitoring",
+      "zh-Hans": "## 性能监控"
+    },
+    {
+      "en-US": "### Query Performance",
+      "zh-Hans": "### 查询性能"
+    },
+    {
+      "en-US": "```sql\n-- Check slow queries\nSELECT\n    query_id,\n    user,\n    query,\n    query_duration_ms,\n    read_rows,\n    read_bytes,\n    memory_usage\nFROM system.query_log\nWHERE type = 'QueryFinish'\n  AND query_duration_ms > 1000\n  AND event_time >= now() - INTERVAL 1 HOUR\nORDER BY query_duration_ms DESC\nLIMIT 10;\n```",
+      "zh-Hans": "```sql\n-- Check slow queries\nSELECT\n    query_id,\n    user,\n    query,\n    query_duration_ms,\n    read_rows,\n    read_bytes,\n    memory_usage\nFROM system.query_log\nWHERE type = 'QueryFinish'\n  AND query_duration_ms > 1000\n  AND event_time >= now() - INTERVAL 1 HOUR\nORDER BY query_duration_ms DESC\nLIMIT 10;\n```"
+    },
+    {
+      "en-US": "### Table Statistics",
+      "zh-Hans": "### 表统计信息"
+    },
+    {
+      "en-US": "```sql\n-- Check table sizes\nSELECT\n    database,\n    table,\n    formatReadableSize(sum(bytes)) AS size,\n    sum(rows) AS rows,\n    max(modification_time) AS latest_modification\nFROM system.parts\nWHERE active\nGROUP BY database, table\nORDER BY sum(bytes) DESC;\n```",
+      "zh-Hans": "```sql\n-- Check table sizes\nSELECT\n    database,\n    table,\n    formatReadableSize(sum(bytes)) AS size,\n    sum(rows) AS rows,\n    max(modification_time) AS latest_modification\nFROM system.parts\nWHERE active\nGROUP BY database, table\nORDER BY sum(bytes) DESC;\n```"
+    },
+    {
+      "en-US": "## Common Analytics Queries",
+      "zh-Hans": "## 常见分析查询"
+    },
+    {
+      "en-US": "### Time Series Analysis",
+      "zh-Hans": "### 时间序列分析"
+    },
+    {
+      "en-US": "```sql\n-- Daily active users\nSELECT\n    toDate(timestamp) AS date,\n    uniq(user_id) AS daily_active_users\nFROM events\nWHERE timestamp >= today() - INTERVAL 30 DAY\nGROUP BY date\nORDER BY date;\n\n-- Retention analysis\nSELECT\n    signup_date,\n    countIf(days_since_signup = 0) AS day_0,\n    countIf(days_since_signup = 1) AS day_1,\n    countIf(days_since_signup = 7) AS day_7,\n    countIf(days_since_signup = 30) AS day_30\nFROM (\n    SELECT\n        user_id,\n        min(toDate(timestamp)) AS signup_date,\n        toDate(timestamp) AS activity_date,\n        dateDiff('day', signup_date, activity_date) AS days_since_signup\n    FROM events\n    GROUP BY user_id, activity_date\n)\nGROUP BY signup_date\nORDER BY signup_date DESC;\n```",
+      "zh-Hans": "```sql\n-- Daily active users\nSELECT\n    toDate(timestamp) AS date,\n    uniq(user_id) AS daily_active_users\nFROM events\nWHERE timestamp >= today() - INTERVAL 30 DAY\nGROUP BY date\nORDER BY date;\n\n-- Retention analysis\nSELECT\n    signup_date,\n    countIf(days_since_signup = 0) AS day_0,\n    countIf(days_since_signup = 1) AS day_1,\n    countIf(days_since_signup = 7) AS day_7,\n    countIf(days_since_signup = 30) AS day_30\nFROM (\n    SELECT\n        user_id,\n        min(toDate(timestamp)) AS signup_date,\n        toDate(timestamp) AS activity_date,\n        dateDiff('day', signup_date, activity_date) AS days_since_signup\n    FROM events\n    GROUP BY user_id, activity_date\n)\nGROUP BY signup_date\nORDER BY signup_date DESC;\n```"
+    },
+    {
+      "en-US": "### Funnel Analysis",
+      "zh-Hans": "### 漏斗分析"
+    },
+    {
+      "en-US": "```sql\n-- Conversion funnel\nSELECT\n    countIf(step = 'viewed_market') AS viewed,\n    countIf(step = 'clicked_trade') AS clicked,\n    countIf(step = 'completed_trade') AS completed,\n    round(clicked / viewed * 100, 2) AS view_to_click_rate,\n    round(completed / clicked * 100, 2) AS click_to_completion_rate\nFROM (\n    SELECT\n        user_id,\n        session_id,\n        event_type AS step\n    FROM events\n    WHERE event_date = today()\n)\nGROUP BY session_id;\n```",
+      "zh-Hans": "```sql\n-- Conversion funnel\nSELECT\n    countIf(step = 'viewed_market') AS viewed,\n    countIf(step = 'clicked_trade') AS clicked,\n    countIf(step = 'completed_trade') AS completed,\n    round(clicked / viewed * 100, 2) AS view_to_click_rate,\n    round(completed / clicked * 100, 2) AS click_to_completion_rate\nFROM (\n    SELECT\n        user_id,\n        session_id,\n        event_type AS step\n    FROM events\n    WHERE event_date = today()\n)\nGROUP BY session_id;\n```"
+    },
+    {
+      "en-US": "### Cohort Analysis",
+      "zh-Hans": "### 队列分析"
+    },
+    {
+      "en-US": "```sql\n-- User cohorts by signup month\nSELECT\n    toStartOfMonth(signup_date) AS cohort,\n    toStartOfMonth(activity_date) AS month,\n    dateDiff('month', cohort, month) AS months_since_signup,\n    count(DISTINCT user_id) AS active_users\nFROM (\n    SELECT\n        user_id,\n        min(toDate(timestamp)) OVER (PARTITION BY user_id) AS signup_date,\n        toDate(timestamp) AS activity_date\n    FROM events\n)\nGROUP BY cohort, month, months_since_signup\nORDER BY cohort, months_since_signup;\n```",
+      "zh-Hans": "```sql\n-- User cohorts by signup month\nSELECT\n    toStartOfMonth(signup_date) AS cohort,\n    toStartOfMonth(activity_date) AS month,\n    dateDiff('month', cohort, month) AS months_since_signup,\n    count(DISTINCT user_id) AS active_users\nFROM (\n    SELECT\n        user_id,\n        min(toDate(timestamp)) OVER (PARTITION BY user_id) AS signup_date,\n        toDate(timestamp) AS activity_date\n    FROM events\n)\nGROUP BY cohort, month, months_since_signup\nORDER BY cohort, months_since_signup;\n```"
+    },
+    {
+      "en-US": "## Data Pipeline Patterns",
+      "zh-Hans": "## 数据管道模式"
+    },
+    {
+      "en-US": "### ETL Pattern",
+      "zh-Hans": "### ETL 模式"
+    },
+    {
+      "en-US": "```typescript\n// Extract, Transform, Load\nasync function etlPipeline() {\n  // 1. Extract from source\n  const rawData = await extractFromPostgres()\n\n  // 2. Transform\n  const transformed = rawData.map(row => ({\n    date: new Date(row.created_at).toISOString().split('T')[0],\n    market_id: row.market_slug,\n    volume: parseFloat(row.total_volume),\n    trades: parseInt(row.trade_count)\n  }))\n\n  // 3. Load to ClickHouse\n  await bulkInsertToClickHouse(transformed)\n}\n\n// Run periodically\nsetInterval(etlPipeline, 60 * 60 * 1000)  // Every hour\n```",
+      "zh-Hans": "```typescript\n// Extract, Transform, Load\nasync function etlPipeline() {\n  // 1. Extract from source\n  const rawData = await extractFromPostgres()\n\n  // 2. Transform\n  const transformed = rawData.map(row => ({\n    date: new Date(row.created_at).toISOString().split('T')[0],\n    market_id: row.market_slug,\n    volume: parseFloat(row.total_volume),\n    trades: parseInt(row.trade_count)\n  }))\n\n  // 3. Load to ClickHouse\n  await bulkInsertToClickHouse(transformed)\n}\n\n// Run periodically\nsetInterval(etlPipeline, 60 * 60 * 1000)  // Every hour\n```"
+    },
+    {
+      "en-US": "### Change Data Capture (CDC)",
+      "zh-Hans": "### 变更数据捕获（CDC）"
+    },
+    {
+      "en-US": "```typescript\n// Listen to PostgreSQL changes and sync to ClickHouse\nimport { Client } from 'pg'\n\nconst pgClient = new Client({ connectionString: process.env.DATABASE_URL })\n\npgClient.query('LISTEN market_updates')\n\npgClient.on('notification', async (msg) => {\n  const update = JSON.parse(msg.payload)\n\n  await clickhouse.insert('market_updates', [\n    {\n      market_id: update.id,\n      event_type: update.operation,  // INSERT, UPDATE, DELETE\n      timestamp: new Date(),\n      data: JSON.stringify(update.new_data)\n    }\n  ])\n})\n```",
+      "zh-Hans": "```typescript\n// Listen to PostgreSQL changes and sync to ClickHouse\nimport { Client } from 'pg'\n\nconst pgClient = new Client({ connectionString: process.env.DATABASE_URL })\n\npgClient.query('LISTEN market_updates')\n\npgClient.on('notification', async (msg) => {\n  const update = JSON.parse(msg.payload)\n\n  await clickhouse.insert('market_updates', [\n    {\n      market_id: update.id,\n      event_type: update.operation,  // INSERT, UPDATE, DELETE\n      timestamp: new Date(),\n      data: JSON.stringify(update.new_data)\n    }\n  ])\n})\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "### 1. Partitioning Strategy",
+      "zh-Hans": "### 1. 分区策略"
+    },
+    {
+      "en-US": "- Partition by time (usually month or day)\n- Avoid too many partitions (performance impact)\n- Use DATE type for partition key",
+      "zh-Hans": "* 按时间分区（通常是月或日）\n* 避免过多分区（影响性能）\n* 使用 DATE 类型作为分区键"
+    },
+    {
+      "en-US": "### 2. Ordering Key",
+      "zh-Hans": "### 2. 排序键"
+    },
+    {
+      "en-US": "- Put most frequently filtered columns first\n- Consider cardinality (high cardinality first)\n- Order impacts compression",
+      "zh-Hans": "* 将最常过滤的列放在最前面\n* 考虑基数（高基数优先）\n* 顺序影响压缩"
+    },
+    {
+      "en-US": "### 3. Data Types",
+      "zh-Hans": "### 3. 数据类型"
+    },
+    {
+      "en-US": "- Use smallest appropriate type (UInt32 vs UInt64)\n- Use LowCardinality for repeated strings\n- Use Enum for categorical data",
+      "zh-Hans": "* 使用最合适的较小类型（UInt32 对比 UInt64）\n* 对重复字符串使用 LowCardinality\n* 对分类数据使用 Enum"
+    },
+    {
+      "en-US": "### 4. Avoid",
+      "zh-Hans": "### 4. 避免"
+    },
+    {
+      "en-US": "- SELECT * (specify columns)\n- FINAL (merge data before query instead)\n- Too many JOINs (denormalize for analytics)\n- Small frequent inserts (batch instead)",
+      "zh-Hans": "* SELECT \\*（指定列）\n* FINAL（改为在查询前合并数据）\n* 过多的 JOIN（为分析进行反规范化）\n* 少量频繁插入（改为批量）"
+    },
+    {
+      "en-US": "### 5. Monitoring",
+      "zh-Hans": "### 5. 监控"
+    },
+    {
+      "en-US": "- Track query performance\n- Monitor disk usage\n- Check merge operations\n- Review slow query log",
+      "zh-Hans": "* 跟踪查询性能\n* 监控磁盘使用情况\n* 检查合并操作\n* 查看慢查询日志"
+    },
+    {
+      "en-US": "**Remember**: ClickHouse excels at analytical workloads. Design tables for your query patterns, batch inserts, and leverage materialized views for real-time aggregations.",
+      "zh-Hans": "**记住**：ClickHouse 擅长分析工作负载。根据您的查询模式设计表，进行批量插入，并利用物化视图进行实时聚合。"
+    }
+  ]
+}

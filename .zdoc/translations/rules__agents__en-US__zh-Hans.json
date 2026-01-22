@@ -1,0 +1,58 @@
+{
+  "sourceFile": "rules/agents.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Agent Orchestration",
+      "zh-Hans": "# 智能体编排"
+    },
+    {
+      "en-US": "## Available Agents",
+      "zh-Hans": "## 可用智能体"
+    },
+    {
+      "en-US": "Located in `~/.claude/agents/`:",
+      "zh-Hans": "位于 `~/.claude/agents/` 中："
+    },
+    {
+      "en-US": "| Agent | Purpose | When to Use |\n|-------|---------|-------------|\n| planner | Implementation planning | Complex features, refactoring |\n| architect | System design | Architectural decisions |\n| tdd-guide | Test-driven development | New features, bug fixes |\n| code-reviewer | Code review | After writing code |\n| security-reviewer | Security analysis | Before commits |\n| build-error-resolver | Fix build errors | When build fails |\n| e2e-runner | E2E testing | Critical user flows |\n| refactor-cleaner | Dead code cleanup | Code maintenance |\n| doc-updater | Documentation | Updating docs |",
+      "zh-Hans": "| 智能体 | 用途 | 使用时机 |\n|-------|---------|-------------|\n| planner | 实现规划 | 复杂功能、重构 |\n| architect | 系统设计 | 架构决策 |\n| tdd-guide | 测试驱动开发 | 新功能、错误修复 |\n| code-reviewer | 代码审查 | 编写代码后 |\n| security-reviewer | 安全分析 | 提交前 |\n| build-error-resolver | 修复构建错误 | 构建失败时 |\n| e2e-runner | 端到端测试 | 关键用户流程 |\n| refactor-cleaner | 清理死代码 | 代码维护 |\n| doc-updater | 文档 | 更新文档时 |"
+    },
+    {
+      "en-US": "## Immediate Agent Usage",
+      "zh-Hans": "## 即时智能体使用"
+    },
+    {
+      "en-US": "No user prompt needed:",
+      "zh-Hans": "无需用户提示："
+    },
+    {
+      "en-US": "1. Complex feature requests - Use **planner** agent\n2. Code just written/modified - Use **code-reviewer** agent\n3. Bug fix or new feature - Use **tdd-guide** agent\n4. Architectural decision - Use **architect** agent",
+      "zh-Hans": "1. 复杂的功能请求 - 使用 **planner** 智能体\n2. 刚编写/修改的代码 - 使用 **code-reviewer** 智能体\n3. 错误修复或新功能 - 使用 **tdd-guide** 智能体\n4. 架构决策 - 使用 **architect** 智能体"
+    },
+    {
+      "en-US": "## Parallel Task Execution",
+      "zh-Hans": "## 并行任务执行"
+    },
+    {
+      "en-US": "ALWAYS use parallel Task execution for independent operations:",
+      "zh-Hans": "对于独立操作，**始终**使用并行任务执行："
+    },
+    {
+      "en-US": "```markdown\n# GOOD: Parallel execution\nLaunch 3 agents in parallel:\n1. Agent 1: Security analysis of auth.ts\n2. Agent 2: Performance review of cache system\n3. Agent 3: Type checking of utils.ts\n\n# BAD: Sequential when unnecessary\nFirst agent 1, then agent 2, then agent 3\n```",
+      "zh-Hans": "```markdown\n# GOOD: Parallel execution\nLaunch 3 agents in parallel:\n1. Agent 1: Security analysis of auth.ts\n2. Agent 2: Performance review of cache system\n3. Agent 3: Type checking of utils.ts\n\n# BAD: Sequential when unnecessary\nFirst agent 1, then agent 2, then agent 3\n```"
+    },
+    {
+      "en-US": "## Multi-Perspective Analysis",
+      "zh-Hans": "## 多视角分析"
+    },
+    {
+      "en-US": "For complex problems, use split role sub-agents:",
+      "zh-Hans": "对于复杂问题，使用拆分角色的子智能体："
+    },
+    {
+      "en-US": "- Factual reviewer\n- Senior engineer\n- Security expert\n- Consistency reviewer\n- Redundancy checker",
+      "zh-Hans": "* 事实审查员\n* 高级工程师\n* 安全专家\n* 一致性审查员\n* 冗余检查器"
+    }
+  ]
+}

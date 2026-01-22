@@ -1,0 +1,70 @@
+{
+  "sourceFile": "rules/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Coding Style",
+      "zh-Hans": "# 编码风格"
+    },
+    {
+      "en-US": "## Immutability (CRITICAL)",
+      "zh-Hans": "## 不可变性（关键）"
+    },
+    {
+      "en-US": "ALWAYS create new objects, NEVER mutate:",
+      "zh-Hans": "始终创建新对象，切勿修改："
+    },
+    {
+      "en-US": "```javascript\n// WRONG: Mutation\nfunction updateUser(user, name) {\n  user.name = name  // MUTATION!\n  return user\n}\n\n// CORRECT: Immutability\nfunction updateUser(user, name) {\n  return {\n    ...user,\n    name\n  }\n}\n```",
+      "zh-Hans": "```javascript\n// WRONG: Mutation\nfunction updateUser(user, name) {\n  user.name = name  // MUTATION!\n  return user\n}\n\n// CORRECT: Immutability\nfunction updateUser(user, name) {\n  return {\n    ...user,\n    name\n  }\n}\n```"
+    },
+    {
+      "en-US": "## File Organization",
+      "zh-Hans": "## 文件组织"
+    },
+    {
+      "en-US": "MANY SMALL FILES > FEW LARGE FILES:",
+      "zh-Hans": "多个小文件 > 少数大文件："
+    },
+    {
+      "en-US": "- High cohesion, low coupling\n- 200-400 lines typical, 800 max\n- Extract utilities from large components\n- Organize by feature/domain, not by type",
+      "zh-Hans": "* 高内聚，低耦合\n* 典型 200-400 行，最多 800 行\n* 从大型组件中提取实用工具\n* 按功能/领域组织，而非按类型"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "ALWAYS handle errors comprehensively:",
+      "zh-Hans": "始终全面处理错误："
+    },
+    {
+      "en-US": "```typescript\ntry {\n  const result = await riskyOperation()\n  return result\n} catch (error) {\n  console.error('Operation failed:', error)\n  throw new Error('Detailed user-friendly message')\n}\n```",
+      "zh-Hans": "```typescript\ntry {\n  const result = await riskyOperation()\n  return result\n} catch (error) {\n  console.error('Operation failed:', error)\n  throw new Error('Detailed user-friendly message')\n}\n```"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "ALWAYS validate user input:",
+      "zh-Hans": "始终验证用户输入："
+    },
+    {
+      "en-US": "```typescript\nimport { z } from 'zod'\n\nconst schema = z.object({\n  email: z.string().email(),\n  age: z.number().int().min(0).max(150)\n})\n\nconst validated = schema.parse(input)\n```",
+      "zh-Hans": "```typescript\nimport { z } from 'zod'\n\nconst schema = z.object({\n  email: z.string().email(),\n  age: z.number().int().min(0).max(150)\n})\n\nconst validated = schema.parse(input)\n```"
+    },
+    {
+      "en-US": "## Code Quality Checklist",
+      "zh-Hans": "## 代码质量检查清单"
+    },
+    {
+      "en-US": "Before marking work complete:",
+      "zh-Hans": "在标记工作完成之前："
+    },
+    {
+      "en-US": "- [ ] Code is readable and well-named\n- [ ] Functions are small (<50 lines)\n- [ ] Files are focused (<800 lines)\n- [ ] No deep nesting (>4 levels)\n- [ ] Proper error handling\n- [ ] No console.log statements\n- [ ] No hardcoded values\n- [ ] No mutation (immutable patterns used)",
+      "zh-Hans": "* \\[ ] 代码可读且命名良好\n* \\[ ] 函数短小（<50 行）\n* \\[ ] 文件专注（<800 行）\n* \\[ ] 无深层嵌套（>4 层）\n* \\[ ] 正确的错误处理\n* \\[ ] 无 console.log 语句\n* \\[ ] 无硬编码值\n* \\[ ] 无修改（使用不可变模式）"
+    }
+  ]
+}

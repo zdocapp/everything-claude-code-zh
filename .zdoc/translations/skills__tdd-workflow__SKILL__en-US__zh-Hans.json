@@ -1,0 +1,334 @@
+{
+  "sourceFile": "skills/tdd-workflow/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: tdd-workflow\ndescription: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.\n---",
+      "zh-Hans": "---\nname: tdd-workflow\ndescription: 在编写新功能、修复错误或重构代码时使用此技能。强制执行测试驱动开发，包含单元测试、集成测试和端到端测试，覆盖率超过80%。\n---"
+    },
+    {
+      "en-US": "# Test-Driven Development Workflow",
+      "zh-Hans": "# 测试驱动开发工作流"
+    },
+    {
+      "en-US": "This skill ensures all code development follows TDD principles with comprehensive test coverage.",
+      "zh-Hans": "此技能确保所有代码开发遵循TDD原则，并具备全面的测试覆盖率。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Writing new features or functionality\n- Fixing bugs or issues\n- Refactoring existing code\n- Adding API endpoints\n- Creating new components",
+      "zh-Hans": "* 编写新功能或功能\n* 修复错误或问题\n* 重构现有代码\n* 添加API端点\n* 创建新组件"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "### 1. Tests BEFORE Code",
+      "zh-Hans": "### 1. 测试优先于代码"
+    },
+    {
+      "en-US": "ALWAYS write tests first, then implement code to make tests pass.",
+      "zh-Hans": "始终先编写测试，然后实现代码以使测试通过。"
+    },
+    {
+      "en-US": "### 2. Coverage Requirements",
+      "zh-Hans": "### 2. 覆盖率要求"
+    },
+    {
+      "en-US": "- Minimum 80% coverage (unit + integration + E2E)\n- All edge cases covered\n- Error scenarios tested\n- Boundary conditions verified",
+      "zh-Hans": "* 最低80%覆盖率（单元 + 集成 + 端到端）\n* 覆盖所有边缘情况\n* 测试错误场景\n* 验证边界条件"
+    },
+    {
+      "en-US": "### 3. Test Types",
+      "zh-Hans": "### 3. 测试类型"
+    },
+    {
+      "en-US": "#### Unit Tests",
+      "zh-Hans": "#### 单元测试"
+    },
+    {
+      "en-US": "- Individual functions and utilities\n- Component logic\n- Pure functions\n- Helpers and utilities",
+      "zh-Hans": "* 单个函数和工具\n* 组件逻辑\n* 纯函数\n* 辅助函数和工具"
+    },
+    {
+      "en-US": "#### Integration Tests",
+      "zh-Hans": "#### 集成测试"
+    },
+    {
+      "en-US": "- API endpoints\n- Database operations\n- Service interactions\n- External API calls",
+      "zh-Hans": "* API端点\n* 数据库操作\n* 服务交互\n* 外部API调用"
+    },
+    {
+      "en-US": "#### E2E Tests (Playwright)",
+      "zh-Hans": "#### 端到端测试 (Playwright)"
+    },
+    {
+      "en-US": "- Critical user flows\n- Complete workflows\n- Browser automation\n- UI interactions",
+      "zh-Hans": "* 关键用户流程\n* 完整工作流\n* 浏览器自动化\n* UI交互"
+    },
+    {
+      "en-US": "## TDD Workflow Steps",
+      "zh-Hans": "## TDD 工作流步骤"
+    },
+    {
+      "en-US": "### Step 1: Write User Journeys",
+      "zh-Hans": "### 步骤 1: 编写用户旅程"
+    },
+    {
+      "en-US": "```\nAs a [role], I want to [action], so that [benefit]\n\nExample:\nAs a user, I want to search for markets semantically,\nso that I can find relevant markets even without exact keywords.\n```",
+      "zh-Hans": "```\nAs a [role], I want to [action], so that [benefit]\n\nExample:\nAs a user, I want to search for markets semantically,\nso that I can find relevant markets even without exact keywords.\n```"
+    },
+    {
+      "en-US": "### Step 2: Generate Test Cases",
+      "zh-Hans": "### 步骤 2: 生成测试用例"
+    },
+    {
+      "en-US": "For each user journey, create comprehensive test cases:",
+      "zh-Hans": "针对每个用户旅程，创建全面的测试用例："
+    },
+    {
+      "en-US": "```typescript\ndescribe('Semantic Search', () => {\n  it('returns relevant markets for query', async () => {\n    // Test implementation\n  })\n\n  it('handles empty query gracefully', async () => {\n    // Test edge case\n  })\n\n  it('falls back to substring search when Redis unavailable', async () => {\n    // Test fallback behavior\n  })\n\n  it('sorts results by similarity score', async () => {\n    // Test sorting logic\n  })\n})\n```",
+      "zh-Hans": "```typescript\ndescribe('Semantic Search', () => {\n  it('returns relevant markets for query', async () => {\n    // Test implementation\n  })\n\n  it('handles empty query gracefully', async () => {\n    // Test edge case\n  })\n\n  it('falls back to substring search when Redis unavailable', async () => {\n    // Test fallback behavior\n  })\n\n  it('sorts results by similarity score', async () => {\n    // Test sorting logic\n  })\n})\n```"
+    },
+    {
+      "en-US": "### Step 3: Run Tests (They Should Fail)",
+      "zh-Hans": "### 步骤 3: 运行测试（它们应该失败）"
+    },
+    {
+      "en-US": "```bash\nnpm test\n# Tests should fail - we haven't implemented yet\n```",
+      "zh-Hans": "```bash\nnpm test\n# Tests should fail - we haven't implemented yet\n```"
+    },
+    {
+      "en-US": "### Step 4: Implement Code",
+      "zh-Hans": "### 步骤 4: 实现代码"
+    },
+    {
+      "en-US": "Write minimal code to make tests pass:",
+      "zh-Hans": "编写最少的代码以使测试通过："
+    },
+    {
+      "en-US": "```typescript\n// Implementation guided by tests\nexport async function searchMarkets(query: string) {\n  // Implementation here\n}\n```",
+      "zh-Hans": "```typescript\n// Implementation guided by tests\nexport async function searchMarkets(query: string) {\n  // Implementation here\n}\n```"
+    },
+    {
+      "en-US": "### Step 5: Run Tests Again",
+      "zh-Hans": "### 步骤 5: 再次运行测试"
+    },
+    {
+      "en-US": "```bash\nnpm test\n# Tests should now pass\n```",
+      "zh-Hans": "```bash\nnpm test\n# Tests should now pass\n```"
+    },
+    {
+      "en-US": "### Step 6: Refactor",
+      "zh-Hans": "### 步骤 6: 重构"
+    },
+    {
+      "en-US": "Improve code quality while keeping tests green:",
+      "zh-Hans": "在保持测试通过的同时提高代码质量："
+    },
+    {
+      "en-US": "- Remove duplication\n- Improve naming\n- Optimize performance\n- Enhance readability",
+      "zh-Hans": "* 消除重复\n* 改进命名\n* 优化性能\n* 增强可读性"
+    },
+    {
+      "en-US": "### Step 7: Verify Coverage",
+      "zh-Hans": "### 步骤 7: 验证覆盖率"
+    },
+    {
+      "en-US": "```bash\nnpm run test:coverage\n# Verify 80%+ coverage achieved\n```",
+      "zh-Hans": "```bash\nnpm run test:coverage\n# Verify 80%+ coverage achieved\n```"
+    },
+    {
+      "en-US": "## Testing Patterns",
+      "zh-Hans": "## 测试模式"
+    },
+    {
+      "en-US": "### Unit Test Pattern (Jest/Vitest)",
+      "zh-Hans": "### 单元测试模式 (Jest/Vitest)"
+    },
+    {
+      "en-US": "```typescript\nimport { render, screen, fireEvent } from '@testing-library/react'\nimport { Button } from './Button'\n\ndescribe('Button Component', () => {\n  it('renders with correct text', () => {\n    render(<Button>Click me</Button>)\n    expect(screen.getByText('Click me')).toBeInTheDocument()\n  })\n\n  it('calls onClick when clicked', () => {\n    const handleClick = jest.fn()\n    render(<Button onClick={handleClick}>Click</Button>)\n\n    fireEvent.click(screen.getByRole('button'))\n\n    expect(handleClick).toHaveBeenCalledTimes(1)\n  })\n\n  it('is disabled when disabled prop is true', () => {\n    render(<Button disabled>Click</Button>)\n    expect(screen.getByRole('button')).toBeDisabled()\n  })\n})\n```",
+      "zh-Hans": "```typescript\nimport { render, screen, fireEvent } from '@testing-library/react'\nimport { Button } from './Button'\n\ndescribe('Button Component', () => {\n  it('renders with correct text', () => {\n    render(<Button>Click me</Button>)\n    expect(screen.getByText('Click me')).toBeInTheDocument()\n  })\n\n  it('calls onClick when clicked', () => {\n    const handleClick = jest.fn()\n    render(<Button onClick={handleClick}>Click</Button>)\n\n    fireEvent.click(screen.getByRole('button'))\n\n    expect(handleClick).toHaveBeenCalledTimes(1)\n  })\n\n  it('is disabled when disabled prop is true', () => {\n    render(<Button disabled>Click</Button>)\n    expect(screen.getByRole('button')).toBeDisabled()\n  })\n})\n```"
+    },
+    {
+      "en-US": "### API Integration Test Pattern",
+      "zh-Hans": "### API 集成测试模式"
+    },
+    {
+      "en-US": "```typescript\nimport { NextRequest } from 'next/server'\nimport { GET } from './route'\n\ndescribe('GET /api/markets', () => {\n  it('returns markets successfully', async () => {\n    const request = new NextRequest('http://localhost/api/markets')\n    const response = await GET(request)\n    const data = await response.json()\n\n    expect(response.status).toBe(200)\n    expect(data.success).toBe(true)\n    expect(Array.isArray(data.data)).toBe(true)\n  })\n\n  it('validates query parameters', async () => {\n    const request = new NextRequest('http://localhost/api/markets?limit=invalid')\n    const response = await GET(request)\n\n    expect(response.status).toBe(400)\n  })\n\n  it('handles database errors gracefully', async () => {\n    // Mock database failure\n    const request = new NextRequest('http://localhost/api/markets')\n    // Test error handling\n  })\n})\n```",
+      "zh-Hans": "```typescript\nimport { NextRequest } from 'next/server'\nimport { GET } from './route'\n\ndescribe('GET /api/markets', () => {\n  it('returns markets successfully', async () => {\n    const request = new NextRequest('http://localhost/api/markets')\n    const response = await GET(request)\n    const data = await response.json()\n\n    expect(response.status).toBe(200)\n    expect(data.success).toBe(true)\n    expect(Array.isArray(data.data)).toBe(true)\n  })\n\n  it('validates query parameters', async () => {\n    const request = new NextRequest('http://localhost/api/markets?limit=invalid')\n    const response = await GET(request)\n\n    expect(response.status).toBe(400)\n  })\n\n  it('handles database errors gracefully', async () => {\n    // Mock database failure\n    const request = new NextRequest('http://localhost/api/markets')\n    // Test error handling\n  })\n})\n```"
+    },
+    {
+      "en-US": "### E2E Test Pattern (Playwright)",
+      "zh-Hans": "### 端到端测试模式 (Playwright)"
+    },
+    {
+      "en-US": "```typescript\nimport { test, expect } from '@playwright/test'\n\ntest('user can search and filter markets', async ({ page }) => {\n  // Navigate to markets page\n  await page.goto('/')\n  await page.click('a[href=\"/markets\"]')\n\n  // Verify page loaded\n  await expect(page.locator('h1')).toContainText('Markets')\n\n  // Search for markets\n  await page.fill('input[placeholder=\"Search markets\"]', 'election')\n\n  // Wait for debounce and results\n  await page.waitForTimeout(600)\n\n  // Verify search results displayed\n  const results = page.locator('[data-testid=\"market-card\"]')\n  await expect(results).toHaveCount(5, { timeout: 5000 })\n\n  // Verify results contain search term\n  const firstResult = results.first()\n  await expect(firstResult).toContainText('election', { ignoreCase: true })\n\n  // Filter by status\n  await page.click('button:has-text(\"Active\")')\n\n  // Verify filtered results\n  await expect(results).toHaveCount(3)\n})\n\ntest('user can create a new market', async ({ page }) => {\n  // Login first\n  await page.goto('/creator-dashboard')\n\n  // Fill market creation form\n  await page.fill('input[name=\"name\"]', 'Test Market')\n  await page.fill('textarea[name=\"description\"]', 'Test description')\n  await page.fill('input[name=\"endDate\"]', '2025-12-31')\n\n  // Submit form\n  await page.click('button[type=\"submit\"]')\n\n  // Verify success message\n  await expect(page.locator('text=Market created successfully')).toBeVisible()\n\n  // Verify redirect to market page\n  await expect(page).toHaveURL(/\\/markets\\/test-market/)\n})\n```",
+      "zh-Hans": "```typescript\nimport { test, expect } from '@playwright/test'\n\ntest('user can search and filter markets', async ({ page }) => {\n  // Navigate to markets page\n  await page.goto('/')\n  await page.click('a[href=\"/markets\"]')\n\n  // Verify page loaded\n  await expect(page.locator('h1')).toContainText('Markets')\n\n  // Search for markets\n  await page.fill('input[placeholder=\"Search markets\"]', 'election')\n\n  // Wait for debounce and results\n  await page.waitForTimeout(600)\n\n  // Verify search results displayed\n  const results = page.locator('[data-testid=\"market-card\"]')\n  await expect(results).toHaveCount(5, { timeout: 5000 })\n\n  // Verify results contain search term\n  const firstResult = results.first()\n  await expect(firstResult).toContainText('election', { ignoreCase: true })\n\n  // Filter by status\n  await page.click('button:has-text(\"Active\")')\n\n  // Verify filtered results\n  await expect(results).toHaveCount(3)\n})\n\ntest('user can create a new market', async ({ page }) => {\n  // Login first\n  await page.goto('/creator-dashboard')\n\n  // Fill market creation form\n  await page.fill('input[name=\"name\"]', 'Test Market')\n  await page.fill('textarea[name=\"description\"]', 'Test description')\n  await page.fill('input[name=\"endDate\"]', '2025-12-31')\n\n  // Submit form\n  await page.click('button[type=\"submit\"]')\n\n  // Verify success message\n  await expect(page.locator('text=Market created successfully')).toBeVisible()\n\n  // Verify redirect to market page\n  await expect(page).toHaveURL(/\\/markets\\/test-market/)\n})\n```"
+    },
+    {
+      "en-US": "## Test File Organization",
+      "zh-Hans": "## 测试文件组织"
+    },
+    {
+      "en-US": "```\nsrc/\n├── components/\n│   ├── Button/\n│   │   ├── Button.tsx\n│   │   ├── Button.test.tsx          # Unit tests\n│   │   └── Button.stories.tsx       # Storybook\n│   └── MarketCard/\n│       ├── MarketCard.tsx\n│       └── MarketCard.test.tsx\n├── app/\n│   └── api/\n│       └── markets/\n│           ├── route.ts\n│           └── route.test.ts         # Integration tests\n└── e2e/\n    ├── markets.spec.ts               # E2E tests\n    ├── trading.spec.ts\n    └── auth.spec.ts\n```",
+      "zh-Hans": "```\nsrc/\n├── components/\n│   ├── Button/\n│   │   ├── Button.tsx\n│   │   ├── Button.test.tsx          # Unit tests\n│   │   └── Button.stories.tsx       # Storybook\n│   └── MarketCard/\n│       ├── MarketCard.tsx\n│       └── MarketCard.test.tsx\n├── app/\n│   └── api/\n│       └── markets/\n│           ├── route.ts\n│           └── route.test.ts         # Integration tests\n└── e2e/\n    ├── markets.spec.ts               # E2E tests\n    ├── trading.spec.ts\n    └── auth.spec.ts\n```"
+    },
+    {
+      "en-US": "## Mocking External Services",
+      "zh-Hans": "## 模拟外部服务"
+    },
+    {
+      "en-US": "### Supabase Mock",
+      "zh-Hans": "### Supabase 模拟"
+    },
+    {
+      "en-US": "```typescript\njest.mock('@/lib/supabase', () => ({\n  supabase: {\n    from: jest.fn(() => ({\n      select: jest.fn(() => ({\n        eq: jest.fn(() => Promise.resolve({\n          data: [{ id: 1, name: 'Test Market' }],\n          error: null\n        }))\n      }))\n    }))\n  }\n}))\n```",
+      "zh-Hans": "```typescript\njest.mock('@/lib/supabase', () => ({\n  supabase: {\n    from: jest.fn(() => ({\n      select: jest.fn(() => ({\n        eq: jest.fn(() => Promise.resolve({\n          data: [{ id: 1, name: 'Test Market' }],\n          error: null\n        }))\n      }))\n    }))\n  }\n}))\n```"
+    },
+    {
+      "en-US": "### Redis Mock",
+      "zh-Hans": "### Redis 模拟"
+    },
+    {
+      "en-US": "```typescript\njest.mock('@/lib/redis', () => ({\n  searchMarketsByVector: jest.fn(() => Promise.resolve([\n    { slug: 'test-market', similarity_score: 0.95 }\n  ])),\n  checkRedisHealth: jest.fn(() => Promise.resolve({ connected: true }))\n}))\n```",
+      "zh-Hans": "```typescript\njest.mock('@/lib/redis', () => ({\n  searchMarketsByVector: jest.fn(() => Promise.resolve([\n    { slug: 'test-market', similarity_score: 0.95 }\n  ])),\n  checkRedisHealth: jest.fn(() => Promise.resolve({ connected: true }))\n}))\n```"
+    },
+    {
+      "en-US": "### OpenAI Mock",
+      "zh-Hans": "### OpenAI 模拟"
+    },
+    {
+      "en-US": "```typescript\njest.mock('@/lib/openai', () => ({\n  generateEmbedding: jest.fn(() => Promise.resolve(\n    new Array(1536).fill(0.1) // Mock 1536-dim embedding\n  ))\n}))\n```",
+      "zh-Hans": "```typescript\njest.mock('@/lib/openai', () => ({\n  generateEmbedding: jest.fn(() => Promise.resolve(\n    new Array(1536).fill(0.1) // Mock 1536-dim embedding\n  ))\n}))\n```"
+    },
+    {
+      "en-US": "## Test Coverage Verification",
+      "zh-Hans": "## 测试覆盖率验证"
+    },
+    {
+      "en-US": "### Run Coverage Report",
+      "zh-Hans": "### 运行覆盖率报告"
+    },
+    {
+      "en-US": "```bash\nnpm run test:coverage\n```",
+      "zh-Hans": "```bash\nnpm run test:coverage\n```"
+    },
+    {
+      "en-US": "### Coverage Thresholds",
+      "zh-Hans": "### 覆盖率阈值"
+    },
+    {
+      "en-US": "```json\n{\n  \"jest\": {\n    \"coverageThresholds\": {\n      \"global\": {\n        \"branches\": 80,\n        \"functions\": 80,\n        \"lines\": 80,\n        \"statements\": 80\n      }\n    }\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"jest\": {\n    \"coverageThresholds\": {\n      \"global\": {\n        \"branches\": 80,\n        \"functions\": 80,\n        \"lines\": 80,\n        \"statements\": 80\n      }\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Common Testing Mistakes to Avoid",
+      "zh-Hans": "## 应避免的常见测试错误"
+    },
+    {
+      "en-US": "### ❌ WRONG: Testing Implementation Details",
+      "zh-Hans": "### ❌ 错误：测试实现细节"
+    },
+    {
+      "en-US": "```typescript\n// Don't test internal state\nexpect(component.state.count).toBe(5)\n```",
+      "zh-Hans": "```typescript\n// Don't test internal state\nexpect(component.state.count).toBe(5)\n```"
+    },
+    {
+      "en-US": "### ✅ CORRECT: Test User-Visible Behavior",
+      "zh-Hans": "### ✅ 正确：测试用户可见的行为"
+    },
+    {
+      "en-US": "```typescript\n// Test what users see\nexpect(screen.getByText('Count: 5')).toBeInTheDocument()\n```",
+      "zh-Hans": "```typescript\n// Test what users see\nexpect(screen.getByText('Count: 5')).toBeInTheDocument()\n```"
+    },
+    {
+      "en-US": "### ❌ WRONG: Brittle Selectors",
+      "zh-Hans": "### ❌ 错误：脆弱的定位器"
+    },
+    {
+      "en-US": "```typescript\n// Breaks easily\nawait page.click('.css-class-xyz')\n```",
+      "zh-Hans": "```typescript\n// Breaks easily\nawait page.click('.css-class-xyz')\n```"
+    },
+    {
+      "en-US": "### ✅ CORRECT: Semantic Selectors",
+      "zh-Hans": "### ✅ 正确：语义化定位器"
+    },
+    {
+      "en-US": "```typescript\n// Resilient to changes\nawait page.click('button:has-text(\"Submit\")')\nawait page.click('[data-testid=\"submit-button\"]')\n```",
+      "zh-Hans": "```typescript\n// Resilient to changes\nawait page.click('button:has-text(\"Submit\")')\nawait page.click('[data-testid=\"submit-button\"]')\n```"
+    },
+    {
+      "en-US": "### ❌ WRONG: No Test Isolation",
+      "zh-Hans": "### ❌ 错误：没有测试隔离"
+    },
+    {
+      "en-US": "```typescript\n// Tests depend on each other\ntest('creates user', () => { /* ... */ })\ntest('updates same user', () => { /* depends on previous test */ })\n```",
+      "zh-Hans": "```typescript\n// Tests depend on each other\ntest('creates user', () => { /* ... */ })\ntest('updates same user', () => { /* depends on previous test */ })\n```"
+    },
+    {
+      "en-US": "### ✅ CORRECT: Independent Tests",
+      "zh-Hans": "### ✅ 正确：独立的测试"
+    },
+    {
+      "en-US": "```typescript\n// Each test sets up its own data\ntest('creates user', () => {\n  const user = createTestUser()\n  // Test logic\n})\n\ntest('updates user', () => {\n  const user = createTestUser()\n  // Update logic\n})\n```",
+      "zh-Hans": "```typescript\n// Each test sets up its own data\ntest('creates user', () => {\n  const user = createTestUser()\n  // Test logic\n})\n\ntest('updates user', () => {\n  const user = createTestUser()\n  // Update logic\n})\n```"
+    },
+    {
+      "en-US": "## Continuous Testing",
+      "zh-Hans": "## 持续测试"
+    },
+    {
+      "en-US": "### Watch Mode During Development",
+      "zh-Hans": "### 开发期间的监视模式"
+    },
+    {
+      "en-US": "```bash\nnpm test -- --watch\n# Tests run automatically on file changes\n```",
+      "zh-Hans": "```bash\nnpm test -- --watch\n# Tests run automatically on file changes\n```"
+    },
+    {
+      "en-US": "### Pre-Commit Hook",
+      "zh-Hans": "### 预提交钩子"
+    },
+    {
+      "en-US": "```bash\n# Runs before every commit\nnpm test && npm run lint\n```",
+      "zh-Hans": "```bash\n# Runs before every commit\nnpm test && npm run lint\n```"
+    },
+    {
+      "en-US": "### CI/CD Integration",
+      "zh-Hans": "### CI/CD 集成"
+    },
+    {
+      "en-US": "```yaml\n# GitHub Actions\n- name: Run Tests\n  run: npm test -- --coverage\n- name: Upload Coverage\n  uses: codecov/codecov-action@v3\n```",
+      "zh-Hans": "```yaml\n# GitHub Actions\n- name: Run Tests\n  run: npm test -- --coverage\n- name: Upload Coverage\n  uses: codecov/codecov-action@v3\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "1. **Write Tests First** - Always TDD\n2. **One Assert Per Test** - Focus on single behavior\n3. **Descriptive Test Names** - Explain what's tested\n4. **Arrange-Act-Assert** - Clear test structure\n5. **Mock External Dependencies** - Isolate unit tests\n6. **Test Edge Cases** - Null, undefined, empty, large\n7. **Test Error Paths** - Not just happy paths\n8. **Keep Tests Fast** - Unit tests < 50ms each\n9. **Clean Up After Tests** - No side effects\n10. **Review Coverage Reports** - Identify gaps",
+      "zh-Hans": "1. **先写测试** - 始终遵循TDD\n2. **每个测试一个断言** - 专注于单一行为\n3. **描述性的测试名称** - 解释测试内容\n4. **组织-执行-断言** - 清晰的测试结构\n5. **模拟外部依赖** - 隔离单元测试\n6. **测试边缘情况** - Null、undefined、空、大量数据\n7. **测试错误路径** - 不仅仅是正常路径\n8. **保持测试快速** - 单元测试每个 < 50ms\n9. **测试后清理** - 无副作用\n10. **审查覆盖率报告** - 识别空白"
+    },
+    {
+      "en-US": "## Success Metrics",
+      "zh-Hans": "## 成功指标"
+    },
+    {
+      "en-US": "- 80%+ code coverage achieved\n- All tests passing (green)\n- No skipped or disabled tests\n- Fast test execution (< 30s for unit tests)\n- E2E tests cover critical user flows\n- Tests catch bugs before production",
+      "zh-Hans": "* 达到 80%+ 代码覆盖率\n* 所有测试通过（绿色）\n* 没有跳过或禁用的测试\n* 快速测试执行（单元测试 < 30秒）\n* 端到端测试覆盖关键用户流程\n* 测试在生产前捕获错误"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Remember**: Tests are not optional. They are the safety net that enables confident refactoring, rapid development, and production reliability.",
+      "zh-Hans": "**记住**：测试不是可选的。它们是安全网，能够实现自信的重构、快速的开发和生产的可靠性。"
+    }
+  ]
+}

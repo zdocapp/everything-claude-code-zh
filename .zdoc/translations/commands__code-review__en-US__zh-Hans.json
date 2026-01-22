@@ -1,0 +1,50 @@
+{
+  "sourceFile": "commands/code-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Code Review",
+      "zh-Hans": "# 代码审查"
+    },
+    {
+      "en-US": "Comprehensive security and quality review of uncommitted changes:",
+      "zh-Hans": "对未提交的更改进行全面的安全性和质量审查："
+    },
+    {
+      "en-US": "1. Get changed files: git diff --name-only HEAD\n\n2. For each changed file, check for:",
+      "zh-Hans": "1. 获取更改的文件：`git diff --name-only HEAD`\n\n2. 对每个更改的文件，检查："
+    },
+    {
+      "en-US": "**Security Issues (CRITICAL):**",
+      "zh-Hans": "**安全问题（严重）：**"
+    },
+    {
+      "en-US": "- Hardcoded credentials, API keys, tokens\n- SQL injection vulnerabilities\n- XSS vulnerabilities  \n- Missing input validation\n- Insecure dependencies\n- Path traversal risks",
+      "zh-Hans": "* 硬编码的凭据、API 密钥、令牌\n* SQL 注入漏洞\n* XSS 漏洞\n* 缺少输入验证\n* 不安全的依赖项\n* 路径遍历风险"
+    },
+    {
+      "en-US": "**Code Quality (HIGH):**",
+      "zh-Hans": "**代码质量（高）：**"
+    },
+    {
+      "en-US": "- Functions > 50 lines\n- Files > 800 lines\n- Nesting depth > 4 levels\n- Missing error handling\n- console.log statements\n- TODO/FIXME comments\n- Missing JSDoc for public APIs",
+      "zh-Hans": "* 函数长度超过 50 行\n* 文件长度超过 800 行\n* 嵌套深度超过 4 层\n* 缺少错误处理\n* `console.log` 语句\n* `TODO`/`FIXME` 注释\n* 公共 API 缺少 JSDoc"
+    },
+    {
+      "en-US": "**Best Practices (MEDIUM):**",
+      "zh-Hans": "**最佳实践（中）：**"
+    },
+    {
+      "en-US": "- Mutation patterns (use immutable instead)\n- Emoji usage in code/comments\n- Missing tests for new code\n- Accessibility issues (a11y)",
+      "zh-Hans": "* 可变模式（应使用不可变模式）\n* 代码/注释中使用表情符号\n* 新代码缺少测试\n* 无障碍性问题（a11y）"
+    },
+    {
+      "en-US": "3. Generate report with:\n   - Severity: CRITICAL, HIGH, MEDIUM, LOW\n   - File location and line numbers\n   - Issue description\n   - Suggested fix\n\n4. Block commit if CRITICAL or HIGH issues found",
+      "zh-Hans": "3. 生成报告，包含：\n   * 严重性：严重、高、中、低\n   * 文件位置和行号\n   * 问题描述\n   * 建议的修复方法\n\n4. 如果发现严重或高优先级问题，则阻止提交"
+    },
+    {
+      "en-US": "Never approve code with security vulnerabilities!",
+      "zh-Hans": "绝不允许包含安全漏洞的代码！"
+    }
+  ]
+}

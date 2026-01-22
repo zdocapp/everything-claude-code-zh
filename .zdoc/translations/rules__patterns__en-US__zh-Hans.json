@@ -1,0 +1,46 @@
+{
+  "sourceFile": "rules/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Common Patterns",
+      "zh-Hans": "# 常见模式"
+    },
+    {
+      "en-US": "## API Response Format",
+      "zh-Hans": "## API 响应格式"
+    },
+    {
+      "en-US": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n  meta?: {\n    total: number\n    page: number\n    limit: number\n  }\n}\n```",
+      "zh-Hans": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n  meta?: {\n    total: number\n    page: number\n    limit: number\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Custom Hooks Pattern",
+      "zh-Hans": "## 自定义 Hooks 模式"
+    },
+    {
+      "en-US": "```typescript\nexport function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState<T>(value)\n\n  useEffect(() => {\n    const handler = setTimeout(() => setDebouncedValue(value), delay)\n    return () => clearTimeout(handler)\n  }, [value, delay])\n\n  return debouncedValue\n}\n```",
+      "zh-Hans": "```typescript\nexport function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState<T>(value)\n\n  useEffect(() => {\n    const handler = setTimeout(() => setDebouncedValue(value), delay)\n    return () => clearTimeout(handler)\n  }, [value, delay])\n\n  return debouncedValue\n}\n```"
+    },
+    {
+      "en-US": "## Repository Pattern",
+      "zh-Hans": "## 仓库模式"
+    },
+    {
+      "en-US": "```typescript\ninterface Repository<T> {\n  findAll(filters?: Filters): Promise<T[]>\n  findById(id: string): Promise<T | null>\n  create(data: CreateDto): Promise<T>\n  update(id: string, data: UpdateDto): Promise<T>\n  delete(id: string): Promise<void>\n}\n```",
+      "zh-Hans": "```typescript\ninterface Repository<T> {\n  findAll(filters?: Filters): Promise<T[]>\n  findById(id: string): Promise<T | null>\n  create(data: CreateDto): Promise<T>\n  update(id: string, data: UpdateDto): Promise<T>\n  delete(id: string): Promise<void>\n}\n```"
+    },
+    {
+      "en-US": "## Skeleton Projects",
+      "zh-Hans": "## 骨架项目"
+    },
+    {
+      "en-US": "When implementing new functionality:",
+      "zh-Hans": "当实现新功能时："
+    },
+    {
+      "en-US": "1. Search for battle-tested skeleton projects\n2. Use parallel agents to evaluate options:\n   - Security assessment\n   - Extensibility analysis\n   - Relevance scoring\n   - Implementation planning\n3. Clone best match as foundation\n4. Iterate within proven structure",
+      "zh-Hans": "1. 搜索经过实战检验的骨架项目\n2. 使用并行代理评估选项：\n   * 安全性评估\n   * 可扩展性分析\n   * 相关性评分\n   * 实施规划\n3. 克隆最佳匹配作为基础\n4. 在已验证的结构内迭代"
+    }
+  ]
+}

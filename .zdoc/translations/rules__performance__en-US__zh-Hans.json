@@ -1,0 +1,82 @@
+{
+  "sourceFile": "rules/performance.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Performance Optimization",
+      "zh-Hans": "# 性能优化"
+    },
+    {
+      "en-US": "## Model Selection Strategy",
+      "zh-Hans": "## 模型选择策略"
+    },
+    {
+      "en-US": "**Haiku 4.5** (90% of Sonnet capability, 3x cost savings):",
+      "zh-Hans": "**Haiku 4.5** (具备 Sonnet 90% 的能力，节省 3 倍成本):"
+    },
+    {
+      "en-US": "- Lightweight agents with frequent invocation\n- Pair programming and code generation\n- Worker agents in multi-agent systems",
+      "zh-Hans": "* 频繁调用的轻量级智能体\n* 结对编程和代码生成\n* 多智能体系统中的工作智能体"
+    },
+    {
+      "en-US": "**Sonnet 4.5** (Best coding model):",
+      "zh-Hans": "**Sonnet 4.5** (最佳编码模型):"
+    },
+    {
+      "en-US": "- Main development work\n- Orchestrating multi-agent workflows\n- Complex coding tasks",
+      "zh-Hans": "* 主要的开发工作\n* 编排多智能体工作流\n* 复杂的编码任务"
+    },
+    {
+      "en-US": "**Opus 4.5** (Deepest reasoning):",
+      "zh-Hans": "**Opus 4.5** (最深的推理能力):"
+    },
+    {
+      "en-US": "- Complex architectural decisions\n- Maximum reasoning requirements\n- Research and analysis tasks",
+      "zh-Hans": "* 复杂的架构决策\n* 最高级别的推理需求\n* 研究和分析任务"
+    },
+    {
+      "en-US": "## Context Window Management",
+      "zh-Hans": "## 上下文窗口管理"
+    },
+    {
+      "en-US": "Avoid last 20% of context window for:",
+      "zh-Hans": "避免使用上下文窗口的最后 20% 进行:"
+    },
+    {
+      "en-US": "- Large-scale refactoring\n- Feature implementation spanning multiple files\n- Debugging complex interactions",
+      "zh-Hans": "* 大规模重构\n* 跨多个文件的功能实现\n* 调试复杂的交互"
+    },
+    {
+      "en-US": "Lower context sensitivity tasks:",
+      "zh-Hans": "上下文敏感性较低的任务:"
+    },
+    {
+      "en-US": "- Single-file edits\n- Independent utility creation\n- Documentation updates\n- Simple bug fixes",
+      "zh-Hans": "* 单文件编辑\n* 创建独立的实用工具\n* 文档更新\n* 简单的错误修复"
+    },
+    {
+      "en-US": "## Ultrathink + Plan Mode",
+      "zh-Hans": "## Ultrathink + 计划模式"
+    },
+    {
+      "en-US": "For complex tasks requiring deep reasoning:",
+      "zh-Hans": "对于需要深度推理的复杂任务:"
+    },
+    {
+      "en-US": "1. Use `ultrathink` for enhanced thinking\n2. Enable **Plan Mode** for structured approach\n3. \"Rev the engine\" with multiple critique rounds\n4. Use split role sub-agents for diverse analysis",
+      "zh-Hans": "1. 使用 `ultrathink` 进行增强思考\n2. 启用**计划模式**以获得结构化方法\n3. 通过多轮批判性评审来\"发动引擎\"\n4. 使用拆分角色的子智能体进行多样化分析"
+    },
+    {
+      "en-US": "## Build Troubleshooting",
+      "zh-Hans": "## 构建故障排除"
+    },
+    {
+      "en-US": "If build fails:",
+      "zh-Hans": "如果构建失败:"
+    },
+    {
+      "en-US": "1. Use **build-error-resolver** agent\n2. Analyze error messages\n3. Fix incrementally\n4. Verify after each fix",
+      "zh-Hans": "1. 使用 **build-error-resolver** 智能体\n2. 分析错误信息\n3. 逐步修复\n4. 每次修复后进行验证"
+    }
+  ]
+}

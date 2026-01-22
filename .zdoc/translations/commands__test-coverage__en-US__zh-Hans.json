@@ -1,0 +1,26 @@
+{
+  "sourceFile": "commands/test-coverage.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Test Coverage",
+      "zh-Hans": "# 测试覆盖率"
+    },
+    {
+      "en-US": "Analyze test coverage and generate missing tests:",
+      "zh-Hans": "分析测试覆盖率并生成缺失的测试："
+    },
+    {
+      "en-US": "1. Run tests with coverage: npm test --coverage or pnpm test --coverage\n\n2. Analyze coverage report (coverage/coverage-summary.json)\n\n3. Identify files below 80% coverage threshold\n\n4. For each under-covered file:\n   - Analyze untested code paths\n   - Generate unit tests for functions\n   - Generate integration tests for APIs\n   - Generate E2E tests for critical flows\n\n5. Verify new tests pass\n\n6. Show before/after coverage metrics\n\n7. Ensure project reaches 80%+ overall coverage",
+      "zh-Hans": "1. 运行带有覆盖率的测试：npm test --coverage 或 pnpm test --coverage\n\n2. 分析覆盖率报告 (coverage/coverage-summary.json)\n\n3. 识别覆盖率低于 80% 阈值的文件\n\n4. 对于每个覆盖率不足的文件：\n   * 分析未测试的代码路径\n   * 为函数生成单元测试\n   * 为 API 生成集成测试\n   * 为关键流程生成端到端测试\n\n5. 验证新测试通过\n\n6. 显示覆盖率指标的前后对比\n\n7. 确保项目整体覆盖率超过 80%"
+    },
+    {
+      "en-US": "Focus on:",
+      "zh-Hans": "重点关注："
+    },
+    {
+      "en-US": "- Happy path scenarios\n- Error handling\n- Edge cases (null, undefined, empty)\n- Boundary conditions",
+      "zh-Hans": "* 正常路径场景\n* 错误处理\n* 边界情况（null、undefined、空值）\n* 边界条件"
+    }
+  ]
+}

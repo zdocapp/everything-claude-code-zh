@@ -1,0 +1,22 @@
+{
+  "sourceFile": "commands/refactor-clean.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Refactor Clean",
+      "zh-Hans": "# 重构清理"
+    },
+    {
+      "en-US": "Safely identify and remove dead code with test verification:",
+      "zh-Hans": "通过测试验证安全识别并删除无用代码："
+    },
+    {
+      "en-US": "1. Run dead code analysis tools:\n   - knip: Find unused exports and files\n   - depcheck: Find unused dependencies\n   - ts-prune: Find unused TypeScript exports\n\n2. Generate comprehensive report in .reports/dead-code-analysis.md\n\n3. Categorize findings by severity:\n   - SAFE: Test files, unused utilities\n   - CAUTION: API routes, components\n   - DANGER: Config files, main entry points\n\n4. Propose safe deletions only\n\n5. Before each deletion:\n   - Run full test suite\n   - Verify tests pass\n   - Apply change\n   - Re-run tests\n   - Rollback if tests fail\n\n6. Show summary of cleaned items",
+      "zh-Hans": "1. 运行无用代码分析工具：\n   * knip：查找未使用的导出和文件\n   * depcheck：查找未使用的依赖项\n   * ts-prune：查找未使用的 TypeScript 导出\n\n2. 在 .reports/dead-code-analysis.md 中生成综合报告\n\n3. 按严重程度对发现进行分类：\n   * 安全：测试文件、未使用的工具函数\n   * 注意：API 路由、组件\n   * 危险：配置文件、主要入口点\n\n4. 仅建议安全的删除操作\n\n5. 每次删除前：\n   * 运行完整的测试套件\n   * 验证测试通过\n   * 应用更改\n   * 重新运行测试\n   * 如果测试失败则回滚\n\n6. 显示已清理项目的摘要"
+    },
+    {
+      "en-US": "Never delete code without running tests first!",
+      "zh-Hans": "切勿在不首先运行测试的情况下删除代码！"
+    }
+  ]
+}

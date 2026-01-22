@@ -1,0 +1,22 @@
+{
+  "sourceFile": "commands/update-codemaps.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Update Codemaps",
+      "zh-Hans": "# 更新代码地图"
+    },
+    {
+      "en-US": "Analyze the codebase structure and update architecture documentation:",
+      "zh-Hans": "分析代码库结构并更新架构文档："
+    },
+    {
+      "en-US": "1. Scan all source files for imports, exports, and dependencies\n2. Generate token-lean codemaps in the following format:\n   - codemaps/architecture.md - Overall architecture\n   - codemaps/backend.md - Backend structure  \n   - codemaps/frontend.md - Frontend structure\n   - codemaps/data.md - Data models and schemas\n\n3. Calculate diff percentage from previous version\n4. If changes > 30%, request user approval before updating\n5. Add freshness timestamp to each codemap\n6. Save reports to .reports/codemap-diff.txt",
+      "zh-Hans": "1. 扫描所有源文件的导入、导出和依赖关系\n\n2. 以以下格式生成简洁的代码地图：\n   * codemaps/architecture.md - 整体架构\n   * codemaps/backend.md - 后端结构\n   * codemaps/frontend.md - 前端结构\n   * codemaps/data.md - 数据模型和模式\n\n3. 计算与之前版本的差异百分比\n\n4. 如果变更 > 30%，则在更新前请求用户批准\n\n5. 为每个代码地图添加新鲜度时间戳\n\n6. 将报告保存到 .reports/codemap-diff.txt"
+    },
+    {
+      "en-US": "Use TypeScript/Node.js for analysis. Focus on high-level structure, not implementation details.",
+      "zh-Hans": "使用 TypeScript/Node.js 进行分析。专注于高层结构，而非实现细节。"
+    }
+  ]
+}

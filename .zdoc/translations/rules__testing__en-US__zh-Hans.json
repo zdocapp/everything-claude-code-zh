@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Testing Requirements",
+      "zh-Hans": "# 测试要求"
+    },
+    {
+      "en-US": "## Minimum Test Coverage: 80%",
+      "zh-Hans": "## 最低测试覆盖率：80%"
+    },
+    {
+      "en-US": "Test Types (ALL required):",
+      "zh-Hans": "测试类型（全部需要）："
+    },
+    {
+      "en-US": "1. **Unit Tests** - Individual functions, utilities, components\n2. **Integration Tests** - API endpoints, database operations\n3. **E2E Tests** - Critical user flows (Playwright)",
+      "zh-Hans": "1. **单元测试** - 单个函数、工具、组件\n2. **集成测试** - API 端点、数据库操作\n3. **端到端测试** - 关键用户流程 (Playwright)"
+    },
+    {
+      "en-US": "## Test-Driven Development",
+      "zh-Hans": "## 测试驱动开发"
+    },
+    {
+      "en-US": "MANDATORY workflow:",
+      "zh-Hans": "强制工作流程："
+    },
+    {
+      "en-US": "1. Write test first (RED)\n2. Run test - it should FAIL\n3. Write minimal implementation (GREEN)\n4. Run test - it should PASS\n5. Refactor (IMPROVE)\n6. Verify coverage (80%+)",
+      "zh-Hans": "1. 先写测试 (失败)\n2. 运行测试 - 它应该失败\n3. 编写最小实现 (成功)\n4. 运行测试 - 它应该通过\n5. 重构 (改进)\n6. 验证覆盖率 (80%+)"
+    },
+    {
+      "en-US": "## Troubleshooting Test Failures",
+      "zh-Hans": "## 测试失败排查"
+    },
+    {
+      "en-US": "1. Use **tdd-guide** agent\n2. Check test isolation\n3. Verify mocks are correct\n4. Fix implementation, not tests (unless tests are wrong)",
+      "zh-Hans": "1. 使用 **tdd-guide** 代理\n2. 检查测试隔离性\n3. 验证模拟是否正确\n4. 修复实现，而不是测试（除非测试有误）"
+    },
+    {
+      "en-US": "## Agent Support",
+      "zh-Hans": "## 代理支持"
+    },
+    {
+      "en-US": "- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first\n- **e2e-runner** - Playwright E2E testing specialist",
+      "zh-Hans": "* **tdd-guide** - 主动用于新功能，强制执行先写测试\n* **e2e-runner** - Playwright 端到端测试专家"
+    }
+  ]
+}

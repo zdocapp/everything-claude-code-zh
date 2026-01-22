@@ -1,0 +1,202 @@
+{
+  "sourceFile": "commands/e2e.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Generate and run end-to-end tests with Playwright. Creates test journeys, runs tests, captures screenshots/videos/traces, and uploads artifacts.\n---",
+      "zh-Hans": "---\ndescription: 使用 Playwright 生成并运行端到端测试。创建测试旅程、运行测试、捕获截图/视频/跟踪，并上传工件。\n---"
+    },
+    {
+      "en-US": "# E2E Command",
+      "zh-Hans": "# E2E 命令"
+    },
+    {
+      "en-US": "This command invokes the **e2e-runner** agent to generate, maintain, and execute end-to-end tests using Playwright.",
+      "zh-Hans": "此命令调用 **e2e-runner** 代理来使用 Playwright 生成、维护和执行端到端测试。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的作用"
+    },
+    {
+      "en-US": "1. **Generate Test Journeys** - Create Playwright tests for user flows\n2. **Run E2E Tests** - Execute tests across browsers\n3. **Capture Artifacts** - Screenshots, videos, traces on failures\n4. **Upload Results** - HTML reports and JUnit XML\n5. **Identify Flaky Tests** - Quarantine unstable tests",
+      "zh-Hans": "1. **生成测试旅程** - 为用户流程创建 Playwright 测试\n2. **运行 E2E 测试** - 跨浏览器执行测试\n3. **捕获工件** - 失败时的截图、视频、跟踪\n4. **上传结果** - HTML 报告和 JUnit XML\n5. **识别不稳定测试** - 隔离不稳定的测试"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use `/e2e` when:",
+      "zh-Hans": "在以下情况使用 `/e2e`："
+    },
+    {
+      "en-US": "- Testing critical user journeys (login, trading, payments)\n- Verifying multi-step flows work end-to-end\n- Testing UI interactions and navigation\n- Validating integration between frontend and backend\n- Preparing for production deployment",
+      "zh-Hans": "* 测试关键用户旅程（登录、交易、支付）\n* 验证多步骤流程端到端工作\n* 测试 UI 交互和导航\n* 验证前端和后端之间的集成\n* 为生产部署做准备"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "The e2e-runner agent will:",
+      "zh-Hans": "e2e-runner 代理将："
+    },
+    {
+      "en-US": "1. **Analyze user flow** and identify test scenarios\n2. **Generate Playwright test** using Page Object Model pattern\n3. **Run tests** across multiple browsers (Chrome, Firefox, Safari)\n4. **Capture failures** with screenshots, videos, and traces\n5. **Generate report** with results and artifacts\n6. **Identify flaky tests** and recommend fixes",
+      "zh-Hans": "1. **分析用户流程**并识别测试场景\n2. **使用页面对象模型模式生成 Playwright 测试**\n3. **跨多个浏览器（Chrome、Firefox、Safari）运行测试**\n4. **捕获失败**，包括截图、视频和跟踪\n5. **生成包含结果和工件的报告**\n6. **识别不稳定测试**并推荐修复方法"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```\nUser: /e2e Test the market search and view flow\n\nAgent (e2e-runner):\n# E2E Test Generation: Market Search and View Flow\n\n## Test Scenario Identified\n\n**User Journey:** Market Search → View Results → Click Market → View Details\n\n**Test Coverage:**\n1. Navigate to markets page\n2. Perform semantic search\n3. Verify search results\n4. Click on first result\n5. Verify market details page loads\n6. Verify chart renders\n\n## Generated Test Code\n\n```typescript\n// tests/e2e/markets/search-and-view.spec.ts\nimport { test, expect } from '@playwright/test'\nimport { MarketsPage } from '../../pages/MarketsPage'\nimport { MarketDetailsPage } from '../../pages/MarketDetailsPage'\n\ntest.describe('Market Search and View Flow', () => {\n  test('user can search markets and view details', async ({ page }) => {\n    // 1. Navigate to markets page\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Verify page loaded\n    await expect(page).toHaveTitle(/Markets/)\n    await expect(page.locator('h1')).toContainText('Markets')\n\n    // 2. Perform semantic search\n    await marketsPage.searchMarkets('election')\n\n    // Wait for API response\n    await page.waitForResponse(resp =>\n      resp.url().includes('/api/markets/search') && resp.status() === 200\n    )\n\n    // 3. Verify search results\n    const marketCards = marketsPage.marketCards\n    await expect(marketCards.first()).toBeVisible()\n    const resultCount = await marketCards.count()\n    expect(resultCount).toBeGreaterThan(0)\n\n    // Take screenshot of search results\n    await page.screenshot({ path: 'artifacts/search-results.png' })\n\n    // 4. Click on first result\n    const firstMarketTitle = await marketCards.first().textContent()\n    await marketCards.first().click()\n\n    // 5. Verify market details page loads\n    await expect(page).toHaveURL(/\\/markets\\/[a-z0-9-]+/)\n\n    const detailsPage = new MarketDetailsPage(page)\n    await expect(detailsPage.marketName).toBeVisible()\n    await expect(detailsPage.marketDescription).toBeVisible()\n\n    // 6. Verify chart renders\n    await expect(detailsPage.priceChart).toBeVisible()\n\n    // Verify market name matches\n    const detailsTitle = await detailsPage.marketName.textContent()\n    expect(detailsTitle?.toLowerCase()).toContain(\n      firstMarketTitle?.toLowerCase().substring(0, 20) || ''\n    )\n\n    // Take screenshot of market details\n    await page.screenshot({ path: 'artifacts/market-details.png' })\n  })\n\n  test('search with no results shows empty state', async ({ page }) => {\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Search for non-existent market\n    await marketsPage.searchMarkets('xyznonexistentmarket123456')\n\n    // Verify empty state\n    await expect(page.locator('[data-testid=\"no-results\"]')).toBeVisible()\n    await expect(page.locator('[data-testid=\"no-results\"]')).toContainText(\n      /no.*results|no.*markets/i\n    )\n\n    const marketCount = await marketsPage.marketCards.count()\n    expect(marketCount).toBe(0)\n  })\n\n  test('can clear search and see all markets again', async ({ page }) => {\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Initial market count\n    const initialCount = await marketsPage.marketCards.count()\n\n    // Perform search\n    await marketsPage.searchMarkets('trump')\n    await page.waitForLoadState('networkidle')\n\n    // Verify filtered results\n    const filteredCount = await marketsPage.marketCards.count()\n    expect(filteredCount).toBeLessThan(initialCount)\n\n    // Clear search\n    await marketsPage.searchInput.clear()\n    await page.waitForLoadState('networkidle')\n\n    // Verify all markets shown again\n    const finalCount = await marketsPage.marketCards.count()\n    expect(finalCount).toBe(initialCount)\n  })\n})\n```",
+      "zh-Hans": "````\nUser: /e2e Test the market search and view flow\n\nAgent (e2e-runner):\n# E2E Test Generation: Market Search and View Flow\n\n## Test Scenario Identified\n\n**User Journey:** Market Search → View Results → Click Market → View Details\n\n**Test Coverage:**\n1. Navigate to markets page\n2. Perform semantic search\n3. Verify search results\n4. Click on first result\n5. Verify market details page loads\n6. Verify chart renders\n\n## Generated Test Code\n\n```typescript\n// tests/e2e/markets/search-and-view.spec.ts\nimport { test, expect } from '@playwright/test'\nimport { MarketsPage } from '../../pages/MarketsPage'\nimport { MarketDetailsPage } from '../../pages/MarketDetailsPage'\n\ntest.describe('Market Search and View Flow', () => {\n  test('user can search markets and view details', async ({ page }) => {\n    // 1. Navigate to markets page\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Verify page loaded\n    await expect(page).toHaveTitle(/Markets/)\n    await expect(page.locator('h1')).toContainText('Markets')\n\n    // 2. Perform semantic search\n    await marketsPage.searchMarkets('election')\n\n    // Wait for API response\n    await page.waitForResponse(resp =>\n      resp.url().includes('/api/markets/search') && resp.status() === 200\n    )\n\n    // 3. Verify search results\n    const marketCards = marketsPage.marketCards\n    await expect(marketCards.first()).toBeVisible()\n    const resultCount = await marketCards.count()\n    expect(resultCount).toBeGreaterThan(0)\n\n    // Take screenshot of search results\n    await page.screenshot({ path: 'artifacts/search-results.png' })\n\n    // 4. Click on first result\n    const firstMarketTitle = await marketCards.first().textContent()\n    await marketCards.first().click()\n\n    // 5. Verify market details page loads\n    await expect(page).toHaveURL(/\\/markets\\/[a-z0-9-]+/)\n\n    const detailsPage = new MarketDetailsPage(page)\n    await expect(detailsPage.marketName).toBeVisible()\n    await expect(detailsPage.marketDescription).toBeVisible()\n\n    // 6. Verify chart renders\n    await expect(detailsPage.priceChart).toBeVisible()\n\n    // Verify market name matches\n    const detailsTitle = await detailsPage.marketName.textContent()\n    expect(detailsTitle?.toLowerCase()).toContain(\n      firstMarketTitle?.toLowerCase().substring(0, 20) || ''\n    )\n\n    // Take screenshot of market details\n    await page.screenshot({ path: 'artifacts/market-details.png' })\n  })\n\n  test('search with no results shows empty state', async ({ page }) => {\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Search for non-existent market\n    await marketsPage.searchMarkets('xyznonexistentmarket123456')\n\n    // Verify empty state\n    await expect(page.locator('[data-testid=\"no-results\"]')).toBeVisible()\n    await expect(page.locator('[data-testid=\"no-results\"]')).toContainText(\n      /no.*results|no.*markets/i\n    )\n\n    const marketCount = await marketsPage.marketCards.count()\n    expect(marketCount).toBe(0)\n  })\n\n  test('can clear search and see all markets again', async ({ page }) => {\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Initial market count\n    const initialCount = await marketsPage.marketCards.count()\n\n    // Perform search\n    await marketsPage.searchMarkets('trump')\n    await page.waitForLoadState('networkidle')\n\n    // Verify filtered results\n    const filteredCount = await marketsPage.marketCards.count()\n    expect(filteredCount).toBeLessThan(initialCount)\n\n    // Clear search\n    await marketsPage.searchInput.clear()\n    await page.waitForLoadState('networkidle')\n\n    // Verify all markets shown again\n    const finalCount = await marketsPage.marketCards.count()\n    expect(finalCount).toBe(initialCount)\n  })\n})\n````"
+    },
+    {
+      "en-US": "## Running Tests",
+      "zh-Hans": "## 运行测试"
+    },
+    {
+      "en-US": "```bash\n# Run the generated test\nnpx playwright test tests/e2e/markets/search-and-view.spec.ts\n\nRunning 3 tests using 3 workers\n\n  ✓  [chromium] › search-and-view.spec.ts:5:3 › user can search markets and view details (4.2s)\n  ✓  [chromium] › search-and-view.spec.ts:52:3 › search with no results shows empty state (1.8s)\n  ✓  [chromium] › search-and-view.spec.ts:67:3 › can clear search and see all markets again (2.9s)\n\n  3 passed (9.1s)\n\nArtifacts generated:\n- artifacts/search-results.png\n- artifacts/market-details.png\n- playwright-report/index.html\n```",
+      "zh-Hans": "```bash\n# Run the generated test\nnpx playwright test tests/e2e/markets/search-and-view.spec.ts\n\nRunning 3 tests using 3 workers\n\n  ✓  [chromium] › search-and-view.spec.ts:5:3 › user can search markets and view details (4.2s)\n  ✓  [chromium] › search-and-view.spec.ts:52:3 › search with no results shows empty state (1.8s)\n  ✓  [chromium] › search-and-view.spec.ts:67:3 › can clear search and see all markets again (2.9s)\n\n  3 passed (9.1s)\n\nArtifacts generated:\n- artifacts/search-results.png\n- artifacts/market-details.png\n- playwright-report/index.html\n```"
+    },
+    {
+      "en-US": "## Test Report",
+      "zh-Hans": "## 测试报告"
+    },
+    {
+      "en-US": "```\n╔══════════════════════════════════════════════════════════════╗\n║                    E2E Test Results                          ║\n╠══════════════════════════════════════════════════════════════╣\n║ Status:     ✅ ALL TESTS PASSED                              ║\n║ Total:      3 tests                                          ║\n║ Passed:     3 (100%)                                         ║\n║ Failed:     0                                                ║\n║ Flaky:      0                                                ║\n║ Duration:   9.1s                                             ║\n╚══════════════════════════════════════════════════════════════╝\n\nArtifacts:\n📸 Screenshots: 2 files\n📹 Videos: 0 files (only on failure)\n🔍 Traces: 0 files (only on failure)\n📊 HTML Report: playwright-report/index.html\n\nView report: npx playwright show-report\n```",
+      "zh-Hans": "```\n╔══════════════════════════════════════════════════════════════╗\n║                    E2E Test Results                          ║\n╠══════════════════════════════════════════════════════════════╣\n║ Status:     ✅ ALL TESTS PASSED                              ║\n║ Total:      3 tests                                          ║\n║ Passed:     3 (100%)                                         ║\n║ Failed:     0                                                ║\n║ Flaky:      0                                                ║\n║ Duration:   9.1s                                             ║\n╚══════════════════════════════════════════════════════════════╝\n\nArtifacts:\n📸 Screenshots: 2 files\n📹 Videos: 0 files (only on failure)\n🔍 Traces: 0 files (only on failure)\n📊 HTML Report: playwright-report/index.html\n\nView report: npx playwright show-report\n```"
+    },
+    {
+      "en-US": "✅ E2E test suite ready for CI/CD integration!",
+      "zh-Hans": "✅ E2E 测试套件已准备好进行 CI/CD 集成！"
+    },
+    {
+      "en-US": "```\n\n## Test Artifacts\n\nWhen tests run, the following artifacts are captured:\n\n**On All Tests:**\n- HTML Report with timeline and results\n- JUnit XML for CI integration\n\n**On Failure Only:**\n- Screenshot of the failing state\n- Video recording of the test\n- Trace file for debugging (step-by-step replay)\n- Network logs\n- Console logs\n\n## Viewing Artifacts\n\n```bash\n# View HTML report in browser\nnpx playwright show-report\n\n# View specific trace file\nnpx playwright show-trace artifacts/trace-abc123.zip\n\n# Screenshots are saved in artifacts/ directory\nopen artifacts/search-results.png\n```",
+      "zh-Hans": "````\n\n## Test Artifacts\n\nWhen tests run, the following artifacts are captured:\n\n**On All Tests:**\n- HTML Report with timeline and results\n- JUnit XML for CI integration\n\n**On Failure Only:**\n- Screenshot of the failing state\n- Video recording of the test\n- Trace file for debugging (step-by-step replay)\n- Network logs\n- Console logs\n\n## Viewing Artifacts\n\n```bash\n# View HTML report in browser\nnpx playwright show-report\n\n# View specific trace file\nnpx playwright show-trace artifacts/trace-abc123.zip\n\n# Screenshots are saved in artifacts/ directory\nopen artifacts/search-results.png\n````"
+    },
+    {
+      "en-US": "## Flaky Test Detection",
+      "zh-Hans": "## 不稳定测试检测"
+    },
+    {
+      "en-US": "If a test fails intermittently:",
+      "zh-Hans": "如果测试间歇性失败："
+    },
+    {
+      "en-US": "```\n⚠️  FLAKY TEST DETECTED: tests/e2e/markets/trade.spec.ts\n\nTest passed 7/10 runs (70% pass rate)\n\nCommon failure:\n\"Timeout waiting for element '[data-testid=\"confirm-btn\"]'\"\n\nRecommended fixes:\n1. Add explicit wait: await page.waitForSelector('[data-testid=\"confirm-btn\"]')\n2. Increase timeout: { timeout: 10000 }\n3. Check for race conditions in component\n4. Verify element is not hidden by animation\n\nQuarantine recommendation: Mark as test.fixme() until fixed\n```",
+      "zh-Hans": "```\n⚠️  FLAKY TEST DETECTED: tests/e2e/markets/trade.spec.ts\n\nTest passed 7/10 runs (70% pass rate)\n\nCommon failure:\n\"Timeout waiting for element '[data-testid=\"confirm-btn\"]'\"\n\nRecommended fixes:\n1. Add explicit wait: await page.waitForSelector('[data-testid=\"confirm-btn\"]')\n2. Increase timeout: { timeout: 10000 }\n3. Check for race conditions in component\n4. Verify element is not hidden by animation\n\nQuarantine recommendation: Mark as test.fixme() until fixed\n```"
+    },
+    {
+      "en-US": "## Browser Configuration",
+      "zh-Hans": "## 浏览器配置"
+    },
+    {
+      "en-US": "Tests run on multiple browsers by default:",
+      "zh-Hans": "默认情况下，测试在多个浏览器上运行："
+    },
+    {
+      "en-US": "- ✅ Chromium (Desktop Chrome)\n- ✅ Firefox (Desktop)\n- ✅ WebKit (Desktop Safari)\n- ✅ Mobile Chrome (optional)",
+      "zh-Hans": "* ✅ Chromium（桌面版 Chrome）\n* ✅ Firefox（桌面版）\n* ✅ WebKit（桌面版 Safari）\n* ✅ 移动版 Chrome（可选）"
+    },
+    {
+      "en-US": "Configure in `playwright.config.ts` to adjust browsers.",
+      "zh-Hans": "在 `playwright.config.ts` 中配置以调整浏览器。"
+    },
+    {
+      "en-US": "## CI/CD Integration",
+      "zh-Hans": "## CI/CD 集成"
+    },
+    {
+      "en-US": "Add to your CI pipeline:",
+      "zh-Hans": "添加到您的 CI 流水线："
+    },
+    {
+      "en-US": "```yaml\n# .github/workflows/e2e.yml\n- name: Install Playwright\n  run: npx playwright install --with-deps\n\n- name: Run E2E tests\n  run: npx playwright test\n\n- name: Upload artifacts\n  if: always()\n  uses: actions/upload-artifact@v3\n  with:\n    name: playwright-report\n    path: playwright-report/\n```",
+      "zh-Hans": "```yaml\n# .github/workflows/e2e.yml\n- name: Install Playwright\n  run: npx playwright install --with-deps\n\n- name: Run E2E tests\n  run: npx playwright test\n\n- name: Upload artifacts\n  if: always()\n  uses: actions/upload-artifact@v3\n  with:\n    name: playwright-report\n    path: playwright-report/\n```"
+    },
+    {
+      "en-US": "## PMX-Specific Critical Flows",
+      "zh-Hans": "## PMX 特定的关键流程"
+    },
+    {
+      "en-US": "For PMX, prioritize these E2E tests:",
+      "zh-Hans": "对于 PMX，请优先考虑以下 E2E 测试："
+    },
+    {
+      "en-US": "**🔴 CRITICAL (Must Always Pass):**",
+      "zh-Hans": "**🔴 关键（必须始终通过）：**"
+    },
+    {
+      "en-US": "1. User can connect wallet\n2. User can browse markets\n3. User can search markets (semantic search)\n4. User can view market details\n5. User can place trade (with test funds)\n6. Market resolves correctly\n7. User can withdraw funds",
+      "zh-Hans": "1. 用户可以连接钱包\n2. 用户可以浏览市场\n3. 用户可以搜索市场（语义搜索）\n4. 用户可以查看市场详情\n5. 用户可以下交易单（使用测试资金）\n6. 市场正确结算\n7. 用户可以提取资金"
+    },
+    {
+      "en-US": "**🟡 IMPORTANT:**",
+      "zh-Hans": "**🟡 重要：**"
+    },
+    {
+      "en-US": "1. Market creation flow\n2. User profile updates\n3. Real-time price updates\n4. Chart rendering\n5. Filter and sort markets\n6. Mobile responsive layout",
+      "zh-Hans": "1. 市场创建流程\n2. 用户资料更新\n3. 实时价格更新\n4. 图表渲染\n5. 过滤和排序市场\n6. 移动端响应式布局"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "**DO:**",
+      "zh-Hans": "**应该：**"
+    },
+    {
+      "en-US": "- ✅ Use Page Object Model for maintainability\n- ✅ Use data-testid attributes for selectors\n- ✅ Wait for API responses, not arbitrary timeouts\n- ✅ Test critical user journeys end-to-end\n- ✅ Run tests before merging to main\n- ✅ Review artifacts when tests fail",
+      "zh-Hans": "* ✅ 使用页面对象模型以提高可维护性\n* ✅ 使用 data-testid 属性作为选择器\n* ✅ 等待 API 响应，而不是使用任意超时\n* ✅ 测试关键用户旅程的端到端\n* ✅ 在合并到主分支前运行测试\n* ✅ 在测试失败时审查工件"
+    },
+    {
+      "en-US": "**DON'T:**",
+      "zh-Hans": "**不应该：**"
+    },
+    {
+      "en-US": "- ❌ Use brittle selectors (CSS classes can change)\n- ❌ Test implementation details\n- ❌ Run tests against production\n- ❌ Ignore flaky tests\n- ❌ Skip artifact review on failures\n- ❌ Test every edge case with E2E (use unit tests)",
+      "zh-Hans": "* ❌ 使用不稳定的选择器（CSS 类可能会改变）\n* ❌ 测试实现细节\n* ❌ 针对生产环境运行测试\n* ❌ 忽略不稳定测试\n* ❌ 在失败时跳过工件审查\n* ❌ 使用 E2E 测试每个边缘情况（使用单元测试）"
+    },
+    {
+      "en-US": "## Important Notes",
+      "zh-Hans": "## 重要注意事项"
+    },
+    {
+      "en-US": "**CRITICAL for PMX:**",
+      "zh-Hans": "**对 PMX 至关重要：**"
+    },
+    {
+      "en-US": "- E2E tests involving real money MUST run on testnet/staging only\n- Never run trading tests against production\n- Set `test.skip(process.env.NODE_ENV === 'production')` for financial tests\n- Use test wallets with small test funds only",
+      "zh-Hans": "* 涉及真实资金的 E2E 测试**必须**仅在测试网/暂存环境中运行\n* 切勿针对生产环境运行交易测试\n* 为金融测试设置 `test.skip(process.env.NODE_ENV === 'production')`\n* 仅使用带有少量测试资金的测试钱包"
+    },
+    {
+      "en-US": "## Integration with Other Commands",
+      "zh-Hans": "## 与其他命令的集成"
+    },
+    {
+      "en-US": "- Use `/plan` to identify critical journeys to test\n- Use `/tdd` for unit tests (faster, more granular)\n- Use `/e2e` for integration and user journey tests\n- Use `/code-review` to verify test quality",
+      "zh-Hans": "* 使用 `/plan` 来识别要测试的关键旅程\n* 使用 `/tdd` 进行单元测试（更快、更细粒度）\n* 使用 `/e2e` 进行集成和用户旅程测试\n* 使用 `/code-review` 来验证测试质量"
+    },
+    {
+      "en-US": "## Related Agents",
+      "zh-Hans": "## 相关代理"
+    },
+    {
+      "en-US": "This command invokes the `e2e-runner` agent located at:\n`~/.claude/agents/e2e-runner.md`",
+      "zh-Hans": "此命令调用位于 `~/.claude/agents/e2e-runner.md` 的 `e2e-runner` 代理。"
+    },
+    {
+      "en-US": "## Quick Commands",
+      "zh-Hans": "## 快速命令"
+    },
+    {
+      "en-US": "```bash\n# Run all E2E tests\nnpx playwright test\n\n# Run specific test file\nnpx playwright test tests/e2e/markets/search.spec.ts\n\n# Run in headed mode (see browser)\nnpx playwright test --headed\n\n# Debug test\nnpx playwright test --debug\n\n# Generate test code\nnpx playwright codegen http://localhost:3000\n\n# View report\nnpx playwright show-report\n```",
+      "zh-Hans": "```bash\n# Run all E2E tests\nnpx playwright test\n\n# Run specific test file\nnpx playwright test tests/e2e/markets/search.spec.ts\n\n# Run in headed mode (see browser)\nnpx playwright test --headed\n\n# Debug test\nnpx playwright test --debug\n\n# Generate test code\nnpx playwright codegen http://localhost:3000\n\n# View report\nnpx playwright show-report\n```"
+    }
+  ]
+}

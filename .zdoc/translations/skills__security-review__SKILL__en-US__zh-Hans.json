@@ -1,0 +1,358 @@
+{
+  "sourceFile": "skills/security-review/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: security-review\ndescription: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.\n---",
+      "zh-Hans": "---\nname: security-review\ndescription: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.\n---"
+    },
+    {
+      "en-US": "# Security Review Skill",
+      "zh-Hans": "# 安全审查技能"
+    },
+    {
+      "en-US": "This skill ensures all code follows security best practices and identifies potential vulnerabilities.",
+      "zh-Hans": "此技能确保所有代码遵循安全最佳实践，并识别潜在漏洞。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Implementing authentication or authorization\n- Handling user input or file uploads\n- Creating new API endpoints\n- Working with secrets or credentials\n- Implementing payment features\n- Storing or transmitting sensitive data\n- Integrating third-party APIs",
+      "zh-Hans": "* 实现身份验证或授权时\n* 处理用户输入或文件上传时\n* 创建新的 API 端点时\n* 处理密钥或凭据时\n* 实现支付功能时\n* 存储或传输敏感数据时\n* 集成第三方 API 时"
+    },
+    {
+      "en-US": "## Security Checklist",
+      "zh-Hans": "## 安全检查清单"
+    },
+    {
+      "en-US": "### 1. Secrets Management",
+      "zh-Hans": "### 1. 密钥管理"
+    },
+    {
+      "en-US": "#### ❌ NEVER Do This",
+      "zh-Hans": "#### ❌ 绝对不要这样做"
+    },
+    {
+      "en-US": "```typescript\nconst apiKey = \"sk-proj-xxxxx\"  // Hardcoded secret\nconst dbPassword = \"password123\" // In source code\n```",
+      "zh-Hans": "```typescript\nconst apiKey = \"sk-proj-xxxxx\"  // Hardcoded secret\nconst dbPassword = \"password123\" // In source code\n```"
+    },
+    {
+      "en-US": "#### ✅ ALWAYS Do This",
+      "zh-Hans": "#### ✅ 始终这样做"
+    },
+    {
+      "en-US": "```typescript\nconst apiKey = process.env.OPENAI_API_KEY\nconst dbUrl = process.env.DATABASE_URL\n\n// Verify secrets exist\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```",
+      "zh-Hans": "```typescript\nconst apiKey = process.env.OPENAI_API_KEY\nconst dbUrl = process.env.DATABASE_URL\n\n// Verify secrets exist\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] No hardcoded API keys, tokens, or passwords\n- [ ] All secrets in environment variables\n- [ ] `.env.local` in .gitignore\n- [ ] No secrets in git history\n- [ ] Production secrets in hosting platform (Vercel, Railway)",
+      "zh-Hans": "* \\[ ] 没有硬编码的 API 密钥、令牌或密码\n* \\[ ] 所有密钥都存储在环境变量中\n* \\[ ] `.env` 文件在 .gitignore 中\n* \\[ ] git 历史记录中没有密钥\n* \\[ ] 生产环境密钥存储在托管平台中（Vercel, Railway）"
+    },
+    {
+      "en-US": "### 2. Input Validation",
+      "zh-Hans": "### 2. 输入验证"
+    },
+    {
+      "en-US": "#### Always Validate User Input",
+      "zh-Hans": "#### 始终验证用户输入"
+    },
+    {
+      "en-US": "```typescript\nimport { z } from 'zod'\n\n// Define validation schema\nconst CreateUserSchema = z.object({\n  email: z.string().email(),\n  name: z.string().min(1).max(100),\n  age: z.number().int().min(0).max(150)\n})\n\n// Validate before processing\nexport async function createUser(input: unknown) {\n  try {\n    const validated = CreateUserSchema.parse(input)\n    return await db.users.create(validated)\n  } catch (error) {\n    if (error instanceof z.ZodError) {\n      return { success: false, errors: error.errors }\n    }\n    throw error\n  }\n}\n```",
+      "zh-Hans": "```typescript\nimport { z } from 'zod'\n\n// Define validation schema\nconst CreateUserSchema = z.object({\n  email: z.string().email(),\n  name: z.string().min(1).max(100),\n  age: z.number().int().min(0).max(150)\n})\n\n// Validate before processing\nexport async function createUser(input: unknown) {\n  try {\n    const validated = CreateUserSchema.parse(input)\n    return await db.users.create(validated)\n  } catch (error) {\n    if (error instanceof z.ZodError) {\n      return { success: false, errors: error.errors }\n    }\n    throw error\n  }\n}\n```"
+    },
+    {
+      "en-US": "#### File Upload Validation",
+      "zh-Hans": "#### 文件上传验证"
+    },
+    {
+      "en-US": "```typescript\nfunction validateFileUpload(file: File) {\n  // Size check (5MB max)\n  const maxSize = 5 * 1024 * 1024\n  if (file.size > maxSize) {\n    throw new Error('File too large (max 5MB)')\n  }\n\n  // Type check\n  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']\n  if (!allowedTypes.includes(file.type)) {\n    throw new Error('Invalid file type')\n  }\n\n  // Extension check\n  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif']\n  const extension = file.name.toLowerCase().match(/\\.[^.]+$/)?.[0]\n  if (!extension || !allowedExtensions.includes(extension)) {\n    throw new Error('Invalid file extension')\n  }\n\n  return true\n}\n```",
+      "zh-Hans": "```typescript\nfunction validateFileUpload(file: File) {\n  // Size check (5MB max)\n  const maxSize = 5 * 1024 * 1024\n  if (file.size > maxSize) {\n    throw new Error('File too large (max 5MB)')\n  }\n\n  // Type check\n  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']\n  if (!allowedTypes.includes(file.type)) {\n    throw new Error('Invalid file type')\n  }\n\n  // Extension check\n  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif']\n  const extension = file.name.toLowerCase().match(/\\.[^.]+$/)?.[0]\n  if (!extension || !allowedExtensions.includes(extension)) {\n    throw new Error('Invalid file extension')\n  }\n\n  return true\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] All user inputs validated with schemas\n- [ ] File uploads restricted (size, type, extension)\n- [ ] No direct use of user input in queries\n- [ ] Whitelist validation (not blacklist)\n- [ ] Error messages don't leak sensitive info",
+      "zh-Hans": "* \\[ ] 所有用户输入都使用模式进行了验证\n* \\[ ] 文件上传受到限制（大小、类型、扩展名）\n* \\[ ] 查询中没有直接使用用户输入\n* \\[ ] 使用白名单验证（而非黑名单）\n* \\[ ] 错误消息不会泄露敏感信息"
+    },
+    {
+      "en-US": "### 3. SQL Injection Prevention",
+      "zh-Hans": "### 3. SQL 注入防护"
+    },
+    {
+      "en-US": "#### ❌ NEVER Concatenate SQL",
+      "zh-Hans": "#### ❌ 绝对不要拼接 SQL"
+    },
+    {
+      "en-US": "```typescript\n// DANGEROUS - SQL Injection vulnerability\nconst query = `SELECT * FROM users WHERE email = '${userEmail}'`\nawait db.query(query)\n```",
+      "zh-Hans": "```typescript\n// DANGEROUS - SQL Injection vulnerability\nconst query = `SELECT * FROM users WHERE email = '${userEmail}'`\nawait db.query(query)\n```"
+    },
+    {
+      "en-US": "#### ✅ ALWAYS Use Parameterized Queries",
+      "zh-Hans": "#### ✅ 始终使用参数化查询"
+    },
+    {
+      "en-US": "```typescript\n// Safe - parameterized query\nconst { data } = await supabase\n  .from('users')\n  .select('*')\n  .eq('email', userEmail)\n\n// Or with raw SQL\nawait db.query(\n  'SELECT * FROM users WHERE email = $1',\n  [userEmail]\n)\n```",
+      "zh-Hans": "```typescript\n// Safe - parameterized query\nconst { data } = await supabase\n  .from('users')\n  .select('*')\n  .eq('email', userEmail)\n\n// Or with raw SQL\nawait db.query(\n  'SELECT * FROM users WHERE email = $1',\n  [userEmail]\n)\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] All database queries use parameterized queries\n- [ ] No string concatenation in SQL\n- [ ] ORM/query builder used correctly\n- [ ] Supabase queries properly sanitized",
+      "zh-Hans": "* \\[ ] 所有数据库查询都使用参数化查询\n* \\[ ] SQL 中没有字符串拼接\n* \\[ ] 正确使用 ORM/查询构建器\n* \\[ ] Supabase 查询已正确清理"
+    },
+    {
+      "en-US": "### 4. Authentication & Authorization",
+      "zh-Hans": "### 4. 身份验证与授权"
+    },
+    {
+      "en-US": "#### JWT Token Handling",
+      "zh-Hans": "#### JWT 令牌处理"
+    },
+    {
+      "en-US": "```typescript\n// ❌ WRONG: localStorage (vulnerable to XSS)\nlocalStorage.setItem('token', token)\n\n// ✅ CORRECT: httpOnly cookies\nres.setHeader('Set-Cookie',\n  `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`)\n```",
+      "zh-Hans": "```typescript\n// ❌ WRONG: localStorage (vulnerable to XSS)\nlocalStorage.setItem('token', token)\n\n// ✅ CORRECT: httpOnly cookies\nres.setHeader('Set-Cookie',\n  `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`)\n```"
+    },
+    {
+      "en-US": "#### Authorization Checks",
+      "zh-Hans": "#### 授权检查"
+    },
+    {
+      "en-US": "```typescript\nexport async function deleteUser(userId: string, requesterId: string) {\n  // ALWAYS verify authorization first\n  const requester = await db.users.findUnique({\n    where: { id: requesterId }\n  })\n\n  if (requester.role !== 'admin') {\n    return NextResponse.json(\n      { error: 'Unauthorized' },\n      { status: 403 }\n    )\n  }\n\n  // Proceed with deletion\n  await db.users.delete({ where: { id: userId } })\n}\n```",
+      "zh-Hans": "```typescript\nexport async function deleteUser(userId: string, requesterId: string) {\n  // ALWAYS verify authorization first\n  const requester = await db.users.findUnique({\n    where: { id: requesterId }\n  })\n\n  if (requester.role !== 'admin') {\n    return NextResponse.json(\n      { error: 'Unauthorized' },\n      { status: 403 }\n    )\n  }\n\n  // Proceed with deletion\n  await db.users.delete({ where: { id: userId } })\n}\n```"
+    },
+    {
+      "en-US": "#### Row Level Security (Supabase)",
+      "zh-Hans": "#### 行级安全（Supabase）"
+    },
+    {
+      "en-US": "```sql\n-- Enable RLS on all tables\nALTER TABLE users ENABLE ROW LEVEL SECURITY;\n\n-- Users can only view their own data\nCREATE POLICY \"Users view own data\"\n  ON users FOR SELECT\n  USING (auth.uid() = id);\n\n-- Users can only update their own data\nCREATE POLICY \"Users update own data\"\n  ON users FOR UPDATE\n  USING (auth.uid() = id);\n```",
+      "zh-Hans": "```sql\n-- Enable RLS on all tables\nALTER TABLE users ENABLE ROW LEVEL SECURITY;\n\n-- Users can only view their own data\nCREATE POLICY \"Users view own data\"\n  ON users FOR SELECT\n  USING (auth.uid() = id);\n\n-- Users can only update their own data\nCREATE POLICY \"Users update own data\"\n  ON users FOR UPDATE\n  USING (auth.uid() = id);\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] Tokens stored in httpOnly cookies (not localStorage)\n- [ ] Authorization checks before sensitive operations\n- [ ] Row Level Security enabled in Supabase\n- [ ] Role-based access control implemented\n- [ ] Session management secure",
+      "zh-Hans": "* \\[ ] 令牌存储在 httpOnly cookie 中（而非 localStorage）\n* \\[ ] 执行敏感操作前进行授权检查\n* \\[ ] Supabase 中启用了行级安全\n* \\[ ] 实现了基于角色的访问控制\n* \\[ ] 会话管理安全"
+    },
+    {
+      "en-US": "### 5. XSS Prevention",
+      "zh-Hans": "### 5. XSS 防护"
+    },
+    {
+      "en-US": "#### Sanitize HTML",
+      "zh-Hans": "#### 清理 HTML"
+    },
+    {
+      "en-US": "```typescript\nimport DOMPurify from 'isomorphic-dompurify'\n\n// ALWAYS sanitize user-provided HTML\nfunction renderUserContent(html: string) {\n  const clean = DOMPurify.sanitize(html, {\n    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p'],\n    ALLOWED_ATTR: []\n  })\n  return <div dangerouslySetInnerHTML={{ __html: clean }} />\n}\n```",
+      "zh-Hans": "```typescript\nimport DOMPurify from 'isomorphic-dompurify'\n\n// ALWAYS sanitize user-provided HTML\nfunction renderUserContent(html: string) {\n  const clean = DOMPurify.sanitize(html, {\n    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p'],\n    ALLOWED_ATTR: []\n  })\n  return <div dangerouslySetInnerHTML={{ __html: clean }} />\n}\n```"
+    },
+    {
+      "en-US": "#### Content Security Policy",
+      "zh-Hans": "#### 内容安全策略"
+    },
+    {
+      "en-US": "```typescript\n// next.config.js\nconst securityHeaders = [\n  {\n    key: 'Content-Security-Policy',\n    value: `\n      default-src 'self';\n      script-src 'self' 'unsafe-eval' 'unsafe-inline';\n      style-src 'self' 'unsafe-inline';\n      img-src 'self' data: https:;\n      font-src 'self';\n      connect-src 'self' https://api.example.com;\n    `.replace(/\\s{2,}/g, ' ').trim()\n  }\n]\n```",
+      "zh-Hans": "```typescript\n// next.config.js\nconst securityHeaders = [\n  {\n    key: 'Content-Security-Policy',\n    value: `\n      default-src 'self';\n      script-src 'self' 'unsafe-eval' 'unsafe-inline';\n      style-src 'self' 'unsafe-inline';\n      img-src 'self' data: https:;\n      font-src 'self';\n      connect-src 'self' https://api.example.com;\n    `.replace(/\\s{2,}/g, ' ').trim()\n  }\n]\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] User-provided HTML sanitized\n- [ ] CSP headers configured\n- [ ] No unvalidated dynamic content rendering\n- [ ] React's built-in XSS protection used",
+      "zh-Hans": "* \\[ ] 用户提供的 HTML 已被清理\n* \\[ ] 已配置 CSP 头部\n* \\[ ] 没有渲染未经验证的动态内容\n* \\[ ] 使用了 React 内置的 XSS 防护"
+    },
+    {
+      "en-US": "### 6. CSRF Protection",
+      "zh-Hans": "### 6. CSRF 防护"
+    },
+    {
+      "en-US": "#### CSRF Tokens",
+      "zh-Hans": "#### CSRF 令牌"
+    },
+    {
+      "en-US": "```typescript\nimport { csrf } from '@/lib/csrf'\n\nexport async function POST(request: Request) {\n  const token = request.headers.get('X-CSRF-Token')\n\n  if (!csrf.verify(token)) {\n    return NextResponse.json(\n      { error: 'Invalid CSRF token' },\n      { status: 403 }\n    )\n  }\n\n  // Process request\n}\n```",
+      "zh-Hans": "```typescript\nimport { csrf } from '@/lib/csrf'\n\nexport async function POST(request: Request) {\n  const token = request.headers.get('X-CSRF-Token')\n\n  if (!csrf.verify(token)) {\n    return NextResponse.json(\n      { error: 'Invalid CSRF token' },\n      { status: 403 }\n    )\n  }\n\n  // Process request\n}\n```"
+    },
+    {
+      "en-US": "#### SameSite Cookies",
+      "zh-Hans": "#### SameSite Cookie"
+    },
+    {
+      "en-US": "```typescript\nres.setHeader('Set-Cookie',\n  `session=${sessionId}; HttpOnly; Secure; SameSite=Strict`)\n```",
+      "zh-Hans": "```typescript\nres.setHeader('Set-Cookie',\n  `session=${sessionId}; HttpOnly; Secure; SameSite=Strict`)\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] CSRF tokens on state-changing operations\n- [ ] SameSite=Strict on all cookies\n- [ ] Double-submit cookie pattern implemented",
+      "zh-Hans": "* \\[ ] 状态变更操作上使用了 CSRF 令牌\n* \\[ ] 所有 Cookie 都设置了 SameSite=Strict\n* \\[ ] 实现了双重提交 Cookie 模式"
+    },
+    {
+      "en-US": "### 7. Rate Limiting",
+      "zh-Hans": "### 7. 速率限制"
+    },
+    {
+      "en-US": "#### API Rate Limiting",
+      "zh-Hans": "#### API 速率限制"
+    },
+    {
+      "en-US": "```typescript\nimport rateLimit from 'express-rate-limit'\n\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100, // 100 requests per window\n  message: 'Too many requests'\n})\n\n// Apply to routes\napp.use('/api/', limiter)\n```",
+      "zh-Hans": "```typescript\nimport rateLimit from 'express-rate-limit'\n\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100, // 100 requests per window\n  message: 'Too many requests'\n})\n\n// Apply to routes\napp.use('/api/', limiter)\n```"
+    },
+    {
+      "en-US": "#### Expensive Operations",
+      "zh-Hans": "#### 昂贵操作"
+    },
+    {
+      "en-US": "```typescript\n// Aggressive rate limiting for searches\nconst searchLimiter = rateLimit({\n  windowMs: 60 * 1000, // 1 minute\n  max: 10, // 10 requests per minute\n  message: 'Too many search requests'\n})\n\napp.use('/api/search', searchLimiter)\n```",
+      "zh-Hans": "```typescript\n// Aggressive rate limiting for searches\nconst searchLimiter = rateLimit({\n  windowMs: 60 * 1000, // 1 minute\n  max: 10, // 10 requests per minute\n  message: 'Too many search requests'\n})\n\napp.use('/api/search', searchLimiter)\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] Rate limiting on all API endpoints\n- [ ] Stricter limits on expensive operations\n- [ ] IP-based rate limiting\n- [ ] User-based rate limiting (authenticated)",
+      "zh-Hans": "* \\[ ] 所有 API 端点都实施了速率限制\n* \\[ ] 对昂贵操作有更严格的限制\n* \\[ ] 基于 IP 的速率限制\n* \\[ ] 基于用户的速率限制（已认证）"
+    },
+    {
+      "en-US": "### 8. Sensitive Data Exposure",
+      "zh-Hans": "### 8. 敏感数据泄露"
+    },
+    {
+      "en-US": "#### Logging",
+      "zh-Hans": "#### 日志记录"
+    },
+    {
+      "en-US": "```typescript\n// ❌ WRONG: Logging sensitive data\nconsole.log('User login:', { email, password })\nconsole.log('Payment:', { cardNumber, cvv })\n\n// ✅ CORRECT: Redact sensitive data\nconsole.log('User login:', { email, userId })\nconsole.log('Payment:', { last4: card.last4, userId })\n```",
+      "zh-Hans": "```typescript\n// ❌ WRONG: Logging sensitive data\nconsole.log('User login:', { email, password })\nconsole.log('Payment:', { cardNumber, cvv })\n\n// ✅ CORRECT: Redact sensitive data\nconsole.log('User login:', { email, userId })\nconsole.log('Payment:', { last4: card.last4, userId })\n```"
+    },
+    {
+      "en-US": "#### Error Messages",
+      "zh-Hans": "#### 错误消息"
+    },
+    {
+      "en-US": "```typescript\n// ❌ WRONG: Exposing internal details\ncatch (error) {\n  return NextResponse.json(\n    { error: error.message, stack: error.stack },\n    { status: 500 }\n  )\n}\n\n// ✅ CORRECT: Generic error messages\ncatch (error) {\n  console.error('Internal error:', error)\n  return NextResponse.json(\n    { error: 'An error occurred. Please try again.' },\n    { status: 500 }\n  )\n}\n```",
+      "zh-Hans": "```typescript\n// ❌ WRONG: Exposing internal details\ncatch (error) {\n  return NextResponse.json(\n    { error: error.message, stack: error.stack },\n    { status: 500 }\n  )\n}\n\n// ✅ CORRECT: Generic error messages\ncatch (error) {\n  console.error('Internal error:', error)\n  return NextResponse.json(\n    { error: 'An error occurred. Please try again.' },\n    { status: 500 }\n  )\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] No passwords, tokens, or secrets in logs\n- [ ] Error messages generic for users\n- [ ] Detailed errors only in server logs\n- [ ] No stack traces exposed to users",
+      "zh-Hans": "* \\[ ] 日志中没有密码、令牌或密钥\n* \\[ ] 对用户显示通用错误消息\n* \\[ ] 详细错误信息仅在服务器日志中\n* \\[ ] 没有向用户暴露堆栈跟踪"
+    },
+    {
+      "en-US": "### 9. Blockchain Security (Solana)",
+      "zh-Hans": "### 9. 区块链安全（Solana）"
+    },
+    {
+      "en-US": "#### Wallet Verification",
+      "zh-Hans": "#### 钱包验证"
+    },
+    {
+      "en-US": "```typescript\nimport { verify } from '@solana/web3.js'\n\nasync function verifyWalletOwnership(\n  publicKey: string,\n  signature: string,\n  message: string\n) {\n  try {\n    const isValid = verify(\n      Buffer.from(message),\n      Buffer.from(signature, 'base64'),\n      Buffer.from(publicKey, 'base64')\n    )\n    return isValid\n  } catch (error) {\n    return false\n  }\n}\n```",
+      "zh-Hans": "```typescript\nimport { verify } from '@solana/web3.js'\n\nasync function verifyWalletOwnership(\n  publicKey: string,\n  signature: string,\n  message: string\n) {\n  try {\n    const isValid = verify(\n      Buffer.from(message),\n      Buffer.from(signature, 'base64'),\n      Buffer.from(publicKey, 'base64')\n    )\n    return isValid\n  } catch (error) {\n    return false\n  }\n}\n```"
+    },
+    {
+      "en-US": "#### Transaction Verification",
+      "zh-Hans": "#### 交易验证"
+    },
+    {
+      "en-US": "```typescript\nasync function verifyTransaction(transaction: Transaction) {\n  // Verify recipient\n  if (transaction.to !== expectedRecipient) {\n    throw new Error('Invalid recipient')\n  }\n\n  // Verify amount\n  if (transaction.amount > maxAmount) {\n    throw new Error('Amount exceeds limit')\n  }\n\n  // Verify user has sufficient balance\n  const balance = await getBalance(transaction.from)\n  if (balance < transaction.amount) {\n    throw new Error('Insufficient balance')\n  }\n\n  return true\n}\n```",
+      "zh-Hans": "```typescript\nasync function verifyTransaction(transaction: Transaction) {\n  // Verify recipient\n  if (transaction.to !== expectedRecipient) {\n    throw new Error('Invalid recipient')\n  }\n\n  // Verify amount\n  if (transaction.amount > maxAmount) {\n    throw new Error('Amount exceeds limit')\n  }\n\n  // Verify user has sufficient balance\n  const balance = await getBalance(transaction.from)\n  if (balance < transaction.amount) {\n    throw new Error('Insufficient balance')\n  }\n\n  return true\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] Wallet signatures verified\n- [ ] Transaction details validated\n- [ ] Balance checks before transactions\n- [ ] No blind transaction signing",
+      "zh-Hans": "* \\[ ] 已验证钱包签名\n* \\[ ] 已验证交易详情\n* \\[ ] 交易前检查余额\n* \\[ ] 没有盲签名交易"
+    },
+    {
+      "en-US": "### 10. Dependency Security",
+      "zh-Hans": "### 10. 依赖项安全"
+    },
+    {
+      "en-US": "#### Regular Updates",
+      "zh-Hans": "#### 定期更新"
+    },
+    {
+      "en-US": "```bash\n# Check for vulnerabilities\nnpm audit\n\n# Fix automatically fixable issues\nnpm audit fix\n\n# Update dependencies\nnpm update\n\n# Check for outdated packages\nnpm outdated\n```",
+      "zh-Hans": "```bash\n# Check for vulnerabilities\nnpm audit\n\n# Fix automatically fixable issues\nnpm audit fix\n\n# Update dependencies\nnpm update\n\n# Check for outdated packages\nnpm outdated\n```"
+    },
+    {
+      "en-US": "#### Lock Files",
+      "zh-Hans": "#### 锁定文件"
+    },
+    {
+      "en-US": "```bash\n# ALWAYS commit lock files\ngit add package-lock.json\n\n# Use in CI/CD for reproducible builds\nnpm ci  # Instead of npm install\n```",
+      "zh-Hans": "```bash\n# ALWAYS commit lock files\ngit add package-lock.json\n\n# Use in CI/CD for reproducible builds\nnpm ci  # Instead of npm install\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] Dependencies up to date\n- [ ] No known vulnerabilities (npm audit clean)\n- [ ] Lock files committed\n- [ ] Dependabot enabled on GitHub\n- [ ] Regular security updates",
+      "zh-Hans": "* \\[ ] 依赖项是最新的\n* \\[ ] 没有已知漏洞（npm audit 检查通过）\n* \\[ ] 提交了锁定文件\n* \\[ ] GitHub 上启用了 Dependabot\n* \\[ ] 定期进行安全更新"
+    },
+    {
+      "en-US": "## Security Testing",
+      "zh-Hans": "## 安全测试"
+    },
+    {
+      "en-US": "### Automated Security Tests",
+      "zh-Hans": "### 自动化安全测试"
+    },
+    {
+      "en-US": "```typescript\n// Test authentication\ntest('requires authentication', async () => {\n  const response = await fetch('/api/protected')\n  expect(response.status).toBe(401)\n})\n\n// Test authorization\ntest('requires admin role', async () => {\n  const response = await fetch('/api/admin', {\n    headers: { Authorization: `Bearer ${userToken}` }\n  })\n  expect(response.status).toBe(403)\n})\n\n// Test input validation\ntest('rejects invalid input', async () => {\n  const response = await fetch('/api/users', {\n    method: 'POST',\n    body: JSON.stringify({ email: 'not-an-email' })\n  })\n  expect(response.status).toBe(400)\n})\n\n// Test rate limiting\ntest('enforces rate limits', async () => {\n  const requests = Array(101).fill(null).map(() =>\n    fetch('/api/endpoint')\n  )\n\n  const responses = await Promise.all(requests)\n  const tooManyRequests = responses.filter(r => r.status === 429)\n\n  expect(tooManyRequests.length).toBeGreaterThan(0)\n})\n```",
+      "zh-Hans": "```typescript\n// Test authentication\ntest('requires authentication', async () => {\n  const response = await fetch('/api/protected')\n  expect(response.status).toBe(401)\n})\n\n// Test authorization\ntest('requires admin role', async () => {\n  const response = await fetch('/api/admin', {\n    headers: { Authorization: `Bearer ${userToken}` }\n  })\n  expect(response.status).toBe(403)\n})\n\n// Test input validation\ntest('rejects invalid input', async () => {\n  const response = await fetch('/api/users', {\n    method: 'POST',\n    body: JSON.stringify({ email: 'not-an-email' })\n  })\n  expect(response.status).toBe(400)\n})\n\n// Test rate limiting\ntest('enforces rate limits', async () => {\n  const requests = Array(101).fill(null).map(() =>\n    fetch('/api/endpoint')\n  )\n\n  const responses = await Promise.all(requests)\n  const tooManyRequests = responses.filter(r => r.status === 429)\n\n  expect(tooManyRequests.length).toBeGreaterThan(0)\n})\n```"
+    },
+    {
+      "en-US": "## Pre-Deployment Security Checklist",
+      "zh-Hans": "## 部署前安全检查清单"
+    },
+    {
+      "en-US": "Before ANY production deployment:",
+      "zh-Hans": "在任何生产环境部署前："
+    },
+    {
+      "en-US": "- [ ] **Secrets**: No hardcoded secrets, all in env vars\n- [ ] **Input Validation**: All user inputs validated\n- [ ] **SQL Injection**: All queries parameterized\n- [ ] **XSS**: User content sanitized\n- [ ] **CSRF**: Protection enabled\n- [ ] **Authentication**: Proper token handling\n- [ ] **Authorization**: Role checks in place\n- [ ] **Rate Limiting**: Enabled on all endpoints\n- [ ] **HTTPS**: Enforced in production\n- [ ] **Security Headers**: CSP, X-Frame-Options configured\n- [ ] **Error Handling**: No sensitive data in errors\n- [ ] **Logging**: No sensitive data logged\n- [ ] **Dependencies**: Up to date, no vulnerabilities\n- [ ] **Row Level Security**: Enabled in Supabase\n- [ ] **CORS**: Properly configured\n- [ ] **File Uploads**: Validated (size, type)\n- [ ] **Wallet Signatures**: Verified (if blockchain)",
+      "zh-Hans": "* \\[ ] **密钥**：没有硬编码的密钥，全部在环境变量中\n* \\[ ] **输入验证**：所有用户输入都已验证\n* \\[ ] **SQL 注入**：所有查询都已参数化\n* \\[ ] **XSS**：用户内容已被清理\n* \\[ ] **CSRF**：已启用防护\n* \\[ ] **身份验证**：正确处理令牌\n* \\[ ] **授权**：已实施角色检查\n* \\[ ] **速率限制**：所有端点都已启用\n* \\[ ] **HTTPS**：在生产环境中强制执行\n* \\[ ] **安全头部**：已配置 CSP、X-Frame-Options\n* \\[ ] **错误处理**：错误中不包含敏感数据\n* \\[ ] **日志记录**：日志中不包含敏感数据\n* \\[ ] **依赖项**：已更新，无漏洞\n* \\[ ] **行级安全**：Supabase 中已启用\n* \\[ ] **CORS**：已正确配置\n* \\[ ] **文件上传**：已验证（大小、类型）\n* \\[ ] **钱包签名**：已验证（如果涉及区块链）"
+    },
+    {
+      "en-US": "## Resources",
+      "zh-Hans": "## 资源"
+    },
+    {
+      "en-US": "- [OWASP Top 10](https://owasp.org/www-project-top-ten/)\n- [Next.js Security](https://nextjs.org/docs/security)\n- [Supabase Security](https://supabase.com/docs/guides/auth)\n- [Web Security Academy](https://portswigger.net/web-security)",
+      "zh-Hans": "* [OWASP Top 10](https://owasp.org/www-project-top-ten/)\n* [Next.js 安全](https://nextjs.org/docs/security)\n* [Supabase 安全](https://supabase.com/docs/guides/auth)\n* [Web 安全学院](https://portswigger.net/web-security)"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Remember**: Security is not optional. One vulnerability can compromise the entire platform. When in doubt, err on the side of caution.",
+      "zh-Hans": "**请记住**：安全不是可选项。一个漏洞就可能危及整个平台。如有疑问，请谨慎行事。"
+    }
+  ]
+}

@@ -1,0 +1,294 @@
+{
+  "sourceFile": "skills/coding-standards.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: coding-standards\ndescription: Universal coding standards, best practices, and patterns for TypeScript, JavaScript, React, and Node.js development.\n---",
+      "zh-Hans": "---\nname: coding-standards\ndescription: Universal coding standards, best practices, and patterns for TypeScript, JavaScript, React, and Node.js development.\n---"
+    },
+    {
+      "en-US": "# Coding Standards & Best Practices",
+      "zh-Hans": "# 编码标准与最佳实践"
+    },
+    {
+      "en-US": "Universal coding standards applicable across all projects.",
+      "zh-Hans": "适用于所有项目的通用编码标准。"
+    },
+    {
+      "en-US": "## Code Quality Principles",
+      "zh-Hans": "## 代码质量原则"
+    },
+    {
+      "en-US": "### 1. Readability First",
+      "zh-Hans": "### 1. 可读性优先"
+    },
+    {
+      "en-US": "- Code is read more than written\n- Clear variable and function names\n- Self-documenting code preferred over comments\n- Consistent formatting",
+      "zh-Hans": "* 代码被阅读的次数远多于被编写的次数\n* 清晰的变量和函数名\n* 优先选择自文档化代码而非注释\n* 一致的格式化"
+    },
+    {
+      "en-US": "### 2. KISS (Keep It Simple, Stupid)",
+      "zh-Hans": "### 2. KISS (保持简单直接)"
+    },
+    {
+      "en-US": "- Simplest solution that works\n- Avoid over-engineering\n- No premature optimization\n- Easy to understand > clever code",
+      "zh-Hans": "* 使用可行的最简单方案\n* 避免过度设计\n* 不要过早优化\n* 易于理解 > 聪明的代码"
+    },
+    {
+      "en-US": "### 3. DRY (Don't Repeat Yourself)",
+      "zh-Hans": "### 3. DRY (不要重复自己)"
+    },
+    {
+      "en-US": "- Extract common logic into functions\n- Create reusable components\n- Share utilities across modules\n- Avoid copy-paste programming",
+      "zh-Hans": "* 将通用逻辑提取到函数中\n* 创建可复用的组件\n* 在模块间共享工具函数\n* 避免复制粘贴编程"
+    },
+    {
+      "en-US": "### 4. YAGNI (You Aren't Gonna Need It)",
+      "zh-Hans": "### 4. YAGNI (你将来不需要它)"
+    },
+    {
+      "en-US": "- Don't build features before they're needed\n- Avoid speculative generality\n- Add complexity only when required\n- Start simple, refactor when needed",
+      "zh-Hans": "* 不要在需要之前构建功能\n* 避免推测性的泛化\n* 仅在需要时增加复杂性\n* 从简单开始，需要时再重构"
+    },
+    {
+      "en-US": "## TypeScript/JavaScript Standards",
+      "zh-Hans": "## TypeScript/JavaScript 标准"
+    },
+    {
+      "en-US": "### Variable Naming",
+      "zh-Hans": "### 变量命名"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Descriptive names\nconst marketSearchQuery = 'election'\nconst isUserAuthenticated = true\nconst totalRevenue = 1000\n\n// ❌ BAD: Unclear names\nconst q = 'election'\nconst flag = true\nconst x = 1000\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Descriptive names\nconst marketSearchQuery = 'election'\nconst isUserAuthenticated = true\nconst totalRevenue = 1000\n\n// ❌ BAD: Unclear names\nconst q = 'election'\nconst flag = true\nconst x = 1000\n```"
+    },
+    {
+      "en-US": "### Function Naming",
+      "zh-Hans": "### 函数命名"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Verb-noun pattern\nasync function fetchMarketData(marketId: string) { }\nfunction calculateSimilarity(a: number[], b: number[]) { }\nfunction isValidEmail(email: string): boolean { }\n\n// ❌ BAD: Unclear or noun-only\nasync function market(id: string) { }\nfunction similarity(a, b) { }\nfunction email(e) { }\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Verb-noun pattern\nasync function fetchMarketData(marketId: string) { }\nfunction calculateSimilarity(a: number[], b: number[]) { }\nfunction isValidEmail(email: string): boolean { }\n\n// ❌ BAD: Unclear or noun-only\nasync function market(id: string) { }\nfunction similarity(a, b) { }\nfunction email(e) { }\n```"
+    },
+    {
+      "en-US": "### Immutability Pattern (CRITICAL)",
+      "zh-Hans": "### 不可变性模式 (关键)"
+    },
+    {
+      "en-US": "```typescript\n// ✅ ALWAYS use spread operator\nconst updatedUser = {\n  ...user,\n  name: 'New Name'\n}\n\nconst updatedArray = [...items, newItem]\n\n// ❌ NEVER mutate directly\nuser.name = 'New Name'  // BAD\nitems.push(newItem)     // BAD\n```",
+      "zh-Hans": "```typescript\n// ✅ ALWAYS use spread operator\nconst updatedUser = {\n  ...user,\n  name: 'New Name'\n}\n\nconst updatedArray = [...items, newItem]\n\n// ❌ NEVER mutate directly\nuser.name = 'New Name'  // BAD\nitems.push(newItem)     // BAD\n```"
+    },
+    {
+      "en-US": "### Error Handling",
+      "zh-Hans": "### 错误处理"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Comprehensive error handling\nasync function fetchData(url: string) {\n  try {\n    const response = await fetch(url)\n\n    if (!response.ok) {\n      throw new Error(`HTTP ${response.status}: ${response.statusText}`)\n    }\n\n    return await response.json()\n  } catch (error) {\n    console.error('Fetch failed:', error)\n    throw new Error('Failed to fetch data')\n  }\n}\n\n// ❌ BAD: No error handling\nasync function fetchData(url) {\n  const response = await fetch(url)\n  return response.json()\n}\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Comprehensive error handling\nasync function fetchData(url: string) {\n  try {\n    const response = await fetch(url)\n\n    if (!response.ok) {\n      throw new Error(`HTTP ${response.status}: ${response.statusText}`)\n    }\n\n    return await response.json()\n  } catch (error) {\n    console.error('Fetch failed:', error)\n    throw new Error('Failed to fetch data')\n  }\n}\n\n// ❌ BAD: No error handling\nasync function fetchData(url) {\n  const response = await fetch(url)\n  return response.json()\n}\n```"
+    },
+    {
+      "en-US": "### Async/Await Best Practices",
+      "zh-Hans": "### Async/Await 最佳实践"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Parallel execution when possible\nconst [users, markets, stats] = await Promise.all([\n  fetchUsers(),\n  fetchMarkets(),\n  fetchStats()\n])\n\n// ❌ BAD: Sequential when unnecessary\nconst users = await fetchUsers()\nconst markets = await fetchMarkets()\nconst stats = await fetchStats()\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Parallel execution when possible\nconst [users, markets, stats] = await Promise.all([\n  fetchUsers(),\n  fetchMarkets(),\n  fetchStats()\n])\n\n// ❌ BAD: Sequential when unnecessary\nconst users = await fetchUsers()\nconst markets = await fetchMarkets()\nconst stats = await fetchStats()\n```"
+    },
+    {
+      "en-US": "### Type Safety",
+      "zh-Hans": "### 类型安全"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Proper types\ninterface Market {\n  id: string\n  name: string\n  status: 'active' | 'resolved' | 'closed'\n  created_at: Date\n}\n\nfunction getMarket(id: string): Promise<Market> {\n  // Implementation\n}\n\n// ❌ BAD: Using 'any'\nfunction getMarket(id: any): Promise<any> {\n  // Implementation\n}\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Proper types\ninterface Market {\n  id: string\n  name: string\n  status: 'active' | 'resolved' | 'closed'\n  created_at: Date\n}\n\nfunction getMarket(id: string): Promise<Market> {\n  // Implementation\n}\n\n// ❌ BAD: Using 'any'\nfunction getMarket(id: any): Promise<any> {\n  // Implementation\n}\n```"
+    },
+    {
+      "en-US": "## React Best Practices",
+      "zh-Hans": "## React 最佳实践"
+    },
+    {
+      "en-US": "### Component Structure",
+      "zh-Hans": "### 组件结构"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Functional component with types\ninterface ButtonProps {\n  children: React.ReactNode\n  onClick: () => void\n  disabled?: boolean\n  variant?: 'primary' | 'secondary'\n}\n\nexport function Button({\n  children,\n  onClick,\n  disabled = false,\n  variant = 'primary'\n}: ButtonProps) {\n  return (\n    <button\n      onClick={onClick}\n      disabled={disabled}\n      className={`btn btn-${variant}`}\n    >\n      {children}\n    </button>\n  )\n}\n\n// ❌ BAD: No types, unclear structure\nexport function Button(props) {\n  return <button onClick={props.onClick}>{props.children}</button>\n}\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Functional component with types\ninterface ButtonProps {\n  children: React.ReactNode\n  onClick: () => void\n  disabled?: boolean\n  variant?: 'primary' | 'secondary'\n}\n\nexport function Button({\n  children,\n  onClick,\n  disabled = false,\n  variant = 'primary'\n}: ButtonProps) {\n  return (\n    <button\n      onClick={onClick}\n      disabled={disabled}\n      className={`btn btn-${variant}`}\n    >\n      {children}\n    </button>\n  )\n}\n\n// ❌ BAD: No types, unclear structure\nexport function Button(props) {\n  return <button onClick={props.onClick}>{props.children}</button>\n}\n```"
+    },
+    {
+      "en-US": "### Custom Hooks",
+      "zh-Hans": "### 自定义钩子"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Reusable custom hook\nexport function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState<T>(value)\n\n  useEffect(() => {\n    const handler = setTimeout(() => {\n      setDebouncedValue(value)\n    }, delay)\n\n    return () => clearTimeout(handler)\n  }, [value, delay])\n\n  return debouncedValue\n}\n\n// Usage\nconst debouncedQuery = useDebounce(searchQuery, 500)\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Reusable custom hook\nexport function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState<T>(value)\n\n  useEffect(() => {\n    const handler = setTimeout(() => {\n      setDebouncedValue(value)\n    }, delay)\n\n    return () => clearTimeout(handler)\n  }, [value, delay])\n\n  return debouncedValue\n}\n\n// Usage\nconst debouncedQuery = useDebounce(searchQuery, 500)\n```"
+    },
+    {
+      "en-US": "### State Management",
+      "zh-Hans": "### 状态管理"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Proper state updates\nconst [count, setCount] = useState(0)\n\n// Functional update for state based on previous state\nsetCount(prev => prev + 1)\n\n// ❌ BAD: Direct state reference\nsetCount(count + 1)  // Can be stale in async scenarios\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Proper state updates\nconst [count, setCount] = useState(0)\n\n// Functional update for state based on previous state\nsetCount(prev => prev + 1)\n\n// ❌ BAD: Direct state reference\nsetCount(count + 1)  // Can be stale in async scenarios\n```"
+    },
+    {
+      "en-US": "### Conditional Rendering",
+      "zh-Hans": "### 条件渲染"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Clear conditional rendering\n{isLoading && <Spinner />}\n{error && <ErrorMessage error={error} />}\n{data && <DataDisplay data={data} />}\n\n// ❌ BAD: Ternary hell\n{isLoading ? <Spinner /> : error ? <ErrorMessage error={error} /> : data ? <DataDisplay data={data} /> : null}\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Clear conditional rendering\n{isLoading && <Spinner />}\n{error && <ErrorMessage error={error} />}\n{data && <DataDisplay data={data} />}\n\n// ❌ BAD: Ternary hell\n{isLoading ? <Spinner /> : error ? <ErrorMessage error={error} /> : data ? <DataDisplay data={data} /> : null}\n```"
+    },
+    {
+      "en-US": "## API Design Standards",
+      "zh-Hans": "## API 设计标准"
+    },
+    {
+      "en-US": "### REST API Conventions",
+      "zh-Hans": "### REST API 约定"
+    },
+    {
+      "en-US": "```\nGET    /api/markets              # List all markets\nGET    /api/markets/:id          # Get specific market\nPOST   /api/markets              # Create new market\nPUT    /api/markets/:id          # Update market (full)\nPATCH  /api/markets/:id          # Update market (partial)\nDELETE /api/markets/:id          # Delete market\n\n# Query parameters for filtering\nGET /api/markets?status=active&limit=10&offset=0\n```",
+      "zh-Hans": "```\nGET    /api/markets              # List all markets\nGET    /api/markets/:id          # Get specific market\nPOST   /api/markets              # Create new market\nPUT    /api/markets/:id          # Update market (full)\nPATCH  /api/markets/:id          # Update market (partial)\nDELETE /api/markets/:id          # Delete market\n\n# Query parameters for filtering\nGET /api/markets?status=active&limit=10&offset=0\n```"
+    },
+    {
+      "en-US": "### Response Format",
+      "zh-Hans": "### 响应格式"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Consistent response structure\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n  meta?: {\n    total: number\n    page: number\n    limit: number\n  }\n}\n\n// Success response\nreturn NextResponse.json({\n  success: true,\n  data: markets,\n  meta: { total: 100, page: 1, limit: 10 }\n})\n\n// Error response\nreturn NextResponse.json({\n  success: false,\n  error: 'Invalid request'\n}, { status: 400 })\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Consistent response structure\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n  meta?: {\n    total: number\n    page: number\n    limit: number\n  }\n}\n\n// Success response\nreturn NextResponse.json({\n  success: true,\n  data: markets,\n  meta: { total: 100, page: 1, limit: 10 }\n})\n\n// Error response\nreturn NextResponse.json({\n  success: false,\n  error: 'Invalid request'\n}, { status: 400 })\n```"
+    },
+    {
+      "en-US": "### Input Validation",
+      "zh-Hans": "### 输入验证"
+    },
+    {
+      "en-US": "```typescript\nimport { z } from 'zod'\n\n// ✅ GOOD: Schema validation\nconst CreateMarketSchema = z.object({\n  name: z.string().min(1).max(200),\n  description: z.string().min(1).max(2000),\n  endDate: z.string().datetime(),\n  categories: z.array(z.string()).min(1)\n})\n\nexport async function POST(request: Request) {\n  const body = await request.json()\n\n  try {\n    const validated = CreateMarketSchema.parse(body)\n    // Proceed with validated data\n  } catch (error) {\n    if (error instanceof z.ZodError) {\n      return NextResponse.json({\n        success: false,\n        error: 'Validation failed',\n        details: error.errors\n      }, { status: 400 })\n    }\n  }\n}\n```",
+      "zh-Hans": "```typescript\nimport { z } from 'zod'\n\n// ✅ GOOD: Schema validation\nconst CreateMarketSchema = z.object({\n  name: z.string().min(1).max(200),\n  description: z.string().min(1).max(2000),\n  endDate: z.string().datetime(),\n  categories: z.array(z.string()).min(1)\n})\n\nexport async function POST(request: Request) {\n  const body = await request.json()\n\n  try {\n    const validated = CreateMarketSchema.parse(body)\n    // Proceed with validated data\n  } catch (error) {\n    if (error instanceof z.ZodError) {\n      return NextResponse.json({\n        success: false,\n        error: 'Validation failed',\n        details: error.errors\n      }, { status: 400 })\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "## File Organization",
+      "zh-Hans": "## 文件组织"
+    },
+    {
+      "en-US": "### Project Structure",
+      "zh-Hans": "### 项目结构"
+    },
+    {
+      "en-US": "```\nsrc/\n├── app/                    # Next.js App Router\n│   ├── api/               # API routes\n│   ├── markets/           # Market pages\n│   └── (auth)/           # Auth pages (route groups)\n├── components/            # React components\n│   ├── ui/               # Generic UI components\n│   ├── forms/            # Form components\n│   └── layouts/          # Layout components\n├── hooks/                # Custom React hooks\n├── lib/                  # Utilities and configs\n│   ├── api/             # API clients\n│   ├── utils/           # Helper functions\n│   └── constants/       # Constants\n├── types/                # TypeScript types\n└── styles/              # Global styles\n```",
+      "zh-Hans": "```\nsrc/\n├── app/                    # Next.js App Router\n│   ├── api/               # API routes\n│   ├── markets/           # Market pages\n│   └── (auth)/           # Auth pages (route groups)\n├── components/            # React components\n│   ├── ui/               # Generic UI components\n│   ├── forms/            # Form components\n│   └── layouts/          # Layout components\n├── hooks/                # Custom React hooks\n├── lib/                  # Utilities and configs\n│   ├── api/             # API clients\n│   ├── utils/           # Helper functions\n│   └── constants/       # Constants\n├── types/                # TypeScript types\n└── styles/              # Global styles\n```"
+    },
+    {
+      "en-US": "### File Naming",
+      "zh-Hans": "### 文件命名"
+    },
+    {
+      "en-US": "```\ncomponents/Button.tsx          # PascalCase for components\nhooks/useAuth.ts              # camelCase with 'use' prefix\nlib/formatDate.ts             # camelCase for utilities\ntypes/market.types.ts         # camelCase with .types suffix\n```",
+      "zh-Hans": "```\ncomponents/Button.tsx          # PascalCase for components\nhooks/useAuth.ts              # camelCase with 'use' prefix\nlib/formatDate.ts             # camelCase for utilities\ntypes/market.types.ts         # camelCase with .types suffix\n```"
+    },
+    {
+      "en-US": "## Comments & Documentation",
+      "zh-Hans": "## 注释与文档"
+    },
+    {
+      "en-US": "### When to Comment",
+      "zh-Hans": "### 何时添加注释"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Explain WHY, not WHAT\n// Use exponential backoff to avoid overwhelming the API during outages\nconst delay = Math.min(1000 * Math.pow(2, retryCount), 30000)\n\n// Deliberately using mutation here for performance with large arrays\nitems.push(newItem)\n\n// ❌ BAD: Stating the obvious\n// Increment counter by 1\ncount++\n\n// Set name to user's name\nname = user.name\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Explain WHY, not WHAT\n// Use exponential backoff to avoid overwhelming the API during outages\nconst delay = Math.min(1000 * Math.pow(2, retryCount), 30000)\n\n// Deliberately using mutation here for performance with large arrays\nitems.push(newItem)\n\n// ❌ BAD: Stating the obvious\n// Increment counter by 1\ncount++\n\n// Set name to user's name\nname = user.name\n```"
+    },
+    {
+      "en-US": "### JSDoc for Public APIs",
+      "zh-Hans": "### 公共 API 的 JSDoc"
+    },
+    {
+      "en-US": "```typescript\n/**\n * Searches markets using semantic similarity.\n *\n * @param query - Natural language search query\n * @param limit - Maximum number of results (default: 10)\n * @returns Array of markets sorted by similarity score\n * @throws {Error} If OpenAI API fails or Redis unavailable\n *\n * @example\n * ```typescript\n * const results = await searchMarkets('election', 5)\n * console.log(results[0].name) // \"Trump vs Biden\"\n * ```\n */\nexport async function searchMarkets(\n  query: string,\n  limit: number = 10\n): Promise<Market[]> {\n  // Implementation\n}\n```",
+      "zh-Hans": "````typescript\n/**\n * Searches markets using semantic similarity.\n *\n * @param query - Natural language search query\n * @param limit - Maximum number of results (default: 10)\n * @returns Array of markets sorted by similarity score\n * @throws {Error} If OpenAI API fails or Redis unavailable\n *\n * @example\n * ```typescript\n * const results = await searchMarkets('election', 5)\n * console.log(results[0].name) // \"Trump vs Biden\"\n * ```\n */\nexport async function searchMarkets(\n  query: string,\n  limit: number = 10\n): Promise<Market[]> {\n  // Implementation\n}\n````"
+    },
+    {
+      "en-US": "## Performance Best Practices",
+      "zh-Hans": "## 性能最佳实践"
+    },
+    {
+      "en-US": "### Memoization",
+      "zh-Hans": "### 记忆化"
+    },
+    {
+      "en-US": "```typescript\nimport { useMemo, useCallback } from 'react'\n\n// ✅ GOOD: Memoize expensive computations\nconst sortedMarkets = useMemo(() => {\n  return markets.sort((a, b) => b.volume - a.volume)\n}, [markets])\n\n// ✅ GOOD: Memoize callbacks\nconst handleSearch = useCallback((query: string) => {\n  setSearchQuery(query)\n}, [])\n```",
+      "zh-Hans": "```typescript\nimport { useMemo, useCallback } from 'react'\n\n// ✅ GOOD: Memoize expensive computations\nconst sortedMarkets = useMemo(() => {\n  return markets.sort((a, b) => b.volume - a.volume)\n}, [markets])\n\n// ✅ GOOD: Memoize callbacks\nconst handleSearch = useCallback((query: string) => {\n  setSearchQuery(query)\n}, [])\n```"
+    },
+    {
+      "en-US": "### Lazy Loading",
+      "zh-Hans": "### 懒加载"
+    },
+    {
+      "en-US": "```typescript\nimport { lazy, Suspense } from 'react'\n\n// ✅ GOOD: Lazy load heavy components\nconst HeavyChart = lazy(() => import('./HeavyChart'))\n\nexport function Dashboard() {\n  return (\n    <Suspense fallback={<Spinner />}>\n      <HeavyChart />\n    </Suspense>\n  )\n}\n```",
+      "zh-Hans": "```typescript\nimport { lazy, Suspense } from 'react'\n\n// ✅ GOOD: Lazy load heavy components\nconst HeavyChart = lazy(() => import('./HeavyChart'))\n\nexport function Dashboard() {\n  return (\n    <Suspense fallback={<Spinner />}>\n      <HeavyChart />\n    </Suspense>\n  )\n}\n```"
+    },
+    {
+      "en-US": "### Database Queries",
+      "zh-Hans": "### 数据库查询"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Select only needed columns\nconst { data } = await supabase\n  .from('markets')\n  .select('id, name, status')\n  .limit(10)\n\n// ❌ BAD: Select everything\nconst { data } = await supabase\n  .from('markets')\n  .select('*')\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Select only needed columns\nconst { data } = await supabase\n  .from('markets')\n  .select('id, name, status')\n  .limit(10)\n\n// ❌ BAD: Select everything\nconst { data } = await supabase\n  .from('markets')\n  .select('*')\n```"
+    },
+    {
+      "en-US": "## Testing Standards",
+      "zh-Hans": "## 测试标准"
+    },
+    {
+      "en-US": "### Test Structure (AAA Pattern)",
+      "zh-Hans": "### 测试结构 (AAA 模式)"
+    },
+    {
+      "en-US": "```typescript\ntest('calculates similarity correctly', () => {\n  // Arrange\n  const vector1 = [1, 0, 0]\n  const vector2 = [0, 1, 0]\n\n  // Act\n  const similarity = calculateCosineSimilarity(vector1, vector2)\n\n  // Assert\n  expect(similarity).toBe(0)\n})\n```",
+      "zh-Hans": "```typescript\ntest('calculates similarity correctly', () => {\n  // Arrange\n  const vector1 = [1, 0, 0]\n  const vector2 = [0, 1, 0]\n\n  // Act\n  const similarity = calculateCosineSimilarity(vector1, vector2)\n\n  // Assert\n  expect(similarity).toBe(0)\n})\n```"
+    },
+    {
+      "en-US": "### Test Naming",
+      "zh-Hans": "### 测试命名"
+    },
+    {
+      "en-US": "```typescript\n// ✅ GOOD: Descriptive test names\ntest('returns empty array when no markets match query', () => { })\ntest('throws error when OpenAI API key is missing', () => { })\ntest('falls back to substring search when Redis unavailable', () => { })\n\n// ❌ BAD: Vague test names\ntest('works', () => { })\ntest('test search', () => { })\n```",
+      "zh-Hans": "```typescript\n// ✅ GOOD: Descriptive test names\ntest('returns empty array when no markets match query', () => { })\ntest('throws error when OpenAI API key is missing', () => { })\ntest('falls back to substring search when Redis unavailable', () => { })\n\n// ❌ BAD: Vague test names\ntest('works', () => { })\ntest('test search', () => { })\n```"
+    },
+    {
+      "en-US": "## Code Smell Detection",
+      "zh-Hans": "## 代码异味检测"
+    },
+    {
+      "en-US": "Watch for these anti-patterns:",
+      "zh-Hans": "注意以下反模式："
+    },
+    {
+      "en-US": "### 1. Long Functions",
+      "zh-Hans": "### 1. 长函数"
+    },
+    {
+      "en-US": "```typescript\n// ❌ BAD: Function > 50 lines\nfunction processMarketData() {\n  // 100 lines of code\n}\n\n// ✅ GOOD: Split into smaller functions\nfunction processMarketData() {\n  const validated = validateData()\n  const transformed = transformData(validated)\n  return saveData(transformed)\n}\n```",
+      "zh-Hans": "```typescript\n// ❌ BAD: Function > 50 lines\nfunction processMarketData() {\n  // 100 lines of code\n}\n\n// ✅ GOOD: Split into smaller functions\nfunction processMarketData() {\n  const validated = validateData()\n  const transformed = transformData(validated)\n  return saveData(transformed)\n}\n```"
+    },
+    {
+      "en-US": "### 2. Deep Nesting",
+      "zh-Hans": "### 2. 深层嵌套"
+    },
+    {
+      "en-US": "```typescript\n// ❌ BAD: 5+ levels of nesting\nif (user) {\n  if (user.isAdmin) {\n    if (market) {\n      if (market.isActive) {\n        if (hasPermission) {\n          // Do something\n        }\n      }\n    }\n  }\n}\n\n// ✅ GOOD: Early returns\nif (!user) return\nif (!user.isAdmin) return\nif (!market) return\nif (!market.isActive) return\nif (!hasPermission) return\n\n// Do something\n```",
+      "zh-Hans": "```typescript\n// ❌ BAD: 5+ levels of nesting\nif (user) {\n  if (user.isAdmin) {\n    if (market) {\n      if (market.isActive) {\n        if (hasPermission) {\n          // Do something\n        }\n      }\n    }\n  }\n}\n\n// ✅ GOOD: Early returns\nif (!user) return\nif (!user.isAdmin) return\nif (!market) return\nif (!market.isActive) return\nif (!hasPermission) return\n\n// Do something\n```"
+    },
+    {
+      "en-US": "### 3. Magic Numbers",
+      "zh-Hans": "### 3. 魔法数字"
+    },
+    {
+      "en-US": "```typescript\n// ❌ BAD: Unexplained numbers\nif (retryCount > 3) { }\nsetTimeout(callback, 500)\n\n// ✅ GOOD: Named constants\nconst MAX_RETRIES = 3\nconst DEBOUNCE_DELAY_MS = 500\n\nif (retryCount > MAX_RETRIES) { }\nsetTimeout(callback, DEBOUNCE_DELAY_MS)\n```",
+      "zh-Hans": "```typescript\n// ❌ BAD: Unexplained numbers\nif (retryCount > 3) { }\nsetTimeout(callback, 500)\n\n// ✅ GOOD: Named constants\nconst MAX_RETRIES = 3\nconst DEBOUNCE_DELAY_MS = 500\n\nif (retryCount > MAX_RETRIES) { }\nsetTimeout(callback, DEBOUNCE_DELAY_MS)\n```"
+    },
+    {
+      "en-US": "**Remember**: Code quality is not negotiable. Clear, maintainable code enables rapid development and confident refactoring.",
+      "zh-Hans": "**记住**：代码质量不容妥协。清晰、可维护的代码能实现快速开发和自信的重构。"
+    }
+  ]
+}
