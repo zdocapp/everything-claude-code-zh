@@ -1,9 +1,9 @@
 [
   {
-    "description": "翻译项目的 README.md",
+    "description": "根目录下的关键 markdown 文件翻译为简体中文",
     "source_language": "en-US",
     "target_languages": ["zh-Hans"],
-    "include": ["README.md"],
+    "include": ["README.md", "CONTRIBUTING.md"],
     "ignore": [],
     "translation_store": {
       "dir": ".zdoc/translations"
