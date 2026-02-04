@@ -1,0 +1,146 @@
+{
+  "sourceFile": "commands/instinct-import.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: instinct-import\ndescription: Import instincts from teammates, Skill Creator, or other sources\ncommand: true\n---",
+      "zh-Hans": "---\nname: instinct-import\ndescription: 从队友、技能创建者或其他来源导入本能\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Instinct Import Command",
+      "zh-Hans": "# 本能导入命令"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行本能 CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" import <file-or-url> [--dry-run] [--force] [--min-confidence 0.7]\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" import <file-or-url> [--dry-run] [--force] [--min-confidence 0.7]\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):",
+      "zh-Hans": "或者，如果 `CLAUDE_PLUGIN_ROOT` 未设置（手动安装）："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py import <file-or-url>\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py import <file-or-url>\n```"
+    },
+    {
+      "en-US": "Import instincts from:",
+      "zh-Hans": "从以下来源导入本能："
+    },
+    {
+      "en-US": "- Teammates' exports\n- Skill Creator (repo analysis)\n- Community collections\n- Previous machine backups",
+      "zh-Hans": "* 队友的导出\n* 技能创建器（仓库分析）\n* 社区集合\n* 之前的机器备份"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```\n/instinct-import team-instincts.yaml\n/instinct-import https://github.com/org/repo/instincts.yaml\n/instinct-import --from-skill-creator acme/webapp\n```",
+      "zh-Hans": "```\n/instinct-import team-instincts.yaml\n/instinct-import https://github.com/org/repo/instincts.yaml\n/instinct-import --from-skill-creator acme/webapp\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 执行步骤"
+    },
+    {
+      "en-US": "1. Fetch the instinct file (local path or URL)\n2. Parse and validate the format\n3. Check for duplicates with existing instincts\n4. Merge or add new instincts\n5. Save to `~/.claude/homunculus/instincts/inherited/`",
+      "zh-Hans": "1. 获取本能文件（本地路径或 URL）\n2. 解析并验证格式\n3. 检查与现有本能的重复项\n4. 合并或添加新本能\n5. 保存到 `~/.claude/homunculus/instincts/inherited/`"
+    },
+    {
+      "en-US": "## Import Process",
+      "zh-Hans": "## 导入过程"
+    },
+    {
+      "en-US": "```\n📥 Importing instincts from: team-instincts.yaml\n================================================\n\nFound 12 instincts to import.\n\nAnalyzing conflicts...\n\n## New Instincts (8)\nThese will be added:\n  ✓ use-zod-validation (confidence: 0.7)\n  ✓ prefer-named-exports (confidence: 0.65)\n  ✓ test-async-functions (confidence: 0.8)\n  ...\n\n## Duplicate Instincts (3)\nAlready have similar instincts:\n  ⚠️ prefer-functional-style\n     Local: 0.8 confidence, 12 observations\n     Import: 0.7 confidence\n     → Keep local (higher confidence)\n\n  ⚠️ test-first-workflow\n     Local: 0.75 confidence\n     Import: 0.9 confidence\n     → Update to import (higher confidence)\n\n## Conflicting Instincts (1)\nThese contradict local instincts:\n  ❌ use-classes-for-services\n     Conflicts with: avoid-classes\n     → Skip (requires manual resolution)\n\n---\nImport 8 new, update 1, skip 3?\n```",
+      "zh-Hans": "```\n📥 Importing instincts from: team-instincts.yaml\n================================================\n\nFound 12 instincts to import.\n\nAnalyzing conflicts...\n\n## New Instincts (8)\nThese will be added:\n  ✓ use-zod-validation (confidence: 0.7)\n  ✓ prefer-named-exports (confidence: 0.65)\n  ✓ test-async-functions (confidence: 0.8)\n  ...\n\n## Duplicate Instincts (3)\nAlready have similar instincts:\n  ⚠️ prefer-functional-style\n     Local: 0.8 confidence, 12 observations\n     Import: 0.7 confidence\n     → Keep local (higher confidence)\n\n  ⚠️ test-first-workflow\n     Local: 0.75 confidence\n     Import: 0.9 confidence\n     → Update to import (higher confidence)\n\n## Conflicting Instincts (1)\nThese contradict local instincts:\n  ❌ use-classes-for-services\n     Conflicts with: avoid-classes\n     → Skip (requires manual resolution)\n\n---\nImport 8 new, update 1, skip 3?\n```"
+    },
+    {
+      "en-US": "## Merge Strategies",
+      "zh-Hans": "## 合并策略"
+    },
+    {
+      "en-US": "### For Duplicates",
+      "zh-Hans": "### 针对重复项"
+    },
+    {
+      "en-US": "When importing an instinct that matches an existing one:",
+      "zh-Hans": "当导入一个与现有本能匹配的本能时："
+    },
+    {
+      "en-US": "- **Higher confidence wins**: Keep the one with higher confidence\n- **Merge evidence**: Combine observation counts\n- **Update timestamp**: Mark as recently validated",
+      "zh-Hans": "* **置信度高的胜出**：保留置信度更高的那个\n* **合并证据**：合并观察计数\n* **更新时间戳**：标记为最近已验证"
+    },
+    {
+      "en-US": "### For Conflicts",
+      "zh-Hans": "### 针对冲突"
+    },
+    {
+      "en-US": "When importing an instinct that contradicts an existing one:",
+      "zh-Hans": "当导入一个与现有本能相矛盾的本能时："
+    },
+    {
+      "en-US": "- **Skip by default**: Don't import conflicting instincts\n- **Flag for review**: Mark both as needing attention\n- **Manual resolution**: User decides which to keep",
+      "zh-Hans": "* **默认跳过**：不导入冲突的本能\n* **标记待审**：将两者都标记为需要注意\n* **手动解决**：由用户决定保留哪个"
+    },
+    {
+      "en-US": "## Source Tracking",
+      "zh-Hans": "## 来源追踪"
+    },
+    {
+      "en-US": "Imported instincts are marked with:",
+      "zh-Hans": "导入的本能被标记为："
+    },
+    {
+      "en-US": "```yaml\nsource: \"inherited\"\nimported_from: \"team-instincts.yaml\"\nimported_at: \"2025-01-22T10:30:00Z\"\noriginal_source: \"session-observation\"  # or \"repo-analysis\"\n```",
+      "zh-Hans": "```yaml\nsource: \"inherited\"\nimported_from: \"team-instincts.yaml\"\nimported_at: \"2025-01-22T10:30:00Z\"\noriginal_source: \"session-observation\"  # or \"repo-analysis\"\n```"
+    },
+    {
+      "en-US": "## Skill Creator Integration",
+      "zh-Hans": "## 技能创建器集成"
+    },
+    {
+      "en-US": "When importing from Skill Creator:",
+      "zh-Hans": "从技能创建器导入时："
+    },
+    {
+      "en-US": "```\n/instinct-import --from-skill-creator acme/webapp\n```",
+      "zh-Hans": "```\n/instinct-import --from-skill-creator acme/webapp\n```"
+    },
+    {
+      "en-US": "This fetches instincts generated from repo analysis:",
+      "zh-Hans": "这会获取从仓库分析生成的本能："
+    },
+    {
+      "en-US": "- Source: `repo-analysis`\n- Higher initial confidence (0.7+)\n- Linked to source repository",
+      "zh-Hans": "* 来源：`repo-analysis`\n* 更高的初始置信度（0.7+）\n* 链接到源仓库"
+    },
+    {
+      "en-US": "## Flags",
+      "zh-Hans": "## 标志"
+    },
+    {
+      "en-US": "- `--dry-run`: Preview without importing\n- `--force`: Import even if conflicts exist\n- `--merge-strategy <higher|local|import>`: How to handle duplicates\n- `--from-skill-creator <owner/repo>`: Import from Skill Creator analysis\n- `--min-confidence <n>`: Only import instincts above threshold",
+      "zh-Hans": "* `--dry-run`：预览而不导入\n* `--force`：即使存在冲突也导入\n* `--merge-strategy <higher|local|import>`：如何处理重复项\n* `--from-skill-creator <owner/repo>`：从技能创建器分析导入\n* `--min-confidence <n>`：仅导入高于阈值的本能"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "After import:",
+      "zh-Hans": "导入后："
+    },
+    {
+      "en-US": "```\n✅ Import complete!\n\nAdded: 8 instincts\nUpdated: 1 instinct\nSkipped: 3 instincts (2 duplicates, 1 conflict)\n\nNew instincts saved to: ~/.claude/homunculus/instincts/inherited/\n\nRun /instinct-status to see all instincts.\n```",
+      "zh-Hans": "```\n✅ Import complete!\n\nAdded: 8 instincts\nUpdated: 1 instinct\nSkipped: 3 instincts (2 duplicates, 1 conflict)\n\nNew instincts saved to: ~/.claude/homunculus/instincts/inherited/\n\nRun /instinct-status to see all instincts.\n```"
+    }
+  ]
+}

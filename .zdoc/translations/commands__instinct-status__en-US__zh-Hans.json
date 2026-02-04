@@ -1,0 +1,70 @@
+{
+  "sourceFile": "commands/instinct-status.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: instinct-status\ndescription: Show all learned instincts with their confidence levels\ncommand: true\n---",
+      "zh-Hans": "---\nname: instinct-status\ndescription: 显示所有已学习的本能及其置信水平\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Instinct Status Command",
+      "zh-Hans": "# 本能状态命令"
+    },
+    {
+      "en-US": "Shows all learned instincts with their confidence scores, grouped by domain.",
+      "zh-Hans": "显示所有已学习的本能及其置信度分数，按领域分组。"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行本能 CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" status\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" status\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation), use:",
+      "zh-Hans": "或者，如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装），则使用："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```\n/instinct-status\n/instinct-status --domain code-style\n/instinct-status --low-confidence\n```",
+      "zh-Hans": "```\n/instinct-status\n/instinct-status --domain code-style\n/instinct-status --low-confidence\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 操作步骤"
+    },
+    {
+      "en-US": "1. Read all instinct files from `~/.claude/homunculus/instincts/personal/`\n2. Read inherited instincts from `~/.claude/homunculus/instincts/inherited/`\n3. Display them grouped by domain with confidence bars",
+      "zh-Hans": "1. 从 `~/.claude/homunculus/instincts/personal/` 读取所有本能文件\n2. 从 `~/.claude/homunculus/instincts/inherited/` 读取继承的本能\n3. 按领域分组显示它们，并带有置信度条"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```\n📊 Instinct Status\n==================\n\n## Code Style (4 instincts)\n\n### prefer-functional-style\nTrigger: when writing new functions\nAction: Use functional patterns over classes\nConfidence: ████████░░ 80%\nSource: session-observation | Last updated: 2025-01-22\n\n### use-path-aliases\nTrigger: when importing modules\nAction: Use @/ path aliases instead of relative imports\nConfidence: ██████░░░░ 60%\nSource: repo-analysis (github.com/acme/webapp)\n\n## Testing (2 instincts)\n\n### test-first-workflow\nTrigger: when adding new functionality\nAction: Write test first, then implementation\nConfidence: █████████░ 90%\nSource: session-observation\n\n## Workflow (3 instincts)\n\n### grep-before-edit\nTrigger: when modifying code\nAction: Search with Grep, confirm with Read, then Edit\nConfidence: ███████░░░ 70%\nSource: session-observation\n\n---\nTotal: 9 instincts (4 personal, 5 inherited)\nObserver: Running (last analysis: 5 min ago)\n```",
+      "zh-Hans": "```\n📊 Instinct Status\n==================\n\n## Code Style (4 instincts)\n\n### prefer-functional-style\nTrigger: when writing new functions\nAction: Use functional patterns over classes\nConfidence: ████████░░ 80%\nSource: session-observation | Last updated: 2025-01-22\n\n### use-path-aliases\nTrigger: when importing modules\nAction: Use @/ path aliases instead of relative imports\nConfidence: ██████░░░░ 60%\nSource: repo-analysis (github.com/acme/webapp)\n\n## Testing (2 instincts)\n\n### test-first-workflow\nTrigger: when adding new functionality\nAction: Write test first, then implementation\nConfidence: █████████░ 90%\nSource: session-observation\n\n## Workflow (3 instincts)\n\n### grep-before-edit\nTrigger: when modifying code\nAction: Search with Grep, confirm with Read, then Edit\nConfidence: ███████░░░ 70%\nSource: session-observation\n\n---\nTotal: 9 instincts (4 personal, 5 inherited)\nObserver: Running (last analysis: 5 min ago)\n```"
+    },
+    {
+      "en-US": "## Flags",
+      "zh-Hans": "## 标志"
+    },
+    {
+      "en-US": "- `--domain <name>`: Filter by domain (code-style, testing, git, etc.)\n- `--low-confidence`: Show only instincts with confidence < 0.5\n- `--high-confidence`: Show only instincts with confidence >= 0.7\n- `--source <type>`: Filter by source (session-observation, repo-analysis, inherited)\n- `--json`: Output as JSON for programmatic use",
+      "zh-Hans": "* `--domain <name>`：按领域过滤（code-style、testing、git 等）\n* `--low-confidence`：仅显示置信度 < 0.5 的本能\n* `--high-confidence`：仅显示置信度 >= 0.7 的本能\n* `--source <type>`：按来源过滤（session-observation、repo-analysis、inherited）\n* `--json`：以 JSON 格式输出，供编程使用"
+    }
+  ]
+}

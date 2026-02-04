@@ -1,0 +1,178 @@
+{
+  "sourceFile": "commands/evolve.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: evolve\ndescription: Cluster related instincts into skills, commands, or agents\ncommand: true\n---",
+      "zh-Hans": "---\nname: evolve\ndescription: 将相关本能聚类为技能、命令或代理\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Evolve Command",
+      "zh-Hans": "# Evolve 命令"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现方式"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行 instinct CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" evolve [--generate]\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" evolve [--generate]\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):",
+      "zh-Hans": "或者如果 `CLAUDE_PLUGIN_ROOT` 未设置（手动安装）："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]\n```"
+    },
+    {
+      "en-US": "Analyzes instincts and clusters related ones into higher-level structures:",
+      "zh-Hans": "分析本能并将相关的本能聚合成更高层次的结构："
+    },
+    {
+      "en-US": "- **Commands**: When instincts describe user-invoked actions\n- **Skills**: When instincts describe auto-triggered behaviors\n- **Agents**: When instincts describe complex, multi-step processes",
+      "zh-Hans": "* **命令**：当本能描述用户调用的操作时\n* **技能**：当本能描述自动触发的行为时\n* **代理**：当本能描述复杂的、多步骤的流程时"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --domain testing   # Only evolve instincts in testing domain\n/evolve --dry-run          # Show what would be created without creating\n/evolve --threshold 5      # Require 5+ related instincts to cluster\n```",
+      "zh-Hans": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --domain testing   # Only evolve instincts in testing domain\n/evolve --dry-run          # Show what would be created without creating\n/evolve --threshold 5      # Require 5+ related instincts to cluster\n```"
+    },
+    {
+      "en-US": "## Evolution Rules",
+      "zh-Hans": "## 演化规则"
+    },
+    {
+      "en-US": "### → Command (User-Invoked)",
+      "zh-Hans": "### → 命令（用户调用）"
+    },
+    {
+      "en-US": "When instincts describe actions a user would explicitly request:",
+      "zh-Hans": "当本能描述用户会明确请求的操作时："
+    },
+    {
+      "en-US": "- Multiple instincts about \"when user asks to...\"\n- Instincts with triggers like \"when creating a new X\"\n- Instincts that follow a repeatable sequence",
+      "zh-Hans": "* 多个关于“当用户要求...”的本能\n* 触发器类似“当创建新的 X 时”的本能\n* 遵循可重复序列的本能"
+    },
+    {
+      "en-US": "Example:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- `new-table-step1`: \"when adding a database table, create migration\"\n- `new-table-step2`: \"when adding a database table, update schema\"\n- `new-table-step3`: \"when adding a database table, regenerate types\"",
+      "zh-Hans": "* `new-table-step1`: \"当添加数据库表时，创建迁移\"\n* `new-table-step2`: \"当添加数据库表时，更新模式\"\n* `new-table-step3`: \"当添加数据库表时，重新生成类型\""
+    },
+    {
+      "en-US": "→ Creates: `/new-table` command",
+      "zh-Hans": "→ 创建：`/new-table` 命令"
+    },
+    {
+      "en-US": "### → Skill (Auto-Triggered)",
+      "zh-Hans": "### → 技能（自动触发）"
+    },
+    {
+      "en-US": "When instincts describe behaviors that should happen automatically:",
+      "zh-Hans": "当本能描述应该自动发生的行为时："
+    },
+    {
+      "en-US": "- Pattern-matching triggers\n- Error handling responses\n- Code style enforcement",
+      "zh-Hans": "* 模式匹配触发器\n* 错误处理响应\n* 代码风格强制执行"
+    },
+    {
+      "en-US": "Example:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- `prefer-functional`: \"when writing functions, prefer functional style\"\n- `use-immutable`: \"when modifying state, use immutable patterns\"\n- `avoid-classes`: \"when designing modules, avoid class-based design\"",
+      "zh-Hans": "* `prefer-functional`: \"当编写函数时，优先使用函数式风格\"\n* `use-immutable`: \"当修改状态时，使用不可变模式\"\n* `avoid-classes`: \"当设计模块时，避免基于类的设计\""
+    },
+    {
+      "en-US": "→ Creates: `functional-patterns` skill",
+      "zh-Hans": "→ 创建：`functional-patterns` 技能"
+    },
+    {
+      "en-US": "### → Agent (Needs Depth/Isolation)",
+      "zh-Hans": "### → 代理（需要深度/隔离）"
+    },
+    {
+      "en-US": "When instincts describe complex, multi-step processes that benefit from isolation:",
+      "zh-Hans": "当本能描述复杂的、多步骤的、受益于隔离的流程时："
+    },
+    {
+      "en-US": "- Debugging workflows\n- Refactoring sequences\n- Research tasks",
+      "zh-Hans": "* 调试工作流\n* 重构序列\n* 研究任务"
+    },
+    {
+      "en-US": "Example:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- `debug-step1`: \"when debugging, first check logs\"\n- `debug-step2`: \"when debugging, isolate the failing component\"\n- `debug-step3`: \"when debugging, create minimal reproduction\"\n- `debug-step4`: \"when debugging, verify fix with test\"",
+      "zh-Hans": "* `debug-step1`: \"当调试时，首先检查日志\"\n* `debug-step2`: \"当调试时，隔离故障组件\"\n* `debug-step3`: \"当调试时，创建最小复现\"\n* `debug-step4`: \"当调试时，用测试验证修复\""
+    },
+    {
+      "en-US": "→ Creates: `debugger` agent",
+      "zh-Hans": "→ 创建：`debugger` 代理"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 操作步骤"
+    },
+    {
+      "en-US": "1. Read all instincts from `~/.claude/homunculus/instincts/`\n2. Group instincts by:\n   - Domain similarity\n   - Trigger pattern overlap\n   - Action sequence relationship\n3. For each cluster of 3+ related instincts:\n   - Determine evolution type (command/skill/agent)\n   - Generate the appropriate file\n   - Save to `~/.claude/homunculus/evolved/{commands,skills,agents}/`\n4. Link evolved structure back to source instincts",
+      "zh-Hans": "1. 从 `~/.claude/homunculus/instincts/` 读取所有本能\n2. 按以下方式对本能进行分组：\n   * 领域相似性\n   * 触发器模式重叠\n   * 操作序列关联性\n3. 对于每个包含 3 个以上相关本能的集群：\n   * 确定演化类型（命令/技能/代理）\n   * 生成相应的文件\n   * 保存到 `~/.claude/homunculus/evolved/{commands,skills,agents}/`\n4. 将演化后的结构链接回源本能"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```\n🧬 Evolve Analysis\n==================\n\nFound 3 clusters ready for evolution:\n\n## Cluster 1: Database Migration Workflow\nInstincts: new-table-migration, update-schema, regenerate-types\nType: Command\nConfidence: 85% (based on 12 observations)\n\nWould create: /new-table command\nFiles:\n  - ~/.claude/homunculus/evolved/commands/new-table.md\n\n## Cluster 2: Functional Code Style\nInstincts: prefer-functional, use-immutable, avoid-classes, pure-functions\nType: Skill\nConfidence: 78% (based on 8 observations)\n\nWould create: functional-patterns skill\nFiles:\n  - ~/.claude/homunculus/evolved/skills/functional-patterns.md\n\n## Cluster 3: Debugging Process\nInstincts: debug-check-logs, debug-isolate, debug-reproduce, debug-verify\nType: Agent\nConfidence: 72% (based on 6 observations)\n\nWould create: debugger agent\nFiles:\n  - ~/.claude/homunculus/evolved/agents/debugger.md\n\n---\nRun `/evolve --execute` to create these files.\n```",
+      "zh-Hans": "```\n🧬 Evolve Analysis\n==================\n\nFound 3 clusters ready for evolution:\n\n## Cluster 1: Database Migration Workflow\nInstincts: new-table-migration, update-schema, regenerate-types\nType: Command\nConfidence: 85% (based on 12 observations)\n\nWould create: /new-table command\nFiles:\n  - ~/.claude/homunculus/evolved/commands/new-table.md\n\n## Cluster 2: Functional Code Style\nInstincts: prefer-functional, use-immutable, avoid-classes, pure-functions\nType: Skill\nConfidence: 78% (based on 8 observations)\n\nWould create: functional-patterns skill\nFiles:\n  - ~/.claude/homunculus/evolved/skills/functional-patterns.md\n\n## Cluster 3: Debugging Process\nInstincts: debug-check-logs, debug-isolate, debug-reproduce, debug-verify\nType: Agent\nConfidence: 72% (based on 6 observations)\n\nWould create: debugger agent\nFiles:\n  - ~/.claude/homunculus/evolved/agents/debugger.md\n\n---\nRun `/evolve --execute` to create these files.\n```"
+    },
+    {
+      "en-US": "## Flags",
+      "zh-Hans": "## 标志"
+    },
+    {
+      "en-US": "- `--execute`: Actually create the evolved structures (default is preview)\n- `--dry-run`: Preview without creating\n- `--domain <name>`: Only evolve instincts in specified domain\n- `--threshold <n>`: Minimum instincts required to form cluster (default: 3)\n- `--type <command|skill|agent>`: Only create specified type",
+      "zh-Hans": "* `--execute`: 实际创建演化后的结构（默认为预览）\n* `--dry-run`: 仅预览而不创建\n* `--domain <name>`: 仅演化指定领域的本能\n* `--threshold <n>`: 形成集群所需的最小本能数（默认：3）\n* `--type <command|skill|agent>`: 仅创建指定类型"
+    },
+    {
+      "en-US": "## Generated File Format",
+      "zh-Hans": "## 生成的文件格式"
+    },
+    {
+      "en-US": "### Command",
+      "zh-Hans": "### 命令"
+    },
+    {
+      "en-US": "```markdown\n---\nname: new-table\ndescription: Create a new database table with migration, schema update, and type generation\ncommand: /new-table\nevolved_from:\n  - new-table-migration\n  - update-schema\n  - regenerate-types\n---\n\n# New Table Command\n\n[Generated content based on clustered instincts]\n\n## Steps\n1. ...\n2. ...\n```",
+      "zh-Hans": "```markdown\n---\nname: new-table\ndescription: Create a new database table with migration, schema update, and type generation\ncommand: /new-table\nevolved_from:\n  - new-table-migration\n  - update-schema\n  - regenerate-types\n---\n\n# 新建数据表命令\n\n[基于集群本能生成的内容]\n\n## 步骤\n1. ...\n2. ...\n\n```"
+    },
+    {
+      "en-US": "### Skill",
+      "zh-Hans": "### 技能"
+    },
+    {
+      "en-US": "```markdown\n---\nname: functional-patterns\ndescription: Enforce functional programming patterns\nevolved_from:\n  - prefer-functional\n  - use-immutable\n  - avoid-classes\n---\n\n# Functional Patterns Skill\n\n[Generated content based on clustered instincts]\n```",
+      "zh-Hans": "```markdown\n---\nname: functional-patterns\ndescription: 强制执行函数式编程模式\nevolved_from:\n  - prefer-functional\n  - use-immutable\n  - avoid-classes\n---\n\n# 函数式模式技能\n\n[基于聚类本能生成的内容]\n\n```"
+    },
+    {
+      "en-US": "### Agent",
+      "zh-Hans": "### 代理"
+    },
+    {
+      "en-US": "```markdown\n---\nname: debugger\ndescription: Systematic debugging agent\nmodel: sonnet\nevolved_from:\n  - debug-check-logs\n  - debug-isolate\n  - debug-reproduce\n---\n\n# Debugger Agent\n\n[Generated content based on clustered instincts]\n```",
+      "zh-Hans": "```markdown\n---\nname: debugger\ndescription: 系统性调试代理\nmodel: sonnet\nevolved_from:\n  - debug-check-logs\n  - debug-isolate\n  - debug-reproduce\n---\n\n# 调试器代理\n\n[基于聚类本能生成的内容]\n\n```"
+    }
+  ]
+}

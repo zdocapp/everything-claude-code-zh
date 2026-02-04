@@ -1,0 +1,90 @@
+{
+  "sourceFile": "commands/setup-pm.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Configure your preferred package manager (npm/pnpm/yarn/bun)\ndisable-model-invocation: true\n---",
+      "zh-Hans": "---\ndescription: 配置您首选的包管理器（npm/pnpm/yarn/bun）\ndisable-model-invocation: true\n---"
+    },
+    {
+      "en-US": "# Package Manager Setup",
+      "zh-Hans": "# 包管理器设置"
+    },
+    {
+      "en-US": "Configure your preferred package manager for this project or globally.",
+      "zh-Hans": "配置您为此项目或全局偏好的包管理器。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方式"
+    },
+    {
+      "en-US": "```bash\n# Detect current package manager\nnode scripts/setup-package-manager.js --detect\n\n# Set global preference\nnode scripts/setup-package-manager.js --global pnpm\n\n# Set project preference\nnode scripts/setup-package-manager.js --project bun\n\n# List available package managers\nnode scripts/setup-package-manager.js --list\n```",
+      "zh-Hans": "```bash\n# Detect current package manager\nnode scripts/setup-package-manager.js --detect\n\n# Set global preference\nnode scripts/setup-package-manager.js --global pnpm\n\n# Set project preference\nnode scripts/setup-package-manager.js --project bun\n\n# List available package managers\nnode scripts/setup-package-manager.js --list\n```"
+    },
+    {
+      "en-US": "## Detection Priority",
+      "zh-Hans": "## 检测优先级"
+    },
+    {
+      "en-US": "When determining which package manager to use, the following order is checked:",
+      "zh-Hans": "在确定使用哪个包管理器时，会按以下顺序检查："
+    },
+    {
+      "en-US": "1. **Environment variable**: `CLAUDE_PACKAGE_MANAGER`\n2. **Project config**: `.claude/package-manager.json`\n3. **package.json**: `packageManager` field\n4. **Lock file**: Presence of package-lock.json, yarn.lock, pnpm-lock.yaml, or bun.lockb\n5. **Global config**: `~/.claude/package-manager.json`\n6. **Fallback**: First available package manager (pnpm > bun > yarn > npm)",
+      "zh-Hans": "1. **环境变量**：`CLAUDE_PACKAGE_MANAGER`\n2. **项目配置**：`.claude/package-manager.json`\n3. **package.json**：`packageManager` 字段\n4. **锁文件**：package-lock.json、yarn.lock、pnpm-lock.yaml 或 bun.lockb 的存在\n5. **全局配置**：`~/.claude/package-manager.json`\n6. **回退方案**：第一个可用的包管理器 (pnpm > bun > yarn > npm)"
+    },
+    {
+      "en-US": "## Configuration Files",
+      "zh-Hans": "## 配置文件"
+    },
+    {
+      "en-US": "### Global Configuration",
+      "zh-Hans": "### 全局配置"
+    },
+    {
+      "en-US": "```json\n// ~/.claude/package-manager.json\n{\n  \"packageManager\": \"pnpm\"\n}\n```",
+      "zh-Hans": "```json\n// ~/.claude/package-manager.json\n{\n  \"packageManager\": \"pnpm\"\n}\n```"
+    },
+    {
+      "en-US": "### Project Configuration",
+      "zh-Hans": "### 项目配置"
+    },
+    {
+      "en-US": "```json\n// .claude/package-manager.json\n{\n  \"packageManager\": \"bun\"\n}\n```",
+      "zh-Hans": "```json\n// .claude/package-manager.json\n{\n  \"packageManager\": \"bun\"\n}\n```"
+    },
+    {
+      "en-US": "### package.json",
+      "zh-Hans": "### package.json"
+    },
+    {
+      "en-US": "```json\n{\n  \"packageManager\": \"pnpm@8.6.0\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"packageManager\": \"pnpm@8.6.0\"\n}\n```"
+    },
+    {
+      "en-US": "## Environment Variable",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "Set `CLAUDE_PACKAGE_MANAGER` to override all other detection methods:",
+      "zh-Hans": "设置 `CLAUDE_PACKAGE_MANAGER` 以覆盖所有其他检测方法："
+    },
+    {
+      "en-US": "```bash\n# Windows (PowerShell)\n$env:CLAUDE_PACKAGE_MANAGER = \"pnpm\"\n\n# macOS/Linux\nexport CLAUDE_PACKAGE_MANAGER=pnpm\n```",
+      "zh-Hans": "```bash\n# Windows (PowerShell)\n$env:CLAUDE_PACKAGE_MANAGER = \"pnpm\"\n\n# macOS/Linux\nexport CLAUDE_PACKAGE_MANAGER=pnpm\n```"
+    },
+    {
+      "en-US": "## Run the Detection",
+      "zh-Hans": "## 运行检测"
+    },
+    {
+      "en-US": "To see current package manager detection results, run:",
+      "zh-Hans": "要查看当前包管理器检测结果，请运行："
+    },
+    {
+      "en-US": "```bash\nnode scripts/setup-package-manager.js --detect\n```",
+      "zh-Hans": "```bash\nnode scripts/setup-package-manager.js --detect\n```"
+    }
+  ]
+}

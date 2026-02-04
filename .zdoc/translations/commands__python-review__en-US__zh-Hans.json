@@ -1,0 +1,218 @@
+{
+  "sourceFile": "commands/python-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Comprehensive Python code review for PEP 8 compliance, type hints, security, and Pythonic idioms. Invokes the python-reviewer agent.\n---",
+      "zh-Hans": "---\ndescription: 全面的Python代码审查，确保符合PEP 8标准、类型提示、安全性以及Pythonic惯用法。调用python-reviewer代理。\n---"
+    },
+    {
+      "en-US": "# Python Code Review",
+      "zh-Hans": "# Python 代码审查"
+    },
+    {
+      "en-US": "This command invokes the **python-reviewer** agent for comprehensive Python-specific code review.",
+      "zh-Hans": "此命令调用 **python-reviewer** 代理进行全面的 Python 专项代码审查。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的功能"
+    },
+    {
+      "en-US": "1. **Identify Python Changes**: Find modified `.py` files via `git diff`\n2. **Run Static Analysis**: Execute `ruff`, `mypy`, `pylint`, `black --check`\n3. **Security Scan**: Check for SQL injection, command injection, unsafe deserialization\n4. **Type Safety Review**: Analyze type hints and mypy errors\n5. **Pythonic Code Check**: Verify code follows PEP 8 and Python best practices\n6. **Generate Report**: Categorize issues by severity",
+      "zh-Hans": "1. **识别 Python 变更**：通过 `git diff` 查找修改过的 `.py` 文件\n2. **运行静态分析**：执行 `ruff`、`mypy`、`pylint`、`black --check`\n3. **安全扫描**：检查 SQL 注入、命令注入、不安全的反序列化\n4. **类型安全审查**：分析类型提示和 mypy 错误\n5. **Pythonic 代码检查**：验证代码是否遵循 PEP 8 和 Python 最佳实践\n6. **生成报告**：按严重程度对问题进行归类"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "Use `/python-review` when:",
+      "zh-Hans": "在以下情况使用 `/python-review`："
+    },
+    {
+      "en-US": "- After writing or modifying Python code\n- Before committing Python changes\n- Reviewing pull requests with Python code\n- Onboarding to a new Python codebase\n- Learning Pythonic patterns and idioms",
+      "zh-Hans": "* 编写或修改 Python 代码后\n* 提交 Python 变更前\n* 审查包含 Python 代码的拉取请求时\n* 接手新的 Python 代码库时\n* 学习 Pythonic 模式和惯用法时"
+    },
+    {
+      "en-US": "## Review Categories",
+      "zh-Hans": "## 审查类别"
+    },
+    {
+      "en-US": "### CRITICAL (Must Fix)",
+      "zh-Hans": "### 关键 (必须修复)"
+    },
+    {
+      "en-US": "- SQL/Command injection vulnerabilities\n- Unsafe eval/exec usage\n- Pickle unsafe deserialization\n- Hardcoded credentials\n- YAML unsafe load\n- Bare except clauses hiding errors",
+      "zh-Hans": "* SQL/命令注入漏洞\n* 不安全的 eval/exec 使用\n* Pickle 不安全反序列化\n* 硬编码的凭证\n* YAML 不安全加载\n* 隐藏错误的裸 except 子句"
+    },
+    {
+      "en-US": "### HIGH (Should Fix)",
+      "zh-Hans": "### 高 (应该修复)"
+    },
+    {
+      "en-US": "- Missing type hints on public functions\n- Mutable default arguments\n- Swallowing exceptions silently\n- Not using context managers for resources\n- C-style looping instead of comprehensions\n- Using type() instead of isinstance()\n- Race conditions without locks",
+      "zh-Hans": "* 公共函数缺少类型提示\n* 可变默认参数\n* 静默吞掉异常\n* 未对资源使用上下文管理器\n* 使用 C 风格循环而非推导式\n* 使用 type() 而非 isinstance()\n* 无锁的竞态条件"
+    },
+    {
+      "en-US": "### MEDIUM (Consider)",
+      "zh-Hans": "### 中 (考虑)"
+    },
+    {
+      "en-US": "- PEP 8 formatting violations\n- Missing docstrings on public functions\n- Print statements instead of logging\n- Inefficient string operations\n- Magic numbers without named constants\n- Not using f-strings for formatting\n- Unnecessary list creation",
+      "zh-Hans": "* 违反 PEP 8 格式规范\n* 公共函数缺少文档字符串\n* 使用 print 语句而非 logging\n* 低效的字符串操作\n* 未使用命名常量的魔法数字\n* 未使用 f-strings 进行格式化\n* 不必要的列表创建"
+    },
+    {
+      "en-US": "## Automated Checks Run",
+      "zh-Hans": "## 运行的自动化检查"
+    },
+    {
+      "en-US": "```bash\n# Type checking\nmypy .\n\n# Linting and formatting\nruff check .\nblack --check .\nisort --check-only .\n\n# Security scanning\nbandit -r .\n\n# Dependency audit\npip-audit\nsafety check\n\n# Testing\npytest --cov=app --cov-report=term-missing\n```",
+      "zh-Hans": "```bash\n# Type checking\nmypy .\n\n# Linting and formatting\nruff check .\nblack --check .\nisort --check-only .\n\n# Security scanning\nbandit -r .\n\n# Dependency audit\npip-audit\nsafety check\n\n# Testing\npytest --cov=app --cov-report=term-missing\n```"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```text\nUser: /python-review\n\nAgent:\n# Python Code Review Report\n\n## Files Reviewed\n- app/routes/user.py (modified)\n- app/services/auth.py (modified)\n\n## Static Analysis Results\n✓ ruff: No issues\n✓ mypy: No errors\n⚠️ black: 2 files need reformatting\n✓ bandit: No security issues\n\n## Issues Found\n\n[CRITICAL] SQL Injection vulnerability\nFile: app/routes/user.py:42\nIssue: User input directly interpolated into SQL query\n```python\nquery = f\"SELECT * FROM users WHERE id = {user_id}\"  # Bad\n```",
+      "zh-Hans": "````text\nUser: /python-review\n\nAgent:\n# Python Code Review Report\n\n## Files Reviewed\n- app/routes/user.py (modified)\n- app/services/auth.py (modified)\n\n## Static Analysis Results\n✓ ruff: No issues\n✓ mypy: No errors\n⚠️ black: 2 files need reformatting\n✓ bandit: No security issues\n\n## Issues Found\n\n[CRITICAL] SQL Injection vulnerability\nFile: app/routes/user.py:42\nIssue: User input directly interpolated into SQL query\n```python\nquery = f\"SELECT * FROM users WHERE id = {user_id}\"  # Bad\n````"
+    },
+    {
+      "en-US": "Fix: Use parameterized query",
+      "zh-Hans": "修复：使用参数化查询"
+    },
+    {
+      "en-US": "```python\nquery = \"SELECT * FROM users WHERE id = %s\"  # Good\ncursor.execute(query, (user_id,))\n```",
+      "zh-Hans": "```python\nquery = \"SELECT * FROM users WHERE id = %s\"  # Good\ncursor.execute(query, (user_id,))\n```"
+    },
+    {
+      "en-US": "[HIGH] Mutable default argument\nFile: app/services/auth.py:18\nIssue: Mutable default argument causes shared state",
+      "zh-Hans": "\\[高] 可变默认参数\n文件：app/services/auth.py:18\n问题：可变默认参数导致共享状态"
+    },
+    {
+      "en-US": "```python\ndef process_items(items=[]):  # Bad\n    items.append(\"new\")\n    return items\n```",
+      "zh-Hans": "```python\ndef process_items(items=[]):  # Bad\n    items.append(\"new\")\n    return items\n```"
+    },
+    {
+      "en-US": "Fix: Use None as default",
+      "zh-Hans": "修复：使用 None 作为默认值"
+    },
+    {
+      "en-US": "```python\ndef process_items(items=None):  # Good\n    if items is None:\n        items = []\n    items.append(\"new\")\n    return items\n```",
+      "zh-Hans": "```python\ndef process_items(items=None):  # Good\n    if items is None:\n        items = []\n    items.append(\"new\")\n    return items\n```"
+    },
+    {
+      "en-US": "[MEDIUM] Missing type hints\nFile: app/services/auth.py:25\nIssue: Public function without type annotations",
+      "zh-Hans": "\\[中] 缺少类型提示\n文件：app/services/auth.py:25\n问题：公共函数缺少类型注解"
+    },
+    {
+      "en-US": "```python\ndef get_user(user_id):  # Bad\n    return db.find(user_id)\n```",
+      "zh-Hans": "```python\ndef get_user(user_id):  # Bad\n    return db.find(user_id)\n```"
+    },
+    {
+      "en-US": "Fix: Add type hints",
+      "zh-Hans": "修复：添加类型提示"
+    },
+    {
+      "en-US": "```python\ndef get_user(user_id: str) -> Optional[User]:  # Good\n    return db.find(user_id)\n```",
+      "zh-Hans": "```python\ndef get_user(user_id: str) -> Optional[User]:  # Good\n    return db.find(user_id)\n```"
+    },
+    {
+      "en-US": "[MEDIUM] Not using context manager\nFile: app/routes/user.py:55\nIssue: File not closed on exception",
+      "zh-Hans": "\\[中] 未使用上下文管理器\n文件：app/routes/user.py:55\n问题：异常时文件未关闭"
+    },
+    {
+      "en-US": "```python\nf = open(\"config.json\")  # Bad\ndata = f.read()\nf.close()\n```",
+      "zh-Hans": "```python\nf = open(\"config.json\")  # Bad\ndata = f.read()\nf.close()\n```"
+    },
+    {
+      "en-US": "Fix: Use context manager",
+      "zh-Hans": "修复：使用上下文管理器"
+    },
+    {
+      "en-US": "```python\nwith open(\"config.json\") as f:  # Good\n    data = f.read()\n```",
+      "zh-Hans": "```python\nwith open(\"config.json\") as f:  # Good\n    data = f.read()\n```"
+    },
+    {
+      "en-US": "## Summary",
+      "zh-Hans": "## 摘要"
+    },
+    {
+      "en-US": "- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 2",
+      "zh-Hans": "* 关键：1\n* 高：1\n* 中：2"
+    },
+    {
+      "en-US": "Recommendation: ❌ Block merge until CRITICAL issue is fixed",
+      "zh-Hans": "建议：❌ 在关键问题修复前阻止合并"
+    },
+    {
+      "en-US": "## Formatting Required",
+      "zh-Hans": "## 所需的格式化"
+    },
+    {
+      "en-US": "Run: `black app/routes/user.py app/services/auth.py`",
+      "zh-Hans": "运行：`black app/routes/user.py app/services/auth.py`"
+    },
+    {
+      "en-US": "```\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| ✅ Approve | No CRITICAL or HIGH issues |\n| ⚠️ Warning | Only MEDIUM issues (merge with caution) |\n| ❌ Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/python-test` first to ensure tests pass\n- Use `/code-review` for non-Python specific concerns\n- Use `/python-review` before committing\n- Use `/build-fix` if static analysis tools fail\n\n## Framework-Specific Reviews\n\n### Django Projects\nThe reviewer checks for:\n- N+1 query issues (use `select_related` and `prefetch_related`)\n- Missing migrations for model changes\n- Raw SQL usage when ORM could work\n- Missing `transaction.atomic()` for multi-step operations\n\n### FastAPI Projects\nThe reviewer checks for:\n- CORS misconfiguration\n- Pydantic models for request validation\n- Response models correctness\n- Proper async/await usage\n- Dependency injection patterns\n\n### Flask Projects\nThe reviewer checks for:\n- Context management (app context, request context)\n- Proper error handling\n- Blueprint organization\n- Configuration management\n\n## Related\n\n- Agent: `agents/python-reviewer.md`\n- Skills: `skills/python-patterns/`, `skills/python-testing/`\n\n## Common Fixes\n\n### Add Type Hints\n```python\n# Before\ndef calculate(x, y):\n    return x + y\n\n# After\nfrom typing import Union\n\ndef calculate(x: Union[int, float], y: Union[int, float]) -> Union[int, float]:\n    return x + y\n```",
+      "zh-Hans": "````\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| ✅ Approve | No CRITICAL or HIGH issues |\n| ⚠️ Warning | Only MEDIUM issues (merge with caution) |\n| ❌ Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/python-test` first to ensure tests pass\n- Use `/code-review` for non-Python specific concerns\n- Use `/python-review` before committing\n- Use `/build-fix` if static analysis tools fail\n\n## Framework-Specific Reviews\n\n### Django Projects\nThe reviewer checks for:\n- N+1 query issues (use `select_related` and `prefetch_related`)\n- Missing migrations for model changes\n- Raw SQL usage when ORM could work\n- Missing `transaction.atomic()` for multi-step operations\n\n### FastAPI Projects\nThe reviewer checks for:\n- CORS misconfiguration\n- Pydantic models for request validation\n- Response models correctness\n- Proper async/await usage\n- Dependency injection patterns\n\n### Flask Projects\nThe reviewer checks for:\n- Context management (app context, request context)\n- Proper error handling\n- Blueprint organization\n- Configuration management\n\n## Related\n\n- Agent: `agents/python-reviewer.md`\n- Skills: `skills/python-patterns/`, `skills/python-testing/`\n\n## Common Fixes\n\n### Add Type Hints\n```python\n# Before\ndef calculate(x, y):\n    return x + y\n\n# After\nfrom typing import Union\n\ndef calculate(x: Union[int, float], y: Union[int, float]) -> Union[int, float]:\n    return x + y\n````"
+    },
+    {
+      "en-US": "### Use Context Managers",
+      "zh-Hans": "### 使用上下文管理器"
+    },
+    {
+      "en-US": "```python\n# Before\nf = open(\"file.txt\")\ndata = f.read()\nf.close()\n\n# After\nwith open(\"file.txt\") as f:\n    data = f.read()\n```",
+      "zh-Hans": "```python\n# Before\nf = open(\"file.txt\")\ndata = f.read()\nf.close()\n\n# After\nwith open(\"file.txt\") as f:\n    data = f.read()\n```"
+    },
+    {
+      "en-US": "### Use List Comprehensions",
+      "zh-Hans": "### 使用列表推导式"
+    },
+    {
+      "en-US": "```python\n# Before\nresult = []\nfor item in items:\n    if item.active:\n        result.append(item.name)\n\n# After\nresult = [item.name for item in items if item.active]\n```",
+      "zh-Hans": "```python\n# Before\nresult = []\nfor item in items:\n    if item.active:\n        result.append(item.name)\n\n# After\nresult = [item.name for item in items if item.active]\n```"
+    },
+    {
+      "en-US": "### Fix Mutable Defaults",
+      "zh-Hans": "### 修复可变默认参数"
+    },
+    {
+      "en-US": "```python\n# Before\ndef append(value, items=[]):\n    items.append(value)\n    return items\n\n# After\ndef append(value, items=None):\n    if items is None:\n        items = []\n    items.append(value)\n    return items\n```",
+      "zh-Hans": "```python\n# Before\ndef append(value, items=[]):\n    items.append(value)\n    return items\n\n# After\ndef append(value, items=None):\n    if items is None:\n        items = []\n    items.append(value)\n    return items\n```"
+    },
+    {
+      "en-US": "### Use f-strings (Python 3.6+)",
+      "zh-Hans": "### 使用 f-strings (Python 3.6+)"
+    },
+    {
+      "en-US": "```python\n# Before\nname = \"Alice\"\ngreeting = \"Hello, \" + name + \"!\"\ngreeting2 = \"Hello, {}\".format(name)\n\n# After\ngreeting = f\"Hello, {name}!\"\n```",
+      "zh-Hans": "```python\n# Before\nname = \"Alice\"\ngreeting = \"Hello, \" + name + \"!\"\ngreeting2 = \"Hello, {}\".format(name)\n\n# After\ngreeting = f\"Hello, {name}!\"\n```"
+    },
+    {
+      "en-US": "### Fix String Concatenation in Loops",
+      "zh-Hans": "### 修复循环中的字符串连接"
+    },
+    {
+      "en-US": "```python\n# Before\nresult = \"\"\nfor item in items:\n    result += str(item)\n\n# After\nresult = \"\".join(str(item) for item in items)\n```",
+      "zh-Hans": "```python\n# Before\nresult = \"\"\nfor item in items:\n    result += str(item)\n\n# After\nresult = \"\".join(str(item) for item in items)\n```"
+    },
+    {
+      "en-US": "## Python Version Compatibility",
+      "zh-Hans": "## Python 版本兼容性"
+    },
+    {
+      "en-US": "The reviewer notes when code uses features from newer Python versions:",
+      "zh-Hans": "审查者会指出代码何时使用了新 Python 版本的功能："
+    },
+    {
+      "en-US": "| Feature | Minimum Python |\n|---------|----------------|\n| Type hints | 3.5+ |\n| f-strings | 3.6+ |\n| Walrus operator (`:=`) | 3.8+ |\n| Position-only parameters | 3.8+ |\n| Match statements | 3.10+ |\n| Type unions (&#96;x &#124; None&#96;) | 3.10+ |",
+      "zh-Hans": "| 功能 | 最低 Python 版本 |\n|---------|----------------|\n| 类型提示 | 3.5+ |\n| f-strings | 3.6+ |\n| 海象运算符 (`:=`) | 3.8+ |\n| 仅限位置参数 | 3.8+ |\n| Match 语句 | 3.10+ |\n| 类型联合 (\\`x | None\\`) | 3.10+ |"
+    },
+    {
+      "en-US": "Ensure your project's `pyproject.toml` or `setup.py` specifies the correct minimum Python version.",
+      "zh-Hans": "确保你的项目 `pyproject.toml` 或 `setup.py` 指定了正确的最低 Python 版本。"
+    }
+  ]
+}

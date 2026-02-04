@@ -1,0 +1,174 @@
+{
+  "sourceFile": "commands/sessions.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Sessions Command",
+      "zh-Hans": "# Sessions 命令"
+    },
+    {
+      "en-US": "Manage Claude Code session history - list, load, alias, and edit sessions stored in `~/.claude/sessions/`.",
+      "zh-Hans": "管理 Claude Code 会话历史 - 列出、加载、设置别名和编辑存储在 `~/.claude/sessions/` 中的会话。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "`/sessions [list|load|alias|info|help] [options]`",
+      "zh-Hans": "`/sessions [list|load|alias|info|help] [options]`"
+    },
+    {
+      "en-US": "## Actions",
+      "zh-Hans": "## 操作"
+    },
+    {
+      "en-US": "### List Sessions",
+      "zh-Hans": "### 列出会话"
+    },
+    {
+      "en-US": "Display all sessions with metadata, filtering, and pagination.",
+      "zh-Hans": "显示所有会话及其元数据，支持筛选和分页。"
+    },
+    {
+      "en-US": "```bash\n/sessions                              # List all sessions (default)\n/sessions list                         # Same as above\n/sessions list --limit 10              # Show 10 sessions\n/sessions list --date 2026-02-01       # Filter by date\n/sessions list --search abc            # Search by session ID\n```",
+      "zh-Hans": "```bash\n/sessions                              # List all sessions (default)\n/sessions list                         # Same as above\n/sessions list --limit 10              # Show 10 sessions\n/sessions list --date 2026-02-01       # Filter by date\n/sessions list --search abc            # Search by session ID\n```"
+    },
+    {
+      "en-US": "**Script:**",
+      "zh-Hans": "**脚本：**"
+    },
+    {
+      "en-US": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\n\nconst result = sm.getAllSessions({ limit: 20 });\nconst aliases = aa.listAliases();\nconst aliasMap = {};\nfor (const a of aliases) aliasMap[a.sessionPath] = a.name;\n\nconsole.log('Sessions (showing ' + result.sessions.length + ' of ' + result.total + '):');\nconsole.log('');\nconsole.log('ID        Date        Time     Size     Lines  Alias');\nconsole.log('────────────────────────────────────────────────────');\n\nfor (const s of result.sessions) {\n  const alias = aliasMap[s.filename] || '';\n  const size = sm.getSessionSize(s.sessionPath);\n  const stats = sm.getSessionStats(s.sessionPath);\n  const id = s.shortId === 'no-id' ? '(none)' : s.shortId.slice(0, 8);\n  const time = s.modifiedTime.toTimeString().slice(0, 5);\n\n  console.log(id.padEnd(8) + ' ' + s.date + '  ' + time + '   ' + size.padEnd(7) + '  ' + String(stats.lineCount).padEnd(5) + '  ' + alias);\n}\n\"\n```",
+      "zh-Hans": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\n\nconst result = sm.getAllSessions({ limit: 20 });\nconst aliases = aa.listAliases();\nconst aliasMap = {};\nfor (const a of aliases) aliasMap[a.sessionPath] = a.name;\n\nconsole.log('Sessions (showing ' + result.sessions.length + ' of ' + result.total + '):');\nconsole.log('');\nconsole.log('ID        Date        Time     Size     Lines  Alias');\nconsole.log('────────────────────────────────────────────────────');\n\nfor (const s of result.sessions) {\n  const alias = aliasMap[s.filename] || '';\n  const size = sm.getSessionSize(s.sessionPath);\n  const stats = sm.getSessionStats(s.sessionPath);\n  const id = s.shortId === 'no-id' ? '(none)' : s.shortId.slice(0, 8);\n  const time = s.modifiedTime.toTimeString().slice(0, 5);\n\n  console.log(id.padEnd(8) + ' ' + s.date + '  ' + time + '   ' + size.padEnd(7) + '  ' + String(stats.lineCount).padEnd(5) + '  ' + alias);\n}\n\"\n```"
+    },
+    {
+      "en-US": "### Load Session",
+      "zh-Hans": "### 加载会话"
+    },
+    {
+      "en-US": "Load and display a session's content (by ID or alias).",
+      "zh-Hans": "加载并显示会话内容（通过 ID 或别名）。"
+    },
+    {
+      "en-US": "```bash\n/sessions load <id|alias>             # Load session\n/sessions load 2026-02-01             # By date (for no-id sessions)\n/sessions load a1b2c3d4               # By short ID\n/sessions load my-alias               # By alias name\n```",
+      "zh-Hans": "```bash\n/sessions load <id|alias>             # Load session\n/sessions load 2026-02-01             # By date (for no-id sessions)\n/sessions load a1b2c3d4               # By short ID\n/sessions load my-alias               # By alias name\n```"
+    },
+    {
+      "en-US": "**Script:**",
+      "zh-Hans": "**脚本：**"
+    },
+    {
+      "en-US": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\nconst id = process.argv[1];\n\n// First try to resolve as alias\nconst resolved = aa.resolveAlias(id);\nconst sessionId = resolved ? resolved.sessionPath : id;\n\nconst session = sm.getSessionById(sessionId, true);\nif (!session) {\n  console.log('Session not found: ' + id);\n  process.exit(1);\n}\n\nconst stats = sm.getSessionStats(session.sessionPath);\nconst size = sm.getSessionSize(session.sessionPath);\nconst aliases = aa.getAliasesForSession(session.filename);\n\nconsole.log('Session: ' + session.filename);\nconsole.log('Path: ~/.claude/sessions/' + session.filename);\nconsole.log('');\nconsole.log('Statistics:');\nconsole.log('  Lines: ' + stats.lineCount);\nconsole.log('  Total items: ' + stats.totalItems);\nconsole.log('  Completed: ' + stats.completedItems);\nconsole.log('  In progress: ' + stats.inProgressItems);\nconsole.log('  Size: ' + size);\nconsole.log('');\n\nif (aliases.length > 0) {\n  console.log('Aliases: ' + aliases.map(a => a.name).join(', '));\n  console.log('');\n}\n\nif (session.metadata.title) {\n  console.log('Title: ' + session.metadata.title);\n  console.log('');\n}\n\nif (session.metadata.started) {\n  console.log('Started: ' + session.metadata.started);\n}\n\nif (session.metadata.lastUpdated) {\n  console.log('Last Updated: ' + session.metadata.lastUpdated);\n}\n\" \"$ARGUMENTS\"\n```",
+      "zh-Hans": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\nconst id = process.argv[1];\n\n// First try to resolve as alias\nconst resolved = aa.resolveAlias(id);\nconst sessionId = resolved ? resolved.sessionPath : id;\n\nconst session = sm.getSessionById(sessionId, true);\nif (!session) {\n  console.log('Session not found: ' + id);\n  process.exit(1);\n}\n\nconst stats = sm.getSessionStats(session.sessionPath);\nconst size = sm.getSessionSize(session.sessionPath);\nconst aliases = aa.getAliasesForSession(session.filename);\n\nconsole.log('Session: ' + session.filename);\nconsole.log('Path: ~/.claude/sessions/' + session.filename);\nconsole.log('');\nconsole.log('Statistics:');\nconsole.log('  Lines: ' + stats.lineCount);\nconsole.log('  Total items: ' + stats.totalItems);\nconsole.log('  Completed: ' + stats.completedItems);\nconsole.log('  In progress: ' + stats.inProgressItems);\nconsole.log('  Size: ' + size);\nconsole.log('');\n\nif (aliases.length > 0) {\n  console.log('Aliases: ' + aliases.map(a => a.name).join(', '));\n  console.log('');\n}\n\nif (session.metadata.title) {\n  console.log('Title: ' + session.metadata.title);\n  console.log('');\n}\n\nif (session.metadata.started) {\n  console.log('Started: ' + session.metadata.started);\n}\n\nif (session.metadata.lastUpdated) {\n  console.log('Last Updated: ' + session.metadata.lastUpdated);\n}\n\" \"$ARGUMENTS\"\n```"
+    },
+    {
+      "en-US": "### Create Alias",
+      "zh-Hans": "### 创建别名"
+    },
+    {
+      "en-US": "Create a memorable alias for a session.",
+      "zh-Hans": "为会话创建一个易记的别名。"
+    },
+    {
+      "en-US": "```bash\n/sessions alias <id> <name>           # Create alias\n/sessions alias 2026-02-01 today-work # Create alias named \"today-work\"\n```",
+      "zh-Hans": "```bash\n/sessions alias <id> <name>           # Create alias\n/sessions alias 2026-02-01 today-work # Create alias named \"today-work\"\n```"
+    },
+    {
+      "en-US": "**Script:**",
+      "zh-Hans": "**脚本：**"
+    },
+    {
+      "en-US": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\n\nconst sessionId = process.argv[1];\nconst aliasName = process.argv[2];\n\nif (!sessionId || !aliasName) {\n  console.log('Usage: /sessions alias <id> <name>');\n  process.exit(1);\n}\n\n// Get session filename\nconst session = sm.getSessionById(sessionId);\nif (!session) {\n  console.log('Session not found: ' + sessionId);\n  process.exit(1);\n}\n\nconst result = aa.setAlias(aliasName, session.filename);\nif (result.success) {\n  console.log('✓ Alias created: ' + aliasName + ' → ' + session.filename);\n} else {\n  console.log('✗ Error: ' + result.error);\n  process.exit(1);\n}\n\" \"$ARGUMENTS\"\n```",
+      "zh-Hans": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\n\nconst sessionId = process.argv[1];\nconst aliasName = process.argv[2];\n\nif (!sessionId || !aliasName) {\n  console.log('Usage: /sessions alias <id> <name>');\n  process.exit(1);\n}\n\n// Get session filename\nconst session = sm.getSessionById(sessionId);\nif (!session) {\n  console.log('Session not found: ' + sessionId);\n  process.exit(1);\n}\n\nconst result = aa.setAlias(aliasName, session.filename);\nif (result.success) {\n  console.log('✓ Alias created: ' + aliasName + ' → ' + session.filename);\n} else {\n  console.log('✗ Error: ' + result.error);\n  process.exit(1);\n}\n\" \"$ARGUMENTS\"\n```"
+    },
+    {
+      "en-US": "### Remove Alias",
+      "zh-Hans": "### 移除别名"
+    },
+    {
+      "en-US": "Delete an existing alias.",
+      "zh-Hans": "删除现有的别名。"
+    },
+    {
+      "en-US": "```bash\n/sessions alias --remove <name>        # Remove alias\n/sessions unalias <name>               # Same as above\n```",
+      "zh-Hans": "```bash\n/sessions alias --remove <name>        # Remove alias\n/sessions unalias <name>               # Same as above\n```"
+    },
+    {
+      "en-US": "**Script:**",
+      "zh-Hans": "**脚本：**"
+    },
+    {
+      "en-US": "```bash\nnode -e \"\nconst aa = require('./scripts/lib/session-aliases');\n\nconst aliasName = process.argv[1];\nif (!aliasName) {\n  console.log('Usage: /sessions alias --remove <name>');\n  process.exit(1);\n}\n\nconst result = aa.deleteAlias(aliasName);\nif (result.success) {\n  console.log('✓ Alias removed: ' + aliasName);\n} else {\n  console.log('✗ Error: ' + result.error);\n  process.exit(1);\n}\n\" \"$ARGUMENTS\"\n```",
+      "zh-Hans": "```bash\nnode -e \"\nconst aa = require('./scripts/lib/session-aliases');\n\nconst aliasName = process.argv[1];\nif (!aliasName) {\n  console.log('Usage: /sessions alias --remove <name>');\n  process.exit(1);\n}\n\nconst result = aa.deleteAlias(aliasName);\nif (result.success) {\n  console.log('✓ Alias removed: ' + aliasName);\n} else {\n  console.log('✗ Error: ' + result.error);\n  process.exit(1);\n}\n\" \"$ARGUMENTS\"\n```"
+    },
+    {
+      "en-US": "### Session Info",
+      "zh-Hans": "### 会话信息"
+    },
+    {
+      "en-US": "Show detailed information about a session.",
+      "zh-Hans": "显示会话的详细信息。"
+    },
+    {
+      "en-US": "```bash\n/sessions info <id|alias>              # Show session details\n```",
+      "zh-Hans": "```bash\n/sessions info <id|alias>              # Show session details\n```"
+    },
+    {
+      "en-US": "**Script:**",
+      "zh-Hans": "**脚本：**"
+    },
+    {
+      "en-US": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\n\nconst id = process.argv[1];\nconst resolved = aa.resolveAlias(id);\nconst sessionId = resolved ? resolved.sessionPath : id;\n\nconst session = sm.getSessionById(sessionId, true);\nif (!session) {\n  console.log('Session not found: ' + id);\n  process.exit(1);\n}\n\nconst stats = sm.getSessionStats(session.sessionPath);\nconst size = sm.getSessionSize(session.sessionPath);\nconst aliases = aa.getAliasesForSession(session.filename);\n\nconsole.log('Session Information');\nconsole.log('════════════════════');\nconsole.log('ID:          ' + (session.shortId === 'no-id' ? '(none)' : session.shortId));\nconsole.log('Filename:    ' + session.filename);\nconsole.log('Date:        ' + session.date);\nconsole.log('Modified:    ' + session.modifiedTime.toISOString().slice(0, 19).replace('T', ' '));\nconsole.log('');\nconsole.log('Content:');\nconsole.log('  Lines:         ' + stats.lineCount);\nconsole.log('  Total items:   ' + stats.totalItems);\nconsole.log('  Completed:     ' + stats.completedItems);\nconsole.log('  In progress:   ' + stats.inProgressItems);\nconsole.log('  Size:          ' + size);\nif (aliases.length > 0) {\n  console.log('Aliases:     ' + aliases.map(a => a.name).join(', '));\n}\n\" \"$ARGUMENTS\"\n```",
+      "zh-Hans": "```bash\nnode -e \"\nconst sm = require('./scripts/lib/session-manager');\nconst aa = require('./scripts/lib/session-aliases');\n\nconst id = process.argv[1];\nconst resolved = aa.resolveAlias(id);\nconst sessionId = resolved ? resolved.sessionPath : id;\n\nconst session = sm.getSessionById(sessionId, true);\nif (!session) {\n  console.log('Session not found: ' + id);\n  process.exit(1);\n}\n\nconst stats = sm.getSessionStats(session.sessionPath);\nconst size = sm.getSessionSize(session.sessionPath);\nconst aliases = aa.getAliasesForSession(session.filename);\n\nconsole.log('Session Information');\nconsole.log('════════════════════');\nconsole.log('ID:          ' + (session.shortId === 'no-id' ? '(none)' : session.shortId));\nconsole.log('Filename:    ' + session.filename);\nconsole.log('Date:        ' + session.date);\nconsole.log('Modified:    ' + session.modifiedTime.toISOString().slice(0, 19).replace('T', ' '));\nconsole.log('');\nconsole.log('Content:');\nconsole.log('  Lines:         ' + stats.lineCount);\nconsole.log('  Total items:   ' + stats.totalItems);\nconsole.log('  Completed:     ' + stats.completedItems);\nconsole.log('  In progress:   ' + stats.inProgressItems);\nconsole.log('  Size:          ' + size);\nif (aliases.length > 0) {\n  console.log('Aliases:     ' + aliases.map(a => a.name).join(', '));\n}\n\" \"$ARGUMENTS\"\n```"
+    },
+    {
+      "en-US": "### List Aliases",
+      "zh-Hans": "### 列出别名"
+    },
+    {
+      "en-US": "Show all session aliases.",
+      "zh-Hans": "显示所有会话别名。"
+    },
+    {
+      "en-US": "```bash\n/sessions aliases                      # List all aliases\n```",
+      "zh-Hans": "```bash\n/sessions aliases                      # List all aliases\n```"
+    },
+    {
+      "en-US": "**Script:**",
+      "zh-Hans": "**脚本：**"
+    },
+    {
+      "en-US": "```bash\nnode -e \"\nconst aa = require('./scripts/lib/session-aliases');\n\nconst aliases = aa.listAliases();\nconsole.log('Session Aliases (' + aliases.length + '):');\nconsole.log('');\n\nif (aliases.length === 0) {\n  console.log('No aliases found.');\n} else {\n  console.log('Name          Session File                    Title');\n  console.log('─────────────────────────────────────────────────────────────');\n  for (const a of aliases) {\n    const name = a.name.padEnd(12);\n    const file = (a.sessionPath.length > 30 ? a.sessionPath.slice(0, 27) + '...' : a.sessionPath).padEnd(30);\n    const title = a.title || '';\n    console.log(name + ' ' + file + ' ' + title);\n  }\n}\n\"\n```",
+      "zh-Hans": "```bash\nnode -e \"\nconst aa = require('./scripts/lib/session-aliases');\n\nconst aliases = aa.listAliases();\nconsole.log('Session Aliases (' + aliases.length + '):');\nconsole.log('');\n\nif (aliases.length === 0) {\n  console.log('No aliases found.');\n} else {\n  console.log('Name          Session File                    Title');\n  console.log('─────────────────────────────────────────────────────────────');\n  for (const a of aliases) {\n    const name = a.name.padEnd(12);\n    const file = (a.sessionPath.length > 30 ? a.sessionPath.slice(0, 27) + '...' : a.sessionPath).padEnd(30);\n    const title = a.title || '';\n    console.log(name + ' ' + file + ' ' + title);\n  }\n}\n\"\n```"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `list [options]` - List sessions\n  - `--limit <n>` - Max sessions to show (default: 50)\n  - `--date <YYYY-MM-DD>` - Filter by date\n  - `--search <pattern>` - Search in session ID\n- `load <id|alias>` - Load session content\n- `alias <id> <name>` - Create alias for session\n- `alias --remove <name>` - Remove alias\n- `unalias <name>` - Same as `--remove`\n- `info <id|alias>` - Show session statistics\n- `aliases` - List all aliases\n- `help` - Show this help",
+      "zh-Hans": "* `list [options]` - 列出会话\n  * `--limit <n>` - 最大显示会话数（默认：50）\n  * `--date <YYYY-MM-DD>` - 按日期筛选\n  * `--search <pattern>` - 在会话 ID 中搜索\n* `load <id|alias>` - 加载会话内容\n* `alias <id> <name>` - 为会话创建别名\n* `alias --remove <name>` - 移除别名\n* `unalias <name>` - 与 `--remove` 相同\n* `info <id|alias>` - 显示会话统计信息\n* `aliases` - 列出所有别名\n* `help` - 显示此帮助信息"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "```bash\n# List all sessions\n/sessions list\n\n# Create an alias for today's session\n/sessions alias 2026-02-01 today\n\n# Load session by alias\n/sessions load today\n\n# Show session info\n/sessions info today\n\n# Remove alias\n/sessions alias --remove today\n\n# List all aliases\n/sessions aliases\n```",
+      "zh-Hans": "```bash\n# List all sessions\n/sessions list\n\n# Create an alias for today's session\n/sessions alias 2026-02-01 today\n\n# Load session by alias\n/sessions load today\n\n# Show session info\n/sessions info today\n\n# Remove alias\n/sessions alias --remove today\n\n# List all aliases\n/sessions aliases\n```"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 备注"
+    },
+    {
+      "en-US": "- Sessions are stored as markdown files in `~/.claude/sessions/`\n- Aliases are stored in `~/.claude/session-aliases.json`\n- Session IDs can be shortened (first 4-8 characters usually unique enough)\n- Use aliases for frequently referenced sessions",
+      "zh-Hans": "* 会话以 Markdown 文件形式存储在 `~/.claude/sessions/`\n* 别名存储在 `~/.claude/session-aliases.json`\n* 会话 ID 可以缩短（通常前 4-8 个字符就足够唯一）\n* 为经常引用的会话使用别名"
+    }
+  ]
+}

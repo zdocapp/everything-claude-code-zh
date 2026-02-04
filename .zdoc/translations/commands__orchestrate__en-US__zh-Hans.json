@@ -1,0 +1,162 @@
+{
+  "sourceFile": "commands/orchestrate.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Orchestrate Command",
+      "zh-Hans": "# 编排命令"
+    },
+    {
+      "en-US": "Sequential agent workflow for complex tasks.",
+      "zh-Hans": "用于复杂任务的顺序代理工作流。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用"
+    },
+    {
+      "en-US": "`/orchestrate [workflow-type] [task-description]`",
+      "zh-Hans": "`/orchestrate [workflow-type] [task-description]`"
+    },
+    {
+      "en-US": "## Workflow Types",
+      "zh-Hans": "## 工作流类型"
+    },
+    {
+      "en-US": "### feature",
+      "zh-Hans": "### feature"
+    },
+    {
+      "en-US": "Full feature implementation workflow:",
+      "zh-Hans": "完整功能实现工作流："
+    },
+    {
+      "en-US": "```\nplanner -> tdd-guide -> code-reviewer -> security-reviewer\n```",
+      "zh-Hans": "```\nplanner -> tdd-guide -> code-reviewer -> security-reviewer\n```"
+    },
+    {
+      "en-US": "### bugfix",
+      "zh-Hans": "### bugfix"
+    },
+    {
+      "en-US": "Bug investigation and fix workflow:",
+      "zh-Hans": "错误调查与修复工作流："
+    },
+    {
+      "en-US": "```\nexplorer -> tdd-guide -> code-reviewer\n```",
+      "zh-Hans": "```\nexplorer -> tdd-guide -> code-reviewer\n```"
+    },
+    {
+      "en-US": "### refactor",
+      "zh-Hans": "### refactor"
+    },
+    {
+      "en-US": "Safe refactoring workflow:",
+      "zh-Hans": "安全重构工作流："
+    },
+    {
+      "en-US": "```\narchitect -> code-reviewer -> tdd-guide\n```",
+      "zh-Hans": "```\narchitect -> code-reviewer -> tdd-guide\n```"
+    },
+    {
+      "en-US": "### security",
+      "zh-Hans": "### security"
+    },
+    {
+      "en-US": "Security-focused review:",
+      "zh-Hans": "安全审查工作流："
+    },
+    {
+      "en-US": "```\nsecurity-reviewer -> code-reviewer -> architect\n```",
+      "zh-Hans": "```\nsecurity-reviewer -> code-reviewer -> architect\n```"
+    },
+    {
+      "en-US": "## Execution Pattern",
+      "zh-Hans": "## 执行模式"
+    },
+    {
+      "en-US": "For each agent in the workflow:",
+      "zh-Hans": "针对工作流中的每个代理："
+    },
+    {
+      "en-US": "1. **Invoke agent** with context from previous agent\n2. **Collect output** as structured handoff document\n3. **Pass to next agent** in chain\n4. **Aggregate results** into final report",
+      "zh-Hans": "1. 使用来自上一个代理的上下文**调用代理**\n2. 将输出收集为结构化的交接文档\n3. 将文档**传递给链中的下一个代理**\n4. 将结果**汇总**到最终报告中"
+    },
+    {
+      "en-US": "## Handoff Document Format",
+      "zh-Hans": "## 交接文档格式"
+    },
+    {
+      "en-US": "Between agents, create handoff document:",
+      "zh-Hans": "在代理之间，创建交接文档："
+    },
+    {
+      "en-US": "```markdown\n## HANDOFF: [previous-agent] -> [next-agent]\n\n### Context\n[Summary of what was done]\n\n### Findings\n[Key discoveries or decisions]\n\n### Files Modified\n[List of files touched]\n\n### Open Questions\n[Unresolved items for next agent]\n\n### Recommendations\n[Suggested next steps]\n```",
+      "zh-Hans": "```markdown\n## 交接：[前一位代理人] -> [下一位代理人]\n\n### 背景\n[已完成工作的总结]\n\n### 发现\n[关键发现或决定]\n\n### 已修改的文件\n[已触及的文件列表]\n\n### 待解决的问题\n[留给下一位代理人的未决事项]\n\n### 建议\n[建议的后续步骤]\n\n```"
+    },
+    {
+      "en-US": "## Example: Feature Workflow",
+      "zh-Hans": "## 示例：功能工作流"
+    },
+    {
+      "en-US": "```\n/orchestrate feature \"Add user authentication\"\n```",
+      "zh-Hans": "```\n/orchestrate feature \"Add user authentication\"\n```"
+    },
+    {
+      "en-US": "Executes:",
+      "zh-Hans": "执行："
+    },
+    {
+      "en-US": "1. **Planner Agent**\n   - Analyzes requirements\n   - Creates implementation plan\n   - Identifies dependencies\n   - Output: `HANDOFF: planner -> tdd-guide`\n\n2. **TDD Guide Agent**\n   - Reads planner handoff\n   - Writes tests first\n   - Implements to pass tests\n   - Output: `HANDOFF: tdd-guide -> code-reviewer`\n\n3. **Code Reviewer Agent**\n   - Reviews implementation\n   - Checks for issues\n   - Suggests improvements\n   - Output: `HANDOFF: code-reviewer -> security-reviewer`\n\n4. **Security Reviewer Agent**\n   - Security audit\n   - Vulnerability check\n   - Final approval\n   - Output: Final Report",
+      "zh-Hans": "1. **规划代理**\n   * 分析需求\n   * 创建实施计划\n   * 识别依赖项\n   * 输出：`HANDOFF: planner -> tdd-guide`\n\n2. **TDD 指导代理**\n   * 读取规划交接文档\n   * 先编写测试\n   * 实施代码以通过测试\n   * 输出：`HANDOFF: tdd-guide -> code-reviewer`\n\n3. **代码审查代理**\n   * 审查实现\n   * 检查问题\n   * 提出改进建议\n   * 输出：`HANDOFF: code-reviewer -> security-reviewer`\n\n4. **安全审查代理**\n   * 安全审计\n   * 漏洞检查\n   * 最终批准\n   * 输出：最终报告"
+    },
+    {
+      "en-US": "## Final Report Format",
+      "zh-Hans": "## 最终报告格式"
+    },
+    {
+      "en-US": "```\nORCHESTRATION REPORT\n====================\nWorkflow: feature\nTask: Add user authentication\nAgents: planner -> tdd-guide -> code-reviewer -> security-reviewer\n\nSUMMARY\n-------\n[One paragraph summary]\n\nAGENT OUTPUTS\n-------------\nPlanner: [summary]\nTDD Guide: [summary]\nCode Reviewer: [summary]\nSecurity Reviewer: [summary]\n\nFILES CHANGED\n-------------\n[List all files modified]\n\nTEST RESULTS\n------------\n[Test pass/fail summary]\n\nSECURITY STATUS\n---------------\n[Security findings]\n\nRECOMMENDATION\n--------------\n[SHIP / NEEDS WORK / BLOCKED]\n```",
+      "zh-Hans": "```\nORCHESTRATION REPORT\n====================\nWorkflow: feature\nTask: Add user authentication\nAgents: planner -> tdd-guide -> code-reviewer -> security-reviewer\n\nSUMMARY\n-------\n[One paragraph summary]\n\nAGENT OUTPUTS\n-------------\nPlanner: [summary]\nTDD Guide: [summary]\nCode Reviewer: [summary]\nSecurity Reviewer: [summary]\n\nFILES CHANGED\n-------------\n[List all files modified]\n\nTEST RESULTS\n------------\n[Test pass/fail summary]\n\nSECURITY STATUS\n---------------\n[Security findings]\n\nRECOMMENDATION\n--------------\n[SHIP / NEEDS WORK / BLOCKED]\n```"
+    },
+    {
+      "en-US": "## Parallel Execution",
+      "zh-Hans": "## 并行执行"
+    },
+    {
+      "en-US": "For independent checks, run agents in parallel:",
+      "zh-Hans": "对于独立的检查，并行运行代理："
+    },
+    {
+      "en-US": "```markdown\n### Parallel Phase\nRun simultaneously:\n- code-reviewer (quality)\n- security-reviewer (security)\n- architect (design)\n\n### Merge Results\nCombine outputs into single report\n```",
+      "zh-Hans": "```markdown\n### 并行阶段\n同时运行：\n- code-reviewer（质量）\n- security-reviewer（安全）\n- architect（设计）\n\n### 合并结果\n将输出合并为单一报告\n\n```"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `feature <description>` - Full feature workflow\n- `bugfix <description>` - Bug fix workflow\n- `refactor <description>` - Refactoring workflow\n- `security <description>` - Security review workflow\n- `custom <agents> <description>` - Custom agent sequence",
+      "zh-Hans": "* `feature <description>` - 完整功能工作流\n* `bugfix <description>` - 错误修复工作流\n* `refactor <description>` - 重构工作流\n* `security <description>` - 安全审查工作流\n* `custom <agents> <description>` - 自定义代理序列"
+    },
+    {
+      "en-US": "## Custom Workflow Example",
+      "zh-Hans": "## 自定义工作流示例"
+    },
+    {
+      "en-US": "```\n/orchestrate custom \"architect,tdd-guide,code-reviewer\" \"Redesign caching layer\"\n```",
+      "zh-Hans": "```\n/orchestrate custom \"architect,tdd-guide,code-reviewer\" \"Redesign caching layer\"\n```"
+    },
+    {
+      "en-US": "## Tips",
+      "zh-Hans": "## 提示"
+    },
+    {
+      "en-US": "1. **Start with planner** for complex features\n2. **Always include code-reviewer** before merge\n3. **Use security-reviewer** for auth/payment/PII\n4. **Keep handoffs concise** - focus on what next agent needs\n5. **Run verification** between agents if needed",
+      "zh-Hans": "1. **从规划代理开始**处理复杂功能\n2. **始终在合并前包含代码审查代理**\n3. 处理认证/支付/个人身份信息时**使用安全审查代理**\n4. **保持交接文档简洁** - 关注下一个代理需要什么\n5. 如有需要，**在代理之间运行验证**"
+    }
+  ]
+}

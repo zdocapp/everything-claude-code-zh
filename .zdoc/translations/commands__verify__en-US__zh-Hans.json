@@ -1,0 +1,54 @@
+{
+  "sourceFile": "commands/verify.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Verification Command",
+      "zh-Hans": "# 验证命令"
+    },
+    {
+      "en-US": "Run comprehensive verification on current codebase state.",
+      "zh-Hans": "对当前代码库状态执行全面验证。"
+    },
+    {
+      "en-US": "## Instructions",
+      "zh-Hans": "## 说明"
+    },
+    {
+      "en-US": "Execute verification in this exact order:",
+      "zh-Hans": "请严格按照以下顺序执行验证："
+    },
+    {
+      "en-US": "1. **Build Check**\n   - Run the build command for this project\n   - If it fails, report errors and STOP\n\n2. **Type Check**\n   - Run TypeScript/type checker\n   - Report all errors with file:line\n\n3. **Lint Check**\n   - Run linter\n   - Report warnings and errors\n\n4. **Test Suite**\n   - Run all tests\n   - Report pass/fail count\n   - Report coverage percentage\n\n5. **Console.log Audit**\n   - Search for console.log in source files\n   - Report locations\n\n6. **Git Status**\n   - Show uncommitted changes\n   - Show files modified since last commit",
+      "zh-Hans": "1. **构建检查**\n   * 运行此项目的构建命令\n   * 如果失败，报告错误并**停止**\n\n2. **类型检查**\n   * 运行 TypeScript/类型检查器\n   * 报告所有错误，包含文件:行号\n\n3. **代码检查**\n   * 运行代码检查器\n   * 报告警告和错误\n\n4. **测试套件**\n   * 运行所有测试\n   * 报告通过/失败数量\n   * 报告覆盖率百分比\n\n5. **Console.log 审计**\n   * 在源文件中搜索 console.log\n   * 报告位置\n\n6. **Git 状态**\n   * 显示未提交的更改\n   * 显示自上次提交以来修改的文件"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "Produce a concise verification report:",
+      "zh-Hans": "生成一份简洁的验证报告："
+    },
+    {
+      "en-US": "```\nVERIFICATION: [PASS/FAIL]\n\nBuild:    [OK/FAIL]\nTypes:    [OK/X errors]\nLint:     [OK/X issues]\nTests:    [X/Y passed, Z% coverage]\nSecrets:  [OK/X found]\nLogs:     [OK/X console.logs]\n\nReady for PR: [YES/NO]\n```",
+      "zh-Hans": "```\nVERIFICATION: [PASS/FAIL]\n\nBuild:    [OK/FAIL]\nTypes:    [OK/X errors]\nLint:     [OK/X issues]\nTests:    [X/Y passed, Z% coverage]\nSecrets:  [OK/X found]\nLogs:     [OK/X console.logs]\n\nReady for PR: [YES/NO]\n```"
+    },
+    {
+      "en-US": "If any critical issues, list them with fix suggestions.",
+      "zh-Hans": "如果存在任何关键问题，列出它们并提供修复建议。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS can be:",
+      "zh-Hans": "$ARGUMENTS 可以是："
+    },
+    {
+      "en-US": "- `quick` - Only build + types\n- `full` - All checks (default)\n- `pre-commit` - Checks relevant for commits\n- `pre-pr` - Full checks plus security scan",
+      "zh-Hans": "* `quick` - 仅构建 + 类型检查\n* `full` - 所有检查（默认）\n* `pre-commit` - 与提交相关的检查\n* `pre-pr` - 完整检查加安全扫描"
+    }
+  ]
+}
