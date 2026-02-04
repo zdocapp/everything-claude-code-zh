@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: security-reviewer\ndescription: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Flags secrets, SSRF, injection, unsafe crypto, and OWASP Top 10 vulnerabilities.\ntools: Read, Write, Edit, Bash, Grep, Glob\nmodel: opus\n---",
-      "zh-Hans": "---\nname: security-reviewer\ndescription: 安全漏洞检测与修复专家。在处理用户输入、身份验证、API端点或敏感数据的代码编写后，主动使用。标记机密信息、SSRF、注入、不安全加密和OWASP Top 10漏洞。\ntools: Read, Write, Edit, Bash, Grep, Glob\nmodel: opus\n---"
+      "en-US": "---\nname: security-reviewer\ndescription: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Flags secrets, SSRF, injection, unsafe crypto, and OWASP Top 10 vulnerabilities.\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: opus\n---",
+      "zh-Hans": "---\nname: security-reviewer\ndescription: 安全漏洞检测与修复专家。在编写处理用户输入、身份验证、API端点或敏感数据的代码后，主动使用。标记机密信息、SSRF、注入攻击、不安全加密以及OWASP Top 10漏洞。\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: opus\n---"
     },
     {
       "en-US": "# Security Reviewer",

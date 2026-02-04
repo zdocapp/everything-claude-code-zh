@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: planner\ndescription: Expert planning specialist for complex features and refactoring. Use PROACTIVELY when users request feature implementation, architectural changes, or complex refactoring. Automatically activated for planning tasks.\ntools: Read, Grep, Glob\nmodel: opus\n---",
-      "zh-Hans": "---\nname: planner\ndescription: 复杂功能和重构的专家规划专家。当用户请求功能实现、架构变更或复杂重构时，请主动使用。规划任务自动激活。\ntools: Read, Grep, Glob\nmodel: opus\n---"
+      "en-US": "---\nname: planner\ndescription: Expert planning specialist for complex features and refactoring. Use PROACTIVELY when users request feature implementation, architectural changes, or complex refactoring. Automatically activated for planning tasks.\ntools: [\"Read\", \"Grep\", \"Glob\"]\nmodel: opus\n---",
+      "zh-Hans": "---\nname: planner\ndescription: 复杂功能和重构的专家规划专家。当用户请求功能实现、架构变更或复杂重构时，请主动使用。计划任务自动激活。\ntools: [\"Read\", \"Grep\", \"Glob\"]\nmodel: opus\n---"
     },
     {
       "en-US": "You are an expert planning specialist focused on creating comprehensive, actionable implementation plans.",

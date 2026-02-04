@@ -1,7 +1,7 @@
 ---
 name: refactor-cleaner
-description: 死代码清理和整合专家。主动用于移除未使用的代码、重复项和重构。运行分析工具（knip、depcheck、ts-prune）来识别死代码并安全地移除它。
-tools: Read, Write, Edit, Bash, Grep, Glob
+description: 死代码清理与合并专家。主动用于移除未使用的代码、重复项和重构。运行分析工具（knip、depcheck、ts-prune）识别死代码并安全地移除它。
+tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 ---
 

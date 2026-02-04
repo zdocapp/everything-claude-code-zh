@@ -1,7 +1,7 @@
 ---
 name: tdd-guide
-description: 测试驱动开发专家，强制执行先写测试的方法论。在编写新功能、修复错误或重构代码时，请主动使用。确保测试覆盖率超过80%。
-tools: Read, Write, Edit, Bash, Grep
+description: 测试驱动开发专家，强制执行先写测试的方法。在编写新功能、修复错误或重构代码时主动使用。确保80%以上的测试覆盖率。
+tools: ["Read", "Write", "Edit", "Bash", "Grep"]
 model: opus
 ---
 

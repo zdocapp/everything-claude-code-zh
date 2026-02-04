@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
-description: 安全漏洞检测与修复专家。在处理用户输入、身份验证、API端点或敏感数据的代码编写后，主动使用。标记机密信息、SSRF、注入、不安全加密和OWASP Top 10漏洞。
-tools: Read, Write, Edit, Bash, Grep, Glob
+description: 安全漏洞检测与修复专家。在编写处理用户输入、身份验证、API端点或敏感数据的代码后，主动使用。标记机密信息、SSRF、注入攻击、不安全加密以及OWASP Top 10漏洞。
+tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 ---
 

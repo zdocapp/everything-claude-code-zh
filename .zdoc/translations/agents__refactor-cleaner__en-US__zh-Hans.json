@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: refactor-cleaner\ndescription: Dead code cleanup and consolidation specialist. Use PROACTIVELY for removing unused code, duplicates, and refactoring. Runs analysis tools (knip, depcheck, ts-prune) to identify dead code and safely removes it.\ntools: Read, Write, Edit, Bash, Grep, Glob\nmodel: opus\n---",
-      "zh-Hans": "---\nname: refactor-cleaner\ndescription: 死代码清理和整合专家。主动用于移除未使用的代码、重复项和重构。运行分析工具（knip、depcheck、ts-prune）来识别死代码并安全地移除它。\ntools: Read, Write, Edit, Bash, Grep, Glob\nmodel: opus\n---"
+      "en-US": "---\nname: refactor-cleaner\ndescription: Dead code cleanup and consolidation specialist. Use PROACTIVELY for removing unused code, duplicates, and refactoring. Runs analysis tools (knip, depcheck, ts-prune) to identify dead code and safely removes it.\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: opus\n---",
+      "zh-Hans": "---\nname: refactor-cleaner\ndescription: 死代码清理与合并专家。主动用于移除未使用的代码、重复项和重构。运行分析工具（knip、depcheck、ts-prune）识别死代码并安全地移除它。\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: opus\n---"
     },
     {
       "en-US": "# Refactor & Dead Code Cleaner",
