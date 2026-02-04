@@ -1,0 +1,254 @@
+{
+  "sourceFile": "skills/golang-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: golang-testing\ndescription: Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing, and test coverage. Follows TDD methodology with idiomatic Go practices.\n---",
+      "zh-Hans": "---\nname: golang-testing\ndescription: Go测试模式包括表格驱动测试、子测试、基准测试、模糊测试和测试覆盖率。遵循TDD方法论，采用地道的Go实践。\n---"
+    },
+    {
+      "en-US": "# Go Testing Patterns",
+      "zh-Hans": "# Go 测试模式"
+    },
+    {
+      "en-US": "Comprehensive Go testing patterns for writing reliable, maintainable tests following TDD methodology.",
+      "zh-Hans": "遵循 TDD 方法论，用于编写可靠、可维护测试的全面 Go 测试模式。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Writing new Go functions or methods\n- Adding test coverage to existing code\n- Creating benchmarks for performance-critical code\n- Implementing fuzz tests for input validation\n- Following TDD workflow in Go projects",
+      "zh-Hans": "* 编写新的 Go 函数或方法时\n* 为现有代码添加测试覆盖率时\n* 为性能关键代码创建基准测试时\n* 为输入验证实现模糊测试时\n* 在 Go 项目中遵循 TDD 工作流时"
+    },
+    {
+      "en-US": "## TDD Workflow for Go",
+      "zh-Hans": "## Go 的 TDD 工作流"
+    },
+    {
+      "en-US": "### The RED-GREEN-REFACTOR Cycle",
+      "zh-Hans": "### 红-绿-重构循环"
+    },
+    {
+      "en-US": "```\nRED     → Write a failing test first\nGREEN   → Write minimal code to pass the test\nREFACTOR → Improve code while keeping tests green\nREPEAT  → Continue with next requirement\n```",
+      "zh-Hans": "```\nRED     → Write a failing test first\nGREEN   → Write minimal code to pass the test\nREFACTOR → Improve code while keeping tests green\nREPEAT  → Continue with next requirement\n```"
+    },
+    {
+      "en-US": "### Step-by-Step TDD in Go",
+      "zh-Hans": "### Go 中的分步 TDD"
+    },
+    {
+      "en-US": "```go\n// Step 1: Define the interface/signature\n// calculator.go\npackage calculator\n\nfunc Add(a, b int) int {\n    panic(\"not implemented\") // Placeholder\n}\n\n// Step 2: Write failing test (RED)\n// calculator_test.go\npackage calculator\n\nimport \"testing\"\n\nfunc TestAdd(t *testing.T) {\n    got := Add(2, 3)\n    want := 5\n    if got != want {\n        t.Errorf(\"Add(2, 3) = %d; want %d\", got, want)\n    }\n}\n\n// Step 3: Run test - verify FAIL\n// $ go test\n// --- FAIL: TestAdd (0.00s)\n// panic: not implemented\n\n// Step 4: Implement minimal code (GREEN)\nfunc Add(a, b int) int {\n    return a + b\n}\n\n// Step 5: Run test - verify PASS\n// $ go test\n// PASS\n\n// Step 6: Refactor if needed, verify tests still pass\n```",
+      "zh-Hans": "```go\n// Step 1: Define the interface/signature\n// calculator.go\npackage calculator\n\nfunc Add(a, b int) int {\n    panic(\"not implemented\") // Placeholder\n}\n\n// Step 2: Write failing test (RED)\n// calculator_test.go\npackage calculator\n\nimport \"testing\"\n\nfunc TestAdd(t *testing.T) {\n    got := Add(2, 3)\n    want := 5\n    if got != want {\n        t.Errorf(\"Add(2, 3) = %d; want %d\", got, want)\n    }\n}\n\n// Step 3: Run test - verify FAIL\n// $ go test\n// --- FAIL: TestAdd (0.00s)\n// panic: not implemented\n\n// Step 4: Implement minimal code (GREEN)\nfunc Add(a, b int) int {\n    return a + b\n}\n\n// Step 5: Run test - verify PASS\n// $ go test\n// PASS\n\n// Step 6: Refactor if needed, verify tests still pass\n```"
+    },
+    {
+      "en-US": "## Table-Driven Tests",
+      "zh-Hans": "## 表驱动测试"
+    },
+    {
+      "en-US": "The standard pattern for Go tests. Enables comprehensive coverage with minimal code.",
+      "zh-Hans": "Go 测试的标准模式。以最少的代码实现全面的覆盖。"
+    },
+    {
+      "en-US": "```go\nfunc TestAdd(t *testing.T) {\n    tests := []struct {\n        name     string\n        a, b     int\n        expected int\n    }{\n        {\"positive numbers\", 2, 3, 5},\n        {\"negative numbers\", -1, -2, -3},\n        {\"zero values\", 0, 0, 0},\n        {\"mixed signs\", -1, 1, 0},\n        {\"large numbers\", 1000000, 2000000, 3000000},\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got := Add(tt.a, tt.b)\n            if got != tt.expected {\n                t.Errorf(\"Add(%d, %d) = %d; want %d\",\n                    tt.a, tt.b, got, tt.expected)\n            }\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc TestAdd(t *testing.T) {\n    tests := []struct {\n        name     string\n        a, b     int\n        expected int\n    }{\n        {\"positive numbers\", 2, 3, 5},\n        {\"negative numbers\", -1, -2, -3},\n        {\"zero values\", 0, 0, 0},\n        {\"mixed signs\", -1, 1, 0},\n        {\"large numbers\", 1000000, 2000000, 3000000},\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got := Add(tt.a, tt.b)\n            if got != tt.expected {\n                t.Errorf(\"Add(%d, %d) = %d; want %d\",\n                    tt.a, tt.b, got, tt.expected)\n            }\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Table-Driven Tests with Error Cases",
+      "zh-Hans": "### 包含错误情况的表驱动测试"
+    },
+    {
+      "en-US": "```go\nfunc TestParseConfig(t *testing.T) {\n    tests := []struct {\n        name    string\n        input   string\n        want    *Config\n        wantErr bool\n    }{\n        {\n            name:  \"valid config\",\n            input: `{\"host\": \"localhost\", \"port\": 8080}`,\n            want:  &Config{Host: \"localhost\", Port: 8080},\n        },\n        {\n            name:    \"invalid JSON\",\n            input:   `{invalid}`,\n            wantErr: true,\n        },\n        {\n            name:    \"empty input\",\n            input:   \"\",\n            wantErr: true,\n        },\n        {\n            name:  \"minimal config\",\n            input: `{}`,\n            want:  &Config{}, // Zero value config\n        },\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got, err := ParseConfig(tt.input)\n\n            if tt.wantErr {\n                if err == nil {\n                    t.Error(\"expected error, got nil\")\n                }\n                return\n            }\n\n            if err != nil {\n                t.Fatalf(\"unexpected error: %v\", err)\n            }\n\n            if !reflect.DeepEqual(got, tt.want) {\n                t.Errorf(\"got %+v; want %+v\", got, tt.want)\n            }\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc TestParseConfig(t *testing.T) {\n    tests := []struct {\n        name    string\n        input   string\n        want    *Config\n        wantErr bool\n    }{\n        {\n            name:  \"valid config\",\n            input: `{\"host\": \"localhost\", \"port\": 8080}`,\n            want:  &Config{Host: \"localhost\", Port: 8080},\n        },\n        {\n            name:    \"invalid JSON\",\n            input:   `{invalid}`,\n            wantErr: true,\n        },\n        {\n            name:    \"empty input\",\n            input:   \"\",\n            wantErr: true,\n        },\n        {\n            name:  \"minimal config\",\n            input: `{}`,\n            want:  &Config{}, // Zero value config\n        },\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got, err := ParseConfig(tt.input)\n\n            if tt.wantErr {\n                if err == nil {\n                    t.Error(\"expected error, got nil\")\n                }\n                return\n            }\n\n            if err != nil {\n                t.Fatalf(\"unexpected error: %v\", err)\n            }\n\n            if !reflect.DeepEqual(got, tt.want) {\n                t.Errorf(\"got %+v; want %+v\", got, tt.want)\n            }\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Subtests and Sub-benchmarks",
+      "zh-Hans": "## 子测试和子基准测试"
+    },
+    {
+      "en-US": "### Organizing Related Tests",
+      "zh-Hans": "### 组织相关测试"
+    },
+    {
+      "en-US": "```go\nfunc TestUser(t *testing.T) {\n    // Setup shared by all subtests\n    db := setupTestDB(t)\n\n    t.Run(\"Create\", func(t *testing.T) {\n        user := &User{Name: \"Alice\"}\n        err := db.CreateUser(user)\n        if err != nil {\n            t.Fatalf(\"CreateUser failed: %v\", err)\n        }\n        if user.ID == \"\" {\n            t.Error(\"expected user ID to be set\")\n        }\n    })\n\n    t.Run(\"Get\", func(t *testing.T) {\n        user, err := db.GetUser(\"alice-id\")\n        if err != nil {\n            t.Fatalf(\"GetUser failed: %v\", err)\n        }\n        if user.Name != \"Alice\" {\n            t.Errorf(\"got name %q; want %q\", user.Name, \"Alice\")\n        }\n    })\n\n    t.Run(\"Update\", func(t *testing.T) {\n        // ...\n    })\n\n    t.Run(\"Delete\", func(t *testing.T) {\n        // ...\n    })\n}\n```",
+      "zh-Hans": "```go\nfunc TestUser(t *testing.T) {\n    // Setup shared by all subtests\n    db := setupTestDB(t)\n\n    t.Run(\"Create\", func(t *testing.T) {\n        user := &User{Name: \"Alice\"}\n        err := db.CreateUser(user)\n        if err != nil {\n            t.Fatalf(\"CreateUser failed: %v\", err)\n        }\n        if user.ID == \"\" {\n            t.Error(\"expected user ID to be set\")\n        }\n    })\n\n    t.Run(\"Get\", func(t *testing.T) {\n        user, err := db.GetUser(\"alice-id\")\n        if err != nil {\n            t.Fatalf(\"GetUser failed: %v\", err)\n        }\n        if user.Name != \"Alice\" {\n            t.Errorf(\"got name %q; want %q\", user.Name, \"Alice\")\n        }\n    })\n\n    t.Run(\"Update\", func(t *testing.T) {\n        // ...\n    })\n\n    t.Run(\"Delete\", func(t *testing.T) {\n        // ...\n    })\n}\n```"
+    },
+    {
+      "en-US": "### Parallel Subtests",
+      "zh-Hans": "### 并行子测试"
+    },
+    {
+      "en-US": "```go\nfunc TestParallel(t *testing.T) {\n    tests := []struct {\n        name  string\n        input string\n    }{\n        {\"case1\", \"input1\"},\n        {\"case2\", \"input2\"},\n        {\"case3\", \"input3\"},\n    }\n\n    for _, tt := range tests {\n        tt := tt // Capture range variable\n        t.Run(tt.name, func(t *testing.T) {\n            t.Parallel() // Run subtests in parallel\n            result := Process(tt.input)\n            // assertions...\n            _ = result\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc TestParallel(t *testing.T) {\n    tests := []struct {\n        name  string\n        input string\n    }{\n        {\"case1\", \"input1\"},\n        {\"case2\", \"input2\"},\n        {\"case3\", \"input3\"},\n    }\n\n    for _, tt := range tests {\n        tt := tt // Capture range variable\n        t.Run(tt.name, func(t *testing.T) {\n            t.Parallel() // Run subtests in parallel\n            result := Process(tt.input)\n            // assertions...\n            _ = result\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Test Helpers",
+      "zh-Hans": "## 测试辅助函数"
+    },
+    {
+      "en-US": "### Helper Functions",
+      "zh-Hans": "### 辅助函数"
+    },
+    {
+      "en-US": "```go\nfunc setupTestDB(t *testing.T) *sql.DB {\n    t.Helper() // Marks this as a helper function\n\n    db, err := sql.Open(\"sqlite3\", \":memory:\")\n    if err != nil {\n        t.Fatalf(\"failed to open database: %v\", err)\n    }\n\n    // Cleanup when test finishes\n    t.Cleanup(func() {\n        db.Close()\n    })\n\n    // Run migrations\n    if _, err := db.Exec(schema); err != nil {\n        t.Fatalf(\"failed to create schema: %v\", err)\n    }\n\n    return db\n}\n\nfunc assertNoError(t *testing.T, err error) {\n    t.Helper()\n    if err != nil {\n        t.Fatalf(\"unexpected error: %v\", err)\n    }\n}\n\nfunc assertEqual[T comparable](t *testing.T, got, want T) {\n    t.Helper()\n    if got != want {\n        t.Errorf(\"got %v; want %v\", got, want)\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc setupTestDB(t *testing.T) *sql.DB {\n    t.Helper() // Marks this as a helper function\n\n    db, err := sql.Open(\"sqlite3\", \":memory:\")\n    if err != nil {\n        t.Fatalf(\"failed to open database: %v\", err)\n    }\n\n    // Cleanup when test finishes\n    t.Cleanup(func() {\n        db.Close()\n    })\n\n    // Run migrations\n    if _, err := db.Exec(schema); err != nil {\n        t.Fatalf(\"failed to create schema: %v\", err)\n    }\n\n    return db\n}\n\nfunc assertNoError(t *testing.T, err error) {\n    t.Helper()\n    if err != nil {\n        t.Fatalf(\"unexpected error: %v\", err)\n    }\n}\n\nfunc assertEqual[T comparable](t *testing.T, got, want T) {\n    t.Helper()\n    if got != want {\n        t.Errorf(\"got %v; want %v\", got, want)\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Temporary Files and Directories",
+      "zh-Hans": "### 临时文件和目录"
+    },
+    {
+      "en-US": "```go\nfunc TestFileProcessing(t *testing.T) {\n    // Create temp directory - automatically cleaned up\n    tmpDir := t.TempDir()\n\n    // Create test file\n    testFile := filepath.Join(tmpDir, \"test.txt\")\n    err := os.WriteFile(testFile, []byte(\"test content\"), 0644)\n    if err != nil {\n        t.Fatalf(\"failed to create test file: %v\", err)\n    }\n\n    // Run test\n    result, err := ProcessFile(testFile)\n    if err != nil {\n        t.Fatalf(\"ProcessFile failed: %v\", err)\n    }\n\n    // Assert...\n    _ = result\n}\n```",
+      "zh-Hans": "```go\nfunc TestFileProcessing(t *testing.T) {\n    // Create temp directory - automatically cleaned up\n    tmpDir := t.TempDir()\n\n    // Create test file\n    testFile := filepath.Join(tmpDir, \"test.txt\")\n    err := os.WriteFile(testFile, []byte(\"test content\"), 0644)\n    if err != nil {\n        t.Fatalf(\"failed to create test file: %v\", err)\n    }\n\n    // Run test\n    result, err := ProcessFile(testFile)\n    if err != nil {\n        t.Fatalf(\"ProcessFile failed: %v\", err)\n    }\n\n    // Assert...\n    _ = result\n}\n```"
+    },
+    {
+      "en-US": "## Golden Files",
+      "zh-Hans": "## 黄金文件"
+    },
+    {
+      "en-US": "Testing against expected output files stored in `testdata/`.",
+      "zh-Hans": "针对存储在 `testdata/` 中的预期输出文件进行测试。"
+    },
+    {
+      "en-US": "```go\nvar update = flag.Bool(\"update\", false, \"update golden files\")\n\nfunc TestRender(t *testing.T) {\n    tests := []struct {\n        name  string\n        input Template\n    }{\n        {\"simple\", Template{Name: \"test\"}},\n        {\"complex\", Template{Name: \"test\", Items: []string{\"a\", \"b\"}}},\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got := Render(tt.input)\n\n            golden := filepath.Join(\"testdata\", tt.name+\".golden\")\n\n            if *update {\n                // Update golden file: go test -update\n                err := os.WriteFile(golden, got, 0644)\n                if err != nil {\n                    t.Fatalf(\"failed to update golden file: %v\", err)\n                }\n            }\n\n            want, err := os.ReadFile(golden)\n            if err != nil {\n                t.Fatalf(\"failed to read golden file: %v\", err)\n            }\n\n            if !bytes.Equal(got, want) {\n                t.Errorf(\"output mismatch:\\ngot:\\n%s\\nwant:\\n%s\", got, want)\n            }\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nvar update = flag.Bool(\"update\", false, \"update golden files\")\n\nfunc TestRender(t *testing.T) {\n    tests := []struct {\n        name  string\n        input Template\n    }{\n        {\"simple\", Template{Name: \"test\"}},\n        {\"complex\", Template{Name: \"test\", Items: []string{\"a\", \"b\"}}},\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got := Render(tt.input)\n\n            golden := filepath.Join(\"testdata\", tt.name+\".golden\")\n\n            if *update {\n                // Update golden file: go test -update\n                err := os.WriteFile(golden, got, 0644)\n                if err != nil {\n                    t.Fatalf(\"failed to update golden file: %v\", err)\n                }\n            }\n\n            want, err := os.ReadFile(golden)\n            if err != nil {\n                t.Fatalf(\"failed to read golden file: %v\", err)\n            }\n\n            if !bytes.Equal(got, want) {\n                t.Errorf(\"output mismatch:\\ngot:\\n%s\\nwant:\\n%s\", got, want)\n            }\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Mocking with Interfaces",
+      "zh-Hans": "## 使用接口进行模拟"
+    },
+    {
+      "en-US": "### Interface-Based Mocking",
+      "zh-Hans": "### 基于接口的模拟"
+    },
+    {
+      "en-US": "```go\n// Define interface for dependencies\ntype UserRepository interface {\n    GetUser(id string) (*User, error)\n    SaveUser(user *User) error\n}\n\n// Production implementation\ntype PostgresUserRepository struct {\n    db *sql.DB\n}\n\nfunc (r *PostgresUserRepository) GetUser(id string) (*User, error) {\n    // Real database query\n}\n\n// Mock implementation for tests\ntype MockUserRepository struct {\n    GetUserFunc  func(id string) (*User, error)\n    SaveUserFunc func(user *User) error\n}\n\nfunc (m *MockUserRepository) GetUser(id string) (*User, error) {\n    return m.GetUserFunc(id)\n}\n\nfunc (m *MockUserRepository) SaveUser(user *User) error {\n    return m.SaveUserFunc(user)\n}\n\n// Test using mock\nfunc TestUserService(t *testing.T) {\n    mock := &MockUserRepository{\n        GetUserFunc: func(id string) (*User, error) {\n            if id == \"123\" {\n                return &User{ID: \"123\", Name: \"Alice\"}, nil\n            }\n            return nil, ErrNotFound\n        },\n    }\n\n    service := NewUserService(mock)\n\n    user, err := service.GetUserProfile(\"123\")\n    if err != nil {\n        t.Fatalf(\"unexpected error: %v\", err)\n    }\n    if user.Name != \"Alice\" {\n        t.Errorf(\"got name %q; want %q\", user.Name, \"Alice\")\n    }\n}\n```",
+      "zh-Hans": "```go\n// Define interface for dependencies\ntype UserRepository interface {\n    GetUser(id string) (*User, error)\n    SaveUser(user *User) error\n}\n\n// Production implementation\ntype PostgresUserRepository struct {\n    db *sql.DB\n}\n\nfunc (r *PostgresUserRepository) GetUser(id string) (*User, error) {\n    // Real database query\n}\n\n// Mock implementation for tests\ntype MockUserRepository struct {\n    GetUserFunc  func(id string) (*User, error)\n    SaveUserFunc func(user *User) error\n}\n\nfunc (m *MockUserRepository) GetUser(id string) (*User, error) {\n    return m.GetUserFunc(id)\n}\n\nfunc (m *MockUserRepository) SaveUser(user *User) error {\n    return m.SaveUserFunc(user)\n}\n\n// Test using mock\nfunc TestUserService(t *testing.T) {\n    mock := &MockUserRepository{\n        GetUserFunc: func(id string) (*User, error) {\n            if id == \"123\" {\n                return &User{ID: \"123\", Name: \"Alice\"}, nil\n            }\n            return nil, ErrNotFound\n        },\n    }\n\n    service := NewUserService(mock)\n\n    user, err := service.GetUserProfile(\"123\")\n    if err != nil {\n        t.Fatalf(\"unexpected error: %v\", err)\n    }\n    if user.Name != \"Alice\" {\n        t.Errorf(\"got name %q; want %q\", user.Name, \"Alice\")\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Benchmarks",
+      "zh-Hans": "## 基准测试"
+    },
+    {
+      "en-US": "### Basic Benchmarks",
+      "zh-Hans": "### 基本基准测试"
+    },
+    {
+      "en-US": "```go\nfunc BenchmarkProcess(b *testing.B) {\n    data := generateTestData(1000)\n    b.ResetTimer() // Don't count setup time\n\n    for i := 0; i < b.N; i++ {\n        Process(data)\n    }\n}\n\n// Run: go test -bench=BenchmarkProcess -benchmem\n// Output: BenchmarkProcess-8   10000   105234 ns/op   4096 B/op   10 allocs/op\n```",
+      "zh-Hans": "```go\nfunc BenchmarkProcess(b *testing.B) {\n    data := generateTestData(1000)\n    b.ResetTimer() // Don't count setup time\n\n    for i := 0; i < b.N; i++ {\n        Process(data)\n    }\n}\n\n// Run: go test -bench=BenchmarkProcess -benchmem\n// Output: BenchmarkProcess-8   10000   105234 ns/op   4096 B/op   10 allocs/op\n```"
+    },
+    {
+      "en-US": "### Benchmark with Different Sizes",
+      "zh-Hans": "### 不同大小的基准测试"
+    },
+    {
+      "en-US": "```go\nfunc BenchmarkSort(b *testing.B) {\n    sizes := []int{100, 1000, 10000, 100000}\n\n    for _, size := range sizes {\n        b.Run(fmt.Sprintf(\"size=%d\", size), func(b *testing.B) {\n            data := generateRandomSlice(size)\n            b.ResetTimer()\n\n            for i := 0; i < b.N; i++ {\n                // Make a copy to avoid sorting already sorted data\n                tmp := make([]int, len(data))\n                copy(tmp, data)\n                sort.Ints(tmp)\n            }\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc BenchmarkSort(b *testing.B) {\n    sizes := []int{100, 1000, 10000, 100000}\n\n    for _, size := range sizes {\n        b.Run(fmt.Sprintf(\"size=%d\", size), func(b *testing.B) {\n            data := generateRandomSlice(size)\n            b.ResetTimer()\n\n            for i := 0; i < b.N; i++ {\n                // Make a copy to avoid sorting already sorted data\n                tmp := make([]int, len(data))\n                copy(tmp, data)\n                sort.Ints(tmp)\n            }\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Memory Allocation Benchmarks",
+      "zh-Hans": "### 内存分配基准测试"
+    },
+    {
+      "en-US": "```go\nfunc BenchmarkStringConcat(b *testing.B) {\n    parts := []string{\"hello\", \"world\", \"foo\", \"bar\", \"baz\"}\n\n    b.Run(\"plus\", func(b *testing.B) {\n        for i := 0; i < b.N; i++ {\n            var s string\n            for _, p := range parts {\n                s += p\n            }\n            _ = s\n        }\n    })\n\n    b.Run(\"builder\", func(b *testing.B) {\n        for i := 0; i < b.N; i++ {\n            var sb strings.Builder\n            for _, p := range parts {\n                sb.WriteString(p)\n            }\n            _ = sb.String()\n        }\n    })\n\n    b.Run(\"join\", func(b *testing.B) {\n        for i := 0; i < b.N; i++ {\n            _ = strings.Join(parts, \"\")\n        }\n    })\n}\n```",
+      "zh-Hans": "```go\nfunc BenchmarkStringConcat(b *testing.B) {\n    parts := []string{\"hello\", \"world\", \"foo\", \"bar\", \"baz\"}\n\n    b.Run(\"plus\", func(b *testing.B) {\n        for i := 0; i < b.N; i++ {\n            var s string\n            for _, p := range parts {\n                s += p\n            }\n            _ = s\n        }\n    })\n\n    b.Run(\"builder\", func(b *testing.B) {\n        for i := 0; i < b.N; i++ {\n            var sb strings.Builder\n            for _, p := range parts {\n                sb.WriteString(p)\n            }\n            _ = sb.String()\n        }\n    })\n\n    b.Run(\"join\", func(b *testing.B) {\n        for i := 0; i < b.N; i++ {\n            _ = strings.Join(parts, \"\")\n        }\n    })\n}\n```"
+    },
+    {
+      "en-US": "## Fuzzing (Go 1.18+)",
+      "zh-Hans": "## 模糊测试 (Go 1.18+)"
+    },
+    {
+      "en-US": "### Basic Fuzz Test",
+      "zh-Hans": "### 基本模糊测试"
+    },
+    {
+      "en-US": "```go\nfunc FuzzParseJSON(f *testing.F) {\n    // Add seed corpus\n    f.Add(`{\"name\": \"test\"}`)\n    f.Add(`{\"count\": 123}`)\n    f.Add(`[]`)\n    f.Add(`\"\"`)\n\n    f.Fuzz(func(t *testing.T, input string) {\n        var result map[string]interface{}\n        err := json.Unmarshal([]byte(input), &result)\n\n        if err != nil {\n            // Invalid JSON is expected for random input\n            return\n        }\n\n        // If parsing succeeded, re-encoding should work\n        _, err = json.Marshal(result)\n        if err != nil {\n            t.Errorf(\"Marshal failed after successful Unmarshal: %v\", err)\n        }\n    })\n}\n\n// Run: go test -fuzz=FuzzParseJSON -fuzztime=30s\n```",
+      "zh-Hans": "```go\nfunc FuzzParseJSON(f *testing.F) {\n    // Add seed corpus\n    f.Add(`{\"name\": \"test\"}`)\n    f.Add(`{\"count\": 123}`)\n    f.Add(`[]`)\n    f.Add(`\"\"`)\n\n    f.Fuzz(func(t *testing.T, input string) {\n        var result map[string]interface{}\n        err := json.Unmarshal([]byte(input), &result)\n\n        if err != nil {\n            // Invalid JSON is expected for random input\n            return\n        }\n\n        // If parsing succeeded, re-encoding should work\n        _, err = json.Marshal(result)\n        if err != nil {\n            t.Errorf(\"Marshal failed after successful Unmarshal: %v\", err)\n        }\n    })\n}\n\n// Run: go test -fuzz=FuzzParseJSON -fuzztime=30s\n```"
+    },
+    {
+      "en-US": "### Fuzz Test with Multiple Inputs",
+      "zh-Hans": "### 多输入模糊测试"
+    },
+    {
+      "en-US": "```go\nfunc FuzzCompare(f *testing.F) {\n    f.Add(\"hello\", \"world\")\n    f.Add(\"\", \"\")\n    f.Add(\"abc\", \"abc\")\n\n    f.Fuzz(func(t *testing.T, a, b string) {\n        result := Compare(a, b)\n\n        // Property: Compare(a, a) should always equal 0\n        if a == b && result != 0 {\n            t.Errorf(\"Compare(%q, %q) = %d; want 0\", a, b, result)\n        }\n\n        // Property: Compare(a, b) and Compare(b, a) should have opposite signs\n        reverse := Compare(b, a)\n        if (result > 0 && reverse >= 0) || (result < 0 && reverse <= 0) {\n            if result != 0 || reverse != 0 {\n                t.Errorf(\"Compare(%q, %q) = %d, Compare(%q, %q) = %d; inconsistent\",\n                    a, b, result, b, a, reverse)\n            }\n        }\n    })\n}\n```",
+      "zh-Hans": "```go\nfunc FuzzCompare(f *testing.F) {\n    f.Add(\"hello\", \"world\")\n    f.Add(\"\", \"\")\n    f.Add(\"abc\", \"abc\")\n\n    f.Fuzz(func(t *testing.T, a, b string) {\n        result := Compare(a, b)\n\n        // Property: Compare(a, a) should always equal 0\n        if a == b && result != 0 {\n            t.Errorf(\"Compare(%q, %q) = %d; want 0\", a, b, result)\n        }\n\n        // Property: Compare(a, b) and Compare(b, a) should have opposite signs\n        reverse := Compare(b, a)\n        if (result > 0 && reverse >= 0) || (result < 0 && reverse <= 0) {\n            if result != 0 || reverse != 0 {\n                t.Errorf(\"Compare(%q, %q) = %d, Compare(%q, %q) = %d; inconsistent\",\n                    a, b, result, b, a, reverse)\n            }\n        }\n    })\n}\n```"
+    },
+    {
+      "en-US": "## Test Coverage",
+      "zh-Hans": "## 测试覆盖率"
+    },
+    {
+      "en-US": "### Running Coverage",
+      "zh-Hans": "### 运行覆盖率"
+    },
+    {
+      "en-US": "```bash\n# Basic coverage\ngo test -cover ./...\n\n# Generate coverage profile\ngo test -coverprofile=coverage.out ./...\n\n# View coverage in browser\ngo tool cover -html=coverage.out\n\n# View coverage by function\ngo tool cover -func=coverage.out\n\n# Coverage with race detection\ngo test -race -coverprofile=coverage.out ./...\n```",
+      "zh-Hans": "```bash\n# Basic coverage\ngo test -cover ./...\n\n# Generate coverage profile\ngo test -coverprofile=coverage.out ./...\n\n# View coverage in browser\ngo tool cover -html=coverage.out\n\n# View coverage by function\ngo tool cover -func=coverage.out\n\n# Coverage with race detection\ngo test -race -coverprofile=coverage.out ./...\n```"
+    },
+    {
+      "en-US": "### Coverage Targets",
+      "zh-Hans": "### 覆盖率目标"
+    },
+    {
+      "en-US": "| Code Type | Target |\n|-----------|--------|\n| Critical business logic | 100% |\n| Public APIs | 90%+ |\n| General code | 80%+ |\n| Generated code | Exclude |",
+      "zh-Hans": "| 代码类型 | 目标 |\n|-----------|--------|\n| 关键业务逻辑 | 100% |\n| 公共 API | 90%+ |\n| 通用代码 | 80%+ |\n| 生成的代码 | 排除 |"
+    },
+    {
+      "en-US": "### Excluding Generated Code from Coverage",
+      "zh-Hans": "### 从覆盖率中排除生成的代码"
+    },
+    {
+      "en-US": "```go\n//go:generate mockgen -source=interface.go -destination=mock_interface.go\n\n// In coverage profile, exclude with build tags:\n// go test -cover -tags=!generate ./...\n```",
+      "zh-Hans": "```go\n//go:generate mockgen -source=interface.go -destination=mock_interface.go\n\n// In coverage profile, exclude with build tags:\n// go test -cover -tags=!generate ./...\n```"
+    },
+    {
+      "en-US": "## HTTP Handler Testing",
+      "zh-Hans": "## HTTP 处理器测试"
+    },
+    {
+      "en-US": "```go\nfunc TestHealthHandler(t *testing.T) {\n    // Create request\n    req := httptest.NewRequest(http.MethodGet, \"/health\", nil)\n    w := httptest.NewRecorder()\n\n    // Call handler\n    HealthHandler(w, req)\n\n    // Check response\n    resp := w.Result()\n    defer resp.Body.Close()\n\n    if resp.StatusCode != http.StatusOK {\n        t.Errorf(\"got status %d; want %d\", resp.StatusCode, http.StatusOK)\n    }\n\n    body, _ := io.ReadAll(resp.Body)\n    if string(body) != \"OK\" {\n        t.Errorf(\"got body %q; want %q\", body, \"OK\")\n    }\n}\n\nfunc TestAPIHandler(t *testing.T) {\n    tests := []struct {\n        name       string\n        method     string\n        path       string\n        body       string\n        wantStatus int\n        wantBody   string\n    }{\n        {\n            name:       \"get user\",\n            method:     http.MethodGet,\n            path:       \"/users/123\",\n            wantStatus: http.StatusOK,\n            wantBody:   `{\"id\":\"123\",\"name\":\"Alice\"}`,\n        },\n        {\n            name:       \"not found\",\n            method:     http.MethodGet,\n            path:       \"/users/999\",\n            wantStatus: http.StatusNotFound,\n        },\n        {\n            name:       \"create user\",\n            method:     http.MethodPost,\n            path:       \"/users\",\n            body:       `{\"name\":\"Bob\"}`,\n            wantStatus: http.StatusCreated,\n        },\n    }\n\n    handler := NewAPIHandler()\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            var body io.Reader\n            if tt.body != \"\" {\n                body = strings.NewReader(tt.body)\n            }\n\n            req := httptest.NewRequest(tt.method, tt.path, body)\n            req.Header.Set(\"Content-Type\", \"application/json\")\n            w := httptest.NewRecorder()\n\n            handler.ServeHTTP(w, req)\n\n            if w.Code != tt.wantStatus {\n                t.Errorf(\"got status %d; want %d\", w.Code, tt.wantStatus)\n            }\n\n            if tt.wantBody != \"\" && w.Body.String() != tt.wantBody {\n                t.Errorf(\"got body %q; want %q\", w.Body.String(), tt.wantBody)\n            }\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc TestHealthHandler(t *testing.T) {\n    // Create request\n    req := httptest.NewRequest(http.MethodGet, \"/health\", nil)\n    w := httptest.NewRecorder()\n\n    // Call handler\n    HealthHandler(w, req)\n\n    // Check response\n    resp := w.Result()\n    defer resp.Body.Close()\n\n    if resp.StatusCode != http.StatusOK {\n        t.Errorf(\"got status %d; want %d\", resp.StatusCode, http.StatusOK)\n    }\n\n    body, _ := io.ReadAll(resp.Body)\n    if string(body) != \"OK\" {\n        t.Errorf(\"got body %q; want %q\", body, \"OK\")\n    }\n}\n\nfunc TestAPIHandler(t *testing.T) {\n    tests := []struct {\n        name       string\n        method     string\n        path       string\n        body       string\n        wantStatus int\n        wantBody   string\n    }{\n        {\n            name:       \"get user\",\n            method:     http.MethodGet,\n            path:       \"/users/123\",\n            wantStatus: http.StatusOK,\n            wantBody:   `{\"id\":\"123\",\"name\":\"Alice\"}`,\n        },\n        {\n            name:       \"not found\",\n            method:     http.MethodGet,\n            path:       \"/users/999\",\n            wantStatus: http.StatusNotFound,\n        },\n        {\n            name:       \"create user\",\n            method:     http.MethodPost,\n            path:       \"/users\",\n            body:       `{\"name\":\"Bob\"}`,\n            wantStatus: http.StatusCreated,\n        },\n    }\n\n    handler := NewAPIHandler()\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            var body io.Reader\n            if tt.body != \"\" {\n                body = strings.NewReader(tt.body)\n            }\n\n            req := httptest.NewRequest(tt.method, tt.path, body)\n            req.Header.Set(\"Content-Type\", \"application/json\")\n            w := httptest.NewRecorder()\n\n            handler.ServeHTTP(w, req)\n\n            if w.Code != tt.wantStatus {\n                t.Errorf(\"got status %d; want %d\", w.Code, tt.wantStatus)\n            }\n\n            if tt.wantBody != \"\" && w.Body.String() != tt.wantBody {\n                t.Errorf(\"got body %q; want %q\", w.Body.String(), tt.wantBody)\n            }\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Testing Commands",
+      "zh-Hans": "## 命令测试"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\ngo test ./...\n\n# Run tests with verbose output\ngo test -v ./...\n\n# Run specific test\ngo test -run TestAdd ./...\n\n# Run tests matching pattern\ngo test -run \"TestUser/Create\" ./...\n\n# Run tests with race detector\ngo test -race ./...\n\n# Run tests with coverage\ngo test -cover -coverprofile=coverage.out ./...\n\n# Run short tests only\ngo test -short ./...\n\n# Run tests with timeout\ngo test -timeout 30s ./...\n\n# Run benchmarks\ngo test -bench=. -benchmem ./...\n\n# Run fuzzing\ngo test -fuzz=FuzzParse -fuzztime=30s ./...\n\n# Count test runs (for flaky test detection)\ngo test -count=10 ./...\n```",
+      "zh-Hans": "```bash\n# Run all tests\ngo test ./...\n\n# Run tests with verbose output\ngo test -v ./...\n\n# Run specific test\ngo test -run TestAdd ./...\n\n# Run tests matching pattern\ngo test -run \"TestUser/Create\" ./...\n\n# Run tests with race detector\ngo test -race ./...\n\n# Run tests with coverage\ngo test -cover -coverprofile=coverage.out ./...\n\n# Run short tests only\ngo test -short ./...\n\n# Run tests with timeout\ngo test -timeout 30s ./...\n\n# Run benchmarks\ngo test -bench=. -benchmem ./...\n\n# Run fuzzing\ngo test -fuzz=FuzzParse -fuzztime=30s ./...\n\n# Count test runs (for flaky test detection)\ngo test -count=10 ./...\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "**DO:**",
+      "zh-Hans": "**应该：**"
+    },
+    {
+      "en-US": "- Write tests FIRST (TDD)\n- Use table-driven tests for comprehensive coverage\n- Test behavior, not implementation\n- Use `t.Helper()` in helper functions\n- Use `t.Parallel()` for independent tests\n- Clean up resources with `t.Cleanup()`\n- Use meaningful test names that describe the scenario",
+      "zh-Hans": "* **先**写测试 (TDD)\n* 使用表驱动测试以实现全面覆盖\n* 测试行为，而非实现\n* 在辅助函数中使用 `t.Helper()`\n* 对于独立的测试使用 `t.Parallel()`\n* 使用 `t.Cleanup()` 清理资源\n* 使用描述场景的有意义的测试名称"
+    },
+    {
+      "en-US": "**DON'T:**",
+      "zh-Hans": "**不应该：**"
+    },
+    {
+      "en-US": "- Test private functions directly (test through public API)\n- Use `time.Sleep()` in tests (use channels or conditions)\n- Ignore flaky tests (fix or remove them)\n- Mock everything (prefer integration tests when possible)\n- Skip error path testing",
+      "zh-Hans": "* 直接测试私有函数 (通过公共 API 测试)\n* 在测试中使用 `time.Sleep()` (使用通道或条件)\n* 忽略不稳定的测试 (修复或移除它们)\n* 模拟所有东西 (在可能的情况下优先使用集成测试)\n* 跳过错误路径测试"
+    },
+    {
+      "en-US": "## Integration with CI/CD",
+      "zh-Hans": "## 与 CI/CD 集成"
+    },
+    {
+      "en-US": "```yaml\n# GitHub Actions example\ntest:\n  runs-on: ubuntu-latest\n  steps:\n    - uses: actions/checkout@v4\n    - uses: actions/setup-go@v5\n      with:\n        go-version: '1.22'\n\n    - name: Run tests\n      run: go test -race -coverprofile=coverage.out ./...\n\n    - name: Check coverage\n      run: |\n        go tool cover -func=coverage.out | grep total | awk '{print $3}' | \\\n        awk -F'%' '{if ($1 < 80) exit 1}'\n```",
+      "zh-Hans": "```yaml\n# GitHub Actions example\ntest:\n  runs-on: ubuntu-latest\n  steps:\n    - uses: actions/checkout@v4\n    - uses: actions/setup-go@v5\n      with:\n        go-version: '1.22'\n\n    - name: Run tests\n      run: go test -race -coverprofile=coverage.out ./...\n\n    - name: Check coverage\n      run: |\n        go tool cover -func=coverage.out | grep total | awk '{print $3}' | \\\n        awk -F'%' '{if ($1 < 80) exit 1}'\n```"
+    },
+    {
+      "en-US": "**Remember**: Tests are documentation. They show how your code is meant to be used. Write them clearly and keep them up to date.",
+      "zh-Hans": "**记住**：测试即文档。它们展示了你的代码应如何使用。清晰地编写它们并保持更新。"
+    }
+  ]
+}

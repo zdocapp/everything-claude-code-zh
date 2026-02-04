@@ -1,11 +1,11 @@
 ---
 name: backend-patterns
-description: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.
+description: 后端架构模式、API设计、数据库优化以及针对Node.js、Express和Next.js API路由的服务器端最佳实践。
 ---
 
 # 后端开发模式
 
-可扩展服务器端应用程序的后端架构模式和最佳实践。
+用于可扩展服务器端应用程序的后端架构模式和最佳实践。
 
 ## API 设计模式
 
@@ -228,7 +228,7 @@ class CachedMarketRepository implements MarketRepository {
 }
 ```
 
-### 缓存旁路模式
+### 旁路缓存模式
 
 ```typescript
 async function getMarketWithCache(id: string): Promise<Market> {
@@ -252,7 +252,7 @@ async function getMarketWithCache(id: string): Promise<Market> {
 
 ## 错误处理模式
 
-### 集中式错误处理器
+### 集中式错误处理程序
 
 ```typescript
 class ApiError extends Error {
@@ -395,26 +395,31 @@ export function hasPermission(user: User, permission: Permission): boolean {
 }
 
 export function requirePermission(permission: Permission) {
-  return async (request: Request) => {
-    const user = await requireAuth(request)
+  return (handler: (request: Request, user: User) => Promise<Response>) => {
+    return async (request: Request) => {
+      const user = await requireAuth(request)
 
-    if (!hasPermission(user, permission)) {
-      throw new ApiError(403, 'Insufficient permissions')
+      if (!hasPermission(user, permission)) {
+        throw new ApiError(403, 'Insufficient permissions')
+      }
+
+      return handler(request, user)
     }
-
-    return user
   }
 }
 
-// Usage
-export const DELETE = requirePermission('delete')(async (request: Request) => {
-  // Handler with permission check
-})
+// Usage - HOF wraps the handler
+export const DELETE = requirePermission('delete')(
+  async (request: Request, user: User) => {
+    // Handler receives authenticated user with verified permission
+    return new Response('Deleted', { status: 200 })
+  }
+)
 ```
 
 ## 速率限制
 
-### 简单内存速率限制器
+### 简单的内存速率限制器
 
 ```typescript
 class RateLimiter {
@@ -579,4 +584,4 @@ export async function GET(request: Request) {
 }
 ```
 
-**记住**：后端模式支持可扩展、可维护的服务器端应用程序。选择适合你复杂度的模式。
+**记住**：后端模式支持可扩展、可维护的服务器端应用程序。选择适合你复杂程度的模式。

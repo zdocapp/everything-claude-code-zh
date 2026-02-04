@@ -1,0 +1,138 @@
+{
+  "sourceFile": "skills/postgres-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: postgres-patterns\ndescription: PostgreSQL database patterns for query optimization, schema design, indexing, and security. Based on Supabase best practices.\n---",
+      "zh-Hans": "---\nname: postgres-patterns\ndescription: 基于Supabase最佳实践的PostgreSQL数据库模式，用于查询优化、架构设计、索引和安全。\n---"
+    },
+    {
+      "en-US": "# PostgreSQL Patterns",
+      "zh-Hans": "# PostgreSQL 模式"
+    },
+    {
+      "en-US": "Quick reference for PostgreSQL best practices. For detailed guidance, use the `database-reviewer` agent.",
+      "zh-Hans": "PostgreSQL 最佳实践快速参考。如需详细指导，请使用 `database-reviewer` 智能体。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Writing SQL queries or migrations\n- Designing database schemas\n- Troubleshooting slow queries\n- Implementing Row Level Security\n- Setting up connection pooling",
+      "zh-Hans": "* 编写 SQL 查询或迁移时\n* 设计数据库模式时\n* 排查慢查询时\n* 实施行级安全性时\n* 设置连接池时"
+    },
+    {
+      "en-US": "## Quick Reference",
+      "zh-Hans": "## 快速参考"
+    },
+    {
+      "en-US": "### Index Cheat Sheet",
+      "zh-Hans": "### 索引速查表"
+    },
+    {
+      "en-US": "| Query Pattern | Index Type | Example |\n|--------------|------------|---------|\n| `WHERE col = value` | B-tree (default) | `CREATE INDEX idx ON t (col)` |\n| `WHERE col > value` | B-tree | `CREATE INDEX idx ON t (col)` |\n| `WHERE a = x AND b > y` | Composite | `CREATE INDEX idx ON t (a, b)` |\n| `WHERE jsonb @> '{}'` | GIN | `CREATE INDEX idx ON t USING gin (col)` |\n| `WHERE tsv @@ query` | GIN | `CREATE INDEX idx ON t USING gin (col)` |\n| Time-series ranges | BRIN | `CREATE INDEX idx ON t USING brin (col)` |",
+      "zh-Hans": "| 查询模式 | 索引类型 | 示例 |\n|--------------|------------|---------|\n| `WHERE col = value` | B-tree（默认） | `CREATE INDEX idx ON t (col)` |\n| `WHERE col > value` | B-tree | `CREATE INDEX idx ON t (col)` |\n| `WHERE a = x AND b > y` | 复合索引 | `CREATE INDEX idx ON t (a, b)` |\n| `WHERE jsonb @> '{}'` | GIN | `CREATE INDEX idx ON t USING gin (col)` |\n| `WHERE tsv @@ query` | GIN | `CREATE INDEX idx ON t USING gin (col)` |\n| 时间序列范围查询 | BRIN | `CREATE INDEX idx ON t USING brin (col)` |"
+    },
+    {
+      "en-US": "### Data Type Quick Reference",
+      "zh-Hans": "### 数据类型快速参考"
+    },
+    {
+      "en-US": "| Use Case | Correct Type | Avoid |\n|----------|-------------|-------|\n| IDs | `bigint` | `int`, random UUID |\n| Strings | `text` | `varchar(255)` |\n| Timestamps | `timestamptz` | `timestamp` |\n| Money | `numeric(10,2)` | `float` |\n| Flags | `boolean` | `varchar`, `int` |",
+      "zh-Hans": "| 使用场景 | 正确类型 | 避免使用 |\n|----------|-------------|-------|\n| ID | `bigint` | `int`，随机 UUID |\n| 字符串 | `text` | `varchar(255)` |\n| 时间戳 | `timestamptz` | `timestamp` |\n| 货币 | `numeric(10,2)` | `float` |\n| 标志位 | `boolean` | `varchar`，`int` |"
+    },
+    {
+      "en-US": "### Common Patterns",
+      "zh-Hans": "### 常见模式"
+    },
+    {
+      "en-US": "**Composite Index Order:**",
+      "zh-Hans": "**复合索引顺序：**"
+    },
+    {
+      "en-US": "```sql\n-- Equality columns first, then range columns\nCREATE INDEX idx ON orders (status, created_at);\n-- Works for: WHERE status = 'pending' AND created_at > '2024-01-01'\n```",
+      "zh-Hans": "```sql\n-- Equality columns first, then range columns\nCREATE INDEX idx ON orders (status, created_at);\n-- Works for: WHERE status = 'pending' AND created_at > '2024-01-01'\n```"
+    },
+    {
+      "en-US": "**Covering Index:**",
+      "zh-Hans": "**覆盖索引：**"
+    },
+    {
+      "en-US": "```sql\nCREATE INDEX idx ON users (email) INCLUDE (name, created_at);\n-- Avoids table lookup for SELECT email, name, created_at\n```",
+      "zh-Hans": "```sql\nCREATE INDEX idx ON users (email) INCLUDE (name, created_at);\n-- Avoids table lookup for SELECT email, name, created_at\n```"
+    },
+    {
+      "en-US": "**Partial Index:**",
+      "zh-Hans": "**部分索引：**"
+    },
+    {
+      "en-US": "```sql\nCREATE INDEX idx ON users (email) WHERE deleted_at IS NULL;\n-- Smaller index, only includes active users\n```",
+      "zh-Hans": "```sql\nCREATE INDEX idx ON users (email) WHERE deleted_at IS NULL;\n-- Smaller index, only includes active users\n```"
+    },
+    {
+      "en-US": "**RLS Policy (Optimized):**",
+      "zh-Hans": "**RLS 策略（优化版）：**"
+    },
+    {
+      "en-US": "```sql\nCREATE POLICY policy ON orders\n  USING ((SELECT auth.uid()) = user_id);  -- Wrap in SELECT!\n```",
+      "zh-Hans": "```sql\nCREATE POLICY policy ON orders\n  USING ((SELECT auth.uid()) = user_id);  -- Wrap in SELECT!\n```"
+    },
+    {
+      "en-US": "**UPSERT:**",
+      "zh-Hans": "**UPSERT：**"
+    },
+    {
+      "en-US": "```sql\nINSERT INTO settings (user_id, key, value)\nVALUES (123, 'theme', 'dark')\nON CONFLICT (user_id, key)\nDO UPDATE SET value = EXCLUDED.value;\n```",
+      "zh-Hans": "```sql\nINSERT INTO settings (user_id, key, value)\nVALUES (123, 'theme', 'dark')\nON CONFLICT (user_id, key)\nDO UPDATE SET value = EXCLUDED.value;\n```"
+    },
+    {
+      "en-US": "**Cursor Pagination:**",
+      "zh-Hans": "**游标分页：**"
+    },
+    {
+      "en-US": "```sql\nSELECT * FROM products WHERE id > $last_id ORDER BY id LIMIT 20;\n-- O(1) vs OFFSET which is O(n)\n```",
+      "zh-Hans": "```sql\nSELECT * FROM products WHERE id > $last_id ORDER BY id LIMIT 20;\n-- O(1) vs OFFSET which is O(n)\n```"
+    },
+    {
+      "en-US": "**Queue Processing:**",
+      "zh-Hans": "**队列处理：**"
+    },
+    {
+      "en-US": "```sql\nUPDATE jobs SET status = 'processing'\nWHERE id = (\n  SELECT id FROM jobs WHERE status = 'pending'\n  ORDER BY created_at LIMIT 1\n  FOR UPDATE SKIP LOCKED\n) RETURNING *;\n```",
+      "zh-Hans": "```sql\nUPDATE jobs SET status = 'processing'\nWHERE id = (\n  SELECT id FROM jobs WHERE status = 'pending'\n  ORDER BY created_at LIMIT 1\n  FOR UPDATE SKIP LOCKED\n) RETURNING *;\n```"
+    },
+    {
+      "en-US": "### Anti-Pattern Detection",
+      "zh-Hans": "### 反模式检测\\*\\*"
+    },
+    {
+      "en-US": "```sql\n-- Find unindexed foreign keys\nSELECT conrelid::regclass, a.attname\nFROM pg_constraint c\nJOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = ANY(c.conkey)\nWHERE c.contype = 'f'\n  AND NOT EXISTS (\n    SELECT 1 FROM pg_index i\n    WHERE i.indrelid = c.conrelid AND a.attnum = ANY(i.indkey)\n  );\n\n-- Find slow queries\nSELECT query, mean_exec_time, calls\nFROM pg_stat_statements\nWHERE mean_exec_time > 100\nORDER BY mean_exec_time DESC;\n\n-- Check table bloat\nSELECT relname, n_dead_tup, last_vacuum\nFROM pg_stat_user_tables\nWHERE n_dead_tup > 1000\nORDER BY n_dead_tup DESC;\n```",
+      "zh-Hans": "```sql\n-- Find unindexed foreign keys\nSELECT conrelid::regclass, a.attname\nFROM pg_constraint c\nJOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = ANY(c.conkey)\nWHERE c.contype = 'f'\n  AND NOT EXISTS (\n    SELECT 1 FROM pg_index i\n    WHERE i.indrelid = c.conrelid AND a.attnum = ANY(i.indkey)\n  );\n\n-- Find slow queries\nSELECT query, mean_exec_time, calls\nFROM pg_stat_statements\nWHERE mean_exec_time > 100\nORDER BY mean_exec_time DESC;\n\n-- Check table bloat\nSELECT relname, n_dead_tup, last_vacuum\nFROM pg_stat_user_tables\nWHERE n_dead_tup > 1000\nORDER BY n_dead_tup DESC;\n```"
+    },
+    {
+      "en-US": "### Configuration Template",
+      "zh-Hans": "### 配置模板"
+    },
+    {
+      "en-US": "```sql\n-- Connection limits (adjust for RAM)\nALTER SYSTEM SET max_connections = 100;\nALTER SYSTEM SET work_mem = '8MB';\n\n-- Timeouts\nALTER SYSTEM SET idle_in_transaction_session_timeout = '30s';\nALTER SYSTEM SET statement_timeout = '30s';\n\n-- Monitoring\nCREATE EXTENSION IF NOT EXISTS pg_stat_statements;\n\n-- Security defaults\nREVOKE ALL ON SCHEMA public FROM public;\n\nSELECT pg_reload_conf();\n```",
+      "zh-Hans": "```sql\n-- Connection limits (adjust for RAM)\nALTER SYSTEM SET max_connections = 100;\nALTER SYSTEM SET work_mem = '8MB';\n\n-- Timeouts\nALTER SYSTEM SET idle_in_transaction_session_timeout = '30s';\nALTER SYSTEM SET statement_timeout = '30s';\n\n-- Monitoring\nCREATE EXTENSION IF NOT EXISTS pg_stat_statements;\n\n-- Security defaults\nREVOKE ALL ON SCHEMA public FROM public;\n\nSELECT pg_reload_conf();\n```"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- Agent: `database-reviewer` - Full database review workflow\n- Skill: `clickhouse-io` - ClickHouse analytics patterns\n- Skill: `backend-patterns` - API and backend patterns",
+      "zh-Hans": "* 智能体：`database-reviewer` - 完整的数据库审查工作流\n* 技能：`clickhouse-io` - ClickHouse 分析模式\n* 技能：`backend-patterns` - API 和后端模式"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "*Based on [Supabase Agent Skills](https://github.com/supabase/agent-skills) (MIT License)*",
+      "zh-Hans": "*基于 [Supabase Agent Skills](https://github.com/supabase/agent-skills) (MIT License)*"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "sourceFile": "skills/verification-loop/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Verification Loop Skill",
+      "zh-Hans": "# 验证循环技能"
+    },
+    {
+      "en-US": "A comprehensive verification system for Claude Code sessions.",
+      "zh-Hans": "一个全面的 Claude Code 会话验证系统。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Invoke this skill:",
+      "zh-Hans": "在以下情况下调用此技能："
+    },
+    {
+      "en-US": "- After completing a feature or significant code change\n- Before creating a PR\n- When you want to ensure quality gates pass\n- After refactoring",
+      "zh-Hans": "* 完成功能或重大代码变更后\n* 创建 PR 之前\n* 当您希望确保质量门通过时\n* 重构之后"
+    },
+    {
+      "en-US": "## Verification Phases",
+      "zh-Hans": "## 验证阶段"
+    },
+    {
+      "en-US": "### Phase 1: Build Verification",
+      "zh-Hans": "### 阶段 1：构建验证"
+    },
+    {
+      "en-US": "```bash\n# Check if project builds\nnpm run build 2>&1 | tail -20\n# OR\npnpm build 2>&1 | tail -20\n```",
+      "zh-Hans": "```bash\n# Check if project builds\nnpm run build 2>&1 | tail -20\n# OR\npnpm build 2>&1 | tail -20\n```"
+    },
+    {
+      "en-US": "If build fails, STOP and fix before continuing.",
+      "zh-Hans": "如果构建失败，请停止并在继续之前修复。"
+    },
+    {
+      "en-US": "### Phase 2: Type Check",
+      "zh-Hans": "### 阶段 2：类型检查"
+    },
+    {
+      "en-US": "```bash\n# TypeScript projects\nnpx tsc --noEmit 2>&1 | head -30\n\n# Python projects\npyright . 2>&1 | head -30\n```",
+      "zh-Hans": "```bash\n# TypeScript projects\nnpx tsc --noEmit 2>&1 | head -30\n\n# Python projects\npyright . 2>&1 | head -30\n```"
+    },
+    {
+      "en-US": "Report all type errors. Fix critical ones before continuing.",
+      "zh-Hans": "报告所有类型错误。在继续之前修复关键错误。"
+    },
+    {
+      "en-US": "### Phase 3: Lint Check",
+      "zh-Hans": "### 阶段 3：代码规范检查"
+    },
+    {
+      "en-US": "```bash\n# JavaScript/TypeScript\nnpm run lint 2>&1 | head -30\n\n# Python\nruff check . 2>&1 | head -30\n```",
+      "zh-Hans": "```bash\n# JavaScript/TypeScript\nnpm run lint 2>&1 | head -30\n\n# Python\nruff check . 2>&1 | head -30\n```"
+    },
+    {
+      "en-US": "### Phase 4: Test Suite",
+      "zh-Hans": "### 阶段 4：测试套件"
+    },
+    {
+      "en-US": "```bash\n# Run tests with coverage\nnpm run test -- --coverage 2>&1 | tail -50\n\n# Check coverage threshold\n# Target: 80% minimum\n```",
+      "zh-Hans": "```bash\n# Run tests with coverage\nnpm run test -- --coverage 2>&1 | tail -50\n\n# Check coverage threshold\n# Target: 80% minimum\n```"
+    },
+    {
+      "en-US": "Report:",
+      "zh-Hans": "报告："
+    },
+    {
+      "en-US": "- Total tests: X\n- Passed: X\n- Failed: X\n- Coverage: X%",
+      "zh-Hans": "* 总测试数：X\n* 通过：X\n* 失败：X\n* 覆盖率：X%"
+    },
+    {
+      "en-US": "### Phase 5: Security Scan",
+      "zh-Hans": "### 阶段 5：安全扫描"
+    },
+    {
+      "en-US": "```bash\n# Check for secrets\ngrep -rn \"sk-\" --include=\"*.ts\" --include=\"*.js\" . 2>/dev/null | head -10\ngrep -rn \"api_key\" --include=\"*.ts\" --include=\"*.js\" . 2>/dev/null | head -10\n\n# Check for console.log\ngrep -rn \"console.log\" --include=\"*.ts\" --include=\"*.tsx\" src/ 2>/dev/null | head -10\n```",
+      "zh-Hans": "```bash\n# Check for secrets\ngrep -rn \"sk-\" --include=\"*.ts\" --include=\"*.js\" . 2>/dev/null | head -10\ngrep -rn \"api_key\" --include=\"*.ts\" --include=\"*.js\" . 2>/dev/null | head -10\n\n# Check for console.log\ngrep -rn \"console.log\" --include=\"*.ts\" --include=\"*.tsx\" src/ 2>/dev/null | head -10\n```"
+    },
+    {
+      "en-US": "### Phase 6: Diff Review",
+      "zh-Hans": "### 阶段 6：差异审查"
+    },
+    {
+      "en-US": "```bash\n# Show what changed\ngit diff --stat\ngit diff HEAD~1 --name-only\n```",
+      "zh-Hans": "```bash\n# Show what changed\ngit diff --stat\ngit diff HEAD~1 --name-only\n```"
+    },
+    {
+      "en-US": "Review each changed file for:",
+      "zh-Hans": "审查每个更改的文件，检查："
+    },
+    {
+      "en-US": "- Unintended changes\n- Missing error handling\n- Potential edge cases",
+      "zh-Hans": "* 意外更改\n* 缺失的错误处理\n* 潜在的边界情况"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "After running all phases, produce a verification report:",
+      "zh-Hans": "运行所有阶段后，生成验证报告："
+    },
+    {
+      "en-US": "```\nVERIFICATION REPORT\n==================\n\nBuild:     [PASS/FAIL]\nTypes:     [PASS/FAIL] (X errors)\nLint:      [PASS/FAIL] (X warnings)\nTests:     [PASS/FAIL] (X/Y passed, Z% coverage)\nSecurity:  [PASS/FAIL] (X issues)\nDiff:      [X files changed]\n\nOverall:   [READY/NOT READY] for PR\n\nIssues to Fix:\n1. ...\n2. ...\n```",
+      "zh-Hans": "```\nVERIFICATION REPORT\n==================\n\nBuild:     [PASS/FAIL]\nTypes:     [PASS/FAIL] (X errors)\nLint:      [PASS/FAIL] (X warnings)\nTests:     [PASS/FAIL] (X/Y passed, Z% coverage)\nSecurity:  [PASS/FAIL] (X issues)\nDiff:      [X files changed]\n\nOverall:   [READY/NOT READY] for PR\n\nIssues to Fix:\n1. ...\n2. ...\n```"
+    },
+    {
+      "en-US": "## Continuous Mode",
+      "zh-Hans": "## 持续模式"
+    },
+    {
+      "en-US": "For long sessions, run verification every 15 minutes or after major changes:",
+      "zh-Hans": "对于长时间会话，每 15 分钟或在重大更改后运行验证："
+    },
+    {
+      "en-US": "```markdown\nSet a mental checkpoint:\n- After completing each function\n- After finishing a component\n- Before moving to next task\n\nRun: /verify\n```",
+      "zh-Hans": "```markdown\n设置一个心理检查点：\n- 完成每个函数后\n- 完成一个组件后\n- 在移动到下一个任务之前\n\n运行: /verify\n\n```"
+    },
+    {
+      "en-US": "## Integration with Hooks",
+      "zh-Hans": "## 与钩子的集成"
+    },
+    {
+      "en-US": "This skill complements PostToolUse hooks but provides deeper verification.\nHooks catch issues immediately; this skill provides comprehensive review.",
+      "zh-Hans": "此技能补充 PostToolUse 钩子，但提供更深入的验证。\n钩子会立即捕获问题；此技能提供全面的审查。"
+    }
+  ]
+}

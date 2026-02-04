@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/springboot-tdd/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: springboot-tdd\ndescription: Test-driven development for Spring Boot using JUnit 5, Mockito, MockMvc, Testcontainers, and JaCoCo. Use when adding features, fixing bugs, or refactoring.\n---",
+      "zh-Hans": "---\nname: springboot-tdd\ndescription: 使用JUnit 5、Mockito、MockMvc、Testcontainers和JaCoCo进行Spring Boot的测试驱动开发。适用于添加功能、修复错误或重构时。\n---"
+    },
+    {
+      "en-US": "# Spring Boot TDD Workflow",
+      "zh-Hans": "# Spring Boot TDD 工作流程"
+    },
+    {
+      "en-US": "TDD guidance for Spring Boot services with 80%+ coverage (unit + integration).",
+      "zh-Hans": "适用于 Spring Boot 服务、覆盖率 80%+（单元 + 集成）的 TDD 指南。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- New features or endpoints\n- Bug fixes or refactors\n- Adding data access logic or security rules",
+      "zh-Hans": "* 新功能或端点\n* 错误修复或重构\n* 添加数据访问逻辑或安全规则"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "1) Write tests first (they should fail)\n2) Implement minimal code to pass\n3) Refactor with tests green\n4) Enforce coverage (JaCoCo)",
+      "zh-Hans": "1. 先写测试（它们应该失败）\n2. 实现最小代码以通过测试\n3. 在测试通过后进行重构\n4. 强制覆盖率（JaCoCo）"
+    },
+    {
+      "en-US": "## Unit Tests (JUnit 5 + Mockito)",
+      "zh-Hans": "## 单元测试 (JUnit 5 + Mockito)"
+    },
+    {
+      "en-US": "```java\n@ExtendWith(MockitoExtension.class)\nclass MarketServiceTest {\n  @Mock MarketRepository repo;\n  @InjectMocks MarketService service;\n\n  @Test\n  void createsMarket() {\n    CreateMarketRequest req = new CreateMarketRequest(\"name\", \"desc\", Instant.now(), List.of(\"cat\"));\n    when(repo.save(any())).thenAnswer(inv -> inv.getArgument(0));\n\n    Market result = service.create(req);\n\n    assertThat(result.name()).isEqualTo(\"name\");\n    verify(repo).save(any());\n  }\n}\n```",
+      "zh-Hans": "```java\n@ExtendWith(MockitoExtension.class)\nclass MarketServiceTest {\n  @Mock MarketRepository repo;\n  @InjectMocks MarketService service;\n\n  @Test\n  void createsMarket() {\n    CreateMarketRequest req = new CreateMarketRequest(\"name\", \"desc\", Instant.now(), List.of(\"cat\"));\n    when(repo.save(any())).thenAnswer(inv -> inv.getArgument(0));\n\n    Market result = service.create(req);\n\n    assertThat(result.name()).isEqualTo(\"name\");\n    verify(repo).save(any());\n  }\n}\n```"
+    },
+    {
+      "en-US": "Patterns:",
+      "zh-Hans": "模式："
+    },
+    {
+      "en-US": "- Arrange-Act-Assert\n- Avoid partial mocks; prefer explicit stubbing\n- Use `@ParameterizedTest` for variants",
+      "zh-Hans": "* Arrange-Act-Assert\n* 避免部分模拟；优先使用显式桩\n* 使用 `@ParameterizedTest` 处理变体"
+    },
+    {
+      "en-US": "## Web Layer Tests (MockMvc)",
+      "zh-Hans": "## Web 层测试 (MockMvc)"
+    },
+    {
+      "en-US": "```java\n@WebMvcTest(MarketController.class)\nclass MarketControllerTest {\n  @Autowired MockMvc mockMvc;\n  @MockBean MarketService marketService;\n\n  @Test\n  void returnsMarkets() throws Exception {\n    when(marketService.list(any())).thenReturn(Page.empty());\n\n    mockMvc.perform(get(\"/api/markets\"))\n        .andExpect(status().isOk())\n        .andExpect(jsonPath(\"$.content\").isArray());\n  }\n}\n```",
+      "zh-Hans": "```java\n@WebMvcTest(MarketController.class)\nclass MarketControllerTest {\n  @Autowired MockMvc mockMvc;\n  @MockBean MarketService marketService;\n\n  @Test\n  void returnsMarkets() throws Exception {\n    when(marketService.list(any())).thenReturn(Page.empty());\n\n    mockMvc.perform(get(\"/api/markets\"))\n        .andExpect(status().isOk())\n        .andExpect(jsonPath(\"$.content\").isArray());\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Integration Tests (SpringBootTest)",
+      "zh-Hans": "## 集成测试 (SpringBootTest)"
+    },
+    {
+      "en-US": "```java\n@SpringBootTest\n@AutoConfigureMockMvc\n@ActiveProfiles(\"test\")\nclass MarketIntegrationTest {\n  @Autowired MockMvc mockMvc;\n\n  @Test\n  void createsMarket() throws Exception {\n    mockMvc.perform(post(\"/api/markets\")\n        .contentType(MediaType.APPLICATION_JSON)\n        .content(\"\"\"\n          {\"name\":\"Test\",\"description\":\"Desc\",\"endDate\":\"2030-01-01T00:00:00Z\",\"categories\":[\"general\"]}\n        \"\"\"))\n      .andExpect(status().isCreated());\n  }\n}\n```",
+      "zh-Hans": "```java\n@SpringBootTest\n@AutoConfigureMockMvc\n@ActiveProfiles(\"test\")\nclass MarketIntegrationTest {\n  @Autowired MockMvc mockMvc;\n\n  @Test\n  void createsMarket() throws Exception {\n    mockMvc.perform(post(\"/api/markets\")\n        .contentType(MediaType.APPLICATION_JSON)\n        .content(\"\"\"\n          {\"name\":\"Test\",\"description\":\"Desc\",\"endDate\":\"2030-01-01T00:00:00Z\",\"categories\":[\"general\"]}\n        \"\"\"))\n      .andExpect(status().isCreated());\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Persistence Tests (DataJpaTest)",
+      "zh-Hans": "## 持久层测试 (DataJpaTest)"
+    },
+    {
+      "en-US": "```java\n@DataJpaTest\n@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)\n@Import(TestContainersConfig.class)\nclass MarketRepositoryTest {\n  @Autowired MarketRepository repo;\n\n  @Test\n  void savesAndFinds() {\n    MarketEntity entity = new MarketEntity();\n    entity.setName(\"Test\");\n    repo.save(entity);\n\n    Optional<MarketEntity> found = repo.findByName(\"Test\");\n    assertThat(found).isPresent();\n  }\n}\n```",
+      "zh-Hans": "```java\n@DataJpaTest\n@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)\n@Import(TestContainersConfig.class)\nclass MarketRepositoryTest {\n  @Autowired MarketRepository repo;\n\n  @Test\n  void savesAndFinds() {\n    MarketEntity entity = new MarketEntity();\n    entity.setName(\"Test\");\n    repo.save(entity);\n\n    Optional<MarketEntity> found = repo.findByName(\"Test\");\n    assertThat(found).isPresent();\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Testcontainers",
+      "zh-Hans": "## Testcontainers"
+    },
+    {
+      "en-US": "- Use reusable containers for Postgres/Redis to mirror production\n- Wire via `@DynamicPropertySource` to inject JDBC URLs into Spring context",
+      "zh-Hans": "* 对 Postgres/Redis 使用可复用的容器以镜像生产环境\n* 通过 `@DynamicPropertySource` 连接，将 JDBC URL 注入 Spring 上下文"
+    },
+    {
+      "en-US": "## Coverage (JaCoCo)",
+      "zh-Hans": "## 覆盖率 (JaCoCo)"
+    },
+    {
+      "en-US": "Maven snippet:",
+      "zh-Hans": "Maven 片段："
+    },
+    {
+      "en-US": "```xml\n<plugin>\n  <groupId>org.jacoco</groupId>\n  <artifactId>jacoco-maven-plugin</artifactId>\n  <version>0.8.14</version>\n  <executions>\n    <execution>\n      <goals><goal>prepare-agent</goal></goals>\n    </execution>\n    <execution>\n      <id>report</id>\n      <phase>verify</phase>\n      <goals><goal>report</goal></goals>\n    </execution>\n  </executions>\n</plugin>\n```",
+      "zh-Hans": "```xml\n<plugin>\n  <groupId>org.jacoco</groupId>\n  <artifactId>jacoco-maven-plugin</artifactId>\n  <version>0.8.14</version>\n  <executions>\n    <execution>\n      <goals><goal>prepare-agent</goal></goals>\n    </execution>\n    <execution>\n      <id>report</id>\n      <phase>verify</phase>\n      <goals><goal>report</goal></goals>\n    </execution>\n  </executions>\n</plugin>\n```"
+    },
+    {
+      "en-US": "## Assertions",
+      "zh-Hans": "## 断言"
+    },
+    {
+      "en-US": "- Prefer AssertJ (`assertThat`) for readability\n- For JSON responses, use `jsonPath`\n- For exceptions: `assertThatThrownBy(...)`",
+      "zh-Hans": "* 为可读性，优先使用 AssertJ (`assertThat`)\n* 对于 JSON 响应，使用 `jsonPath`\n* 对于异常：`assertThatThrownBy(...)`"
+    },
+    {
+      "en-US": "## Test Data Builders",
+      "zh-Hans": "## 测试数据构建器"
+    },
+    {
+      "en-US": "```java\nclass MarketBuilder {\n  private String name = \"Test\";\n  MarketBuilder withName(String name) { this.name = name; return this; }\n  Market build() { return new Market(null, name, MarketStatus.ACTIVE); }\n}\n```",
+      "zh-Hans": "```java\nclass MarketBuilder {\n  private String name = \"Test\";\n  MarketBuilder withName(String name) { this.name = name; return this; }\n  Market build() { return new Market(null, name, MarketStatus.ACTIVE); }\n}\n```"
+    },
+    {
+      "en-US": "## CI Commands",
+      "zh-Hans": "## CI 命令"
+    },
+    {
+      "en-US": "- Maven: `mvn -T 4 test` or `mvn verify`\n- Gradle: `./gradlew test jacocoTestReport`",
+      "zh-Hans": "* Maven: `mvn -T 4 test` 或 `mvn verify`\n* Gradle: `./gradlew test jacocoTestReport`"
+    },
+    {
+      "en-US": "**Remember**: Keep tests fast, isolated, and deterministic. Test behavior, not implementation details.",
+      "zh-Hans": "**记住**：保持测试快速、隔离且确定。测试行为，而非实现细节。"
+    }
+  ]
+}

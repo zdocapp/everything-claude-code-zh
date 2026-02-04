@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: Universal coding standards, best practices, and patterns for TypeScript, JavaScript, React, and Node.js development.
+description: 适用于TypeScript、JavaScript、React和Node.js开发的通用编码标准、最佳实践和模式。
 ---
 
 # 编码标准与最佳实践
@@ -13,12 +13,12 @@ description: Universal coding standards, best practices, and patterns for TypeSc
 
 * 代码被阅读的次数远多于被编写的次数
 * 清晰的变量和函数名
-* 优先选择自文档化代码而非注释
+* 优先选择自文档化代码，而非注释
 * 一致的格式化
 
-### 2. KISS (保持简单直接)
+### 2. KISS (保持简单，傻瓜)
 
-* 使用可行的最简单方案
+* 采用能工作的最简单方案
 * 避免过度设计
 * 不要过早优化
 * 易于理解 > 聪明的代码
@@ -27,13 +27,13 @@ description: Universal coding standards, best practices, and patterns for TypeSc
 
 * 将通用逻辑提取到函数中
 * 创建可复用的组件
-* 在模块间共享工具函数
-* 避免复制粘贴编程
+* 跨模块共享工具函数
+* 避免复制粘贴式编程
 
-### 4. YAGNI (你将来不需要它)
+### 4. YAGNI (你不会需要它)
 
-* 不要在需要之前构建功能
-* 避免推测性的泛化
+* 不要预先构建不需要的功能
+* 避免推测性泛化
 * 仅在需要时增加复杂性
 * 从简单开始，需要时再重构
 
@@ -182,7 +182,7 @@ export function Button(props) {
 }
 ```
 
-### 自定义钩子
+### 自定义 Hooks
 
 ```typescript
 // ✅ GOOD: Reusable custom hook
@@ -465,7 +465,7 @@ test('test search', () => { })
 
 ## 代码异味检测
 
-注意以下反模式：
+警惕以下反模式：
 
 ### 1. 长函数
 
@@ -524,4 +524,4 @@ if (retryCount > MAX_RETRIES) { }
 setTimeout(callback, DEBOUNCE_DELAY_MS)
 ```
 
-**记住**：代码质量不容妥协。清晰、可维护的代码能实现快速开发和自信的重构。
+**记住**：代码质量不容妥协。清晰、可维护的代码能够实现快速开发和自信的重构。

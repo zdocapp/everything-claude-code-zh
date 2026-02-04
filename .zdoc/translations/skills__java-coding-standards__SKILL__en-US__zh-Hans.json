@@ -1,0 +1,134 @@
+{
+  "sourceFile": "skills/java-coding-standards/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: java-coding-standards\ndescription: Java coding standards for Spring Boot services: naming, immutability, Optional usage, streams, exceptions, generics, and project layout.\n---",
+      "zh-Hans": "---\nname: java-coding-standards\ndescription: Java coding standards for Spring Boot services: naming, immutability, Optional usage, streams, exceptions, generics, and project layout.\n---"
+    },
+    {
+      "en-US": "# Java Coding Standards",
+      "zh-Hans": "# Java 编码规范"
+    },
+    {
+      "en-US": "Standards for readable, maintainable Java (17+) code in Spring Boot services.",
+      "zh-Hans": "适用于 Spring Boot 服务中可读、可维护的 Java (17+) 代码的规范。"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "- Prefer clarity over cleverness\n- Immutable by default; minimize shared mutable state\n- Fail fast with meaningful exceptions\n- Consistent naming and package structure",
+      "zh-Hans": "* 清晰优于巧妙\n* 默认不可变；最小化共享可变状态\n* 快速失败并提供有意义的异常\n* 一致的命名和包结构"
+    },
+    {
+      "en-US": "## Naming",
+      "zh-Hans": "## 命名"
+    },
+    {
+      "en-US": "```java\n// ✅ Classes/Records: PascalCase\npublic class MarketService {}\npublic record Money(BigDecimal amount, Currency currency) {}\n\n// ✅ Methods/fields: camelCase\nprivate final MarketRepository marketRepository;\npublic Market findBySlug(String slug) {}\n\n// ✅ Constants: UPPER_SNAKE_CASE\nprivate static final int MAX_PAGE_SIZE = 100;\n```",
+      "zh-Hans": "```java\n// ✅ Classes/Records: PascalCase\npublic class MarketService {}\npublic record Money(BigDecimal amount, Currency currency) {}\n\n// ✅ Methods/fields: camelCase\nprivate final MarketRepository marketRepository;\npublic Market findBySlug(String slug) {}\n\n// ✅ Constants: UPPER_SNAKE_CASE\nprivate static final int MAX_PAGE_SIZE = 100;\n```"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "```java\n// ✅ Favor records and final fields\npublic record MarketDto(Long id, String name, MarketStatus status) {}\n\npublic class Market {\n  private final Long id;\n  private final String name;\n  // getters only, no setters\n}\n```",
+      "zh-Hans": "```java\n// ✅ Favor records and final fields\npublic record MarketDto(Long id, String name, MarketStatus status) {}\n\npublic class Market {\n  private final Long id;\n  private final String name;\n  // getters only, no setters\n}\n```"
+    },
+    {
+      "en-US": "## Optional Usage",
+      "zh-Hans": "## Optional 使用"
+    },
+    {
+      "en-US": "```java\n// ✅ Return Optional from find* methods\nOptional<Market> market = marketRepository.findBySlug(slug);\n\n// ✅ Map/flatMap instead of get()\nreturn market\n    .map(MarketResponse::from)\n    .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n```",
+      "zh-Hans": "```java\n// ✅ Return Optional from find* methods\nOptional<Market> market = marketRepository.findBySlug(slug);\n\n// ✅ Map/flatMap instead of get()\nreturn market\n    .map(MarketResponse::from)\n    .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n```"
+    },
+    {
+      "en-US": "## Streams Best Practices",
+      "zh-Hans": "## Streams 最佳实践"
+    },
+    {
+      "en-US": "```java\n// ✅ Use streams for transformations, keep pipelines short\nList<String> names = markets.stream()\n    .map(Market::name)\n    .filter(Objects::nonNull)\n    .toList();\n\n// ❌ Avoid complex nested streams; prefer loops for clarity\n```",
+      "zh-Hans": "```java\n// ✅ Use streams for transformations, keep pipelines short\nList<String> names = markets.stream()\n    .map(Market::name)\n    .filter(Objects::nonNull)\n    .toList();\n\n// ❌ Avoid complex nested streams; prefer loops for clarity\n```"
+    },
+    {
+      "en-US": "## Exceptions",
+      "zh-Hans": "## 异常"
+    },
+    {
+      "en-US": "- Use unchecked exceptions for domain errors; wrap technical exceptions with context\n- Create domain-specific exceptions (e.g., `MarketNotFoundException`)\n- Avoid broad `catch (Exception ex)` unless rethrowing/logging centrally",
+      "zh-Hans": "* 领域错误使用非受检异常；包装技术异常时提供上下文\n* 创建特定领域的异常（例如，`MarketNotFoundException`）\n* 避免宽泛的 `catch (Exception ex)`，除非在中心位置重新抛出/记录"
+    },
+    {
+      "en-US": "```java\nthrow new MarketNotFoundException(slug);\n```",
+      "zh-Hans": "```java\nthrow new MarketNotFoundException(slug);\n```"
+    },
+    {
+      "en-US": "## Generics and Type Safety",
+      "zh-Hans": "## 泛型和类型安全"
+    },
+    {
+      "en-US": "- Avoid raw types; declare generic parameters\n- Prefer bounded generics for reusable utilities",
+      "zh-Hans": "* 避免原始类型；声明泛型参数\n* 对于可复用的工具类，优先使用有界泛型"
+    },
+    {
+      "en-US": "```java\npublic <T extends Identifiable> Map<Long, T> indexById(Collection<T> items) { ... }\n```",
+      "zh-Hans": "```java\npublic <T extends Identifiable> Map<Long, T> indexById(Collection<T> items) { ... }\n```"
+    },
+    {
+      "en-US": "## Project Structure (Maven/Gradle)",
+      "zh-Hans": "## 项目结构 (Maven/Gradle)"
+    },
+    {
+      "en-US": "```\nsrc/main/java/com/example/app/\n  config/\n  controller/\n  service/\n  repository/\n  domain/\n  dto/\n  util/\nsrc/main/resources/\n  application.yml\nsrc/test/java/... (mirrors main)\n```",
+      "zh-Hans": "```\nsrc/main/java/com/example/app/\n  config/\n  controller/\n  service/\n  repository/\n  domain/\n  dto/\n  util/\nsrc/main/resources/\n  application.yml\nsrc/test/java/... (mirrors main)\n```"
+    },
+    {
+      "en-US": "## Formatting and Style",
+      "zh-Hans": "## 格式化和风格"
+    },
+    {
+      "en-US": "- Use 2 or 4 spaces consistently (project standard)\n- One public top-level type per file\n- Keep methods short and focused; extract helpers\n- Order members: constants, fields, constructors, public methods, protected, private",
+      "zh-Hans": "* 一致地使用 2 或 4 个空格（项目标准）\n* 每个文件一个公共顶级类型\n* 保持方法简短且专注；提取辅助方法\n* 成员顺序：常量、字段、构造函数、公共方法、受保护方法、私有方法"
+    },
+    {
+      "en-US": "## Code Smells to Avoid",
+      "zh-Hans": "## 需要避免的代码坏味道"
+    },
+    {
+      "en-US": "- Long parameter lists → use DTO/builders\n- Deep nesting → early returns\n- Magic numbers → named constants\n- Static mutable state → prefer dependency injection\n- Silent catch blocks → log and act or rethrow",
+      "zh-Hans": "* 长参数列表 → 使用 DTO/构建器\n* 深度嵌套 → 提前返回\n* 魔法数字 → 命名常量\n* 静态可变状态 → 优先使用依赖注入\n* 静默捕获块 → 记录日志并处理或重新抛出"
+    },
+    {
+      "en-US": "## Logging",
+      "zh-Hans": "## 日志记录"
+    },
+    {
+      "en-US": "```java\nprivate static final Logger log = LoggerFactory.getLogger(MarketService.class);\nlog.info(\"fetch_market slug={}\", slug);\nlog.error(\"failed_fetch_market slug={}\", slug, ex);\n```",
+      "zh-Hans": "```java\nprivate static final Logger log = LoggerFactory.getLogger(MarketService.class);\nlog.info(\"fetch_market slug={}\", slug);\nlog.error(\"failed_fetch_market slug={}\", slug, ex);\n```"
+    },
+    {
+      "en-US": "## Null Handling",
+      "zh-Hans": "## Null 处理"
+    },
+    {
+      "en-US": "- Accept `@Nullable` only when unavoidable; otherwise use `@NonNull`\n- Use Bean Validation (`@NotNull`, `@NotBlank`) on inputs",
+      "zh-Hans": "* 仅在不可避免时接受 `@Nullable`；否则使用 `@NonNull`\n* 在输入上使用 Bean 验证（`@NotNull`, `@NotBlank`）"
+    },
+    {
+      "en-US": "## Testing Expectations",
+      "zh-Hans": "## 测试期望"
+    },
+    {
+      "en-US": "- JUnit 5 + AssertJ for fluent assertions\n- Mockito for mocking; avoid partial mocks where possible\n- Favor deterministic tests; no hidden sleeps",
+      "zh-Hans": "* 使用 JUnit 5 + AssertJ 进行流畅的断言\n* 使用 Mockito 进行模拟；尽可能避免部分模拟\n* 倾向于确定性测试；没有隐藏的休眠"
+    },
+    {
+      "en-US": "**Remember**: Keep code intentional, typed, and observable. Optimize for maintainability over micro-optimizations unless proven necessary.",
+      "zh-Hans": "**记住**：保持代码意图明确、类型安全且可观察。除非证明有必要，否则优先考虑可维护性而非微优化。"
+    }
+  ]
+}

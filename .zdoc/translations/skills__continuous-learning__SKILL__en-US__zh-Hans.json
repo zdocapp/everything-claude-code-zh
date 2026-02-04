@@ -1,0 +1,118 @@
+{
+  "sourceFile": "skills/continuous-learning/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: continuous-learning\ndescription: Automatically extract reusable patterns from Claude Code sessions and save them as learned skills for future use.\n---",
+      "zh-Hans": "---\nname: continuous-learning\ndescription: 自动从Claude Code会话中提取可重用模式，并将其保存为学习技能供未来使用。\n---"
+    },
+    {
+      "en-US": "# Continuous Learning Skill",
+      "zh-Hans": "# 持续学习技能"
+    },
+    {
+      "en-US": "Automatically evaluates Claude Code sessions on end to extract reusable patterns that can be saved as learned skills.",
+      "zh-Hans": "自动评估 Claude Code 会话的结尾，以提取可重用的模式，这些模式可以保存为学习到的技能。"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "This skill runs as a **Stop hook** at the end of each session:",
+      "zh-Hans": "此技能作为 **停止钩子** 在每个会话结束时运行："
+    },
+    {
+      "en-US": "1. **Session Evaluation**: Checks if session has enough messages (default: 10+)\n2. **Pattern Detection**: Identifies extractable patterns from the session\n3. **Skill Extraction**: Saves useful patterns to `~/.claude/skills/learned/`",
+      "zh-Hans": "1. **会话评估**：检查会话是否包含足够多的消息（默认：10 条以上）\n2. **模式检测**：从会话中识别可提取的模式\n3. **技能提取**：将有用的模式保存到 `~/.claude/skills/learned/`"
+    },
+    {
+      "en-US": "## Configuration",
+      "zh-Hans": "## 配置"
+    },
+    {
+      "en-US": "Edit `config.json` to customize:",
+      "zh-Hans": "编辑 `config.json` 以进行自定义："
+    },
+    {
+      "en-US": "```json\n{\n  \"min_session_length\": 10,\n  \"extraction_threshold\": \"medium\",\n  \"auto_approve\": false,\n  \"learned_skills_path\": \"~/.claude/skills/learned/\",\n  \"patterns_to_detect\": [\n    \"error_resolution\",\n    \"user_corrections\",\n    \"workarounds\",\n    \"debugging_techniques\",\n    \"project_specific\"\n  ],\n  \"ignore_patterns\": [\n    \"simple_typos\",\n    \"one_time_fixes\",\n    \"external_api_issues\"\n  ]\n}\n```",
+      "zh-Hans": "```json\n{\n  \"min_session_length\": 10,\n  \"extraction_threshold\": \"medium\",\n  \"auto_approve\": false,\n  \"learned_skills_path\": \"~/.claude/skills/learned/\",\n  \"patterns_to_detect\": [\n    \"error_resolution\",\n    \"user_corrections\",\n    \"workarounds\",\n    \"debugging_techniques\",\n    \"project_specific\"\n  ],\n  \"ignore_patterns\": [\n    \"simple_typos\",\n    \"one_time_fixes\",\n    \"external_api_issues\"\n  ]\n}\n```"
+    },
+    {
+      "en-US": "## Pattern Types",
+      "zh-Hans": "## 模式类型"
+    },
+    {
+      "en-US": "| Pattern | Description |\n|---------|-------------|\n| `error_resolution` | How specific errors were resolved |\n| `user_corrections` | Patterns from user corrections |\n| `workarounds` | Solutions to framework/library quirks |\n| `debugging_techniques` | Effective debugging approaches |\n| `project_specific` | Project-specific conventions |",
+      "zh-Hans": "| 模式 | 描述 |\n|---------|-------------|\n| `error_resolution` | 特定错误是如何解决的 |\n| `user_corrections` | 来自用户纠正的模式 |\n| `workarounds` | 框架/库特殊性的解决方案 |\n| `debugging_techniques` | 有效的调试方法 |\n| `project_specific` | 项目特定的约定 |"
+    },
+    {
+      "en-US": "## Hook Setup",
+      "zh-Hans": "## 钩子设置"
+    },
+    {
+      "en-US": "Add to your `~/.claude/settings.json`:",
+      "zh-Hans": "添加到你的 `~/.claude/settings.json` 中："
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"Stop\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning/evaluate-session.sh\"\n      }]\n    }]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"Stop\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning/evaluate-session.sh\"\n      }]\n    }]\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Why Stop Hook?",
+      "zh-Hans": "## 为什么使用停止钩子？"
+    },
+    {
+      "en-US": "- **Lightweight**: Runs once at session end\n- **Non-blocking**: Doesn't add latency to every message\n- **Complete context**: Has access to full session transcript",
+      "zh-Hans": "* **轻量级**：仅在会话结束时运行一次\n* **非阻塞**：不会给每条消息增加延迟\n* **完整上下文**：可以访问完整的会话记录"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Section on continuous learning\n- `/learn` command - Manual pattern extraction mid-session",
+      "zh-Hans": "* [长篇指南](https://x.com/affaanmustafa/status/2014040193557471352) - 关于持续学习的章节\n* `/learn` 命令 - 在会话中手动提取模式"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Comparison Notes (Research: Jan 2025)",
+      "zh-Hans": "## 对比说明（研究：2025年1月）"
+    },
+    {
+      "en-US": "### vs Homunculus (github.com/humanplane/homunculus)",
+      "zh-Hans": "### 与 Homunculus (github.com/humanplane/homunculus) 对比"
+    },
+    {
+      "en-US": "Homunculus v2 takes a more sophisticated approach:",
+      "zh-Hans": "Homunculus v2 采用了更复杂的方法："
+    },
+    {
+      "en-US": "| Feature | Our Approach | Homunculus v2 |\n|---------|--------------|---------------|\n| Observation | Stop hook (end of session) | PreToolUse/PostToolUse hooks (100% reliable) |\n| Analysis | Main context | Background agent (Haiku) |\n| Granularity | Full skills | Atomic \"instincts\" |\n| Confidence | None | 0.3-0.9 weighted |\n| Evolution | Direct to skill | Instincts → cluster → skill/command/agent |\n| Sharing | None | Export/import instincts |",
+      "zh-Hans": "| 功能 | 我们的方法 | Homunculus v2 |\n|---------|--------------|---------------|\n| 观察 | 停止钩子（会话结束时） | PreToolUse/PostToolUse 钩子（100% 可靠） |\n| 分析 | 主上下文 | 后台代理 (Haiku) |\n| 粒度 | 完整技能 | 原子化的“本能” |\n| 置信度 | 无 | 0.3-0.9 加权 |\n| 演进 | 直接到技能 | 本能 → 集群 → 技能/命令/代理 |\n| 共享 | 无 | 导出/导入本能 |"
+    },
+    {
+      "en-US": "**Key insight from homunculus:**",
+      "zh-Hans": "**来自 homunculus 的关键见解：**"
+    },
+    {
+      "en-US": "> \"v1 relied on skills to observe. Skills are probabilistic—they fire ~50-80% of the time. v2 uses hooks for observation (100% reliable) and instincts as the atomic unit of learned behavior.\"",
+      "zh-Hans": "> \"v1 依赖技能来观察。技能是概率性的——它们触发的概率约为 50-80%。v2 使用钩子进行观察（100% 可靠），并以本能作为学习行为的原子单元。\""
+    },
+    {
+      "en-US": "### Potential v2 Enhancements",
+      "zh-Hans": "### 潜在的 v2 增强功能"
+    },
+    {
+      "en-US": "1. **Instinct-based learning** - Smaller, atomic behaviors with confidence scoring\n2. **Background observer** - Haiku agent analyzing in parallel\n3. **Confidence decay** - Instincts lose confidence if contradicted\n4. **Domain tagging** - code-style, testing, git, debugging, etc.\n5. **Evolution path** - Cluster related instincts into skills/commands",
+      "zh-Hans": "1. **基于本能的学习** - 更小、原子化的行为，附带置信度评分\n2. **后台观察者** - Haiku 代理并行分析\n3. **置信度衰减** - 如果被反驳，本能会降低置信度\n4. **领域标记** - 代码风格、测试、git、调试等\n5. **演进路径** - 将相关本能聚类为技能/命令"
+    },
+    {
+      "en-US": "See: `/Users/affoon/Documents/tasks/12-continuous-learning-v2.md` for full spec.",
+      "zh-Hans": "完整规格请参见：`/Users/affoon/Documents/tasks/12-continuous-learning-v2.md`"
+    }
+  ]
+}

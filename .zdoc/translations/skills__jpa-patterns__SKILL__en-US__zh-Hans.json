@@ -1,0 +1,146 @@
+{
+  "sourceFile": "skills/jpa-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: jpa-patterns\ndescription: JPA/Hibernate patterns for entity design, relationships, query optimization, transactions, auditing, indexing, pagination, and pooling in Spring Boot.\n---",
+      "zh-Hans": "---\nname: jpa-patterns\ndescription: Spring Boot中的JPA/Hibernate实体设计、关系、查询优化、事务、审计、索引、分页和连接池模式。\n---"
+    },
+    {
+      "en-US": "# JPA/Hibernate Patterns",
+      "zh-Hans": "# JPA/Hibernate 模式"
+    },
+    {
+      "en-US": "Use for data modeling, repositories, and performance tuning in Spring Boot.",
+      "zh-Hans": "用于 Spring Boot 中的数据建模、存储库和性能调优。"
+    },
+    {
+      "en-US": "## Entity Design",
+      "zh-Hans": "## 实体设计"
+    },
+    {
+      "en-US": "```java\n@Entity\n@Table(name = \"markets\", indexes = {\n  @Index(name = \"idx_markets_slug\", columnList = \"slug\", unique = true)\n})\n@EntityListeners(AuditingEntityListener.class)\npublic class MarketEntity {\n  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\n  private Long id;\n\n  @Column(nullable = false, length = 200)\n  private String name;\n\n  @Column(nullable = false, unique = true, length = 120)\n  private String slug;\n\n  @Enumerated(EnumType.STRING)\n  private MarketStatus status = MarketStatus.ACTIVE;\n\n  @CreatedDate private Instant createdAt;\n  @LastModifiedDate private Instant updatedAt;\n}\n```",
+      "zh-Hans": "```java\n@Entity\n@Table(name = \"markets\", indexes = {\n  @Index(name = \"idx_markets_slug\", columnList = \"slug\", unique = true)\n})\n@EntityListeners(AuditingEntityListener.class)\npublic class MarketEntity {\n  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\n  private Long id;\n\n  @Column(nullable = false, length = 200)\n  private String name;\n\n  @Column(nullable = false, unique = true, length = 120)\n  private String slug;\n\n  @Enumerated(EnumType.STRING)\n  private MarketStatus status = MarketStatus.ACTIVE;\n\n  @CreatedDate private Instant createdAt;\n  @LastModifiedDate private Instant updatedAt;\n}\n```"
+    },
+    {
+      "en-US": "Enable auditing:",
+      "zh-Hans": "启用审计："
+    },
+    {
+      "en-US": "```java\n@Configuration\n@EnableJpaAuditing\nclass JpaConfig {}\n```",
+      "zh-Hans": "```java\n@Configuration\n@EnableJpaAuditing\nclass JpaConfig {}\n```"
+    },
+    {
+      "en-US": "## Relationships and N+1 Prevention",
+      "zh-Hans": "## 关联关系和 N+1 预防"
+    },
+    {
+      "en-US": "```java\n@OneToMany(mappedBy = \"market\", cascade = CascadeType.ALL, orphanRemoval = true)\nprivate List<PositionEntity> positions = new ArrayList<>();\n```",
+      "zh-Hans": "```java\n@OneToMany(mappedBy = \"market\", cascade = CascadeType.ALL, orphanRemoval = true)\nprivate List<PositionEntity> positions = new ArrayList<>();\n```"
+    },
+    {
+      "en-US": "- Default to lazy loading; use `JOIN FETCH` in queries when needed\n- Avoid `EAGER` on collections; use DTO projections for read paths",
+      "zh-Hans": "* 默认使用延迟加载；需要时在查询中使用 `JOIN FETCH`\n* 避免在集合上使用 `EAGER`；对于读取路径使用 DTO 投影"
+    },
+    {
+      "en-US": "```java\n@Query(\"select m from MarketEntity m left join fetch m.positions where m.id = :id\")\nOptional<MarketEntity> findWithPositions(@Param(\"id\") Long id);\n```",
+      "zh-Hans": "```java\n@Query(\"select m from MarketEntity m left join fetch m.positions where m.id = :id\")\nOptional<MarketEntity> findWithPositions(@Param(\"id\") Long id);\n```"
+    },
+    {
+      "en-US": "## Repository Patterns",
+      "zh-Hans": "## 存储库模式"
+    },
+    {
+      "en-US": "```java\npublic interface MarketRepository extends JpaRepository<MarketEntity, Long> {\n  Optional<MarketEntity> findBySlug(String slug);\n\n  @Query(\"select m from MarketEntity m where m.status = :status\")\n  Page<MarketEntity> findByStatus(@Param(\"status\") MarketStatus status, Pageable pageable);\n}\n```",
+      "zh-Hans": "```java\npublic interface MarketRepository extends JpaRepository<MarketEntity, Long> {\n  Optional<MarketEntity> findBySlug(String slug);\n\n  @Query(\"select m from MarketEntity m where m.status = :status\")\n  Page<MarketEntity> findByStatus(@Param(\"status\") MarketStatus status, Pageable pageable);\n}\n```"
+    },
+    {
+      "en-US": "- Use projections for lightweight queries:",
+      "zh-Hans": "* 使用投影进行轻量级查询："
+    },
+    {
+      "en-US": "```java\npublic interface MarketSummary {\n  Long getId();\n  String getName();\n  MarketStatus getStatus();\n}\nPage<MarketSummary> findAllBy(Pageable pageable);\n```",
+      "zh-Hans": "```java\npublic interface MarketSummary {\n  Long getId();\n  String getName();\n  MarketStatus getStatus();\n}\nPage<MarketSummary> findAllBy(Pageable pageable);\n```"
+    },
+    {
+      "en-US": "## Transactions",
+      "zh-Hans": "## 事务"
+    },
+    {
+      "en-US": "- Annotate service methods with `@Transactional`\n- Use `@Transactional(readOnly = true)` for read paths to optimize\n- Choose propagation carefully; avoid long-running transactions",
+      "zh-Hans": "* 使用 `@Transactional` 注解服务方法\n* 对读取路径使用 `@Transactional(readOnly = true)` 以进行优化\n* 谨慎选择传播行为；避免长时间运行的事务"
+    },
+    {
+      "en-US": "```java\n@Transactional\npublic Market updateStatus(Long id, MarketStatus status) {\n  MarketEntity entity = repo.findById(id)\n      .orElseThrow(() -> new EntityNotFoundException(\"Market\"));\n  entity.setStatus(status);\n  return Market.from(entity);\n}\n```",
+      "zh-Hans": "```java\n@Transactional\npublic Market updateStatus(Long id, MarketStatus status) {\n  MarketEntity entity = repo.findById(id)\n      .orElseThrow(() -> new EntityNotFoundException(\"Market\"));\n  entity.setStatus(status);\n  return Market.from(entity);\n}\n```"
+    },
+    {
+      "en-US": "## Pagination",
+      "zh-Hans": "## 分页"
+    },
+    {
+      "en-US": "```java\nPageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by(\"createdAt\").descending());\nPage<MarketEntity> markets = repo.findByStatus(MarketStatus.ACTIVE, page);\n```",
+      "zh-Hans": "```java\nPageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by(\"createdAt\").descending());\nPage<MarketEntity> markets = repo.findByStatus(MarketStatus.ACTIVE, page);\n```"
+    },
+    {
+      "en-US": "For cursor-like pagination, include `id > :lastId` in JPQL with ordering.",
+      "zh-Hans": "对于类似游标的分页，在 JPQL 中包含 `id > :lastId` 并配合排序。"
+    },
+    {
+      "en-US": "## Indexing and Performance",
+      "zh-Hans": "## 索引和性能"
+    },
+    {
+      "en-US": "- Add indexes for common filters (`status`, `slug`, foreign keys)\n- Use composite indexes matching query patterns (`status, created_at`)\n- Avoid `select *`; project only needed columns\n- Batch writes with `saveAll` and `hibernate.jdbc.batch_size`",
+      "zh-Hans": "* 为常用过滤器添加索引（`status`、`slug`、外键）\n* 使用与查询模式匹配的复合索引（`status, created_at`）\n* 避免 `select *`；仅投影需要的列\n* 使用 `saveAll` 和 `hibernate.jdbc.batch_size` 进行批量写入"
+    },
+    {
+      "en-US": "## Connection Pooling (HikariCP)",
+      "zh-Hans": "## 连接池 (HikariCP)"
+    },
+    {
+      "en-US": "Recommended properties:",
+      "zh-Hans": "推荐属性："
+    },
+    {
+      "en-US": "```\nspring.datasource.hikari.maximum-pool-size=20\nspring.datasource.hikari.minimum-idle=5\nspring.datasource.hikari.connection-timeout=30000\nspring.datasource.hikari.validation-timeout=5000\n```",
+      "zh-Hans": "```\nspring.datasource.hikari.maximum-pool-size=20\nspring.datasource.hikari.minimum-idle=5\nspring.datasource.hikari.connection-timeout=30000\nspring.datasource.hikari.validation-timeout=5000\n```"
+    },
+    {
+      "en-US": "For PostgreSQL LOB handling, add:",
+      "zh-Hans": "对于 PostgreSQL LOB 处理，添加："
+    },
+    {
+      "en-US": "```\nspring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true\n```",
+      "zh-Hans": "```\nspring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true\n```"
+    },
+    {
+      "en-US": "## Caching",
+      "zh-Hans": "## 缓存"
+    },
+    {
+      "en-US": "- 1st-level cache is per EntityManager; avoid keeping entities across transactions\n- For read-heavy entities, consider second-level cache cautiously; validate eviction strategy",
+      "zh-Hans": "* 一级缓存是每个 EntityManager 的；避免在事务之间保持实体\n* 对于读取频繁的实体，谨慎考虑二级缓存；验证驱逐策略"
+    },
+    {
+      "en-US": "## Migrations",
+      "zh-Hans": "## 迁移"
+    },
+    {
+      "en-US": "- Use Flyway or Liquibase; never rely on Hibernate auto DDL in production\n- Keep migrations idempotent and additive; avoid dropping columns without plan",
+      "zh-Hans": "* 使用 Flyway 或 Liquibase；切勿在生产中依赖 Hibernate 自动 DDL\n* 保持迁移的幂等性和可添加性；避免无计划地删除列"
+    },
+    {
+      "en-US": "## Testing Data Access",
+      "zh-Hans": "## 测试数据访问"
+    },
+    {
+      "en-US": "- Prefer `@DataJpaTest` with Testcontainers to mirror production\n- Assert SQL efficiency using logs: set `logging.level.org.hibernate.SQL=DEBUG` and `logging.level.org.hibernate.orm.jdbc.bind=TRACE` for parameter values",
+      "zh-Hans": "* 首选使用 Testcontainers 的 `@DataJpaTest` 来镜像生产环境\n* 使用日志断言 SQL 效率：设置 `logging.level.org.hibernate.SQL=DEBUG` 和 `logging.level.org.hibernate.orm.jdbc.bind=TRACE` 以查看参数值"
+    },
+    {
+      "en-US": "**Remember**: Keep entities lean, queries intentional, and transactions short. Prevent N+1 with fetch strategies and projections, and index for your read/write paths.",
+      "zh-Hans": "**请记住**：保持实体精简，查询有针对性，事务简短。通过获取策略和投影来预防 N+1 问题，并根据读写路径建立索引。"
+    }
+  ]
+}

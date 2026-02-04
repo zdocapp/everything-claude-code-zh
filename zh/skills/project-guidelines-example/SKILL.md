@@ -1,14 +1,14 @@
 # 项目指南技能（示例）
 
-这是一个项目特定技能的示例。请以此为模板，用于您自己的项目。
+这是一个项目特定技能的示例。将其用作您自己项目的模板。
 
-基于真实的生产应用：[Zenith](https://zenith.chat) - 人工智能驱动的客户发现平台。
+基于一个真实的生产应用程序：[Zenith](https://zenith.chat) - 由 AI 驱动的客户发现平台。
 
 ***
 
 ## 何时使用
 
-在处理为其设计的特定项目时，请参考此技能。项目技能包含：
+在为其设计的特定项目上工作时，请参考此技能。项目技能包含：
 
 * 架构概述
 * 文件结构
@@ -23,11 +23,11 @@
 **技术栈：**
 
 * **前端**: Next.js 15 (App Router), TypeScript, React
-* **后端**: FastAPI (Python), Pydantic models
+* **后端**: FastAPI (Python), Pydantic 模型
 * **数据库**: Supabase (PostgreSQL)
-* **AI**: Claude API with tool calling and structured output
+* **AI**: Claude API，支持工具调用和结构化输出
 * **部署**: Google Cloud Run
-* **测试**: Playwright (E2E), pytest (backend), React Testing Library
+* **测试**: Playwright (E2E), pytest (后端), React Testing Library
 
 **服务：**
 
@@ -182,7 +182,7 @@ async def analyze_with_claude(content: str) -> AnalysisResult:
     return AnalysisResult(**tool_use.input)
 ```
 
-### 自定义钩子 (React)
+### 自定义 Hooks (React)
 
 ```typescript
 import { useState, useCallback } from 'react'
@@ -298,7 +298,7 @@ describe('WorkspacePanel', () => {
 * \[ ] `poetry run pytest` 通过 (后端)
 * \[ ] 没有硬编码的密钥
 * \[ ] 环境变量已记录
-* \[ ] 数据库迁移准备就绪
+* \[ ] 数据库迁移就绪
 
 ### 部署命令
 
@@ -331,14 +331,14 @@ SUPABASE_KEY=eyJ...
 
 ## 关键规则
 
-1. **代码、注释或文档中不使用表情符号**
-2. **不可变性** - 永不修改对象或数组
-3. **TDD** - 先写测试后实现
-4. **最低 80% 的覆盖率**
+1. 在代码、注释或文档中**不使用表情符号**
+2. **不可变性** - 永不改变对象或数组
+3. **测试驱动开发 (TDD)** - 在实现之前编写测试
+4. **最低 80% 覆盖率**
 5. **许多小文件** - 典型 200-400 行，最多 800 行
-6. **生产代码中不使用 console.log**
-7. **使用 try/catch 进行适当的错误处理**
-8. **使用 Pydantic/Zod 进行输入验证**
+6. 在生产代码中**不使用 console.log**
+7. 使用 try/catch 进行**适当的错误处理**
+8. 使用 Pydantic/Zod 进行**输入验证**
 
 ***
 

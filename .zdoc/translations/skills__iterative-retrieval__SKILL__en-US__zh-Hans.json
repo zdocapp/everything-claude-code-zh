@@ -1,0 +1,154 @@
+{
+  "sourceFile": "skills/iterative-retrieval/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: iterative-retrieval\ndescription: Pattern for progressively refining context retrieval to solve the subagent context problem\n---",
+      "zh-Hans": "---\nname: iterative-retrieval\ndescription: 用于逐步优化上下文检索以解决子代理上下文问题的模式\n---"
+    },
+    {
+      "en-US": "# Iterative Retrieval Pattern",
+      "zh-Hans": "# 迭代检索模式"
+    },
+    {
+      "en-US": "Solves the \"context problem\" in multi-agent workflows where subagents don't know what context they need until they start working.",
+      "zh-Hans": "解决多智能体工作流中的“上下文问题”，即子智能体在开始工作前不知道需要哪些上下文。"
+    },
+    {
+      "en-US": "## The Problem",
+      "zh-Hans": "## 问题"
+    },
+    {
+      "en-US": "Subagents are spawned with limited context. They don't know:",
+      "zh-Hans": "子智能体被生成时上下文有限。它们不知道："
+    },
+    {
+      "en-US": "- Which files contain relevant code\n- What patterns exist in the codebase\n- What terminology the project uses",
+      "zh-Hans": "* 哪些文件包含相关代码\n* 代码库中存在哪些模式\n* 项目使用什么术语"
+    },
+    {
+      "en-US": "Standard approaches fail:",
+      "zh-Hans": "标准方法会失败："
+    },
+    {
+      "en-US": "- **Send everything**: Exceeds context limits\n- **Send nothing**: Agent lacks critical information\n- **Guess what's needed**: Often wrong",
+      "zh-Hans": "* **发送所有内容**：超出上下文限制\n* **不发送任何内容**：智能体缺乏关键信息\n* **猜测所需内容**：经常出错"
+    },
+    {
+      "en-US": "## The Solution: Iterative Retrieval",
+      "zh-Hans": "## 解决方案：迭代检索"
+    },
+    {
+      "en-US": "A 4-phase loop that progressively refines context:",
+      "zh-Hans": "一个逐步优化上下文的 4 阶段循环："
+    },
+    {
+      "en-US": "```\n┌─────────────────────────────────────────────┐\n│                                             │\n│   ┌──────────┐      ┌──────────┐            │\n│   │ DISPATCH │─────▶│ EVALUATE │            │\n│   └──────────┘      └──────────┘            │\n│        ▲                  │                 │\n│        │                  ▼                 │\n│   ┌──────────┐      ┌──────────┐            │\n│   │   LOOP   │◀─────│  REFINE  │            │\n│   └──────────┘      └──────────┘            │\n│                                             │\n│        Max 3 cycles, then proceed           │\n└─────────────────────────────────────────────┘\n```",
+      "zh-Hans": "```\n┌─────────────────────────────────────────────┐\n│                                             │\n│   ┌──────────┐      ┌──────────┐            │\n│   │ DISPATCH │─────▶│ EVALUATE │            │\n│   └──────────┘      └──────────┘            │\n│        ▲                  │                 │\n│        │                  ▼                 │\n│   ┌──────────┐      ┌──────────┐            │\n│   │   LOOP   │◀─────│  REFINE  │            │\n│   └──────────┘      └──────────┘            │\n│                                             │\n│        Max 3 cycles, then proceed           │\n└─────────────────────────────────────────────┘\n```"
+    },
+    {
+      "en-US": "### Phase 1: DISPATCH",
+      "zh-Hans": "### 阶段 1：调度"
+    },
+    {
+      "en-US": "Initial broad query to gather candidate files:",
+      "zh-Hans": "初始的广泛查询以收集候选文件："
+    },
+    {
+      "en-US": "```javascript\n// Start with high-level intent\nconst initialQuery = {\n  patterns: ['src/**/*.ts', 'lib/**/*.ts'],\n  keywords: ['authentication', 'user', 'session'],\n  excludes: ['*.test.ts', '*.spec.ts']\n};\n\n// Dispatch to retrieval agent\nconst candidates = await retrieveFiles(initialQuery);\n```",
+      "zh-Hans": "```javascript\n// Start with high-level intent\nconst initialQuery = {\n  patterns: ['src/**/*.ts', 'lib/**/*.ts'],\n  keywords: ['authentication', 'user', 'session'],\n  excludes: ['*.test.ts', '*.spec.ts']\n};\n\n// Dispatch to retrieval agent\nconst candidates = await retrieveFiles(initialQuery);\n```"
+    },
+    {
+      "en-US": "### Phase 2: EVALUATE",
+      "zh-Hans": "### 阶段 2：评估"
+    },
+    {
+      "en-US": "Assess retrieved content for relevance:",
+      "zh-Hans": "评估检索到的内容的相关性："
+    },
+    {
+      "en-US": "```javascript\nfunction evaluateRelevance(files, task) {\n  return files.map(file => ({\n    path: file.path,\n    relevance: scoreRelevance(file.content, task),\n    reason: explainRelevance(file.content, task),\n    missingContext: identifyGaps(file.content, task)\n  }));\n}\n```",
+      "zh-Hans": "```javascript\nfunction evaluateRelevance(files, task) {\n  return files.map(file => ({\n    path: file.path,\n    relevance: scoreRelevance(file.content, task),\n    reason: explainRelevance(file.content, task),\n    missingContext: identifyGaps(file.content, task)\n  }));\n}\n```"
+    },
+    {
+      "en-US": "Scoring criteria:",
+      "zh-Hans": "评分标准："
+    },
+    {
+      "en-US": "- **High (0.8-1.0)**: Directly implements target functionality\n- **Medium (0.5-0.7)**: Contains related patterns or types\n- **Low (0.2-0.4)**: Tangentially related\n- **None (0-0.2)**: Not relevant, exclude",
+      "zh-Hans": "* **高 (0.8-1.0)**：直接实现目标功能\n* **中 (0.5-0.7)**：包含相关模式或类型\n* **低 (0.2-0.4)**：略微相关\n* **无 (0-0.2)**：不相关，排除"
+    },
+    {
+      "en-US": "### Phase 3: REFINE",
+      "zh-Hans": "### 阶段 3：优化"
+    },
+    {
+      "en-US": "Update search criteria based on evaluation:",
+      "zh-Hans": "根据评估结果更新搜索条件："
+    },
+    {
+      "en-US": "```javascript\nfunction refineQuery(evaluation, previousQuery) {\n  return {\n    // Add new patterns discovered in high-relevance files\n    patterns: [...previousQuery.patterns, ...extractPatterns(evaluation)],\n\n    // Add terminology found in codebase\n    keywords: [...previousQuery.keywords, ...extractKeywords(evaluation)],\n\n    // Exclude confirmed irrelevant paths\n    excludes: [...previousQuery.excludes, ...evaluation\n      .filter(e => e.relevance < 0.2)\n      .map(e => e.path)\n    ],\n\n    // Target specific gaps\n    focusAreas: evaluation\n      .flatMap(e => e.missingContext)\n      .filter(unique)\n  };\n}\n```",
+      "zh-Hans": "```javascript\nfunction refineQuery(evaluation, previousQuery) {\n  return {\n    // Add new patterns discovered in high-relevance files\n    patterns: [...previousQuery.patterns, ...extractPatterns(evaluation)],\n\n    // Add terminology found in codebase\n    keywords: [...previousQuery.keywords, ...extractKeywords(evaluation)],\n\n    // Exclude confirmed irrelevant paths\n    excludes: [...previousQuery.excludes, ...evaluation\n      .filter(e => e.relevance < 0.2)\n      .map(e => e.path)\n    ],\n\n    // Target specific gaps\n    focusAreas: evaluation\n      .flatMap(e => e.missingContext)\n      .filter(unique)\n  };\n}\n```"
+    },
+    {
+      "en-US": "### Phase 4: LOOP",
+      "zh-Hans": "### 阶段 4：循环"
+    },
+    {
+      "en-US": "Repeat with refined criteria (max 3 cycles):",
+      "zh-Hans": "使用优化后的条件重复（最多 3 个周期）："
+    },
+    {
+      "en-US": "```javascript\nasync function iterativeRetrieve(task, maxCycles = 3) {\n  let query = createInitialQuery(task);\n  let bestContext = [];\n\n  for (let cycle = 0; cycle < maxCycles; cycle++) {\n    const candidates = await retrieveFiles(query);\n    const evaluation = evaluateRelevance(candidates, task);\n\n    // Check if we have sufficient context\n    const highRelevance = evaluation.filter(e => e.relevance >= 0.7);\n    if (highRelevance.length >= 3 && !hasCriticalGaps(evaluation)) {\n      return highRelevance;\n    }\n\n    // Refine and continue\n    query = refineQuery(evaluation, query);\n    bestContext = mergeContext(bestContext, highRelevance);\n  }\n\n  return bestContext;\n}\n```",
+      "zh-Hans": "```javascript\nasync function iterativeRetrieve(task, maxCycles = 3) {\n  let query = createInitialQuery(task);\n  let bestContext = [];\n\n  for (let cycle = 0; cycle < maxCycles; cycle++) {\n    const candidates = await retrieveFiles(query);\n    const evaluation = evaluateRelevance(candidates, task);\n\n    // Check if we have sufficient context\n    const highRelevance = evaluation.filter(e => e.relevance >= 0.7);\n    if (highRelevance.length >= 3 && !hasCriticalGaps(evaluation)) {\n      return highRelevance;\n    }\n\n    // Refine and continue\n    query = refineQuery(evaluation, query);\n    bestContext = mergeContext(bestContext, highRelevance);\n  }\n\n  return bestContext;\n}\n```"
+    },
+    {
+      "en-US": "## Practical Examples",
+      "zh-Hans": "## 实际示例"
+    },
+    {
+      "en-US": "### Example 1: Bug Fix Context",
+      "zh-Hans": "### 示例 1：错误修复上下文"
+    },
+    {
+      "en-US": "```\nTask: \"Fix the authentication token expiry bug\"\n\nCycle 1:\n  DISPATCH: Search for \"token\", \"auth\", \"expiry\" in src/**\n  EVALUATE: Found auth.ts (0.9), tokens.ts (0.8), user.ts (0.3)\n  REFINE: Add \"refresh\", \"jwt\" keywords; exclude user.ts\n\nCycle 2:\n  DISPATCH: Search refined terms\n  EVALUATE: Found session-manager.ts (0.95), jwt-utils.ts (0.85)\n  REFINE: Sufficient context (2 high-relevance files)\n\nResult: auth.ts, tokens.ts, session-manager.ts, jwt-utils.ts\n```",
+      "zh-Hans": "```\nTask: \"Fix the authentication token expiry bug\"\n\nCycle 1:\n  DISPATCH: Search for \"token\", \"auth\", \"expiry\" in src/**\n  EVALUATE: Found auth.ts (0.9), tokens.ts (0.8), user.ts (0.3)\n  REFINE: Add \"refresh\", \"jwt\" keywords; exclude user.ts\n\nCycle 2:\n  DISPATCH: Search refined terms\n  EVALUATE: Found session-manager.ts (0.95), jwt-utils.ts (0.85)\n  REFINE: Sufficient context (2 high-relevance files)\n\nResult: auth.ts, tokens.ts, session-manager.ts, jwt-utils.ts\n```"
+    },
+    {
+      "en-US": "### Example 2: Feature Implementation",
+      "zh-Hans": "### 示例 2：功能实现"
+    },
+    {
+      "en-US": "```\nTask: \"Add rate limiting to API endpoints\"\n\nCycle 1:\n  DISPATCH: Search \"rate\", \"limit\", \"api\" in routes/**\n  EVALUATE: No matches - codebase uses \"throttle\" terminology\n  REFINE: Add \"throttle\", \"middleware\" keywords\n\nCycle 2:\n  DISPATCH: Search refined terms\n  EVALUATE: Found throttle.ts (0.9), middleware/index.ts (0.7)\n  REFINE: Need router patterns\n\nCycle 3:\n  DISPATCH: Search \"router\", \"express\" patterns\n  EVALUATE: Found router-setup.ts (0.8)\n  REFINE: Sufficient context\n\nResult: throttle.ts, middleware/index.ts, router-setup.ts\n```",
+      "zh-Hans": "```\nTask: \"Add rate limiting to API endpoints\"\n\nCycle 1:\n  DISPATCH: Search \"rate\", \"limit\", \"api\" in routes/**\n  EVALUATE: No matches - codebase uses \"throttle\" terminology\n  REFINE: Add \"throttle\", \"middleware\" keywords\n\nCycle 2:\n  DISPATCH: Search refined terms\n  EVALUATE: Found throttle.ts (0.9), middleware/index.ts (0.7)\n  REFINE: Need router patterns\n\nCycle 3:\n  DISPATCH: Search \"router\", \"express\" patterns\n  EVALUATE: Found router-setup.ts (0.8)\n  REFINE: Sufficient context\n\nResult: throttle.ts, middleware/index.ts, router-setup.ts\n```"
+    },
+    {
+      "en-US": "## Integration with Agents",
+      "zh-Hans": "## 与智能体集成"
+    },
+    {
+      "en-US": "Use in agent prompts:",
+      "zh-Hans": "在智能体提示中使用："
+    },
+    {
+      "en-US": "```markdown\nWhen retrieving context for this task:\n1. Start with broad keyword search\n2. Evaluate each file's relevance (0-1 scale)\n3. Identify what context is still missing\n4. Refine search criteria and repeat (max 3 cycles)\n5. Return files with relevance >= 0.7\n```",
+      "zh-Hans": "```markdown\n在为该任务检索上下文时：\n1. 从广泛的关键词搜索开始\n2. 评估每个文件的相关性（0-1 分制）\n3. 识别仍缺失哪些上下文\n4. 优化搜索条件并重复（最多 3 个循环）\n5. 返回相关性 >= 0.7 的文件\n\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "1. **Start broad, narrow progressively** - Don't over-specify initial queries\n2. **Learn codebase terminology** - First cycle often reveals naming conventions\n3. **Track what's missing** - Explicit gap identification drives refinement\n4. **Stop at \"good enough\"** - 3 high-relevance files beats 10 mediocre ones\n5. **Exclude confidently** - Low-relevance files won't become relevant",
+      "zh-Hans": "1. **先宽泛，后逐步细化** - 不要过度指定初始查询\n2. **学习代码库术语** - 第一轮循环通常能揭示命名约定\n3. **跟踪缺失内容** - 明确识别差距以驱动优化\n4. **在“足够好”时停止** - 3 个高相关性文件胜过 10 个中等相关性文件\n5. **自信地排除** - 低相关性文件不会变得相关"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Subagent orchestration section\n- `continuous-learning` skill - For patterns that improve over time\n- Agent definitions in `~/.claude/agents/`",
+      "zh-Hans": "* [长篇指南](https://x.com/affaanmustafa/status/2014040193557471352) - 子智能体编排部分\n* `continuous-learning` 技能 - 用于随时间改进的模式\n* 在 `~/.claude/agents/` 中的智能体定义"
+    }
+  ]
+}

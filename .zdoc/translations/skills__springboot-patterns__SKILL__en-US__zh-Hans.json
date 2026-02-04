@@ -1,0 +1,162 @@
+{
+  "sourceFile": "skills/springboot-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: springboot-patterns\ndescription: Spring Boot architecture patterns, REST API design, layered services, data access, caching, async processing, and logging. Use for Java Spring Boot backend work.\n---",
+      "zh-Hans": "---\nname: springboot-patterns\ndescription: Spring Boot 架构模式、REST API 设计、分层服务、数据访问、缓存、异步处理和日志记录。适用于 Java Spring Boot 后端工作。\n---"
+    },
+    {
+      "en-US": "# Spring Boot Development Patterns",
+      "zh-Hans": "# Spring Boot 开发模式"
+    },
+    {
+      "en-US": "Spring Boot architecture and API patterns for scalable, production-grade services.",
+      "zh-Hans": "用于可扩展、生产级服务的 Spring Boot 架构和 API 模式。"
+    },
+    {
+      "en-US": "## REST API Structure",
+      "zh-Hans": "## REST API 结构"
+    },
+    {
+      "en-US": "```java\n@RestController\n@RequestMapping(\"/api/markets\")\n@Validated\nclass MarketController {\n  private final MarketService marketService;\n\n  MarketController(MarketService marketService) {\n    this.marketService = marketService;\n  }\n\n  @GetMapping\n  ResponseEntity<Page<MarketResponse>> list(\n      @RequestParam(defaultValue = \"0\") int page,\n      @RequestParam(defaultValue = \"20\") int size) {\n    Page<Market> markets = marketService.list(PageRequest.of(page, size));\n    return ResponseEntity.ok(markets.map(MarketResponse::from));\n  }\n\n  @PostMapping\n  ResponseEntity<MarketResponse> create(@Valid @RequestBody CreateMarketRequest request) {\n    Market market = marketService.create(request);\n    return ResponseEntity.status(HttpStatus.CREATED).body(MarketResponse.from(market));\n  }\n}\n```",
+      "zh-Hans": "```java\n@RestController\n@RequestMapping(\"/api/markets\")\n@Validated\nclass MarketController {\n  private final MarketService marketService;\n\n  MarketController(MarketService marketService) {\n    this.marketService = marketService;\n  }\n\n  @GetMapping\n  ResponseEntity<Page<MarketResponse>> list(\n      @RequestParam(defaultValue = \"0\") int page,\n      @RequestParam(defaultValue = \"20\") int size) {\n    Page<Market> markets = marketService.list(PageRequest.of(page, size));\n    return ResponseEntity.ok(markets.map(MarketResponse::from));\n  }\n\n  @PostMapping\n  ResponseEntity<MarketResponse> create(@Valid @RequestBody CreateMarketRequest request) {\n    Market market = marketService.create(request);\n    return ResponseEntity.status(HttpStatus.CREATED).body(MarketResponse.from(market));\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Repository Pattern (Spring Data JPA)",
+      "zh-Hans": "## 仓库模式 (Spring Data JPA)"
+    },
+    {
+      "en-US": "```java\npublic interface MarketRepository extends JpaRepository<MarketEntity, Long> {\n  @Query(\"select m from MarketEntity m where m.status = :status order by m.volume desc\")\n  List<MarketEntity> findActive(@Param(\"status\") MarketStatus status, Pageable pageable);\n}\n```",
+      "zh-Hans": "```java\npublic interface MarketRepository extends JpaRepository<MarketEntity, Long> {\n  @Query(\"select m from MarketEntity m where m.status = :status order by m.volume desc\")\n  List<MarketEntity> findActive(@Param(\"status\") MarketStatus status, Pageable pageable);\n}\n```"
+    },
+    {
+      "en-US": "## Service Layer with Transactions",
+      "zh-Hans": "## 带事务的服务层"
+    },
+    {
+      "en-US": "```java\n@Service\npublic class MarketService {\n  private final MarketRepository repo;\n\n  public MarketService(MarketRepository repo) {\n    this.repo = repo;\n  }\n\n  @Transactional\n  public Market create(CreateMarketRequest request) {\n    MarketEntity entity = MarketEntity.from(request);\n    MarketEntity saved = repo.save(entity);\n    return Market.from(saved);\n  }\n}\n```",
+      "zh-Hans": "```java\n@Service\npublic class MarketService {\n  private final MarketRepository repo;\n\n  public MarketService(MarketRepository repo) {\n    this.repo = repo;\n  }\n\n  @Transactional\n  public Market create(CreateMarketRequest request) {\n    MarketEntity entity = MarketEntity.from(request);\n    MarketEntity saved = repo.save(entity);\n    return Market.from(saved);\n  }\n}\n```"
+    },
+    {
+      "en-US": "## DTOs and Validation",
+      "zh-Hans": "## DTO 和验证"
+    },
+    {
+      "en-US": "```java\npublic record CreateMarketRequest(\n    @NotBlank @Size(max = 200) String name,\n    @NotBlank @Size(max = 2000) String description,\n    @NotNull @FutureOrPresent Instant endDate,\n    @NotEmpty List<@NotBlank String> categories) {}\n\npublic record MarketResponse(Long id, String name, MarketStatus status) {\n  static MarketResponse from(Market market) {\n    return new MarketResponse(market.id(), market.name(), market.status());\n  }\n}\n```",
+      "zh-Hans": "```java\npublic record CreateMarketRequest(\n    @NotBlank @Size(max = 200) String name,\n    @NotBlank @Size(max = 2000) String description,\n    @NotNull @FutureOrPresent Instant endDate,\n    @NotEmpty List<@NotBlank String> categories) {}\n\npublic record MarketResponse(Long id, String name, MarketStatus status) {\n  static MarketResponse from(Market market) {\n    return new MarketResponse(market.id(), market.name(), market.status());\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Exception Handling",
+      "zh-Hans": "## 异常处理"
+    },
+    {
+      "en-US": "```java\n@ControllerAdvice\nclass GlobalExceptionHandler {\n  @ExceptionHandler(MethodArgumentNotValidException.class)\n  ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {\n    String message = ex.getBindingResult().getFieldErrors().stream()\n        .map(e -> e.getField() + \": \" + e.getDefaultMessage())\n        .collect(Collectors.joining(\", \"));\n    return ResponseEntity.badRequest().body(ApiError.validation(message));\n  }\n\n  @ExceptionHandler(AccessDeniedException.class)\n  ResponseEntity<ApiError> handleAccessDenied() {\n    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiError.of(\"Forbidden\"));\n  }\n\n  @ExceptionHandler(Exception.class)\n  ResponseEntity<ApiError> handleGeneric(Exception ex) {\n    // Log unexpected errors with stack traces\n    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)\n        .body(ApiError.of(\"Internal server error\"));\n  }\n}\n```",
+      "zh-Hans": "```java\n@ControllerAdvice\nclass GlobalExceptionHandler {\n  @ExceptionHandler(MethodArgumentNotValidException.class)\n  ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {\n    String message = ex.getBindingResult().getFieldErrors().stream()\n        .map(e -> e.getField() + \": \" + e.getDefaultMessage())\n        .collect(Collectors.joining(\", \"));\n    return ResponseEntity.badRequest().body(ApiError.validation(message));\n  }\n\n  @ExceptionHandler(AccessDeniedException.class)\n  ResponseEntity<ApiError> handleAccessDenied() {\n    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiError.of(\"Forbidden\"));\n  }\n\n  @ExceptionHandler(Exception.class)\n  ResponseEntity<ApiError> handleGeneric(Exception ex) {\n    // Log unexpected errors with stack traces\n    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)\n        .body(ApiError.of(\"Internal server error\"));\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Caching",
+      "zh-Hans": "## 缓存"
+    },
+    {
+      "en-US": "Requires `@EnableCaching` on a configuration class.",
+      "zh-Hans": "需要在配置类上使用 `@EnableCaching`。"
+    },
+    {
+      "en-US": "```java\n@Service\npublic class MarketCacheService {\n  private final MarketRepository repo;\n\n  public MarketCacheService(MarketRepository repo) {\n    this.repo = repo;\n  }\n\n  @Cacheable(value = \"market\", key = \"#id\")\n  public Market getById(Long id) {\n    return repo.findById(id)\n        .map(Market::from)\n        .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n  }\n\n  @CacheEvict(value = \"market\", key = \"#id\")\n  public void evict(Long id) {}\n}\n```",
+      "zh-Hans": "```java\n@Service\npublic class MarketCacheService {\n  private final MarketRepository repo;\n\n  public MarketCacheService(MarketRepository repo) {\n    this.repo = repo;\n  }\n\n  @Cacheable(value = \"market\", key = \"#id\")\n  public Market getById(Long id) {\n    return repo.findById(id)\n        .map(Market::from)\n        .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n  }\n\n  @CacheEvict(value = \"market\", key = \"#id\")\n  public void evict(Long id) {}\n}\n```"
+    },
+    {
+      "en-US": "## Async Processing",
+      "zh-Hans": "## 异步处理"
+    },
+    {
+      "en-US": "Requires `@EnableAsync` on a configuration class.",
+      "zh-Hans": "需要在配置类上使用 `@EnableAsync`。"
+    },
+    {
+      "en-US": "```java\n@Service\npublic class NotificationService {\n  @Async\n  public CompletableFuture<Void> sendAsync(Notification notification) {\n    // send email/SMS\n    return CompletableFuture.completedFuture(null);\n  }\n}\n```",
+      "zh-Hans": "```java\n@Service\npublic class NotificationService {\n  @Async\n  public CompletableFuture<Void> sendAsync(Notification notification) {\n    // send email/SMS\n    return CompletableFuture.completedFuture(null);\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Logging (SLF4J)",
+      "zh-Hans": "## 日志记录 (SLF4J)"
+    },
+    {
+      "en-US": "```java\n@Service\npublic class ReportService {\n  private static final Logger log = LoggerFactory.getLogger(ReportService.class);\n\n  public Report generate(Long marketId) {\n    log.info(\"generate_report marketId={}\", marketId);\n    try {\n      // logic\n    } catch (Exception ex) {\n      log.error(\"generate_report_failed marketId={}\", marketId, ex);\n      throw ex;\n    }\n    return new Report();\n  }\n}\n```",
+      "zh-Hans": "```java\n@Service\npublic class ReportService {\n  private static final Logger log = LoggerFactory.getLogger(ReportService.class);\n\n  public Report generate(Long marketId) {\n    log.info(\"generate_report marketId={}\", marketId);\n    try {\n      // logic\n    } catch (Exception ex) {\n      log.error(\"generate_report_failed marketId={}\", marketId, ex);\n      throw ex;\n    }\n    return new Report();\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Middleware / Filters",
+      "zh-Hans": "## 中间件 / 过滤器"
+    },
+    {
+      "en-US": "```java\n@Component\npublic class RequestLoggingFilter extends OncePerRequestFilter {\n  private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);\n\n  @Override\n  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,\n      FilterChain filterChain) throws ServletException, IOException {\n    long start = System.currentTimeMillis();\n    try {\n      filterChain.doFilter(request, response);\n    } finally {\n      long duration = System.currentTimeMillis() - start;\n      log.info(\"req method={} uri={} status={} durationMs={}\",\n          request.getMethod(), request.getRequestURI(), response.getStatus(), duration);\n    }\n  }\n}\n```",
+      "zh-Hans": "```java\n@Component\npublic class RequestLoggingFilter extends OncePerRequestFilter {\n  private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);\n\n  @Override\n  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,\n      FilterChain filterChain) throws ServletException, IOException {\n    long start = System.currentTimeMillis();\n    try {\n      filterChain.doFilter(request, response);\n    } finally {\n      long duration = System.currentTimeMillis() - start;\n      log.info(\"req method={} uri={} status={} durationMs={}\",\n          request.getMethod(), request.getRequestURI(), response.getStatus(), duration);\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Pagination and Sorting",
+      "zh-Hans": "## 分页和排序"
+    },
+    {
+      "en-US": "```java\nPageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by(\"createdAt\").descending());\nPage<Market> results = marketService.list(page);\n```",
+      "zh-Hans": "```java\nPageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by(\"createdAt\").descending());\nPage<Market> results = marketService.list(page);\n```"
+    },
+    {
+      "en-US": "## Error-Resilient External Calls",
+      "zh-Hans": "## 容错的外部调用"
+    },
+    {
+      "en-US": "```java\npublic <T> T withRetry(Supplier<T> supplier, int maxRetries) {\n  int attempts = 0;\n  while (true) {\n    try {\n      return supplier.get();\n    } catch (Exception ex) {\n      attempts++;\n      if (attempts >= maxRetries) {\n        throw ex;\n      }\n      try {\n        Thread.sleep((long) Math.pow(2, attempts) * 100L);\n      } catch (InterruptedException ie) {\n        Thread.currentThread().interrupt();\n        throw ex;\n      }\n    }\n  }\n}\n```",
+      "zh-Hans": "```java\npublic <T> T withRetry(Supplier<T> supplier, int maxRetries) {\n  int attempts = 0;\n  while (true) {\n    try {\n      return supplier.get();\n    } catch (Exception ex) {\n      attempts++;\n      if (attempts >= maxRetries) {\n        throw ex;\n      }\n      try {\n        Thread.sleep((long) Math.pow(2, attempts) * 100L);\n      } catch (InterruptedException ie) {\n        Thread.currentThread().interrupt();\n        throw ex;\n      }\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Rate Limiting (Filter + Bucket4j)",
+      "zh-Hans": "## 速率限制 (过滤器 + Bucket4j)"
+    },
+    {
+      "en-US": "**Security Note**: The `X-Forwarded-For` header is untrusted by default because clients can spoof it.\nOnly use forwarded headers when:",
+      "zh-Hans": "**安全须知**：默认情况下 `X-Forwarded-For` 头是不可信的，因为客户端可以伪造它。\n仅在以下情况下使用转发头："
+    },
+    {
+      "en-US": "1. Your app is behind a trusted reverse proxy (nginx, AWS ALB, etc.)\n2. You have registered `ForwardedHeaderFilter` as a bean\n3. You have configured `server.forward-headers-strategy=NATIVE` or `FRAMEWORK` in application properties\n4. Your proxy is configured to overwrite (not append to) the `X-Forwarded-For` header",
+      "zh-Hans": "1. 您的应用程序位于可信的反向代理（nginx、AWS ALB 等）之后\n2. 您已将 `ForwardedHeaderFilter` 注册为 bean\n3. 您已在应用属性中配置了 `server.forward-headers-strategy=NATIVE` 或 `FRAMEWORK`\n4. 您的代理配置为覆盖（而非追加）`X-Forwarded-For` 头"
+    },
+    {
+      "en-US": "When `ForwardedHeaderFilter` is properly configured, `request.getRemoteAddr()` will automatically\nreturn the correct client IP from the forwarded headers. Without this configuration, use\n`request.getRemoteAddr()` directly—it returns the immediate connection IP, which is the only\ntrustworthy value.",
+      "zh-Hans": "当 `ForwardedHeaderFilter` 被正确配置时，`request.getRemoteAddr()` 将自动从转发的头中返回正确的客户端 IP。\n没有此配置时，请直接使用 `request.getRemoteAddr()`——它返回的是直接连接的 IP，这是唯一可信的值。"
+    },
+    {
+      "en-US": "```java\n@Component\npublic class RateLimitFilter extends OncePerRequestFilter {\n  private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();\n\n  /*\n   * SECURITY: This filter uses request.getRemoteAddr() to identify clients for rate limiting.\n   *\n   * If your application is behind a reverse proxy (nginx, AWS ALB, etc.), you MUST configure\n   * Spring to handle forwarded headers properly for accurate client IP detection:\n   *\n   * 1. Set server.forward-headers-strategy=NATIVE (for cloud platforms) or FRAMEWORK in\n   *    application.properties/yaml\n   * 2. If using FRAMEWORK strategy, register ForwardedHeaderFilter:\n   *\n   *    @Bean\n   *    ForwardedHeaderFilter forwardedHeaderFilter() {\n   *        return new ForwardedHeaderFilter();\n   *    }\n   *\n   * 3. Ensure your proxy overwrites (not appends) the X-Forwarded-For header to prevent spoofing\n   * 4. Configure server.tomcat.remoteip.trusted-proxies or equivalent for your container\n   *\n   * Without this configuration, request.getRemoteAddr() returns the proxy IP, not the client IP.\n   * Do NOT read X-Forwarded-For directly—it is trivially spoofable without trusted proxy handling.\n   */\n  @Override\n  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,\n      FilterChain filterChain) throws ServletException, IOException {\n    // Use getRemoteAddr() which returns the correct client IP when ForwardedHeaderFilter\n    // is configured, or the direct connection IP otherwise. Never trust X-Forwarded-For\n    // headers directly without proper proxy configuration.\n    String clientIp = request.getRemoteAddr();\n\n    Bucket bucket = buckets.computeIfAbsent(clientIp,\n        k -> Bucket.builder()\n            .addLimit(Bandwidth.classic(100, Refill.greedy(100, Duration.ofMinutes(1))))\n            .build());\n\n    if (bucket.tryConsume(1)) {\n      filterChain.doFilter(request, response);\n    } else {\n      response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());\n    }\n  }\n}\n```",
+      "zh-Hans": "```java\n@Component\npublic class RateLimitFilter extends OncePerRequestFilter {\n  private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();\n\n  /*\n   * SECURITY: This filter uses request.getRemoteAddr() to identify clients for rate limiting.\n   *\n   * If your application is behind a reverse proxy (nginx, AWS ALB, etc.), you MUST configure\n   * Spring to handle forwarded headers properly for accurate client IP detection:\n   *\n   * 1. Set server.forward-headers-strategy=NATIVE (for cloud platforms) or FRAMEWORK in\n   *    application.properties/yaml\n   * 2. If using FRAMEWORK strategy, register ForwardedHeaderFilter:\n   *\n   *    @Bean\n   *    ForwardedHeaderFilter forwardedHeaderFilter() {\n   *        return new ForwardedHeaderFilter();\n   *    }\n   *\n   * 3. Ensure your proxy overwrites (not appends) the X-Forwarded-For header to prevent spoofing\n   * 4. Configure server.tomcat.remoteip.trusted-proxies or equivalent for your container\n   *\n   * Without this configuration, request.getRemoteAddr() returns the proxy IP, not the client IP.\n   * Do NOT read X-Forwarded-For directly—it is trivially spoofable without trusted proxy handling.\n   */\n  @Override\n  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,\n      FilterChain filterChain) throws ServletException, IOException {\n    // Use getRemoteAddr() which returns the correct client IP when ForwardedHeaderFilter\n    // is configured, or the direct connection IP otherwise. Never trust X-Forwarded-For\n    // headers directly without proper proxy configuration.\n    String clientIp = request.getRemoteAddr();\n\n    Bucket bucket = buckets.computeIfAbsent(clientIp,\n        k -> Bucket.builder()\n            .addLimit(Bandwidth.classic(100, Refill.greedy(100, Duration.ofMinutes(1))))\n            .build());\n\n    if (bucket.tryConsume(1)) {\n      filterChain.doFilter(request, response);\n    } else {\n      response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Background Jobs",
+      "zh-Hans": "## 后台作业"
+    },
+    {
+      "en-US": "Use Spring’s `@Scheduled` or integrate with queues (e.g., Kafka, SQS, RabbitMQ). Keep handlers idempotent and observable.",
+      "zh-Hans": "使用 Spring 的 `@Scheduled` 或与队列（如 Kafka、SQS、RabbitMQ）集成。保持处理程序是幂等的和可观察的。"
+    },
+    {
+      "en-US": "## Observability",
+      "zh-Hans": "## 可观测性"
+    },
+    {
+      "en-US": "- Structured logging (JSON) via Logback encoder\n- Metrics: Micrometer + Prometheus/OTel\n- Tracing: Micrometer Tracing with OpenTelemetry or Brave backend",
+      "zh-Hans": "* 通过 Logback 编码器进行结构化日志记录 (JSON)\n* 指标：Micrometer + Prometheus/OTel\n* 追踪：带有 OpenTelemetry 或 Brave 后端的 Micrometer Tracing"
+    },
+    {
+      "en-US": "## Production Defaults",
+      "zh-Hans": "## 生产环境默认设置"
+    },
+    {
+      "en-US": "- Prefer constructor injection, avoid field injection\n- Enable `spring.mvc.problemdetails.enabled=true` for RFC 7807 errors (Spring Boot 3+)\n- Configure HikariCP pool sizes for workload, set timeouts\n- Use `@Transactional(readOnly = true)` for queries\n- Enforce null-safety via `@NonNull` and `Optional` where appropriate",
+      "zh-Hans": "* 优先使用构造函数注入，避免字段注入\n* 启用 `spring.mvc.problemdetails.enabled=true` 以获得 RFC 7807 错误 (Spring Boot 3+)\n* 根据工作负载配置 HikariCP 连接池大小，设置超时\n* 对查询使用 `@Transactional(readOnly = true)`\n* 在适当的地方通过 `@NonNull` 和 `Optional` 强制执行空值安全"
+    },
+    {
+      "en-US": "**Remember**: Keep controllers thin, services focused, repositories simple, and errors handled centrally. Optimize for maintainability and testability.",
+      "zh-Hans": "**记住**：保持控制器精简、服务专注、仓库简单，并集中处理错误。为可维护性和可测试性进行优化。"
+    }
+  ]
+}

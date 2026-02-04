@@ -1,0 +1,206 @@
+{
+  "sourceFile": "skills/project-guidelines-example/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Project Guidelines Skill (Example)",
+      "zh-Hans": "# 项目指南技能（示例）"
+    },
+    {
+      "en-US": "This is an example of a project-specific skill. Use this as a template for your own projects.",
+      "zh-Hans": "这是一个项目特定技能的示例。将其用作您自己项目的模板。"
+    },
+    {
+      "en-US": "Based on a real production application: [Zenith](https://zenith.chat) - AI-powered customer discovery platform.",
+      "zh-Hans": "基于一个真实的生产应用程序：[Zenith](https://zenith.chat) - 由 AI 驱动的客户发现平台。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Reference this skill when working on the specific project it's designed for. Project skills contain:",
+      "zh-Hans": "在为其设计的特定项目上工作时，请参考此技能。项目技能包含："
+    },
+    {
+      "en-US": "- Architecture overview\n- File structure\n- Code patterns\n- Testing requirements\n- Deployment workflow",
+      "zh-Hans": "* 架构概述\n* 文件结构\n* 代码模式\n* 测试要求\n* 部署工作流"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Architecture Overview",
+      "zh-Hans": "## 架构概述"
+    },
+    {
+      "en-US": "**Tech Stack:**",
+      "zh-Hans": "**技术栈：**"
+    },
+    {
+      "en-US": "- **Frontend**: Next.js 15 (App Router), TypeScript, React\n- **Backend**: FastAPI (Python), Pydantic models\n- **Database**: Supabase (PostgreSQL)\n- **AI**: Claude API with tool calling and structured output\n- **Deployment**: Google Cloud Run\n- **Testing**: Playwright (E2E), pytest (backend), React Testing Library",
+      "zh-Hans": "* **前端**: Next.js 15 (App Router), TypeScript, React\n* **后端**: FastAPI (Python), Pydantic 模型\n* **数据库**: Supabase (PostgreSQL)\n* **AI**: Claude API，支持工具调用和结构化输出\n* **部署**: Google Cloud Run\n* **测试**: Playwright (E2E), pytest (后端), React Testing Library"
+    },
+    {
+      "en-US": "**Services:**",
+      "zh-Hans": "**服务：**"
+    },
+    {
+      "en-US": "```\n┌─────────────────────────────────────────────────────────────┐\n│                         Frontend                            │\n│  Next.js 15 + TypeScript + TailwindCSS                     │\n│  Deployed: Vercel / Cloud Run                              │\n└─────────────────────────────────────────────────────────────┘\n                              │\n                              ▼\n┌─────────────────────────────────────────────────────────────┐\n│                         Backend                             │\n│  FastAPI + Python 3.11 + Pydantic                          │\n│  Deployed: Cloud Run                                       │\n└─────────────────────────────────────────────────────────────┘\n                              │\n              ┌───────────────┼───────────────┐\n              ▼               ▼               ▼\n        ┌──────────┐   ┌──────────┐   ┌──────────┐\n        │ Supabase │   │  Claude  │   │  Redis   │\n        │ Database │   │   API    │   │  Cache   │\n        └──────────┘   └──────────┘   └──────────┘\n```",
+      "zh-Hans": "```\n┌─────────────────────────────────────────────────────────────┐\n│                         Frontend                            │\n│  Next.js 15 + TypeScript + TailwindCSS                     │\n│  Deployed: Vercel / Cloud Run                              │\n└─────────────────────────────────────────────────────────────┘\n                              │\n                              ▼\n┌─────────────────────────────────────────────────────────────┐\n│                         Backend                             │\n│  FastAPI + Python 3.11 + Pydantic                          │\n│  Deployed: Cloud Run                                       │\n└─────────────────────────────────────────────────────────────┘\n                              │\n              ┌───────────────┼───────────────┐\n              ▼               ▼               ▼\n        ┌──────────┐   ┌──────────┐   ┌──────────┐\n        │ Supabase │   │  Claude  │   │  Redis   │\n        │ Database │   │   API    │   │  Cache   │\n        └──────────┘   └──────────┘   └──────────┘\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\nproject/\n├── frontend/\n│   └── src/\n│       ├── app/              # Next.js app router pages\n│       │   ├── api/          # API routes\n│       │   ├── (auth)/       # Auth-protected routes\n│       │   └── workspace/    # Main app workspace\n│       ├── components/       # React components\n│       │   ├── ui/           # Base UI components\n│       │   ├── forms/        # Form components\n│       │   └── layouts/      # Layout components\n│       ├── hooks/            # Custom React hooks\n│       ├── lib/              # Utilities\n│       ├── types/            # TypeScript definitions\n│       └── config/           # Configuration\n│\n├── backend/\n│   ├── routers/              # FastAPI route handlers\n│   ├── models.py             # Pydantic models\n│   ├── main.py               # FastAPI app entry\n│   ├── auth_system.py        # Authentication\n│   ├── database.py           # Database operations\n│   ├── services/             # Business logic\n│   └── tests/                # pytest tests\n│\n├── deploy/                   # Deployment configs\n├── docs/                     # Documentation\n└── scripts/                  # Utility scripts\n```",
+      "zh-Hans": "```\nproject/\n├── frontend/\n│   └── src/\n│       ├── app/              # Next.js app router pages\n│       │   ├── api/          # API routes\n│       │   ├── (auth)/       # Auth-protected routes\n│       │   └── workspace/    # Main app workspace\n│       ├── components/       # React components\n│       │   ├── ui/           # Base UI components\n│       │   ├── forms/        # Form components\n│       │   └── layouts/      # Layout components\n│       ├── hooks/            # Custom React hooks\n│       ├── lib/              # Utilities\n│       ├── types/            # TypeScript definitions\n│       └── config/           # Configuration\n│\n├── backend/\n│   ├── routers/              # FastAPI route handlers\n│   ├── models.py             # Pydantic models\n│   ├── main.py               # FastAPI app entry\n│   ├── auth_system.py        # Authentication\n│   ├── database.py           # Database operations\n│   ├── services/             # Business logic\n│   └── tests/                # pytest tests\n│\n├── deploy/                   # Deployment configs\n├── docs/                     # Documentation\n└── scripts/                  # Utility scripts\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Code Patterns",
+      "zh-Hans": "## 代码模式"
+    },
+    {
+      "en-US": "### API Response Format (FastAPI)",
+      "zh-Hans": "### API 响应格式 (FastAPI)"
+    },
+    {
+      "en-US": "```python\nfrom pydantic import BaseModel\nfrom typing import Generic, TypeVar, Optional\n\nT = TypeVar('T')\n\nclass ApiResponse(BaseModel, Generic[T]):\n    success: bool\n    data: Optional[T] = None\n    error: Optional[str] = None\n\n    @classmethod\n    def ok(cls, data: T) -> \"ApiResponse[T]\":\n        return cls(success=True, data=data)\n\n    @classmethod\n    def fail(cls, error: str) -> \"ApiResponse[T]\":\n        return cls(success=False, error=error)\n```",
+      "zh-Hans": "```python\nfrom pydantic import BaseModel\nfrom typing import Generic, TypeVar, Optional\n\nT = TypeVar('T')\n\nclass ApiResponse(BaseModel, Generic[T]):\n    success: bool\n    data: Optional[T] = None\n    error: Optional[str] = None\n\n    @classmethod\n    def ok(cls, data: T) -> \"ApiResponse[T]\":\n        return cls(success=True, data=data)\n\n    @classmethod\n    def fail(cls, error: str) -> \"ApiResponse[T]\":\n        return cls(success=False, error=error)\n```"
+    },
+    {
+      "en-US": "### Frontend API Calls (TypeScript)",
+      "zh-Hans": "### 前端 API 调用 (TypeScript)"
+    },
+    {
+      "en-US": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n}\n\nasync function fetchApi<T>(\n  endpoint: string,\n  options?: RequestInit\n): Promise<ApiResponse<T>> {\n  try {\n    const response = await fetch(`/api${endpoint}`, {\n      ...options,\n      headers: {\n        'Content-Type': 'application/json',\n        ...options?.headers,\n      },\n    })\n\n    if (!response.ok) {\n      return { success: false, error: `HTTP ${response.status}` }\n    }\n\n    return await response.json()\n  } catch (error) {\n    return { success: false, error: String(error) }\n  }\n}\n```",
+      "zh-Hans": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n}\n\nasync function fetchApi<T>(\n  endpoint: string,\n  options?: RequestInit\n): Promise<ApiResponse<T>> {\n  try {\n    const response = await fetch(`/api${endpoint}`, {\n      ...options,\n      headers: {\n        'Content-Type': 'application/json',\n        ...options?.headers,\n      },\n    })\n\n    if (!response.ok) {\n      return { success: false, error: `HTTP ${response.status}` }\n    }\n\n    return await response.json()\n  } catch (error) {\n    return { success: false, error: String(error) }\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Claude AI Integration (Structured Output)",
+      "zh-Hans": "### Claude AI 集成 (结构化输出)"
+    },
+    {
+      "en-US": "```python\nfrom anthropic import Anthropic\nfrom pydantic import BaseModel\n\nclass AnalysisResult(BaseModel):\n    summary: str\n    key_points: list[str]\n    confidence: float\n\nasync def analyze_with_claude(content: str) -> AnalysisResult:\n    client = Anthropic()\n\n    response = client.messages.create(\n        model=\"claude-sonnet-4-5-20250514\",\n        max_tokens=1024,\n        messages=[{\"role\": \"user\", \"content\": content}],\n        tools=[{\n            \"name\": \"provide_analysis\",\n            \"description\": \"Provide structured analysis\",\n            \"input_schema\": AnalysisResult.model_json_schema()\n        }],\n        tool_choice={\"type\": \"tool\", \"name\": \"provide_analysis\"}\n    )\n\n    # Extract tool use result\n    tool_use = next(\n        block for block in response.content\n        if block.type == \"tool_use\"\n    )\n\n    return AnalysisResult(**tool_use.input)\n```",
+      "zh-Hans": "```python\nfrom anthropic import Anthropic\nfrom pydantic import BaseModel\n\nclass AnalysisResult(BaseModel):\n    summary: str\n    key_points: list[str]\n    confidence: float\n\nasync def analyze_with_claude(content: str) -> AnalysisResult:\n    client = Anthropic()\n\n    response = client.messages.create(\n        model=\"claude-sonnet-4-5-20250514\",\n        max_tokens=1024,\n        messages=[{\"role\": \"user\", \"content\": content}],\n        tools=[{\n            \"name\": \"provide_analysis\",\n            \"description\": \"Provide structured analysis\",\n            \"input_schema\": AnalysisResult.model_json_schema()\n        }],\n        tool_choice={\"type\": \"tool\", \"name\": \"provide_analysis\"}\n    )\n\n    # Extract tool use result\n    tool_use = next(\n        block for block in response.content\n        if block.type == \"tool_use\"\n    )\n\n    return AnalysisResult(**tool_use.input)\n```"
+    },
+    {
+      "en-US": "### Custom Hooks (React)",
+      "zh-Hans": "### 自定义 Hooks (React)"
+    },
+    {
+      "en-US": "```typescript\nimport { useState, useCallback } from 'react'\n\ninterface UseApiState<T> {\n  data: T | null\n  loading: boolean\n  error: string | null\n}\n\nexport function useApi<T>(\n  fetchFn: () => Promise<ApiResponse<T>>\n) {\n  const [state, setState] = useState<UseApiState<T>>({\n    data: null,\n    loading: false,\n    error: null,\n  })\n\n  const execute = useCallback(async () => {\n    setState(prev => ({ ...prev, loading: true, error: null }))\n\n    const result = await fetchFn()\n\n    if (result.success) {\n      setState({ data: result.data!, loading: false, error: null })\n    } else {\n      setState({ data: null, loading: false, error: result.error! })\n    }\n  }, [fetchFn])\n\n  return { ...state, execute }\n}\n```",
+      "zh-Hans": "```typescript\nimport { useState, useCallback } from 'react'\n\ninterface UseApiState<T> {\n  data: T | null\n  loading: boolean\n  error: string | null\n}\n\nexport function useApi<T>(\n  fetchFn: () => Promise<ApiResponse<T>>\n) {\n  const [state, setState] = useState<UseApiState<T>>({\n    data: null,\n    loading: false,\n    error: null,\n  })\n\n  const execute = useCallback(async () => {\n    setState(prev => ({ ...prev, loading: true, error: null }))\n\n    const result = await fetchFn()\n\n    if (result.success) {\n      setState({ data: result.data!, loading: false, error: null })\n    } else {\n      setState({ data: null, loading: false, error: result.error! })\n    }\n  }, [fetchFn])\n\n  return { ...state, execute }\n}\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Testing Requirements",
+      "zh-Hans": "## 测试要求"
+    },
+    {
+      "en-US": "### Backend (pytest)",
+      "zh-Hans": "### 后端 (pytest)"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\npoetry run pytest tests/\n\n# Run with coverage\npoetry run pytest tests/ --cov=. --cov-report=html\n\n# Run specific test file\npoetry run pytest tests/test_auth.py -v\n```",
+      "zh-Hans": "```bash\n# Run all tests\npoetry run pytest tests/\n\n# Run with coverage\npoetry run pytest tests/ --cov=. --cov-report=html\n\n# Run specific test file\npoetry run pytest tests/test_auth.py -v\n```"
+    },
+    {
+      "en-US": "**Test structure:**",
+      "zh-Hans": "**测试结构：**"
+    },
+    {
+      "en-US": "```python\nimport pytest\nfrom httpx import AsyncClient\nfrom main import app\n\n@pytest.fixture\nasync def client():\n    async with AsyncClient(app=app, base_url=\"http://test\") as ac:\n        yield ac\n\n@pytest.mark.asyncio\nasync def test_health_check(client: AsyncClient):\n    response = await client.get(\"/health\")\n    assert response.status_code == 200\n    assert response.json()[\"status\"] == \"healthy\"\n```",
+      "zh-Hans": "```python\nimport pytest\nfrom httpx import AsyncClient\nfrom main import app\n\n@pytest.fixture\nasync def client():\n    async with AsyncClient(app=app, base_url=\"http://test\") as ac:\n        yield ac\n\n@pytest.mark.asyncio\nasync def test_health_check(client: AsyncClient):\n    response = await client.get(\"/health\")\n    assert response.status_code == 200\n    assert response.json()[\"status\"] == \"healthy\"\n```"
+    },
+    {
+      "en-US": "### Frontend (React Testing Library)",
+      "zh-Hans": "### 前端 (React Testing Library)"
+    },
+    {
+      "en-US": "```bash\n# Run tests\nnpm run test\n\n# Run with coverage\nnpm run test -- --coverage\n\n# Run E2E tests\nnpm run test:e2e\n```",
+      "zh-Hans": "```bash\n# Run tests\nnpm run test\n\n# Run with coverage\nnpm run test -- --coverage\n\n# Run E2E tests\nnpm run test:e2e\n```"
+    },
+    {
+      "en-US": "**Test structure:**",
+      "zh-Hans": "**测试结构：**"
+    },
+    {
+      "en-US": "```typescript\nimport { render, screen, fireEvent } from '@testing-library/react'\nimport { WorkspacePanel } from './WorkspacePanel'\n\ndescribe('WorkspacePanel', () => {\n  it('renders workspace correctly', () => {\n    render(<WorkspacePanel />)\n    expect(screen.getByRole('main')).toBeInTheDocument()\n  })\n\n  it('handles session creation', async () => {\n    render(<WorkspacePanel />)\n    fireEvent.click(screen.getByText('New Session'))\n    expect(await screen.findByText('Session created')).toBeInTheDocument()\n  })\n})\n```",
+      "zh-Hans": "```typescript\nimport { render, screen, fireEvent } from '@testing-library/react'\nimport { WorkspacePanel } from './WorkspacePanel'\n\ndescribe('WorkspacePanel', () => {\n  it('renders workspace correctly', () => {\n    render(<WorkspacePanel />)\n    expect(screen.getByRole('main')).toBeInTheDocument()\n  })\n\n  it('handles session creation', async () => {\n    render(<WorkspacePanel />)\n    fireEvent.click(screen.getByText('New Session'))\n    expect(await screen.findByText('Session created')).toBeInTheDocument()\n  })\n})\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Deployment Workflow",
+      "zh-Hans": "## 部署工作流"
+    },
+    {
+      "en-US": "### Pre-Deployment Checklist",
+      "zh-Hans": "### 部署前检查清单"
+    },
+    {
+      "en-US": "- [ ] All tests passing locally\n- [ ] `npm run build` succeeds (frontend)\n- [ ] `poetry run pytest` passes (backend)\n- [ ] No hardcoded secrets\n- [ ] Environment variables documented\n- [ ] Database migrations ready",
+      "zh-Hans": "* \\[ ] 所有测试在本地通过\n* \\[ ] `npm run build` 成功 (前端)\n* \\[ ] `poetry run pytest` 通过 (后端)\n* \\[ ] 没有硬编码的密钥\n* \\[ ] 环境变量已记录\n* \\[ ] 数据库迁移就绪"
+    },
+    {
+      "en-US": "### Deployment Commands",
+      "zh-Hans": "### 部署命令"
+    },
+    {
+      "en-US": "```bash\n# Build and deploy frontend\ncd frontend && npm run build\ngcloud run deploy frontend --source .\n\n# Build and deploy backend\ncd backend\ngcloud run deploy backend --source .\n```",
+      "zh-Hans": "```bash\n# Build and deploy frontend\ncd frontend && npm run build\ngcloud run deploy frontend --source .\n\n# Build and deploy backend\ncd backend\ngcloud run deploy backend --source .\n```"
+    },
+    {
+      "en-US": "### Environment Variables",
+      "zh-Hans": "### 环境变量"
+    },
+    {
+      "en-US": "```bash\n# Frontend (.env.local)\nNEXT_PUBLIC_API_URL=https://api.example.com\nNEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...\n\n# Backend (.env)\nDATABASE_URL=postgresql://...\nANTHROPIC_API_KEY=sk-ant-...\nSUPABASE_URL=https://xxx.supabase.co\nSUPABASE_KEY=eyJ...\n```",
+      "zh-Hans": "```bash\n# Frontend (.env.local)\nNEXT_PUBLIC_API_URL=https://api.example.com\nNEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...\n\n# Backend (.env)\nDATABASE_URL=postgresql://...\nANTHROPIC_API_KEY=sk-ant-...\nSUPABASE_URL=https://xxx.supabase.co\nSUPABASE_KEY=eyJ...\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "1. **No emojis** in code, comments, or documentation\n2. **Immutability** - never mutate objects or arrays\n3. **TDD** - write tests before implementation\n4. **80% coverage** minimum\n5. **Many small files** - 200-400 lines typical, 800 max\n6. **No console.log** in production code\n7. **Proper error handling** with try/catch\n8. **Input validation** with Pydantic/Zod",
+      "zh-Hans": "1. 在代码、注释或文档中**不使用表情符号**\n2. **不可变性** - 永不改变对象或数组\n3. **测试驱动开发 (TDD)** - 在实现之前编写测试\n4. **最低 80% 覆盖率**\n5. **许多小文件** - 典型 200-400 行，最多 800 行\n6. 在生产代码中**不使用 console.log**\n7. 使用 try/catch 进行**适当的错误处理**\n8. 使用 Pydantic/Zod 进行**输入验证**"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `coding-standards.md` - General coding best practices\n- `backend-patterns.md` - API and database patterns\n- `frontend-patterns.md` - React and Next.js patterns\n- `tdd-workflow/` - Test-driven development methodology",
+      "zh-Hans": "* `coding-standards.md` - 通用编码最佳实践\n* `backend-patterns.md` - API 和数据库模式\n* `frontend-patterns.md` - React 和 Next.js 模式\n* `tdd-workflow/` - 测试驱动开发方法论"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "sourceFile": "skills/eval-harness/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: eval-harness\ndescription: Formal evaluation framework for Claude Code sessions implementing eval-driven development (EDD) principles\ntools: Read, Write, Edit, Bash, Grep, Glob\n---",
+      "zh-Hans": "---\nname: eval-harness\ndescription: 克劳德代码会话的正式评估框架，实施评估驱动开发（EDD）原则\ntools: Read, Write, Edit, Bash, Grep, Glob\n---"
+    },
+    {
+      "en-US": "# Eval Harness Skill",
+      "zh-Hans": "# Eval Harness 技能"
+    },
+    {
+      "en-US": "A formal evaluation framework for Claude Code sessions, implementing eval-driven development (EDD) principles.",
+      "zh-Hans": "一个用于 Claude Code 会话的正式评估框架，实现了评估驱动开发 (EDD) 原则。"
+    },
+    {
+      "en-US": "## Philosophy",
+      "zh-Hans": "## 理念"
+    },
+    {
+      "en-US": "Eval-Driven Development treats evals as the \"unit tests of AI development\":",
+      "zh-Hans": "评估驱动开发将评估视为 \"AI 开发的单元测试\"："
+    },
+    {
+      "en-US": "- Define expected behavior BEFORE implementation\n- Run evals continuously during development\n- Track regressions with each change\n- Use pass@k metrics for reliability measurement",
+      "zh-Hans": "* 在实现 **之前** 定义预期行为\n* 在开发过程中持续运行评估\n* 跟踪每次更改的回归情况\n* 使用 pass@k 指标来衡量可靠性"
+    },
+    {
+      "en-US": "## Eval Types",
+      "zh-Hans": "## 评估类型"
+    },
+    {
+      "en-US": "### Capability Evals",
+      "zh-Hans": "### 能力评估"
+    },
+    {
+      "en-US": "Test if Claude can do something it couldn't before:",
+      "zh-Hans": "测试 Claude 是否能完成之前无法完成的事情："
+    },
+    {
+      "en-US": "```markdown\n[CAPABILITY EVAL: feature-name]\nTask: Description of what Claude should accomplish\nSuccess Criteria:\n  - [ ] Criterion 1\n  - [ ] Criterion 2\n  - [ ] Criterion 3\nExpected Output: Description of expected result\n```",
+      "zh-Hans": "```markdown\n[能力评估：功能名称]\n任务：描述 Claude 应完成的工作\n成功标准：\n  - [ ] 标准 1\n  - [ ] 标准 2\n  - [ ] 标准 标准 3\n预期输出：对预期结果的描述\n\n```"
+    },
+    {
+      "en-US": "### Regression Evals",
+      "zh-Hans": "### 回归评估"
+    },
+    {
+      "en-US": "Ensure changes don't break existing functionality:",
+      "zh-Hans": "确保更改不会破坏现有功能："
+    },
+    {
+      "en-US": "```markdown\n[REGRESSION EVAL: feature-name]\nBaseline: SHA or checkpoint name\nTests:\n  - existing-test-1: PASS/FAIL\n  - existing-test-2: PASS/FAIL\n  - existing-test-3: PASS/FAIL\nResult: X/Y passed (previously Y/Y)\n```",
+      "zh-Hans": "```markdown\n[回归评估：功能名称]\n基线：SHA 或检查点名称\n测试：\n  - 现有测试-1：通过/失败\n  - 现有测试-2：通过/失败\n  - 现有测试-3：通过/失败\n结果：X/Y 通过（之前为 Y/Y）\n\n```"
+    },
+    {
+      "en-US": "## Grader Types",
+      "zh-Hans": "## 评分器类型"
+    },
+    {
+      "en-US": "### 1. Code-Based Grader",
+      "zh-Hans": "### 1. 基于代码的评分器"
+    },
+    {
+      "en-US": "Deterministic checks using code:",
+      "zh-Hans": "使用代码进行确定性检查："
+    },
+    {
+      "en-US": "```bash\n# Check if file contains expected pattern\ngrep -q \"export function handleAuth\" src/auth.ts && echo \"PASS\" || echo \"FAIL\"\n\n# Check if tests pass\nnpm test -- --testPathPattern=\"auth\" && echo \"PASS\" || echo \"FAIL\"\n\n# Check if build succeeds\nnpm run build && echo \"PASS\" || echo \"FAIL\"\n```",
+      "zh-Hans": "```bash\n# Check if file contains expected pattern\ngrep -q \"export function handleAuth\" src/auth.ts && echo \"PASS\" || echo \"FAIL\"\n\n# Check if tests pass\nnpm test -- --testPathPattern=\"auth\" && echo \"PASS\" || echo \"FAIL\"\n\n# Check if build succeeds\nnpm run build && echo \"PASS\" || echo \"FAIL\"\n```"
+    },
+    {
+      "en-US": "### 2. Model-Based Grader",
+      "zh-Hans": "### 2. 基于模型的评分器"
+    },
+    {
+      "en-US": "Use Claude to evaluate open-ended outputs:",
+      "zh-Hans": "使用 Claude 来评估开放式输出："
+    },
+    {
+      "en-US": "```markdown\n[MODEL GRADER PROMPT]\nEvaluate the following code change:\n1. Does it solve the stated problem?\n2. Is it well-structured?\n3. Are edge cases handled?\n4. Is error handling appropriate?\n\nScore: 1-5 (1=poor, 5=excellent)\nReasoning: [explanation]\n```",
+      "zh-Hans": "```markdown\n[MODEL GRADER PROMPT]\n评估以下代码变更：\n1. 它是否解决了所述问题？\n2. 它的结构是否良好？\n3. 是否处理了边界情况？\n4. 错误处理是否恰当？\n\n评分：1-5 (1=差，5=优秀)\n推理：[解释]\n\n```"
+    },
+    {
+      "en-US": "### 3. Human Grader",
+      "zh-Hans": "### 3. 人工评分器"
+    },
+    {
+      "en-US": "Flag for manual review:",
+      "zh-Hans": "标记为需要手动审查："
+    },
+    {
+      "en-US": "```markdown\n[HUMAN REVIEW REQUIRED]\nChange: Description of what changed\nReason: Why human review is needed\nRisk Level: LOW/MEDIUM/HIGH\n```",
+      "zh-Hans": "```markdown\n[HUMAN REVIEW REQUIRED]\n变更：对更改内容的描述\n原因：为何需要人工审核\n风险等级：低/中/高\n\n```"
+    },
+    {
+      "en-US": "## Metrics",
+      "zh-Hans": "## 指标"
+    },
+    {
+      "en-US": "### pass@k",
+      "zh-Hans": "### pass@k"
+    },
+    {
+      "en-US": "\"At least one success in k attempts\"",
+      "zh-Hans": "\"k 次尝试中至少成功一次\""
+    },
+    {
+      "en-US": "- pass@1: First attempt success rate\n- pass@3: Success within 3 attempts\n- Typical target: pass@3 > 90%",
+      "zh-Hans": "* pass@1：首次尝试成功率\n* pass@3：3 次尝试内成功率\n* 典型目标：pass@3 > 90%"
+    },
+    {
+      "en-US": "### pass^k",
+      "zh-Hans": "### pass^k"
+    },
+    {
+      "en-US": "\"All k trials succeed\"",
+      "zh-Hans": "\"所有 k 次试验都成功\""
+    },
+    {
+      "en-US": "- Higher bar for reliability\n- pass^3: 3 consecutive successes\n- Use for critical paths",
+      "zh-Hans": "* 更高的可靠性门槛\n* pass^3：连续 3 次成功\n* 用于关键路径"
+    },
+    {
+      "en-US": "## Eval Workflow",
+      "zh-Hans": "## 评估工作流程"
+    },
+    {
+      "en-US": "### 1. Define (Before Coding)",
+      "zh-Hans": "### 1. 定义（编码前）"
+    },
+    {
+      "en-US": "```markdown\n## EVAL DEFINITION: feature-xyz\n\n### Capability Evals\n1. Can create new user account\n2. Can validate email format\n3. Can hash password securely\n\n### Regression Evals\n1. Existing login still works\n2. Session management unchanged\n3. Logout flow intact\n\n### Success Metrics\n- pass@3 > 90% for capability evals\n- pass^3 = 100% for regression evals\n```",
+      "zh-Hans": "```markdown\n## 评估定义：功能-xyz\n\n### 能力评估\n1. 可以创建新用户账户\n2. 可以验证电子邮件格式\n3. 可以安全地哈希密码\n\n### 回归评估\n1. 现有登录功能仍然有效\n2. 会话管理未改变\n3. 注销流程完整\n\n### 成功指标\n- 能力评估的 pass@3 > 90%\n- 回归评估的 pass^3 = 100%\n\n```"
+    },
+    {
+      "en-US": "### 2. Implement",
+      "zh-Hans": "### 2. 实现"
+    },
+    {
+      "en-US": "Write code to pass the defined evals.",
+      "zh-Hans": "编写代码以通过已定义的评估。"
+    },
+    {
+      "en-US": "### 3. Evaluate",
+      "zh-Hans": "### 3. 评估"
+    },
+    {
+      "en-US": "```bash\n# Run capability evals\n[Run each capability eval, record PASS/FAIL]\n\n# Run regression evals\nnpm test -- --testPathPattern=\"existing\"\n\n# Generate report\n```",
+      "zh-Hans": "```bash\n# Run capability evals\n[Run each capability eval, record PASS/FAIL]\n\n# Run regression evals\nnpm test -- --testPathPattern=\"existing\"\n\n# Generate report\n```"
+    },
+    {
+      "en-US": "### 4. Report",
+      "zh-Hans": "### 4. 报告"
+    },
+    {
+      "en-US": "```markdown\nEVAL REPORT: feature-xyz\n========================\n\nCapability Evals:\n  create-user:     PASS (pass@1)\n  validate-email:  PASS (pass@2)\n  hash-password:   PASS (pass@1)\n  Overall:         3/3 passed\n\nRegression Evals:\n  login-flow:      PASS\n  session-mgmt:    PASS\n  logout-flow:     PASS\n  Overall:         3/3 passed\n\nMetrics:\n  pass@1: 67% (2/3)\n  pass@3: 100% (3/3)\n\nStatus: READY FOR REVIEW\n```",
+      "zh-Hans": "```markdown\n评估报告：功能-xyz\n========================\n\n能力评估：\n  创建用户：    通过（通过@1）\n  验证邮箱：    通过（通过@2）\n  哈希密码：    通过（通过@1）\n  总计：         3/3 通过\n\n回归评估：\n  登录流程：     通过\n  会话管理：     通过\n  登出流程：     通过\n  总计：         3/3 通过\n\n指标：\n  通过@1： 67% (2/3)\n  通过@3： 100% (3/3)\n\n状态：准备就绪，待审核\n\n```"
+    },
+    {
+      "en-US": "## Integration Patterns",
+      "zh-Hans": "## 集成模式"
+    },
+    {
+      "en-US": "### Pre-Implementation",
+      "zh-Hans": "### 实施前"
+    },
+    {
+      "en-US": "```\n/eval define feature-name\n```",
+      "zh-Hans": "```\n/eval define feature-name\n```"
+    },
+    {
+      "en-US": "Creates eval definition file at `.claude/evals/feature-name.md`",
+      "zh-Hans": "在 `.claude/evals/feature-name.md` 处创建评估定义文件"
+    },
+    {
+      "en-US": "### During Implementation",
+      "zh-Hans": "### 实施过程中"
+    },
+    {
+      "en-US": "```\n/eval check feature-name\n```",
+      "zh-Hans": "```\n/eval check feature-name\n```"
+    },
+    {
+      "en-US": "Runs current evals and reports status",
+      "zh-Hans": "运行当前评估并报告状态"
+    },
+    {
+      "en-US": "### Post-Implementation",
+      "zh-Hans": "### 实施后"
+    },
+    {
+      "en-US": "```\n/eval report feature-name\n```",
+      "zh-Hans": "```\n/eval report feature-name\n```"
+    },
+    {
+      "en-US": "Generates full eval report",
+      "zh-Hans": "生成完整的评估报告"
+    },
+    {
+      "en-US": "## Eval Storage",
+      "zh-Hans": "## 评估存储"
+    },
+    {
+      "en-US": "Store evals in project:",
+      "zh-Hans": "将评估存储在项目中："
+    },
+    {
+      "en-US": "```\n.claude/\n  evals/\n    feature-xyz.md      # Eval definition\n    feature-xyz.log     # Eval run history\n    baseline.json       # Regression baselines\n```",
+      "zh-Hans": "```\n.claude/\n  evals/\n    feature-xyz.md      # Eval definition\n    feature-xyz.log     # Eval run history\n    baseline.json       # Regression baselines\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "1. **Define evals BEFORE coding** - Forces clear thinking about success criteria\n2. **Run evals frequently** - Catch regressions early\n3. **Track pass@k over time** - Monitor reliability trends\n4. **Use code graders when possible** - Deterministic > probabilistic\n5. **Human review for security** - Never fully automate security checks\n6. **Keep evals fast** - Slow evals don't get run\n7. **Version evals with code** - Evals are first-class artifacts",
+      "zh-Hans": "1. **在编码前定义评估** - 强制清晰地思考成功标准\n2. **频繁运行评估** - 及早发现回归问题\n3. **随时间跟踪 pass@k** - 监控可靠性趋势\n4. **尽可能使用代码评分器** - 确定性 > 概率性\n5. **对安全性进行人工审查** - 永远不要完全自动化安全检查\n6. **保持评估快速** - 缓慢的评估不会被运行\n7. **评估与代码版本化** - 评估是一等工件"
+    },
+    {
+      "en-US": "## Example: Adding Authentication",
+      "zh-Hans": "## 示例：添加身份验证"
+    },
+    {
+      "en-US": "```markdown\n## EVAL: add-authentication\n\n### Phase 1: Define (10 min)\nCapability Evals:\n- [ ] User can register with email/password\n- [ ] User can login with valid credentials\n- [ ] Invalid credentials rejected with proper error\n- [ ] Sessions persist across page reloads\n- [ ] Logout clears session\n\nRegression Evals:\n- [ ] Public routes still accessible\n- [ ] API responses unchanged\n- [ ] Database schema compatible\n\n### Phase 2: Implement (varies)\n[Write code]\n\n### Phase 3: Evaluate\nRun: /eval check add-authentication\n\n### Phase 4: Report\nEVAL REPORT: add-authentication\n==============================\nCapability: 5/5 passed (pass@3: 100%)\nRegression: 3/3 passed (pass^3: 100%)\nStatus: SHIP IT\n```",
+      "zh-Hans": "```markdown\n## EVAL：添加身份验证\n\n### 第 1 阶段：定义 (10 分钟)\n能力评估：\n- [ ] 用户可以使用邮箱/密码注册\n- [ ] 用户可以使用有效凭证登录\n- [ ] 无效凭证被拒绝并显示适当的错误\n- [ ] 会话在页面重新加载后保持\n- [ ] 登出操作清除会话\n\n回归评估：\n- [ ] 公共路由仍可访问\n- [ ] API 响应未改变\n- [ ] 数据库模式兼容\n\n### 第 2 阶段：实施 (时间不定)\n[编写代码]\n\n### 第 3 阶段：评估\n运行：/eval check add-authentication\n\n### 第 4 阶段：报告\n评估报告：添加身份验证\n==============================\n能力：5/5 通过 (pass@3: 100%)\n回归：3/3 通过 (pass^3: 100%)\n状态：可以发布\n\n```"
+    }
+  ]
+}

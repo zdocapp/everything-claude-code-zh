@@ -1,6 +1,6 @@
 ---
 name: frontend-patterns
-description: Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices.
+description: React、Next.js、状态管理、性能优化和UI最佳实践的前端开发模式。
 ---
 
 # 前端开发模式
@@ -374,7 +374,7 @@ export function VirtualMarketList({ markets }: { markets: Market[] }) {
 
 ## 表单处理模式
 
-### 受控表单与验证
+### 带验证的受控表单
 
 ```typescript
 interface FormData {
@@ -628,4 +628,4 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 }
 ```
 
-**请记住**：现代前端模式能够实现可维护、高性能的用户界面。请选择适合您项目复杂度的模式。
+**记住**：现代前端模式能实现可维护、高性能的用户界面。选择适合你项目复杂度的模式。

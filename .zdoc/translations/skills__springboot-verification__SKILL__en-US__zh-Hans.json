@@ -1,0 +1,118 @@
+{
+  "sourceFile": "skills/springboot-verification/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: springboot-verification\ndescription: Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\n---",
+      "zh-Hans": "---\nname: springboot-verification\ndescription: Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\n---"
+    },
+    {
+      "en-US": "# Spring Boot Verification Loop",
+      "zh-Hans": "# Spring Boot 验证循环"
+    },
+    {
+      "en-US": "Run before PRs, after major changes, and pre-deploy.",
+      "zh-Hans": "在提交 PR 前、重大变更后以及部署前运行。"
+    },
+    {
+      "en-US": "## Phase 1: Build",
+      "zh-Hans": "## 阶段 1：构建"
+    },
+    {
+      "en-US": "```bash\nmvn -T 4 clean verify -DskipTests\n# or\n./gradlew clean assemble -x test\n```",
+      "zh-Hans": "```bash\nmvn -T 4 clean verify -DskipTests\n# or\n./gradlew clean assemble -x test\n```"
+    },
+    {
+      "en-US": "If build fails, stop and fix.",
+      "zh-Hans": "如果构建失败，停止并修复。"
+    },
+    {
+      "en-US": "## Phase 2: Static Analysis",
+      "zh-Hans": "## 阶段 2：静态分析"
+    },
+    {
+      "en-US": "Maven (common plugins):",
+      "zh-Hans": "Maven（常用插件）："
+    },
+    {
+      "en-US": "```bash\nmvn -T 4 spotbugs:check pmd:check checkstyle:check\n```",
+      "zh-Hans": "```bash\nmvn -T 4 spotbugs:check pmd:check checkstyle:check\n```"
+    },
+    {
+      "en-US": "Gradle (if configured):",
+      "zh-Hans": "Gradle（如果已配置）："
+    },
+    {
+      "en-US": "```bash\n./gradlew checkstyleMain pmdMain spotbugsMain\n```",
+      "zh-Hans": "```bash\n./gradlew checkstyleMain pmdMain spotbugsMain\n```"
+    },
+    {
+      "en-US": "## Phase 3: Tests + Coverage",
+      "zh-Hans": "## 阶段 3：测试 + 覆盖率"
+    },
+    {
+      "en-US": "```bash\nmvn -T 4 test\nmvn jacoco:report   # verify 80%+ coverage\n# or\n./gradlew test jacocoTestReport\n```",
+      "zh-Hans": "```bash\nmvn -T 4 test\nmvn jacoco:report   # verify 80%+ coverage\n# or\n./gradlew test jacocoTestReport\n```"
+    },
+    {
+      "en-US": "Report:",
+      "zh-Hans": "报告："
+    },
+    {
+      "en-US": "- Total tests, passed/failed\n- Coverage % (lines/branches)",
+      "zh-Hans": "* 总测试数，通过/失败\n* 覆盖率百分比（行/分支）"
+    },
+    {
+      "en-US": "## Phase 4: Security Scan",
+      "zh-Hans": "## 阶段 4：安全扫描"
+    },
+    {
+      "en-US": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets (git)\ngit secrets --scan  # if configured\n```",
+      "zh-Hans": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets (git)\ngit secrets --scan  # if configured\n```"
+    },
+    {
+      "en-US": "## Phase 5: Lint/Format (optional gate)",
+      "zh-Hans": "## 阶段 5：代码检查/格式化（可选关卡）"
+    },
+    {
+      "en-US": "```bash\nmvn spotless:apply   # if using Spotless plugin\n./gradlew spotlessApply\n```",
+      "zh-Hans": "```bash\nmvn spotless:apply   # if using Spotless plugin\n./gradlew spotlessApply\n```"
+    },
+    {
+      "en-US": "## Phase 6: Diff Review",
+      "zh-Hans": "## 阶段 6：差异审查"
+    },
+    {
+      "en-US": "```bash\ngit diff --stat\ngit diff\n```",
+      "zh-Hans": "```bash\ngit diff --stat\ngit diff\n```"
+    },
+    {
+      "en-US": "Checklist:",
+      "zh-Hans": "检查清单："
+    },
+    {
+      "en-US": "- No debugging logs left (`System.out`, `log.debug` without guards)\n- Meaningful errors and HTTP statuses\n- Transactions and validation present where needed\n- Config changes documented",
+      "zh-Hans": "* 没有遗留调试日志（`System.out`、`log.debug` 没有防护）\n* 有意义的错误信息和 HTTP 状态码\n* 在需要的地方有事务和验证\n* 配置变更已记录"
+    },
+    {
+      "en-US": "## Output Template",
+      "zh-Hans": "## 输出模板"
+    },
+    {
+      "en-US": "```\nVERIFICATION REPORT\n===================\nBuild:     [PASS/FAIL]\nStatic:    [PASS/FAIL] (spotbugs/pmd/checkstyle)\nTests:     [PASS/FAIL] (X/Y passed, Z% coverage)\nSecurity:  [PASS/FAIL] (CVE findings: N)\nDiff:      [X files changed]\n\nOverall:   [READY / NOT READY]\n\nIssues to Fix:\n1. ...\n2. ...\n```",
+      "zh-Hans": "```\nVERIFICATION REPORT\n===================\nBuild:     [PASS/FAIL]\nStatic:    [PASS/FAIL] (spotbugs/pmd/checkstyle)\nTests:     [PASS/FAIL] (X/Y passed, Z% coverage)\nSecurity:  [PASS/FAIL] (CVE findings: N)\nDiff:      [X files changed]\n\nOverall:   [READY / NOT READY]\n\nIssues to Fix:\n1. ...\n2. ...\n```"
+    },
+    {
+      "en-US": "## Continuous Mode",
+      "zh-Hans": "## 持续模式"
+    },
+    {
+      "en-US": "- Re-run phases on significant changes or every 30–60 minutes in long sessions\n- Keep a short loop: `mvn -T 4 test` + spotbugs for quick feedback",
+      "zh-Hans": "* 在重大变更时或长时间会话中每 30–60 分钟重新运行各阶段\n* 保持短循环：`mvn -T 4 test` + spotbugs 以获取快速反馈"
+    },
+    {
+      "en-US": "**Remember**: Fast feedback beats late surprises. Keep the gate strict—treat warnings as defects in production systems.",
+      "zh-Hans": "**记住**：快速反馈胜过意外惊喜。保持关卡严格——将警告视为生产系统中的缺陷。"
+    }
+  ]
+}

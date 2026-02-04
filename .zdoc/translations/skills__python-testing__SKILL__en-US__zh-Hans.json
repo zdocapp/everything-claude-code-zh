@@ -1,0 +1,446 @@
+{
+  "sourceFile": "skills/python-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: python-testing\ndescription: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.\n---",
+      "zh-Hans": "---\nname: python-testing\ndescription: 使用pytest、TDD方法、夹具、模拟、参数化和覆盖率要求的Python测试策略。\n---"
+    },
+    {
+      "en-US": "# Python Testing Patterns",
+      "zh-Hans": "# Python 测试模式"
+    },
+    {
+      "en-US": "Comprehensive testing strategies for Python applications using pytest, TDD methodology, and best practices.",
+      "zh-Hans": "使用 pytest、TDD 方法论和最佳实践的 Python 应用程序全面测试策略。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Writing new Python code (follow TDD: red, green, refactor)\n- Designing test suites for Python projects\n- Reviewing Python test coverage\n- Setting up testing infrastructure",
+      "zh-Hans": "* 编写新的 Python 代码（遵循 TDD：红、绿、重构）\n* 为 Python 项目设计测试套件\n* 审查 Python 测试覆盖率\n* 设置测试基础设施"
+    },
+    {
+      "en-US": "## Core Testing Philosophy",
+      "zh-Hans": "## 核心测试理念"
+    },
+    {
+      "en-US": "### Test-Driven Development (TDD)",
+      "zh-Hans": "### 测试驱动开发 (TDD)"
+    },
+    {
+      "en-US": "Always follow the TDD cycle:",
+      "zh-Hans": "始终遵循 TDD 循环："
+    },
+    {
+      "en-US": "1. **RED**: Write a failing test for the desired behavior\n2. **GREEN**: Write minimal code to make the test pass\n3. **REFACTOR**: Improve code while keeping tests green",
+      "zh-Hans": "1. **红**：为期望的行为编写一个失败的测试\n2. **绿**：编写最少的代码使测试通过\n3. **重构**：在保持测试通过的同时改进代码"
+    },
+    {
+      "en-US": "```python\n# Step 1: Write failing test (RED)\ndef test_add_numbers():\n    result = add(2, 3)\n    assert result == 5\n\n# Step 2: Write minimal implementation (GREEN)\ndef add(a, b):\n    return a + b\n\n# Step 3: Refactor if needed (REFACTOR)\n```",
+      "zh-Hans": "```python\n# Step 1: Write failing test (RED)\ndef test_add_numbers():\n    result = add(2, 3)\n    assert result == 5\n\n# Step 2: Write minimal implementation (GREEN)\ndef add(a, b):\n    return a + b\n\n# Step 3: Refactor if needed (REFACTOR)\n```"
+    },
+    {
+      "en-US": "### Coverage Requirements",
+      "zh-Hans": "### 覆盖率要求"
+    },
+    {
+      "en-US": "- **Target**: 80%+ code coverage\n- **Critical paths**: 100% coverage required\n- Use `pytest --cov` to measure coverage",
+      "zh-Hans": "* **目标**：80%+ 代码覆盖率\n* **关键路径**：需要 100% 覆盖率\n* 使用 `pytest --cov` 来测量覆盖率"
+    },
+    {
+      "en-US": "```bash\npytest --cov=mypackage --cov-report=term-missing --cov-report=html\n```",
+      "zh-Hans": "```bash\npytest --cov=mypackage --cov-report=term-missing --cov-report=html\n```"
+    },
+    {
+      "en-US": "## pytest Fundamentals",
+      "zh-Hans": "## pytest 基础"
+    },
+    {
+      "en-US": "### Basic Test Structure",
+      "zh-Hans": "### 基本测试结构"
+    },
+    {
+      "en-US": "```python\nimport pytest\n\ndef test_addition():\n    \"\"\"Test basic addition.\"\"\"\n    assert 2 + 2 == 4\n\ndef test_string_uppercase():\n    \"\"\"Test string uppercasing.\"\"\"\n    text = \"hello\"\n    assert text.upper() == \"HELLO\"\n\ndef test_list_append():\n    \"\"\"Test list append.\"\"\"\n    items = [1, 2, 3]\n    items.append(4)\n    assert 4 in items\n    assert len(items) == 4\n```",
+      "zh-Hans": "```python\nimport pytest\n\ndef test_addition():\n    \"\"\"Test basic addition.\"\"\"\n    assert 2 + 2 == 4\n\ndef test_string_uppercase():\n    \"\"\"Test string uppercasing.\"\"\"\n    text = \"hello\"\n    assert text.upper() == \"HELLO\"\n\ndef test_list_append():\n    \"\"\"Test list append.\"\"\"\n    items = [1, 2, 3]\n    items.append(4)\n    assert 4 in items\n    assert len(items) == 4\n```"
+    },
+    {
+      "en-US": "### Assertions",
+      "zh-Hans": "### 断言"
+    },
+    {
+      "en-US": "```python\n# Equality\nassert result == expected\n\n# Inequality\nassert result != unexpected\n\n# Truthiness\nassert result  # Truthy\nassert not result  # Falsy\nassert result is True  # Exactly True\nassert result is False  # Exactly False\nassert result is None  # Exactly None\n\n# Membership\nassert item in collection\nassert item not in collection\n\n# Comparisons\nassert result > 0\nassert 0 <= result <= 100\n\n# Type checking\nassert isinstance(result, str)\n\n# Exception testing (preferred approach)\nwith pytest.raises(ValueError):\n    raise ValueError(\"error message\")\n\n# Check exception message\nwith pytest.raises(ValueError, match=\"invalid input\"):\n    raise ValueError(\"invalid input provided\")\n\n# Check exception attributes\nwith pytest.raises(ValueError) as exc_info:\n    raise ValueError(\"error message\")\nassert str(exc_info.value) == \"error message\"\n```",
+      "zh-Hans": "```python\n# Equality\nassert result == expected\n\n# Inequality\nassert result != unexpected\n\n# Truthiness\nassert result  # Truthy\nassert not result  # Falsy\nassert result is True  # Exactly True\nassert result is False  # Exactly False\nassert result is None  # Exactly None\n\n# Membership\nassert item in collection\nassert item not in collection\n\n# Comparisons\nassert result > 0\nassert 0 <= result <= 100\n\n# Type checking\nassert isinstance(result, str)\n\n# Exception testing (preferred approach)\nwith pytest.raises(ValueError):\n    raise ValueError(\"error message\")\n\n# Check exception message\nwith pytest.raises(ValueError, match=\"invalid input\"):\n    raise ValueError(\"invalid input provided\")\n\n# Check exception attributes\nwith pytest.raises(ValueError) as exc_info:\n    raise ValueError(\"error message\")\nassert str(exc_info.value) == \"error message\"\n```"
+    },
+    {
+      "en-US": "## Fixtures",
+      "zh-Hans": "## 夹具"
+    },
+    {
+      "en-US": "### Basic Fixture Usage",
+      "zh-Hans": "### 基本夹具使用"
+    },
+    {
+      "en-US": "```python\nimport pytest\n\n@pytest.fixture\ndef sample_data():\n    \"\"\"Fixture providing sample data.\"\"\"\n    return {\"name\": \"Alice\", \"age\": 30}\n\ndef test_sample_data(sample_data):\n    \"\"\"Test using the fixture.\"\"\"\n    assert sample_data[\"name\"] == \"Alice\"\n    assert sample_data[\"age\"] == 30\n```",
+      "zh-Hans": "```python\nimport pytest\n\n@pytest.fixture\ndef sample_data():\n    \"\"\"Fixture providing sample data.\"\"\"\n    return {\"name\": \"Alice\", \"age\": 30}\n\ndef test_sample_data(sample_data):\n    \"\"\"Test using the fixture.\"\"\"\n    assert sample_data[\"name\"] == \"Alice\"\n    assert sample_data[\"age\"] == 30\n```"
+    },
+    {
+      "en-US": "### Fixture with Setup/Teardown",
+      "zh-Hans": "### 带设置/拆卸的夹具"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture\ndef database():\n    \"\"\"Fixture with setup and teardown.\"\"\"\n    # Setup\n    db = Database(\":memory:\")\n    db.create_tables()\n    db.insert_test_data()\n\n    yield db  # Provide to test\n\n    # Teardown\n    db.close()\n\ndef test_database_query(database):\n    \"\"\"Test database operations.\"\"\"\n    result = database.query(\"SELECT * FROM users\")\n    assert len(result) > 0\n```",
+      "zh-Hans": "```python\n@pytest.fixture\ndef database():\n    \"\"\"Fixture with setup and teardown.\"\"\"\n    # Setup\n    db = Database(\":memory:\")\n    db.create_tables()\n    db.insert_test_data()\n\n    yield db  # Provide to test\n\n    # Teardown\n    db.close()\n\ndef test_database_query(database):\n    \"\"\"Test database operations.\"\"\"\n    result = database.query(\"SELECT * FROM users\")\n    assert len(result) > 0\n```"
+    },
+    {
+      "en-US": "### Fixture Scopes",
+      "zh-Hans": "### 夹具作用域"
+    },
+    {
+      "en-US": "```python\n# Function scope (default) - runs for each test\n@pytest.fixture\ndef temp_file():\n    with open(\"temp.txt\", \"w\") as f:\n        yield f\n    os.remove(\"temp.txt\")\n\n# Module scope - runs once per module\n@pytest.fixture(scope=\"module\")\ndef module_db():\n    db = Database(\":memory:\")\n    db.create_tables()\n    yield db\n    db.close()\n\n# Session scope - runs once per test session\n@pytest.fixture(scope=\"session\")\ndef shared_resource():\n    resource = ExpensiveResource()\n    yield resource\n    resource.cleanup()\n```",
+      "zh-Hans": "```python\n# Function scope (default) - runs for each test\n@pytest.fixture\ndef temp_file():\n    with open(\"temp.txt\", \"w\") as f:\n        yield f\n    os.remove(\"temp.txt\")\n\n# Module scope - runs once per module\n@pytest.fixture(scope=\"module\")\ndef module_db():\n    db = Database(\":memory:\")\n    db.create_tables()\n    yield db\n    db.close()\n\n# Session scope - runs once per test session\n@pytest.fixture(scope=\"session\")\ndef shared_resource():\n    resource = ExpensiveResource()\n    yield resource\n    resource.cleanup()\n```"
+    },
+    {
+      "en-US": "### Fixture with Parameters",
+      "zh-Hans": "### 带参数的夹具"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture(params=[1, 2, 3])\ndef number(request):\n    \"\"\"Parameterized fixture.\"\"\"\n    return request.param\n\ndef test_numbers(number):\n    \"\"\"Test runs 3 times, once for each parameter.\"\"\"\n    assert number > 0\n```",
+      "zh-Hans": "```python\n@pytest.fixture(params=[1, 2, 3])\ndef number(request):\n    \"\"\"Parameterized fixture.\"\"\"\n    return request.param\n\ndef test_numbers(number):\n    \"\"\"Test runs 3 times, once for each parameter.\"\"\"\n    assert number > 0\n```"
+    },
+    {
+      "en-US": "### Using Multiple Fixtures",
+      "zh-Hans": "### 使用多个夹具"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture\ndef user():\n    return User(id=1, name=\"Alice\")\n\n@pytest.fixture\ndef admin():\n    return User(id=2, name=\"Admin\", role=\"admin\")\n\ndef test_user_admin_interaction(user, admin):\n    \"\"\"Test using multiple fixtures.\"\"\"\n    assert admin.can_manage(user)\n```",
+      "zh-Hans": "```python\n@pytest.fixture\ndef user():\n    return User(id=1, name=\"Alice\")\n\n@pytest.fixture\ndef admin():\n    return User(id=2, name=\"Admin\", role=\"admin\")\n\ndef test_user_admin_interaction(user, admin):\n    \"\"\"Test using multiple fixtures.\"\"\"\n    assert admin.can_manage(user)\n```"
+    },
+    {
+      "en-US": "### Autouse Fixtures",
+      "zh-Hans": "### 自动使用夹具"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture(autouse=True)\ndef reset_config():\n    \"\"\"Automatically runs before every test.\"\"\"\n    Config.reset()\n    yield\n    Config.cleanup()\n\ndef test_without_fixture_call():\n    # reset_config runs automatically\n    assert Config.get_setting(\"debug\") is False\n```",
+      "zh-Hans": "```python\n@pytest.fixture(autouse=True)\ndef reset_config():\n    \"\"\"Automatically runs before every test.\"\"\"\n    Config.reset()\n    yield\n    Config.cleanup()\n\ndef test_without_fixture_call():\n    # reset_config runs automatically\n    assert Config.get_setting(\"debug\") is False\n```"
+    },
+    {
+      "en-US": "### Conftest.py for Shared Fixtures",
+      "zh-Hans": "### 使用 Conftest.py 共享夹具"
+    },
+    {
+      "en-US": "```python\n# tests/conftest.py\nimport pytest\n\n@pytest.fixture\ndef client():\n    \"\"\"Shared fixture for all tests.\"\"\"\n    app = create_app(testing=True)\n    with app.test_client() as client:\n        yield client\n\n@pytest.fixture\ndef auth_headers(client):\n    \"\"\"Generate auth headers for API testing.\"\"\"\n    response = client.post(\"/api/login\", json={\n        \"username\": \"test\",\n        \"password\": \"test\"\n    })\n    token = response.json[\"token\"]\n    return {\"Authorization\": f\"Bearer {token}\"}\n```",
+      "zh-Hans": "```python\n# tests/conftest.py\nimport pytest\n\n@pytest.fixture\ndef client():\n    \"\"\"Shared fixture for all tests.\"\"\"\n    app = create_app(testing=True)\n    with app.test_client() as client:\n        yield client\n\n@pytest.fixture\ndef auth_headers(client):\n    \"\"\"Generate auth headers for API testing.\"\"\"\n    response = client.post(\"/api/login\", json={\n        \"username\": \"test\",\n        \"password\": \"test\"\n    })\n    token = response.json[\"token\"]\n    return {\"Authorization\": f\"Bearer {token}\"}\n```"
+    },
+    {
+      "en-US": "## Parametrization",
+      "zh-Hans": "## 参数化"
+    },
+    {
+      "en-US": "### Basic Parametrization",
+      "zh-Hans": "### 基本参数化"
+    },
+    {
+      "en-US": "```python\n@pytest.mark.parametrize(\"input,expected\", [\n    (\"hello\", \"HELLO\"),\n    (\"world\", \"WORLD\"),\n    (\"PyThOn\", \"PYTHON\"),\n])\ndef test_uppercase(input, expected):\n    \"\"\"Test runs 3 times with different inputs.\"\"\"\n    assert input.upper() == expected\n```",
+      "zh-Hans": "```python\n@pytest.mark.parametrize(\"input,expected\", [\n    (\"hello\", \"HELLO\"),\n    (\"world\", \"WORLD\"),\n    (\"PyThOn\", \"PYTHON\"),\n])\ndef test_uppercase(input, expected):\n    \"\"\"Test runs 3 times with different inputs.\"\"\"\n    assert input.upper() == expected\n```"
+    },
+    {
+      "en-US": "### Multiple Parameters",
+      "zh-Hans": "### 多参数"
+    },
+    {
+      "en-US": "```python\n@pytest.mark.parametrize(\"a,b,expected\", [\n    (2, 3, 5),\n    (0, 0, 0),\n    (-1, 1, 0),\n    (100, 200, 300),\n])\ndef test_add(a, b, expected):\n    \"\"\"Test addition with multiple inputs.\"\"\"\n    assert add(a, b) == expected\n```",
+      "zh-Hans": "```python\n@pytest.mark.parametrize(\"a,b,expected\", [\n    (2, 3, 5),\n    (0, 0, 0),\n    (-1, 1, 0),\n    (100, 200, 300),\n])\ndef test_add(a, b, expected):\n    \"\"\"Test addition with multiple inputs.\"\"\"\n    assert add(a, b) == expected\n```"
+    },
+    {
+      "en-US": "### Parametrize with IDs",
+      "zh-Hans": "### 带 ID 的参数化"
+    },
+    {
+      "en-US": "```python\n@pytest.mark.parametrize(\"input,expected\", [\n    (\"valid@email.com\", True),\n    (\"invalid\", False),\n    (\"@no-domain.com\", False),\n], ids=[\"valid-email\", \"missing-at\", \"missing-domain\"])\ndef test_email_validation(input, expected):\n    \"\"\"Test email validation with readable test IDs.\"\"\"\n    assert is_valid_email(input) is expected\n```",
+      "zh-Hans": "```python\n@pytest.mark.parametrize(\"input,expected\", [\n    (\"valid@email.com\", True),\n    (\"invalid\", False),\n    (\"@no-domain.com\", False),\n], ids=[\"valid-email\", \"missing-at\", \"missing-domain\"])\ndef test_email_validation(input, expected):\n    \"\"\"Test email validation with readable test IDs.\"\"\"\n    assert is_valid_email(input) is expected\n```"
+    },
+    {
+      "en-US": "### Parametrized Fixtures",
+      "zh-Hans": "### 参数化夹具"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture(params=[\"sqlite\", \"postgresql\", \"mysql\"])\ndef db(request):\n    \"\"\"Test against multiple database backends.\"\"\"\n    if request.param == \"sqlite\":\n        return Database(\":memory:\")\n    elif request.param == \"postgresql\":\n        return Database(\"postgresql://localhost/test\")\n    elif request.param == \"mysql\":\n        return Database(\"mysql://localhost/test\")\n\ndef test_database_operations(db):\n    \"\"\"Test runs 3 times, once for each database.\"\"\"\n    result = db.query(\"SELECT 1\")\n    assert result is not None\n```",
+      "zh-Hans": "```python\n@pytest.fixture(params=[\"sqlite\", \"postgresql\", \"mysql\"])\ndef db(request):\n    \"\"\"Test against multiple database backends.\"\"\"\n    if request.param == \"sqlite\":\n        return Database(\":memory:\")\n    elif request.param == \"postgresql\":\n        return Database(\"postgresql://localhost/test\")\n    elif request.param == \"mysql\":\n        return Database(\"mysql://localhost/test\")\n\ndef test_database_operations(db):\n    \"\"\"Test runs 3 times, once for each database.\"\"\"\n    result = db.query(\"SELECT 1\")\n    assert result is not None\n```"
+    },
+    {
+      "en-US": "## Markers and Test Selection",
+      "zh-Hans": "## 标记器和测试选择"
+    },
+    {
+      "en-US": "### Custom Markers",
+      "zh-Hans": "### 自定义标记器"
+    },
+    {
+      "en-US": "```python\n# Mark slow tests\n@pytest.mark.slow\ndef test_slow_operation():\n    time.sleep(5)\n\n# Mark integration tests\n@pytest.mark.integration\ndef test_api_integration():\n    response = requests.get(\"https://api.example.com\")\n    assert response.status_code == 200\n\n# Mark unit tests\n@pytest.mark.unit\ndef test_unit_logic():\n    assert calculate(2, 3) == 5\n```",
+      "zh-Hans": "```python\n# Mark slow tests\n@pytest.mark.slow\ndef test_slow_operation():\n    time.sleep(5)\n\n# Mark integration tests\n@pytest.mark.integration\ndef test_api_integration():\n    response = requests.get(\"https://api.example.com\")\n    assert response.status_code == 200\n\n# Mark unit tests\n@pytest.mark.unit\ndef test_unit_logic():\n    assert calculate(2, 3) == 5\n```"
+    },
+    {
+      "en-US": "### Run Specific Tests",
+      "zh-Hans": "### 运行特定测试"
+    },
+    {
+      "en-US": "```bash\n# Run only fast tests\npytest -m \"not slow\"\n\n# Run only integration tests\npytest -m integration\n\n# Run integration or slow tests\npytest -m \"integration or slow\"\n\n# Run tests marked as unit but not slow\npytest -m \"unit and not slow\"\n```",
+      "zh-Hans": "```bash\n# Run only fast tests\npytest -m \"not slow\"\n\n# Run only integration tests\npytest -m integration\n\n# Run integration or slow tests\npytest -m \"integration or slow\"\n\n# Run tests marked as unit but not slow\npytest -m \"unit and not slow\"\n```"
+    },
+    {
+      "en-US": "### Configure Markers in pytest.ini",
+      "zh-Hans": "### 在 pytest.ini 中配置标记器"
+    },
+    {
+      "en-US": "```ini\n[pytest]\nmarkers =\n    slow: marks tests as slow\n    integration: marks tests as integration tests\n    unit: marks tests as unit tests\n    django: marks tests as requiring Django\n```",
+      "zh-Hans": "```ini\n[pytest]\nmarkers =\n    slow: marks tests as slow\n    integration: marks tests as integration tests\n    unit: marks tests as unit tests\n    django: marks tests as requiring Django\n```"
+    },
+    {
+      "en-US": "## Mocking and Patching",
+      "zh-Hans": "## 模拟和补丁"
+    },
+    {
+      "en-US": "### Mocking Functions",
+      "zh-Hans": "### 模拟函数"
+    },
+    {
+      "en-US": "```python\nfrom unittest.mock import patch, Mock\n\n@patch(\"mypackage.external_api_call\")\ndef test_with_mock(api_call_mock):\n    \"\"\"Test with mocked external API.\"\"\"\n    api_call_mock.return_value = {\"status\": \"success\"}\n\n    result = my_function()\n\n    api_call_mock.assert_called_once()\n    assert result[\"status\"] == \"success\"\n```",
+      "zh-Hans": "```python\nfrom unittest.mock import patch, Mock\n\n@patch(\"mypackage.external_api_call\")\ndef test_with_mock(api_call_mock):\n    \"\"\"Test with mocked external API.\"\"\"\n    api_call_mock.return_value = {\"status\": \"success\"}\n\n    result = my_function()\n\n    api_call_mock.assert_called_once()\n    assert result[\"status\"] == \"success\"\n```"
+    },
+    {
+      "en-US": "### Mocking Return Values",
+      "zh-Hans": "### 模拟返回值"
+    },
+    {
+      "en-US": "```python\n@patch(\"mypackage.Database.connect\")\ndef test_database_connection(connect_mock):\n    \"\"\"Test with mocked database connection.\"\"\"\n    connect_mock.return_value = MockConnection()\n\n    db = Database()\n    db.connect()\n\n    connect_mock.assert_called_once_with(\"localhost\")\n```",
+      "zh-Hans": "```python\n@patch(\"mypackage.Database.connect\")\ndef test_database_connection(connect_mock):\n    \"\"\"Test with mocked database connection.\"\"\"\n    connect_mock.return_value = MockConnection()\n\n    db = Database()\n    db.connect()\n\n    connect_mock.assert_called_once_with(\"localhost\")\n```"
+    },
+    {
+      "en-US": "### Mocking Exceptions",
+      "zh-Hans": "### 模拟异常"
+    },
+    {
+      "en-US": "```python\n@patch(\"mypackage.api_call\")\ndef test_api_error_handling(api_call_mock):\n    \"\"\"Test error handling with mocked exception.\"\"\"\n    api_call_mock.side_effect = ConnectionError(\"Network error\")\n\n    with pytest.raises(ConnectionError):\n        api_call()\n\n    api_call_mock.assert_called_once()\n```",
+      "zh-Hans": "```python\n@patch(\"mypackage.api_call\")\ndef test_api_error_handling(api_call_mock):\n    \"\"\"Test error handling with mocked exception.\"\"\"\n    api_call_mock.side_effect = ConnectionError(\"Network error\")\n\n    with pytest.raises(ConnectionError):\n        api_call()\n\n    api_call_mock.assert_called_once()\n```"
+    },
+    {
+      "en-US": "### Mocking Context Managers",
+      "zh-Hans": "### 模拟上下文管理器"
+    },
+    {
+      "en-US": "```python\n@patch(\"builtins.open\", new_callable=mock_open)\ndef test_file_reading(mock_file):\n    \"\"\"Test file reading with mocked open.\"\"\"\n    mock_file.return_value.read.return_value = \"file content\"\n\n    result = read_file(\"test.txt\")\n\n    mock_file.assert_called_once_with(\"test.txt\", \"r\")\n    assert result == \"file content\"\n```",
+      "zh-Hans": "```python\n@patch(\"builtins.open\", new_callable=mock_open)\ndef test_file_reading(mock_file):\n    \"\"\"Test file reading with mocked open.\"\"\"\n    mock_file.return_value.read.return_value = \"file content\"\n\n    result = read_file(\"test.txt\")\n\n    mock_file.assert_called_once_with(\"test.txt\", \"r\")\n    assert result == \"file content\"\n```"
+    },
+    {
+      "en-US": "### Using Autospec",
+      "zh-Hans": "### 使用 Autospec"
+    },
+    {
+      "en-US": "```python\n@patch(\"mypackage.DBConnection\", autospec=True)\ndef test_autospec(db_mock):\n    \"\"\"Test with autospec to catch API misuse.\"\"\"\n    db = db_mock.return_value\n    db.query(\"SELECT * FROM users\")\n\n    # This would fail if DBConnection doesn't have query method\n    db_mock.assert_called_once()\n```",
+      "zh-Hans": "```python\n@patch(\"mypackage.DBConnection\", autospec=True)\ndef test_autospec(db_mock):\n    \"\"\"Test with autospec to catch API misuse.\"\"\"\n    db = db_mock.return_value\n    db.query(\"SELECT * FROM users\")\n\n    # This would fail if DBConnection doesn't have query method\n    db_mock.assert_called_once()\n```"
+    },
+    {
+      "en-US": "### Mock Class Instances",
+      "zh-Hans": "### 模拟类实例"
+    },
+    {
+      "en-US": "```python\nclass TestUserService:\n    @patch(\"mypackage.UserRepository\")\n    def test_create_user(self, repo_mock):\n        \"\"\"Test user creation with mocked repository.\"\"\"\n        repo_mock.return_value.save.return_value = User(id=1, name=\"Alice\")\n\n        service = UserService(repo_mock.return_value)\n        user = service.create_user(name=\"Alice\")\n\n        assert user.name == \"Alice\"\n        repo_mock.return_value.save.assert_called_once()\n```",
+      "zh-Hans": "```python\nclass TestUserService:\n    @patch(\"mypackage.UserRepository\")\n    def test_create_user(self, repo_mock):\n        \"\"\"Test user creation with mocked repository.\"\"\"\n        repo_mock.return_value.save.return_value = User(id=1, name=\"Alice\")\n\n        service = UserService(repo_mock.return_value)\n        user = service.create_user(name=\"Alice\")\n\n        assert user.name == \"Alice\"\n        repo_mock.return_value.save.assert_called_once()\n```"
+    },
+    {
+      "en-US": "### Mock Property",
+      "zh-Hans": "### 模拟属性"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture\ndef mock_config():\n    \"\"\"Create a mock with a property.\"\"\"\n    config = Mock()\n    type(config).debug = PropertyMock(return_value=True)\n    type(config).api_key = PropertyMock(return_value=\"test-key\")\n    return config\n\ndef test_with_mock_config(mock_config):\n    \"\"\"Test with mocked config properties.\"\"\"\n    assert mock_config.debug is True\n    assert mock_config.api_key == \"test-key\"\n```",
+      "zh-Hans": "```python\n@pytest.fixture\ndef mock_config():\n    \"\"\"Create a mock with a property.\"\"\"\n    config = Mock()\n    type(config).debug = PropertyMock(return_value=True)\n    type(config).api_key = PropertyMock(return_value=\"test-key\")\n    return config\n\ndef test_with_mock_config(mock_config):\n    \"\"\"Test with mocked config properties.\"\"\"\n    assert mock_config.debug is True\n    assert mock_config.api_key == \"test-key\"\n```"
+    },
+    {
+      "en-US": "## Testing Async Code",
+      "zh-Hans": "## 测试异步代码"
+    },
+    {
+      "en-US": "### Async Tests with pytest-asyncio",
+      "zh-Hans": "### 使用 pytest-asyncio 进行异步测试"
+    },
+    {
+      "en-US": "```python\nimport pytest\n\n@pytest.mark.asyncio\nasync def test_async_function():\n    \"\"\"Test async function.\"\"\"\n    result = await async_add(2, 3)\n    assert result == 5\n\n@pytest.mark.asyncio\nasync def test_async_with_fixture(async_client):\n    \"\"\"Test async with async fixture.\"\"\"\n    response = await async_client.get(\"/api/users\")\n    assert response.status_code == 200\n```",
+      "zh-Hans": "```python\nimport pytest\n\n@pytest.mark.asyncio\nasync def test_async_function():\n    \"\"\"Test async function.\"\"\"\n    result = await async_add(2, 3)\n    assert result == 5\n\n@pytest.mark.asyncio\nasync def test_async_with_fixture(async_client):\n    \"\"\"Test async with async fixture.\"\"\"\n    response = await async_client.get(\"/api/users\")\n    assert response.status_code == 200\n```"
+    },
+    {
+      "en-US": "### Async Fixture",
+      "zh-Hans": "### 异步夹具"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture\nasync def async_client():\n    \"\"\"Async fixture providing async test client.\"\"\"\n    app = create_app()\n    async with app.test_client() as client:\n        yield client\n\n@pytest.mark.asyncio\nasync def test_api_endpoint(async_client):\n    \"\"\"Test using async fixture.\"\"\"\n    response = await async_client.get(\"/api/data\")\n    assert response.status_code == 200\n```",
+      "zh-Hans": "```python\n@pytest.fixture\nasync def async_client():\n    \"\"\"Async fixture providing async test client.\"\"\"\n    app = create_app()\n    async with app.test_client() as client:\n        yield client\n\n@pytest.mark.asyncio\nasync def test_api_endpoint(async_client):\n    \"\"\"Test using async fixture.\"\"\"\n    response = await async_client.get(\"/api/data\")\n    assert response.status_code == 200\n```"
+    },
+    {
+      "en-US": "### Mocking Async Functions",
+      "zh-Hans": "### 模拟异步函数"
+    },
+    {
+      "en-US": "```python\n@pytest.mark.asyncio\n@patch(\"mypackage.async_api_call\")\nasync def test_async_mock(api_call_mock):\n    \"\"\"Test async function with mock.\"\"\"\n    api_call_mock.return_value = {\"status\": \"ok\"}\n\n    result = await my_async_function()\n\n    api_call_mock.assert_awaited_once()\n    assert result[\"status\"] == \"ok\"\n```",
+      "zh-Hans": "```python\n@pytest.mark.asyncio\n@patch(\"mypackage.async_api_call\")\nasync def test_async_mock(api_call_mock):\n    \"\"\"Test async function with mock.\"\"\"\n    api_call_mock.return_value = {\"status\": \"ok\"}\n\n    result = await my_async_function()\n\n    api_call_mock.assert_awaited_once()\n    assert result[\"status\"] == \"ok\"\n```"
+    },
+    {
+      "en-US": "## Testing Exceptions",
+      "zh-Hans": "## 测试异常"
+    },
+    {
+      "en-US": "### Testing Expected Exceptions",
+      "zh-Hans": "### 测试预期异常"
+    },
+    {
+      "en-US": "```python\ndef test_divide_by_zero():\n    \"\"\"Test that dividing by zero raises ZeroDivisionError.\"\"\"\n    with pytest.raises(ZeroDivisionError):\n        divide(10, 0)\n\ndef test_custom_exception():\n    \"\"\"Test custom exception with message.\"\"\"\n    with pytest.raises(ValueError, match=\"invalid input\"):\n        validate_input(\"invalid\")\n```",
+      "zh-Hans": "```python\ndef test_divide_by_zero():\n    \"\"\"Test that dividing by zero raises ZeroDivisionError.\"\"\"\n    with pytest.raises(ZeroDivisionError):\n        divide(10, 0)\n\ndef test_custom_exception():\n    \"\"\"Test custom exception with message.\"\"\"\n    with pytest.raises(ValueError, match=\"invalid input\"):\n        validate_input(\"invalid\")\n```"
+    },
+    {
+      "en-US": "### Testing Exception Attributes",
+      "zh-Hans": "### 测试异常属性"
+    },
+    {
+      "en-US": "```python\ndef test_exception_with_details():\n    \"\"\"Test exception with custom attributes.\"\"\"\n    with pytest.raises(CustomError) as exc_info:\n        raise CustomError(\"error\", code=400)\n\n    assert exc_info.value.code == 400\n    assert \"error\" in str(exc_info.value)\n```",
+      "zh-Hans": "```python\ndef test_exception_with_details():\n    \"\"\"Test exception with custom attributes.\"\"\"\n    with pytest.raises(CustomError) as exc_info:\n        raise CustomError(\"error\", code=400)\n\n    assert exc_info.value.code == 400\n    assert \"error\" in str(exc_info.value)\n```"
+    },
+    {
+      "en-US": "## Testing Side Effects",
+      "zh-Hans": "## 测试副作用"
+    },
+    {
+      "en-US": "### Testing File Operations",
+      "zh-Hans": "### 测试文件操作"
+    },
+    {
+      "en-US": "```python\nimport tempfile\nimport os\n\ndef test_file_processing():\n    \"\"\"Test file processing with temp file.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt') as f:\n        f.write(\"test content\")\n        temp_path = f.name\n\n    try:\n        result = process_file(temp_path)\n        assert result == \"processed: test content\"\n    finally:\n        os.unlink(temp_path)\n```",
+      "zh-Hans": "```python\nimport tempfile\nimport os\n\ndef test_file_processing():\n    \"\"\"Test file processing with temp file.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt') as f:\n        f.write(\"test content\")\n        temp_path = f.name\n\n    try:\n        result = process_file(temp_path)\n        assert result == \"processed: test content\"\n    finally:\n        os.unlink(temp_path)\n```"
+    },
+    {
+      "en-US": "### Testing with pytest's tmp_path Fixture",
+      "zh-Hans": "### 使用 pytest 的 tmp\\_path 夹具进行测试"
+    },
+    {
+      "en-US": "```python\ndef test_with_tmp_path(tmp_path):\n    \"\"\"Test using pytest's built-in temp path fixture.\"\"\"\n    test_file = tmp_path / \"test.txt\"\n    test_file.write_text(\"hello world\")\n\n    result = process_file(str(test_file))\n    assert result == \"hello world\"\n    # tmp_path automatically cleaned up\n```",
+      "zh-Hans": "```python\ndef test_with_tmp_path(tmp_path):\n    \"\"\"Test using pytest's built-in temp path fixture.\"\"\"\n    test_file = tmp_path / \"test.txt\"\n    test_file.write_text(\"hello world\")\n\n    result = process_file(str(test_file))\n    assert result == \"hello world\"\n    # tmp_path automatically cleaned up\n```"
+    },
+    {
+      "en-US": "### Testing with tmpdir Fixture",
+      "zh-Hans": "### 使用 tmpdir 夹具进行测试"
+    },
+    {
+      "en-US": "```python\ndef test_with_tmpdir(tmpdir):\n    \"\"\"Test using pytest's tmpdir fixture.\"\"\"\n    test_file = tmpdir.join(\"test.txt\")\n    test_file.write(\"data\")\n\n    result = process_file(str(test_file))\n    assert result == \"data\"\n```",
+      "zh-Hans": "```python\ndef test_with_tmpdir(tmpdir):\n    \"\"\"Test using pytest's tmpdir fixture.\"\"\"\n    test_file = tmpdir.join(\"test.txt\")\n    test_file.write(\"data\")\n\n    result = process_file(str(test_file))\n    assert result == \"data\"\n```"
+    },
+    {
+      "en-US": "## Test Organization",
+      "zh-Hans": "## 测试组织"
+    },
+    {
+      "en-US": "### Directory Structure",
+      "zh-Hans": "### 目录结构"
+    },
+    {
+      "en-US": "```\ntests/\n├── conftest.py                 # Shared fixtures\n├── __init__.py\n├── unit/                       # Unit tests\n│   ├── __init__.py\n│   ├── test_models.py\n│   ├── test_utils.py\n│   └── test_services.py\n├── integration/                # Integration tests\n│   ├── __init__.py\n│   ├── test_api.py\n│   └── test_database.py\n└── e2e/                        # End-to-end tests\n    ├── __init__.py\n    └── test_user_flow.py\n```",
+      "zh-Hans": "```\ntests/\n├── conftest.py                 # Shared fixtures\n├── __init__.py\n├── unit/                       # Unit tests\n│   ├── __init__.py\n│   ├── test_models.py\n│   ├── test_utils.py\n│   └── test_services.py\n├── integration/                # Integration tests\n│   ├── __init__.py\n│   ├── test_api.py\n│   └── test_database.py\n└── e2e/                        # End-to-end tests\n    ├── __init__.py\n    └── test_user_flow.py\n```"
+    },
+    {
+      "en-US": "### Test Classes",
+      "zh-Hans": "### 测试类"
+    },
+    {
+      "en-US": "```python\nclass TestUserService:\n    \"\"\"Group related tests in a class.\"\"\"\n\n    @pytest.fixture(autouse=True)\n    def setup(self):\n        \"\"\"Setup runs before each test in this class.\"\"\"\n        self.service = UserService()\n\n    def test_create_user(self):\n        \"\"\"Test user creation.\"\"\"\n        user = self.service.create_user(\"Alice\")\n        assert user.name == \"Alice\"\n\n    def test_delete_user(self):\n        \"\"\"Test user deletion.\"\"\"\n        user = User(id=1, name=\"Bob\")\n        self.service.delete_user(user)\n        assert not self.service.user_exists(1)\n```",
+      "zh-Hans": "```python\nclass TestUserService:\n    \"\"\"Group related tests in a class.\"\"\"\n\n    @pytest.fixture(autouse=True)\n    def setup(self):\n        \"\"\"Setup runs before each test in this class.\"\"\"\n        self.service = UserService()\n\n    def test_create_user(self):\n        \"\"\"Test user creation.\"\"\"\n        user = self.service.create_user(\"Alice\")\n        assert user.name == \"Alice\"\n\n    def test_delete_user(self):\n        \"\"\"Test user deletion.\"\"\"\n        user = User(id=1, name=\"Bob\")\n        self.service.delete_user(user)\n        assert not self.service.user_exists(1)\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "### DO",
+      "zh-Hans": "### 应该做"
+    },
+    {
+      "en-US": "- **Follow TDD**: Write tests before code (red-green-refactor)\n- **Test one thing**: Each test should verify a single behavior\n- **Use descriptive names**: `test_user_login_with_invalid_credentials_fails`\n- **Use fixtures**: Eliminate duplication with fixtures\n- **Mock external dependencies**: Don't depend on external services\n- **Test edge cases**: Empty inputs, None values, boundary conditions\n- **Aim for 80%+ coverage**: Focus on critical paths\n- **Keep tests fast**: Use marks to separate slow tests",
+      "zh-Hans": "* **遵循 TDD**：在代码之前编写测试（红-绿-重构）\n* **测试单一事物**：每个测试应验证一个单一行为\n* **使用描述性名称**：`test_user_login_with_invalid_credentials_fails`\n* **使用夹具**：用夹具消除重复\n* **模拟外部依赖**：不要依赖外部服务\n* **测试边界情况**：空输入、None 值、边界条件\n* **目标 80%+ 覆盖率**：关注关键路径\n* **保持测试快速**：使用标记来分离慢速测试"
+    },
+    {
+      "en-US": "### DON'T",
+      "zh-Hans": "### 不要做"
+    },
+    {
+      "en-US": "- **Don't test implementation**: Test behavior, not internals\n- **Don't use complex conditionals in tests**: Keep tests simple\n- **Don't ignore test failures**: All tests must pass\n- **Don't test third-party code**: Trust libraries to work\n- **Don't share state between tests**: Tests should be independent\n- **Don't catch exceptions in tests**: Use `pytest.raises`\n- **Don't use print statements**: Use assertions and pytest output\n- **Don't write tests that are too brittle**: Avoid over-specific mocks",
+      "zh-Hans": "* **不要测试实现**：测试行为，而非内部实现\n* **不要在测试中使用复杂的条件语句**：保持测试简单\n* **不要忽略测试失败**：所有测试必须通过\n* **不要测试第三方代码**：相信库能正常工作\n* **不要在测试之间共享状态**：测试应该是独立的\n* **不要在测试中捕获异常**：使用 `pytest.raises`\n* **不要使用 print 语句**：使用断言和 pytest 输出\n* **不要编写过于脆弱的测试**：避免过度具体的模拟"
+    },
+    {
+      "en-US": "## Common Patterns",
+      "zh-Hans": "## 常见模式"
+    },
+    {
+      "en-US": "### Testing API Endpoints (FastAPI/Flask)",
+      "zh-Hans": "### 测试 API 端点 (FastAPI/Flask)"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture\ndef client():\n    app = create_app(testing=True)\n    return app.test_client()\n\ndef test_get_user(client):\n    response = client.get(\"/api/users/1\")\n    assert response.status_code == 200\n    assert response.json[\"id\"] == 1\n\ndef test_create_user(client):\n    response = client.post(\"/api/users\", json={\n        \"name\": \"Alice\",\n        \"email\": \"alice@example.com\"\n    })\n    assert response.status_code == 201\n    assert response.json[\"name\"] == \"Alice\"\n```",
+      "zh-Hans": "```python\n@pytest.fixture\ndef client():\n    app = create_app(testing=True)\n    return app.test_client()\n\ndef test_get_user(client):\n    response = client.get(\"/api/users/1\")\n    assert response.status_code == 200\n    assert response.json[\"id\"] == 1\n\ndef test_create_user(client):\n    response = client.post(\"/api/users\", json={\n        \"name\": \"Alice\",\n        \"email\": \"alice@example.com\"\n    })\n    assert response.status_code == 201\n    assert response.json[\"name\"] == \"Alice\"\n```"
+    },
+    {
+      "en-US": "### Testing Database Operations",
+      "zh-Hans": "### 测试数据库操作"
+    },
+    {
+      "en-US": "```python\n@pytest.fixture\ndef db_session():\n    \"\"\"Create a test database session.\"\"\"\n    session = Session(bind=engine)\n    session.begin_nested()\n    yield session\n    session.rollback()\n    session.close()\n\ndef test_create_user(db_session):\n    user = User(name=\"Alice\", email=\"alice@example.com\")\n    db_session.add(user)\n    db_session.commit()\n\n    retrieved = db_session.query(User).filter_by(name=\"Alice\").first()\n    assert retrieved.email == \"alice@example.com\"\n```",
+      "zh-Hans": "```python\n@pytest.fixture\ndef db_session():\n    \"\"\"Create a test database session.\"\"\"\n    session = Session(bind=engine)\n    session.begin_nested()\n    yield session\n    session.rollback()\n    session.close()\n\ndef test_create_user(db_session):\n    user = User(name=\"Alice\", email=\"alice@example.com\")\n    db_session.add(user)\n    db_session.commit()\n\n    retrieved = db_session.query(User).filter_by(name=\"Alice\").first()\n    assert retrieved.email == \"alice@example.com\"\n```"
+    },
+    {
+      "en-US": "### Testing Class Methods",
+      "zh-Hans": "### 测试类方法"
+    },
+    {
+      "en-US": "```python\nclass TestCalculator:\n    @pytest.fixture\n    def calculator(self):\n        return Calculator()\n\n    def test_add(self, calculator):\n        assert calculator.add(2, 3) == 5\n\n    def test_divide_by_zero(self, calculator):\n        with pytest.raises(ZeroDivisionError):\n            calculator.divide(10, 0)\n```",
+      "zh-Hans": "```python\nclass TestCalculator:\n    @pytest.fixture\n    def calculator(self):\n        return Calculator()\n\n    def test_add(self, calculator):\n        assert calculator.add(2, 3) == 5\n\n    def test_divide_by_zero(self, calculator):\n        with pytest.raises(ZeroDivisionError):\n            calculator.divide(10, 0)\n```"
+    },
+    {
+      "en-US": "## pytest Configuration",
+      "zh-Hans": "## pytest 配置"
+    },
+    {
+      "en-US": "### pytest.ini",
+      "zh-Hans": "### pytest.ini"
+    },
+    {
+      "en-US": "```ini\n[pytest]\ntestpaths = tests\npython_files = test_*.py\npython_classes = Test*\npython_functions = test_*\naddopts =\n    --strict-markers\n    --disable-warnings\n    --cov=mypackage\n    --cov-report=term-missing\n    --cov-report=html\nmarkers =\n    slow: marks tests as slow\n    integration: marks tests as integration tests\n    unit: marks tests as unit tests\n```",
+      "zh-Hans": "```ini\n[pytest]\ntestpaths = tests\npython_files = test_*.py\npython_classes = Test*\npython_functions = test_*\naddopts =\n    --strict-markers\n    --disable-warnings\n    --cov=mypackage\n    --cov-report=term-missing\n    --cov-report=html\nmarkers =\n    slow: marks tests as slow\n    integration: marks tests as integration tests\n    unit: marks tests as unit tests\n```"
+    },
+    {
+      "en-US": "### pyproject.toml",
+      "zh-Hans": "### pyproject.toml"
+    },
+    {
+      "en-US": "```toml\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\npython_files = [\"test_*.py\"]\npython_classes = [\"Test*\"]\npython_functions = [\"test_*\"]\naddopts = [\n    \"--strict-markers\",\n    \"--cov=mypackage\",\n    \"--cov-report=term-missing\",\n    \"--cov-report=html\",\n]\nmarkers = [\n    \"slow: marks tests as slow\",\n    \"integration: marks tests as integration tests\",\n    \"unit: marks tests as unit tests\",\n]\n```",
+      "zh-Hans": "```toml\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\npython_files = [\"test_*.py\"]\npython_classes = [\"Test*\"]\npython_functions = [\"test_*\"]\naddopts = [\n    \"--strict-markers\",\n    \"--cov=mypackage\",\n    \"--cov-report=term-missing\",\n    \"--cov-report=html\",\n]\nmarkers = [\n    \"slow: marks tests as slow\",\n    \"integration: marks tests as integration tests\",\n    \"unit: marks tests as unit tests\",\n]\n```"
+    },
+    {
+      "en-US": "## Running Tests",
+      "zh-Hans": "## 运行测试"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\npytest\n\n# Run specific file\npytest tests/test_utils.py\n\n# Run specific test\npytest tests/test_utils.py::test_function\n\n# Run with verbose output\npytest -v\n\n# Run with coverage\npytest --cov=mypackage --cov-report=html\n\n# Run only fast tests\npytest -m \"not slow\"\n\n# Run until first failure\npytest -x\n\n# Run and stop on N failures\npytest --maxfail=3\n\n# Run last failed tests\npytest --lf\n\n# Run tests with pattern\npytest -k \"test_user\"\n\n# Run with debugger on failure\npytest --pdb\n```",
+      "zh-Hans": "```bash\n# Run all tests\npytest\n\n# Run specific file\npytest tests/test_utils.py\n\n# Run specific test\npytest tests/test_utils.py::test_function\n\n# Run with verbose output\npytest -v\n\n# Run with coverage\npytest --cov=mypackage --cov-report=html\n\n# Run only fast tests\npytest -m \"not slow\"\n\n# Run until first failure\npytest -x\n\n# Run and stop on N failures\npytest --maxfail=3\n\n# Run last failed tests\npytest --lf\n\n# Run tests with pattern\npytest -k \"test_user\"\n\n# Run with debugger on failure\npytest --pdb\n```"
+    },
+    {
+      "en-US": "## Quick Reference",
+      "zh-Hans": "## 快速参考"
+    },
+    {
+      "en-US": "| Pattern | Usage |\n|---------|-------|\n| `pytest.raises()` | Test expected exceptions |\n| `@pytest.fixture()` | Create reusable test fixtures |\n| `@pytest.mark.parametrize()` | Run tests with multiple inputs |\n| `@pytest.mark.slow` | Mark slow tests |\n| `pytest -m \"not slow\"` | Skip slow tests |\n| `@patch()` | Mock functions and classes |\n| `tmp_path` fixture | Automatic temp directory |\n| `pytest --cov` | Generate coverage report |\n| `assert` | Simple and readable assertions |",
+      "zh-Hans": "| 模式 | 用法 |\n|---------|-------|\n| `pytest.raises()` | 测试预期异常 |\n| `@pytest.fixture()` | 创建可重用的测试夹具 |\n| `@pytest.mark.parametrize()` | 使用多个输入运行测试 |\n| `@pytest.mark.slow` | 标记慢速测试 |\n| `pytest -m \"not slow\"` | 跳过慢速测试 |\n| `@patch()` | 模拟函数和类 |\n| `tmp_path` 夹具 | 自动临时目录 |\n| `pytest --cov` | 生成覆盖率报告 |\n| `assert` | 简单且可读的断言 |"
+    },
+    {
+      "en-US": "**Remember**: Tests are code too. Keep them clean, readable, and maintainable. Good tests catch bugs; great tests prevent them.",
+      "zh-Hans": "**记住**：测试也是代码。保持它们干净、可读且可维护。好的测试能发现错误；优秀的测试能预防错误。"
+    }
+  ]
+}

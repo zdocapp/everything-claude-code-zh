@@ -1,0 +1,366 @@
+{
+  "sourceFile": "skills/python-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: python-patterns\ndescription: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications.\n---",
+      "zh-Hans": "---\nname: python-patterns\ndescription: Pythonic 惯用法、PEP 8 标准、类型提示以及构建健壮、高效、可维护的 Python 应用程序的最佳实践。\n---"
+    },
+    {
+      "en-US": "# Python Development Patterns",
+      "zh-Hans": "# Python 开发模式"
+    },
+    {
+      "en-US": "Idiomatic Python patterns and best practices for building robust, efficient, and maintainable applications.",
+      "zh-Hans": "用于构建健壮、高效和可维护应用程序的惯用 Python 模式与最佳实践。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Writing new Python code\n- Reviewing Python code\n- Refactoring existing Python code\n- Designing Python packages/modules",
+      "zh-Hans": "* 编写新的 Python 代码\n* 审查 Python 代码\n* 重构现有的 Python 代码\n* 设计 Python 包/模块"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "### 1. Readability Counts",
+      "zh-Hans": "### 1. 可读性很重要"
+    },
+    {
+      "en-US": "Python prioritizes readability. Code should be obvious and easy to understand.",
+      "zh-Hans": "Python 优先考虑可读性。代码应该清晰且易于理解。"
+    },
+    {
+      "en-US": "```python\n# Good: Clear and readable\ndef get_active_users(users: list[User]) -> list[User]:\n    \"\"\"Return only active users from the provided list.\"\"\"\n    return [user for user in users if user.is_active]\n\n\n# Bad: Clever but confusing\ndef get_active_users(u):\n    return [x for x in u if x.a]\n```",
+      "zh-Hans": "```python\n# Good: Clear and readable\ndef get_active_users(users: list[User]) -> list[User]:\n    \"\"\"Return only active users from the provided list.\"\"\"\n    return [user for user in users if user.is_active]\n\n\n# Bad: Clever but confusing\ndef get_active_users(u):\n    return [x for x in u if x.a]\n```"
+    },
+    {
+      "en-US": "### 2. Explicit is Better Than Implicit",
+      "zh-Hans": "### 2. 显式优于隐式"
+    },
+    {
+      "en-US": "Avoid magic; be clear about what your code does.",
+      "zh-Hans": "避免魔法；清晰说明你的代码在做什么。"
+    },
+    {
+      "en-US": "```python\n# Good: Explicit configuration\nimport logging\n\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'\n)\n\n# Bad: Hidden side effects\nimport some_module\nsome_module.setup()  # What does this do?\n```",
+      "zh-Hans": "```python\n# Good: Explicit configuration\nimport logging\n\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'\n)\n\n# Bad: Hidden side effects\nimport some_module\nsome_module.setup()  # What does this do?\n```"
+    },
+    {
+      "en-US": "### 3. EAFP - Easier to Ask Forgiveness Than Permission",
+      "zh-Hans": "### 3. EAFP - 请求宽恕比请求许可更容易"
+    },
+    {
+      "en-US": "Python prefers exception handling over checking conditions.",
+      "zh-Hans": "Python 倾向于使用异常处理而非检查条件。"
+    },
+    {
+      "en-US": "```python\n# Good: EAFP style\ndef get_value(dictionary: dict, key: str) -> Any:\n    try:\n        return dictionary[key]\n    except KeyError:\n        return default_value\n\n# Bad: LBYL (Look Before You Leap) style\ndef get_value(dictionary: dict, key: str) -> Any:\n    if key in dictionary:\n        return dictionary[key]\n    else:\n        return default_value\n```",
+      "zh-Hans": "```python\n# Good: EAFP style\ndef get_value(dictionary: dict, key: str) -> Any:\n    try:\n        return dictionary[key]\n    except KeyError:\n        return default_value\n\n# Bad: LBYL (Look Before You Leap) style\ndef get_value(dictionary: dict, key: str) -> Any:\n    if key in dictionary:\n        return dictionary[key]\n    else:\n        return default_value\n```"
+    },
+    {
+      "en-US": "## Type Hints",
+      "zh-Hans": "## 类型提示"
+    },
+    {
+      "en-US": "### Basic Type Annotations",
+      "zh-Hans": "### 基本类型注解"
+    },
+    {
+      "en-US": "```python\nfrom typing import Optional, List, Dict, Any\n\ndef process_user(\n    user_id: str,\n    data: Dict[str, Any],\n    active: bool = True\n) -> Optional[User]:\n    \"\"\"Process a user and return the updated User or None.\"\"\"\n    if not active:\n        return None\n    return User(user_id, data)\n```",
+      "zh-Hans": "```python\nfrom typing import Optional, List, Dict, Any\n\ndef process_user(\n    user_id: str,\n    data: Dict[str, Any],\n    active: bool = True\n) -> Optional[User]:\n    \"\"\"Process a user and return the updated User or None.\"\"\"\n    if not active:\n        return None\n    return User(user_id, data)\n```"
+    },
+    {
+      "en-US": "### Modern Type Hints (Python 3.9+)",
+      "zh-Hans": "### 现代类型提示（Python 3.9+）"
+    },
+    {
+      "en-US": "```python\n# Python 3.9+ - Use built-in types\ndef process_items(items: list[str]) -> dict[str, int]:\n    return {item: len(item) for item in items}\n\n# Python 3.8 and earlier - Use typing module\nfrom typing import List, Dict\n\ndef process_items(items: List[str]) -> Dict[str, int]:\n    return {item: len(item) for item in items}\n```",
+      "zh-Hans": "```python\n# Python 3.9+ - Use built-in types\ndef process_items(items: list[str]) -> dict[str, int]:\n    return {item: len(item) for item in items}\n\n# Python 3.8 and earlier - Use typing module\nfrom typing import List, Dict\n\ndef process_items(items: List[str]) -> Dict[str, int]:\n    return {item: len(item) for item in items}\n```"
+    },
+    {
+      "en-US": "### Type Aliases and TypeVar",
+      "zh-Hans": "### 类型别名和 TypeVar"
+    },
+    {
+      "en-US": "```python\nfrom typing import TypeVar, Union\n\n# Type alias for complex types\nJSON = Union[dict[str, Any], list[Any], str, int, float, bool, None]\n\ndef parse_json(data: str) -> JSON:\n    return json.loads(data)\n\n# Generic types\nT = TypeVar('T')\n\ndef first(items: list[T]) -> T | None:\n    \"\"\"Return the first item or None if list is empty.\"\"\"\n    return items[0] if items else None\n```",
+      "zh-Hans": "```python\nfrom typing import TypeVar, Union\n\n# Type alias for complex types\nJSON = Union[dict[str, Any], list[Any], str, int, float, bool, None]\n\ndef parse_json(data: str) -> JSON:\n    return json.loads(data)\n\n# Generic types\nT = TypeVar('T')\n\ndef first(items: list[T]) -> T | None:\n    \"\"\"Return the first item or None if list is empty.\"\"\"\n    return items[0] if items else None\n```"
+    },
+    {
+      "en-US": "### Protocol-Based Duck Typing",
+      "zh-Hans": "### 基于协议的鸭子类型"
+    },
+    {
+      "en-US": "```python\nfrom typing import Protocol\n\nclass Renderable(Protocol):\n    def render(self) -> str:\n        \"\"\"Render the object to a string.\"\"\"\n\ndef render_all(items: list[Renderable]) -> str:\n    \"\"\"Render all items that implement the Renderable protocol.\"\"\"\n    return \"\\n\".join(item.render() for item in items)\n```",
+      "zh-Hans": "```python\nfrom typing import Protocol\n\nclass Renderable(Protocol):\n    def render(self) -> str:\n        \"\"\"Render the object to a string.\"\"\"\n\ndef render_all(items: list[Renderable]) -> str:\n    \"\"\"Render all items that implement the Renderable protocol.\"\"\"\n    return \"\\n\".join(item.render() for item in items)\n```"
+    },
+    {
+      "en-US": "## Error Handling Patterns",
+      "zh-Hans": "## 错误处理模式"
+    },
+    {
+      "en-US": "### Specific Exception Handling",
+      "zh-Hans": "### 特定异常处理"
+    },
+    {
+      "en-US": "```python\n# Good: Catch specific exceptions\ndef load_config(path: str) -> Config:\n    try:\n        with open(path) as f:\n            return Config.from_json(f.read())\n    except FileNotFoundError as e:\n        raise ConfigError(f\"Config file not found: {path}\") from e\n    except json.JSONDecodeError as e:\n        raise ConfigError(f\"Invalid JSON in config: {path}\") from e\n\n# Bad: Bare except\ndef load_config(path: str) -> Config:\n    try:\n        with open(path) as f:\n            return Config.from_json(f.read())\n    except:\n        return None  # Silent failure!\n```",
+      "zh-Hans": "```python\n# Good: Catch specific exceptions\ndef load_config(path: str) -> Config:\n    try:\n        with open(path) as f:\n            return Config.from_json(f.read())\n    except FileNotFoundError as e:\n        raise ConfigError(f\"Config file not found: {path}\") from e\n    except json.JSONDecodeError as e:\n        raise ConfigError(f\"Invalid JSON in config: {path}\") from e\n\n# Bad: Bare except\ndef load_config(path: str) -> Config:\n    try:\n        with open(path) as f:\n            return Config.from_json(f.read())\n    except:\n        return None  # Silent failure!\n```"
+    },
+    {
+      "en-US": "### Exception Chaining",
+      "zh-Hans": "### 异常链"
+    },
+    {
+      "en-US": "```python\ndef process_data(data: str) -> Result:\n    try:\n        parsed = json.loads(data)\n    except json.JSONDecodeError as e:\n        # Chain exceptions to preserve the traceback\n        raise ValueError(f\"Failed to parse data: {data}\") from e\n```",
+      "zh-Hans": "```python\ndef process_data(data: str) -> Result:\n    try:\n        parsed = json.loads(data)\n    except json.JSONDecodeError as e:\n        # Chain exceptions to preserve the traceback\n        raise ValueError(f\"Failed to parse data: {data}\") from e\n```"
+    },
+    {
+      "en-US": "### Custom Exception Hierarchy",
+      "zh-Hans": "### 自定义异常层次结构"
+    },
+    {
+      "en-US": "```python\nclass AppError(Exception):\n    \"\"\"Base exception for all application errors.\"\"\"\n    pass\n\nclass ValidationError(AppError):\n    \"\"\"Raised when input validation fails.\"\"\"\n    pass\n\nclass NotFoundError(AppError):\n    \"\"\"Raised when a requested resource is not found.\"\"\"\n    pass\n\n# Usage\ndef get_user(user_id: str) -> User:\n    user = db.find_user(user_id)\n    if not user:\n        raise NotFoundError(f\"User not found: {user_id}\")\n    return user\n```",
+      "zh-Hans": "```python\nclass AppError(Exception):\n    \"\"\"Base exception for all application errors.\"\"\"\n    pass\n\nclass ValidationError(AppError):\n    \"\"\"Raised when input validation fails.\"\"\"\n    pass\n\nclass NotFoundError(AppError):\n    \"\"\"Raised when a requested resource is not found.\"\"\"\n    pass\n\n# Usage\ndef get_user(user_id: str) -> User:\n    user = db.find_user(user_id)\n    if not user:\n        raise NotFoundError(f\"User not found: {user_id}\")\n    return user\n```"
+    },
+    {
+      "en-US": "## Context Managers",
+      "zh-Hans": "## 上下文管理器"
+    },
+    {
+      "en-US": "### Resource Management",
+      "zh-Hans": "### 资源管理"
+    },
+    {
+      "en-US": "```python\n# Good: Using context managers\ndef process_file(path: str) -> str:\n    with open(path, 'r') as f:\n        return f.read()\n\n# Bad: Manual resource management\ndef process_file(path: str) -> str:\n    f = open(path, 'r')\n    try:\n        return f.read()\n    finally:\n        f.close()\n```",
+      "zh-Hans": "```python\n# Good: Using context managers\ndef process_file(path: str) -> str:\n    with open(path, 'r') as f:\n        return f.read()\n\n# Bad: Manual resource management\ndef process_file(path: str) -> str:\n    f = open(path, 'r')\n    try:\n        return f.read()\n    finally:\n        f.close()\n```"
+    },
+    {
+      "en-US": "### Custom Context Managers",
+      "zh-Hans": "### 自定义上下文管理器"
+    },
+    {
+      "en-US": "```python\nfrom contextlib import contextmanager\n\n@contextmanager\ndef timer(name: str):\n    \"\"\"Context manager to time a block of code.\"\"\"\n    start = time.perf_counter()\n    yield\n    elapsed = time.perf_counter() - start\n    print(f\"{name} took {elapsed:.4f} seconds\")\n\n# Usage\nwith timer(\"data processing\"):\n    process_large_dataset()\n```",
+      "zh-Hans": "```python\nfrom contextlib import contextmanager\n\n@contextmanager\ndef timer(name: str):\n    \"\"\"Context manager to time a block of code.\"\"\"\n    start = time.perf_counter()\n    yield\n    elapsed = time.perf_counter() - start\n    print(f\"{name} took {elapsed:.4f} seconds\")\n\n# Usage\nwith timer(\"data processing\"):\n    process_large_dataset()\n```"
+    },
+    {
+      "en-US": "### Context Manager Classes",
+      "zh-Hans": "### 上下文管理器类"
+    },
+    {
+      "en-US": "```python\nclass DatabaseTransaction:\n    def __init__(self, connection):\n        self.connection = connection\n\n    def __enter__(self):\n        self.connection.begin_transaction()\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        if exc_type is None:\n            self.connection.commit()\n        else:\n            self.connection.rollback()\n        return False  # Don't suppress exceptions\n\n# Usage\nwith DatabaseTransaction(conn):\n    user = conn.create_user(user_data)\n    conn.create_profile(user.id, profile_data)\n```",
+      "zh-Hans": "```python\nclass DatabaseTransaction:\n    def __init__(self, connection):\n        self.connection = connection\n\n    def __enter__(self):\n        self.connection.begin_transaction()\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        if exc_type is None:\n            self.connection.commit()\n        else:\n            self.connection.rollback()\n        return False  # Don't suppress exceptions\n\n# Usage\nwith DatabaseTransaction(conn):\n    user = conn.create_user(user_data)\n    conn.create_profile(user.id, profile_data)\n```"
+    },
+    {
+      "en-US": "## Comprehensions and Generators",
+      "zh-Hans": "## 推导式和生成器"
+    },
+    {
+      "en-US": "### List Comprehensions",
+      "zh-Hans": "### 列表推导式"
+    },
+    {
+      "en-US": "```python\n# Good: List comprehension for simple transformations\nnames = [user.name for user in users if user.is_active]\n\n# Bad: Manual loop\nnames = []\nfor user in users:\n    if user.is_active:\n        names.append(user.name)\n\n# Complex comprehensions should be expanded\n# Bad: Too complex\nresult = [x * 2 for x in items if x > 0 if x % 2 == 0]\n\n# Good: Use a generator function\ndef filter_and_transform(items: Iterable[int]) -> list[int]:\n    result = []\n    for x in items:\n        if x > 0 and x % 2 == 0:\n            result.append(x * 2)\n    return result\n```",
+      "zh-Hans": "```python\n# Good: List comprehension for simple transformations\nnames = [user.name for user in users if user.is_active]\n\n# Bad: Manual loop\nnames = []\nfor user in users:\n    if user.is_active:\n        names.append(user.name)\n\n# Complex comprehensions should be expanded\n# Bad: Too complex\nresult = [x * 2 for x in items if x > 0 if x % 2 == 0]\n\n# Good: Use a generator function\ndef filter_and_transform(items: Iterable[int]) -> list[int]:\n    result = []\n    for x in items:\n        if x > 0 and x % 2 == 0:\n            result.append(x * 2)\n    return result\n```"
+    },
+    {
+      "en-US": "### Generator Expressions",
+      "zh-Hans": "### 生成器表达式"
+    },
+    {
+      "en-US": "```python\n# Good: Generator for lazy evaluation\ntotal = sum(x * x for x in range(1_000_000))\n\n# Bad: Creates large intermediate list\ntotal = sum([x * x for x in range(1_000_000)])\n```",
+      "zh-Hans": "```python\n# Good: Generator for lazy evaluation\ntotal = sum(x * x for x in range(1_000_000))\n\n# Bad: Creates large intermediate list\ntotal = sum([x * x for x in range(1_000_000)])\n```"
+    },
+    {
+      "en-US": "### Generator Functions",
+      "zh-Hans": "### 生成器函数"
+    },
+    {
+      "en-US": "```python\ndef read_large_file(path: str) -> Iterator[str]:\n    \"\"\"Read a large file line by line.\"\"\"\n    with open(path) as f:\n        for line in f:\n            yield line.strip()\n\n# Usage\nfor line in read_large_file(\"huge.txt\"):\n    process(line)\n```",
+      "zh-Hans": "```python\ndef read_large_file(path: str) -> Iterator[str]:\n    \"\"\"Read a large file line by line.\"\"\"\n    with open(path) as f:\n        for line in f:\n            yield line.strip()\n\n# Usage\nfor line in read_large_file(\"huge.txt\"):\n    process(line)\n```"
+    },
+    {
+      "en-US": "## Data Classes and Named Tuples",
+      "zh-Hans": "## 数据类和命名元组"
+    },
+    {
+      "en-US": "### Data Classes",
+      "zh-Hans": "### 数据类"
+    },
+    {
+      "en-US": "```python\nfrom dataclasses import dataclass, field\nfrom datetime import datetime\n\n@dataclass\nclass User:\n    \"\"\"User entity with automatic __init__, __repr__, and __eq__.\"\"\"\n    id: str\n    name: str\n    email: str\n    created_at: datetime = field(default_factory=datetime.now)\n    is_active: bool = True\n\n# Usage\nuser = User(\n    id=\"123\",\n    name=\"Alice\",\n    email=\"alice@example.com\"\n)\n```",
+      "zh-Hans": "```python\nfrom dataclasses import dataclass, field\nfrom datetime import datetime\n\n@dataclass\nclass User:\n    \"\"\"User entity with automatic __init__, __repr__, and __eq__.\"\"\"\n    id: str\n    name: str\n    email: str\n    created_at: datetime = field(default_factory=datetime.now)\n    is_active: bool = True\n\n# Usage\nuser = User(\n    id=\"123\",\n    name=\"Alice\",\n    email=\"alice@example.com\"\n)\n```"
+    },
+    {
+      "en-US": "### Data Classes with Validation",
+      "zh-Hans": "### 带验证的数据类"
+    },
+    {
+      "en-US": "```python\n@dataclass\nclass User:\n    email: str\n    age: int\n\n    def __post_init__(self):\n        # Validate email format\n        if \"@\" not in self.email:\n            raise ValueError(f\"Invalid email: {self.email}\")\n        # Validate age range\n        if self.age < 0 or self.age > 150:\n            raise ValueError(f\"Invalid age: {self.age}\")\n```",
+      "zh-Hans": "```python\n@dataclass\nclass User:\n    email: str\n    age: int\n\n    def __post_init__(self):\n        # Validate email format\n        if \"@\" not in self.email:\n            raise ValueError(f\"Invalid email: {self.email}\")\n        # Validate age range\n        if self.age < 0 or self.age > 150:\n            raise ValueError(f\"Invalid age: {self.age}\")\n```"
+    },
+    {
+      "en-US": "### Named Tuples",
+      "zh-Hans": "### 命名元组"
+    },
+    {
+      "en-US": "```python\nfrom typing import NamedTuple\n\nclass Point(NamedTuple):\n    \"\"\"Immutable 2D point.\"\"\"\n    x: float\n    y: float\n\n    def distance(self, other: 'Point') -> float:\n        return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5\n\n# Usage\np1 = Point(0, 0)\np2 = Point(3, 4)\nprint(p1.distance(p2))  # 5.0\n```",
+      "zh-Hans": "```python\nfrom typing import NamedTuple\n\nclass Point(NamedTuple):\n    \"\"\"Immutable 2D point.\"\"\"\n    x: float\n    y: float\n\n    def distance(self, other: 'Point') -> float:\n        return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5\n\n# Usage\np1 = Point(0, 0)\np2 = Point(3, 4)\nprint(p1.distance(p2))  # 5.0\n```"
+    },
+    {
+      "en-US": "## Decorators",
+      "zh-Hans": "## 装饰器"
+    },
+    {
+      "en-US": "### Function Decorators",
+      "zh-Hans": "### 函数装饰器"
+    },
+    {
+      "en-US": "```python\nimport functools\nimport time\n\ndef timer(func: Callable) -> Callable:\n    \"\"\"Decorator to time function execution.\"\"\"\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f\"{func.__name__} took {elapsed:.4f}s\")\n        return result\n    return wrapper\n\n@timer\ndef slow_function():\n    time.sleep(1)\n\n# slow_function() prints: slow_function took 1.0012s\n```",
+      "zh-Hans": "```python\nimport functools\nimport time\n\ndef timer(func: Callable) -> Callable:\n    \"\"\"Decorator to time function execution.\"\"\"\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f\"{func.__name__} took {elapsed:.4f}s\")\n        return result\n    return wrapper\n\n@timer\ndef slow_function():\n    time.sleep(1)\n\n# slow_function() prints: slow_function took 1.0012s\n```"
+    },
+    {
+      "en-US": "### Parameterized Decorators",
+      "zh-Hans": "### 参数化装饰器"
+    },
+    {
+      "en-US": "```python\ndef repeat(times: int):\n    \"\"\"Decorator to repeat a function multiple times.\"\"\"\n    def decorator(func: Callable) -> Callable:\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            results = []\n            for _ in range(times):\n                results.append(func(*args, **kwargs))\n            return results\n        return wrapper\n    return decorator\n\n@repeat(times=3)\ndef greet(name: str) -> str:\n    return f\"Hello, {name}!\"\n\n# greet(\"Alice\") returns [\"Hello, Alice!\", \"Hello, Alice!\", \"Hello, Alice!\"]\n```",
+      "zh-Hans": "```python\ndef repeat(times: int):\n    \"\"\"Decorator to repeat a function multiple times.\"\"\"\n    def decorator(func: Callable) -> Callable:\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            results = []\n            for _ in range(times):\n                results.append(func(*args, **kwargs))\n            return results\n        return wrapper\n    return decorator\n\n@repeat(times=3)\ndef greet(name: str) -> str:\n    return f\"Hello, {name}!\"\n\n# greet(\"Alice\") returns [\"Hello, Alice!\", \"Hello, Alice!\", \"Hello, Alice!\"]\n```"
+    },
+    {
+      "en-US": "### Class-Based Decorators",
+      "zh-Hans": "### 基于类的装饰器"
+    },
+    {
+      "en-US": "```python\nclass CountCalls:\n    \"\"\"Decorator that counts how many times a function is called.\"\"\"\n    def __init__(self, func: Callable):\n        functools.update_wrapper(self, func)\n        self.func = func\n        self.count = 0\n\n    def __call__(self, *args, **kwargs):\n        self.count += 1\n        print(f\"{self.func.__name__} has been called {self.count} times\")\n        return self.func(*args, **kwargs)\n\n@CountCalls\ndef process():\n    pass\n\n# Each call to process() prints the call count\n```",
+      "zh-Hans": "```python\nclass CountCalls:\n    \"\"\"Decorator that counts how many times a function is called.\"\"\"\n    def __init__(self, func: Callable):\n        functools.update_wrapper(self, func)\n        self.func = func\n        self.count = 0\n\n    def __call__(self, *args, **kwargs):\n        self.count += 1\n        print(f\"{self.func.__name__} has been called {self.count} times\")\n        return self.func(*args, **kwargs)\n\n@CountCalls\ndef process():\n    pass\n\n# Each call to process() prints the call count\n```"
+    },
+    {
+      "en-US": "## Concurrency Patterns",
+      "zh-Hans": "## 并发模式"
+    },
+    {
+      "en-US": "### Threading for I/O-Bound Tasks",
+      "zh-Hans": "### 用于 I/O 密集型任务的线程"
+    },
+    {
+      "en-US": "```python\nimport concurrent.futures\nimport threading\n\ndef fetch_url(url: str) -> str:\n    \"\"\"Fetch a URL (I/O-bound operation).\"\"\"\n    import urllib.request\n    with urllib.request.urlopen(url) as response:\n        return response.read().decode()\n\ndef fetch_all_urls(urls: list[str]) -> dict[str, str]:\n    \"\"\"Fetch multiple URLs concurrently using threads.\"\"\"\n    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:\n        future_to_url = {executor.submit(fetch_url, url): url for url in urls}\n        results = {}\n        for future in concurrent.futures.as_completed(future_to_url):\n            url = future_to_url[future]\n            try:\n                results[url] = future.result()\n            except Exception as e:\n                results[url] = f\"Error: {e}\"\n    return results\n```",
+      "zh-Hans": "```python\nimport concurrent.futures\nimport threading\n\ndef fetch_url(url: str) -> str:\n    \"\"\"Fetch a URL (I/O-bound operation).\"\"\"\n    import urllib.request\n    with urllib.request.urlopen(url) as response:\n        return response.read().decode()\n\ndef fetch_all_urls(urls: list[str]) -> dict[str, str]:\n    \"\"\"Fetch multiple URLs concurrently using threads.\"\"\"\n    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:\n        future_to_url = {executor.submit(fetch_url, url): url for url in urls}\n        results = {}\n        for future in concurrent.futures.as_completed(future_to_url):\n            url = future_to_url[future]\n            try:\n                results[url] = future.result()\n            except Exception as e:\n                results[url] = f\"Error: {e}\"\n    return results\n```"
+    },
+    {
+      "en-US": "### Multiprocessing for CPU-Bound Tasks",
+      "zh-Hans": "### 用于 CPU 密集型任务的多进程"
+    },
+    {
+      "en-US": "```python\ndef process_data(data: list[int]) -> int:\n    \"\"\"CPU-intensive computation.\"\"\"\n    return sum(x ** 2 for x in data)\n\ndef process_all(datasets: list[list[int]]) -> list[int]:\n    \"\"\"Process multiple datasets using multiple processes.\"\"\"\n    with concurrent.futures.ProcessPoolExecutor() as executor:\n        results = list(executor.map(process_data, datasets))\n    return results\n```",
+      "zh-Hans": "```python\ndef process_data(data: list[int]) -> int:\n    \"\"\"CPU-intensive computation.\"\"\"\n    return sum(x ** 2 for x in data)\n\ndef process_all(datasets: list[list[int]]) -> list[int]:\n    \"\"\"Process multiple datasets using multiple processes.\"\"\"\n    with concurrent.futures.ProcessPoolExecutor() as executor:\n        results = list(executor.map(process_data, datasets))\n    return results\n```"
+    },
+    {
+      "en-US": "### Async/Await for Concurrent I/O",
+      "zh-Hans": "### 用于并发 I/O 的异步/等待"
+    },
+    {
+      "en-US": "```python\nimport asyncio\n\nasync def fetch_async(url: str) -> str:\n    \"\"\"Fetch a URL asynchronously.\"\"\"\n    import aiohttp\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            return await response.text()\n\nasync def fetch_all(urls: list[str]) -> dict[str, str]:\n    \"\"\"Fetch multiple URLs concurrently.\"\"\"\n    tasks = [fetch_async(url) for url in urls]\n    results = await asyncio.gather(*tasks, return_exceptions=True)\n    return dict(zip(urls, results))\n```",
+      "zh-Hans": "```python\nimport asyncio\n\nasync def fetch_async(url: str) -> str:\n    \"\"\"Fetch a URL asynchronously.\"\"\"\n    import aiohttp\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            return await response.text()\n\nasync def fetch_all(urls: list[str]) -> dict[str, str]:\n    \"\"\"Fetch multiple URLs concurrently.\"\"\"\n    tasks = [fetch_async(url) for url in urls]\n    results = await asyncio.gather(*tasks, return_exceptions=True)\n    return dict(zip(urls, results))\n```"
+    },
+    {
+      "en-US": "## Package Organization",
+      "zh-Hans": "## 包组织"
+    },
+    {
+      "en-US": "### Standard Project Layout",
+      "zh-Hans": "### 标准项目布局"
+    },
+    {
+      "en-US": "```\nmyproject/\n├── src/\n│   └── mypackage/\n│       ├── __init__.py\n│       ├── main.py\n│       ├── api/\n│       │   ├── __init__.py\n│       │   └── routes.py\n│       ├── models/\n│       │   ├── __init__.py\n│       │   └── user.py\n│       └── utils/\n│           ├── __init__.py\n│           └── helpers.py\n├── tests/\n│   ├── __init__.py\n│   ├── conftest.py\n│   ├── test_api.py\n│   └── test_models.py\n├── pyproject.toml\n├── README.md\n└── .gitignore\n```",
+      "zh-Hans": "```\nmyproject/\n├── src/\n│   └── mypackage/\n│       ├── __init__.py\n│       ├── main.py\n│       ├── api/\n│       │   ├── __init__.py\n│       │   └── routes.py\n│       ├── models/\n│       │   ├── __init__.py\n│       │   └── user.py\n│       └── utils/\n│           ├── __init__.py\n│           └── helpers.py\n├── tests/\n│   ├── __init__.py\n│   ├── conftest.py\n│   ├── test_api.py\n│   └── test_models.py\n├── pyproject.toml\n├── README.md\n└── .gitignore\n```"
+    },
+    {
+      "en-US": "### Import Conventions",
+      "zh-Hans": "### 导入约定"
+    },
+    {
+      "en-US": "```python\n# Good: Import order - stdlib, third-party, local\nimport os\nimport sys\nfrom pathlib import Path\n\nimport requests\nfrom fastapi import FastAPI\n\nfrom mypackage.models import User\nfrom mypackage.utils import format_name\n\n# Good: Use isort for automatic import sorting\n# pip install isort\n```",
+      "zh-Hans": "```python\n# Good: Import order - stdlib, third-party, local\nimport os\nimport sys\nfrom pathlib import Path\n\nimport requests\nfrom fastapi import FastAPI\n\nfrom mypackage.models import User\nfrom mypackage.utils import format_name\n\n# Good: Use isort for automatic import sorting\n# pip install isort\n```"
+    },
+    {
+      "en-US": "### __init__.py for Package Exports",
+      "zh-Hans": "### **init**.py 用于包导出"
+    },
+    {
+      "en-US": "```python\n# mypackage/__init__.py\n\"\"\"mypackage - A sample Python package.\"\"\"\n\n__version__ = \"1.0.0\"\n\n# Export main classes/functions at package level\nfrom mypackage.models import User, Post\nfrom mypackage.utils import format_name\n\n__all__ = [\"User\", \"Post\", \"format_name\"]\n```",
+      "zh-Hans": "```python\n# mypackage/__init__.py\n\"\"\"mypackage - A sample Python package.\"\"\"\n\n__version__ = \"1.0.0\"\n\n# Export main classes/functions at package level\nfrom mypackage.models import User, Post\nfrom mypackage.utils import format_name\n\n__all__ = [\"User\", \"Post\", \"format_name\"]\n```"
+    },
+    {
+      "en-US": "## Memory and Performance",
+      "zh-Hans": "## 内存和性能"
+    },
+    {
+      "en-US": "### Using __slots__ for Memory Efficiency",
+      "zh-Hans": "### 使用 **slots** 提高内存效率"
+    },
+    {
+      "en-US": "```python\n# Bad: Regular class uses __dict__ (more memory)\nclass Point:\n    def __init__(self, x: float, y: float):\n        self.x = x\n        self.y = y\n\n# Good: __slots__ reduces memory usage\nclass Point:\n    __slots__ = ['x', 'y']\n\n    def __init__(self, x: float, y: float):\n        self.x = x\n        self.y = y\n```",
+      "zh-Hans": "```python\n# Bad: Regular class uses __dict__ (more memory)\nclass Point:\n    def __init__(self, x: float, y: float):\n        self.x = x\n        self.y = y\n\n# Good: __slots__ reduces memory usage\nclass Point:\n    __slots__ = ['x', 'y']\n\n    def __init__(self, x: float, y: float):\n        self.x = x\n        self.y = y\n```"
+    },
+    {
+      "en-US": "### Generator for Large Data",
+      "zh-Hans": "### 生成器用于大数据"
+    },
+    {
+      "en-US": "```python\n# Bad: Returns full list in memory\ndef read_lines(path: str) -> list[str]:\n    with open(path) as f:\n        return [line.strip() for line in f]\n\n# Good: Yields lines one at a time\ndef read_lines(path: str) -> Iterator[str]:\n    with open(path) as f:\n        for line in f:\n            yield line.strip()\n```",
+      "zh-Hans": "```python\n# Bad: Returns full list in memory\ndef read_lines(path: str) -> list[str]:\n    with open(path) as f:\n        return [line.strip() for line in f]\n\n# Good: Yields lines one at a time\ndef read_lines(path: str) -> Iterator[str]:\n    with open(path) as f:\n        for line in f:\n            yield line.strip()\n```"
+    },
+    {
+      "en-US": "### Avoid String Concatenation in Loops",
+      "zh-Hans": "### 避免在循环中进行字符串拼接"
+    },
+    {
+      "en-US": "```python\n# Bad: O(n²) due to string immutability\nresult = \"\"\nfor item in items:\n    result += str(item)\n\n# Good: O(n) using join\nresult = \"\".join(str(item) for item in items)\n\n# Good: Using StringIO for building\nfrom io import StringIO\n\nbuffer = StringIO()\nfor item in items:\n    buffer.write(str(item))\nresult = buffer.getvalue()\n```",
+      "zh-Hans": "```python\n# Bad: O(n²) due to string immutability\nresult = \"\"\nfor item in items:\n    result += str(item)\n\n# Good: O(n) using join\nresult = \"\".join(str(item) for item in items)\n\n# Good: Using StringIO for building\nfrom io import StringIO\n\nbuffer = StringIO()\nfor item in items:\n    buffer.write(str(item))\nresult = buffer.getvalue()\n```"
+    },
+    {
+      "en-US": "## Python Tooling Integration",
+      "zh-Hans": "## Python 工具集成"
+    },
+    {
+      "en-US": "### Essential Commands",
+      "zh-Hans": "### 基本命令"
+    },
+    {
+      "en-US": "```bash\n# Code formatting\nblack .\nisort .\n\n# Linting\nruff check .\npylint mypackage/\n\n# Type checking\nmypy .\n\n# Testing\npytest --cov=mypackage --cov-report=html\n\n# Security scanning\nbandit -r .\n\n# Dependency management\npip-audit\nsafety check\n```",
+      "zh-Hans": "```bash\n# Code formatting\nblack .\nisort .\n\n# Linting\nruff check .\npylint mypackage/\n\n# Type checking\nmypy .\n\n# Testing\npytest --cov=mypackage --cov-report=html\n\n# Security scanning\nbandit -r .\n\n# Dependency management\npip-audit\nsafety check\n```"
+    },
+    {
+      "en-US": "### pyproject.toml Configuration",
+      "zh-Hans": "### pyproject.toml 配置"
+    },
+    {
+      "en-US": "```toml\n[project]\nname = \"mypackage\"\nversion = \"1.0.0\"\nrequires-python = \">=3.9\"\ndependencies = [\n    \"requests>=2.31.0\",\n    \"pydantic>=2.0.0\",\n]\n\n[project.optional-dependencies]\ndev = [\n    \"pytest>=7.4.0\",\n    \"pytest-cov>=4.1.0\",\n    \"black>=23.0.0\",\n    \"ruff>=0.1.0\",\n    \"mypy>=1.5.0\",\n]\n\n[tool.black]\nline-length = 88\ntarget-version = ['py39']\n\n[tool.ruff]\nline-length = 88\nselect = [\"E\", \"F\", \"I\", \"N\", \"W\"]\n\n[tool.mypy]\npython_version = \"3.9\"\nwarn_return_any = true\nwarn_unused_configs = true\ndisallow_untyped_defs = true\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\naddopts = \"--cov=mypackage --cov-report=term-missing\"\n```",
+      "zh-Hans": "```toml\n[project]\nname = \"mypackage\"\nversion = \"1.0.0\"\nrequires-python = \">=3.9\"\ndependencies = [\n    \"requests>=2.31.0\",\n    \"pydantic>=2.0.0\",\n]\n\n[project.optional-dependencies]\ndev = [\n    \"pytest>=7.4.0\",\n    \"pytest-cov>=4.1.0\",\n    \"black>=23.0.0\",\n    \"ruff>=0.1.0\",\n    \"mypy>=1.5.0\",\n]\n\n[tool.black]\nline-length = 88\ntarget-version = ['py39']\n\n[tool.ruff]\nline-length = 88\nselect = [\"E\", \"F\", \"I\", \"N\", \"W\"]\n\n[tool.mypy]\npython_version = \"3.9\"\nwarn_return_any = true\nwarn_unused_configs = true\ndisallow_untyped_defs = true\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\naddopts = \"--cov=mypackage --cov-report=term-missing\"\n```"
+    },
+    {
+      "en-US": "## Quick Reference: Python Idioms",
+      "zh-Hans": "## 快速参考：Python 惯用法"
+    },
+    {
+      "en-US": "| Idiom | Description |\n|-------|-------------|\n| EAFP | Easier to Ask Forgiveness than Permission |\n| Context managers | Use `with` for resource management |\n| List comprehensions | For simple transformations |\n| Generators | For lazy evaluation and large datasets |\n| Type hints | Annotate function signatures |\n| Dataclasses | For data containers with auto-generated methods |\n| `__slots__` | For memory optimization |\n| f-strings | For string formatting (Python 3.6+) |\n| `pathlib.Path` | For path operations (Python 3.4+) |\n| `enumerate` | For index-element pairs in loops |",
+      "zh-Hans": "| 惯用法 | 描述 |\n|-------|-------------|\n| EAFP | 请求宽恕比请求许可更容易 |\n| 上下文管理器 | 使用 `with` 进行资源管理 |\n| 列表推导式 | 用于简单的转换 |\n| 生成器 | 用于惰性求值和大数据集 |\n| 类型提示 | 注解函数签名 |\n| 数据类 | 用于具有自动生成方法的数据容器 |\n| `__slots__` | 用于内存优化 |\n| f-strings | 用于字符串格式化（Python 3.6+） |\n| `pathlib.Path` | 用于路径操作（Python 3.4+） |\n| `enumerate` | 用于循环中的索引-元素对 |"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 要避免的反模式"
+    },
+    {
+      "en-US": "```python\n# Bad: Mutable default arguments\ndef append_to(item, items=[]):\n    items.append(item)\n    return items\n\n# Good: Use None and create new list\ndef append_to(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n\n# Bad: Checking type with type()\nif type(obj) == list:\n    process(obj)\n\n# Good: Use isinstance\nif isinstance(obj, list):\n    process(obj)\n\n# Bad: Comparing to None with ==\nif value == None:\n    process()\n\n# Good: Use is\nif value is None:\n    process()\n\n# Bad: from module import *\nfrom os.path import *\n\n# Good: Explicit imports\nfrom os.path import join, exists\n\n# Bad: Bare except\ntry:\n    risky_operation()\nexcept:\n    pass\n\n# Good: Specific exception\ntry:\n    risky_operation()\nexcept SpecificError as e:\n    logger.error(f\"Operation failed: {e}\")\n```",
+      "zh-Hans": "```python\n# Bad: Mutable default arguments\ndef append_to(item, items=[]):\n    items.append(item)\n    return items\n\n# Good: Use None and create new list\ndef append_to(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n\n# Bad: Checking type with type()\nif type(obj) == list:\n    process(obj)\n\n# Good: Use isinstance\nif isinstance(obj, list):\n    process(obj)\n\n# Bad: Comparing to None with ==\nif value == None:\n    process()\n\n# Good: Use is\nif value is None:\n    process()\n\n# Bad: from module import *\nfrom os.path import *\n\n# Good: Explicit imports\nfrom os.path import join, exists\n\n# Bad: Bare except\ntry:\n    risky_operation()\nexcept:\n    pass\n\n# Good: Specific exception\ntry:\n    risky_operation()\nexcept SpecificError as e:\n    logger.error(f\"Operation failed: {e}\")\n```"
+    },
+    {
+      "en-US": "__Remember__: Python code should be readable, explicit, and follow the principle of least surprise. When in doubt, prioritize clarity over cleverness.",
+      "zh-Hans": "**记住**：Python 代码应该具有可读性、显式性，并遵循最小意外原则。如有疑问，优先考虑清晰性而非巧妙性。"
+    }
+  ]
+}
