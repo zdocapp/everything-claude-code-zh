@@ -51,7 +51,7 @@
   {
     "source_language": "en-US",
     "target_languages": ["zh-Hans"],
-    "include": ["agents/planner.md"],
+    "include": ["examples/**/*.md"],
     "ignore": [],
     "translation_store": {
       "dir": ".zdoc/translations"

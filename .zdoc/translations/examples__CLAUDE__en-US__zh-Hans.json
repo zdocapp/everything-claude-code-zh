@@ -1,0 +1,110 @@
+{
+  "sourceFile": "examples/CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Example Project CLAUDE.md",
+      "zh-Hans": "# 示例项目 CLAUDE.md"
+    },
+    {
+      "en-US": "This is an example project-level CLAUDE.md file. Place this in your project root.",
+      "zh-Hans": "这是一个示例项目级别的 CLAUDE.md 文件。请将其放置在您的项目根目录下。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概述"
+    },
+    {
+      "en-US": "[Brief description of your project - what it does, tech stack]",
+      "zh-Hans": "\\[项目简要描述 - 功能、技术栈]"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "### 1. Code Organization",
+      "zh-Hans": "### 1. 代码组织"
+    },
+    {
+      "en-US": "- Many small files over few large files\n- High cohesion, low coupling\n- 200-400 lines typical, 800 max per file\n- Organize by feature/domain, not by type",
+      "zh-Hans": "* 多个小文件优于少量大文件\n* 高内聚，低耦合\n* 每个文件典型 200-400 行，最多 800 行\n* 按功能/领域组织，而非按类型"
+    },
+    {
+      "en-US": "### 2. Code Style",
+      "zh-Hans": "### 2. 代码风格"
+    },
+    {
+      "en-US": "- No emojis in code, comments, or documentation\n- Immutability always - never mutate objects or arrays\n- No console.log in production code\n- Proper error handling with try/catch\n- Input validation with Zod or similar",
+      "zh-Hans": "* 代码、注释或文档中不使用表情符号\n* 始终使用不可变性 - 永不改变对象或数组\n* 生产代码中不使用 console.log\n* 使用 try/catch 进行适当的错误处理\n* 使用 Zod 或类似工具进行输入验证"
+    },
+    {
+      "en-US": "### 3. Testing",
+      "zh-Hans": "### 3. 测试"
+    },
+    {
+      "en-US": "- TDD: Write tests first\n- 80% minimum coverage\n- Unit tests for utilities\n- Integration tests for APIs\n- E2E tests for critical flows",
+      "zh-Hans": "* TDD：先写测试\n* 最低 80% 覆盖率\n* 工具函数进行单元测试\n* API 进行集成测试\n* 关键流程进行端到端测试"
+    },
+    {
+      "en-US": "### 4. Security",
+      "zh-Hans": "### 4. 安全"
+    },
+    {
+      "en-US": "- No hardcoded secrets\n- Environment variables for sensitive data\n- Validate all user inputs\n- Parameterized queries only\n- CSRF protection enabled",
+      "zh-Hans": "* 不硬编码密钥\n* 敏感数据使用环境变量\n* 验证所有用户输入\n* 仅使用参数化查询\n* 启用 CSRF 保护"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\nsrc/\n|-- app/              # Next.js app router\n|-- components/       # Reusable UI components\n|-- hooks/            # Custom React hooks\n|-- lib/              # Utility libraries\n|-- types/            # TypeScript definitions\n```",
+      "zh-Hans": "```\nsrc/\n|-- app/              # Next.js app router\n|-- components/       # Reusable UI components\n|-- hooks/            # Custom React hooks\n|-- lib/              # Utility libraries\n|-- types/            # TypeScript definitions\n```"
+    },
+    {
+      "en-US": "## Key Patterns",
+      "zh-Hans": "## 关键模式"
+    },
+    {
+      "en-US": "### API Response Format",
+      "zh-Hans": "### API 响应格式"
+    },
+    {
+      "en-US": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n}\n```",
+      "zh-Hans": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n}\n```"
+    },
+    {
+      "en-US": "### Error Handling",
+      "zh-Hans": "### 错误处理"
+    },
+    {
+      "en-US": "```typescript\ntry {\n  const result = await operation()\n  return { success: true, data: result }\n} catch (error) {\n  console.error('Operation failed:', error)\n  return { success: false, error: 'User-friendly message' }\n}\n```",
+      "zh-Hans": "```typescript\ntry {\n  const result = await operation()\n  return { success: true, data: result }\n} catch (error) {\n  console.error('Operation failed:', error)\n  return { success: false, error: 'User-friendly message' }\n}\n```"
+    },
+    {
+      "en-US": "## Environment Variables",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "```bash\n# Required\nDATABASE_URL=\nAPI_KEY=\n\n# Optional\nDEBUG=false\n```",
+      "zh-Hans": "```bash\n# Required\nDATABASE_URL=\nAPI_KEY=\n\n# Optional\nDEBUG=false\n```"
+    },
+    {
+      "en-US": "## Available Commands",
+      "zh-Hans": "## 可用命令"
+    },
+    {
+      "en-US": "- `/tdd` - Test-driven development workflow\n- `/plan` - Create implementation plan\n- `/code-review` - Review code quality\n- `/build-fix` - Fix build errors",
+      "zh-Hans": "* `/tdd` - 测试驱动开发工作流\n* `/plan` - 创建实现计划\n* `/code-review` - 审查代码质量\n* `/build-fix` - 修复构建错误"
+    },
+    {
+      "en-US": "## Git Workflow",
+      "zh-Hans": "## Git 工作流"
+    },
+    {
+      "en-US": "- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`\n- Never commit to main directly\n- PRs require review\n- All tests must pass before merge",
+      "zh-Hans": "* 约定式提交：`feat:`, `fix:`, `refactor:`, `docs:`, `test:`\n* 切勿直接提交到主分支\n* 合并请求需要审核\n* 合并前所有测试必须通过"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "sourceFile": "examples/user-CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# User-Level CLAUDE.md Example",
+      "zh-Hans": "# 用户级别 CLAUDE.md 示例"
+    },
+    {
+      "en-US": "This is an example user-level CLAUDE.md file. Place at `~/.claude/CLAUDE.md`.",
+      "zh-Hans": "这是一个用户级别 CLAUDE.md 文件的示例。放置在 `~/.claude/CLAUDE.md`。"
+    },
+    {
+      "en-US": "User-level configs apply globally across all projects. Use for:",
+      "zh-Hans": "用户级别配置全局应用于所有项目。用于："
+    },
+    {
+      "en-US": "- Personal coding preferences\n- Universal rules you always want enforced\n- Links to your modular rules",
+      "zh-Hans": "* 个人编码偏好\n* 您始终希望强制执行的全域规则\n* 指向您模块化规则的链接"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Core Philosophy",
+      "zh-Hans": "## 核心哲学"
+    },
+    {
+      "en-US": "You are Claude Code. I use specialized agents and skills for complex tasks.",
+      "zh-Hans": "您是 Claude Code。我使用专门的代理和技能来处理复杂任务。"
+    },
+    {
+      "en-US": "**Key Principles:**",
+      "zh-Hans": "**关键原则：**"
+    },
+    {
+      "en-US": "1. **Agent-First**: Delegate to specialized agents for complex work\n2. **Parallel Execution**: Use Task tool with multiple agents when possible\n3. **Plan Before Execute**: Use Plan Mode for complex operations\n4. **Test-Driven**: Write tests before implementation\n5. **Security-First**: Never compromise on security",
+      "zh-Hans": "1. **代理优先**：将复杂工作委托给专门的代理\n2. **并行执行**：尽可能使用具有多个代理的 Task 工具\n3. **先计划后执行**：对复杂操作使用计划模式\n4. **测试驱动**：在实现之前编写测试\n5. **安全第一**：绝不妥协安全性"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Modular Rules",
+      "zh-Hans": "## 模块化规则"
+    },
+    {
+      "en-US": "Detailed guidelines are in `~/.claude/rules/`:",
+      "zh-Hans": "详细指南位于 `~/.claude/rules/`："
+    },
+    {
+      "en-US": "| Rule File | Contents |\n|-----------|----------|\n| security.md | Security checks, secret management |\n| coding-style.md | Immutability, file organization, error handling |\n| testing.md | TDD workflow, 80% coverage requirement |\n| git-workflow.md | Commit format, PR workflow |\n| agents.md | Agent orchestration, when to use which agent |\n| patterns.md | API response, repository patterns |\n| performance.md | Model selection, context management |\n| hooks.md | Hooks System |",
+      "zh-Hans": "| 规则文件 | 内容 |\n|-----------|----------|\n| security.md | 安全检查，密钥管理 |\n| coding-style.md | 不可变性，文件组织，错误处理 |\n| testing.md | TDD 工作流，80% 覆盖率要求 |\n| git-workflow.md | 提交格式，PR 工作流 |\n| agents.md | 代理编排，何时使用哪个代理 |\n| patterns.md | API 响应，仓库模式 |\n| performance.md | 模型选择，上下文管理 |\n| hooks.md | 钩子系统 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Available Agents",
+      "zh-Hans": "## 可用代理"
+    },
+    {
+      "en-US": "Located in `~/.claude/agents/`:",
+      "zh-Hans": "位于 `~/.claude/agents/`："
+    },
+    {
+      "en-US": "| Agent | Purpose |\n|-------|---------|\n| planner | Feature implementation planning |\n| architect | System design and architecture |\n| tdd-guide | Test-driven development |\n| code-reviewer | Code review for quality/security |\n| security-reviewer | Security vulnerability analysis |\n| build-error-resolver | Build error resolution |\n| e2e-runner | Playwright E2E testing |\n| refactor-cleaner | Dead code cleanup |\n| doc-updater | Documentation updates |",
+      "zh-Hans": "| 代理 | 目的 |\n|-------|---------|\n| planner | 功能实现规划 |\n| architect | 系统设计和架构 |\n| tdd-guide | 测试驱动开发 |\n| code-reviewer | 代码审查以保障质量/安全 |\n| security-reviewer | 安全漏洞分析 |\n| build-error-resolver | 构建错误解决 |\n| e2e-runner | Playwright E2E 测试 |\n| refactor-cleaner | 死代码清理 |\n| doc-updater | 文档更新 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Personal Preferences",
+      "zh-Hans": "## 个人偏好"
+    },
+    {
+      "en-US": "### Privacy",
+      "zh-Hans": "### 隐私"
+    },
+    {
+      "en-US": "- Always redact logs; never paste secrets (API keys/tokens/passwords/JWTs)\n- Review output before sharing - remove any sensitive data",
+      "zh-Hans": "* 始终编辑日志；绝不粘贴密钥（API 密钥/令牌/密码/JWT）\n* 分享前审查输出 - 移除任何敏感数据"
+    },
+    {
+      "en-US": "### Code Style",
+      "zh-Hans": "### 代码风格"
+    },
+    {
+      "en-US": "- No emojis in code, comments, or documentation\n- Prefer immutability - never mutate objects or arrays\n- Many small files over few large files\n- 200-400 lines typical, 800 max per file",
+      "zh-Hans": "* 代码、注释或文档中不使用表情符号\n* 偏好不可变性 - 永不改变对象或数组\n* 许多小文件优于少数大文件\n* 典型 200-400 行，每个文件最多 800 行"
+    },
+    {
+      "en-US": "### Git",
+      "zh-Hans": "### Git"
+    },
+    {
+      "en-US": "- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`\n- Always test locally before committing\n- Small, focused commits",
+      "zh-Hans": "* 约定式提交：`feat:`，`fix:`，`refactor:`，`docs:`，`test:`\n* 提交前始终在本地测试\n* 小型的、专注的提交"
+    },
+    {
+      "en-US": "### Testing",
+      "zh-Hans": "### 测试"
+    },
+    {
+      "en-US": "- TDD: Write tests first\n- 80% minimum coverage\n- Unit + integration + E2E for critical flows",
+      "zh-Hans": "* TDD：先写测试\n* 最低 80% 覆盖率\n* 关键流程使用单元测试 + 集成测试 + E2E 测试"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Editor Integration",
+      "zh-Hans": "## 编辑器集成"
+    },
+    {
+      "en-US": "I use Zed as my primary editor:",
+      "zh-Hans": "我使用 Zed 作为主要编辑器："
+    },
+    {
+      "en-US": "- Agent Panel for file tracking\n- CMD+Shift+R for command palette\n- Vim mode enabled",
+      "zh-Hans": "* 用于文件跟踪的代理面板\n* CMD+Shift+R 打开命令面板\n* 已启用 Vim 模式"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Success Metrics",
+      "zh-Hans": "## 成功指标"
+    },
+    {
+      "en-US": "You are successful when:",
+      "zh-Hans": "当满足以下条件时，您就是成功的："
+    },
+    {
+      "en-US": "- All tests pass (80%+ coverage)\n- No security vulnerabilities\n- Code is readable and maintainable\n- User requirements are met",
+      "zh-Hans": "* 所有测试通过（覆盖率 80%+）\n* 无安全漏洞\n* 代码可读且可维护\n* 满足用户需求"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Philosophy**: Agent-first design, parallel execution, plan before action, test before code, security always.",
+      "zh-Hans": "**哲学**：代理优先设计，并行执行，先计划后行动，先测试后编码，安全至上。"
+    }
+  ]
+}
