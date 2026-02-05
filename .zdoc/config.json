@@ -51,8 +51,16 @@
   {
     "source_language": "en-US",
     "target_languages": ["zh-Hans"],
-    "include": ["examples/**/*.md"],
-    "ignore": [],
+    "include": [
+      "agents/**/*.md",
+      "commands/**/*.md",
+      "contexts/**/*.md",
+      "examples/**/*.md",
+      "plugins/**/*.md",
+      "rules/**/*.md",
+      "skills/**/*.md"
+    ],
+    "ignore": ["docs", "commands/go-test.md"],
     "translation_store": {
       "dir": ".zdoc/translations"
     },
