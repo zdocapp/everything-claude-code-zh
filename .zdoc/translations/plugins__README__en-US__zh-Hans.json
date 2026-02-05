@@ -1,0 +1,114 @@
+{
+  "sourceFile": "plugins/README.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Plugins and Marketplaces",
+      "zh-Hans": "# 插件与市场"
+    },
+    {
+      "en-US": "Plugins extend Claude Code with new tools and capabilities. This guide covers installation only - see the [full article](https://x.com/affaanmustafa/status/2012378465664745795) for when and why to use them.",
+      "zh-Hans": "插件扩展了 Claude Code 的功能，为其添加新工具和能力。本指南仅涵盖安装部分 - 关于何时以及为何使用插件，请参阅[完整文章](https://x.com/affaanmustafa/status/2012378465664745795)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Marketplaces",
+      "zh-Hans": "## 市场"
+    },
+    {
+      "en-US": "Marketplaces are repositories of installable plugins.",
+      "zh-Hans": "市场是可安装插件的存储库。"
+    },
+    {
+      "en-US": "### Adding a Marketplace",
+      "zh-Hans": "### 添加市场"
+    },
+    {
+      "en-US": "```bash\n# Add official Anthropic marketplace\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\n\n# Add community marketplaces\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n```",
+      "zh-Hans": "```bash\n# Add official Anthropic marketplace\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\n\n# Add community marketplaces\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n```"
+    },
+    {
+      "en-US": "### Recommended Marketplaces",
+      "zh-Hans": "### 推荐市场"
+    },
+    {
+      "en-US": "| Marketplace | Source |\n|-------------|--------|\n| claude-plugins-official | `anthropics/claude-plugins-official` |\n| claude-code-plugins | `anthropics/claude-code` |\n| Mixedbread-Grep | `mixedbread-ai/mgrep` |",
+      "zh-Hans": "| 市场 | 来源 |\n|-------------|--------|\n| claude-plugins-official | `anthropics/claude-plugins-official` |\n| claude-code-plugins | `anthropics/claude-code` |\n| Mixedbread-Grep | `mixedbread-ai/mgrep` |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Installing Plugins",
+      "zh-Hans": "## 安装插件"
+    },
+    {
+      "en-US": "```bash\n# Open plugins browser\n/plugins\n\n# Or install directly\nclaude plugin install typescript-lsp@claude-plugins-official\n```",
+      "zh-Hans": "```bash\n# Open plugins browser\n/plugins\n\n# Or install directly\nclaude plugin install typescript-lsp@claude-plugins-official\n```"
+    },
+    {
+      "en-US": "### Recommended Plugins",
+      "zh-Hans": "### 推荐插件"
+    },
+    {
+      "en-US": "**Development:**",
+      "zh-Hans": "**开发：**"
+    },
+    {
+      "en-US": "- `typescript-lsp` - TypeScript intelligence\n- `pyright-lsp` - Python type checking\n- `hookify` - Create hooks conversationally\n- `code-simplifier` - Refactor code",
+      "zh-Hans": "* `typescript-lsp` - TypeScript 智能支持\n* `pyright-lsp` - Python 类型检查\n* `hookify` - 通过对话创建钩子\n* `code-simplifier` - 代码重构"
+    },
+    {
+      "en-US": "**Code Quality:**",
+      "zh-Hans": "**代码质量：**"
+    },
+    {
+      "en-US": "- `code-review` - Code review\n- `pr-review-toolkit` - PR automation\n- `security-guidance` - Security checks",
+      "zh-Hans": "* `code-review` - 代码审查\n* `pr-review-toolkit` - PR 自动化\n* `security-guidance` - 安全检查"
+    },
+    {
+      "en-US": "**Search:**",
+      "zh-Hans": "**搜索：**"
+    },
+    {
+      "en-US": "- `mgrep` - Enhanced search (better than ripgrep)\n- `context7` - Live documentation lookup",
+      "zh-Hans": "* `mgrep` - 增强搜索（优于 ripgrep）\n* `context7` - 实时文档查找"
+    },
+    {
+      "en-US": "**Workflow:**",
+      "zh-Hans": "**工作流：**"
+    },
+    {
+      "en-US": "- `commit-commands` - Git workflow\n- `frontend-design` - UI patterns\n- `feature-dev` - Feature development",
+      "zh-Hans": "* `commit-commands` - Git 工作流\n* `frontend-design` - UI 模式\n* `feature-dev` - 功能开发"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Quick Setup",
+      "zh-Hans": "## 快速设置"
+    },
+    {
+      "en-US": "```bash\n# Add marketplaces\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open /plugins and install what you need\n```",
+      "zh-Hans": "```bash\n# Add marketplaces\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open /plugins and install what you need\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Plugin Files Location",
+      "zh-Hans": "## 插件文件位置"
+    },
+    {
+      "en-US": "```\n~/.claude/plugins/\n|-- cache/                    # Downloaded plugins\n|-- installed_plugins.json    # Installed list\n|-- known_marketplaces.json   # Added marketplaces\n|-- marketplaces/             # Marketplace data\n```",
+      "zh-Hans": "```\n~/.claude/plugins/\n|-- cache/                    # Downloaded plugins\n|-- installed_plugins.json    # Installed list\n|-- known_marketplaces.json   # Added marketplaces\n|-- marketplaces/             # Marketplace data\n```"
+    }
+  ]
+}
