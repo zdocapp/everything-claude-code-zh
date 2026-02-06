@@ -83,8 +83,13 @@ Get up and running in under 2 minutes:
 # Clone the repo first
 git clone https://github.com/affaan-m/everything-claude-code.git
 
-# Copy rules (applies to all projects)
-cp -r everything-claude-code/rules/* ~/.claude/rules/
+# Install common rules (required)
+cp -r everything-claude-code/rules/common/* ~/.claude/rules/
+
+# Install language-specific rules (pick your stack)
+cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/
+cp -r everything-claude-code/rules/python/* ~/.claude/rules/
+cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
 ```
 
 ### Step 3: Start Using
@@ -195,12 +200,19 @@ everything-claude-code/
 |   |-- evolve.md           # /evolve - Cluster instincts into skills (NEW)
 |
 |-- rules/            # Always-follow guidelines (copy to ~/.claude/rules/)
-|   |-- security.md         # Mandatory security checks
-|   |-- coding-style.md     # Immutability, file organization
-|   |-- testing.md          # TDD, 80% coverage requirement
-|   |-- git-workflow.md     # Commit format, PR process
-|   |-- agents.md           # When to delegate to subagents
-|   |-- performance.md      # Model selection, context management
+|   |-- README.md            # Structure overview and installation guide
+|   |-- common/              # Language-agnostic principles
+|   |   |-- coding-style.md    # Immutability, file organization
+|   |   |-- git-workflow.md    # Commit format, PR process
+|   |   |-- testing.md         # TDD, 80% coverage requirement
+|   |   |-- performance.md     # Model selection, context management
+|   |   |-- patterns.md        # Design patterns, skeleton projects
+|   |   |-- hooks.md           # Hook architecture, TodoWrite
+|   |   |-- agents.md          # When to delegate to subagents
+|   |   |-- security.md        # Mandatory security checks
+|   |-- typescript/          # TypeScript/JavaScript specific
+|   |-- python/              # Python specific
+|   |-- golang/              # Go specific
 |
 |-- hooks/            # Trigger-based automations
 |   |-- hooks.json                # All hooks config (PreToolUse, PostToolUse, Stop, etc.)
@@ -359,11 +371,15 @@ This gives you instant access to all commands, agents, skills, and hooks.
 > git clone https://github.com/affaan-m/everything-claude-code.git
 >
 > # Option A: User-level rules (applies to all projects)
-> cp -r everything-claude-code/rules/* ~/.claude/rules/
+> cp -r everything-claude-code/rules/common/* ~/.claude/rules/
+> cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/   # pick your stack
+> cp -r everything-claude-code/rules/python/* ~/.claude/rules/
+> cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
 >
 > # Option B: Project-level rules (applies to current project only)
 > mkdir -p .claude/rules
-> cp -r everything-claude-code/rules/* .claude/rules/
+> cp -r everything-claude-code/rules/common/* .claude/rules/
+> cp -r everything-claude-code/rules/typescript/* .claude/rules/     # pick your stack
 > ```
 
 ---
@@ -379,8 +395,11 @@ git clone https://github.com/affaan-m/everything-claude-code.git
 # Copy agents to your Claude config
 cp everything-claude-code/agents/*.md ~/.claude/agents/
 
-# Copy rules
-cp everything-claude-code/rules/*.md ~/.claude/rules/
+# Copy rules (common + language-specific)
+cp -r everything-claude-code/rules/common/* ~/.claude/rules/
+cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/   # pick your stack
+cp -r everything-claude-code/rules/python/* ~/.claude/rules/
+cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
 
 # Copy commands
 cp everything-claude-code/commands/*.md ~/.claude/commands/
@@ -448,14 +467,17 @@ Hooks fire on tool events. Example - warn about console.log:
 
 ### Rules
 
-Rules are always-follow guidelines. Keep them modular:
+Rules are always-follow guidelines, organized into `common/` (language-agnostic) + language-specific directories:
 
 ```
-~/.claude/rules/
-  security.md      # No hardcoded secrets
-  coding-style.md  # Immutability, file limits
-  testing.md       # TDD, coverage requirements
+rules/
+  common/          # Universal principles (always install)
+  typescript/      # TS/JS specific patterns and tools
+  python/          # Python specific patterns and tools
+  golang/          # Go specific patterns and tools
 ```
+
+See [`rules/README.md`](rules/README.md) for installation and structure details.
 
 ---
 
@@ -494,6 +516,106 @@ Please contribute! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 - DevOps agents (Kubernetes, Terraform, AWS)
 - Testing strategies (different frameworks)
 - Domain-specific knowledge (ML, data engineering, mobile)
+
+---
+
+## 🔌 OpenCode Support
+
+ECC provides **full OpenCode support** including plugins and hooks.
+
+### Quick Start
+
+```bash
+# Install OpenCode
+npm install -g opencode
+
+# Run in the repository root
+opencode
+```
+
+The configuration is automatically detected from `.opencode/opencode.json`.
+
+### Feature Parity
+
+| Feature | Claude Code | OpenCode | Status |
+|---------|-------------|----------|--------|
+| Agents | ✅ 12 agents | ✅ 12 agents | **Full parity** |
+| Commands | ✅ 23 commands | ✅ 24 commands | **Full parity** |
+| Skills | ✅ 16 skills | ✅ 16 skills | **Full parity** |
+| Hooks | ✅ 3 phases | ✅ 20+ events | **OpenCode has more!** |
+| Rules | ✅ 8 rules | ✅ 8 rules | **Full parity** |
+| MCP Servers | ✅ Full | ✅ Full | **Full parity** |
+| Custom Tools | ✅ Via hooks | ✅ Native support | **OpenCode is better** |
+
+### Hook Support via Plugins
+
+OpenCode's plugin system is MORE sophisticated than Claude Code with 20+ event types:
+
+| Claude Code Hook | OpenCode Plugin Event |
+|-----------------|----------------------|
+| PreToolUse | `tool.execute.before` |
+| PostToolUse | `tool.execute.after` |
+| Stop | `session.idle` |
+| SessionStart | `session.created` |
+| SessionEnd | `session.deleted` |
+
+**Additional OpenCode events**: `file.edited`, `file.watcher.updated`, `message.updated`, `lsp.client.diagnostics`, `tui.toast.show`, and more.
+
+### Available Commands (24)
+
+| Command | Description |
+|---------|-------------|
+| `/plan` | Create implementation plan |
+| `/tdd` | Enforce TDD workflow |
+| `/code-review` | Review code changes |
+| `/security` | Run security review |
+| `/build-fix` | Fix build errors |
+| `/e2e` | Generate E2E tests |
+| `/refactor-clean` | Remove dead code |
+| `/orchestrate` | Multi-agent workflow |
+| `/learn` | Extract patterns from session |
+| `/checkpoint` | Save verification state |
+| `/verify` | Run verification loop |
+| `/eval` | Evaluate against criteria |
+| `/update-docs` | Update documentation |
+| `/update-codemaps` | Update codemaps |
+| `/test-coverage` | Analyze coverage |
+| `/go-review` | Go code review |
+| `/go-test` | Go TDD workflow |
+| `/go-build` | Fix Go build errors |
+| `/skill-create` | Generate skills from git |
+| `/instinct-status` | View learned instincts |
+| `/instinct-import` | Import instincts |
+| `/instinct-export` | Export instincts |
+| `/evolve` | Cluster instincts into skills |
+| `/setup-pm` | Configure package manager |
+
+### Plugin Installation
+
+**Option 1: Use directly**
+```bash
+cd everything-claude-code
+opencode
+```
+
+**Option 2: Install as npm package**
+```bash
+npm install opencode-ecc
+```
+
+Then add to your `opencode.json`:
+```json
+{
+  "plugin": ["opencode-ecc"]
+}
+```
+
+### Documentation
+
+- **Migration Guide**: `.opencode/MIGRATION.md`
+- **OpenCode Plugin README**: `.opencode/README.md`
+- **Consolidated Rules**: `.opencode/instructions/INSTRUCTIONS.md`
+- **LLM Documentation**: `llms.txt` (complete OpenCode docs for LLMs)
 
 ---
 
