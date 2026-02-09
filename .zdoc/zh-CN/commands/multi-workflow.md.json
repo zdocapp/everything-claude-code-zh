@@ -1,0 +1,258 @@
+{
+  "sourceFile": "commands/multi-workflow.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Workflow - Multi-Model Collaborative Development",
+      "zh-Hans": "# 工作流程 - 多模型协同开发"
+    },
+    {
+      "en-US": "Multi-model collaborative development workflow (Research → Ideation → Plan → Execute → Optimize → Review), with intelligent routing: Frontend → Gemini, Backend → Codex.",
+      "zh-Hans": "多模型协同开发工作流程（研究 → 构思 → 规划 → 执行 → 优化 → 审查），带有智能路由：前端 → Gemini，后端 → Codex。"
+    },
+    {
+      "en-US": "Structured development workflow with quality gates, MCP services, and multi-model collaboration.",
+      "zh-Hans": "结构化开发工作流程，包含质量门控、MCP 服务和多模型协作。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```bash\n/workflow <task description>\n```",
+      "zh-Hans": "```bash\n/workflow <task description>\n```"
+    },
+    {
+      "en-US": "## Context",
+      "zh-Hans": "## 上下文"
+    },
+    {
+      "en-US": "- Task to develop: $ARGUMENTS\n- Structured 6-phase workflow with quality gates\n- Multi-model collaboration: Codex (backend) + Gemini (frontend) + Claude (orchestration)\n- MCP service integration (ace-tool) for enhanced capabilities",
+      "zh-Hans": "* 待开发任务：$ARGUMENTS\n* 结构化的 6 阶段工作流程，包含质量门控\n* 多模型协作：Codex（后端） + Gemini（前端） + Claude（编排）\n* MCP 服务集成（ace-tool）以增强能力"
+    },
+    {
+      "en-US": "## Your Role",
+      "zh-Hans": "## 你的角色"
+    },
+    {
+      "en-US": "You are the **Orchestrator**, coordinating a multi-model collaborative system (Research → Ideation → Plan → Execute → Optimize → Review). Communicate concisely and professionally for experienced developers.",
+      "zh-Hans": "你是**编排者**，协调一个多模型协作系统（研究 → 构思 → 规划 → 执行 → 优化 → 审查）。为有经验的开发者进行简洁、专业的沟通。"
+    },
+    {
+      "en-US": "**Collaborative Models**:",
+      "zh-Hans": "**协作模型**："
+    },
+    {
+      "en-US": "- **ace-tool MCP** – Code retrieval + Prompt enhancement\n- **Codex** – Backend logic, algorithms, debugging (**Backend authority, trustworthy**)\n- **Gemini** – Frontend UI/UX, visual design (**Frontend expert, backend opinions for reference only**)\n- **Claude (self)** – Orchestration, planning, execution, delivery",
+      "zh-Hans": "* **ace-tool MCP** – 代码检索 + 提示词增强\n* **Codex** – 后端逻辑、算法、调试（**后端权威，可信赖**）\n* **Gemini** – 前端 UI/UX、视觉设计（**前端专家，后端意见仅供参考**）\n* **Claude（自身）** – 编排、规划、执行、交付"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Multi-Model Call Specification",
+      "zh-Hans": "## 多模型调用规范"
+    },
+    {
+      "en-US": "**Call syntax** (parallel: `run_in_background: true`, sequential: `false`):",
+      "zh-Hans": "**调用语法**（并行：`run_in_background: true`，串行：`false`）："
+    },
+    {
+      "en-US": "```\n# New session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend <codex|gemini> {{GEMINI_MODEL_FLAG}}- \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: true,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n\n# Resume session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend <codex|gemini> {{GEMINI_MODEL_FLAG}}resume <SESSION_ID> - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: true,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```",
+      "zh-Hans": "```\n# New session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend <codex|gemini> {{GEMINI_MODEL_FLAG}}- \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: true,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n\n# Resume session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend <codex|gemini> {{GEMINI_MODEL_FLAG}}resume <SESSION_ID> - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: true,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```"
+    },
+    {
+      "en-US": "**Model Parameter Notes**:",
+      "zh-Hans": "**模型参数说明**："
+    },
+    {
+      "en-US": "- `{{GEMINI_MODEL_FLAG}}`: When using `--backend gemini`, replace with `--gemini-model gemini-3-pro-preview ` (note trailing space); use empty string for codex",
+      "zh-Hans": "* `{{GEMINI_MODEL_FLAG}}`：当使用 `--backend gemini` 时，替换为 `--gemini-model gemini-3-pro-preview `（注意末尾空格）；对于 codex 使用空字符串"
+    },
+    {
+      "en-US": "**Role Prompts**:",
+      "zh-Hans": "**角色提示词**："
+    },
+    {
+      "en-US": "| Phase | Codex | Gemini |\n|-------|-------|--------|\n| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/gemini/analyzer.md` |\n| Planning | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/gemini/architect.md` |\n| Review | `~/.claude/.ccg/prompts/codex/reviewer.md` | `~/.claude/.ccg/prompts/gemini/reviewer.md` |",
+      "zh-Hans": "| 阶段 | Codex | Gemini |\n|-------|-------|--------|\n| 分析 | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/gemini/analyzer.md` |\n| 规划 | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/gemini/architect.md` |\n| 审查 | `~/.claude/.ccg/prompts/codex/reviewer.md` | `~/.claude/.ccg/prompts/gemini/reviewer.md` |"
+    },
+    {
+      "en-US": "**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` subcommand for subsequent phases (note: `resume`, not `--resume`).",
+      "zh-Hans": "**会话复用**：每次调用返回 `SESSION_ID: xxx`，在后续阶段使用 `resume xxx` 子命令（注意：`resume`，而非 `--resume`）。"
+    },
+    {
+      "en-US": "**Parallel Calls**: Use `run_in_background: true` to start, wait for results with `TaskOutput`. **Must wait for all models to return before proceeding to next phase**.",
+      "zh-Hans": "**并行调用**：使用 `run_in_background: true` 启动，使用 `TaskOutput` 等待结果。**必须等待所有模型返回后才能进入下一阶段**。"
+    },
+    {
+      "en-US": "**Wait for Background Tasks** (use max timeout 600000ms = 10 minutes):",
+      "zh-Hans": "**等待后台任务**（使用最大超时 600000ms = 10 分钟）："
+    },
+    {
+      "en-US": "```\nTaskOutput({ task_id: \"<task_id>\", block: true, timeout: 600000 })\n```",
+      "zh-Hans": "```\nTaskOutput({ task_id: \"<task_id>\", block: true, timeout: 600000 })\n```"
+    },
+    {
+      "en-US": "**IMPORTANT**:",
+      "zh-Hans": "**重要**："
+    },
+    {
+      "en-US": "- Must specify `timeout: 600000`, otherwise default 30 seconds will cause premature timeout.\n- If still incomplete after 10 minutes, continue polling with `TaskOutput`, **NEVER kill the process**.\n- If waiting is skipped due to timeout, **MUST call `AskUserQuestion` to ask user whether to continue waiting or kill task. Never kill directly.**",
+      "zh-Hans": "* 必须指定 `timeout: 600000`，否则默认 30 秒会导致过早超时。\n* 如果 10 分钟后仍未完成，继续使用 `TaskOutput` 轮询，**切勿终止进程**。\n* 如果因超时而跳过等待，**必须调用 `AskUserQuestion` 询问用户是继续等待还是终止任务。切勿直接终止。**"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Communication Guidelines",
+      "zh-Hans": "## 沟通指南"
+    },
+    {
+      "en-US": "1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`.\n2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`.\n3. Request user confirmation after each phase completion.\n4. Force stop when score < 7 or user does not approve.\n5. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval).",
+      "zh-Hans": "1. 回复以模式标签 `[Mode: X]` 开头，初始为 `[Mode: Research]`。\n2. 遵循严格顺序：`Research → Ideation → Plan → Execute → Optimize → Review`。\n3. 每个阶段完成后请求用户确认。\n4. 当评分 < 7 或用户不批准时强制停止。\n5. 需要时（例如确认/选择/批准）使用 `AskUserQuestion` 工具进行用户交互。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Execution Workflow",
+      "zh-Hans": "## 执行工作流程"
+    },
+    {
+      "en-US": "**Task Description**: $ARGUMENTS",
+      "zh-Hans": "**任务描述**：$ARGUMENTS"
+    },
+    {
+      "en-US": "### Phase 1: Research & Analysis",
+      "zh-Hans": "### 阶段 1：研究与分析"
+    },
+    {
+      "en-US": "`[Mode: Research]` - Understand requirements and gather context:",
+      "zh-Hans": "`[Mode: Research]` - 理解需求并收集上下文："
+    },
+    {
+      "en-US": "1. **Prompt Enhancement**: Call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for all subsequent Codex/Gemini calls**\n2. **Context Retrieval**: Call `mcp__ace-tool__search_context`\n3. **Requirement Completeness Score** (0-10):\n   - Goal clarity (0-3), Expected outcome (0-3), Scope boundaries (0-2), Constraints (0-2)\n   - ≥7: Continue | <7: Stop, ask clarifying questions",
+      "zh-Hans": "1. **提示词增强**：调用 `mcp__ace-tool__enhance_prompt`，**将所有后续对 Codex/Gemini 的调用中的原始 $ARGUMENTS 替换为增强后的结果**\n2. **上下文检索**：调用 `mcp__ace-tool__search_context`\n3. **需求完整性评分** (0-10)：\n   * 目标清晰度 (0-3)，预期成果 (0-3)，范围边界 (0-2)，约束条件 (0-2)\n   * ≥7：继续 | <7：停止，询问澄清问题"
+    },
+    {
+      "en-US": "### Phase 2: Solution Ideation",
+      "zh-Hans": "### 阶段 2：解决方案构思"
+    },
+    {
+      "en-US": "`[Mode: Ideation]` - Multi-model parallel analysis:",
+      "zh-Hans": "`[Mode: Ideation]` - 多模型并行分析："
+    },
+    {
+      "en-US": "**Parallel Calls** (`run_in_background: true`):",
+      "zh-Hans": "**并行调用** (`run_in_background: true`)："
+    },
+    {
+      "en-US": "- Codex: Use analyzer prompt, output technical feasibility, solutions, risks\n- Gemini: Use analyzer prompt, output UI feasibility, solutions, UX evaluation",
+      "zh-Hans": "* Codex：使用分析器提示词，输出技术可行性、解决方案、风险\n* Gemini：使用分析器提示词，输出 UI 可行性、解决方案、UX 评估"
+    },
+    {
+      "en-US": "Wait for results with `TaskOutput`. **Save SESSION_ID** (`CODEX_SESSION` and `GEMINI_SESSION`).",
+      "zh-Hans": "使用 `TaskOutput` 等待结果。**保存 SESSION\\_ID** (`CODEX_SESSION` 和 `GEMINI_SESSION`)。"
+    },
+    {
+      "en-US": "**Follow the `IMPORTANT` instructions in `Multi-Model Call Specification` above**",
+      "zh-Hans": "**遵循上方 `Multi-Model Call Specification` 中的 `IMPORTANT` 说明**"
+    },
+    {
+      "en-US": "Synthesize both analyses, output solution comparison (at least 2 options), wait for user selection.",
+      "zh-Hans": "综合两项分析，输出解决方案比较（至少 2 个选项），等待用户选择。"
+    },
+    {
+      "en-US": "### Phase 3: Detailed Planning",
+      "zh-Hans": "### 阶段 3：详细规划"
+    },
+    {
+      "en-US": "`[Mode: Plan]` - Multi-model collaborative planning:",
+      "zh-Hans": "`[Mode: Plan]` - 多模型协作规划："
+    },
+    {
+      "en-US": "**Parallel Calls** (resume session with `resume <SESSION_ID>`):",
+      "zh-Hans": "**并行调用**（使用 `resume <SESSION_ID>` 恢复会话）："
+    },
+    {
+      "en-US": "- Codex: Use architect prompt + `resume $CODEX_SESSION`, output backend architecture\n- Gemini: Use architect prompt + `resume $GEMINI_SESSION`, output frontend architecture",
+      "zh-Hans": "* Codex：使用架构师提示词 + `resume $CODEX_SESSION`，输出后端架构\n* Gemini：使用架构师提示词 + `resume $GEMINI_SESSION`，输出前端架构"
+    },
+    {
+      "en-US": "Wait for results with `TaskOutput`.",
+      "zh-Hans": "使用 `TaskOutput` 等待结果。"
+    },
+    {
+      "en-US": "**Follow the `IMPORTANT` instructions in `Multi-Model Call Specification` above**",
+      "zh-Hans": "**遵循上方 `Multi-Model Call Specification` 中的 `IMPORTANT` 说明**"
+    },
+    {
+      "en-US": "**Claude Synthesis**: Adopt Codex backend plan + Gemini frontend plan, save to `.claude/plan/task-name.md` after user approval.",
+      "zh-Hans": "**Claude 综合**：采纳 Codex 后端计划 + Gemini 前端计划，在用户批准后保存到 `.claude/plan/task-name.md`。"
+    },
+    {
+      "en-US": "### Phase 4: Implementation",
+      "zh-Hans": "### 阶段 4：实施"
+    },
+    {
+      "en-US": "`[Mode: Execute]` - Code development:",
+      "zh-Hans": "`[Mode: Execute]` - 代码开发："
+    },
+    {
+      "en-US": "- Strictly follow approved plan\n- Follow existing project code standards\n- Request feedback at key milestones",
+      "zh-Hans": "* 严格遵循批准的计划\n* 遵循现有项目代码标准\n* 在关键里程碑请求反馈"
+    },
+    {
+      "en-US": "### Phase 5: Code Optimization",
+      "zh-Hans": "### 阶段 5：代码优化"
+    },
+    {
+      "en-US": "`[Mode: Optimize]` - Multi-model parallel review:",
+      "zh-Hans": "`[Mode: Optimize]` - 多模型并行审查："
+    },
+    {
+      "en-US": "**Parallel Calls**:",
+      "zh-Hans": "**并行调用**："
+    },
+    {
+      "en-US": "- Codex: Use reviewer prompt, focus on security, performance, error handling\n- Gemini: Use reviewer prompt, focus on accessibility, design consistency",
+      "zh-Hans": "* Codex：使用审查者提示词，关注安全性、性能、错误处理\n* Gemini：使用审查者提示词，关注可访问性、设计一致性"
+    },
+    {
+      "en-US": "Wait for results with `TaskOutput`. Integrate review feedback, execute optimization after user confirmation.",
+      "zh-Hans": "使用 `TaskOutput` 等待结果。整合审查反馈，在用户确认后执行优化。"
+    },
+    {
+      "en-US": "**Follow the `IMPORTANT` instructions in `Multi-Model Call Specification` above**",
+      "zh-Hans": "**遵循上方 `Multi-Model Call Specification` 中的 `IMPORTANT` 说明**"
+    },
+    {
+      "en-US": "### Phase 6: Quality Review",
+      "zh-Hans": "### 阶段 6：质量审查"
+    },
+    {
+      "en-US": "`[Mode: Review]` - Final evaluation:",
+      "zh-Hans": "`[Mode: Review]` - 最终评估："
+    },
+    {
+      "en-US": "- Check completion against plan\n- Run tests to verify functionality\n- Report issues and recommendations\n- Request final user confirmation",
+      "zh-Hans": "* 对照计划检查完成情况\n* 运行测试以验证功能\n* 报告问题和建议\n* 请求最终用户确认"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Key Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "1. Phase sequence cannot be skipped (unless user explicitly instructs)\n2. External models have **zero filesystem write access**, all modifications by Claude\n3. **Force stop** when score < 7 or user does not approve",
+      "zh-Hans": "1. 阶段顺序不可跳过（除非用户明确指示）\n2. 外部模型**对文件系统零写入权限**，所有修改由 Claude 执行\n3. 当评分 < 7 或用户不批准时**强制停止**"
+    }
+  ]
+}

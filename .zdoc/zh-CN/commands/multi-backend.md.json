@@ -1,0 +1,214 @@
+{
+  "sourceFile": "commands/multi-backend.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Backend - Backend-Focused Development",
+      "zh-Hans": "# 后端 - 后端导向开发"
+    },
+    {
+      "en-US": "Backend-focused workflow (Research → Ideation → Plan → Execute → Optimize → Review), Codex-led.",
+      "zh-Hans": "后端导向的工作流程（研究 → 构思 → 规划 → 执行 → 优化 → 评审），由 Codex 主导。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```bash\n/backend <backend task description>\n```",
+      "zh-Hans": "```bash\n/backend <backend task description>\n```"
+    },
+    {
+      "en-US": "## Context",
+      "zh-Hans": "## 上下文"
+    },
+    {
+      "en-US": "- Backend task: $ARGUMENTS\n- Codex-led, Gemini for auxiliary reference\n- Applicable: API design, algorithm implementation, database optimization, business logic",
+      "zh-Hans": "* 后端任务：$ARGUMENTS\n* Codex 主导，Gemini 作为辅助参考\n* 适用场景：API 设计、算法实现、数据库优化、业务逻辑"
+    },
+    {
+      "en-US": "## Your Role",
+      "zh-Hans": "## 你的角色"
+    },
+    {
+      "en-US": "You are the **Backend Orchestrator**, coordinating multi-model collaboration for server-side tasks (Research → Ideation → Plan → Execute → Optimize → Review).",
+      "zh-Hans": "你是 **后端协调者**，为服务器端任务协调多模型协作（研究 → 构思 → 规划 → 执行 → 优化 → 评审）。"
+    },
+    {
+      "en-US": "**Collaborative Models**:",
+      "zh-Hans": "**协作模型**："
+    },
+    {
+      "en-US": "- **Codex** – Backend logic, algorithms (**Backend authority, trustworthy**)\n- **Gemini** – Frontend perspective (**Backend opinions for reference only**)\n- **Claude (self)** – Orchestration, planning, execution, delivery",
+      "zh-Hans": "* **Codex** – 后端逻辑、算法（**后端权威，可信赖**）\n* **Gemini** – 前端视角（**后端意见仅供参考**）\n* **Claude (自身)** – 协调、规划、执行、交付"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Multi-Model Call Specification",
+      "zh-Hans": "## 多模型调用规范"
+    },
+    {
+      "en-US": "**Call Syntax**:",
+      "zh-Hans": "**调用语法**："
+    },
+    {
+      "en-US": "```\n# New session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend codex - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n\n# Resume session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend codex resume <SESSION_ID> - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```",
+      "zh-Hans": "```\n# New session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend codex - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n\n# Resume session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend codex resume <SESSION_ID> - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```"
+    },
+    {
+      "en-US": "**Role Prompts**:",
+      "zh-Hans": "**角色提示词**："
+    },
+    {
+      "en-US": "| Phase | Codex |\n|-------|-------|\n| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` |\n| Planning | `~/.claude/.ccg/prompts/codex/architect.md` |\n| Review | `~/.claude/.ccg/prompts/codex/reviewer.md` |",
+      "zh-Hans": "| 阶段 | Codex |\n|-------|-------|\n| 分析 | `~/.claude/.ccg/prompts/codex/analyzer.md` |\n| 规划 | `~/.claude/.ccg/prompts/codex/architect.md` |\n| 评审 | `~/.claude/.ccg/prompts/codex/reviewer.md` |"
+    },
+    {
+      "en-US": "**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` for subsequent phases. Save `CODEX_SESSION` in Phase 2, use `resume` in Phases 3 and 5.",
+      "zh-Hans": "**会话复用**：每次调用返回 `SESSION_ID: xxx`，在后续阶段使用 `resume xxx`。在第 2 阶段保存 `CODEX_SESSION`，在第 3 和第 5 阶段使用 `resume`。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Communication Guidelines",
+      "zh-Hans": "## 沟通准则"
+    },
+    {
+      "en-US": "1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`\n2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`\n3. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval)",
+      "zh-Hans": "1. 在回复开头使用模式标签 `[Mode: X]`，初始值为 `[Mode: Research]`\n2. 遵循严格序列：`Research → Ideation → Plan → Execute → Optimize → Review`\n3. 需要时（例如确认/选择/批准）使用 `AskUserQuestion` 工具进行用户交互"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Core Workflow",
+      "zh-Hans": "## 核心工作流程"
+    },
+    {
+      "en-US": "### Phase 0: Prompt Enhancement (Optional)",
+      "zh-Hans": "### 阶段 0：提示词增强（可选）"
+    },
+    {
+      "en-US": "`[Mode: Prepare]` - If ace-tool MCP available, call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for subsequent Codex calls**",
+      "zh-Hans": "`[Mode: Prepare]` - 如果 ace-tool MCP 可用，调用 `mcp__ace-tool__enhance_prompt`，**用增强后的结果替换原始的 $ARGUMENTS，用于后续的 Codex 调用**"
+    },
+    {
+      "en-US": "### Phase 1: Research",
+      "zh-Hans": "### 阶段 1：研究"
+    },
+    {
+      "en-US": "`[Mode: Research]` - Understand requirements and gather context",
+      "zh-Hans": "`[Mode: Research]` - 理解需求并收集上下文"
+    },
+    {
+      "en-US": "1. **Code Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context` to retrieve existing APIs, data models, service architecture\n2. Requirement completeness score (0-10): >=7 continue, <7 stop and supplement",
+      "zh-Hans": "1. **代码检索**（如果 ace-tool MCP 可用）：调用 `mcp__ace-tool__search_context` 以检索现有的 API、数据模型、服务架构\n2. 需求完整性评分（0-10）：>=7 继续，<7 停止并补充"
+    },
+    {
+      "en-US": "### Phase 2: Ideation",
+      "zh-Hans": "### 阶段 2：构思"
+    },
+    {
+      "en-US": "`[Mode: Ideation]` - Codex-led analysis",
+      "zh-Hans": "`[Mode: Ideation]` - Codex 主导的分析"
+    },
+    {
+      "en-US": "**MUST call Codex** (follow call specification above):",
+      "zh-Hans": "**必须调用 Codex**（遵循上述调用规范）："
+    },
+    {
+      "en-US": "- ROLE_FILE: `~/.claude/.ccg/prompts/codex/analyzer.md`\n- Requirement: Enhanced requirement (or $ARGUMENTS if not enhanced)\n- Context: Project context from Phase 1\n- OUTPUT: Technical feasibility analysis, recommended solutions (at least 2), risk assessment",
+      "zh-Hans": "* ROLE\\_FILE：`~/.claude/.ccg/prompts/codex/analyzer.md`\n* 需求：增强后的需求（或未增强时的 $ARGUMENTS）\n* 上下文：来自阶段 1 的项目上下文\n* 输出：技术可行性分析、推荐解决方案（至少 2 个）、风险评估"
+    },
+    {
+      "en-US": "**Save SESSION_ID** (`CODEX_SESSION`) for subsequent phase reuse.",
+      "zh-Hans": "**保存 SESSION\\_ID**（`CODEX_SESSION`）以供后续阶段复用。"
+    },
+    {
+      "en-US": "Output solutions (at least 2), wait for user selection.",
+      "zh-Hans": "输出解决方案（至少 2 个），等待用户选择。"
+    },
+    {
+      "en-US": "### Phase 3: Planning",
+      "zh-Hans": "### 阶段 3：规划"
+    },
+    {
+      "en-US": "`[Mode: Plan]` - Codex-led planning",
+      "zh-Hans": "`[Mode: Plan]` - Codex 主导的规划"
+    },
+    {
+      "en-US": "**MUST call Codex** (use `resume <CODEX_SESSION>` to reuse session):",
+      "zh-Hans": "**必须调用 Codex**（使用 `resume <CODEX_SESSION>` 以复用会话）："
+    },
+    {
+      "en-US": "- ROLE_FILE: `~/.claude/.ccg/prompts/codex/architect.md`\n- Requirement: User's selected solution\n- Context: Analysis results from Phase 2\n- OUTPUT: File structure, function/class design, dependency relationships",
+      "zh-Hans": "* ROLE\\_FILE：`~/.claude/.ccg/prompts/codex/architect.md`\n* 需求：用户选择的解决方案\n* 上下文：阶段 2 的分析结果\n* 输出：文件结构、函数/类设计、依赖关系"
+    },
+    {
+      "en-US": "Claude synthesizes plan, save to `.claude/plan/task-name.md` after user approval.",
+      "zh-Hans": "Claude 综合规划，在用户批准后保存到 `.claude/plan/task-name.md`。"
+    },
+    {
+      "en-US": "### Phase 4: Implementation",
+      "zh-Hans": "### 阶段 4：实施"
+    },
+    {
+      "en-US": "`[Mode: Execute]` - Code development",
+      "zh-Hans": "`[Mode: Execute]` - 代码开发"
+    },
+    {
+      "en-US": "- Strictly follow approved plan\n- Follow existing project code standards\n- Ensure error handling, security, performance optimization",
+      "zh-Hans": "* 严格遵循已批准的规划\n* 遵循现有项目的代码规范\n* 确保错误处理、安全性、性能优化"
+    },
+    {
+      "en-US": "### Phase 5: Optimization",
+      "zh-Hans": "### 阶段 5：优化"
+    },
+    {
+      "en-US": "`[Mode: Optimize]` - Codex-led review",
+      "zh-Hans": "`[Mode: Optimize]` - Codex 主导的评审"
+    },
+    {
+      "en-US": "**MUST call Codex** (follow call specification above):",
+      "zh-Hans": "**必须调用 Codex**（遵循上述调用规范）："
+    },
+    {
+      "en-US": "- ROLE_FILE: `~/.claude/.ccg/prompts/codex/reviewer.md`\n- Requirement: Review the following backend code changes\n- Context: git diff or code content\n- OUTPUT: Security, performance, error handling, API compliance issues list",
+      "zh-Hans": "* ROLE\\_FILE：`~/.claude/.ccg/prompts/codex/reviewer.md`\n* 需求：评审以下后端代码变更\n* 上下文：git diff 或代码内容\n* 输出：安全性、性能、错误处理、API 合规性问题列表"
+    },
+    {
+      "en-US": "Integrate review feedback, execute optimization after user confirmation.",
+      "zh-Hans": "整合评审反馈，在用户确认后执行优化。"
+    },
+    {
+      "en-US": "### Phase 6: Quality Review",
+      "zh-Hans": "### 阶段 6：质量评审"
+    },
+    {
+      "en-US": "`[Mode: Review]` - Final evaluation",
+      "zh-Hans": "`[Mode: Review]` - 最终评估"
+    },
+    {
+      "en-US": "- Check completion against plan\n- Run tests to verify functionality\n- Report issues and recommendations",
+      "zh-Hans": "* 对照规划检查完成情况\n* 运行测试以验证功能\n* 报告问题和建议"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Key Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "1. **Codex backend opinions are trustworthy**\n2. **Gemini backend opinions for reference only**\n3. External models have **zero filesystem write access**\n4. Claude handles all code writes and file operations",
+      "zh-Hans": "1. **Codex 的后端意见是可信赖的**\n2. **Gemini 的后端意见仅供参考**\n3. 外部模型**对文件系统零写入权限**\n4. Claude 处理所有代码写入和文件操作"
+    }
+  ]
+}

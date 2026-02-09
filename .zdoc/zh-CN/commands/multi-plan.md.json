@@ -1,0 +1,302 @@
+{
+  "sourceFile": "commands/multi-plan.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Plan - Multi-Model Collaborative Planning",
+      "zh-Hans": "# 计划 - 多模型协同规划"
+    },
+    {
+      "en-US": "Multi-model collaborative planning - Context retrieval + Dual-model analysis → Generate step-by-step implementation plan.",
+      "zh-Hans": "多模型协同规划 - 上下文检索 + 双模型分析 → 生成分步实施计划。"
+    },
+    {
+      "en-US": "$ARGUMENTS",
+      "zh-Hans": "$ARGUMENTS"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Core Protocols",
+      "zh-Hans": "## 核心协议"
+    },
+    {
+      "en-US": "- **Language Protocol**: Use **English** when interacting with tools/models, communicate with user in their language\n- **Mandatory Parallel**: Codex/Gemini calls MUST use `run_in_background: true` (including single model calls, to avoid blocking main thread)\n- **Code Sovereignty**: External models have **zero filesystem write access**, all modifications by Claude\n- **Stop-Loss Mechanism**: Do not proceed to next phase until current phase output is validated\n- **Planning Only**: This command allows reading context and writing to `.claude/plan/*` plan files, but **NEVER modify production code**",
+      "zh-Hans": "* **语言协议**：与工具/模型交互时使用 **英语**，与用户沟通时使用其语言\n* **强制并行**：Codex/Gemini 调用 **必须** 使用 `run_in_background: true`（包括单模型调用，以避免阻塞主线程）\n* **代码主权**：外部模型 **零文件系统写入权限**，所有修改由 Claude 执行\n* **止损机制**：在当前阶段输出验证完成前，不进入下一阶段\n* **仅限规划**：此命令允许读取上下文并写入 `.claude/plan/*` 计划文件，但 **绝不修改生产代码**"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Multi-Model Call Specification",
+      "zh-Hans": "## 多模型调用规范"
+    },
+    {
+      "en-US": "**Call Syntax** (parallel: use `run_in_background: true`):",
+      "zh-Hans": "**调用语法**（并行：使用 `run_in_background: true`）："
+    },
+    {
+      "en-US": "```\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend <codex|gemini> {{GEMINI_MODEL_FLAG}}- \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement>\nContext: <retrieved project context>\n</TASK>\nOUTPUT: Step-by-step implementation plan with pseudo-code. DO NOT modify any files.\nEOF\",\n  run_in_background: true,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```",
+      "zh-Hans": "```\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend <codex|gemini> {{GEMINI_MODEL_FLAG}}- \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement>\nContext: <retrieved project context>\n</TASK>\nOUTPUT: Step-by-step implementation plan with pseudo-code. DO NOT modify any files.\nEOF\",\n  run_in_background: true,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```"
+    },
+    {
+      "en-US": "**Model Parameter Notes**:",
+      "zh-Hans": "**模型参数说明**："
+    },
+    {
+      "en-US": "- `{{GEMINI_MODEL_FLAG}}`: When using `--backend gemini`, replace with `--gemini-model gemini-3-pro-preview ` (note trailing space); use empty string for codex",
+      "zh-Hans": "* `{{GEMINI_MODEL_FLAG}}`：使用 `--backend gemini` 时，替换为 `--gemini-model gemini-3-pro-preview `（注意尾随空格）；codex 使用空字符串"
+    },
+    {
+      "en-US": "**Role Prompts**:",
+      "zh-Hans": "**角色提示**："
+    },
+    {
+      "en-US": "| Phase | Codex | Gemini |\n|-------|-------|--------|\n| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/gemini/analyzer.md` |\n| Planning | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/gemini/architect.md` |",
+      "zh-Hans": "| 阶段 | Codex | Gemini |\n|-------|-------|--------|\n| 分析 | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/gemini/analyzer.md` |\n| 规划 | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/gemini/architect.md` |"
+    },
+    {
+      "en-US": "**Session Reuse**: Each call returns `SESSION_ID: xxx` (typically output by wrapper), **MUST save** for subsequent `/ccg:execute` use.",
+      "zh-Hans": "**会话复用**：每次调用返回 `SESSION_ID: xxx`（通常由包装器输出），**必须保存** 供后续 `/ccg:execute` 使用。"
+    },
+    {
+      "en-US": "**Wait for Background Tasks** (max timeout 600000ms = 10 minutes):",
+      "zh-Hans": "**等待后台任务**（最大超时 600000ms = 10 分钟）："
+    },
+    {
+      "en-US": "```\nTaskOutput({ task_id: \"<task_id>\", block: true, timeout: 600000 })\n```",
+      "zh-Hans": "```\nTaskOutput({ task_id: \"<task_id>\", block: true, timeout: 600000 })\n```"
+    },
+    {
+      "en-US": "**IMPORTANT**:",
+      "zh-Hans": "**重要提示**："
+    },
+    {
+      "en-US": "- Must specify `timeout: 600000`, otherwise default 30 seconds will cause premature timeout\n- If still incomplete after 10 minutes, continue polling with `TaskOutput`, **NEVER kill the process**\n- If waiting is skipped due to timeout, **MUST call `AskUserQuestion` to ask user whether to continue waiting or kill task**",
+      "zh-Hans": "* 必须指定 `timeout: 600000`，否则默认 30 秒会导致过早超时\n* 如果 10 分钟后仍未完成，继续使用 `TaskOutput` 轮询，**绝不终止进程**\n* 如果因超时而跳过等待，**必须调用 `AskUserQuestion` 询问用户是继续等待还是终止任务**"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Execution Workflow",
+      "zh-Hans": "## 执行流程"
+    },
+    {
+      "en-US": "**Planning Task**: $ARGUMENTS",
+      "zh-Hans": "**规划任务**：$ARGUMENTS"
+    },
+    {
+      "en-US": "### Phase 1: Full Context Retrieval",
+      "zh-Hans": "### 阶段 1：完整上下文检索"
+    },
+    {
+      "en-US": "`[Mode: Research]`",
+      "zh-Hans": "`[Mode: Research]`"
+    },
+    {
+      "en-US": "#### 1.1 Prompt Enhancement (MUST execute first)",
+      "zh-Hans": "#### 1.1 提示增强（必须先执行）"
+    },
+    {
+      "en-US": "**MUST call `mcp__ace-tool__enhance_prompt` tool**:",
+      "zh-Hans": "**必须调用 `mcp__ace-tool__enhance_prompt` 工具**："
+    },
+    {
+      "en-US": "```\nmcp__ace-tool__enhance_prompt({\n  prompt: \"$ARGUMENTS\",\n  conversation_history: \"<last 5-10 conversation turns>\",\n  project_root_path: \"$PWD\"\n})\n```",
+      "zh-Hans": "```\nmcp__ace-tool__enhance_prompt({\n  prompt: \"$ARGUMENTS\",\n  conversation_history: \"<last 5-10 conversation turns>\",\n  project_root_path: \"$PWD\"\n})\n```"
+    },
+    {
+      "en-US": "Wait for enhanced prompt, **replace original $ARGUMENTS with enhanced result** for all subsequent phases.",
+      "zh-Hans": "等待增强后的提示，**将所有后续阶段的原始 $ARGUMENTS 替换为增强结果**。"
+    },
+    {
+      "en-US": "#### 1.2 Context Retrieval",
+      "zh-Hans": "#### 1.2 上下文检索"
+    },
+    {
+      "en-US": "**Call `mcp__ace-tool__search_context` tool**:",
+      "zh-Hans": "**调用 `mcp__ace-tool__search_context` 工具**："
+    },
+    {
+      "en-US": "```\nmcp__ace-tool__search_context({\n  query: \"<semantic query based on enhanced requirement>\",\n  project_root_path: \"$PWD\"\n})\n```",
+      "zh-Hans": "```\nmcp__ace-tool__search_context({\n  query: \"<semantic query based on enhanced requirement>\",\n  project_root_path: \"$PWD\"\n})\n```"
+    },
+    {
+      "en-US": "- Build semantic query using natural language (Where/What/How)\n- **NEVER answer based on assumptions**\n- If MCP unavailable: fallback to Glob + Grep for file discovery and key symbol location",
+      "zh-Hans": "* 使用自然语言构建语义查询（Where/What/How）\n* **绝不基于假设回答**\n* 如果 MCP 不可用：回退到 Glob + Grep 进行文件发现和关键符号定位"
+    },
+    {
+      "en-US": "#### 1.3 Completeness Check",
+      "zh-Hans": "#### 1.3 完整性检查"
+    },
+    {
+      "en-US": "- Must obtain **complete definitions and signatures** for relevant classes, functions, variables\n- If context insufficient, trigger **recursive retrieval**\n- Prioritize output: entry file + line number + key symbol name; add minimal code snippets only when necessary to resolve ambiguity",
+      "zh-Hans": "* 必须获取相关类、函数、变量的 **完整定义和签名**\n* 如果上下文不足，触发 **递归检索**\n* 输出优先级：入口文件 + 行号 + 关键符号名称；仅在必要时添加最小代码片段以消除歧义"
+    },
+    {
+      "en-US": "#### 1.4 Requirement Alignment",
+      "zh-Hans": "#### 1.4 需求对齐"
+    },
+    {
+      "en-US": "- If requirements still have ambiguity, **MUST** output guiding questions for user\n- Until requirement boundaries are clear (no omissions, no redundancy)",
+      "zh-Hans": "* 如果需求仍有歧义，**必须** 输出引导性问题给用户\n* 直到需求边界清晰（无遗漏，无冗余）"
+    },
+    {
+      "en-US": "### Phase 2: Multi-Model Collaborative Analysis",
+      "zh-Hans": "### 阶段 2：多模型协同分析"
+    },
+    {
+      "en-US": "`[Mode: Analysis]`",
+      "zh-Hans": "`[Mode: Analysis]`"
+    },
+    {
+      "en-US": "#### 2.1 Distribute Inputs",
+      "zh-Hans": "#### 2.1 分发输入"
+    },
+    {
+      "en-US": "**Parallel call** Codex and Gemini (`run_in_background: true`):",
+      "zh-Hans": "**并行调用** Codex 和 Gemini（`run_in_background: true`）："
+    },
+    {
+      "en-US": "Distribute **original requirement** (without preset opinions) to both models:",
+      "zh-Hans": "将 **原始需求**（不预设观点）分发给两个模型："
+    },
+    {
+      "en-US": "1. **Codex Backend Analysis**:\n   - ROLE_FILE: `~/.claude/.ccg/prompts/codex/analyzer.md`\n   - Focus: Technical feasibility, architecture impact, performance considerations, potential risks\n   - OUTPUT: Multi-perspective solutions + pros/cons analysis\n\n2. **Gemini Frontend Analysis**:\n   - ROLE_FILE: `~/.claude/.ccg/prompts/gemini/analyzer.md`\n   - Focus: UI/UX impact, user experience, visual design\n   - OUTPUT: Multi-perspective solutions + pros/cons analysis",
+      "zh-Hans": "1. **Codex 后端分析**：\n   * ROLE\\_FILE：`~/.claude/.ccg/prompts/codex/analyzer.md`\n   * 重点：技术可行性、架构影响、性能考虑、潜在风险\n   * 输出：多视角解决方案 + 优缺点分析\n\n2. **Gemini 前端分析**：\n   * ROLE\\_FILE：`~/.claude/.ccg/prompts/gemini/analyzer.md`\n   * 重点：UI/UX 影响、用户体验、视觉设计\n   * 输出：多视角解决方案 + 优缺点分析"
+    },
+    {
+      "en-US": "Wait for both models' complete results with `TaskOutput`. **Save SESSION_ID** (`CODEX_SESSION` and `GEMINI_SESSION`).",
+      "zh-Hans": "使用 `TaskOutput` 等待两个模型的完整结果。**保存 SESSION\\_ID**（`CODEX_SESSION` 和 `GEMINI_SESSION`）。"
+    },
+    {
+      "en-US": "#### 2.2 Cross-Validation",
+      "zh-Hans": "#### 2.2 交叉验证"
+    },
+    {
+      "en-US": "Integrate perspectives and iterate for optimization:",
+      "zh-Hans": "整合视角并迭代优化："
+    },
+    {
+      "en-US": "1. **Identify consensus** (strong signal)\n2. **Identify divergence** (needs weighing)\n3. **Complementary strengths**: Backend logic follows Codex, Frontend design follows Gemini\n4. **Logical reasoning**: Eliminate logical gaps in solutions",
+      "zh-Hans": "1. **识别共识**（强信号）\n2. **识别分歧**（需要权衡）\n3. **互补优势**：后端逻辑遵循 Codex，前端设计遵循 Gemini\n4. **逻辑推理**：消除解决方案中的逻辑漏洞"
+    },
+    {
+      "en-US": "#### 2.3 (Optional but Recommended) Dual-Model Plan Draft",
+      "zh-Hans": "#### 2.3（可选但推荐）双模型计划草案"
+    },
+    {
+      "en-US": "To reduce risk of omissions in Claude's synthesized plan, can parallel have both models output \"plan drafts\" (still **NOT allowed** to modify files):",
+      "zh-Hans": "为减少 Claude 综合计划中的遗漏风险，可以并行让两个模型输出“计划草案”（仍然 **不允许** 修改文件）："
+    },
+    {
+      "en-US": "1. **Codex Plan Draft** (Backend authority):\n   - ROLE_FILE: `~/.claude/.ccg/prompts/codex/architect.md`\n   - OUTPUT: Step-by-step plan + pseudo-code (focus: data flow/edge cases/error handling/test strategy)\n\n2. **Gemini Plan Draft** (Frontend authority):\n   - ROLE_FILE: `~/.claude/.ccg/prompts/gemini/architect.md`\n   - OUTPUT: Step-by-step plan + pseudo-code (focus: information architecture/interaction/accessibility/visual consistency)",
+      "zh-Hans": "1. **Codex 计划草案**（后端权威）：\n   * ROLE\\_FILE：`~/.claude/.ccg/prompts/codex/architect.md`\n   * 输出：分步计划 + 伪代码（重点：数据流/边缘情况/错误处理/测试策略）\n\n2. **Gemini 计划草案**（前端权威）：\n   * ROLE\\_FILE：`~/.claude/.ccg/prompts/gemini/architect.md`\n   * 输出：分步计划 + 伪代码（重点：信息架构/交互/可访问性/视觉一致性）"
+    },
+    {
+      "en-US": "Wait for both models' complete results with `TaskOutput`, record key differences in their suggestions.",
+      "zh-Hans": "使用 `TaskOutput` 等待两个模型的完整结果，记录它们建议的关键差异。"
+    },
+    {
+      "en-US": "#### 2.4 Generate Implementation Plan (Claude Final Version)",
+      "zh-Hans": "#### 2.4 生成实施计划（Claude 最终版本）"
+    },
+    {
+      "en-US": "Synthesize both analyses, generate **Step-by-step Implementation Plan**:",
+      "zh-Hans": "综合两个分析，生成 **分步实施计划**："
+    },
+    {
+      "en-US": "```markdown\n## Implementation Plan: <Task Name>\n\n### Task Type\n- [ ] Frontend (→ Gemini)\n- [ ] Backend (→ Codex)\n- [ ] Fullstack (→ Parallel)\n\n### Technical Solution\n<Optimal solution synthesized from Codex + Gemini analysis>\n\n### Implementation Steps\n1. <Step 1> - Expected deliverable\n2. <Step 2> - Expected deliverable\n...\n\n### Key Files\n| File | Operation | Description |\n|------|-----------|-------------|\n| path/to/file.ts:L10-L50 | Modify | Description |\n\n### Risks and Mitigation\n| Risk | Mitigation |\n|------|------------|\n\n### SESSION_ID (for /ccg:execute use)\n- CODEX_SESSION: <session_id>\n- GEMINI_SESSION: <session_id>\n```",
+      "zh-Hans": "```markdown\n## 实施计划：<任务名称>\n\n### 任务类型\n- [ ] 前端 (→ Gemini)\n- [ ] 后端 (→ Codex)\n- [ ] 全栈 (→ 并行)\n\n### 技术解决方案\n<基于 Codex + Gemini 分析得出的最优解决方案>\n\n### 实施步骤\n1. <步骤 1> - 预期交付物\n2. <步骤 2> - 预期交付物\n...\n\n### 关键文件\n| 文件 | 操作 | 描述 |\n|------|-----------|-------------|\n| path/to/file.ts:L10-L50 | 修改 | 描述 |\n\n### 风险与缓解措施\n| 风险 | 缓解措施 |\n|------|------------|\n\n### SESSION_ID (供 /ccg:execute 使用)\n- CODEX_SESSION: <session_id>\n- GEMINI_SESSION: <session_id>\n\n```"
+    },
+    {
+      "en-US": "### Phase 2 End: Plan Delivery (Not Execution)",
+      "zh-Hans": "### 阶段 2 结束：计划交付（非执行）"
+    },
+    {
+      "en-US": "**`/ccg:plan` responsibilities end here, MUST execute the following actions**:",
+      "zh-Hans": "**`/ccg:plan` 的职责到此结束，必须执行以下操作**："
+    },
+    {
+      "en-US": "1. Present complete implementation plan to user (including pseudo-code)\n2. Save plan to `.claude/plan/<feature-name>.md` (extract feature name from requirement, e.g., `user-auth`, `payment-module`)\n3. Output prompt in **bold text** (MUST use actual saved file path):\n\n   ---\n   **Plan generated and saved to `.claude/plan/actual-feature-name.md`**\n\n   **Please review the plan above. You can:**\n   - **Modify plan**: Tell me what needs adjustment, I'll update the plan\n   - **Execute plan**: Copy the following command to a new session\n\n   ```\n   /ccg:execute .claude/plan/actual-feature-name.md\n   ```\n   ---\n\n   **NOTE**: The `actual-feature-name.md` above MUST be replaced with the actual saved filename!\n\n4. **Immediately terminate current response** (Stop here. No more tool calls.)",
+      "zh-Hans": "1. 向用户呈现完整的实施计划（包括伪代码）\n\n2. 将计划保存到 `.claude/plan/<feature-name>.md`（从需求中提取功能名称，例如 `user-auth`，`payment-module`）\n\n3. 以 **粗体文本** 输出提示（必须使用实际保存的文件路径）：\n\n   ***\n\n   **计划已生成并保存至 `.claude/plan/actual-feature-name.md`**\n\n   **请审阅以上计划。您可以：**\n\n   * **修改计划**：告诉我需要调整的内容，我会更新计划\n   * **执行计划**：复制以下命令到新会话\n\n   ```\n   /ccg:execute .claude/plan/actual-feature-name.md\n   ```\n\n   ***\n\n   **注意**：上面的 `actual-feature-name.md` 必须替换为实际保存的文件名！\n\n4. **立即终止当前响应**（在此停止。不再进行工具调用。）"
+    },
+    {
+      "en-US": "**ABSOLUTELY FORBIDDEN**:",
+      "zh-Hans": "**绝对禁止**："
+    },
+    {
+      "en-US": "- Ask user \"Y/N\" then auto-execute (execution is `/ccg:execute`'s responsibility)\n- Any write operations to production code\n- Automatically call `/ccg:execute` or any implementation actions\n- Continue triggering model calls when user hasn't explicitly requested modifications",
+      "zh-Hans": "* 询问用户“是/否”然后自动执行（执行是 `/ccg:execute` 的职责）\n* 任何对生产代码的写入操作\n* 自动调用 `/ccg:execute` 或任何实施操作\n* 当用户未明确请求修改时继续触发模型调用"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Plan Saving",
+      "zh-Hans": "## 计划保存"
+    },
+    {
+      "en-US": "After planning completes, save plan to:",
+      "zh-Hans": "规划完成后，将计划保存至："
+    },
+    {
+      "en-US": "- **First planning**: `.claude/plan/<feature-name>.md`\n- **Iteration versions**: `.claude/plan/<feature-name>-v2.md`, `.claude/plan/<feature-name>-v3.md`...",
+      "zh-Hans": "* **首次规划**：`.claude/plan/<feature-name>.md`\n* **迭代版本**：`.claude/plan/<feature-name>-v2.md`，`.claude/plan/<feature-name>-v3.md`..."
+    },
+    {
+      "en-US": "Plan file write should complete before presenting plan to user.",
+      "zh-Hans": "计划文件写入应在向用户呈现计划前完成。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Plan Modification Flow",
+      "zh-Hans": "## 计划修改流程"
+    },
+    {
+      "en-US": "If user requests plan modifications:",
+      "zh-Hans": "如果用户请求修改计划："
+    },
+    {
+      "en-US": "1. Adjust plan content based on user feedback\n2. Update `.claude/plan/<feature-name>.md` file\n3. Re-present modified plan\n4. Prompt user to review or execute again",
+      "zh-Hans": "1. 根据用户反馈调整计划内容\n2. 更新 `.claude/plan/<feature-name>.md` 文件\n3. 重新呈现修改后的计划\n4. 提示用户再次审阅或执行"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Next Steps",
+      "zh-Hans": "## 后续步骤"
+    },
+    {
+      "en-US": "After user approves, **manually** execute:",
+      "zh-Hans": "用户批准后，**手动** 执行："
+    },
+    {
+      "en-US": "```bash\n/ccg:execute .claude/plan/<feature-name>.md\n```",
+      "zh-Hans": "```bash\n/ccg:execute .claude/plan/<feature-name>.md\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Key Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "1. **Plan only, no implementation** – This command does not execute any code changes\n2. **No Y/N prompts** – Only present plan, let user decide next steps\n3. **Trust Rules** – Backend follows Codex, Frontend follows Gemini\n4. External models have **zero filesystem write access**\n5. **SESSION_ID Handoff** – Plan must include `CODEX_SESSION` / `GEMINI_SESSION` at end (for `/ccg:execute resume <SESSION_ID>` use)",
+      "zh-Hans": "1. **仅规划，不实施** – 此命令不执行任何代码更改\n2. **无是/否提示** – 仅呈现计划，让用户决定后续步骤\n3. **信任规则** – 后端遵循 Codex，前端遵循 Gemini\n4. 外部模型 **零文件系统写入权限**\n5. **SESSION\\_ID 交接** – 计划末尾必须包含 `CODEX_SESSION` / `GEMINI_SESSION`（供 `/ccg:execute resume <SESSION_ID>` 使用）"
+    }
+  ]
+}

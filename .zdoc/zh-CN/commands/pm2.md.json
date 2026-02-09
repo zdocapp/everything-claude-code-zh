@@ -1,0 +1,270 @@
+{
+  "sourceFile": "commands/pm2.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# PM2 Init",
+      "zh-Hans": "# PM2 初始化"
+    },
+    {
+      "en-US": "Auto-analyze project and generate PM2 service commands.",
+      "zh-Hans": "自动分析项目并生成 PM2 服务命令。"
+    },
+    {
+      "en-US": "**Command**: `$ARGUMENTS`",
+      "zh-Hans": "**命令**: `$ARGUMENTS`"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "1. Check PM2 (install via `npm install -g pm2` if missing)\n2. Scan project to identify services (frontend/backend/database)\n3. Generate config files and individual command files",
+      "zh-Hans": "1. 检查 PM2（如果缺失，通过 `npm install -g pm2` 安装）\n2. 扫描项目以识别服务（前端/后端/数据库）\n3. 生成配置文件和各命令文件"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Service Detection",
+      "zh-Hans": "## 服务检测"
+    },
+    {
+      "en-US": "| Type | Detection | Default Port |\n|------|-----------|--------------|\n| Vite | vite.config.* | 5173 |\n| Next.js | next.config.* | 3000 |\n| Nuxt | nuxt.config.* | 3000 |\n| CRA | react-scripts in package.json | 3000 |\n| Express/Node | server/backend/api directory + package.json | 3000 |\n| FastAPI/Flask | requirements.txt / pyproject.toml | 8000 |\n| Go | go.mod / main.go | 8080 |",
+      "zh-Hans": "| 类型 | 检测方式 | 默认端口 |\n|------|-----------|--------------|\n| Vite | vite.config.\\* | 5173 |\n| Next.js | next.config.\\* | 3000 |\n| Nuxt | nuxt.config.\\* | 3000 |\n| CRA | package.json 中的 react-scripts | 3000 |\n| Express/Node | server/backend/api 目录 + package.json | 3000 |\n| FastAPI/Flask | requirements.txt / pyproject.toml | 8000 |\n| Go | go.mod / main.go | 8080 |"
+    },
+    {
+      "en-US": "**Port Detection Priority**: User specified > .env > config file > scripts args > default port",
+      "zh-Hans": "**端口检测优先级**: 用户指定 > .env 文件 > 配置文件 > 脚本参数 > 默认端口"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Generated Files",
+      "zh-Hans": "## 生成的文件"
+    },
+    {
+      "en-US": "```\nproject/\n├── ecosystem.config.cjs              # PM2 config\n├── {backend}/start.cjs               # Python wrapper (if applicable)\n└── .claude/\n    ├── commands/\n    │   ├── pm2-all.md                # Start all + monit\n    │   ├── pm2-all-stop.md           # Stop all\n    │   ├── pm2-all-restart.md        # Restart all\n    │   ├── pm2-{port}.md             # Start single + logs\n    │   ├── pm2-{port}-stop.md        # Stop single\n    │   ├── pm2-{port}-restart.md     # Restart single\n    │   ├── pm2-logs.md               # View all logs\n    │   └── pm2-status.md             # View status\n    └── scripts/\n        ├── pm2-logs-{port}.ps1       # Single service logs\n        └── pm2-monit.ps1             # PM2 monitor\n```",
+      "zh-Hans": "```\nproject/\n├── ecosystem.config.cjs              # PM2 config\n├── {backend}/start.cjs               # Python wrapper (if applicable)\n└── .claude/\n    ├── commands/\n    │   ├── pm2-all.md                # Start all + monit\n    │   ├── pm2-all-stop.md           # Stop all\n    │   ├── pm2-all-restart.md        # Restart all\n    │   ├── pm2-{port}.md             # Start single + logs\n    │   ├── pm2-{port}-stop.md        # Stop single\n    │   ├── pm2-{port}-restart.md     # Restart single\n    │   ├── pm2-logs.md               # View all logs\n    │   └── pm2-status.md             # View status\n    └── scripts/\n        ├── pm2-logs-{port}.ps1       # Single service logs\n        └── pm2-monit.ps1             # PM2 monitor\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Windows Configuration (IMPORTANT)",
+      "zh-Hans": "## Windows 配置（重要）"
+    },
+    {
+      "en-US": "### ecosystem.config.cjs",
+      "zh-Hans": "### ecosystem.config.cjs"
+    },
+    {
+      "en-US": "**Must use `.cjs` extension**",
+      "zh-Hans": "**必须使用 `.cjs` 扩展名**"
+    },
+    {
+      "en-US": "```javascript\nmodule.exports = {\n  apps: [\n    // Node.js (Vite/Next/Nuxt)\n    {\n      name: 'project-3000',\n      cwd: './packages/web',\n      script: 'node_modules/vite/bin/vite.js',\n      args: '--port 3000',\n      interpreter: 'C:/Program Files/nodejs/node.exe',\n      env: { NODE_ENV: 'development' }\n    },\n    // Python\n    {\n      name: 'project-8000',\n      cwd: './backend',\n      script: 'start.cjs',\n      interpreter: 'C:/Program Files/nodejs/node.exe',\n      env: { PYTHONUNBUFFERED: '1' }\n    }\n  ]\n}\n```",
+      "zh-Hans": "```javascript\nmodule.exports = {\n  apps: [\n    // Node.js (Vite/Next/Nuxt)\n    {\n      name: 'project-3000',\n      cwd: './packages/web',\n      script: 'node_modules/vite/bin/vite.js',\n      args: '--port 3000',\n      interpreter: 'C:/Program Files/nodejs/node.exe',\n      env: { NODE_ENV: 'development' }\n    },\n    // Python\n    {\n      name: 'project-8000',\n      cwd: './backend',\n      script: 'start.cjs',\n      interpreter: 'C:/Program Files/nodejs/node.exe',\n      env: { PYTHONUNBUFFERED: '1' }\n    }\n  ]\n}\n```"
+    },
+    {
+      "en-US": "**Framework script paths:**",
+      "zh-Hans": "**框架脚本路径:**"
+    },
+    {
+      "en-US": "| Framework | script | args |\n|-----------|--------|------|\n| Vite | `node_modules/vite/bin/vite.js` | `--port {port}` |\n| Next.js | `node_modules/next/dist/bin/next` | `dev -p {port}` |\n| Nuxt | `node_modules/nuxt/bin/nuxt.mjs` | `dev --port {port}` |\n| Express | `src/index.js` or `server.js` | - |",
+      "zh-Hans": "| 框架 | script | args |\n|-----------|--------|------|\n| Vite | `node_modules/vite/bin/vite.js` | `--port {port}` |\n| Next.js | `node_modules/next/dist/bin/next` | `dev -p {port}` |\n| Nuxt | `node_modules/nuxt/bin/nuxt.mjs` | `dev --port {port}` |\n| Express | `src/index.js` 或 `server.js` | - |"
+    },
+    {
+      "en-US": "### Python Wrapper Script (start.cjs)",
+      "zh-Hans": "### Python 包装脚本 (start.cjs)"
+    },
+    {
+      "en-US": "```javascript\nconst { spawn } = require('child_process');\nconst proc = spawn('python', ['-m', 'uvicorn', 'app.main:app', '--host', '0.0.0.0', '--port', '8000', '--reload'], {\n  cwd: __dirname, stdio: 'inherit', windowsHide: true\n});\nproc.on('close', (code) => process.exit(code));\n```",
+      "zh-Hans": "```javascript\nconst { spawn } = require('child_process');\nconst proc = spawn('python', ['-m', 'uvicorn', 'app.main:app', '--host', '0.0.0.0', '--port', '8000', '--reload'], {\n  cwd: __dirname, stdio: 'inherit', windowsHide: true\n});\nproc.on('close', (code) => process.exit(code));\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Command File Templates (Minimal Content)",
+      "zh-Hans": "## 命令文件模板（最简内容）"
+    },
+    {
+      "en-US": "### pm2-all.md (Start all + monit)",
+      "zh-Hans": "### pm2-all.md (启动所有 + 监控)"
+    },
+    {
+      "en-US": "```markdown\nStart all services and open PM2 monitor.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 monit\"\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n启动所有服务并打开 PM2 监控器。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 monit\"\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### pm2-all-stop.md",
+      "zh-Hans": "### pm2-all-stop.md"
+    },
+    {
+      "en-US": "```markdown\nStop all services.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 stop all\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n停止所有服务。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 stop all\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### pm2-all-restart.md",
+      "zh-Hans": "### pm2-all-restart.md"
+    },
+    {
+      "en-US": "```markdown\nRestart all services.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 restart all\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n重启所有服务。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 restart all\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### pm2-{port}.md (Start single + logs)",
+      "zh-Hans": "### pm2-{port}.md (启动单个 + 日志)"
+    },
+    {
+      "en-US": "```markdown\nStart {name} ({port}) and open logs.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs --only {name} && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 logs {name}\"\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n启动 {name} ({port}) 并打开日志。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs --only {name} && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 logs {name}\"\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### pm2-{port}-stop.md",
+      "zh-Hans": "### pm2-{port}-stop.md"
+    },
+    {
+      "en-US": "```markdown\nStop {name} ({port}).\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 stop {name}\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n停止 {name} ({port})。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 stop {name}\n\\`\\`\\`\n\n```"
+    },
+    {
+      "en-US": "### pm2-{port}-restart.md",
+      "zh-Hans": "### pm2-{port}-restart.md"
+    },
+    {
+      "en-US": "```markdown\nRestart {name} ({port}).\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 restart {name}\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n重启 {name} ({port})。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 restart {name}\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### pm2-logs.md",
+      "zh-Hans": "### pm2-logs.md"
+    },
+    {
+      "en-US": "```markdown\nView all PM2 logs.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 logs\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n查看所有 PM2 日志。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 logs\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### pm2-status.md",
+      "zh-Hans": "### pm2-status.md"
+    },
+    {
+      "en-US": "```markdown\nView PM2 status.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 status\n\\`\\`\\`\n```",
+      "zh-Hans": "```markdown\n查看 PM2 状态。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 status\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "### PowerShell Scripts (pm2-logs-{port}.ps1)",
+      "zh-Hans": "### PowerShell 脚本 (pm2-logs-{port}.ps1)"
+    },
+    {
+      "en-US": "```powershell\nSet-Location \"{PROJECT_ROOT}\"\npm2 logs {name}\n```",
+      "zh-Hans": "```powershell\nSet-Location \"{PROJECT_ROOT}\"\npm2 logs {name}\n```"
+    },
+    {
+      "en-US": "### PowerShell Scripts (pm2-monit.ps1)",
+      "zh-Hans": "### PowerShell 脚本 (pm2-monit.ps1)"
+    },
+    {
+      "en-US": "```powershell\nSet-Location \"{PROJECT_ROOT}\"\npm2 monit\n```",
+      "zh-Hans": "```powershell\nSet-Location \"{PROJECT_ROOT}\"\npm2 monit\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Key Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "1. **Config file**: `ecosystem.config.cjs` (not .js)\n2. **Node.js**: Specify bin path directly + interpreter\n3. **Python**: Node.js wrapper script + `windowsHide: true`\n4. **Open new window**: `start wt.exe -d \"{path}\" pwsh -NoExit -c \"command\"`\n5. **Minimal content**: Each command file has only 1-2 lines description + bash block\n6. **Direct execution**: No AI parsing needed, just run the bash command",
+      "zh-Hans": "1. **配置文件**: `ecosystem.config.cjs` (不是 .js)\n2. **Node.js**: 直接指定 bin 路径 + 解释器\n3. **Python**: Node.js 包装脚本 + `windowsHide: true`\n4. **打开新窗口**: `start wt.exe -d \"{path}\" pwsh -NoExit -c \"command\"`\n5. **最简内容**: 每个命令文件只有 1-2 行描述 + bash 代码块\n6. **直接执行**: 无需 AI 解析，直接运行 bash 命令"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Execute",
+      "zh-Hans": "## 执行"
+    },
+    {
+      "en-US": "Based on `$ARGUMENTS`, execute init:",
+      "zh-Hans": "基于 `$ARGUMENTS`，执行初始化："
+    },
+    {
+      "en-US": "1. Scan project for services\n2. Generate `ecosystem.config.cjs`\n3. Generate `{backend}/start.cjs` for Python services (if applicable)\n4. Generate command files in `.claude/commands/`\n5. Generate script files in `.claude/scripts/`\n6. **Update project CLAUDE.md** with PM2 info (see below)\n7. **Display completion summary** with terminal commands",
+      "zh-Hans": "1. 扫描项目服务\n2. 生成 `ecosystem.config.cjs`\n3. 为 Python 服务生成 `{backend}/start.cjs`（如果适用）\n4. 在 `.claude/commands/` 中生成命令文件\n5. 在 `.claude/scripts/` 中生成脚本文件\n6. **更新项目 CLAUDE.md**，添加 PM2 信息（见下文）\n7. **显示完成摘要**，包含终端命令"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Post-Init: Update CLAUDE.md",
+      "zh-Hans": "## 初始化后：更新 CLAUDE.md"
+    },
+    {
+      "en-US": "After generating files, append PM2 section to project's `CLAUDE.md` (create if not exists):",
+      "zh-Hans": "生成文件后，将 PM2 部分追加到项目的 `CLAUDE.md`（如果不存在则创建）："
+    },
+    {
+      "en-US": "```markdown\n## PM2 Services\n\n| Port | Name | Type |\n|------|------|------|\n| {port} | {name} | {type} |\n\n**Terminal Commands:**\n```bash\npm2 start ecosystem.config.cjs   # First time\npm2 start all                    # After first time\npm2 stop all / pm2 restart all\npm2 start {name} / pm2 stop {name}\npm2 logs / pm2 status / pm2 monit\npm2 save                         # Save process list\npm2 resurrect                    # Restore saved list\n```",
+      "zh-Hans": "```markdown\n## PM2 服务\n\n| 端口 | 名称 | 类型 |\n|------|------|------|\n| {port} | {name} | {type} |\n\n**终端命令：**\n`​`​`bash\n\npm2 start ecosystem.config.cjs   # 首次启动\npm2 start all                    # 首次之后启动\npm2 stop all / pm2 restart all\npm2 start {name} / pm2 stop {name}\npm2 logs / pm2 status / pm2 monit\npm2 save                         # 保存进程列表\npm2 resurrect                    # 恢复已保存的列表\n`​`​`\n\n\n```"
+    },
+    {
+      "en-US": "```\n\n**Rules for CLAUDE.md update:**\n- If PM2 section exists, replace it\n- If not exists, append to end\n- Keep content minimal and essential\n\n---\n\n## Post-Init: Display Summary\n\nAfter all files generated, output:\n\n```",
+      "zh-Hans": "```\n\n**Rules for CLAUDE.md update:**\n- If PM2 section exists, replace it\n- If not exists, append to end\n- Keep content minimal and essential\n\n---\n\n## Post-Init: Display Summary\n\nAfter all files generated, output:\n\n```"
+    },
+    {
+      "en-US": "## PM2 Init Complete",
+      "zh-Hans": "## PM2 初始化完成"
+    },
+    {
+      "en-US": "**Services:**\n| Port | Name | Type |\n|------|------|------|\n| {port} | {name} | {type} |",
+      "zh-Hans": "**服务:**\n| 端口 | 名称 | 类型 |\n|------|------|------|\n| {port} | {name} | {type} |"
+    },
+    {
+      "en-US": "**Claude Commands:** /pm2-all, /pm2-all-stop, /pm2-{port}, /pm2-{port}-stop, /pm2-logs, /pm2-status",
+      "zh-Hans": "**Claude 命令:** /pm2-all, /pm2-all-stop, /pm2-{port}, /pm2-{port}-stop, /pm2-logs, /pm2-status"
+    },
+    {
+      "en-US": "**Terminal Commands:**",
+      "zh-Hans": "**终端命令:**"
+    },
+    {
+      "en-US": "# First time (with config file)",
+      "zh-Hans": "# 首次运行（使用配置文件）"
+    },
+    {
+      "en-US": "pm2 start ecosystem.config.cjs && pm2 save",
+      "zh-Hans": "pm2 start ecosystem.config.cjs && pm2 save"
+    },
+    {
+      "en-US": "# After first time (simplified)",
+      "zh-Hans": "# 首次运行后（简化版）"
+    },
+    {
+      "en-US": "pm2 start all          # Start all\npm2 stop all           # Stop all\npm2 restart all        # Restart all\npm2 start {name}       # Start single\npm2 stop {name}        # Stop single\npm2 logs               # View logs\npm2 monit              # Monitor panel\npm2 resurrect          # Restore saved processes",
+      "zh-Hans": "pm2 start all          # 启动所有\npm2 stop all           # 停止所有\npm2 restart all        # 重启所有\npm2 start {name}       # 启动单个\npm2 stop {name}        # 停止单个\npm2 logs               # 查看日志\npm2 monit              # 监控面板\npm2 resurrect          # 恢复已保存的进程"
+    },
+    {
+      "en-US": "**Tip:** Run `pm2 save` after first start to enable simplified commands.",
+      "zh-Hans": "**提示:** 首次启动后运行 `pm2 save` 以启用简化命令。"
+    },
+    {
+      "en-US": "```\n",
+      "zh-Hans": "```\n```"
+    }
+  ]
+}

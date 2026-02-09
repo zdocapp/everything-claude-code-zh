@@ -1,0 +1,214 @@
+{
+  "sourceFile": "commands/multi-frontend.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Frontend - Frontend-Focused Development",
+      "zh-Hans": "# 前端 - 前端聚焦开发"
+    },
+    {
+      "en-US": "Frontend-focused workflow (Research → Ideation → Plan → Execute → Optimize → Review), Gemini-led.",
+      "zh-Hans": "前端聚焦的工作流（研究 → 构思 → 规划 → 执行 → 优化 → 评审），由 Gemini 主导。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```bash\n/frontend <UI task description>\n```",
+      "zh-Hans": "```bash\n/frontend <UI task description>\n```"
+    },
+    {
+      "en-US": "## Context",
+      "zh-Hans": "## 上下文"
+    },
+    {
+      "en-US": "- Frontend task: $ARGUMENTS\n- Gemini-led, Codex for auxiliary reference\n- Applicable: Component design, responsive layout, UI animations, style optimization",
+      "zh-Hans": "* 前端任务: $ARGUMENTS\n* Gemini 主导，Codex 作为辅助参考\n* 适用场景: 组件设计、响应式布局、UI 动画、样式优化"
+    },
+    {
+      "en-US": "## Your Role",
+      "zh-Hans": "## 您的角色"
+    },
+    {
+      "en-US": "You are the **Frontend Orchestrator**, coordinating multi-model collaboration for UI/UX tasks (Research → Ideation → Plan → Execute → Optimize → Review).",
+      "zh-Hans": "您是 **前端协调器**，为 UI/UX 任务协调多模型协作（研究 → 构思 → 规划 → 执行 → 优化 → 评审）。"
+    },
+    {
+      "en-US": "**Collaborative Models**:",
+      "zh-Hans": "**协作模型**:"
+    },
+    {
+      "en-US": "- **Gemini** – Frontend UI/UX (**Frontend authority, trustworthy**)\n- **Codex** – Backend perspective (**Frontend opinions for reference only**)\n- **Claude (self)** – Orchestration, planning, execution, delivery",
+      "zh-Hans": "* **Gemini** – 前端 UI/UX（**前端权威，可信赖**）\n* **Codex** – 后端视角（**前端意见仅供参考**）\n* **Claude（自身）** – 协调、规划、执行、交付"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Multi-Model Call Specification",
+      "zh-Hans": "## 多模型调用规范"
+    },
+    {
+      "en-US": "**Call Syntax**:",
+      "zh-Hans": "**调用语法**:"
+    },
+    {
+      "en-US": "```\n# New session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend gemini --gemini-model gemini-3-pro-preview - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n\n# Resume session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend gemini --gemini-model gemini-3-pro-preview resume <SESSION_ID> - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```",
+      "zh-Hans": "```\n# New session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend gemini --gemini-model gemini-3-pro-preview - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n\n# Resume session call\nBash({\n  command: \"~/.claude/bin/codeagent-wrapper {{LITE_MODE_FLAG}}--backend gemini --gemini-model gemini-3-pro-preview resume <SESSION_ID> - \\\"$PWD\\\" <<'EOF'\nROLE_FILE: <role prompt path>\n<TASK>\nRequirement: <enhanced requirement (or $ARGUMENTS if not enhanced)>\nContext: <project context and analysis from previous phases>\n</TASK>\nOUTPUT: Expected output format\nEOF\",\n  run_in_background: false,\n  timeout: 3600000,\n  description: \"Brief description\"\n})\n```"
+    },
+    {
+      "en-US": "**Role Prompts**:",
+      "zh-Hans": "**角色提示词**:"
+    },
+    {
+      "en-US": "| Phase | Gemini |\n|-------|--------|\n| Analysis | `~/.claude/.ccg/prompts/gemini/analyzer.md` |\n| Planning | `~/.claude/.ccg/prompts/gemini/architect.md` |\n| Review | `~/.claude/.ccg/prompts/gemini/reviewer.md` |",
+      "zh-Hans": "| 阶段 | Gemini |\n|-------|--------|\n| 分析 | `~/.claude/.ccg/prompts/gemini/analyzer.md` |\n| 规划 | `~/.claude/.ccg/prompts/gemini/architect.md` |\n| 评审 | `~/.claude/.ccg/prompts/gemini/reviewer.md` |"
+    },
+    {
+      "en-US": "**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` for subsequent phases. Save `GEMINI_SESSION` in Phase 2, use `resume` in Phases 3 and 5.",
+      "zh-Hans": "**会话重用**: 每次调用返回 `SESSION_ID: xxx`，在后续阶段使用 `resume xxx`。在阶段 2 保存 `GEMINI_SESSION`，在阶段 3 和 5 使用 `resume`。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Communication Guidelines",
+      "zh-Hans": "## 沟通指南"
+    },
+    {
+      "en-US": "1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`\n2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`\n3. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval)",
+      "zh-Hans": "1. 以模式标签 `[Mode: X]` 开始响应，初始为 `[Mode: Research]`\n2. 遵循严格顺序: `Research → Ideation → Plan → Execute → Optimize → Review`\n3. 需要时（例如确认/选择/批准）使用 `AskUserQuestion` 工具进行用户交互"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Core Workflow",
+      "zh-Hans": "## 核心工作流"
+    },
+    {
+      "en-US": "### Phase 0: Prompt Enhancement (Optional)",
+      "zh-Hans": "### 阶段 0: 提示词增强（可选）"
+    },
+    {
+      "en-US": "`[Mode: Prepare]` - If ace-tool MCP available, call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for subsequent Gemini calls**",
+      "zh-Hans": "`[Mode: Prepare]` - 如果 ace-tool MCP 可用，调用 `mcp__ace-tool__enhance_prompt`，**将原始的 $ARGUMENTS 替换为增强后的结果，用于后续的 Gemini 调用**"
+    },
+    {
+      "en-US": "### Phase 1: Research",
+      "zh-Hans": "### 阶段 1: 研究"
+    },
+    {
+      "en-US": "`[Mode: Research]` - Understand requirements and gather context",
+      "zh-Hans": "`[Mode: Research]` - 理解需求并收集上下文"
+    },
+    {
+      "en-US": "1. **Code Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context` to retrieve existing components, styles, design system\n2. Requirement completeness score (0-10): >=7 continue, <7 stop and supplement",
+      "zh-Hans": "1. **代码检索**（如果 ace-tool MCP 可用）: 调用 `mcp__ace-tool__search_context` 来检索现有的组件、样式、设计系统\n2. 需求完整性评分（0-10）: >=7 继续，<7 停止并补充"
+    },
+    {
+      "en-US": "### Phase 2: Ideation",
+      "zh-Hans": "### 阶段 2: 构思"
+    },
+    {
+      "en-US": "`[Mode: Ideation]` - Gemini-led analysis",
+      "zh-Hans": "`[Mode: Ideation]` - Gemini 主导的分析"
+    },
+    {
+      "en-US": "**MUST call Gemini** (follow call specification above):",
+      "zh-Hans": "**必须调用 Gemini**（遵循上述调用规范）:"
+    },
+    {
+      "en-US": "- ROLE_FILE: `~/.claude/.ccg/prompts/gemini/analyzer.md`\n- Requirement: Enhanced requirement (or $ARGUMENTS if not enhanced)\n- Context: Project context from Phase 1\n- OUTPUT: UI feasibility analysis, recommended solutions (at least 2), UX evaluation",
+      "zh-Hans": "* ROLE\\_FILE: `~/.claude/.ccg/prompts/gemini/analyzer.md`\n* 需求: 增强后的需求（或未经增强的 $ARGUMENTS）\n* 上下文: 来自阶段 1 的项目上下文\n* 输出: UI 可行性分析、推荐解决方案（至少 2 个）、UX 评估"
+    },
+    {
+      "en-US": "**Save SESSION_ID** (`GEMINI_SESSION`) for subsequent phase reuse.",
+      "zh-Hans": "**保存 SESSION\\_ID**（`GEMINI_SESSION`）以供后续阶段重用。"
+    },
+    {
+      "en-US": "Output solutions (at least 2), wait for user selection.",
+      "zh-Hans": "输出解决方案（至少 2 个），等待用户选择。"
+    },
+    {
+      "en-US": "### Phase 3: Planning",
+      "zh-Hans": "### 阶段 3: 规划"
+    },
+    {
+      "en-US": "`[Mode: Plan]` - Gemini-led planning",
+      "zh-Hans": "`[Mode: Plan]` - Gemini 主导的规划"
+    },
+    {
+      "en-US": "**MUST call Gemini** (use `resume <GEMINI_SESSION>` to reuse session):",
+      "zh-Hans": "**必须调用 Gemini**（使用 `resume <GEMINI_SESSION>` 来重用会话）:"
+    },
+    {
+      "en-US": "- ROLE_FILE: `~/.claude/.ccg/prompts/gemini/architect.md`\n- Requirement: User's selected solution\n- Context: Analysis results from Phase 2\n- OUTPUT: Component structure, UI flow, styling approach",
+      "zh-Hans": "* ROLE\\_FILE: `~/.claude/.ccg/prompts/gemini/architect.md`\n* 需求: 用户选择的解决方案\n* 上下文: 阶段 2 的分析结果\n* 输出: 组件结构、UI 流程、样式方案"
+    },
+    {
+      "en-US": "Claude synthesizes plan, save to `.claude/plan/task-name.md` after user approval.",
+      "zh-Hans": "Claude 综合规划，在用户批准后保存到 `.claude/plan/task-name.md`。"
+    },
+    {
+      "en-US": "### Phase 4: Implementation",
+      "zh-Hans": "### 阶段 4: 实现"
+    },
+    {
+      "en-US": "`[Mode: Execute]` - Code development",
+      "zh-Hans": "`[Mode: Execute]` - 代码开发"
+    },
+    {
+      "en-US": "- Strictly follow approved plan\n- Follow existing project design system and code standards\n- Ensure responsiveness, accessibility",
+      "zh-Hans": "* 严格遵循批准的规划\n* 遵循现有项目设计系统和代码标准\n* 确保响应式设计、可访问性"
+    },
+    {
+      "en-US": "### Phase 5: Optimization",
+      "zh-Hans": "### 阶段 5: 优化"
+    },
+    {
+      "en-US": "`[Mode: Optimize]` - Gemini-led review",
+      "zh-Hans": "`[Mode: Optimize]` - Gemini 主导的评审"
+    },
+    {
+      "en-US": "**MUST call Gemini** (follow call specification above):",
+      "zh-Hans": "**必须调用 Gemini**（遵循上述调用规范）:"
+    },
+    {
+      "en-US": "- ROLE_FILE: `~/.claude/.ccg/prompts/gemini/reviewer.md`\n- Requirement: Review the following frontend code changes\n- Context: git diff or code content\n- OUTPUT: Accessibility, responsiveness, performance, design consistency issues list",
+      "zh-Hans": "* ROLE\\_FILE: `~/.claude/.ccg/prompts/gemini/reviewer.md`\n* 需求: 评审以下前端代码变更\n* 上下文: git diff 或代码内容\n* 输出: 可访问性、响应式设计、性能、设计一致性等问题列表"
+    },
+    {
+      "en-US": "Integrate review feedback, execute optimization after user confirmation.",
+      "zh-Hans": "整合评审反馈，在用户确认后执行优化。"
+    },
+    {
+      "en-US": "### Phase 6: Quality Review",
+      "zh-Hans": "### 阶段 6: 质量评审"
+    },
+    {
+      "en-US": "`[Mode: Review]` - Final evaluation",
+      "zh-Hans": "`[Mode: Review]` - 最终评估"
+    },
+    {
+      "en-US": "- Check completion against plan\n- Verify responsiveness and accessibility\n- Report issues and recommendations",
+      "zh-Hans": "* 对照规划检查完成情况\n* 验证响应式设计和可访问性\n* 报告问题与建议"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Key Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "1. **Gemini frontend opinions are trustworthy**\n2. **Codex frontend opinions for reference only**\n3. External models have **zero filesystem write access**\n4. Claude handles all code writes and file operations",
+      "zh-Hans": "1. **Gemini 的前端意见是可信赖的**\n2. **Codex 的前端意见仅供参考**\n3. 外部模型**没有文件系统写入权限**\n4. Claude 处理所有代码写入和文件操作"
+    }
+  ]
+}
