@@ -7,8 +7,20 @@
       "zh-Hans": "# 为 Everything Claude Code 做贡献"
     },
     {
-      "en-US": "Thanks for wanting to contribute. This repo is meant to be a community resource for Claude Code users.",
-      "zh-Hans": "感谢您希望做出贡献。这个仓库旨在成为 Claude Code 用户的社区资源。"
+      "en-US": "Thanks for wanting to contribute! This repo is a community resource for Claude Code users.",
+      "zh-Hans": "感谢您想要贡献！这个仓库是 Claude Code 用户的社区资源。"
+    },
+    {
+      "en-US": "## Table of Contents",
+      "zh-Hans": "## 目录"
+    },
+    {
+      "en-US": "- [What We're Looking For](#what-were-looking-for)\n- [Quick Start](#quick-start)\n- [Contributing Skills](#contributing-skills)\n- [Contributing Agents](#contributing-agents)\n- [Contributing Hooks](#contributing-hooks)\n- [Contributing Commands](#contributing-commands)\n- [Pull Request Process](#pull-request-process)",
+      "zh-Hans": "* [我们正在寻找的内容](#我们寻找什么)\n* [快速开始](#快速开始)\n* [贡献技能](#贡献技能)\n* [贡献智能体](#贡献智能体)\n* [贡献钩子](#贡献钩子)\n* [贡献命令](#贡献命令)\n* [拉取请求流程](#拉取请求流程)"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
     },
     {
       "en-US": "## What We're Looking For",
@@ -35,20 +47,8 @@
       "zh-Hans": "工作流定义和领域知识："
     },
     {
-      "en-US": "- Language best practices\n- Framework patterns\n- Testing strategies\n- Architecture guides\n- Domain-specific knowledge",
-      "zh-Hans": "* 语言最佳实践\n* 框架模式\n* 测试策略\n* 架构指南\n* 领域特定知识"
-    },
-    {
-      "en-US": "### Commands",
-      "zh-Hans": "### 命令"
-    },
-    {
-      "en-US": "Slash commands that invoke useful workflows:",
-      "zh-Hans": "调用有用工作流的斜杠命令："
-    },
-    {
-      "en-US": "- Deployment commands\n- Testing commands\n- Documentation commands\n- Code generation commands",
-      "zh-Hans": "* 部署命令\n* 测试命令\n* 文档命令\n* 代码生成命令"
+      "en-US": "- Language best practices\n- Framework patterns\n- Testing strategies\n- Architecture guides",
+      "zh-Hans": "* 语言最佳实践\n* 框架模式\n* 测试策略\n* 架构指南"
     },
     {
       "en-US": "### Hooks",
@@ -63,124 +63,244 @@
       "zh-Hans": "* 代码检查/格式化钩子\n* 安全检查\n* 验证钩子\n* 通知钩子"
     },
     {
-      "en-US": "### Rules",
-      "zh-Hans": "### 规则"
+      "en-US": "### Commands",
+      "zh-Hans": "### 命令"
     },
     {
-      "en-US": "Always-follow guidelines:",
-      "zh-Hans": "始终遵循的指导原则："
+      "en-US": "Slash commands that invoke useful workflows:",
+      "zh-Hans": "调用有用工作流的斜杠命令："
     },
     {
-      "en-US": "- Security rules\n- Code style rules\n- Testing requirements\n- Naming conventions",
-      "zh-Hans": "* 安全规则\n* 代码风格规则\n* 测试要求\n* 命名约定"
-    },
-    {
-      "en-US": "### MCP Configurations",
-      "zh-Hans": "### MCP 配置"
-    },
-    {
-      "en-US": "New or improved MCP server configs:",
-      "zh-Hans": "新的或改进的 MCP 服务器配置："
-    },
-    {
-      "en-US": "- Database integrations\n- Cloud provider MCPs\n- Monitoring tools\n- Communication tools",
-      "zh-Hans": "* 数据库集成\n* 云提供商 MCP\n* 监控工具\n* 通讯工具"
+      "en-US": "- Deployment commands\n- Testing commands\n- Code generation commands",
+      "zh-Hans": "* 部署命令\n* 测试命令\n* 代码生成命令"
     },
     {
       "en-US": "---",
       "zh-Hans": "***"
     },
     {
-      "en-US": "## How to Contribute",
-      "zh-Hans": "## 如何贡献"
+      "en-US": "## Quick Start",
+      "zh-Hans": "## 快速开始"
     },
     {
-      "en-US": "### 1. Fork the repo",
-      "zh-Hans": "### 1. Fork 仓库"
+      "en-US": "```bash\n# 1. Fork and clone\ngh repo fork affaan-m/everything-claude-code --clone\ncd everything-claude-code\n\n# 2. Create a branch\ngit checkout -b feat/my-contribution\n\n# 3. Add your contribution (see sections below)\n\n# 4. Test locally\ncp -r skills/my-skill ~/.claude/skills/  # for skills\n# Then test with Claude Code\n\n# 5. Submit PR\ngit add . && git commit -m \"feat: add my-skill\" && git push\n```",
+      "zh-Hans": "```bash\n# 1. Fork and clone\ngh repo fork affaan-m/everything-claude-code --clone\ncd everything-claude-code\n\n# 2. Create a branch\ngit checkout -b feat/my-contribution\n\n# 3. Add your contribution (see sections below)\n\n# 4. Test locally\ncp -r skills/my-skill ~/.claude/skills/  # for skills\n# Then test with Claude Code\n\n# 5. Submit PR\ngit add . && git commit -m \"feat: add my-skill\" && git push\n```"
     },
     {
-      "en-US": "```bash\ngit clone https://github.com/YOUR_USERNAME/everything-claude-code.git\ncd everything-claude-code\n```",
-      "zh-Hans": "```bash\ngit clone https://github.com/YOUR_USERNAME/everything-claude-code.git\ncd everything-claude-code\n```"
+      "en-US": "---",
+      "zh-Hans": "***"
     },
     {
-      "en-US": "### 2. Create a branch",
-      "zh-Hans": "### 2. 创建一个分支"
+      "en-US": "## Contributing Skills",
+      "zh-Hans": "## 贡献技能"
     },
     {
-      "en-US": "```bash\ngit checkout -b add-python-reviewer\n```",
-      "zh-Hans": "```bash\ngit checkout -b add-python-reviewer\n```"
+      "en-US": "Skills are knowledge modules that Claude Code loads based on context.",
+      "zh-Hans": "技能是 Claude Code 根据上下文加载的知识模块。"
     },
     {
-      "en-US": "### 3. Add your contribution",
-      "zh-Hans": "### 3. 添加您的贡献"
+      "en-US": "### Directory Structure",
+      "zh-Hans": "### 目录结构"
     },
     {
-      "en-US": "Place files in the appropriate directory:",
-      "zh-Hans": "将文件放在适当的目录中："
+      "en-US": "```\nskills/\n└── your-skill-name/\n    └── SKILL.md\n```",
+      "zh-Hans": "```\nskills/\n└── your-skill-name/\n    └── SKILL.md\n```"
     },
     {
-      "en-US": "- `agents/` for new agents\n- `skills/` for skills (can be single .md or directory)\n- `commands/` for slash commands\n- `rules/` for rule files\n- `hooks/` for hook configurations\n- `mcp-configs/` for MCP server configs",
-      "zh-Hans": "* `agents/` 用于新的智能体\n* `skills/` 用于技能（可以是单个 .md 文件或目录）\n* `commands/` 用于斜杠命令\n* `rules/` 用于规则文件\n* `hooks/` 用于钩子配置\n* `mcp-configs/` 用于 MCP 服务器配置"
+      "en-US": "### SKILL.md Template",
+      "zh-Hans": "### SKILL.md 模板"
     },
     {
-      "en-US": "### 4. Follow the format",
-      "zh-Hans": "### 4. 遵循格式"
+      "en-US": "```markdown\n---\nname: your-skill-name\ndescription: Brief description shown in skill list\n---\n\n# Your Skill Title\n\nBrief overview of what this skill covers.\n\n## Core Concepts\n\nExplain key patterns and guidelines.\n\n## Code Examples\n\n\\`\\`\\`typescript\n// Include practical, tested examples\nfunction example() {\n  // Well-commented code\n}\n\\`\\`\\`\n\n## Best Practices\n\n- Actionable guidelines\n- Do's and don'ts\n- Common pitfalls to avoid\n\n## When to Use\n\nDescribe scenarios where this skill applies.\n```",
+      "zh-Hans": "```markdown\n---\nname: your-skill-name\ndescription: Brief description shown in skill list\n---\n\n# 你的技能标题\n\n简要概述此技能涵盖的内容。\n\n## 核心概念\n\n解释关键模式和准则。\n\n## 代码示例\n\n`​`​`typescript\n\n// 包含实用、经过测试的示例\nfunction example() {\n  // 注释良好的代码\n}\n`​`​`\n\n\n## 最佳实践\n\n- 可操作的指导原则\n- 该做与不该做的事项\n- 需要避免的常见陷阱\n\n## 适用场景\n\n描述此技能适用的场景。\n\n```"
     },
     {
-      "en-US": "**Agents** should have frontmatter:",
-      "zh-Hans": "**智能体** 应包含 frontmatter："
+      "en-US": "### Skill Checklist",
+      "zh-Hans": "### 技能清单"
     },
     {
-      "en-US": "```markdown\n---\nname: agent-name\ndescription: What it does\ntools: Read, Grep, Glob, Bash\nmodel: sonnet\n---\n\nInstructions here...\n```",
-      "zh-Hans": "```markdown\n---\nname: agent-name\ndescription: What it does\ntools: Read, Grep, Glob, Bash\nmodel: sonnet\n---\n\nInstructions here...\n```"
+      "en-US": "- [ ] Focused on one domain/technology\n- [ ] Includes practical code examples\n- [ ] Under 500 lines\n- [ ] Uses clear section headers\n- [ ] Tested with Claude Code",
+      "zh-Hans": "* \\[ ] 专注于一个领域/技术\n* \\[ ] 包含实用的代码示例\n* \\[ ] 少于 500 行\n* \\[ ] 使用清晰的章节标题\n* \\[ ] 已通过 Claude Code 测试"
     },
     {
-      "en-US": "**Skills** should be clear and actionable:",
-      "zh-Hans": "**技能** 应清晰且可操作："
+      "en-US": "### Example Skills",
+      "zh-Hans": "### 技能示例"
     },
     {
-      "en-US": "```markdown\n# Skill Name\n\n## When to Use\n\n...\n\n## How It Works\n\n...\n\n## Examples\n\n...\n```",
-      "zh-Hans": "```markdown\n# Skill Name\n\n## When to Use\n\n...\n\n## How It Works\n\n...\n\n## Examples\n\n...\n```"
+      "en-US": "| Skill | Purpose |\n|-------|---------|\n| `coding-standards/` | TypeScript/JavaScript patterns |\n| `frontend-patterns/` | React and Next.js best practices |\n| `backend-patterns/` | API and database patterns |\n| `security-review/` | Security checklist |",
+      "zh-Hans": "| 技能 | 目的 |\n|-------|---------|\n| `coding-standards/` | TypeScript/JavaScript 模式 |\n| `frontend-patterns/` | React 和 Next.js 最佳实践 |\n| `backend-patterns/` | API 和数据库模式 |\n| `security-review/` | 安全检查清单 |"
     },
     {
-      "en-US": "**Commands** should explain what they do:",
-      "zh-Hans": "**命令** 应解释其功能："
+      "en-US": "---",
+      "zh-Hans": "***"
     },
     {
-      "en-US": "```markdown\n---\ndescription: Brief description of command\n---\n\n# Command Name\n\nDetailed instructions...\n```",
-      "zh-Hans": "```markdown\n---\ndescription: Brief description of command\n---\n\n# Command Name\n\nDetailed instructions...\n```"
+      "en-US": "## Contributing Agents",
+      "zh-Hans": "## 贡献智能体"
     },
     {
-      "en-US": "**Hooks** should include descriptions:",
-      "zh-Hans": "**钩子** 应包含描述："
+      "en-US": "Agents are specialized assistants invoked via the Task tool.",
+      "zh-Hans": "智能体是通过任务工具调用的专业助手。"
     },
     {
-      "en-US": "```json\n{\n  \"matcher\": \"...\",\n  \"hooks\": [...],\n  \"description\": \"What this hook does\"\n}\n```",
-      "zh-Hans": "```json\n{\n  \"matcher\": \"...\",\n  \"hooks\": [...],\n  \"description\": \"What this hook does\"\n}\n```"
+      "en-US": "### File Location",
+      "zh-Hans": "### 文件位置"
     },
     {
-      "en-US": "### 5. Test your contribution",
-      "zh-Hans": "### 5. 测试您的贡献"
+      "en-US": "```\nagents/your-agent-name.md\n```",
+      "zh-Hans": "```\nagents/your-agent-name.md\n```"
     },
     {
-      "en-US": "Make sure your config works with Claude Code before submitting.",
-      "zh-Hans": "在提交之前，请确保您的配置能在 Claude Code 中正常工作。"
+      "en-US": "### Agent Template",
+      "zh-Hans": "### 智能体模板"
     },
     {
-      "en-US": "### 6. Submit a PR",
-      "zh-Hans": "### 6. 提交 PR"
+      "en-US": "```markdown\n---\nname: your-agent-name\ndescription: What this agent does and when Claude should invoke it. Be specific!\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: sonnet\n---\n\nYou are a [role] specialist.\n\n## Your Role\n\n- Primary responsibility\n- Secondary responsibility\n- What you DO NOT do (boundaries)\n\n## Workflow\n\n### Step 1: Understand\nHow you approach the task.\n\n### Step 2: Execute\nHow you perform the work.\n\n### Step 3: Verify\nHow you validate results.\n\n## Output Format\n\nWhat you return to the user.\n\n## Examples\n\n### Example: [Scenario]\nInput: [what user provides]\nAction: [what you do]\nOutput: [what you return]\n```",
+      "zh-Hans": "```markdown\n---\nname: 你的代理名称\ndescription: 该代理的作用以及 Claude 应在何时调用它。请具体说明！\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: sonnet\n---\n\n你是一名 [角色] 专家。\n\n## 你的角色\n\n-   主要职责\n-   次要职责\n-   你不做的事情（界限）\n\n## 工作流程\n\n### 步骤 1：理解\n你如何着手处理任务。\n\n### 步骤 2：执行\n你如何开展工作。\n\n### 步骤 3：验证\n你如何验证结果。\n\n## 输出格式\n\n你返回给用户的内容。\n\n## 示例\n\n### 示例：[场景]\n输入：[用户提供的内容]\n操作：[你做了什么]\n输出：[你返回的内容]\n\n```"
     },
     {
-      "en-US": "```bash\ngit add .\ngit commit -m \"Add Python code reviewer agent\"\ngit push origin add-python-reviewer\n```",
-      "zh-Hans": "```bash\ngit add .\ngit commit -m \"Add Python code reviewer agent\"\ngit push origin add-python-reviewer\n```"
+      "en-US": "### Agent Fields",
+      "zh-Hans": "### 智能体字段"
     },
     {
-      "en-US": "Then open a PR with:",
-      "zh-Hans": "然后提交一个 PR，包含以下内容："
+      "en-US": "| Field | Description | Options |\n|-------|-------------|---------|\n| `name` | Lowercase, hyphenated | `code-reviewer` |\n| `description` | Used to decide when to invoke | Be specific! |\n| `tools` | Only what's needed | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task` |\n| `model` | Complexity level | `haiku` (simple), `sonnet` (coding), `opus` (complex) |",
+      "zh-Hans": "| 字段 | 描述 | 选项 |\n|-------|-------------|---------|\n| `name` | 小写，用连字符连接 | `code-reviewer` |\n| `description` | 用于决定何时调用 | 要具体！ |\n| `tools` | 仅包含必要的内容 | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task` |\n| `model` | 复杂度级别 | `haiku` (简单), `sonnet` (编码), `opus` (复杂) |"
     },
     {
-      "en-US": "- What you added\n- Why it's useful\n- How you tested it",
-      "zh-Hans": "* 您添加了什么\n* 为什么它有用\n* 您是如何测试的"
+      "en-US": "### Example Agents",
+      "zh-Hans": "### 智能体示例"
+    },
+    {
+      "en-US": "| Agent | Purpose |\n|-------|---------|\n| `tdd-guide.md` | Test-driven development |\n| `code-reviewer.md` | Code review |\n| `security-reviewer.md` | Security scanning |\n| `build-error-resolver.md` | Fix build errors |",
+      "zh-Hans": "| 智能体 | 目的 |\n|-------|---------|\n| `tdd-guide.md` | 测试驱动开发 |\n| `code-reviewer.md` | 代码审查 |\n| `security-reviewer.md` | 安全扫描 |\n| `build-error-resolver.md` | 修复构建错误 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Contributing Hooks",
+      "zh-Hans": "## 贡献钩子"
+    },
+    {
+      "en-US": "Hooks are automatic behaviors triggered by Claude Code events.",
+      "zh-Hans": "钩子是由 Claude Code 事件触发的自动行为。"
+    },
+    {
+      "en-US": "### File Location",
+      "zh-Hans": "### 文件位置"
+    },
+    {
+      "en-US": "```\nhooks/hooks.json\n```",
+      "zh-Hans": "```\nhooks/hooks.json\n```"
+    },
+    {
+      "en-US": "### Hook Types",
+      "zh-Hans": "### 钩子类型"
+    },
+    {
+      "en-US": "| Type | Trigger | Use Case |\n|------|---------|----------|\n| `PreToolUse` | Before tool runs | Validate, warn, block |\n| `PostToolUse` | After tool runs | Format, check, notify |\n| `SessionStart` | Session begins | Load context |\n| `Stop` | Session ends | Cleanup, audit |",
+      "zh-Hans": "| 类型 | 触发条件 | 用例 |\n|------|---------|----------|\n| `PreToolUse` | 工具运行前 | 验证、警告、阻止 |\n| `PostToolUse` | 工具运行后 | 格式化、检查、通知 |\n| `SessionStart` | 会话开始时 | 加载上下文 |\n| `Stop` | 会话结束时 | 清理、审计 |"
+    },
+    {
+      "en-US": "### Hook Format",
+      "zh-Hans": "### 钩子格式"
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"rm -rf /\\\"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"echo '[Hook] BLOCKED: Dangerous command' && exit 1\"\n          }\n        ],\n        \"description\": \"Block dangerous rm commands\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"rm -rf /\\\"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"echo '[Hook] BLOCKED: Dangerous command' && exit 1\"\n          }\n        ],\n        \"description\": \"Block dangerous rm commands\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Matcher Syntax",
+      "zh-Hans": "### 匹配器语法"
+    },
+    {
+      "en-US": "```javascript\n// Match specific tools\ntool == \"Bash\"\ntool == \"Edit\"\ntool == \"Write\"\n\n// Match input patterns\ntool_input.command matches \"npm install\"\ntool_input.file_path matches \"\\\\.tsx?$\"\n\n// Combine conditions\ntool == \"Bash\" && tool_input.command matches \"git push\"\n```",
+      "zh-Hans": "```javascript\n// Match specific tools\ntool == \"Bash\"\ntool == \"Edit\"\ntool == \"Write\"\n\n// Match input patterns\ntool_input.command matches \"npm install\"\ntool_input.file_path matches \"\\\\.tsx?$\"\n\n// Combine conditions\ntool == \"Bash\" && tool_input.command matches \"git push\"\n```"
+    },
+    {
+      "en-US": "### Hook Examples",
+      "zh-Hans": "### 钩子示例"
+    },
+    {
+      "en-US": "```json\n// Block dev servers outside tmux\n{\n  \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"npm run dev\\\"\",\n  \"hooks\": [{\"type\": \"command\", \"command\": \"echo 'Use tmux for dev servers' && exit 1\"}],\n  \"description\": \"Ensure dev servers run in tmux\"\n}\n\n// Auto-format after editing TypeScript\n{\n  \"matcher\": \"tool == \\\"Edit\\\" && tool_input.file_path matches \\\"\\\\.tsx?$\\\"\",\n  \"hooks\": [{\"type\": \"command\", \"command\": \"npx prettier --write \\\"$file_path\\\"\"}],\n  \"description\": \"Format TypeScript files after edit\"\n}\n\n// Warn before git push\n{\n  \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"git push\\\"\",\n  \"hooks\": [{\"type\": \"command\", \"command\": \"echo '[Hook] Review changes before pushing'\"}],\n  \"description\": \"Reminder to review before push\"\n}\n```",
+      "zh-Hans": "```json\n// Block dev servers outside tmux\n{\n  \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"npm run dev\\\"\",\n  \"hooks\": [{\"type\": \"command\", \"command\": \"echo 'Use tmux for dev servers' && exit 1\"}],\n  \"description\": \"Ensure dev servers run in tmux\"\n}\n\n// Auto-format after editing TypeScript\n{\n  \"matcher\": \"tool == \\\"Edit\\\" && tool_input.file_path matches \\\"\\\\.tsx?$\\\"\",\n  \"hooks\": [{\"type\": \"command\", \"command\": \"npx prettier --write \\\"$file_path\\\"\"}],\n  \"description\": \"Format TypeScript files after edit\"\n}\n\n// Warn before git push\n{\n  \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"git push\\\"\",\n  \"hooks\": [{\"type\": \"command\", \"command\": \"echo '[Hook] Review changes before pushing'\"}],\n  \"description\": \"Reminder to review before push\"\n}\n```"
+    },
+    {
+      "en-US": "### Hook Checklist",
+      "zh-Hans": "### 钩子清单"
+    },
+    {
+      "en-US": "- [ ] Matcher is specific (not overly broad)\n- [ ] Includes clear error/info messages\n- [ ] Uses correct exit codes (`exit 1` blocks, `exit 0` allows)\n- [ ] Tested thoroughly\n- [ ] Has description",
+      "zh-Hans": "* \\[ ] 匹配器具体（不过于宽泛）\n* \\[ ] 包含清晰的错误/信息消息\n* \\[ ] 使用正确的退出代码 (`exit 1` 阻止, `exit 0` 允许)\n* \\[ ] 经过充分测试\n* \\[ ] 有描述"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Contributing Commands",
+      "zh-Hans": "## 贡献命令"
+    },
+    {
+      "en-US": "Commands are user-invoked actions with `/command-name`.",
+      "zh-Hans": "命令是用户通过 `/command-name` 调用的操作。"
+    },
+    {
+      "en-US": "### File Location",
+      "zh-Hans": "### 文件位置"
+    },
+    {
+      "en-US": "```\ncommands/your-command.md\n```",
+      "zh-Hans": "```\ncommands/your-command.md\n```"
+    },
+    {
+      "en-US": "### Command Template",
+      "zh-Hans": "### 命令模板"
+    },
+    {
+      "en-US": "```markdown\n---\ndescription: Brief description shown in /help\n---\n\n# Command Name\n\n## Purpose\n\nWhat this command does.\n\n## Usage\n\n\\`\\`\\`\n/your-command [args]\n\\`\\`\\`\n\n## Workflow\n\n1. First step\n2. Second step\n3. Final step\n\n## Output\n\nWhat the user receives.\n```",
+      "zh-Hans": "```markdown\n---\ndescription: 在 /help 中显示的简要描述\n---\n\n# 命令名称\n\n## 目的\n\n此命令的功能。\n\n## 用法\n\n`​`​`\n\n/your-command [args]\n`​`​`\n\n\n## 工作流程\n\n1.  第一步\n2.  第二步\n3.  最后一步\n\n## 输出\n\n用户将收到的内容。\n\n```"
+    },
+    {
+      "en-US": "### Example Commands",
+      "zh-Hans": "### 命令示例"
+    },
+    {
+      "en-US": "| Command | Purpose |\n|---------|---------|\n| `commit.md` | Create git commits |\n| `code-review.md` | Review code changes |\n| `tdd.md` | TDD workflow |\n| `e2e.md` | E2E testing |",
+      "zh-Hans": "| 命令 | 目的 |\n|---------|---------|\n| `commit.md` | 创建 git 提交 |\n| `code-review.md` | 审查代码变更 |\n| `tdd.md` | TDD 工作流 |\n| `e2e.md` | E2E 测试 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Pull Request Process",
+      "zh-Hans": "## 拉取请求流程"
+    },
+    {
+      "en-US": "### 1. PR Title Format",
+      "zh-Hans": "### 1. PR 标题格式"
+    },
+    {
+      "en-US": "```\nfeat(skills): add rust-patterns skill\nfeat(agents): add api-designer agent\nfeat(hooks): add auto-format hook\nfix(skills): update React patterns\ndocs: improve contributing guide\n```",
+      "zh-Hans": "```\nfeat(skills): add rust-patterns skill\nfeat(agents): add api-designer agent\nfeat(hooks): add auto-format hook\nfix(skills): update React patterns\ndocs: improve contributing guide\n```"
+    },
+    {
+      "en-US": "### 2. PR Description",
+      "zh-Hans": "### 2. PR 描述"
+    },
+    {
+      "en-US": "```markdown\n## Summary\nWhat you're adding and why.\n\n## Type\n- [ ] Skill\n- [ ] Agent\n- [ ] Hook\n- [ ] Command\n\n## Testing\nHow you tested this.\n\n## Checklist\n- [ ] Follows format guidelines\n- [ ] Tested with Claude Code\n- [ ] No sensitive info (API keys, paths)\n- [ ] Clear descriptions\n```",
+      "zh-Hans": "```markdown\n## 摘要\n你正在添加什么以及为什么添加。\n\n## 类型\n- [ ] 技能\n- [ ] 代理\n- [ ] 钩子\n- [ ] 命令\n\n## 测试\n你是如何测试这个的。\n\n## 检查清单\n- [ ] 遵循格式指南\n- [ ] 已使用 Claude Code 进行测试\n- [ ] 无敏感信息（API 密钥、路径）\n- [ ] 描述清晰\n\n```"
+    },
+    {
+      "en-US": "### 3. Review Process",
+      "zh-Hans": "### 3. 审查流程"
+    },
+    {
+      "en-US": "1. Maintainers review within 48 hours\n2. Address feedback if requested\n3. Once approved, merged to main",
+      "zh-Hans": "1. 维护者在 48 小时内审查\n2. 如有要求，请处理反馈\n3. 一旦批准，合并到主分支"
     },
     {
       "en-US": "---",
@@ -195,16 +315,16 @@
       "zh-Hans": "### 应该做的"
     },
     {
-      "en-US": "- Keep configs focused and modular\n- Include clear descriptions\n- Test before submitting\n- Follow existing patterns\n- Document any dependencies",
-      "zh-Hans": "* 保持配置专注且模块化\n* 包含清晰的描述\n* 提交前进行测试\n* 遵循现有模式\n* 记录任何依赖项"
+      "en-US": "- Keep contributions focused and modular\n- Include clear descriptions\n- Test before submitting\n- Follow existing patterns\n- Document dependencies",
+      "zh-Hans": "* 保持贡献内容专注和模块化\n* 包含清晰的描述\n* 提交前进行测试\n* 遵循现有模式\n* 记录依赖项"
     },
     {
       "en-US": "### Don't",
       "zh-Hans": "### 不应该做的"
     },
     {
-      "en-US": "- Include sensitive data (API keys, tokens, paths)\n- Add overly complex or niche configs\n- Submit untested configs\n- Create duplicate functionality\n- Add configs that require specific paid services without alternatives",
-      "zh-Hans": "* 包含敏感数据（API 密钥、令牌、路径）\n* 添加过于复杂或小众的配置\n* 提交未经测试的配置\n* 创建重复的功能\n* 添加需要特定付费服务且没有替代方案的配置"
+      "en-US": "- Include sensitive data (API keys, tokens, paths)\n- Add overly complex or niche configs\n- Submit untested contributions\n- Create duplicates of existing functionality",
+      "zh-Hans": "* 包含敏感数据（API 密钥、令牌、路径）\n* 添加过于复杂或小众的配置\n* 提交未经测试的贡献\n* 创建现有功能的重复项"
     },
     {
       "en-US": "---",
@@ -215,8 +335,8 @@
       "zh-Hans": "## 文件命名"
     },
     {
-      "en-US": "- Use lowercase with hyphens: `python-reviewer.md`\n- Be descriptive: `tdd-workflow.md` not `workflow.md`\n- Match the agent/skill name to the filename",
-      "zh-Hans": "* 使用小写字母和连字符：`python-reviewer.md`\n* 要有描述性：`tdd-workflow.md` 而不是 `workflow.md`\n* 确保智能体/技能名称与文件名匹配"
+      "en-US": "- Use lowercase with hyphens: `python-reviewer.md`\n- Be descriptive: `tdd-workflow.md` not `workflow.md`\n- Match name to filename",
+      "zh-Hans": "* 使用小写和连字符：`python-reviewer.md`\n* 描述性要强：`tdd-workflow.md` 而不是 `workflow.md`\n* 名称与文件名匹配"
     },
     {
       "en-US": "---",
@@ -227,16 +347,16 @@
       "zh-Hans": "## 有问题吗？"
     },
     {
-      "en-US": "Open an issue or reach out on X: [@affaanmustafa](https://x.com/affaanmustafa)",
-      "zh-Hans": "请提出问题或在 X 上联系我们：[@affaanmustafa](https://x.com/affaanmustafa)"
+      "en-US": "- **Issues:** [github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)\n- **X/Twitter:** [@affaanmustafa](https://x.com/affaanmustafa)",
+      "zh-Hans": "* **问题：** [github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)\n* **X/Twitter：** [@affaanmustafa](https://x.com/affaanmustafa)"
     },
     {
       "en-US": "---",
       "zh-Hans": "***"
     },
     {
-      "en-US": "Thanks for contributing. Let's build a great resource together.",
-      "zh-Hans": "感谢您的贡献。让我们共同构建一个优秀的资源。"
+      "en-US": "Thanks for contributing! Let's build a great resource together.",
+      "zh-Hans": "感谢您的贡献！让我们共同构建一个出色的资源。"
     }
   ]
 }
