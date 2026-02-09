@@ -2,7 +2,13 @@
   {
     "source_language": "en-US",
     "target_languages": ["zh-Hans"],
-    "include": ["CONTRIBUTING.md"],
+    "include": [
+      "README.md",
+      "CONTRIBUTING.md",
+      "SPONSORS.md",
+      "the-longform-guide.md",
+      "the-shortform-guide.md"
+    ],
     "ignore": [],
     "translation_store": {
       "dir": ".zdoc/translations"

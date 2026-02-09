@@ -3,11 +3,17 @@
 # Everything Claude Code
 
 [![Stars](https://img.shields.io/github/stars/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/stargazers)
+[![Forks](https://img.shields.io/github/forks/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/network/members)
+[![Contributors](https://img.shields.io/github/contributors/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/graphs/contributors)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash\&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript\&logoColor=white)
+![Python](https://img.shields.io/badge/-Python-3776AB?logo=python\&logoColor=white)
 ![Go](https://img.shields.io/badge/-Go-00ADD8?logo=go\&logoColor=white)
+![Java](https://img.shields.io/badge/-Java-ED8B00?logo=openjdk\&logoColor=white)
 ![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown\&logoColor=white)
+
+> **41K+ stars** | **5K+ forks** | **22 contributors** | **6 languages supported**
 
 ***
 
@@ -61,6 +67,38 @@
 
 ***
 
+## 最新动态
+
+### v1.4.1 — 错误修复 (2026年2月)
+
+* **修复了直觉导入内容丢失问题** — `parse_instinct_file()` 在 `/instinct-import` 期间会静默丢弃 frontmatter 之后的所有内容（Action, Evidence, Examples 部分）。已由社区贡献者 @ericcai0814 修复 ([#148](https://github.com/affaan-m/everything-claude-code/issues/148), [#161](https://github.com/affaan-m/everything-claude-code/pull/161))
+
+### v1.4.0 — 多语言规则、安装向导 & PM2 (2026年2月)
+
+* **交互式安装向导** — 新的 `configure-ecc` 技能提供了带有合并/覆盖检测的引导式设置
+* **PM2 & 多智能体编排** — 6 个新命令 (`/pm2`, `/multi-plan`, `/multi-execute`, `/multi-backend`, `/multi-frontend`, `/multi-workflow`) 用于管理复杂的多服务工作流
+* **多语言规则架构** — 规则从扁平文件重组为 `common/` + `typescript/` + `python/` + `golang/` 目录。仅安装您需要的语言
+* **中文 (zh-CN) 翻译** — 所有智能体、命令、技能和规则的完整翻译 (80+ 个文件)
+* **GitHub Sponsors 支持** — 通过 GitHub Sponsors 赞助项目
+* **增强的 CONTRIBUTING.md** — 针对每种贡献类型的详细 PR 模板
+
+### v1.3.0 — OpenCode 插件支持 (2026年2月)
+
+* **完整的 OpenCode 集成** — 12 个智能体，24 个命令，16 个技能，通过 OpenCode 的插件系统支持钩子 (20+ 种事件类型)
+* **3 个原生自定义工具** — run-tests, check-coverage, security-audit
+* **LLM 文档** — `llms.txt` 用于获取全面的 OpenCode 文档
+
+### v1.2.0 — 统一的命令和技能 (2026年2月)
+
+* **Python/Django 支持** — Django 模式、安全、TDD 和验证技能
+* **Java Spring Boot 技能** — Spring Boot 的模式、安全、TDD 和验证
+* **会话管理** — `/sessions` 命令用于查看会话历史
+* **持续学习 v2** — 基于直觉的学习，带有置信度评分、导入/导出、进化
+
+完整的更新日志请参见 [Releases](https://github.com/affaan-m/everything-claude-code/releases)。
+
+***
+
 ## 🚀 快速开始
 
 在 2 分钟内启动并运行：
@@ -102,7 +140,7 @@ cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
 /plugin list everything-claude-code@everything-claude-code
 ```
 
-✨ **就这样！** 您现在可以访问 15+ 个代理、30+ 个技能和 20+ 个命令。
+✨ **就是这样！** 您现在可以访问 15+ 个智能体，30+ 个技能，以及 30+ 个命令。
 
 ***
 
@@ -161,8 +199,10 @@ everything-claude-code/
 |   |-- e2e-runner.md        # Playwright 端到端测试
 |   |-- refactor-cleaner.md  # 无用代码清理
 |   |-- doc-updater.md       # 文档同步
-|   |-- go-reviewer.md       # Go 代码审查（新增）
-|   |-- go-build-resolver.md # Go 构建错误修复（新增）
+|   |-- go-reviewer.md       # Go 代码审查
+|   |-- go-build-resolver.md # Go 构建错误修复
+|   |-- python-reviewer.md   # Python 代码审查（新增）
+|   |-- database-reviewer.md # 数据库/Supabase 审查（新增）
 |
 |-- skills/           # 工作流定义与领域知识
 |   |-- coding-standards/           # 各语言最佳实践
@@ -176,8 +216,19 @@ everything-claude-code/
 |   |-- security-review/            # 安全检查清单
 |   |-- eval-harness/               # 验证循环评估（长文档指南）
 |   |-- verification-loop/          # 持续验证（长文档指南）
-|   |-- golang-patterns/            # Go 语言惯用法与最佳实践（新增）
-|   |-- golang-testing/             # Go 测试模式、TDD 与基准测试（新增）
+|   |-- golang-patterns/            # Go 语言惯用法与最佳实践
+|   |-- golang-testing/             # Go 测试模式、TDD 与基准测试
+|   |-- django-patterns/            # Django 模式、模型与视图（新增）
+|   |-- django-security/            # Django 安全最佳实践（新增）
+|   |-- django-tdd/                 # Django TDD 工作流（新增）
+|   |-- django-verification/        # Django 验证循环（新增）
+|   |-- python-patterns/            # Python 惯用法与最佳实践（新增）
+|   |-- python-testing/             # 使用 pytest 的 Python 测试（新增）
+|   |-- springboot-patterns/        # Java Spring Boot 模式（新增）
+|   |-- springboot-security/        # Spring Boot 安全（新增）
+|   |-- springboot-tdd/             # Spring Boot TDD（新增）
+|   |-- springboot-verification/    # Spring Boot 验证流程（新增）
+|   |-- configure-ecc/              # 交互式安装向导（新增）
 |
 |-- commands/         # 快捷执行的 Slash 命令
 |   |-- tdd.md              # /tdd - 测试驱动开发
@@ -197,7 +248,13 @@ everything-claude-code/
 |   |-- instinct-status.md  # /instinct-status - 查看已学习的直觉（新增）
 |   |-- instinct-import.md  # /instinct-import - 导入直觉（新增）
 |   |-- instinct-export.md  # /instinct-export - 导出直觉（新增）
-|   |-- evolve.md           # /evolve - 将直觉聚类为技能（新增）
+|   |-- evolve.md           # /evolve - 将直觉聚类为技能
+|   |-- pm2.md              # /pm2 - PM2 服务生命周期管理（新增）
+|   |-- multi-plan.md       # /multi-plan - 多代理任务拆解（新增）
+|   |-- multi-execute.md    # /multi-execute - 编排式多代理工作流（新增）
+|   |-- multi-backend.md    # /multi-backend - 后端多服务编排（新增）
+|   |-- multi-frontend.md   # /multi-frontend - 前端多服务编排（新增）
+|   |-- multi-workflow.md   # /multi-workflow - 通用多服务工作流（新增）
 |
 |-- rules/            # 必须遵循的规则（复制到 ~/.claude/rules/）
 |   |-- README.md            # 结构概览与安装指南
@@ -515,11 +572,11 @@ node tests/hooks/hooks.test.js
 
 ### 贡献想法
 
-* 特定语言的技能（Python、Rust 模式）- 现已包含 Go！
-* 特定框架的配置（Django、Rails、Laravel）
-* DevOps 代理（Kubernetes、Terraform、AWS）
-* 测试策略（不同框架）
-* 特定领域的知识（ML、数据工程、移动开发）
+* 特定语言技能 (Rust, C#, Swift, Kotlin) — Go, Python, Java 已包含
+* 特定框架配置 (Rails, Laravel, FastAPI, NestJS) — Django, Spring Boot 已包含
+* DevOps 智能体 (Kubernetes, Terraform, AWS, Docker)
+* 测试策略 (不同框架，视觉回归)
+* 领域特定知识 (ML, 数据工程, 移动端)
 
 ***
 
@@ -541,15 +598,15 @@ opencode
 
 ### 功能对等
 
-| 功能 | Claude Code | OpenCode | 状态 |
+| 特性 | Claude Code | OpenCode | 状态 |
 |---------|-------------|----------|--------|
-| 代理 | ✅ 12 个代理 | ✅ 12 个代理 | **完全对等** |
-| 命令 | ✅ 23 个命令 | ✅ 24 个命令 | **完全对等** |
-| 技能 | ✅ 16 个技能 | ✅ 16 个技能 | **完全对等** |
-| 钩子 | ✅ 3 个阶段 | ✅ 20+ 个事件 | **OpenCode 更多！** |
-| 规则 | ✅ 8 条规则 | ✅ 8 条规则 | **完全对等** |
-| MCP 服务器 | ✅ 完整 | ✅ 完整 | **完全对等** |
-| 自定义工具 | ✅ 通过钩子 | ✅ 原生支持 | **OpenCode 更好** |
+| 智能体 | ✅ 14 agents | ✅ 12 agents | **Claude Code 领先** |
+| 命令 | ✅ 30 commands | ✅ 24 commands | **Claude Code 领先** |
+| 技能 | ✅ 28 skills | ✅ 16 skills | **Claude Code 领先** |
+| 钩子 | ✅ 3 phases | ✅ 20+ events | **OpenCode 更多！** |
+| 规则 | ✅ 8 rules | ✅ 8 rules | **完全一致** |
+| MCP Servers | ✅ Full | ✅ Full | **完全一致** |
+| 自定义工具 | ✅ Via hooks | ✅ Native support | **OpenCode 更好** |
 
 ### 通过插件实现的钩子支持
 

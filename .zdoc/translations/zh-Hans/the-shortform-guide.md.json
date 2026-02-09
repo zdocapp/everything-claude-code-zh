@@ -1,0 +1,482 @@
+{
+  "sourceFile": "the-shortform-guide.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# The Shorthand Guide to Everything Claude Code",
+      "zh-Hans": "# Claude Code 简明指南"
+    },
+    {
+      "en-US": "![Header: Anthropic Hackathon Winner - Tips & Tricks for Claude Code](./assets/images/shortform/00-header.png)",
+      "zh-Hans": "![Header: Anthropic Hackathon Winner - Tips & Tricks for Claude Code](./assets/images/shortform/00-header.png)"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Been an avid Claude Code user since the experimental rollout in Feb, and won the Anthropic x Forum Ventures hackathon with [zenith.chat](https://zenith.chat) alongside [@DRodriguezFX](https://x.com/DRodriguezFX) - completely using Claude Code.**",
+      "zh-Hans": "**自 2 月实验性推出以来，我一直是 Claude Code 的忠实用户，并凭借 [zenith.chat](https://zenith.chat) 与 [@DRodriguezFX](https://x.com/DRodriguezFX) 一起赢得了 Anthropic x Forum Ventures 的黑客马拉松——完全使用 Claude Code。**"
+    },
+    {
+      "en-US": "Here's my complete setup after 10 months of daily use: skills, hooks, subagents, MCPs, plugins, and what actually works.",
+      "zh-Hans": "经过 10 个月的日常使用，以下是我的完整设置：技能、钩子、子代理、MCP、插件以及实际有效的方法。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Skills and Commands",
+      "zh-Hans": "## 技能和命令"
+    },
+    {
+      "en-US": "Skills operate like rules, constricted to certain scopes and workflows. They're shorthand to prompts when you need to execute a particular workflow.",
+      "zh-Hans": "技能就像规则，受限于特定的范围和流程。当你需要执行特定工作流时，它们是提示词的简写。"
+    },
+    {
+      "en-US": "After a long session of coding with Opus 4.5, you want to clean out dead code and loose .md files? Run `/refactor-clean`. Need testing? `/tdd`, `/e2e`, `/test-coverage`. Skills can also include codemaps - a way for Claude to quickly navigate your codebase without burning context on exploration.",
+      "zh-Hans": "在使用 Opus 4.5 长时间编码后，你想清理死代码和松散的 .md 文件吗？运行 `/refactor-clean`。需要测试吗？`/tdd`、`/e2e`、`/test-coverage`。技能也可以包含代码地图——一种让 Claude 快速浏览你的代码库而无需消耗上下文进行探索的方式。"
+    },
+    {
+      "en-US": "![Terminal showing chained commands](./assets/images/shortform/02-chaining-commands.jpeg)\n*Chaining commands together*",
+      "zh-Hans": "![显示链式命令的终端](./assets/images/shortform/02-chaining-commands.jpeg)\n*将命令链接在一起*"
+    },
+    {
+      "en-US": "Commands are skills executed via slash commands. They overlap but are stored differently:",
+      "zh-Hans": "命令是通过斜杠命令执行的技能。它们有重叠但存储方式不同："
+    },
+    {
+      "en-US": "- **Skills**: `~/.claude/skills/` - broader workflow definitions\n- **Commands**: `~/.claude/commands/` - quick executable prompts",
+      "zh-Hans": "* **技能**: `~/.claude/skills/` - 更广泛的工作流定义\n* **命令**: `~/.claude/commands/` - 快速可执行的提示词"
+    },
+    {
+      "en-US": "```bash\n# Example skill structure\n~/.claude/skills/\n  pmx-guidelines.md      # Project-specific patterns\n  coding-standards.md    # Language best practices\n  tdd-workflow/          # Multi-file skill with README.md\n  security-review/       # Checklist-based skill\n```",
+      "zh-Hans": "```bash\n# Example skill structure\n~/.claude/skills/\n  pmx-guidelines.md      # Project-specific patterns\n  coding-standards.md    # Language best practices\n  tdd-workflow/          # Multi-file skill with README.md\n  security-review/       # Checklist-based skill\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Hooks",
+      "zh-Hans": "## 钩子"
+    },
+    {
+      "en-US": "Hooks are trigger-based automations that fire on specific events. Unlike skills, they're constricted to tool calls and lifecycle events.",
+      "zh-Hans": "钩子是基于触发的自动化，在特定事件发生时触发。与技能不同，它们受限于工具调用和生命周期事件。"
+    },
+    {
+      "en-US": "**Hook Types:**",
+      "zh-Hans": "**钩子类型：**"
+    },
+    {
+      "en-US": "1. **PreToolUse** - Before a tool executes (validation, reminders)\n2. **PostToolUse** - After a tool finishes (formatting, feedback loops)\n3. **UserPromptSubmit** - When you send a message\n4. **Stop** - When Claude finishes responding\n5. **PreCompact** - Before context compaction\n6. **Notification** - Permission requests",
+      "zh-Hans": "1. **PreToolUse** - 工具执行前（验证、提醒）\n2. **PostToolUse** - 工具完成后（格式化、反馈循环）\n3. **UserPromptSubmit** - 当你发送消息时\n4. **Stop** - 当 Claude 完成响应时\n5. **PreCompact** - 上下文压缩前\n6. **Notification** - 权限请求"
+    },
+    {
+      "en-US": "**Example: tmux reminder before long-running commands**",
+      "zh-Hans": "**示例：长时间运行命令前的 tmux 提醒**"
+    },
+    {
+      "en-US": "```json\n{\n  \"PreToolUse\": [\n    {\n      \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"(npm|pnpm|yarn|cargo|pytest)\\\"\",\n      \"hooks\": [\n        {\n          \"type\": \"command\",\n          \"command\": \"if [ -z \\\"$TMUX\\\" ]; then echo '[Hook] Consider tmux for session persistence' >&2; fi\"\n        }\n      ]\n    }\n  ]\n}\n```",
+      "zh-Hans": "```json\n{\n  \"PreToolUse\": [\n    {\n      \"matcher\": \"tool == \\\"Bash\\\" && tool_input.command matches \\\"(npm|pnpm|yarn|cargo|pytest)\\\"\",\n      \"hooks\": [\n        {\n          \"type\": \"command\",\n          \"command\": \"if [ -z \\\"$TMUX\\\" ]; then echo '[Hook] Consider tmux for session persistence' >&2; fi\"\n        }\n      ]\n    }\n  ]\n}\n```"
+    },
+    {
+      "en-US": "![PostToolUse hook feedback](./assets/images/shortform/03-posttooluse-hook.png)\n*Example of what feedback you get in Claude Code, while running a PostToolUse hook*",
+      "zh-Hans": "![PostToolUse 钩子反馈](./assets/images/shortform/03-posttooluse-hook.png)\n*在运行 PostToolUse 钩子时，你在 Claude Code 中获得的反馈示例*"
+    },
+    {
+      "en-US": "**Pro tip:** Use the `hookify` plugin to create hooks conversationally instead of writing JSON manually. Run `/hookify` and describe what you want.",
+      "zh-Hans": "**专业提示：** 使用 `hookify` 插件以对话方式创建钩子，而不是手动编写 JSON。运行 `/hookify` 并描述你想要什么。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Subagents",
+      "zh-Hans": "## 子代理"
+    },
+    {
+      "en-US": "Subagents are processes your orchestrator (main Claude) can delegate tasks to with limited scopes. They can run in background or foreground, freeing up context for the main agent.",
+      "zh-Hans": "子代理是你的编排器（主 Claude）可以委托任务给它的、具有有限范围的进程。它们可以在后台或前台运行，为主代理释放上下文。"
+    },
+    {
+      "en-US": "Subagents work nicely with skills - a subagent capable of executing a subset of your skills can be delegated tasks and use those skills autonomously. They can also be sandboxed with specific tool permissions.",
+      "zh-Hans": "子代理与技能配合得很好——一个能够执行你技能子集的子代理可以被委托任务并自主使用这些技能。它们也可以用特定的工具权限进行沙盒化。"
+    },
+    {
+      "en-US": "```bash\n# Example subagent structure\n~/.claude/agents/\n  planner.md           # Feature implementation planning\n  architect.md         # System design decisions\n  tdd-guide.md         # Test-driven development\n  code-reviewer.md     # Quality/security review\n  security-reviewer.md # Vulnerability analysis\n  build-error-resolver.md\n  e2e-runner.md\n  refactor-cleaner.md\n```",
+      "zh-Hans": "```bash\n# Example subagent structure\n~/.claude/agents/\n  planner.md           # Feature implementation planning\n  architect.md         # System design decisions\n  tdd-guide.md         # Test-driven development\n  code-reviewer.md     # Quality/security review\n  security-reviewer.md # Vulnerability analysis\n  build-error-resolver.md\n  e2e-runner.md\n  refactor-cleaner.md\n```"
+    },
+    {
+      "en-US": "Configure allowed tools, MCPs, and permissions per subagent for proper scoping.",
+      "zh-Hans": "为每个子代理配置允许的工具、MCP 和权限，以实现适当的范围界定。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Rules and Memory",
+      "zh-Hans": "## 规则和记忆"
+    },
+    {
+      "en-US": "Your `.rules` folder holds `.md` files with best practices Claude should ALWAYS follow. Two approaches:",
+      "zh-Hans": "你的 `.rules` 文件夹包含 `.md` 文件，其中是 Claude 应始终遵循的最佳实践。有两种方法："
+    },
+    {
+      "en-US": "1. **Single CLAUDE.md** - Everything in one file (user or project level)\n2. **Rules folder** - Modular `.md` files grouped by concern",
+      "zh-Hans": "1. **单一 CLAUDE.md** - 所有内容在一个文件中（用户或项目级别）\n2. **规则文件夹** - 按关注点分组的模块化 `.md` 文件"
+    },
+    {
+      "en-US": "```bash\n~/.claude/rules/\n  security.md      # No hardcoded secrets, validate inputs\n  coding-style.md  # Immutability, file organization\n  testing.md       # TDD workflow, 80% coverage\n  git-workflow.md  # Commit format, PR process\n  agents.md        # When to delegate to subagents\n  performance.md   # Model selection, context management\n```",
+      "zh-Hans": "```bash\n~/.claude/rules/\n  security.md      # No hardcoded secrets, validate inputs\n  coding-style.md  # Immutability, file organization\n  testing.md       # TDD workflow, 80% coverage\n  git-workflow.md  # Commit format, PR process\n  agents.md        # When to delegate to subagents\n  performance.md   # Model selection, context management\n```"
+    },
+    {
+      "en-US": "**Example rules:**",
+      "zh-Hans": "**规则示例：**"
+    },
+    {
+      "en-US": "- No emojis in codebase\n- Refrain from purple hues in frontend\n- Always test code before deployment\n- Prioritize modular code over mega-files\n- Never commit console.logs",
+      "zh-Hans": "* 代码库中不使用表情符号\n* 前端避免使用紫色色调\n* 部署前始终测试代码\n* 优先考虑模块化代码而非巨型文件\n* 绝不提交 console.log"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## MCPs (Model Context Protocol)",
+      "zh-Hans": "## MCP（模型上下文协议）"
+    },
+    {
+      "en-US": "MCPs connect Claude to external services directly. Not a replacement for APIs - it's a prompt-driven wrapper around them, allowing more flexibility in navigating information.",
+      "zh-Hans": "MCP 将 Claude 直接连接到外部服务。它不是 API 的替代品——而是围绕 API 的提示驱动包装器，允许在导航信息时具有更大的灵活性。"
+    },
+    {
+      "en-US": "**Example:** Supabase MCP lets Claude pull specific data, run SQL directly upstream without copy-paste. Same for databases, deployment platforms, etc.",
+      "zh-Hans": "**示例：** Supabase MCP 允许 Claude 提取特定数据，直接在上游运行 SQL 而无需复制粘贴。数据库、部署平台等也是如此。"
+    },
+    {
+      "en-US": "![Supabase MCP listing tables](./assets/images/shortform/04-supabase-mcp.jpeg)\n*Example of the Supabase MCP listing the tables within the public schema*",
+      "zh-Hans": "![Supabase MCP 列出表](./assets/images/shortform/04-supabase-mcp.jpeg)\n*Supabase MCP 列出公共模式中表的示例*"
+    },
+    {
+      "en-US": "**Chrome in Claude:** is a built-in plugin MCP that lets Claude autonomously control your browser - clicking around to see how things work.",
+      "zh-Hans": "**Claude 中的 Chrome：** 是一个内置的插件 MCP，允许 Claude 自主控制你的浏览器——点击查看事物如何工作。"
+    },
+    {
+      "en-US": "**CRITICAL: Context Window Management**",
+      "zh-Hans": "**关键：上下文窗口管理**"
+    },
+    {
+      "en-US": "Be picky with MCPs. I keep all MCPs in user config but **disable everything unused**. Navigate to `/plugins` and scroll down or run `/mcp`.",
+      "zh-Hans": "对 MCP 要挑剔。我将所有 MCP 保存在用户配置中，但**禁用所有未使用的**。导航到 `/plugins` 并向下滚动，或运行 `/mcp`。"
+    },
+    {
+      "en-US": "![/plugins interface](./assets/images/shortform/05-plugins-interface.jpeg)\n*Using /plugins to navigate to MCPs to see which ones are currently installed and their status*",
+      "zh-Hans": "![插件界面](./assets/images/shortform/05-plugins-interface.jpeg)\n*使用 /plugins 导航到 MCP，查看当前安装了哪些以及它们的状态*"
+    },
+    {
+      "en-US": "Your 200k context window before compacting might only be 70k with too many tools enabled. Performance degrades significantly.",
+      "zh-Hans": "在压缩之前，你的 200k 上下文窗口如果启用了太多工具，可能只有 70k。性能会显著下降。"
+    },
+    {
+      "en-US": "**Rule of thumb:** Have 20-30 MCPs in config, but keep under 10 enabled / under 80 tools active.",
+      "zh-Hans": "**经验法则：** 在配置中保留 20-30 个 MCP，但保持启用状态少于 10 个 / 活动工具少于 80 个。"
+    },
+    {
+      "en-US": "```bash\n# Check enabled MCPs\n/mcp\n\n# Disable unused ones in ~/.claude.json under projects.disabledMcpServers\n```",
+      "zh-Hans": "```bash\n# Check enabled MCPs\n/mcp\n\n# Disable unused ones in ~/.claude.json under projects.disabledMcpServers\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Plugins",
+      "zh-Hans": "## 插件"
+    },
+    {
+      "en-US": "Plugins package tools for easy installation instead of tedious manual setup. A plugin can be a skill + MCP combined, or hooks/tools bundled together.",
+      "zh-Hans": "插件将工具打包以便于安装，而不是繁琐的手动设置。一个插件可以是技能和 MCP 的组合，或者是捆绑在一起的钩子/工具。"
+    },
+    {
+      "en-US": "**Installing plugins:**",
+      "zh-Hans": "**安装插件：**"
+    },
+    {
+      "en-US": "```bash\n# Add a marketplace\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open Claude, run /plugins, find new marketplace, install from there\n```",
+      "zh-Hans": "```bash\n# Add a marketplace\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open Claude, run /plugins, find new marketplace, install from there\n```"
+    },
+    {
+      "en-US": "![Marketplaces tab showing mgrep](./assets/images/shortform/06-marketplaces-mgrep.jpeg)\n*Displaying the newly installed Mixedbread-Grep marketplace*",
+      "zh-Hans": "![显示 mgrep 的市场标签页](./assets/images/shortform/06-marketplaces-mgrep.jpeg)\n*显示新安装的 Mixedbread-Grep 市场*"
+    },
+    {
+      "en-US": "**LSP Plugins** are particularly useful if you run Claude Code outside editors frequently. Language Server Protocol gives Claude real-time type checking, go-to-definition, and intelligent completions without needing an IDE open.",
+      "zh-Hans": "**LSP 插件** 如果你经常在编辑器之外运行 Claude Code，则特别有用。语言服务器协议为 Claude 提供实时类型检查、跳转到定义和智能补全，而无需打开 IDE。"
+    },
+    {
+      "en-US": "```bash\n# Enabled plugins example\ntypescript-lsp@claude-plugins-official  # TypeScript intelligence\npyright-lsp@claude-plugins-official     # Python type checking\nhookify@claude-plugins-official         # Create hooks conversationally\nmgrep@Mixedbread-Grep                   # Better search than ripgrep\n```",
+      "zh-Hans": "```bash\n# Enabled plugins example\ntypescript-lsp@claude-plugins-official  # TypeScript intelligence\npyright-lsp@claude-plugins-official     # Python type checking\nhookify@claude-plugins-official         # Create hooks conversationally\nmgrep@Mixedbread-Grep                   # Better search than ripgrep\n```"
+    },
+    {
+      "en-US": "Same warning as MCPs - watch your context window.",
+      "zh-Hans": "与 MCP 相同的警告——注意你的上下文窗口。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Tips and Tricks",
+      "zh-Hans": "## 技巧和窍门"
+    },
+    {
+      "en-US": "### Keyboard Shortcuts",
+      "zh-Hans": "### 键盘快捷键"
+    },
+    {
+      "en-US": "- `Ctrl+U` - Delete entire line (faster than backspace spam)\n- `!` - Quick bash command prefix\n- `@` - Search for files\n- `/` - Initiate slash commands\n- `Shift+Enter` - Multi-line input\n- `Tab` - Toggle thinking display\n- `Esc Esc` - Interrupt Claude / restore code",
+      "zh-Hans": "* `Ctrl+U` - 删除整行（比反复按退格键快）\n* `!` - 快速 bash 命令前缀\n* `@` - 搜索文件\n* `/` - 发起斜杠命令\n* `Shift+Enter` - 多行输入\n* `Tab` - 切换思考显示\n* `Esc Esc` - 中断 Claude / 恢复代码"
+    },
+    {
+      "en-US": "### Parallel Workflows",
+      "zh-Hans": "### 并行工作流"
+    },
+    {
+      "en-US": "- **Fork** (`/fork`) - Fork conversations to do non-overlapping tasks in parallel instead of spamming queued messages\n- **Git Worktrees** - For overlapping parallel Claudes without conflicts. Each worktree is an independent checkout",
+      "zh-Hans": "* **分叉** (`/fork`) - 分叉对话以并行执行不重叠的任务，而不是在队列中堆积消息\n* **Git Worktrees** - 用于重叠的并行 Claude 而不产生冲突。每个工作树都是一个独立的检出"
+    },
+    {
+      "en-US": "```bash\ngit worktree add ../feature-branch feature-branch\n# Now run separate Claude instances in each worktree\n```",
+      "zh-Hans": "```bash\ngit worktree add ../feature-branch feature-branch\n# Now run separate Claude instances in each worktree\n```"
+    },
+    {
+      "en-US": "### tmux for Long-Running Commands",
+      "zh-Hans": "### 用于长时间运行命令的 tmux"
+    },
+    {
+      "en-US": "Stream and watch logs/bash processes Claude runs:",
+      "zh-Hans": "流式传输和监视 Claude 运行的日志/bash 进程："
+    },
+    {
+      "en-US": "https://github.com/user-attachments/assets/shortform/07-tmux-video.mp4",
+      "zh-Hans": "https://github.com/user-attachments/assets/shortform/07-tmux-video.mp4"
+    },
+    {
+      "en-US": "```bash\ntmux new -s dev\n# Claude runs commands here, you can detach and reattach\ntmux attach -t dev\n```",
+      "zh-Hans": "```bash\ntmux new -s dev\n# Claude runs commands here, you can detach and reattach\ntmux attach -t dev\n```"
+    },
+    {
+      "en-US": "### mgrep > grep",
+      "zh-Hans": "### mgrep > grep"
+    },
+    {
+      "en-US": "`mgrep` is a significant improvement from ripgrep/grep. Install via plugin marketplace, then use the `/mgrep` skill. Works with both local search and web search.",
+      "zh-Hans": "`mgrep` 是对 ripgrep/grep 的显著改进。通过插件市场安装，然后使用 `/mgrep` 技能。适用于本地搜索和网络搜索。"
+    },
+    {
+      "en-US": "```bash\nmgrep \"function handleSubmit\"  # Local search\nmgrep --web \"Next.js 15 app router changes\"  # Web search\n```",
+      "zh-Hans": "```bash\nmgrep \"function handleSubmit\"  # Local search\nmgrep --web \"Next.js 15 app router changes\"  # Web search\n```"
+    },
+    {
+      "en-US": "### Other Useful Commands",
+      "zh-Hans": "### 其他有用的命令"
+    },
+    {
+      "en-US": "- `/rewind` - Go back to a previous state\n- `/statusline` - Customize with branch, context %, todos\n- `/checkpoints` - File-level undo points\n- `/compact` - Manually trigger context compaction",
+      "zh-Hans": "* `/rewind` - 回到之前的状态\n* `/statusline` - 用分支、上下文百分比、待办事项进行自定义\n* `/checkpoints` - 文件级别的撤销点\n* `/compact` - 手动触发上下文压缩"
+    },
+    {
+      "en-US": "### GitHub Actions CI/CD",
+      "zh-Hans": "### GitHub Actions CI/CD"
+    },
+    {
+      "en-US": "Set up code review on your PRs with GitHub Actions. Claude can review PRs automatically when configured.",
+      "zh-Hans": "使用 GitHub Actions 在你的 PR 上设置代码审查。配置后，Claude 可以自动审查 PR。"
+    },
+    {
+      "en-US": "![Claude bot approving a PR](./assets/images/shortform/08-github-pr-review.jpeg)\n*Claude approving a bug fix PR*",
+      "zh-Hans": "![Claude 机器人批准 PR](./assets/images/shortform/08-github-pr-review.jpeg)\n*Claude 批准一个错误修复 PR*"
+    },
+    {
+      "en-US": "### Sandboxing",
+      "zh-Hans": "### 沙盒化"
+    },
+    {
+      "en-US": "Use sandbox mode for risky operations - Claude runs in restricted environment without affecting your actual system.",
+      "zh-Hans": "对风险操作使用沙盒模式——Claude 在受限环境中运行，不影响你的实际系统。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## On Editors",
+      "zh-Hans": "## 关于编辑器"
+    },
+    {
+      "en-US": "Your editor choice significantly impacts Claude Code workflow. While Claude Code works from any terminal, pairing it with a capable editor unlocks real-time file tracking, quick navigation, and integrated command execution.",
+      "zh-Hans": "你的编辑器选择显著影响 Claude Code 的工作流。虽然 Claude Code 可以在任何终端中工作，但将其与功能强大的编辑器配对可以解锁实时文件跟踪、快速导航和集成命令执行。"
+    },
+    {
+      "en-US": "### Zed (My Preference)",
+      "zh-Hans": "### Zed（我的偏好）"
+    },
+    {
+      "en-US": "I use [Zed](https://zed.dev) - written in Rust, so it's genuinely fast. Opens instantly, handles massive codebases without breaking a sweat, and barely touches system resources.",
+      "zh-Hans": "我使用 [Zed](https://zed.dev) —— 用 Rust 编写，所以它真的很快。立即打开，轻松处理大型代码库，几乎不占用系统资源。"
+    },
+    {
+      "en-US": "**Why Zed + Claude Code is a great combo:**",
+      "zh-Hans": "**为什么 Zed + Claude Code 是绝佳组合：**"
+    },
+    {
+      "en-US": "- **Speed** - Rust-based performance means no lag when Claude is rapidly editing files. Your editor keeps up\n- **Agent Panel Integration** - Zed's Claude integration lets you track file changes in real-time as Claude edits. Jump between files Claude references without leaving the editor\n- **CMD+Shift+R Command Palette** - Quick access to all your custom slash commands, debuggers, build scripts in a searchable UI\n- **Minimal Resource Usage** - Won't compete with Claude for RAM/CPU during heavy operations. Important when running Opus\n- **Vim Mode** - Full vim keybindings if that's your thing",
+      "zh-Hans": "* **速度** - 基于 Rust 的性能意味着当 Claude 快速编辑文件时没有延迟。你的编辑器能跟上\n* **代理面板集成** - Zed 的 Claude 集成允许你在 Claude 编辑时实时跟踪文件变化。无需离开编辑器即可跳转到 Claude 引用的文件\n* **CMD+Shift+R 命令面板** - 快速访问所有自定义斜杠命令、调试器、构建脚本，在可搜索的 UI 中\n* **最小的资源使用** - 在繁重操作期间不会与 Claude 竞争 RAM/CPU。运行 Opus 时很重要\n* **Vim 模式** - 完整的 vim 键绑定，如果你喜欢的话"
+    },
+    {
+      "en-US": "![Zed Editor with custom commands](./assets/images/shortform/09-zed-editor.jpeg)\n*Zed Editor with custom commands dropdown using CMD+Shift+R. Following mode shown as the bullseye in the bottom right.*",
+      "zh-Hans": "![带自定义命令的 Zed 编辑器](./assets/images/shortform/09-zed-editor.jpeg)\n*使用 CMD+Shift+R 自定义命令下拉菜单的 Zed 编辑器。跟随模式显示为右下角的靶心。*"
+    },
+    {
+      "en-US": "**Editor-Agnostic Tips:**",
+      "zh-Hans": "**编辑器无关提示：**"
+    },
+    {
+      "en-US": "1. **Split your screen** - Terminal with Claude Code on one side, editor on the other\n2. **Ctrl + G** - quickly open the file Claude is currently working on in Zed\n3. **Auto-save** - Enable autosave so Claude's file reads are always current\n4. **Git integration** - Use editor's git features to review Claude's changes before committing\n5. **File watchers** - Most editors auto-reload changed files, verify this is enabled",
+      "zh-Hans": "1. **分割你的屏幕** - 一侧是带 Claude Code 的终端，另一侧是编辑器\n2. **Ctrl + G** - 在 Zed 中快速打开 Claude 当前正在处理的文件\n3. **自动保存** - 启用自动保存，以便 Claude 的文件读取始终是最新的\n4. **Git 集成** - 使用编辑器的 git 功能在提交前审查 Claude 的更改\n5. **文件监视器** - 大多数编辑器自动重新加载更改的文件，请验证是否已启用"
+    },
+    {
+      "en-US": "### VSCode / Cursor",
+      "zh-Hans": "### VSCode / Cursor"
+    },
+    {
+      "en-US": "This is also a viable choice and works well with Claude Code. You can use it in either terminal format, with automatic sync with your editor using `\\ide` enabling LSP functionality (somewhat redundant with plugins now). Or you can opt for the extension which is more integrated with the Editor and has a matching UI.",
+      "zh-Hans": "这也是一个可行的选择，并且与 Claude Code 配合良好。你可以使用终端格式，通过 `\\ide` 与你的编辑器自动同步以启用 LSP 功能（现在与插件有些冗余）。或者你可以选择扩展，它更集成于编辑器并具有匹配的 UI。"
+    },
+    {
+      "en-US": "![VS Code Claude Code Extension](./assets/images/shortform/10-vscode-extension.jpeg)\n*The VS Code extension provides a native graphical interface for Claude Code, integrated directly into your IDE.*",
+      "zh-Hans": "![VS Code Claude Code 扩展](./assets/images/shortform/10-vscode-extension.jpeg)\n*VS Code 扩展为 Claude Code 提供了原生图形界面，直接集成到你的 IDE 中。*"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## My Setup",
+      "zh-Hans": "## 我的设置"
+    },
+    {
+      "en-US": "### Plugins",
+      "zh-Hans": "### 插件"
+    },
+    {
+      "en-US": "**Installed:** (I usually only have 4-5 of these enabled at a time)",
+      "zh-Hans": "**已安装：**（我通常一次只启用其中的 4-5 个）"
+    },
+    {
+      "en-US": "```markdown\nralph-wiggum@claude-code-plugins       # Loop automation\nfrontend-design@claude-code-plugins    # UI/UX patterns\ncommit-commands@claude-code-plugins    # Git workflow\nsecurity-guidance@claude-code-plugins  # Security checks\npr-review-toolkit@claude-code-plugins  # PR automation\ntypescript-lsp@claude-plugins-official # TS intelligence\nhookify@claude-plugins-official        # Hook creation\ncode-simplifier@claude-plugins-official\nfeature-dev@claude-code-plugins\nexplanatory-output-style@claude-code-plugins\ncode-review@claude-code-plugins\ncontext7@claude-plugins-official       # Live documentation\npyright-lsp@claude-plugins-official    # Python types\nmgrep@Mixedbread-Grep                  # Better search\n```",
+      "zh-Hans": "```markdown\nralph-wiggum@claude-code-plugins       # 循环自动化\nfrontend-design@claude-code-plugins    # UI/UX 模式\ncommit-commands@claude-code-plugins    # Git 工作流\nsecurity-guidance@claude-code-plugins  # 安全检查\npr-review-toolkit@claude-code-plugins  # PR 自动化\ntypescript-lsp@claude-plugins-official # TS 智能\nhookify@claude-plugins-official        # Hook 创建\ncode-simplifier@claude-plugins-official\nfeature-dev@claude-code-plugins\nexplanatory-output-style@claude-code-plugins\ncode-review@claude-code-plugins\ncontext7@claude-plugins-official       # 实时文档\npyright-lsp@claude-plugins-official    # Python 类型\nmgrep@Mixedbread-Grep                  # 更好的搜索\n\n```"
+    },
+    {
+      "en-US": "### MCP Servers",
+      "zh-Hans": "### MCP 服务器"
+    },
+    {
+      "en-US": "**Configured (User Level):**",
+      "zh-Hans": "**已配置（用户级别）：**"
+    },
+    {
+      "en-US": "```json\n{\n  \"github\": { \"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-github\"] },\n  \"firecrawl\": { \"command\": \"npx\", \"args\": [\"-y\", \"firecrawl-mcp\"] },\n  \"supabase\": {\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@supabase/mcp-server-supabase@latest\", \"--project-ref=YOUR_REF\"]\n  },\n  \"memory\": { \"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-memory\"] },\n  \"sequential-thinking\": {\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-sequential-thinking\"]\n  },\n  \"vercel\": { \"type\": \"http\", \"url\": \"https://mcp.vercel.com\" },\n  \"railway\": { \"command\": \"npx\", \"args\": [\"-y\", \"@railway/mcp-server\"] },\n  \"cloudflare-docs\": { \"type\": \"http\", \"url\": \"https://docs.mcp.cloudflare.com/mcp\" },\n  \"cloudflare-workers-bindings\": {\n    \"type\": \"http\",\n    \"url\": \"https://bindings.mcp.cloudflare.com/mcp\"\n  },\n  \"clickhouse\": { \"type\": \"http\", \"url\": \"https://mcp.clickhouse.cloud/mcp\" },\n  \"AbletonMCP\": { \"command\": \"uvx\", \"args\": [\"ableton-mcp\"] },\n  \"magic\": { \"command\": \"npx\", \"args\": [\"-y\", \"@magicuidesign/mcp@latest\"] }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"github\": { \"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-github\"] },\n  \"firecrawl\": { \"command\": \"npx\", \"args\": [\"-y\", \"firecrawl-mcp\"] },\n  \"supabase\": {\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@supabase/mcp-server-supabase@latest\", \"--project-ref=YOUR_REF\"]\n  },\n  \"memory\": { \"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-memory\"] },\n  \"sequential-thinking\": {\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-sequential-thinking\"]\n  },\n  \"vercel\": { \"type\": \"http\", \"url\": \"https://mcp.vercel.com\" },\n  \"railway\": { \"command\": \"npx\", \"args\": [\"-y\", \"@railway/mcp-server\"] },\n  \"cloudflare-docs\": { \"type\": \"http\", \"url\": \"https://docs.mcp.cloudflare.com/mcp\" },\n  \"cloudflare-workers-bindings\": {\n    \"type\": \"http\",\n    \"url\": \"https://bindings.mcp.cloudflare.com/mcp\"\n  },\n  \"clickhouse\": { \"type\": \"http\", \"url\": \"https://mcp.clickhouse.cloud/mcp\" },\n  \"AbletonMCP\": { \"command\": \"uvx\", \"args\": [\"ableton-mcp\"] },\n  \"magic\": { \"command\": \"npx\", \"args\": [\"-y\", \"@magicuidesign/mcp@latest\"] }\n}\n```"
+    },
+    {
+      "en-US": "This is the key - I have 14 MCPs configured but only ~5-6 enabled per project. Keeps context window healthy.",
+      "zh-Hans": "这是关键——我配置了 14 个 MCP，但每个项目只启用约 5-6 个。保持上下文窗口健康。"
+    },
+    {
+      "en-US": "### Key Hooks",
+      "zh-Hans": "### 关键钩子"
+    },
+    {
+      "en-US": "```json\n{\n  \"PreToolUse\": [\n    { \"matcher\": \"npm|pnpm|yarn|cargo|pytest\", \"hooks\": [\"tmux reminder\"] },\n    { \"matcher\": \"Write && .md file\", \"hooks\": [\"block unless README/CLAUDE\"] },\n    { \"matcher\": \"git push\", \"hooks\": [\"open editor for review\"] }\n  ],\n  \"PostToolUse\": [\n    { \"matcher\": \"Edit && .ts/.tsx/.js/.jsx\", \"hooks\": [\"prettier --write\"] },\n    { \"matcher\": \"Edit && .ts/.tsx\", \"hooks\": [\"tsc --noEmit\"] },\n    { \"matcher\": \"Edit\", \"hooks\": [\"grep console.log warning\"] }\n  ],\n  \"Stop\": [\n    { \"matcher\": \"*\", \"hooks\": [\"check modified files for console.log\"] }\n  ]\n}\n```",
+      "zh-Hans": "```json\n{\n  \"PreToolUse\": [\n    { \"matcher\": \"npm|pnpm|yarn|cargo|pytest\", \"hooks\": [\"tmux reminder\"] },\n    { \"matcher\": \"Write && .md file\", \"hooks\": [\"block unless README/CLAUDE\"] },\n    { \"matcher\": \"git push\", \"hooks\": [\"open editor for review\"] }\n  ],\n  \"PostToolUse\": [\n    { \"matcher\": \"Edit && .ts/.tsx/.js/.jsx\", \"hooks\": [\"prettier --write\"] },\n    { \"matcher\": \"Edit && .ts/.tsx\", \"hooks\": [\"tsc --noEmit\"] },\n    { \"matcher\": \"Edit\", \"hooks\": [\"grep console.log warning\"] }\n  ],\n  \"Stop\": [\n    { \"matcher\": \"*\", \"hooks\": [\"check modified files for console.log\"] }\n  ]\n}\n```"
+    },
+    {
+      "en-US": "### Custom Status Line",
+      "zh-Hans": "### 自定义状态行"
+    },
+    {
+      "en-US": "Shows user, directory, git branch with dirty indicator, context remaining %, model, time, and todo count:",
+      "zh-Hans": "显示用户、目录、带脏标记的 git 分支、剩余上下文百分比、模型、时间和待办事项计数："
+    },
+    {
+      "en-US": "![Custom status line](./assets/images/shortform/11-statusline.jpeg)\n*Example statusline in my Mac root directory*",
+      "zh-Hans": "![自定义状态行](./assets/images/shortform/11-statusline.jpeg)\n*我的 Mac 根目录中的状态行示例*"
+    },
+    {
+      "en-US": "```\naffoon:~ ctx:65% Opus 4.5 19:52\n▌▌ plan mode on (shift+tab to cycle)\n```",
+      "zh-Hans": "```\naffoon:~ ctx:65% Opus 4.5 19:52\n▌▌ plan mode on (shift+tab to cycle)\n```"
+    },
+    {
+      "en-US": "### Rules Structure",
+      "zh-Hans": "### 规则结构"
+    },
+    {
+      "en-US": "```\n~/.claude/rules/\n  security.md      # Mandatory security checks\n  coding-style.md  # Immutability, file size limits\n  testing.md       # TDD, 80% coverage\n  git-workflow.md  # Conventional commits\n  agents.md        # Subagent delegation rules\n  patterns.md      # API response formats\n  performance.md   # Model selection (Haiku vs Sonnet vs Opus)\n  hooks.md         # Hook documentation\n```",
+      "zh-Hans": "```\n~/.claude/rules/\n  security.md      # Mandatory security checks\n  coding-style.md  # Immutability, file size limits\n  testing.md       # TDD, 80% coverage\n  git-workflow.md  # Conventional commits\n  agents.md        # Subagent delegation rules\n  patterns.md      # API response formats\n  performance.md   # Model selection (Haiku vs Sonnet vs Opus)\n  hooks.md         # Hook documentation\n```"
+    },
+    {
+      "en-US": "### Subagents",
+      "zh-Hans": "### 子代理"
+    },
+    {
+      "en-US": "```\n~/.claude/agents/\n  planner.md           # Break down features\n  architect.md         # System design\n  tdd-guide.md         # Write tests first\n  code-reviewer.md     # Quality review\n  security-reviewer.md # Vulnerability scan\n  build-error-resolver.md\n  e2e-runner.md        # Playwright tests\n  refactor-cleaner.md  # Dead code removal\n  doc-updater.md       # Keep docs synced\n```",
+      "zh-Hans": "```\n~/.claude/agents/\n  planner.md           # Break down features\n  architect.md         # System design\n  tdd-guide.md         # Write tests first\n  code-reviewer.md     # Quality review\n  security-reviewer.md # Vulnerability scan\n  build-error-resolver.md\n  e2e-runner.md        # Playwright tests\n  refactor-cleaner.md  # Dead code removal\n  doc-updater.md       # Keep docs synced\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Key Takeaways",
+      "zh-Hans": "## 关键要点"
+    },
+    {
+      "en-US": "1. **Don't overcomplicate** - treat configuration like fine-tuning, not architecture\n2. **Context window is precious** - disable unused MCPs and plugins\n3. **Parallel execution** - fork conversations, use git worktrees\n4. **Automate the repetitive** - hooks for formatting, linting, reminders\n5. **Scope your subagents** - limited tools = focused execution",
+      "zh-Hans": "1. **不要过度复杂化** - 将配置视为微调，而非架构\n2. **上下文窗口很宝贵** - 禁用未使用的 MCP 和插件\n3. **并行执行** - 分叉对话，使用 git worktrees\n4. **自动化重复性工作** - 用于格式化、代码检查、提醒的钩子\n5. **界定子代理范围** - 有限的工具 = 专注的执行"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "- [Plugins Reference](https://code.claude.com/docs/en/plugins-reference)\n- [Hooks Documentation](https://code.claude.com/docs/en/hooks)\n- [Checkpointing](https://code.claude.com/docs/en/checkpointing)\n- [Interactive Mode](https://code.claude.com/docs/en/interactive-mode)\n- [Memory System](https://code.claude.com/docs/en/memory)\n- [Subagents](https://code.claude.com/docs/en/sub-agents)\n- [MCP Overview](https://code.claude.com/docs/en/mcp-overview)",
+      "zh-Hans": "* [插件参考](https://code.claude.com/docs/en/plugins-reference)\n* [钩子文档](https://code.claude.com/docs/en/hooks)\n* [检查点](https://code.claude.com/docs/en/checkpointing)\n* [交互模式](https://code.claude.com/docs/en/interactive-mode)\n* [记忆系统](https://code.claude.com/docs/en/memory)\n* [子代理](https://code.claude.com/docs/en/sub-agents)\n* [MCP 概述](https://code.claude.com/docs/en/mcp-overview)"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Note:** This is a subset of detail. See the [Longform Guide](./the-longform-guide.md) for advanced patterns.",
+      "zh-Hans": "**注意：** 这是细节的一个子集。关于高级模式，请参阅 [长篇指南](./the-longform-guide.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "*Won the Anthropic x Forum Ventures hackathon in NYC building [zenith.chat](https://zenith.chat) with [@DRodriguezFX](https://x.com/DRodriguezFX)*",
+      "zh-Hans": "*在纽约与 [@DRodriguezFX](https://x.com/DRodriguezFX) 一起构建 [zenith.chat](https://zenith.chat) 赢得了 Anthropic x Forum Ventures 黑客马拉松*"
+    }
+  ]
+}
