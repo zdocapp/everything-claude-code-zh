@@ -1,0 +1,134 @@
+{
+  "sourceFile": "skills/nutrient-document-processing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: nutrient-document-processing\ndescription: Process, convert, OCR, extract, redact, sign, and fill documents using the Nutrient DWS API. Works with PDFs, DOCX, XLSX, PPTX, HTML, and images.\n---",
+      "zh-Hans": "---\nname: nutrient-document-processing\ndescription: 使用Nutrient DWS API处理、转换、OCR、提取、编辑、签署和填写文档。支持PDF、DOCX、XLSX、PPTX、HTML和图像文件。\n---"
+    },
+    {
+      "en-US": "# Nutrient Document Processing",
+      "zh-Hans": "# 文档处理"
+    },
+    {
+      "en-US": "Process documents with the [Nutrient DWS Processor API](https://www.nutrient.io/api/). Convert formats, extract text and tables, OCR scanned documents, redact PII, add watermarks, digitally sign, and fill PDF forms.",
+      "zh-Hans": "使用 [Nutrient DWS Processor API](https://www.nutrient.io/api/) 处理文档。转换格式、提取文本和表格、对扫描文档进行 OCR、编辑 PII、添加水印、数字签名以及填写 PDF 表单。"
+    },
+    {
+      "en-US": "## Setup",
+      "zh-Hans": "## 设置"
+    },
+    {
+      "en-US": "Get a free API key at **https://dashboard.nutrient.io/sign_up/?product=processor**",
+      "zh-Hans": "在 **https://dashboard.nutrient.io/sign\\_up/?product=processor** 获取免费 API 密钥。"
+    },
+    {
+      "en-US": "```bash\nexport NUTRIENT_API_KEY=\"pdf_live_...\"\n```",
+      "zh-Hans": "```bash\nexport NUTRIENT_API_KEY=\"pdf_live_...\"\n```"
+    },
+    {
+      "en-US": "All requests go to `https://api.nutrient.io/build` as multipart POST with an `instructions` JSON field.",
+      "zh-Hans": "所有请求都以 multipart POST 形式发送到 `https://api.nutrient.io/build`，并附带一个 `instructions` JSON 字段。"
+    },
+    {
+      "en-US": "## Operations",
+      "zh-Hans": "## 操作"
+    },
+    {
+      "en-US": "### Convert Documents",
+      "zh-Hans": "### 转换文档"
+    },
+    {
+      "en-US": "```bash\n# DOCX to PDF\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.docx=@document.docx\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.docx\"}]}' \\\n  -o output.pdf\n\n# PDF to DOCX\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"output\":{\"type\":\"docx\"}}' \\\n  -o output.docx\n\n# HTML to PDF\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"index.html=@index.html\" \\\n  -F 'instructions={\"parts\":[{\"html\":\"index.html\"}]}' \\\n  -o output.pdf\n```",
+      "zh-Hans": "```bash\n# DOCX to PDF\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.docx=@document.docx\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.docx\"}]}' \\\n  -o output.pdf\n\n# PDF to DOCX\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"output\":{\"type\":\"docx\"}}' \\\n  -o output.docx\n\n# HTML to PDF\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"index.html=@index.html\" \\\n  -F 'instructions={\"parts\":[{\"html\":\"index.html\"}]}' \\\n  -o output.pdf\n```"
+    },
+    {
+      "en-US": "Supported inputs: PDF, DOCX, XLSX, PPTX, DOC, XLS, PPT, PPS, PPSX, ODT, RTF, HTML, JPG, PNG, TIFF, HEIC, GIF, WebP, SVG, TGA, EPS.",
+      "zh-Hans": "支持的输入格式：PDF, DOCX, XLSX, PPTX, DOC, XLS, PPT, PPS, PPSX, ODT, RTF, HTML, JPG, PNG, TIFF, HEIC, GIF, WebP, SVG, TGA, EPS。"
+    },
+    {
+      "en-US": "### Extract Text and Data",
+      "zh-Hans": "### 提取文本和数据"
+    },
+    {
+      "en-US": "```bash\n# Extract plain text\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"output\":{\"type\":\"text\"}}' \\\n  -o output.txt\n\n# Extract tables as Excel\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"output\":{\"type\":\"xlsx\"}}' \\\n  -o tables.xlsx\n```",
+      "zh-Hans": "```bash\n# Extract plain text\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"output\":{\"type\":\"text\"}}' \\\n  -o output.txt\n\n# Extract tables as Excel\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"output\":{\"type\":\"xlsx\"}}' \\\n  -o tables.xlsx\n```"
+    },
+    {
+      "en-US": "### OCR Scanned Documents",
+      "zh-Hans": "### OCR 扫描文档"
+    },
+    {
+      "en-US": "```bash\n# OCR to searchable PDF (supports 100+ languages)\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"scanned.pdf=@scanned.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"scanned.pdf\"}],\"actions\":[{\"type\":\"ocr\",\"language\":\"english\"}]}' \\\n  -o searchable.pdf\n```",
+      "zh-Hans": "```bash\n# OCR to searchable PDF (supports 100+ languages)\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"scanned.pdf=@scanned.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"scanned.pdf\"}],\"actions\":[{\"type\":\"ocr\",\"language\":\"english\"}]}' \\\n  -o searchable.pdf\n```"
+    },
+    {
+      "en-US": "Languages: Supports 100+ languages via ISO 639-2 codes (e.g., `eng`, `deu`, `fra`, `spa`, `jpn`, `kor`, `chi_sim`, `chi_tra`, `ara`, `hin`, `rus`). Full language names like `english` or `german` also work. See the [complete OCR language table](https://www.nutrient.io/guides/document-engine/ocr/language-support/) for all supported codes.",
+      "zh-Hans": "支持语言：通过 ISO 639-2 代码支持 100 多种语言（例如，`eng`, `deu`, `fra`, `spa`, `jpn`, `kor`, `chi_sim`, `chi_tra`, `ara`, `hin`, `rus`）。完整的语言名称如 `english` 或 `german` 也适用。查看 [完整的 OCR 语言表](https://www.nutrient.io/guides/document-engine/ocr/language-support/) 以获取所有支持的代码。"
+    },
+    {
+      "en-US": "### Redact Sensitive Information",
+      "zh-Hans": "### 编辑敏感信息"
+    },
+    {
+      "en-US": "```bash\n# Pattern-based (SSN, email)\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"redaction\",\"strategy\":\"preset\",\"strategyOptions\":{\"preset\":\"social-security-number\"}},{\"type\":\"redaction\",\"strategy\":\"preset\",\"strategyOptions\":{\"preset\":\"email-address\"}}]}' \\\n  -o redacted.pdf\n\n# Regex-based\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"redaction\",\"strategy\":\"regex\",\"strategyOptions\":{\"regex\":\"\\\\b[A-Z]{2}\\\\d{6}\\\\b\"}}]}' \\\n  -o redacted.pdf\n```",
+      "zh-Hans": "```bash\n# Pattern-based (SSN, email)\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"redaction\",\"strategy\":\"preset\",\"strategyOptions\":{\"preset\":\"social-security-number\"}},{\"type\":\"redaction\",\"strategy\":\"preset\",\"strategyOptions\":{\"preset\":\"email-address\"}}]}' \\\n  -o redacted.pdf\n\n# Regex-based\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"redaction\",\"strategy\":\"regex\",\"strategyOptions\":{\"regex\":\"\\\\b[A-Z]{2}\\\\d{6}\\\\b\"}}]}' \\\n  -o redacted.pdf\n```"
+    },
+    {
+      "en-US": "Presets: `social-security-number`, `email-address`, `credit-card-number`, `international-phone-number`, `north-american-phone-number`, `date`, `time`, `url`, `ipv4`, `ipv6`, `mac-address`, `us-zip-code`, `vin`.",
+      "zh-Hans": "预设：`social-security-number`, `email-address`, `credit-card-number`, `international-phone-number`, `north-american-phone-number`, `date`, `time`, `url`, `ipv4`, `ipv6`, `mac-address`, `us-zip-code`, `vin`。"
+    },
+    {
+      "en-US": "### Add Watermarks",
+      "zh-Hans": "### 添加水印"
+    },
+    {
+      "en-US": "```bash\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"watermark\",\"text\":\"CONFIDENTIAL\",\"fontSize\":72,\"opacity\":0.3,\"rotation\":-45}]}' \\\n  -o watermarked.pdf\n```",
+      "zh-Hans": "```bash\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"watermark\",\"text\":\"CONFIDENTIAL\",\"fontSize\":72,\"opacity\":0.3,\"rotation\":-45}]}' \\\n  -o watermarked.pdf\n```"
+    },
+    {
+      "en-US": "### Digital Signatures",
+      "zh-Hans": "### 数字签名"
+    },
+    {
+      "en-US": "```bash\n# Self-signed CMS signature\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"sign\",\"signatureType\":\"cms\"}]}' \\\n  -o signed.pdf\n```",
+      "zh-Hans": "```bash\n# Self-signed CMS signature\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"document.pdf=@document.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"document.pdf\"}],\"actions\":[{\"type\":\"sign\",\"signatureType\":\"cms\"}]}' \\\n  -o signed.pdf\n```"
+    },
+    {
+      "en-US": "### Fill PDF Forms",
+      "zh-Hans": "### 填写 PDF 表单"
+    },
+    {
+      "en-US": "```bash\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"form.pdf=@form.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"form.pdf\"}],\"actions\":[{\"type\":\"fillForm\",\"formFields\":{\"name\":\"Jane Smith\",\"email\":\"jane@example.com\",\"date\":\"2026-02-06\"}}]}' \\\n  -o filled.pdf\n```",
+      "zh-Hans": "```bash\ncurl -X POST https://api.nutrient.io/build \\\n  -H \"Authorization: Bearer $NUTRIENT_API_KEY\" \\\n  -F \"form.pdf=@form.pdf\" \\\n  -F 'instructions={\"parts\":[{\"file\":\"form.pdf\"}],\"actions\":[{\"type\":\"fillForm\",\"formFields\":{\"name\":\"Jane Smith\",\"email\":\"jane@example.com\",\"date\":\"2026-02-06\"}}]}' \\\n  -o filled.pdf\n```"
+    },
+    {
+      "en-US": "## MCP Server (Alternative)",
+      "zh-Hans": "## MCP 服务器（替代方案）"
+    },
+    {
+      "en-US": "For native tool integration, use the MCP server instead of curl:",
+      "zh-Hans": "对于原生工具集成，请使用 MCP 服务器代替 curl："
+    },
+    {
+      "en-US": "```json\n{\n  \"mcpServers\": {\n    \"nutrient-dws\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@nutrient-sdk/dws-mcp-server\"],\n      \"env\": {\n        \"NUTRIENT_DWS_API_KEY\": \"YOUR_API_KEY\",\n        \"SANDBOX_PATH\": \"/path/to/working/directory\"\n      }\n    }\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"mcpServers\": {\n    \"nutrient-dws\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@nutrient-sdk/dws-mcp-server\"],\n      \"env\": {\n        \"NUTRIENT_DWS_API_KEY\": \"YOUR_API_KEY\",\n        \"SANDBOX_PATH\": \"/path/to/working/directory\"\n      }\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用场景"
+    },
+    {
+      "en-US": "- Converting documents between formats (PDF, DOCX, XLSX, PPTX, HTML, images)\n- Extracting text, tables, or key-value pairs from PDFs\n- OCR on scanned documents or images\n- Redacting PII before sharing documents\n- Adding watermarks to drafts or confidential documents\n- Digitally signing contracts or agreements\n- Filling PDF forms programmatically",
+      "zh-Hans": "* 在格式之间转换文档（PDF, DOCX, XLSX, PPTX, HTML, 图像）\n* 从 PDF 中提取文本、表格或键值对\n* 对扫描文档或图像进行 OCR\n* 在共享文档前编辑 PII\n* 为草稿或机密文档添加水印\n* 数字签署合同或协议\n* 以编程方式填写 PDF 表单"
+    },
+    {
+      "en-US": "## Links",
+      "zh-Hans": "## 链接"
+    },
+    {
+      "en-US": "- [API Playground](https://dashboard.nutrient.io/processor-api/playground/)\n- [Full API Docs](https://www.nutrient.io/guides/dws-processor/)\n- [Agent Skill Repo](https://github.com/PSPDFKit-labs/nutrient-agent-skill)\n- [npm MCP Server](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)",
+      "zh-Hans": "* [API 演练场](https://dashboard.nutrient.io/processor-api/playground/)\n* [完整 API 文档](https://www.nutrient.io/guides/dws-processor/)\n* [代理技能仓库](https://github.com/PSPDFKit-labs/nutrient-agent-skill)\n* [npm MCP 服务器](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)"
+    }
+  ]
+}

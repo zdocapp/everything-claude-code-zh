@@ -66,9 +66,9 @@
       "rules/**/*.md",
       "skills/**/*.md"
     ],
-    "ignore": ["docs", "commands/go-test.md"],
+    "ignore": [],
     "translation_store": {
-      "dir": ".zdoc/translations"
+      "dir": ".zdoc/zh-CN"
     },
     "output": {
       "dir": "./docs/zh-CN",
