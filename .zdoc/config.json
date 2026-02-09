@@ -11,7 +11,7 @@
     ],
     "ignore": [],
     "translation_store": {
-      "dir": ".zdoc/translations"
+      "dir": ".zdoc/zh-CN"
     },
     "output": {
       "dir": "./docs/zh-CN",
