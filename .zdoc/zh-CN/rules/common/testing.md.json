@@ -1,5 +1,5 @@
 {
-  "sourceFile": "rules/testing.md",
+  "sourceFile": "rules/common/testing.md",
   "sourceLanguage": "en-US",
   "entries": [
     {
@@ -15,8 +15,8 @@
       "zh-Hans": "测试类型（全部需要）："
     },
     {
-      "en-US": "1. **Unit Tests** - Individual functions, utilities, components\n2. **Integration Tests** - API endpoints, database operations\n3. **E2E Tests** - Critical user flows (Playwright)",
-      "zh-Hans": "1. **单元测试** - 单个函数、工具、组件\n2. **集成测试** - API 端点、数据库操作\n3. **端到端测试** - 关键用户流程 (Playwright)"
+      "en-US": "1. **Unit Tests** - Individual functions, utilities, components\n2. **Integration Tests** - API endpoints, database operations\n3. **E2E Tests** - Critical user flows (framework chosen per language)",
+      "zh-Hans": "1. **单元测试** - 单个函数、工具、组件\n2. **集成测试** - API 端点、数据库操作\n3. **端到端测试** - 关键用户流程（根据语言选择框架）"
     },
     {
       "en-US": "## Test-Driven Development",
@@ -43,8 +43,8 @@
       "zh-Hans": "## 代理支持"
     },
     {
-      "en-US": "- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first\n- **e2e-runner** - Playwright E2E testing specialist",
-      "zh-Hans": "* **tdd-guide** - 主动用于新功能，强制执行先写测试\n* **e2e-runner** - Playwright 端到端测试专家"
+      "en-US": "- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first",
+      "zh-Hans": "* **tdd-guide** - 主动用于新功能，强制执行测试优先"
     }
   ]
 }

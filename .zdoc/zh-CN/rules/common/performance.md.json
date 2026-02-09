@@ -1,5 +1,5 @@
 {
-  "sourceFile": "rules/performance.md",
+  "sourceFile": "rules/common/performance.md",
   "sourceLanguage": "en-US",
   "entries": [
     {
@@ -55,16 +55,28 @@
       "zh-Hans": "* 单文件编辑\n* 创建独立的实用工具\n* 文档更新\n* 简单的错误修复"
     },
     {
-      "en-US": "## Ultrathink + Plan Mode",
-      "zh-Hans": "## Ultrathink + 计划模式"
+      "en-US": "## Extended Thinking + Plan Mode",
+      "zh-Hans": "## 扩展思考 + 计划模式"
+    },
+    {
+      "en-US": "Extended thinking is enabled by default, reserving up to 31,999 tokens for internal reasoning.",
+      "zh-Hans": "扩展思考默认启用，最多保留 31,999 个令牌用于内部推理。"
+    },
+    {
+      "en-US": "Control extended thinking via:",
+      "zh-Hans": "通过以下方式控制扩展思考："
+    },
+    {
+      "en-US": "- **Toggle**: Option+T (macOS) / Alt+T (Windows/Linux)\n- **Config**: Set `alwaysThinkingEnabled` in `~/.claude/settings.json`\n- **Budget cap**: `export MAX_THINKING_TOKENS=10000`\n- **Verbose mode**: Ctrl+O to see thinking output",
+      "zh-Hans": "* **切换**：Option+T (macOS) / Alt+T (Windows/Linux)\n* **配置**：在 `~/.claude/settings.json` 中设置 `alwaysThinkingEnabled`\n* **预算上限**：`export MAX_THINKING_TOKENS=10000`\n* **详细模式**：Ctrl+O 查看思考输出"
     },
     {
       "en-US": "For complex tasks requiring deep reasoning:",
       "zh-Hans": "对于需要深度推理的复杂任务:"
     },
     {
-      "en-US": "1. Use `ultrathink` for enhanced thinking\n2. Enable **Plan Mode** for structured approach\n3. \"Rev the engine\" with multiple critique rounds\n4. Use split role sub-agents for diverse analysis",
-      "zh-Hans": "1. 使用 `ultrathink` 进行增强思考\n2. 启用**计划模式**以获得结构化方法\n3. 通过多轮批判性评审来\"发动引擎\"\n4. 使用拆分角色的子智能体进行多样化分析"
+      "en-US": "1. Ensure extended thinking is enabled (on by default)\n2. Enable **Plan Mode** for structured approach\n3. Use multiple critique rounds for thorough analysis\n4. Use split role sub-agents for diverse perspectives",
+      "zh-Hans": "1. 确保扩展思考已启用（默认开启）\n2. 启用 **计划模式** 以获得结构化方法\n3. 使用多轮批判进行彻底分析\n4. 使用分割角色子代理以获得多元视角"
     },
     {
       "en-US": "## Build Troubleshooting",

@@ -1,0 +1,38 @@
+{
+  "sourceFile": "rules/python/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Python Security",
+      "zh-Hans": "# Python 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with Python specific content.",
+      "zh-Hans": "> 本文档基于 [通用安全指南](../common/security.md) 扩展，补充了 Python 相关的内容。"
+    },
+    {
+      "en-US": "## Secret Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "```python\nimport os\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\napi_key = os.environ[\"OPENAI_API_KEY\"]  # Raises KeyError if missing\n```",
+      "zh-Hans": "```python\nimport os\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\napi_key = os.environ[\"OPENAI_API_KEY\"]  # Raises KeyError if missing\n```"
+    },
+    {
+      "en-US": "## Security Scanning",
+      "zh-Hans": "## 安全扫描"
+    },
+    {
+      "en-US": "- Use **bandit** for static security analysis:\n  ```bash\n  bandit -r src/\n  ```",
+      "zh-Hans": "* 使用 **bandit** 进行静态安全分析：\n  ```bash\n  bandit -r src/\n  ```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `django-security` for Django-specific security guidelines (if applicable).",
+      "zh-Hans": "查看技能：`django-security` 以获取 Django 特定的安全指南（如适用）。"
+    }
+  ]
+}

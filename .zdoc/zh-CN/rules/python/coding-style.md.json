@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/python/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Python Coding Style",
+      "zh-Hans": "# Python 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Python specific content.",
+      "zh-Hans": "> 本文件在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Python 特定的内容。"
+    },
+    {
+      "en-US": "## Standards",
+      "zh-Hans": "## 标准"
+    },
+    {
+      "en-US": "- Follow **PEP 8** conventions\n- Use **type annotations** on all function signatures",
+      "zh-Hans": "* 遵循 **PEP 8** 规范\n* 在所有函数签名上使用 **类型注解**"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不变性"
+    },
+    {
+      "en-US": "Prefer immutable data structures:",
+      "zh-Hans": "优先使用不可变数据结构："
+    },
+    {
+      "en-US": "```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass User:\n    name: str\n    email: str\n\nfrom typing import NamedTuple\n\nclass Point(NamedTuple):\n    x: float\n    y: float\n```",
+      "zh-Hans": "```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass User:\n    name: str\n    email: str\n\nfrom typing import NamedTuple\n\nclass Point(NamedTuple):\n    x: float\n    y: float\n```"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- **black** for code formatting\n- **isort** for import sorting\n- **ruff** for linting",
+      "zh-Hans": "* 使用 **black** 进行代码格式化\n* 使用 **isort** 进行导入排序\n* 使用 **ruff** 进行代码检查"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `python-patterns` for comprehensive Python idioms and patterns.",
+      "zh-Hans": "查看技能：`python-patterns` 以获取全面的 Python 惯用法和模式。"
+    }
+  ]
+}

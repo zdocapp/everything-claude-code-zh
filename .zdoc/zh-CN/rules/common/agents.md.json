@@ -1,5 +1,5 @@
 {
-  "sourceFile": "rules/agents.md",
+  "sourceFile": "rules/common/agents.md",
   "sourceLanguage": "en-US",
   "entries": [
     {
@@ -39,8 +39,8 @@
       "zh-Hans": "对于独立操作，**始终**使用并行任务执行："
     },
     {
-      "en-US": "```markdown\n# GOOD: Parallel execution\nLaunch 3 agents in parallel:\n1. Agent 1: Security analysis of auth.ts\n2. Agent 2: Performance review of cache system\n3. Agent 3: Type checking of utils.ts\n\n# BAD: Sequential when unnecessary\nFirst agent 1, then agent 2, then agent 3\n```",
-      "zh-Hans": "```markdown\n# GOOD: Parallel execution\nLaunch 3 agents in parallel:\n1. Agent 1: Security analysis of auth.ts\n2. Agent 2: Performance review of cache system\n3. Agent 3: Type checking of utils.ts\n\n# BAD: Sequential when unnecessary\nFirst agent 1, then agent 2, then agent 3\n```"
+      "en-US": "```markdown\n# GOOD: Parallel execution\nLaunch 3 agents in parallel:\n1. Agent 1: Security analysis of auth module\n2. Agent 2: Performance review of cache system\n3. Agent 3: Type checking of utilities\n\n# BAD: Sequential when unnecessary\nFirst agent 1, then agent 2, then agent 3\n```",
+      "zh-Hans": "```markdown\n# 良好：并行执行\n同时启动 3 个智能体：\n1. 智能体 1：认证模块的安全分析\n2. 智能体 2：缓存系统的性能审查\n3. 智能体 3：工具类的类型检查\n\n# 不良：不必要的顺序执行\n先智能体 1，然后智能体 2，最后智能体 3\n\n```"
     },
     {
       "en-US": "## Multi-Perspective Analysis",

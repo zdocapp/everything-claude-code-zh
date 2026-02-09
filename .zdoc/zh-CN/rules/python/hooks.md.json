@@ -1,0 +1,34 @@
+{
+  "sourceFile": "rules/python/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Python Hooks",
+      "zh-Hans": "# Python 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Python specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/hooks.md](../common/hooks.md) 中关于 Python 的特定内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse 钩子"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **black/ruff**: Auto-format `.py` files after edit\n- **mypy/pyright**: Run type checking after editing `.py` files",
+      "zh-Hans": "* **black/ruff**：编辑后自动格式化 `.py` 文件\n* **mypy/pyright**：编辑 `.py` 文件后运行类型检查"
+    },
+    {
+      "en-US": "## Warnings",
+      "zh-Hans": "## 警告"
+    },
+    {
+      "en-US": "- Warn about `print()` statements in edited files (use `logging` module instead)",
+      "zh-Hans": "* 对编辑文件中的 `print()` 语句发出警告（应使用 `logging` 模块替代）"
+    }
+  ]
+}

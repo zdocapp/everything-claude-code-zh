@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/common/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Common Patterns",
+      "zh-Hans": "# 常见模式"
+    },
+    {
+      "en-US": "## Skeleton Projects",
+      "zh-Hans": "## 骨架项目"
+    },
+    {
+      "en-US": "When implementing new functionality:",
+      "zh-Hans": "当实现新功能时："
+    },
+    {
+      "en-US": "1. Search for battle-tested skeleton projects\n2. Use parallel agents to evaluate options:\n   - Security assessment\n   - Extensibility analysis\n   - Relevance scoring\n   - Implementation planning\n3. Clone best match as foundation\n4. Iterate within proven structure",
+      "zh-Hans": "1. 搜索经过实战检验的骨架项目\n2. 使用并行代理评估选项：\n   * 安全性评估\n   * 可扩展性分析\n   * 相关性评分\n   * 实施规划\n3. 克隆最佳匹配作为基础\n4. 在已验证的结构内迭代"
+    },
+    {
+      "en-US": "## Design Patterns",
+      "zh-Hans": "## 设计模式"
+    },
+    {
+      "en-US": "### Repository Pattern",
+      "zh-Hans": "### 仓库模式"
+    },
+    {
+      "en-US": "Encapsulate data access behind a consistent interface:",
+      "zh-Hans": "将数据访问封装在一个一致的接口之后："
+    },
+    {
+      "en-US": "- Define standard operations: findAll, findById, create, update, delete\n- Concrete implementations handle storage details (database, API, file, etc.)\n- Business logic depends on the abstract interface, not the storage mechanism\n- Enables easy swapping of data sources and simplifies testing with mocks",
+      "zh-Hans": "* 定义标准操作：findAll, findById, create, update, delete\n* 具体实现处理存储细节（数据库、API、文件等）\n* 业务逻辑依赖于抽象接口，而非存储机制\n* 便于轻松切换数据源，并使用模拟对象简化测试"
+    },
+    {
+      "en-US": "### API Response Format",
+      "zh-Hans": "### API 响应格式"
+    },
+    {
+      "en-US": "Use a consistent envelope for all API responses:",
+      "zh-Hans": "对所有 API 响应使用一致的信封格式："
+    },
+    {
+      "en-US": "- Include a success/status indicator\n- Include the data payload (nullable on error)\n- Include an error message field (nullable on success)\n- Include metadata for paginated responses (total, page, limit)",
+      "zh-Hans": "* 包含一个成功/状态指示器\n* 包含数据载荷（出错时可为空）\n* 包含一个错误消息字段（成功时可为空）\n* 为分页响应包含元数据（总数、页码、限制）"
+    }
+  ]
+}

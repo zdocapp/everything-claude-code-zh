@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/golang/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Go Patterns",
+      "zh-Hans": "# Go 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Go specific content.",
+      "zh-Hans": "> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 Go 语言特定的内容。"
+    },
+    {
+      "en-US": "## Functional Options",
+      "zh-Hans": "## 函数式选项"
+    },
+    {
+      "en-US": "```go\ntype Option func(*Server)\n\nfunc WithPort(port int) Option {\n    return func(s *Server) { s.port = port }\n}\n\nfunc NewServer(opts ...Option) *Server {\n    s := &Server{port: 8080}\n    for _, opt := range opts {\n        opt(s)\n    }\n    return s\n}\n```",
+      "zh-Hans": "```go\ntype Option func(*Server)\n\nfunc WithPort(port int) Option {\n    return func(s *Server) { s.port = port }\n}\n\nfunc NewServer(opts ...Option) *Server {\n    s := &Server{port: 8080}\n    for _, opt := range opts {\n        opt(s)\n    }\n    return s\n}\n```"
+    },
+    {
+      "en-US": "## Small Interfaces",
+      "zh-Hans": "## 小接口"
+    },
+    {
+      "en-US": "Define interfaces where they are used, not where they are implemented.",
+      "zh-Hans": "在接口被使用的地方定义它们，而不是在它们被实现的地方。"
+    },
+    {
+      "en-US": "## Dependency Injection",
+      "zh-Hans": "## 依赖注入"
+    },
+    {
+      "en-US": "Use constructor functions to inject dependencies:",
+      "zh-Hans": "使用构造函数来注入依赖："
+    },
+    {
+      "en-US": "```go\nfunc NewUserService(repo UserRepository, logger Logger) *UserService {\n    return &UserService{repo: repo, logger: logger}\n}\n```",
+      "zh-Hans": "```go\nfunc NewUserService(repo UserRepository, logger Logger) *UserService {\n    return &UserService{repo: repo, logger: logger}\n}\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `golang-patterns` for comprehensive Go patterns including concurrency, error handling, and package organization.",
+      "zh-Hans": "有关全面的 Go 模式（包括并发、错误处理和包组织），请参阅技能：`golang-patterns`。"
+    }
+  ]
+}

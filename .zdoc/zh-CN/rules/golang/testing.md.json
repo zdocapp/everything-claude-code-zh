@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/golang/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Go Testing",
+      "zh-Hans": "# Go 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Go specific content.",
+      "zh-Hans": "> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Go 特定的内容。"
+    },
+    {
+      "en-US": "## Framework",
+      "zh-Hans": "## 框架"
+    },
+    {
+      "en-US": "Use the standard `go test` with **table-driven tests**.",
+      "zh-Hans": "使用标准的 `go test` 并采用 **表格驱动测试**。"
+    },
+    {
+      "en-US": "## Race Detection",
+      "zh-Hans": "## 竞态检测"
+    },
+    {
+      "en-US": "Always run with the `-race` flag:",
+      "zh-Hans": "始终使用 `-race` 标志运行："
+    },
+    {
+      "en-US": "```bash\ngo test -race ./...\n```",
+      "zh-Hans": "```bash\ngo test -race ./...\n```"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "```bash\ngo test -cover ./...\n```",
+      "zh-Hans": "```bash\ngo test -cover ./...\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `golang-testing` for detailed Go testing patterns and helpers.",
+      "zh-Hans": "查看技能：`golang-testing` 以获取详细的 Go 测试模式和辅助工具。"
+    }
+  ]
+}

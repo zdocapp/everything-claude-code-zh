@@ -1,0 +1,26 @@
+{
+  "sourceFile": "rules/golang/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Go Hooks",
+      "zh-Hans": "# Go 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Go specific content.",
+      "zh-Hans": "> 本文件通过 Go 特定内容扩展了 [common/hooks.md](../common/hooks.md)。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse 钩子"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **gofmt/goimports**: Auto-format `.go` files after edit\n- **go vet**: Run static analysis after editing `.go` files\n- **staticcheck**: Run extended static checks on modified packages",
+      "zh-Hans": "* **gofmt/goimports**：编辑后自动格式化 `.go` 文件\n* **go vet**：编辑 `.go` 文件后运行静态分析\n* **staticcheck**：对修改的包运行扩展静态检查"
+    }
+  ]
+}

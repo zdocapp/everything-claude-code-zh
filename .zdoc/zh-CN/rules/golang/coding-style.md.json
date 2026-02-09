@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/golang/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Go Coding Style",
+      "zh-Hans": "# Go 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Go specific content.",
+      "zh-Hans": "> 本文件在 [common/coding-style.md](../common/coding-style.md) 的基础上，扩展了 Go 语言的特定内容。"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- **gofmt** and **goimports** are mandatory — no style debates",
+      "zh-Hans": "* **gofmt** 和 **goimports** 是强制性的 —— 无需进行风格辩论"
+    },
+    {
+      "en-US": "## Design Principles",
+      "zh-Hans": "## 设计原则"
+    },
+    {
+      "en-US": "- Accept interfaces, return structs\n- Keep interfaces small (1-3 methods)",
+      "zh-Hans": "* 接受接口，返回结构体\n* 保持接口小巧（1-3 个方法）"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "Always wrap errors with context:",
+      "zh-Hans": "始终用上下文包装错误："
+    },
+    {
+      "en-US": "```go\nif err != nil {\n    return fmt.Errorf(\"failed to create user: %w\", err)\n}\n```",
+      "zh-Hans": "```go\nif err != nil {\n    return fmt.Errorf(\"failed to create user: %w\", err)\n}\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `golang-patterns` for comprehensive Go idioms and patterns.",
+      "zh-Hans": "查看技能：`golang-patterns` 以获取全面的 Go 语言惯用法和模式。"
+    }
+  ]
+}

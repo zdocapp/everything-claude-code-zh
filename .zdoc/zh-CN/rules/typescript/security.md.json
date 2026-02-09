@@ -1,0 +1,30 @@
+{
+  "sourceFile": "rules/typescript/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# TypeScript/JavaScript Security",
+      "zh-Hans": "# TypeScript/JavaScript 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with TypeScript/JavaScript specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/security.md](../common/security.md)，包含了 TypeScript/JavaScript 特定的内容。"
+    },
+    {
+      "en-US": "## Secret Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "```typescript\n// NEVER: Hardcoded secrets\nconst apiKey = \"sk-proj-xxxxx\"\n\n// ALWAYS: Environment variables\nconst apiKey = process.env.OPENAI_API_KEY\n\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```",
+      "zh-Hans": "```typescript\n// NEVER: Hardcoded secrets\nconst apiKey = \"sk-proj-xxxxx\"\n\n// ALWAYS: Environment variables\nconst apiKey = process.env.OPENAI_API_KEY\n\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```"
+    },
+    {
+      "en-US": "## Agent Support",
+      "zh-Hans": "## 代理支持"
+    },
+    {
+      "en-US": "- Use **security-reviewer** skill for comprehensive security audits",
+      "zh-Hans": "* 使用 **security-reviewer** 技能进行全面的安全审计"
+    }
+  ]
+}
