@@ -104,7 +104,7 @@
     },
     {
       "en-US": "```markdown\nStart all services and open PM2 monitor.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 monit\"\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n启动所有服务并打开 PM2 监控器。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 monit\"\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n启动所有服务并打开 PM2 监控器。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 monit\"\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### pm2-all-stop.md",
@@ -112,7 +112,7 @@
     },
     {
       "en-US": "```markdown\nStop all services.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 stop all\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n停止所有服务。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 stop all\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n停止所有服务。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 stop all\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### pm2-all-restart.md",
@@ -120,7 +120,7 @@
     },
     {
       "en-US": "```markdown\nRestart all services.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 restart all\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n重启所有服务。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 restart all\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n重启所有服务。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 restart all\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### pm2-{port}.md (Start single + logs)",
@@ -128,7 +128,7 @@
     },
     {
       "en-US": "```markdown\nStart {name} ({port}) and open logs.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs --only {name} && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 logs {name}\"\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n启动 {name} ({port}) 并打开日志。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs --only {name} && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 logs {name}\"\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n启动 {name} ({port}) 并打开日志。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 start ecosystem.config.cjs --only {name} && start wt.exe -d \"{PROJECT_ROOT}\" pwsh -NoExit -c \"pm2 logs {name}\"\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### pm2-{port}-stop.md",
@@ -144,7 +144,7 @@
     },
     {
       "en-US": "```markdown\nRestart {name} ({port}).\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 restart {name}\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n重启 {name} ({port})。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 restart {name}\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n重启 {name} ({port})。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 restart {name}\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### pm2-logs.md",
@@ -152,7 +152,7 @@
     },
     {
       "en-US": "```markdown\nView all PM2 logs.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 logs\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n查看所有 PM2 日志。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 logs\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n查看所有 PM2 日志。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 logs\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### pm2-status.md",
@@ -160,7 +160,7 @@
     },
     {
       "en-US": "```markdown\nView PM2 status.\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 status\n\\`\\`\\`\n```",
-      "zh-Hans": "```markdown\n查看 PM2 状态。\n`​`​`bash\n\ncd \"{PROJECT_ROOT}\" && pm2 status\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n查看 PM2 状态。\n\\`\\`\\`bash\ncd \"{PROJECT_ROOT}\" && pm2 status\n\\`\\`\\`\n\n```"
     },
     {
       "en-US": "### PowerShell Scripts (pm2-logs-{port}.ps1)",
@@ -220,7 +220,7 @@
     },
     {
       "en-US": "```markdown\n## PM2 Services\n\n| Port | Name | Type |\n|------|------|------|\n| {port} | {name} | {type} |\n\n**Terminal Commands:**\n```bash\npm2 start ecosystem.config.cjs   # First time\npm2 start all                    # After first time\npm2 stop all / pm2 restart all\npm2 start {name} / pm2 stop {name}\npm2 logs / pm2 status / pm2 monit\npm2 save                         # Save process list\npm2 resurrect                    # Restore saved list\n```",
-      "zh-Hans": "```markdown\n## PM2 服务\n\n| 端口 | 名称 | 类型 |\n|------|------|------|\n| {port} | {name} | {type} |\n\n**终端命令：**\n`​`​`bash\n\npm2 start ecosystem.config.cjs   # 首次启动\npm2 start all                    # 首次之后启动\npm2 stop all / pm2 restart all\npm2 start {name} / pm2 stop {name}\npm2 logs / pm2 status / pm2 monit\npm2 save                         # 保存进程列表\npm2 resurrect                    # 恢复已保存的列表\n`​`​`\n\n\n```"
+      "zh-Hans": "```markdown\n## PM2 服务\n\n| 端口 | 名称 | 类型 |\n|------|------|------|\n| {port} | {name} | {type} |\n\n**终端命令：**\n`​`​`bash\n\npm2 start ecosystem.config.cjs   # 首次启动\npm2 start all                    # 首次之后启动\npm2 stop all / pm2 restart all\npm2 start {name} / pm2 stop {name}\npm2 logs / pm2 status / pm2 monit\npm2 save                         # 保存进程列表\npm2 resurrect                    # 恢复已保存的列表\n```"
     },
     {
       "en-US": "```\n\n**Rules for CLAUDE.md update:**\n- If PM2 section exists, replace it\n- If not exists, append to end\n- Keep content minimal and essential\n\n---\n\n## Post-Init: Display Summary\n\nAfter all files generated, output:\n\n```",
