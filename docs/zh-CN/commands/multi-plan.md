@@ -38,7 +38,7 @@ EOF",
 
 **模型参数说明**：
 
-* `{{GEMINI_MODEL_FLAG}}`：使用 `--backend gemini` 时，替换为 `--gemini-model gemini-3-pro-preview `（注意尾随空格）；codex 使用空字符串
+* `{{GEMINI_MODEL_FLAG}}`: 当使用 `--backend gemini` 时，替换为 `--gemini-model gemini-3-pro-preview`（注意尾随空格）；对于 codex 使用空字符串
 
 **角色提示**：
 

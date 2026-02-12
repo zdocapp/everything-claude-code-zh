@@ -1,0 +1,194 @@
+{
+  "sourceFile": "skills/security-scan/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: security-scan\ndescription: Scan your Claude Code configuration (.claude/ directory) for security vulnerabilities, misconfigurations, and injection risks using AgentShield. Checks CLAUDE.md, settings.json, MCP servers, hooks, and agent definitions.\n---",
+      "zh-Hans": "---\nname: security-scan\ndescription: 使用AgentShield扫描您的Claude Code配置（.claude/目录），检测安全漏洞、错误配置和注入风险。检查CLAUDE.md、settings.json、MCP服务器、钩子和代理定义。\n---"
+    },
+    {
+      "en-US": "# Security Scan Skill",
+      "zh-Hans": "# 安全扫描技能"
+    },
+    {
+      "en-US": "Audit your Claude Code configuration for security issues using [AgentShield](https://github.com/affaan-m/agentshield).",
+      "zh-Hans": "使用 [AgentShield](https://github.com/affaan-m/agentshield) 审计您的 Claude Code 配置中的安全问题。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Setting up a new Claude Code project\n- After modifying `.claude/settings.json`, `CLAUDE.md`, or MCP configs\n- Before committing configuration changes\n- When onboarding to a new repository with existing Claude Code configs\n- Periodic security hygiene checks",
+      "zh-Hans": "* 设置新的 Claude Code 项目时\n* 修改 `.claude/settings.json`、`CLAUDE.md` 或 MCP 配置后\n* 提交配置更改前\n* 加入具有现有 Claude Code 配置的新代码库时\n* 定期进行安全卫生检查时"
+    },
+    {
+      "en-US": "## What It Scans",
+      "zh-Hans": "## 扫描内容"
+    },
+    {
+      "en-US": "| File | Checks |\n|------|--------|\n| `CLAUDE.md` | Hardcoded secrets, auto-run instructions, prompt injection patterns |\n| `settings.json` | Overly permissive allow lists, missing deny lists, dangerous bypass flags |\n| `mcp.json` | Risky MCP servers, hardcoded env secrets, npx supply chain risks |\n| `hooks/` | Command injection via interpolation, data exfiltration, silent error suppression |\n| `agents/*.md` | Unrestricted tool access, prompt injection surface, missing model specs |",
+      "zh-Hans": "| 文件 | 检查项 |\n|------|--------|\n| `CLAUDE.md` | 硬编码的密钥、自动运行指令、提示词注入模式 |\n| `settings.json` | 过于宽松的允许列表、缺失的拒绝列表、危险的绕过标志 |\n| `mcp.json` | 有风险的 MCP 服务器、硬编码的环境变量密钥、npx 供应链风险 |\n| `hooks/` | 通过 `${file}` 插值导致的命令注入、数据泄露、静默错误抑制 |\n| `agents/*.md` | 无限制的工具访问、提示词注入攻击面、缺失的模型规格 |"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "AgentShield must be installed. Check and install if needed:",
+      "zh-Hans": "必须安装 AgentShield。检查并在需要时安装："
+    },
+    {
+      "en-US": "```bash\n# Check if installed\nnpx ecc-agentshield --version\n\n# Install globally (recommended)\nnpm install -g ecc-agentshield\n\n# Or run directly via npx (no install needed)\nnpx ecc-agentshield scan .\n```",
+      "zh-Hans": "```bash\n# Check if installed\nnpx ecc-agentshield --version\n\n# Install globally (recommended)\nnpm install -g ecc-agentshield\n\n# Or run directly via npx (no install needed)\nnpx ecc-agentshield scan .\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "### Basic Scan",
+      "zh-Hans": "### 基础扫描"
+    },
+    {
+      "en-US": "Run against the current project's `.claude/` directory:",
+      "zh-Hans": "针对当前项目的 `.claude/` 目录运行："
+    },
+    {
+      "en-US": "```bash\n# Scan current project\nnpx ecc-agentshield scan\n\n# Scan a specific path\nnpx ecc-agentshield scan --path /path/to/.claude\n\n# Scan with minimum severity filter\nnpx ecc-agentshield scan --min-severity medium\n```",
+      "zh-Hans": "```bash\n# Scan current project\nnpx ecc-agentshield scan\n\n# Scan a specific path\nnpx ecc-agentshield scan --path /path/to/.claude\n\n# Scan with minimum severity filter\nnpx ecc-agentshield scan --min-severity medium\n```"
+    },
+    {
+      "en-US": "### Output Formats",
+      "zh-Hans": "### 输出格式"
+    },
+    {
+      "en-US": "```bash\n# Terminal output (default) — colored report with grade\nnpx ecc-agentshield scan\n\n# JSON — for CI/CD integration\nnpx ecc-agentshield scan --format json\n\n# Markdown — for documentation\nnpx ecc-agentshield scan --format markdown\n\n# HTML — self-contained dark-theme report\nnpx ecc-agentshield scan --format html > security-report.html\n```",
+      "zh-Hans": "```bash\n# Terminal output (default) — colored report with grade\nnpx ecc-agentshield scan\n\n# JSON — for CI/CD integration\nnpx ecc-agentshield scan --format json\n\n# Markdown — for documentation\nnpx ecc-agentshield scan --format markdown\n\n# HTML — self-contained dark-theme report\nnpx ecc-agentshield scan --format html > security-report.html\n```"
+    },
+    {
+      "en-US": "### Auto-Fix",
+      "zh-Hans": "### 自动修复"
+    },
+    {
+      "en-US": "Apply safe fixes automatically (only fixes marked as auto-fixable):",
+      "zh-Hans": "自动应用安全的修复（仅修复标记为可自动修复的问题）："
+    },
+    {
+      "en-US": "```bash\nnpx ecc-agentshield scan --fix\n```",
+      "zh-Hans": "```bash\nnpx ecc-agentshield scan --fix\n```"
+    },
+    {
+      "en-US": "This will:",
+      "zh-Hans": "这将："
+    },
+    {
+      "en-US": "- Replace hardcoded secrets with environment variable references\n- Tighten wildcard permissions to scoped alternatives\n- Never modify manual-only suggestions",
+      "zh-Hans": "* 用环境变量引用替换硬编码的密钥\n* 将通配符权限收紧为作用域明确的替代方案\n* 绝不修改仅限手动修复的建议"
+    },
+    {
+      "en-US": "### Opus 4.6 Deep Analysis",
+      "zh-Hans": "### Opus 4.6 深度分析"
+    },
+    {
+      "en-US": "Run the adversarial three-agent pipeline for deeper analysis:",
+      "zh-Hans": "运行对抗性的三智能体流程以进行更深入的分析："
+    },
+    {
+      "en-US": "```bash\n# Requires ANTHROPIC_API_KEY\nexport ANTHROPIC_API_KEY=your-key\nnpx ecc-agentshield scan --opus --stream\n```",
+      "zh-Hans": "```bash\n# Requires ANTHROPIC_API_KEY\nexport ANTHROPIC_API_KEY=your-key\nnpx ecc-agentshield scan --opus --stream\n```"
+    },
+    {
+      "en-US": "This runs:",
+      "zh-Hans": "这将运行："
+    },
+    {
+      "en-US": "1. **Attacker (Red Team)** — finds attack vectors\n2. **Defender (Blue Team)** — recommends hardening\n3. **Auditor (Final Verdict)** — synthesizes both perspectives",
+      "zh-Hans": "1. **攻击者（红队）** — 寻找攻击向量\n2. **防御者（蓝队）** — 建议加固措施\n3. **审计员（最终裁决）** — 综合双方观点"
+    },
+    {
+      "en-US": "### Initialize Secure Config",
+      "zh-Hans": "### 初始化安全配置"
+    },
+    {
+      "en-US": "Scaffold a new secure `.claude/` configuration from scratch:",
+      "zh-Hans": "从头开始搭建一个新的安全 `.claude/` 配置："
+    },
+    {
+      "en-US": "```bash\nnpx ecc-agentshield init\n```",
+      "zh-Hans": "```bash\nnpx ecc-agentshield init\n```"
+    },
+    {
+      "en-US": "Creates:",
+      "zh-Hans": "创建："
+    },
+    {
+      "en-US": "- `settings.json` with scoped permissions and deny list\n- `CLAUDE.md` with security best practices\n- `mcp.json` placeholder",
+      "zh-Hans": "* 具有作用域权限和拒绝列表的 `settings.json`\n* 遵循安全最佳实践的 `CLAUDE.md`\n* `mcp.json` 占位符"
+    },
+    {
+      "en-US": "### GitHub Action",
+      "zh-Hans": "### GitHub Action"
+    },
+    {
+      "en-US": "Add to your CI pipeline:",
+      "zh-Hans": "添加到您的 CI 流水线中："
+    },
+    {
+      "en-US": "```yaml\n- uses: affaan-m/agentshield@v1\n  with:\n    path: '.'\n    min-severity: 'medium'\n    fail-on-findings: true\n```",
+      "zh-Hans": "```yaml\n- uses: affaan-m/agentshield@v1\n  with:\n    path: '.'\n    min-severity: 'medium'\n    fail-on-findings: true\n```"
+    },
+    {
+      "en-US": "## Severity Levels",
+      "zh-Hans": "## 严重性等级"
+    },
+    {
+      "en-US": "| Grade | Score | Meaning |\n|-------|-------|---------|\n| A | 90-100 | Secure configuration |\n| B | 75-89 | Minor issues |\n| C | 60-74 | Needs attention |\n| D | 40-59 | Significant risks |\n| F | 0-39 | Critical vulnerabilities |",
+      "zh-Hans": "| 等级 | 分数 | 含义 |\n|-------|-------|---------|\n| A | 90-100 | 安全配置 |\n| B | 75-89 | 轻微问题 |\n| C | 60-74 | 需要注意 |\n| D | 40-59 | 显著风险 |\n| F | 0-39 | 严重漏洞 |"
+    },
+    {
+      "en-US": "## Interpreting Results",
+      "zh-Hans": "## 结果解读"
+    },
+    {
+      "en-US": "### Critical Findings (fix immediately)",
+      "zh-Hans": "### 关键发现（立即修复）"
+    },
+    {
+      "en-US": "- Hardcoded API keys or tokens in config files\n- `Bash(*)` in the allow list (unrestricted shell access)\n- Command injection in hooks via `${file}` interpolation\n- Shell-running MCP servers",
+      "zh-Hans": "* 配置文件中硬编码的 API 密钥或令牌\n* 允许列表中存在 `Bash(*)`（无限制的 shell 访问）\n* 钩子中通过 `${file}` 插值导致的命令注入\n* 运行 shell 的 MCP 服务器"
+    },
+    {
+      "en-US": "### High Findings (fix before production)",
+      "zh-Hans": "### 高优先级发现（生产前修复）"
+    },
+    {
+      "en-US": "- Auto-run instructions in CLAUDE.md (prompt injection vector)\n- Missing deny lists in permissions\n- Agents with unnecessary Bash access",
+      "zh-Hans": "* CLAUDE.md 中的自动运行指令（提示词注入向量）\n* 权限配置中缺少拒绝列表\n* 具有不必要 Bash 访问权限的代理"
+    },
+    {
+      "en-US": "### Medium Findings (recommended)",
+      "zh-Hans": "### 中优先级发现（建议修复）"
+    },
+    {
+      "en-US": "- Silent error suppression in hooks (`2>/dev/null`, `|| true`)\n- Missing PreToolUse security hooks\n- `npx -y` auto-install in MCP server configs",
+      "zh-Hans": "* 钩子中的静默错误抑制（`2>/dev/null`、`|| true`）\n* 缺少 PreToolUse 安全钩子\n* MCP 服务器配置中的 `npx -y` 自动安装"
+    },
+    {
+      "en-US": "### Info Findings (awareness)",
+      "zh-Hans": "### 信息性发现（了解情况）"
+    },
+    {
+      "en-US": "- Missing descriptions on MCP servers\n- Prohibitive instructions correctly flagged as good practice",
+      "zh-Hans": "* MCP 服务器缺少描述信息\n* 正确标记为良好实践的限制性指令"
+    },
+    {
+      "en-US": "## Links",
+      "zh-Hans": "## 链接"
+    },
+    {
+      "en-US": "- **GitHub**: [github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield)\n- **npm**: [npmjs.com/package/ecc-agentshield](https://www.npmjs.com/package/ecc-agentshield)",
+      "zh-Hans": "* **GitHub**: [github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield)\n* **npm**: [npmjs.com/package/ecc-agentshield](https://www.npmjs.com/package/ecc-agentshield)"
+    }
+  ]
+}

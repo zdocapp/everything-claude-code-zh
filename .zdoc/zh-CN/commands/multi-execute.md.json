@@ -55,8 +55,8 @@
       "zh-Hans": "**模型参数说明**："
     },
     {
-      "en-US": "- `{{GEMINI_MODEL_FLAG}}`: When using `--backend gemini`, replace with `--gemini-model gemini-3-pro-preview ` (note trailing space); use empty string for codex",
-      "zh-Hans": "* `{{GEMINI_MODEL_FLAG}}`：使用 `--backend gemini` 时，替换为 `--gemini-model gemini-3-pro-preview `（注意尾随空格）；codex 使用空字符串"
+      "en-US": "- `{{GEMINI_MODEL_FLAG}}`: When using `--backend gemini`, replace with `--gemini-model gemini-3-pro-preview` (note trailing space); use empty string for codex",
+      "zh-Hans": "* `{{GEMINI_MODEL_FLAG}}`：当使用 `--backend gemini` 时，替换为 `--gemini-model gemini-3-pro-preview`（注意尾随空格）；对于 codex 使用空字符串"
     },
     {
       "en-US": "**Role Prompts**:",

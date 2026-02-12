@@ -108,83 +108,75 @@ proc.on('close', (code) => process.exit(code));
 
 ### pm2-all.md (启动所有 + 监控)
 
-```markdown
+````markdown
 启动所有服务并打开 PM2 监控器。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 start ecosystem.config.cjs && start wt.exe -d "{PROJECT_ROOT}" pwsh -NoExit -c "pm2 monit"
-\`\`\`
-
 ```
+````
 
 ### pm2-all-stop.md
 
-```markdown
+````markdown
 停止所有服务。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 stop all
-\`\`\`
-
 ```
+````
 
 ### pm2-all-restart.md
 
-```markdown
+````markdown
 重启所有服务。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 restart all
-\`\`\`
-
 ```
+````
 
 ### pm2-{port}.md (启动单个 + 日志)
 
-```markdown
+````markdown
 启动 {name} ({port}) 并打开日志。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 start ecosystem.config.cjs --only {name} && start wt.exe -d "{PROJECT_ROOT}" pwsh -NoExit -c "pm2 logs {name}"
-\`\`\`
-
 ```
+````
 
 ### pm2-{port}-stop.md
 
-```markdown
+````markdown
 停止 {name} ({port})。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 stop {name}
-\`\`\`
-
 ```
+````
 
 ### pm2-{port}-restart.md
 
-```markdown
+````markdown
 重启 {name} ({port})。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 restart {name}
-\`\`\`
-
 ```
+````
 
 ### pm2-logs.md
 
-```markdown
+````markdown
 查看所有 PM2 日志。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 logs
-\`\`\`
-
 ```
+````
 
 ### pm2-status.md
 
-```markdown
+````markdown
 查看 PM2 状态。
-\`\`\`bash
+```bash
 cd "{PROJECT_ROOT}" && pm2 status
-\`\`\`
-
 ```
+````
 
 ### PowerShell 脚本 (pm2-logs-{port}.ps1)
 
@@ -231,7 +223,7 @@ pm2 monit
 
 生成文件后，将 PM2 部分追加到项目的 `CLAUDE.md`（如果不存在则创建）：
 
-```markdown
+````markdown
 ## PM2 服务
 
 | 端口 | 名称 | 类型 |
@@ -239,59 +231,53 @@ pm2 monit
 | {port} | {name} | {type} |
 
 **终端命令：**
-`​`​`bash
-
-pm2 start ecosystem.config.cjs   # 首次启动
-pm2 start all                    # 首次之后启动
+```bash
+pm2 start ecosystem.config.cjs   # First time
+pm2 start all                    # After first time
 pm2 stop all / pm2 restart all
 pm2 start {name} / pm2 stop {name}
 pm2 logs / pm2 status / pm2 monit
-pm2 save                         # 保存进程列表
-pm2 resurrect                    # 恢复已保存的列表
+pm2 save                         # Save process list
+pm2 resurrect                    # Restore saved list
 ```
+````
+
+**更新 CLAUDE.md 的规则：**
+
+* 如果存在 PM2 部分，替换它
+* 如果不存在，追加到末尾
+* 保持内容精简且必要
+
+***
+
+## 初始化后：显示摘要
+
+所有文件生成后，输出：
 
 ```
+## PM2 Init Complete
 
-**Rules for CLAUDE.md update:**
-- If PM2 section exists, replace it
-- If not exists, append to end
-- Keep content minimal and essential
+**Services:**
 
----
-
-## Post-Init: Display Summary
-
-After all files generated, output:
-
-```
-
-## PM2 初始化完成
-
-**服务:**
-| 端口 | 名称 | 类型 |
+| Port | Name | Type |
 |------|------|------|
 | {port} | {name} | {type} |
 
-**Claude 命令:** /pm2-all, /pm2-all-stop, /pm2-{port}, /pm2-{port}-stop, /pm2-logs, /pm2-status
+**Claude Commands:** /pm2-all, /pm2-all-stop, /pm2-{port}, /pm2-{port}-stop, /pm2-logs, /pm2-status
 
-**终端命令:**
-
-# 首次运行（使用配置文件）
-
+**Terminal Commands:**
+## First time (with config file)
 pm2 start ecosystem.config.cjs && pm2 save
 
-# 首次运行后（简化版）
+## After first time (simplified)
+pm2 start all          # Start all
+pm2 stop all           # Stop all
+pm2 restart all        # Restart all
+pm2 start {name}       # Start single
+pm2 stop {name}        # Stop single
+pm2 logs               # View logs
+pm2 monit              # Monitor panel
+pm2 resurrect          # Restore saved processes
 
-pm2 start all          # 启动所有
-pm2 stop all           # 停止所有
-pm2 restart all        # 重启所有
-pm2 start {name}       # 启动单个
-pm2 stop {name}        # 停止单个
-pm2 logs               # 查看日志
-pm2 monit              # 监控面板
-pm2 resurrect          # 恢复已保存的进程
-
-**提示:** 首次启动后运行 `pm2 save` 以启用简化命令。
-
-```
+**Tip:** Run `pm2 save` after first start to enable simplified commands.
 ```

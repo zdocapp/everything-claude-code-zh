@@ -13,7 +13,7 @@
 ![Java](https://img.shields.io/badge/-Java-ED8B00?logo=openjdk\&logoColor=white)
 ![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown\&logoColor=white)
 
-> **41K+ stars** | **5K+ forks** | **22 contributors** | **6 languages supported**
+> **42K+ 星标** | **5K+ 分支** | **24 位贡献者** | **支持 6 种语言**
 
 ***
 
@@ -218,6 +218,7 @@ everything-claude-code/
 |   |-- verification-loop/          # 持续验证（长文档指南）
 |   |-- golang-patterns/            # Go 语言惯用法与最佳实践
 |   |-- golang-testing/             # Go 测试模式、TDD 与基准测试
+|   |-- cpp-testing/                # 使用 GoogleTest、CMake/CTest 的 C++ 测试（新增）
 |   |-- django-patterns/            # Django 模式、模型与视图（新增）
 |   |-- django-security/            # Django 安全最佳实践（新增）
 |   |-- django-tdd/                 # Django TDD 工作流（新增）
@@ -229,6 +230,7 @@ everything-claude-code/
 |   |-- springboot-tdd/             # Spring Boot TDD（新增）
 |   |-- springboot-verification/    # Spring Boot 验证流程（新增）
 |   |-- configure-ecc/              # 交互式安装向导（新增）
+|   |-- security-scan/              # AgentShield 安全审计集成（新增）
 |
 |-- commands/         # 快捷执行的 Slash 命令
 |   |-- tdd.md              # /tdd - 测试驱动开发
@@ -345,6 +347,30 @@ everything-claude-code/
 * **SKILL.md 文件** - 可供 Claude Code 使用的即用型技能
 * **Instinct 集合** - 用于 continuous-learning-v2
 * **模式提取** - 从您的提交历史中学习
+
+### AgentShield — 安全审计器
+
+扫描您的 Claude Code 配置，查找漏洞、错误配置和注入风险。
+
+```bash
+# Quick scan (no install needed)
+npx ecc-agentshield scan
+
+# Auto-fix safe issues
+npx ecc-agentshield scan --fix
+
+# Deep analysis with Opus 4.6
+npx ecc-agentshield scan --opus --stream
+
+# Generate secure config from scratch
+npx ecc-agentshield init
+```
+
+检查 CLAUDE.md、settings.json、MCP 服务器、钩子和智能体定义。生成带有可操作发现的安全等级 (A-F)。
+
+在 Claude Code 中使用 `/security-scan` 来运行它，或者通过 [GitHub Action](https://github.com/affaan-m/agentshield) 添加到 CI。
+
+[GitHub](https://github.com/affaan-m/agentshield) | [npm](https://www.npmjs.com/package/ecc-agentshield)
 
 ### 🧠 持续学习 v2
 
@@ -580,6 +606,36 @@ node tests/hooks/hooks.test.js
 
 ***
 
+## Cursor IDE 支持
+
+ecc-universal 包含为 [Cursor IDE](https://cursor.com) 预翻译的配置。`.cursor/` 目录包含适用于 Cursor 格式的规则、智能体、技能、命令和 MCP 配置。
+
+### 快速开始 (Cursor)
+
+```bash
+# Install the package
+npm install ecc-universal
+
+# Install for your language(s)
+./install.sh --target cursor typescript
+./install.sh --target cursor python golang
+```
+
+### 已翻译内容
+
+| 组件 | Claude Code → Cursor | 对等性 |
+|-----------|---------------------|--------|
+| 规则 | 添加了 YAML frontmatter，路径扁平化 | 完全 |
+| 智能体 | 模型 ID 已扩展，工具 → 只读标志 | 完全 |
+| 技能 | 无需更改 (标准相同) | 相同 |
+| 命令 | 路径引用已更新，多-\* 已存根 | 部分 |
+| MCP 配置 | 环境变量插值语法已更新 | 完全 |
+| 钩子 | Cursor 中无等效项 | 参见替代方案 |
+
+详情请参阅 [.cursor/README.md](.cursor/README.md)，完整迁移指南请参阅 [.cursor/MIGRATION.md](.cursor/MIGRATION.md)。
+
+***
+
 ## 🔌 OpenCode 支持
 
 ECC 提供 **完整的 OpenCode 支持**，包括插件和钩子。
@@ -663,14 +719,14 @@ opencode
 **选项 2：作为 npm 包安装**
 
 ```bash
-npm install opencode-ecc
+npm install ecc-universal
 ```
 
 然后添加到您的 `opencode.json`：
 
 ```json
 {
-  "plugin": ["opencode-ecc"]
+  "plugin": ["ecc-universal"]
 }
 ```
 
@@ -724,10 +780,11 @@ npm install opencode-ecc
 
 ## 🔗 链接
 
-* **简明指南（从此开始）：** [Everything Claude Code 简明指南](https://x.com/affaanmustafa/status/2012378465664745795)
-* **详细指南（高级）：** [Everything Claude Code 详细指南](https://x.com/affaanmustafa/status/2014040193557471352)
-* **关注：** [@affaanmustafa](https://x.com/affaanmustafa)
-* **zenith.chat：** [zenith.chat](https://zenith.chat)
+* **速查指南 (从此开始):** [Claude Code 万事速查指南](https://x.com/affaanmustafa/status/2012378465664745795)
+* **详细指南 (进阶):** [Claude Code 万事详细指南](https://x.com/affaanmustafa/status/2014040193557471352)
+* **关注:** [@affaanmustafa](https://x.com/affaanmustafa)
+* **zenith.chat:** [zenith.chat](https://zenith.chat)
+* **技能目录:** [awesome-agent-skills](https://github.com/JackyST0/awesome-agent-skills)
 
 ***
 

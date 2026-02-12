@@ -9,7 +9,7 @@ description: 使用Nutrient DWS API处理、转换、OCR、提取、编辑、签
 
 ## 设置
 
-在 **https://dashboard.nutrient.io/sign\_up/?product=processor** 获取免费 API 密钥。
+在 **[nutrient.io](https://dashboard.nutrient.io/sign_up/?product=processor)** 获取一个免费的 API 密钥
 
 ```bash
 export NUTRIENT_API_KEY="pdf_live_..."

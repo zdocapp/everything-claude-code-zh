@@ -19,8 +19,8 @@
       "zh-Hans": "## 设置"
     },
     {
-      "en-US": "Get a free API key at **https://dashboard.nutrient.io/sign_up/?product=processor**",
-      "zh-Hans": "在 **https://dashboard.nutrient.io/sign\\_up/?product=processor** 获取免费 API 密钥。"
+      "en-US": "Get a free API key at **[nutrient.io](https://dashboard.nutrient.io/sign_up/?product=processor)**",
+      "zh-Hans": "在 **[nutrient.io](https://dashboard.nutrient.io/sign_up/?product=processor)** 获取一个免费的 API 密钥"
     },
     {
       "en-US": "```bash\nexport NUTRIENT_API_KEY=\"pdf_live_...\"\n```",

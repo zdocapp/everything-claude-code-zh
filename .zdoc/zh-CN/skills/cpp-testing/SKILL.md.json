@@ -1,0 +1,218 @@
+{
+  "sourceFile": "skills/cpp-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: cpp-testing\ndescription: Use only when writing/updating/fixing C++ tests, configuring GoogleTest/CTest, diagnosing failing or flaky tests, or adding coverage/sanitizers.\n---",
+      "zh-Hans": "---\nname: cpp-testing\ndescription: 仅在编写/更新/修复C++测试、配置GoogleTest/CTest、诊断失败或不稳定的测试，或添加覆盖率/消毒器时使用。\n---"
+    },
+    {
+      "en-US": "# C++ Testing (Agent Skill)",
+      "zh-Hans": "# C++ 测试（代理技能）"
+    },
+    {
+      "en-US": "Agent-focused testing workflow for modern C++ (C++17/20) using GoogleTest/GoogleMock with CMake/CTest.",
+      "zh-Hans": "针对现代 C++（C++17/20）的代理导向测试工作流，使用 GoogleTest/GoogleMock 和 CMake/CTest。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Writing new C++ tests or fixing existing tests\n- Designing unit/integration test coverage for C++ components\n- Adding test coverage, CI gating, or regression protection\n- Configuring CMake/CTest workflows for consistent execution\n- Investigating test failures or flaky behavior\n- Enabling sanitizers for memory/race diagnostics",
+      "zh-Hans": "* 编写新的 C++ 测试或修复现有测试\n* 为 C++ 组件设计单元/集成测试覆盖\n* 添加测试覆盖、CI 门控或回归保护\n* 配置 CMake/CTest 工作流以实现一致的执行\n* 调查测试失败或偶发性行为\n* 启用用于内存/竞态诊断的消毒剂"
+    },
+    {
+      "en-US": "### When NOT to Use",
+      "zh-Hans": "### 不适用时机"
+    },
+    {
+      "en-US": "- Implementing new product features without test changes\n- Large-scale refactors unrelated to test coverage or failures\n- Performance tuning without test regressions to validate\n- Non-C++ projects or non-test tasks",
+      "zh-Hans": "* 在不修改测试的情况下实现新的产品功能\n* 与测试覆盖或失败无关的大规模重构\n* 没有测试回归需要验证的性能调优\n* 非 C++ 项目或非测试任务"
+    },
+    {
+      "en-US": "## Core Concepts",
+      "zh-Hans": "## 核心概念"
+    },
+    {
+      "en-US": "- **TDD loop**: red → green → refactor (tests first, minimal fix, then cleanups).\n- **Isolation**: prefer dependency injection and fakes over global state.\n- **Test layout**: `tests/unit`, `tests/integration`, `tests/testdata`.\n- **Mocks vs fakes**: mock for interactions, fake for stateful behavior.\n- **CTest discovery**: use `gtest_discover_tests()` for stable test discovery.\n- **CI signal**: run subset first, then full suite with `--output-on-failure`.",
+      "zh-Hans": "* **TDD 循环**：红 → 绿 → 重构（先写测试，最小化修复，然后清理）。\n* **隔离**：优先使用依赖注入和仿制品，而非全局状态。\n* **测试布局**：`tests/unit`、`tests/integration`、`tests/testdata`。\n* **Mock 与 Fake**：Mock 用于交互，Fake 用于有状态行为。\n* **CTest 发现**：使用 `gtest_discover_tests()` 进行稳定的测试发现。\n* **CI 信号**：先运行子集，然后使用 `--output-on-failure` 运行完整套件。"
+    },
+    {
+      "en-US": "## TDD Workflow",
+      "zh-Hans": "## TDD 工作流"
+    },
+    {
+      "en-US": "Follow the RED → GREEN → REFACTOR loop:",
+      "zh-Hans": "遵循 RED → GREEN → REFACTOR 循环："
+    },
+    {
+      "en-US": "1. **RED**: write a failing test that captures the new behavior\n2. **GREEN**: implement the smallest change to pass\n3. **REFACTOR**: clean up while tests stay green",
+      "zh-Hans": "1. **RED**：编写一个捕获新行为的失败测试\n2. **GREEN**：实现最小的更改以使其通过\n3. **REFACTOR**：在测试保持通过的同时进行清理"
+    },
+    {
+      "en-US": "```cpp\n// tests/add_test.cpp\n#include <gtest/gtest.h>\n\nint Add(int a, int b); // Provided by production code.\n\nTEST(AddTest, AddsTwoNumbers) { // RED\n  EXPECT_EQ(Add(2, 3), 5);\n}\n\n// src/add.cpp\nint Add(int a, int b) { // GREEN\n  return a + b;\n}\n\n// REFACTOR: simplify/rename once tests pass\n```",
+      "zh-Hans": "```cpp\n// tests/add_test.cpp\n#include <gtest/gtest.h>\n\nint Add(int a, int b); // Provided by production code.\n\nTEST(AddTest, AddsTwoNumbers) { // RED\n  EXPECT_EQ(Add(2, 3), 5);\n}\n\n// src/add.cpp\nint Add(int a, int b) { // GREEN\n  return a + b;\n}\n\n// REFACTOR: simplify/rename once tests pass\n```"
+    },
+    {
+      "en-US": "## Code Examples",
+      "zh-Hans": "## 代码示例"
+    },
+    {
+      "en-US": "### Basic Unit Test (gtest)",
+      "zh-Hans": "### 基础单元测试 (gtest)"
+    },
+    {
+      "en-US": "```cpp\n// tests/calculator_test.cpp\n#include <gtest/gtest.h>\n\nint Add(int a, int b); // Provided by production code.\n\nTEST(CalculatorTest, AddsTwoNumbers) {\n    EXPECT_EQ(Add(2, 3), 5);\n}\n```",
+      "zh-Hans": "```cpp\n// tests/calculator_test.cpp\n#include <gtest/gtest.h>\n\nint Add(int a, int b); // Provided by production code.\n\nTEST(CalculatorTest, AddsTwoNumbers) {\n    EXPECT_EQ(Add(2, 3), 5);\n}\n```"
+    },
+    {
+      "en-US": "### Fixture (gtest)",
+      "zh-Hans": "### 夹具 (gtest)"
+    },
+    {
+      "en-US": "```cpp\n// tests/user_store_test.cpp\n// Pseudocode stub: replace UserStore/User with project types.\n#include <gtest/gtest.h>\n#include <memory>\n#include <optional>\n#include <string>\n\nstruct User { std::string name; };\nclass UserStore {\npublic:\n    explicit UserStore(std::string /*path*/) {}\n    void Seed(std::initializer_list<User> /*users*/) {}\n    std::optional<User> Find(const std::string &/*name*/) { return User{\"alice\"}; }\n};\n\nclass UserStoreTest : public ::testing::Test {\nprotected:\n    void SetUp() override {\n        store = std::make_unique<UserStore>(\":memory:\");\n        store->Seed({{\"alice\"}, {\"bob\"}});\n    }\n\n    std::unique_ptr<UserStore> store;\n};\n\nTEST_F(UserStoreTest, FindsExistingUser) {\n    auto user = store->Find(\"alice\");\n    ASSERT_TRUE(user.has_value());\n    EXPECT_EQ(user->name, \"alice\");\n}\n```",
+      "zh-Hans": "```cpp\n// tests/user_store_test.cpp\n// Pseudocode stub: replace UserStore/User with project types.\n#include <gtest/gtest.h>\n#include <memory>\n#include <optional>\n#include <string>\n\nstruct User { std::string name; };\nclass UserStore {\npublic:\n    explicit UserStore(std::string /*path*/) {}\n    void Seed(std::initializer_list<User> /*users*/) {}\n    std::optional<User> Find(const std::string &/*name*/) { return User{\"alice\"}; }\n};\n\nclass UserStoreTest : public ::testing::Test {\nprotected:\n    void SetUp() override {\n        store = std::make_unique<UserStore>(\":memory:\");\n        store->Seed({{\"alice\"}, {\"bob\"}});\n    }\n\n    std::unique_ptr<UserStore> store;\n};\n\nTEST_F(UserStoreTest, FindsExistingUser) {\n    auto user = store->Find(\"alice\");\n    ASSERT_TRUE(user.has_value());\n    EXPECT_EQ(user->name, \"alice\");\n}\n```"
+    },
+    {
+      "en-US": "### Mock (gmock)",
+      "zh-Hans": "### Mock (gmock)"
+    },
+    {
+      "en-US": "```cpp\n// tests/notifier_test.cpp\n#include <gmock/gmock.h>\n#include <gtest/gtest.h>\n#include <string>\n\nclass Notifier {\npublic:\n    virtual ~Notifier() = default;\n    virtual void Send(const std::string &message) = 0;\n};\n\nclass MockNotifier : public Notifier {\npublic:\n    MOCK_METHOD(void, Send, (const std::string &message), (override));\n};\n\nclass Service {\npublic:\n    explicit Service(Notifier &notifier) : notifier_(notifier) {}\n    void Publish(const std::string &message) { notifier_.Send(message); }\n\nprivate:\n    Notifier &notifier_;\n};\n\nTEST(ServiceTest, SendsNotifications) {\n    MockNotifier notifier;\n    Service service(notifier);\n\n    EXPECT_CALL(notifier, Send(\"hello\")).Times(1);\n    service.Publish(\"hello\");\n}\n```",
+      "zh-Hans": "```cpp\n// tests/notifier_test.cpp\n#include <gmock/gmock.h>\n#include <gtest/gtest.h>\n#include <string>\n\nclass Notifier {\npublic:\n    virtual ~Notifier() = default;\n    virtual void Send(const std::string &message) = 0;\n};\n\nclass MockNotifier : public Notifier {\npublic:\n    MOCK_METHOD(void, Send, (const std::string &message), (override));\n};\n\nclass Service {\npublic:\n    explicit Service(Notifier &notifier) : notifier_(notifier) {}\n    void Publish(const std::string &message) { notifier_.Send(message); }\n\nprivate:\n    Notifier &notifier_;\n};\n\nTEST(ServiceTest, SendsNotifications) {\n    MockNotifier notifier;\n    Service service(notifier);\n\n    EXPECT_CALL(notifier, Send(\"hello\")).Times(1);\n    service.Publish(\"hello\");\n}\n```"
+    },
+    {
+      "en-US": "### CMake/CTest Quickstart",
+      "zh-Hans": "### CMake/CTest 快速入门"
+    },
+    {
+      "en-US": "```cmake\n# CMakeLists.txt (excerpt)\ncmake_minimum_required(VERSION 3.20)\nproject(example LANGUAGES CXX)\n\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\n\ninclude(FetchContent)\n# Prefer project-locked versions. If using a tag, use a pinned version per project policy.\nset(GTEST_VERSION v1.17.0) # Adjust to project policy.\nFetchContent_Declare(\n  googletest\n  URL https://github.com/google/googletest/archive/refs/tags/${GTEST_VERSION}.zip\n)\nFetchContent_MakeAvailable(googletest)\n\nadd_executable(example_tests\n  tests/calculator_test.cpp\n  src/calculator.cpp\n)\ntarget_link_libraries(example_tests GTest::gtest GTest::gmock GTest::gtest_main)\n\nenable_testing()\ninclude(GoogleTest)\ngtest_discover_tests(example_tests)\n```",
+      "zh-Hans": "```cmake\n# CMakeLists.txt (excerpt)\ncmake_minimum_required(VERSION 3.20)\nproject(example LANGUAGES CXX)\n\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\n\ninclude(FetchContent)\n# Prefer project-locked versions. If using a tag, use a pinned version per project policy.\nset(GTEST_VERSION v1.17.0) # Adjust to project policy.\nFetchContent_Declare(\n  googletest\n  URL https://github.com/google/googletest/archive/refs/tags/${GTEST_VERSION}.zip\n)\nFetchContent_MakeAvailable(googletest)\n\nadd_executable(example_tests\n  tests/calculator_test.cpp\n  src/calculator.cpp\n)\ntarget_link_libraries(example_tests GTest::gtest GTest::gmock GTest::gtest_main)\n\nenable_testing()\ninclude(GoogleTest)\ngtest_discover_tests(example_tests)\n```"
+    },
+    {
+      "en-US": "```bash\ncmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j\nctest --test-dir build --output-on-failure\n```",
+      "zh-Hans": "```bash\ncmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j\nctest --test-dir build --output-on-failure\n```"
+    },
+    {
+      "en-US": "## Running Tests",
+      "zh-Hans": "## 运行测试"
+    },
+    {
+      "en-US": "```bash\nctest --test-dir build --output-on-failure\nctest --test-dir build -R ClampTest\nctest --test-dir build -R \"UserStoreTest.*\" --output-on-failure\n```",
+      "zh-Hans": "```bash\nctest --test-dir build --output-on-failure\nctest --test-dir build -R ClampTest\nctest --test-dir build -R \"UserStoreTest.*\" --output-on-failure\n```"
+    },
+    {
+      "en-US": "```bash\n./build/example_tests --gtest_filter=ClampTest.*\n./build/example_tests --gtest_filter=UserStoreTest.FindsExistingUser\n```",
+      "zh-Hans": "```bash\n./build/example_tests --gtest_filter=ClampTest.*\n./build/example_tests --gtest_filter=UserStoreTest.FindsExistingUser\n```"
+    },
+    {
+      "en-US": "## Debugging Failures",
+      "zh-Hans": "## 调试失败"
+    },
+    {
+      "en-US": "1. Re-run the single failing test with gtest filter.\n2. Add scoped logging around the failing assertion.\n3. Re-run with sanitizers enabled.\n4. Expand to full suite once the root cause is fixed.",
+      "zh-Hans": "1. 使用 gtest 过滤器重新运行单个失败的测试。\n2. 在失败的断言周围添加作用域日志记录。\n3. 启用消毒剂后重新运行。\n4. 根本原因修复后，扩展到完整套件。"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "Prefer target-level settings instead of global flags.",
+      "zh-Hans": "优先使用目标级别的设置，而非全局标志。"
+    },
+    {
+      "en-US": "```cmake\noption(ENABLE_COVERAGE \"Enable coverage flags\" OFF)\n\nif(ENABLE_COVERAGE)\n  if(CMAKE_CXX_COMPILER_ID MATCHES \"GNU\")\n    target_compile_options(example_tests PRIVATE --coverage)\n    target_link_options(example_tests PRIVATE --coverage)\n  elseif(CMAKE_CXX_COMPILER_ID MATCHES \"Clang\")\n    target_compile_options(example_tests PRIVATE -fprofile-instr-generate -fcoverage-mapping)\n    target_link_options(example_tests PRIVATE -fprofile-instr-generate)\n  endif()\nendif()\n```",
+      "zh-Hans": "```cmake\noption(ENABLE_COVERAGE \"Enable coverage flags\" OFF)\n\nif(ENABLE_COVERAGE)\n  if(CMAKE_CXX_COMPILER_ID MATCHES \"GNU\")\n    target_compile_options(example_tests PRIVATE --coverage)\n    target_link_options(example_tests PRIVATE --coverage)\n  elseif(CMAKE_CXX_COMPILER_ID MATCHES \"Clang\")\n    target_compile_options(example_tests PRIVATE -fprofile-instr-generate -fcoverage-mapping)\n    target_link_options(example_tests PRIVATE -fprofile-instr-generate)\n  endif()\nendif()\n```"
+    },
+    {
+      "en-US": "GCC + gcov + lcov:",
+      "zh-Hans": "GCC + gcov + lcov："
+    },
+    {
+      "en-US": "```bash\ncmake -S . -B build-cov -DENABLE_COVERAGE=ON\ncmake --build build-cov -j\nctest --test-dir build-cov\nlcov --capture --directory build-cov --output-file coverage.info\nlcov --remove coverage.info '/usr/*' --output-file coverage.info\ngenhtml coverage.info --output-directory coverage\n```",
+      "zh-Hans": "```bash\ncmake -S . -B build-cov -DENABLE_COVERAGE=ON\ncmake --build build-cov -j\nctest --test-dir build-cov\nlcov --capture --directory build-cov --output-file coverage.info\nlcov --remove coverage.info '/usr/*' --output-file coverage.info\ngenhtml coverage.info --output-directory coverage\n```"
+    },
+    {
+      "en-US": "Clang + llvm-cov:",
+      "zh-Hans": "Clang + llvm-cov："
+    },
+    {
+      "en-US": "```bash\ncmake -S . -B build-llvm -DENABLE_COVERAGE=ON -DCMAKE_CXX_COMPILER=clang++\ncmake --build build-llvm -j\nLLVM_PROFILE_FILE=\"build-llvm/default.profraw\" ctest --test-dir build-llvm\nllvm-profdata merge -sparse build-llvm/default.profraw -o build-llvm/default.profdata\nllvm-cov report build-llvm/example_tests -instr-profile=build-llvm/default.profdata\n```",
+      "zh-Hans": "```bash\ncmake -S . -B build-llvm -DENABLE_COVERAGE=ON -DCMAKE_CXX_COMPILER=clang++\ncmake --build build-llvm -j\nLLVM_PROFILE_FILE=\"build-llvm/default.profraw\" ctest --test-dir build-llvm\nllvm-profdata merge -sparse build-llvm/default.profraw -o build-llvm/default.profdata\nllvm-cov report build-llvm/example_tests -instr-profile=build-llvm/default.profdata\n```"
+    },
+    {
+      "en-US": "## Sanitizers",
+      "zh-Hans": "## 消毒剂"
+    },
+    {
+      "en-US": "```cmake\noption(ENABLE_ASAN \"Enable AddressSanitizer\" OFF)\noption(ENABLE_UBSAN \"Enable UndefinedBehaviorSanitizer\" OFF)\noption(ENABLE_TSAN \"Enable ThreadSanitizer\" OFF)\n\nif(ENABLE_ASAN)\n  add_compile_options(-fsanitize=address -fno-omit-frame-pointer)\n  add_link_options(-fsanitize=address)\nendif()\nif(ENABLE_UBSAN)\n  add_compile_options(-fsanitize=undefined -fno-omit-frame-pointer)\n  add_link_options(-fsanitize=undefined)\nendif()\nif(ENABLE_TSAN)\n  add_compile_options(-fsanitize=thread)\n  add_link_options(-fsanitize=thread)\nendif()\n```",
+      "zh-Hans": "```cmake\noption(ENABLE_ASAN \"Enable AddressSanitizer\" OFF)\noption(ENABLE_UBSAN \"Enable UndefinedBehaviorSanitizer\" OFF)\noption(ENABLE_TSAN \"Enable ThreadSanitizer\" OFF)\n\nif(ENABLE_ASAN)\n  add_compile_options(-fsanitize=address -fno-omit-frame-pointer)\n  add_link_options(-fsanitize=address)\nendif()\nif(ENABLE_UBSAN)\n  add_compile_options(-fsanitize=undefined -fno-omit-frame-pointer)\n  add_link_options(-fsanitize=undefined)\nendif()\nif(ENABLE_TSAN)\n  add_compile_options(-fsanitize=thread)\n  add_link_options(-fsanitize=thread)\nendif()\n```"
+    },
+    {
+      "en-US": "## Flaky Tests Guardrails",
+      "zh-Hans": "## 偶发性测试防护"
+    },
+    {
+      "en-US": "- Never use `sleep` for synchronization; use condition variables or latches.\n- Make temp directories unique per test and always clean them.\n- Avoid real time, network, or filesystem dependencies in unit tests.\n- Use deterministic seeds for randomized inputs.",
+      "zh-Hans": "* 切勿使用 `sleep` 进行同步；使用条件变量或门闩。\n* 为每个测试创建唯一的临时目录并始终清理它们。\n* 避免在单元测试中依赖真实时间、网络或文件系统。\n* 对随机化输入使用确定性种子。"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "### DO",
+      "zh-Hans": "### 应该做"
+    },
+    {
+      "en-US": "- Keep tests deterministic and isolated\n- Prefer dependency injection over globals\n- Use `ASSERT_*` for preconditions, `EXPECT_*` for multiple checks\n- Separate unit vs integration tests in CTest labels or directories\n- Run sanitizers in CI for memory and race detection",
+      "zh-Hans": "* 保持测试的确定性和隔离性\n* 优先使用依赖注入而非全局变量\n* 对前置条件使用 `ASSERT_*`，对多个检查使用 `EXPECT_*`\n* 在 CTest 标签或目录中分离单元测试与集成测试\n* 在 CI 中运行消毒剂以进行内存和竞态检测"
+    },
+    {
+      "en-US": "### DON'T",
+      "zh-Hans": "### 不应该做"
+    },
+    {
+      "en-US": "- Don't depend on real time or network in unit tests\n- Don't use sleeps as synchronization when a condition variable can be used\n- Don't over-mock simple value objects\n- Don't use brittle string matching for non-critical logs",
+      "zh-Hans": "* 不要在单元测试中依赖真实时间或网络\n* 当可以使用条件变量时，不要使用睡眠作为同步手段\n* 不要过度模拟简单的值对象\n* 不要对非关键日志使用脆弱的字符串匹配"
+    },
+    {
+      "en-US": "### Common Pitfalls",
+      "zh-Hans": "### 常见陷阱"
+    },
+    {
+      "en-US": "- **Using fixed temp paths** → Generate unique temp directories per test and clean them.\n- **Relying on wall clock time** → Inject a clock or use fake time sources.\n- **Flaky concurrency tests** → Use condition variables/latches and bounded waits.\n- **Hidden global state** → Reset global state in fixtures or remove globals.\n- **Over-mocking** → Prefer fakes for stateful behavior and only mock interactions.\n- **Missing sanitizer runs** → Add ASan/UBSan/TSan builds in CI.\n- **Coverage on debug-only builds** → Ensure coverage targets use consistent flags.",
+      "zh-Hans": "* **使用固定的临时路径** → 为每个测试生成唯一的临时目录并清理它们。\n* **依赖挂钟时间** → 注入时钟或使用模拟时间源。\n* **偶发性并发测试** → 使用条件变量/门闩和有界等待。\n* **隐藏的全局状态** → 在夹具中重置全局状态或移除全局变量。\n* **过度模拟** → 对有状态行为优先使用 Fake，仅对交互进行 Mock。\n* **缺少消毒剂运行** → 在 CI 中添加 ASan/UBSan/TSan 构建。\n* **仅在调试版本上计算覆盖率** → 确保覆盖率目标使用一致的标志。"
+    },
+    {
+      "en-US": "## Optional Appendix: Fuzzing / Property Testing",
+      "zh-Hans": "## 可选附录：模糊测试 / 属性测试"
+    },
+    {
+      "en-US": "Only use if the project already supports LLVM/libFuzzer or a property-testing library.",
+      "zh-Hans": "仅在项目已支持 LLVM/libFuzzer 或属性测试库时使用。"
+    },
+    {
+      "en-US": "- **libFuzzer**: best for pure functions with minimal I/O.\n- **RapidCheck**: property-based tests to validate invariants.",
+      "zh-Hans": "* **libFuzzer**：最适合 I/O 最少的纯函数。\n* **RapidCheck**：基于属性的测试，用于验证不变量。"
+    },
+    {
+      "en-US": "Minimal libFuzzer harness (pseudocode: replace ParseConfig):",
+      "zh-Hans": "最小的 libFuzzer 测试框架（伪代码：替换 ParseConfig）："
+    },
+    {
+      "en-US": "```cpp\n#include <cstddef>\n#include <cstdint>\n#include <string>\n\nextern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n    std::string input(reinterpret_cast<const char *>(data), size);\n    // ParseConfig(input); // project function\n    return 0;\n}\n```",
+      "zh-Hans": "```cpp\n#include <cstddef>\n#include <cstdint>\n#include <string>\n\nextern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n    std::string input(reinterpret_cast<const char *>(data), size);\n    // ParseConfig(input); // project function\n    return 0;\n}\n```"
+    },
+    {
+      "en-US": "## Alternatives to GoogleTest",
+      "zh-Hans": "## GoogleTest 的替代方案"
+    },
+    {
+      "en-US": "- **Catch2**: header-only, expressive matchers\n- **doctest**: lightweight, minimal compile overhead",
+      "zh-Hans": "* **Catch2**：仅头文件，表达性强的匹配器\n* **doctest**：轻量级，编译开销最小"
+    }
+  ]
+}
