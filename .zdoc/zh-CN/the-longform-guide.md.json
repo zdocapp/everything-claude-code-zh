@@ -8,7 +8,7 @@
     },
     {
       "en-US": "![Header: The Longform Guide to Everything Claude Code](./assets/images/longform/01-header.png)",
-      "zh-Hans": "![Header: The Longform Guide to Everything Claude Code](./assets/images/longform/01-header.png)"
+      "zh-Hans": "![Header: The Longform Guide to Everything Claude Code](../../assets/images/longform/01-header.png)"
     },
     {
       "en-US": "---",
@@ -20,7 +20,7 @@
     },
     {
       "en-US": "![Reference to Shorthand Guide](./assets/images/longform/02-shortform-reference.png)\n*The Shorthand Guide - read it first*",
-      "zh-Hans": "![Reference to Shorthand Guide](./assets/images/longform/02-shortform-reference.png)\n*简明指南 - 请先阅读*"
+      "zh-Hans": "![Reference to Shorthand Guide](../../assets/images/longform/02-shortform-reference.png)\n*速记指南 - 请先阅读它*"
     },
     {
       "en-US": "In the shorthand guide, I covered the foundational setup: skills and commands, hooks, subagents, MCPs, plugins, and the configuration patterns that form the backbone of an effective Claude Code workflow. That was the setup guide and the base infrastructure.",
@@ -84,7 +84,7 @@
     },
     {
       "en-US": "![Session Storage File Tree](./assets/images/longform/03-session-storage.png)\n*Example of session storage -> https://github.com/affaan-m/everything-claude-code/tree/main/examples/sessions*",
-      "zh-Hans": "![Session Storage File Tree](./assets/images/longform/03-session-storage.png)\n*会话存储示例 -> https://github.com/affaan-m/everything-claude-code/tree/main/examples/sessions*"
+      "zh-Hans": "![Session Storage File Tree](../../assets/images/longform/03-session-storage.png)\n*会话存储示例 -> https://github.com/affaan-m/everything-claude-code/tree/main/examples/sessions*"
     },
     {
       "en-US": "Claude creates a file summarizing current state. Review it, ask for edits if needed, then start fresh. For the new conversation, just provide the file path. Particularly useful when you're hitting context limits and need to continue complex work. These files should contain:",
@@ -196,7 +196,7 @@
     },
     {
       "en-US": "![Model Selection Table](./assets/images/longform/04-model-selection.png)\n*Hypothetical setup of subagents on various common tasks and reasoning behind the choices*",
-      "zh-Hans": "![Model Selection Table](./assets/images/longform/04-model-selection.png)\n*在各种常见任务上设置子代理的假设方案及其选择理由*"
+      "zh-Hans": "![Model Selection Table](../../assets/images/longform/04-model-selection.png)\n*针对各种常见任务的子代理假设设置及选择背后的理由*"
     },
     {
       "en-US": "| Task Type                 | Model  | Why                                        |\n| ------------------------- | ------ | ------------------------------------------ |\n| Exploration/search        | Haiku  | Fast, cheap, good enough for finding files |\n| Simple edits              | Haiku  | Single-file changes, clear instructions    |\n| Multi-file implementation | Sonnet | Best balance for coding                    |\n| Complex architecture      | Opus   | Deep reasoning needed                      |\n| PR reviews                | Sonnet | Understands context, catches nuance        |\n| Security analysis         | Opus   | Can't afford to miss vulnerabilities       |\n| Writing docs              | Haiku  | Structure is simple                        |\n| Debugging complex bugs    | Opus   | Needs to hold entire system in mind        |",
@@ -212,7 +212,7 @@
     },
     {
       "en-US": "![Claude Model Pricing](./assets/images/longform/05-pricing-table.png)\n*Source: https://platform.claude.com/docs/en/about-claude/pricing*",
-      "zh-Hans": "![Claude Model Pricing](./assets/images/longform/05-pricing-table.png)\n*来源：https://platform.claude.com/docs/en/about-claude/pricing*"
+      "zh-Hans": "![Claude Model Pricing](../../assets/images/longform/05-pricing-table.png)\n*来源：https://platform.claude.com/docs/en/about-claude/pricing*"
     },
     {
       "en-US": "**Tool-Specific Optimizations:**",
@@ -224,7 +224,7 @@
     },
     {
       "en-US": "![mgrep Benchmark](./assets/images/longform/06-mgrep-benchmark.png)\n*In our 50-task benchmark, mgrep + Claude Code used ~2x fewer tokens than grep-based workflows at similar or better judged quality. Source: https://github.com/mixedbread-ai/mgrep*",
-      "zh-Hans": "![mgrep Benchmark](./assets/images/longform/06-mgrep-benchmark.png)\n*在我们的 50 个任务基准测试中，mgrep + Claude Code 使用了比基于 grep 的工作流少约 2 倍的令牌，且质量相似或更好。来源：https://github.com/mixedbread-ai/mgrep*"
+      "zh-Hans": "![mgrep Benchmark](../../assets/images/longform/06-mgrep-benchmark.png)\n*在我们的 50 项任务基准测试中，mgrep + Claude Code 使用了比基于 grep 的工作流少约 2 倍的 token，且判断质量相似或更好。来源：https://github.com/mixedbread-ai/mgrep*"
     },
     {
       "en-US": "**Modular Codebase Benefits:**",
@@ -300,7 +300,7 @@
     },
     {
       "en-US": "![Boris on Parallel Terminals](./assets/images/longform/07-boris-parallel.png)\n*Boris (Anthropic) on running multiple Claude instances*",
-      "zh-Hans": "![Boris on Parallel Terminals](./assets/images/longform/07-boris-parallel.png)\n*Boris (Anthropic) 关于运行多个 Claude 实例*"
+      "zh-Hans": "![Boris on Parallel Terminals](../../assets/images/longform/07-boris-parallel.png)\n*Boris (Anthropic) 关于运行多个 Claude 实例的说明*"
     },
     {
       "en-US": "Boris has tips on parallelization. He's suggested things like running 5 Claude instances locally and 5 upstream. I advise against setting arbitrary terminal amounts. The addition of a terminal should be out of true necessity.",
@@ -324,7 +324,7 @@
     },
     {
       "en-US": "![Two Terminal Setup](./assets/images/longform/08-two-terminals.png)\n*Starting Setup: Left Terminal for Coding, Right Terminal for Questions - use /rename and /fork*",
-      "zh-Hans": "![Two Terminal Setup](./assets/images/longform/08-two-terminals.png)\n*初始设置：左终端用于编码，右终端用于提问 - 使用 /rename 和 /fork*"
+      "zh-Hans": "![Two Terminal Setup](../../assets/images/longform/08-two-terminals.png)\n*初始设置：左终端用于编码，右终端用于提问 - 使用 /rename 和 /fork*"
     },
     {
       "en-US": "**The Cascade Method:**",
@@ -488,7 +488,7 @@
     },
     {
       "en-US": "![25k+ GitHub Stars](./assets/images/longform/09-25k-stars.png)\n*25,000+ GitHub stars in under a week*",
-      "zh-Hans": "![25k+ GitHub Stars](./assets/images/longform/09-25k-stars.png)\n*一周内获得 25,000+ GitHub stars*"
+      "zh-Hans": "![25k+ GitHub Stars](../../assets/images/longform/09-25k-stars.png)\n*一周内获得 25,000+ GitHub stars*"
     },
     {
       "en-US": "---",
