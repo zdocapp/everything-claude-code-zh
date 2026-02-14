@@ -116,6 +116,7 @@
           "linkReference"
         ]
       }
-    }
+    },
+    "updateLocalFileReferences": true
   }
 ]

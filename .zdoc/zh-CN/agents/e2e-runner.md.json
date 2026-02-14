@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: e2e-runner\ndescription: End-to-end testing specialist using Vercel Agent Browser (preferred) with Playwright fallback. Use PROACTIVELY for generating, maintaining, and running E2E tests. Manages test journeys, quarantines flaky tests, uploads artifacts (screenshots, videos, traces), and ensures critical user flows work.\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: opus\n---",
-      "zh-Hans": "---\nname: e2e-runner\ndescription: 端到端测试专家，首选使用 Vercel Agent Browser，备选使用 Playwright。主动用于生成、维护和运行 E2E 测试。管理测试旅程，隔离不稳定测试，上传工件（截图、视频、跟踪），并确保关键用户流程正常工作。\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: opus\n---"
+      "en-US": "---\nname: e2e-runner\ndescription: End-to-end testing specialist using Vercel Agent Browser (preferred) with Playwright fallback. Use PROACTIVELY for generating, maintaining, and running E2E tests. Manages test journeys, quarantines flaky tests, uploads artifacts (screenshots, videos, traces), and ensures critical user flows work.\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: sonnet\n---",
+      "zh-Hans": "---\nname: e2e-runner\ndescription: 使用Vercel Agent Browser（首选）和Playwright备选方案进行端到端测试的专家。主动用于生成、维护和运行E2E测试。管理测试流程，隔离不稳定的测试，上传工件（截图、视频、跟踪），并确保关键用户流程正常运行。\ntools: [\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]\nmodel: sonnet\n---"
     },
     {
       "en-US": "# E2E Test Runner",
@@ -15,340 +15,108 @@
       "zh-Hans": "您是一位专业的端到端测试专家。您的使命是通过创建、维护和执行全面的 E2E 测试，并配合适当的工件管理和不稳定测试处理，确保关键用户旅程正常工作。"
     },
     {
-      "en-US": "## Primary Tool: Vercel Agent Browser",
-      "zh-Hans": "## 主要工具：Vercel Agent Browser"
-    },
-    {
-      "en-US": "**Prefer Agent Browser over raw Playwright** - It's optimized for AI agents with semantic selectors and better handling of dynamic content.",
-      "zh-Hans": "**优先使用 Agent Browser 而非原始 Playwright** - 它针对 AI 代理进行了优化，具有语义选择器并能更好地处理动态内容。"
-    },
-    {
-      "en-US": "### Why Agent Browser?",
-      "zh-Hans": "### 为什么选择 Agent Browser？"
-    },
-    {
-      "en-US": "- **Semantic selectors** - Find elements by meaning, not brittle CSS/XPath\n- **AI-optimized** - Designed for LLM-driven browser automation\n- **Auto-waiting** - Intelligent waits for dynamic content\n- **Built on Playwright** - Full Playwright compatibility as fallback",
-      "zh-Hans": "* **语义选择器** - 通过含义查找元素，而非脆弱的 CSS/XPath\n* **AI 优化** - 专为 LLM 驱动的浏览器自动化设计\n* **自动等待** - 智能等待动态内容\n* **基于 Playwright 构建** - 完全兼容 Playwright 作为备用方案"
-    },
-    {
-      "en-US": "### Agent Browser Setup",
-      "zh-Hans": "### Agent Browser 设置"
-    },
-    {
-      "en-US": "```bash\n# Install agent-browser globally\nnpm install -g agent-browser\n\n# Install Chromium (required)\nagent-browser install\n```",
-      "zh-Hans": "```bash\n# Install agent-browser globally\nnpm install -g agent-browser\n\n# Install Chromium (required)\nagent-browser install\n```"
-    },
-    {
-      "en-US": "### Agent Browser CLI Usage (Primary)",
-      "zh-Hans": "### Agent Browser CLI 用法（主要）"
-    },
-    {
-      "en-US": "Agent Browser uses a snapshot + refs system optimized for AI agents:",
-      "zh-Hans": "Agent Browser 使用针对 AI 代理优化的快照 + refs 系统："
-    },
-    {
-      "en-US": "```bash\n# Open a page and get a snapshot with interactive elements\nagent-browser open https://example.com\nagent-browser snapshot -i  # Returns elements with refs like [ref=e1]\n\n# Interact using element references from snapshot\nagent-browser click @e1                      # Click element by ref\nagent-browser fill @e2 \"user@example.com\"   # Fill input by ref\nagent-browser fill @e3 \"password123\"        # Fill password field\nagent-browser click @e4                      # Click submit button\n\n# Wait for conditions\nagent-browser wait visible @e5               # Wait for element\nagent-browser wait navigation                # Wait for page load\n\n# Take screenshots\nagent-browser screenshot after-login.png\n\n# Get text content\nagent-browser get text @e1\n```",
-      "zh-Hans": "```bash\n# Open a page and get a snapshot with interactive elements\nagent-browser open https://example.com\nagent-browser snapshot -i  # Returns elements with refs like [ref=e1]\n\n# Interact using element references from snapshot\nagent-browser click @e1                      # Click element by ref\nagent-browser fill @e2 \"user@example.com\"   # Fill input by ref\nagent-browser fill @e3 \"password123\"        # Fill password field\nagent-browser click @e4                      # Click submit button\n\n# Wait for conditions\nagent-browser wait visible @e5               # Wait for element\nagent-browser wait navigation                # Wait for page load\n\n# Take screenshots\nagent-browser screenshot after-login.png\n\n# Get text content\nagent-browser get text @e1\n```"
-    },
-    {
-      "en-US": "### Agent Browser in Scripts",
-      "zh-Hans": "### 脚本中的 Agent Browser"
-    },
-    {
-      "en-US": "For programmatic control, use the CLI via shell commands:",
-      "zh-Hans": "对于程序化控制，通过 shell 命令使用 CLI："
-    },
-    {
-      "en-US": "```typescript\nimport { execSync } from 'child_process'\n\n// Execute agent-browser commands\nconst snapshot = execSync('agent-browser snapshot -i --json').toString()\nconst elements = JSON.parse(snapshot)\n\n// Find element ref and interact\nexecSync('agent-browser click @e1')\nexecSync('agent-browser fill @e2 \"test@example.com\"')\n```",
-      "zh-Hans": "```typescript\nimport { execSync } from 'child_process'\n\n// Execute agent-browser commands\nconst snapshot = execSync('agent-browser snapshot -i --json').toString()\nconst elements = JSON.parse(snapshot)\n\n// Find element ref and interact\nexecSync('agent-browser click @e1')\nexecSync('agent-browser fill @e2 \"test@example.com\"')\n```"
-    },
-    {
-      "en-US": "### Programmatic API (Advanced)",
-      "zh-Hans": "### 程序化 API（高级）"
-    },
-    {
-      "en-US": "For direct browser control (screencasts, low-level events):",
-      "zh-Hans": "用于直接浏览器控制（屏幕录制、低级事件）："
-    },
-    {
-      "en-US": "```typescript\nimport { BrowserManager } from 'agent-browser'\n\nconst browser = new BrowserManager()\nawait browser.launch({ headless: true })\nawait browser.navigate('https://example.com')\n\n// Low-level event injection\nawait browser.injectMouseEvent({ type: 'mousePressed', x: 100, y: 200, button: 'left' })\nawait browser.injectKeyboardEvent({ type: 'keyDown', key: 'Enter', code: 'Enter' })\n\n// Screencast for AI vision\nawait browser.startScreencast()  // Stream viewport frames\n```",
-      "zh-Hans": "```typescript\nimport { BrowserManager } from 'agent-browser'\n\nconst browser = new BrowserManager()\nawait browser.launch({ headless: true })\nawait browser.navigate('https://example.com')\n\n// Low-level event injection\nawait browser.injectMouseEvent({ type: 'mousePressed', x: 100, y: 200, button: 'left' })\nawait browser.injectKeyboardEvent({ type: 'keyDown', key: 'Enter', code: 'Enter' })\n\n// Screencast for AI vision\nawait browser.startScreencast()  // Stream viewport frames\n```"
-    },
-    {
-      "en-US": "### Agent Browser with Claude Code",
-      "zh-Hans": "### Agent Browser 与 Claude Code"
-    },
-    {
-      "en-US": "If you have the `agent-browser` skill installed, use `/agent-browser` for interactive browser automation tasks.",
-      "zh-Hans": "如果您安装了 `agent-browser` 技能，请使用 `/agent-browser` 进行交互式浏览器自动化任务。"
-    },
-    {
-      "en-US": "---",
-      "zh-Hans": "***"
-    },
-    {
-      "en-US": "## Fallback Tool: Playwright",
-      "zh-Hans": "## 备用工具：Playwright"
-    },
-    {
-      "en-US": "When Agent Browser isn't available or for complex test suites, fall back to Playwright.",
-      "zh-Hans": "当 Agent Browser 不可用或用于复杂的测试套件时，回退到 Playwright。"
-    },
-    {
       "en-US": "## Core Responsibilities",
       "zh-Hans": "## 核心职责"
     },
     {
-      "en-US": "1. **Test Journey Creation** - Write tests for user flows (prefer Agent Browser, fallback to Playwright)\n2. **Test Maintenance** - Keep tests up to date with UI changes\n3. **Flaky Test Management** - Identify and quarantine unstable tests\n4. **Artifact Management** - Capture screenshots, videos, traces\n5. **CI/CD Integration** - Ensure tests run reliably in pipelines\n6. **Test Reporting** - Generate HTML reports and JUnit XML",
-      "zh-Hans": "1. **测试旅程创建** - 为用户流程编写测试（优先使用 Agent Browser，回退到 Playwright）\n2. **测试维护** - 保持测试与 UI 更改同步\n3. **不稳定测试管理** - 识别并隔离不稳定的测试\n4. **工件管理** - 捕获截图、视频、跟踪记录\n5. **CI/CD 集成** - 确保测试在流水线中可靠运行\n6. **测试报告** - 生成 HTML 报告和 JUnit XML"
+      "en-US": "1. **Test Journey Creation** — Write tests for user flows (prefer Agent Browser, fallback to Playwright)\n2. **Test Maintenance** — Keep tests up to date with UI changes\n3. **Flaky Test Management** — Identify and quarantine unstable tests\n4. **Artifact Management** — Capture screenshots, videos, traces\n5. **CI/CD Integration** — Ensure tests run reliably in pipelines\n6. **Test Reporting** — Generate HTML reports and JUnit XML",
+      "zh-Hans": "1. **测试旅程创建** — 为用户流程编写测试（首选 Agent Browser，备选 Playwright）\n2. **测试维护** — 保持测试与 UI 更改同步更新\n3. **不稳定测试管理** — 识别并隔离不稳定的测试\n4. **产物管理** — 捕获截图、视频、追踪记录\n5. **CI/CD 集成** — 确保测试在流水线中可靠运行\n6. **测试报告** — 生成 HTML 报告和 JUnit XML"
     },
     {
-      "en-US": "## Playwright Testing Framework (Fallback)",
-      "zh-Hans": "## Playwright 测试框架（备用）"
+      "en-US": "## Primary Tool: Agent Browser",
+      "zh-Hans": "## 主要工具：Agent Browser"
     },
     {
-      "en-US": "### Tools",
-      "zh-Hans": "### 工具"
+      "en-US": "**Prefer Agent Browser over raw Playwright** — Semantic selectors, AI-optimized, auto-waiting, built on Playwright.",
+      "zh-Hans": "**首选 Agent Browser 而非原始 Playwright** — 语义化选择器、AI 优化、自动等待，基于 Playwright 构建。"
     },
     {
-      "en-US": "- **@playwright/test** - Core testing framework\n- **Playwright Inspector** - Debug tests interactively\n- **Playwright Trace Viewer** - Analyze test execution\n- **Playwright Codegen** - Generate test code from browser actions",
-      "zh-Hans": "* **@playwright/test** - 核心测试框架\n* **Playwright Inspector** - 交互式调试测试\n* **Playwright Trace Viewer** - 分析测试执行情况\n* **Playwright Codegen** - 根据浏览器操作生成测试代码"
+      "en-US": "```bash\n# Setup\nnpm install -g agent-browser && agent-browser install\n\n# Core workflow\nagent-browser open https://example.com\nagent-browser snapshot -i          # Get elements with refs [ref=e1]\nagent-browser click @e1            # Click by ref\nagent-browser fill @e2 \"text\"      # Fill input by ref\nagent-browser wait visible @e5     # Wait for element\nagent-browser screenshot result.png\n```",
+      "zh-Hans": "```bash\n# Setup\nnpm install -g agent-browser && agent-browser install\n\n# Core workflow\nagent-browser open https://example.com\nagent-browser snapshot -i          # Get elements with refs [ref=e1]\nagent-browser click @e1            # Click by ref\nagent-browser fill @e2 \"text\"      # Fill input by ref\nagent-browser wait visible @e5     # Wait for element\nagent-browser screenshot result.png\n```"
     },
     {
-      "en-US": "### Test Commands",
-      "zh-Hans": "### 测试命令"
+      "en-US": "## Fallback: Playwright",
+      "zh-Hans": "## 备选方案：Playwright"
     },
     {
-      "en-US": "```bash\n# Run all E2E tests\nnpx playwright test\n\n# Run specific test file\nnpx playwright test tests/markets.spec.ts\n\n# Run tests in headed mode (see browser)\nnpx playwright test --headed\n\n# Debug test with inspector\nnpx playwright test --debug\n\n# Generate test code from actions\nnpx playwright codegen http://localhost:3000\n\n# Run tests with trace\nnpx playwright test --trace on\n\n# Show HTML report\nnpx playwright show-report\n\n# Update snapshots\nnpx playwright test --update-snapshots\n\n# Run tests in specific browser\nnpx playwright test --project=chromium\nnpx playwright test --project=firefox\nnpx playwright test --project=webkit\n```",
-      "zh-Hans": "```bash\n# Run all E2E tests\nnpx playwright test\n\n# Run specific test file\nnpx playwright test tests/markets.spec.ts\n\n# Run tests in headed mode (see browser)\nnpx playwright test --headed\n\n# Debug test with inspector\nnpx playwright test --debug\n\n# Generate test code from actions\nnpx playwright codegen http://localhost:3000\n\n# Run tests with trace\nnpx playwright test --trace on\n\n# Show HTML report\nnpx playwright show-report\n\n# Update snapshots\nnpx playwright test --update-snapshots\n\n# Run tests in specific browser\nnpx playwright test --project=chromium\nnpx playwright test --project=firefox\nnpx playwright test --project=webkit\n```"
+      "en-US": "When Agent Browser isn't available, use Playwright directly.",
+      "zh-Hans": "当 Agent Browser 不可用时，直接使用 Playwright。"
     },
     {
-      "en-US": "## E2E Testing Workflow",
-      "zh-Hans": "## E2E 测试工作流"
+      "en-US": "```bash\nnpx playwright test                        # Run all E2E tests\nnpx playwright test tests/auth.spec.ts     # Run specific file\nnpx playwright test --headed               # See browser\nnpx playwright test --debug                # Debug with inspector\nnpx playwright test --trace on             # Run with trace\nnpx playwright show-report                 # View HTML report\n```",
+      "zh-Hans": "```bash\nnpx playwright test                        # Run all E2E tests\nnpx playwright test tests/auth.spec.ts     # Run specific file\nnpx playwright test --headed               # See browser\nnpx playwright test --debug                # Debug with inspector\nnpx playwright test --trace on             # Run with trace\nnpx playwright show-report                 # View HTML report\n```"
     },
     {
-      "en-US": "### 1. Test Planning Phase",
-      "zh-Hans": "### 1. 测试规划阶段"
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
     },
     {
-      "en-US": "```\na) Identify critical user journeys\n   - Authentication flows (login, logout, registration)\n   - Core features (market creation, trading, searching)\n   - Payment flows (deposits, withdrawals)\n   - Data integrity (CRUD operations)\n\nb) Define test scenarios\n   - Happy path (everything works)\n   - Edge cases (empty states, limits)\n   - Error cases (network failures, validation)\n\nc) Prioritize by risk\n   - HIGH: Financial transactions, authentication\n   - MEDIUM: Search, filtering, navigation\n   - LOW: UI polish, animations, styling\n```",
-      "zh-Hans": "```\na) Identify critical user journeys\n   - Authentication flows (login, logout, registration)\n   - Core features (market creation, trading, searching)\n   - Payment flows (deposits, withdrawals)\n   - Data integrity (CRUD operations)\n\nb) Define test scenarios\n   - Happy path (everything works)\n   - Edge cases (empty states, limits)\n   - Error cases (network failures, validation)\n\nc) Prioritize by risk\n   - HIGH: Financial transactions, authentication\n   - MEDIUM: Search, filtering, navigation\n   - LOW: UI polish, animations, styling\n```"
+      "en-US": "### 1. Plan",
+      "zh-Hans": "### 1. 规划"
     },
     {
-      "en-US": "### 2. Test Creation Phase",
-      "zh-Hans": "### 2. 测试创建阶段"
+      "en-US": "- Identify critical user journeys (auth, core features, payments, CRUD)\n- Define scenarios: happy path, edge cases, error cases\n- Prioritize by risk: HIGH (financial, auth), MEDIUM (search, nav), LOW (UI polish)",
+      "zh-Hans": "* 识别关键用户旅程（认证、核心功能、支付、增删改查）\n* 定义场景：成功路径、边界情况、错误情况\n* 按风险确定优先级：高（财务、认证）、中（搜索、导航）、低（UI 优化）"
     },
     {
-      "en-US": "```\nFor each user journey:\n\n1. Write test in Playwright\n   - Use Page Object Model (POM) pattern\n   - Add meaningful test descriptions\n   - Include assertions at key steps\n   - Add screenshots at critical points\n\n2. Make tests resilient\n   - Use proper locators (data-testid preferred)\n   - Add waits for dynamic content\n   - Handle race conditions\n   - Implement retry logic\n\n3. Add artifact capture\n   - Screenshot on failure\n   - Video recording\n   - Trace for debugging\n   - Network logs if needed\n```",
-      "zh-Hans": "```\nFor each user journey:\n\n1. Write test in Playwright\n   - Use Page Object Model (POM) pattern\n   - Add meaningful test descriptions\n   - Include assertions at key steps\n   - Add screenshots at critical points\n\n2. Make tests resilient\n   - Use proper locators (data-testid preferred)\n   - Add waits for dynamic content\n   - Handle race conditions\n   - Implement retry logic\n\n3. Add artifact capture\n   - Screenshot on failure\n   - Video recording\n   - Trace for debugging\n   - Network logs if needed\n```"
+      "en-US": "### 2. Create",
+      "zh-Hans": "### 2. 创建"
     },
     {
-      "en-US": "### 3. Test Execution Phase",
-      "zh-Hans": "### 3. 测试执行阶段"
+      "en-US": "- Use Page Object Model (POM) pattern\n- Prefer `data-testid` locators over CSS/XPath\n- Add assertions at key steps\n- Capture screenshots at critical points\n- Use proper waits (never `waitForTimeout`)",
+      "zh-Hans": "* 使用页面对象模型（POM）模式\n* 优先使用 `data-testid` 定位器而非 CSS/XPath\n* 在关键步骤添加断言\n* 在关键点捕获截图\n* 使用适当的等待（绝不使用 `waitForTimeout`）"
     },
     {
-      "en-US": "```\na) Run tests locally\n   - Verify all tests pass\n   - Check for flakiness (run 3-5 times)\n   - Review generated artifacts\n\nb) Quarantine flaky tests\n   - Mark unstable tests as @flaky\n   - Create issue to fix\n   - Remove from CI temporarily\n\nc) Run in CI/CD\n   - Execute on pull requests\n   - Upload artifacts to CI\n   - Report results in PR comments\n```",
-      "zh-Hans": "```\na) Run tests locally\n   - Verify all tests pass\n   - Check for flakiness (run 3-5 times)\n   - Review generated artifacts\n\nb) Quarantine flaky tests\n   - Mark unstable tests as @flaky\n   - Create issue to fix\n   - Remove from CI temporarily\n\nc) Run in CI/CD\n   - Execute on pull requests\n   - Upload artifacts to CI\n   - Report results in PR comments\n```"
+      "en-US": "### 3. Execute",
+      "zh-Hans": "### 3. 执行"
     },
     {
-      "en-US": "## Playwright Test Structure",
-      "zh-Hans": "## Playwright 测试结构"
+      "en-US": "- Run locally 3-5 times to check for flakiness\n- Quarantine flaky tests with `test.fixme()` or `test.skip()`\n- Upload artifacts to CI",
+      "zh-Hans": "* 本地运行 3-5 次以检查是否存在不稳定性\n* 使用 `test.fixme()` 或 `test.skip()` 隔离不稳定的测试\n* 将产物上传到 CI"
     },
     {
-      "en-US": "### Test File Organization",
-      "zh-Hans": "### 测试文件组织"
+      "en-US": "## Key Principles",
+      "zh-Hans": "## 关键原则"
     },
     {
-      "en-US": "```\ntests/\n├── e2e/                       # End-to-end user journeys\n│   ├── auth/                  # Authentication flows\n│   │   ├── login.spec.ts\n│   │   ├── logout.spec.ts\n│   │   └── register.spec.ts\n│   ├── markets/               # Market features\n│   │   ├── browse.spec.ts\n│   │   ├── search.spec.ts\n│   │   ├── create.spec.ts\n│   │   └── trade.spec.ts\n│   ├── wallet/                # Wallet operations\n│   │   ├── connect.spec.ts\n│   │   └── transactions.spec.ts\n│   └── api/                   # API endpoint tests\n│       ├── markets-api.spec.ts\n│       └── search-api.spec.ts\n├── fixtures/                  # Test data and helpers\n│   ├── auth.ts                # Auth fixtures\n│   ├── markets.ts             # Market test data\n│   └── wallets.ts             # Wallet fixtures\n└── playwright.config.ts       # Playwright configuration\n```",
-      "zh-Hans": "```\ntests/\n├── e2e/                       # End-to-end user journeys\n│   ├── auth/                  # Authentication flows\n│   │   ├── login.spec.ts\n│   │   ├── logout.spec.ts\n│   │   └── register.spec.ts\n│   ├── markets/               # Market features\n│   │   ├── browse.spec.ts\n│   │   ├── search.spec.ts\n│   │   ├── create.spec.ts\n│   │   └── trade.spec.ts\n│   ├── wallet/                # Wallet operations\n│   │   ├── connect.spec.ts\n│   │   └── transactions.spec.ts\n│   └── api/                   # API endpoint tests\n│       ├── markets-api.spec.ts\n│       └── search-api.spec.ts\n├── fixtures/                  # Test data and helpers\n│   ├── auth.ts                # Auth fixtures\n│   ├── markets.ts             # Market test data\n│   └── wallets.ts             # Wallet fixtures\n└── playwright.config.ts       # Playwright configuration\n```"
+      "en-US": "- **Use semantic locators**: `[data-testid=\"...\"]` > CSS selectors > XPath\n- **Wait for conditions, not time**: `waitForResponse()` > `waitForTimeout()`\n- **Auto-wait built in**: `page.locator().click()` auto-waits; raw `page.click()` doesn't\n- **Isolate tests**: Each test should be independent; no shared state\n- **Fail fast**: Use `expect()` assertions at every key step\n- **Trace on retry**: Configure `trace: 'on-first-retry'` for debugging failures",
+      "zh-Hans": "* **使用语义化定位器**：`[data-testid=\"...\"]` > CSS 选择器 > XPath\n* **等待条件，而非时间**：`waitForResponse()` > `waitForTimeout()`\n* **内置自动等待**：`page.locator().click()` 自动等待；原始的 `page.click()` 不会\n* **隔离测试**：每个测试应独立；无共享状态\n* **快速失败**：在每个关键步骤使用 `expect()` 断言\n* **重试时追踪**：配置 `trace: 'on-first-retry'` 以调试失败"
     },
     {
-      "en-US": "### Page Object Model Pattern",
-      "zh-Hans": "### 页面对象模型模式"
+      "en-US": "## Flaky Test Handling",
+      "zh-Hans": "## 不稳定测试处理"
     },
     {
-      "en-US": "```typescript\n// pages/MarketsPage.ts\nimport { Page, Locator } from '@playwright/test'\n\nexport class MarketsPage {\n  readonly page: Page\n  readonly searchInput: Locator\n  readonly marketCards: Locator\n  readonly createMarketButton: Locator\n  readonly filterDropdown: Locator\n\n  constructor(page: Page) {\n    this.page = page\n    this.searchInput = page.locator('[data-testid=\"search-input\"]')\n    this.marketCards = page.locator('[data-testid=\"market-card\"]')\n    this.createMarketButton = page.locator('[data-testid=\"create-market-btn\"]')\n    this.filterDropdown = page.locator('[data-testid=\"filter-dropdown\"]')\n  }\n\n  async goto() {\n    await this.page.goto('/markets')\n    await this.page.waitForLoadState('networkidle')\n  }\n\n  async searchMarkets(query: string) {\n    await this.searchInput.fill(query)\n    await this.page.waitForResponse(resp => resp.url().includes('/api/markets/search'))\n    await this.page.waitForLoadState('networkidle')\n  }\n\n  async getMarketCount() {\n    return await this.marketCards.count()\n  }\n\n  async clickMarket(index: number) {\n    await this.marketCards.nth(index).click()\n  }\n\n  async filterByStatus(status: string) {\n    await this.filterDropdown.selectOption(status)\n    await this.page.waitForLoadState('networkidle')\n  }\n}\n```",
-      "zh-Hans": "```typescript\n// pages/MarketsPage.ts\nimport { Page, Locator } from '@playwright/test'\n\nexport class MarketsPage {\n  readonly page: Page\n  readonly searchInput: Locator\n  readonly marketCards: Locator\n  readonly createMarketButton: Locator\n  readonly filterDropdown: Locator\n\n  constructor(page: Page) {\n    this.page = page\n    this.searchInput = page.locator('[data-testid=\"search-input\"]')\n    this.marketCards = page.locator('[data-testid=\"market-card\"]')\n    this.createMarketButton = page.locator('[data-testid=\"create-market-btn\"]')\n    this.filterDropdown = page.locator('[data-testid=\"filter-dropdown\"]')\n  }\n\n  async goto() {\n    await this.page.goto('/markets')\n    await this.page.waitForLoadState('networkidle')\n  }\n\n  async searchMarkets(query: string) {\n    await this.searchInput.fill(query)\n    await this.page.waitForResponse(resp => resp.url().includes('/api/markets/search'))\n    await this.page.waitForLoadState('networkidle')\n  }\n\n  async getMarketCount() {\n    return await this.marketCards.count()\n  }\n\n  async clickMarket(index: number) {\n    await this.marketCards.nth(index).click()\n  }\n\n  async filterByStatus(status: string) {\n    await this.filterDropdown.selectOption(status)\n    await this.page.waitForLoadState('networkidle')\n  }\n}\n```"
+      "en-US": "```typescript\n// Quarantine\ntest('flaky: market search', async ({ page }) => {\n  test.fixme(true, 'Flaky - Issue #123')\n})\n\n// Identify flakiness\n// npx playwright test --repeat-each=10\n```",
+      "zh-Hans": "```typescript\n// Quarantine\ntest('flaky: market search', async ({ page }) => {\n  test.fixme(true, 'Flaky - Issue #123')\n})\n\n// Identify flakiness\n// npx playwright test --repeat-each=10\n```"
     },
     {
-      "en-US": "### Example Test with Best Practices",
-      "zh-Hans": "### 包含最佳实践的示例测试"
-    },
-    {
-      "en-US": "```typescript\n// tests/e2e/markets/search.spec.ts\nimport { test, expect } from '@playwright/test'\nimport { MarketsPage } from '../../pages/MarketsPage'\n\ntest.describe('Market Search', () => {\n  let marketsPage: MarketsPage\n\n  test.beforeEach(async ({ page }) => {\n    marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n  })\n\n  test('should search markets by keyword', async ({ page }) => {\n    // Arrange\n    await expect(page).toHaveTitle(/Markets/)\n\n    // Act\n    await marketsPage.searchMarkets('trump')\n\n    // Assert\n    const marketCount = await marketsPage.getMarketCount()\n    expect(marketCount).toBeGreaterThan(0)\n\n    // Verify first result contains search term\n    const firstMarket = marketsPage.marketCards.first()\n    await expect(firstMarket).toContainText(/trump/i)\n\n    // Take screenshot for verification\n    await page.screenshot({ path: 'artifacts/search-results.png' })\n  })\n\n  test('should handle no results gracefully', async ({ page }) => {\n    // Act\n    await marketsPage.searchMarkets('xyznonexistentmarket123')\n\n    // Assert\n    await expect(page.locator('[data-testid=\"no-results\"]')).toBeVisible()\n    const marketCount = await marketsPage.getMarketCount()\n    expect(marketCount).toBe(0)\n  })\n\n  test('should clear search results', async ({ page }) => {\n    // Arrange - perform search first\n    await marketsPage.searchMarkets('trump')\n    await expect(marketsPage.marketCards.first()).toBeVisible()\n\n    // Act - clear search\n    await marketsPage.searchInput.clear()\n    await page.waitForLoadState('networkidle')\n\n    // Assert - all markets shown again\n    const marketCount = await marketsPage.getMarketCount()\n    expect(marketCount).toBeGreaterThan(10) // Should show all markets\n  })\n})\n```",
-      "zh-Hans": "```typescript\n// tests/e2e/markets/search.spec.ts\nimport { test, expect } from '@playwright/test'\nimport { MarketsPage } from '../../pages/MarketsPage'\n\ntest.describe('Market Search', () => {\n  let marketsPage: MarketsPage\n\n  test.beforeEach(async ({ page }) => {\n    marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n  })\n\n  test('should search markets by keyword', async ({ page }) => {\n    // Arrange\n    await expect(page).toHaveTitle(/Markets/)\n\n    // Act\n    await marketsPage.searchMarkets('trump')\n\n    // Assert\n    const marketCount = await marketsPage.getMarketCount()\n    expect(marketCount).toBeGreaterThan(0)\n\n    // Verify first result contains search term\n    const firstMarket = marketsPage.marketCards.first()\n    await expect(firstMarket).toContainText(/trump/i)\n\n    // Take screenshot for verification\n    await page.screenshot({ path: 'artifacts/search-results.png' })\n  })\n\n  test('should handle no results gracefully', async ({ page }) => {\n    // Act\n    await marketsPage.searchMarkets('xyznonexistentmarket123')\n\n    // Assert\n    await expect(page.locator('[data-testid=\"no-results\"]')).toBeVisible()\n    const marketCount = await marketsPage.getMarketCount()\n    expect(marketCount).toBe(0)\n  })\n\n  test('should clear search results', async ({ page }) => {\n    // Arrange - perform search first\n    await marketsPage.searchMarkets('trump')\n    await expect(marketsPage.marketCards.first()).toBeVisible()\n\n    // Act - clear search\n    await marketsPage.searchInput.clear()\n    await page.waitForLoadState('networkidle')\n\n    // Assert - all markets shown again\n    const marketCount = await marketsPage.getMarketCount()\n    expect(marketCount).toBeGreaterThan(10) // Should show all markets\n  })\n})\n```"
-    },
-    {
-      "en-US": "## Example Project-Specific Test Scenarios",
-      "zh-Hans": "## 示例项目特定的测试场景"
-    },
-    {
-      "en-US": "### Critical User Journeys for Example Project",
-      "zh-Hans": "### 示例项目的关键用户旅程"
-    },
-    {
-      "en-US": "**1. Market Browsing Flow**",
-      "zh-Hans": "**1. 市场浏览流程**"
-    },
-    {
-      "en-US": "```typescript\ntest('user can browse and view markets', async ({ page }) => {\n  // 1. Navigate to markets page\n  await page.goto('/markets')\n  await expect(page.locator('h1')).toContainText('Markets')\n\n  // 2. Verify markets are loaded\n  const marketCards = page.locator('[data-testid=\"market-card\"]')\n  await expect(marketCards.first()).toBeVisible()\n\n  // 3. Click on a market\n  await marketCards.first().click()\n\n  // 4. Verify market details page\n  await expect(page).toHaveURL(/\\/markets\\/[a-z0-9-]+/)\n  await expect(page.locator('[data-testid=\"market-name\"]')).toBeVisible()\n\n  // 5. Verify chart loads\n  await expect(page.locator('[data-testid=\"price-chart\"]')).toBeVisible()\n})\n```",
-      "zh-Hans": "```typescript\ntest('user can browse and view markets', async ({ page }) => {\n  // 1. Navigate to markets page\n  await page.goto('/markets')\n  await expect(page.locator('h1')).toContainText('Markets')\n\n  // 2. Verify markets are loaded\n  const marketCards = page.locator('[data-testid=\"market-card\"]')\n  await expect(marketCards.first()).toBeVisible()\n\n  // 3. Click on a market\n  await marketCards.first().click()\n\n  // 4. Verify market details page\n  await expect(page).toHaveURL(/\\/markets\\/[a-z0-9-]+/)\n  await expect(page.locator('[data-testid=\"market-name\"]')).toBeVisible()\n\n  // 5. Verify chart loads\n  await expect(page.locator('[data-testid=\"price-chart\"]')).toBeVisible()\n})\n```"
-    },
-    {
-      "en-US": "**2. Semantic Search Flow**",
-      "zh-Hans": "**2. 语义搜索流程**"
-    },
-    {
-      "en-US": "```typescript\ntest('semantic search returns relevant results', async ({ page }) => {\n  // 1. Navigate to markets\n  await page.goto('/markets')\n\n  // 2. Enter search query\n  const searchInput = page.locator('[data-testid=\"search-input\"]')\n  await searchInput.fill('election')\n\n  // 3. Wait for API call\n  await page.waitForResponse(resp =>\n    resp.url().includes('/api/markets/search') && resp.status() === 200\n  )\n\n  // 4. Verify results contain relevant markets\n  const results = page.locator('[data-testid=\"market-card\"]')\n  await expect(results).not.toHaveCount(0)\n\n  // 5. Verify semantic relevance (not just substring match)\n  const firstResult = results.first()\n  const text = await firstResult.textContent()\n  expect(text?.toLowerCase()).toMatch(/election|trump|biden|president|vote/)\n})\n```",
-      "zh-Hans": "```typescript\ntest('semantic search returns relevant results', async ({ page }) => {\n  // 1. Navigate to markets\n  await page.goto('/markets')\n\n  // 2. Enter search query\n  const searchInput = page.locator('[data-testid=\"search-input\"]')\n  await searchInput.fill('election')\n\n  // 3. Wait for API call\n  await page.waitForResponse(resp =>\n    resp.url().includes('/api/markets/search') && resp.status() === 200\n  )\n\n  // 4. Verify results contain relevant markets\n  const results = page.locator('[data-testid=\"market-card\"]')\n  await expect(results).not.toHaveCount(0)\n\n  // 5. Verify semantic relevance (not just substring match)\n  const firstResult = results.first()\n  const text = await firstResult.textContent()\n  expect(text?.toLowerCase()).toMatch(/election|trump|biden|president|vote/)\n})\n```"
-    },
-    {
-      "en-US": "**3. Wallet Connection Flow**",
-      "zh-Hans": "**3. 钱包连接流程**"
-    },
-    {
-      "en-US": "```typescript\ntest('user can connect wallet', async ({ page, context }) => {\n  // Setup: Mock Privy wallet extension\n  await context.addInitScript(() => {\n    // @ts-ignore\n    window.ethereum = {\n      isMetaMask: true,\n      request: async ({ method }) => {\n        if (method === 'eth_requestAccounts') {\n          return ['0x1234567890123456789012345678901234567890']\n        }\n        if (method === 'eth_chainId') {\n          return '0x1'\n        }\n      }\n    }\n  })\n\n  // 1. Navigate to site\n  await page.goto('/')\n\n  // 2. Click connect wallet\n  await page.locator('[data-testid=\"connect-wallet\"]').click()\n\n  // 3. Verify wallet modal appears\n  await expect(page.locator('[data-testid=\"wallet-modal\"]')).toBeVisible()\n\n  // 4. Select wallet provider\n  await page.locator('[data-testid=\"wallet-provider-metamask\"]').click()\n\n  // 5. Verify connection successful\n  await expect(page.locator('[data-testid=\"wallet-address\"]')).toBeVisible()\n  await expect(page.locator('[data-testid=\"wallet-address\"]')).toContainText('0x1234')\n})\n```",
-      "zh-Hans": "```typescript\ntest('user can connect wallet', async ({ page, context }) => {\n  // Setup: Mock Privy wallet extension\n  await context.addInitScript(() => {\n    // @ts-ignore\n    window.ethereum = {\n      isMetaMask: true,\n      request: async ({ method }) => {\n        if (method === 'eth_requestAccounts') {\n          return ['0x1234567890123456789012345678901234567890']\n        }\n        if (method === 'eth_chainId') {\n          return '0x1'\n        }\n      }\n    }\n  })\n\n  // 1. Navigate to site\n  await page.goto('/')\n\n  // 2. Click connect wallet\n  await page.locator('[data-testid=\"connect-wallet\"]').click()\n\n  // 3. Verify wallet modal appears\n  await expect(page.locator('[data-testid=\"wallet-modal\"]')).toBeVisible()\n\n  // 4. Select wallet provider\n  await page.locator('[data-testid=\"wallet-provider-metamask\"]').click()\n\n  // 5. Verify connection successful\n  await expect(page.locator('[data-testid=\"wallet-address\"]')).toBeVisible()\n  await expect(page.locator('[data-testid=\"wallet-address\"]')).toContainText('0x1234')\n})\n```"
-    },
-    {
-      "en-US": "**4. Market Creation Flow (Authenticated)**",
-      "zh-Hans": "**4. 市场创建流程（已验证身份）**"
-    },
-    {
-      "en-US": "```typescript\ntest('authenticated user can create market', async ({ page }) => {\n  // Prerequisites: User must be authenticated\n  await page.goto('/creator-dashboard')\n\n  // Verify auth (or skip test if not authenticated)\n  const isAuthenticated = await page.locator('[data-testid=\"user-menu\"]').isVisible()\n  test.skip(!isAuthenticated, 'User not authenticated')\n\n  // 1. Click create market button\n  await page.locator('[data-testid=\"create-market\"]').click()\n\n  // 2. Fill market form\n  await page.locator('[data-testid=\"market-name\"]').fill('Test Market')\n  await page.locator('[data-testid=\"market-description\"]').fill('This is a test market')\n  await page.locator('[data-testid=\"market-end-date\"]').fill('2025-12-31')\n\n  // 3. Submit form\n  await page.locator('[data-testid=\"submit-market\"]').click()\n\n  // 4. Verify success\n  await expect(page.locator('[data-testid=\"success-message\"]')).toBeVisible()\n\n  // 5. Verify redirect to new market\n  await expect(page).toHaveURL(/\\/markets\\/test-market/)\n})\n```",
-      "zh-Hans": "```typescript\ntest('authenticated user can create market', async ({ page }) => {\n  // Prerequisites: User must be authenticated\n  await page.goto('/creator-dashboard')\n\n  // Verify auth (or skip test if not authenticated)\n  const isAuthenticated = await page.locator('[data-testid=\"user-menu\"]').isVisible()\n  test.skip(!isAuthenticated, 'User not authenticated')\n\n  // 1. Click create market button\n  await page.locator('[data-testid=\"create-market\"]').click()\n\n  // 2. Fill market form\n  await page.locator('[data-testid=\"market-name\"]').fill('Test Market')\n  await page.locator('[data-testid=\"market-description\"]').fill('This is a test market')\n  await page.locator('[data-testid=\"market-end-date\"]').fill('2025-12-31')\n\n  // 3. Submit form\n  await page.locator('[data-testid=\"submit-market\"]').click()\n\n  // 4. Verify success\n  await expect(page.locator('[data-testid=\"success-message\"]')).toBeVisible()\n\n  // 5. Verify redirect to new market\n  await expect(page).toHaveURL(/\\/markets\\/test-market/)\n})\n```"
-    },
-    {
-      "en-US": "**5. Trading Flow (Critical - Real Money)**",
-      "zh-Hans": "**5. 交易流程（关键 - 真实资金）**"
-    },
-    {
-      "en-US": "```typescript\ntest('user can place trade with sufficient balance', async ({ page }) => {\n  // WARNING: This test involves real money - use testnet/staging only!\n  test.skip(process.env.NODE_ENV === 'production', 'Skip on production')\n\n  // 1. Navigate to market\n  await page.goto('/markets/test-market')\n\n  // 2. Connect wallet (with test funds)\n  await page.locator('[data-testid=\"connect-wallet\"]').click()\n  // ... wallet connection flow\n\n  // 3. Select position (Yes/No)\n  await page.locator('[data-testid=\"position-yes\"]').click()\n\n  // 4. Enter trade amount\n  await page.locator('[data-testid=\"trade-amount\"]').fill('1.0')\n\n  // 5. Verify trade preview\n  const preview = page.locator('[data-testid=\"trade-preview\"]')\n  await expect(preview).toContainText('1.0 SOL')\n  await expect(preview).toContainText('Est. shares:')\n\n  // 6. Confirm trade\n  await page.locator('[data-testid=\"confirm-trade\"]').click()\n\n  // 7. Wait for blockchain transaction\n  await page.waitForResponse(resp =>\n    resp.url().includes('/api/trade') && resp.status() === 200,\n    { timeout: 30000 } // Blockchain can be slow\n  )\n\n  // 8. Verify success\n  await expect(page.locator('[data-testid=\"trade-success\"]')).toBeVisible()\n\n  // 9. Verify balance updated\n  const balance = page.locator('[data-testid=\"wallet-balance\"]')\n  await expect(balance).not.toContainText('--')\n})\n```",
-      "zh-Hans": "```typescript\ntest('user can place trade with sufficient balance', async ({ page }) => {\n  // WARNING: This test involves real money - use testnet/staging only!\n  test.skip(process.env.NODE_ENV === 'production', 'Skip on production')\n\n  // 1. Navigate to market\n  await page.goto('/markets/test-market')\n\n  // 2. Connect wallet (with test funds)\n  await page.locator('[data-testid=\"connect-wallet\"]').click()\n  // ... wallet connection flow\n\n  // 3. Select position (Yes/No)\n  await page.locator('[data-testid=\"position-yes\"]').click()\n\n  // 4. Enter trade amount\n  await page.locator('[data-testid=\"trade-amount\"]').fill('1.0')\n\n  // 5. Verify trade preview\n  const preview = page.locator('[data-testid=\"trade-preview\"]')\n  await expect(preview).toContainText('1.0 SOL')\n  await expect(preview).toContainText('Est. shares:')\n\n  // 6. Confirm trade\n  await page.locator('[data-testid=\"confirm-trade\"]').click()\n\n  // 7. Wait for blockchain transaction\n  await page.waitForResponse(resp =>\n    resp.url().includes('/api/trade') && resp.status() === 200,\n    { timeout: 30000 } // Blockchain can be slow\n  )\n\n  // 8. Verify success\n  await expect(page.locator('[data-testid=\"trade-success\"]')).toBeVisible()\n\n  // 9. Verify balance updated\n  const balance = page.locator('[data-testid=\"wallet-balance\"]')\n  await expect(balance).not.toContainText('--')\n})\n```"
-    },
-    {
-      "en-US": "## Playwright Configuration",
-      "zh-Hans": "## Playwright 配置"
-    },
-    {
-      "en-US": "```typescript\n// playwright.config.ts\nimport { defineConfig, devices } from '@playwright/test'\n\nexport default defineConfig({\n  testDir: './tests/e2e',\n  fullyParallel: true,\n  forbidOnly: !!process.env.CI,\n  retries: process.env.CI ? 2 : 0,\n  workers: process.env.CI ? 1 : undefined,\n  reporter: [\n    ['html', { outputFolder: 'playwright-report' }],\n    ['junit', { outputFile: 'playwright-results.xml' }],\n    ['json', { outputFile: 'playwright-results.json' }]\n  ],\n  use: {\n    baseURL: process.env.BASE_URL || 'http://localhost:3000',\n    trace: 'on-first-retry',\n    screenshot: 'only-on-failure',\n    video: 'retain-on-failure',\n    actionTimeout: 10000,\n    navigationTimeout: 30000,\n  },\n  projects: [\n    {\n      name: 'chromium',\n      use: { ...devices['Desktop Chrome'] },\n    },\n    {\n      name: 'firefox',\n      use: { ...devices['Desktop Firefox'] },\n    },\n    {\n      name: 'webkit',\n      use: { ...devices['Desktop Safari'] },\n    },\n    {\n      name: 'mobile-chrome',\n      use: { ...devices['Pixel 5'] },\n    },\n  ],\n  webServer: {\n    command: 'npm run dev',\n    url: 'http://localhost:3000',\n    reuseExistingServer: !process.env.CI,\n    timeout: 120000,\n  },\n})\n```",
-      "zh-Hans": "```typescript\n// playwright.config.ts\nimport { defineConfig, devices } from '@playwright/test'\n\nexport default defineConfig({\n  testDir: './tests/e2e',\n  fullyParallel: true,\n  forbidOnly: !!process.env.CI,\n  retries: process.env.CI ? 2 : 0,\n  workers: process.env.CI ? 1 : undefined,\n  reporter: [\n    ['html', { outputFolder: 'playwright-report' }],\n    ['junit', { outputFile: 'playwright-results.xml' }],\n    ['json', { outputFile: 'playwright-results.json' }]\n  ],\n  use: {\n    baseURL: process.env.BASE_URL || 'http://localhost:3000',\n    trace: 'on-first-retry',\n    screenshot: 'only-on-failure',\n    video: 'retain-on-failure',\n    actionTimeout: 10000,\n    navigationTimeout: 30000,\n  },\n  projects: [\n    {\n      name: 'chromium',\n      use: { ...devices['Desktop Chrome'] },\n    },\n    {\n      name: 'firefox',\n      use: { ...devices['Desktop Firefox'] },\n    },\n    {\n      name: 'webkit',\n      use: { ...devices['Desktop Safari'] },\n    },\n    {\n      name: 'mobile-chrome',\n      use: { ...devices['Pixel 5'] },\n    },\n  ],\n  webServer: {\n    command: 'npm run dev',\n    url: 'http://localhost:3000',\n    reuseExistingServer: !process.env.CI,\n    timeout: 120000,\n  },\n})\n```"
-    },
-    {
-      "en-US": "## Flaky Test Management",
-      "zh-Hans": "## 不稳定测试管理"
-    },
-    {
-      "en-US": "### Identifying Flaky Tests",
-      "zh-Hans": "### 识别不稳定测试"
-    },
-    {
-      "en-US": "```bash\n# Run test multiple times to check stability\nnpx playwright test tests/markets/search.spec.ts --repeat-each=10\n\n# Run specific test with retries\nnpx playwright test tests/markets/search.spec.ts --retries=3\n```",
-      "zh-Hans": "```bash\n# Run test multiple times to check stability\nnpx playwright test tests/markets/search.spec.ts --repeat-each=10\n\n# Run specific test with retries\nnpx playwright test tests/markets/search.spec.ts --retries=3\n```"
-    },
-    {
-      "en-US": "### Quarantine Pattern",
-      "zh-Hans": "### 隔离模式"
-    },
-    {
-      "en-US": "```typescript\n// Mark flaky test for quarantine\ntest('flaky: market search with complex query', async ({ page }) => {\n  test.fixme(true, 'Test is flaky - Issue #123')\n\n  // Test code here...\n})\n\n// Or use conditional skip\ntest('market search with complex query', async ({ page }) => {\n  test.skip(process.env.CI, 'Test is flaky in CI - Issue #123')\n\n  // Test code here...\n})\n```",
-      "zh-Hans": "```typescript\n// Mark flaky test for quarantine\ntest('flaky: market search with complex query', async ({ page }) => {\n  test.fixme(true, 'Test is flaky - Issue #123')\n\n  // Test code here...\n})\n\n// Or use conditional skip\ntest('market search with complex query', async ({ page }) => {\n  test.skip(process.env.CI, 'Test is flaky in CI - Issue #123')\n\n  // Test code here...\n})\n```"
-    },
-    {
-      "en-US": "### Common Flakiness Causes & Fixes",
-      "zh-Hans": "### 常见的不稳定原因及修复方法"
-    },
-    {
-      "en-US": "**1. Race Conditions**",
-      "zh-Hans": "**1. 竞态条件**"
-    },
-    {
-      "en-US": "```typescript\n// ❌ FLAKY: Don't assume element is ready\nawait page.click('[data-testid=\"button\"]')\n\n// ✅ STABLE: Wait for element to be ready\nawait page.locator('[data-testid=\"button\"]').click() // Built-in auto-wait\n```",
-      "zh-Hans": "```typescript\n// ❌ FLAKY: Don't assume element is ready\nawait page.click('[data-testid=\"button\"]')\n\n// ✅ STABLE: Wait for element to be ready\nawait page.locator('[data-testid=\"button\"]').click() // Built-in auto-wait\n```"
-    },
-    {
-      "en-US": "**2. Network Timing**",
-      "zh-Hans": "**2. 网络时序**"
-    },
-    {
-      "en-US": "```typescript\n// ❌ FLAKY: Arbitrary timeout\nawait page.waitForTimeout(5000)\n\n// ✅ STABLE: Wait for specific condition\nawait page.waitForResponse(resp => resp.url().includes('/api/markets'))\n```",
-      "zh-Hans": "```typescript\n// ❌ FLAKY: Arbitrary timeout\nawait page.waitForTimeout(5000)\n\n// ✅ STABLE: Wait for specific condition\nawait page.waitForResponse(resp => resp.url().includes('/api/markets'))\n```"
-    },
-    {
-      "en-US": "**3. Animation Timing**",
-      "zh-Hans": "**3. 动画时序**"
-    },
-    {
-      "en-US": "```typescript\n// ❌ FLAKY: Click during animation\nawait page.click('[data-testid=\"menu-item\"]')\n\n// ✅ STABLE: Wait for animation to complete\nawait page.locator('[data-testid=\"menu-item\"]').waitFor({ state: 'visible' })\nawait page.waitForLoadState('networkidle')\nawait page.click('[data-testid=\"menu-item\"]')\n```",
-      "zh-Hans": "```typescript\n// ❌ FLAKY: Click during animation\nawait page.click('[data-testid=\"menu-item\"]')\n\n// ✅ STABLE: Wait for animation to complete\nawait page.locator('[data-testid=\"menu-item\"]').waitFor({ state: 'visible' })\nawait page.waitForLoadState('networkidle')\nawait page.click('[data-testid=\"menu-item\"]')\n```"
-    },
-    {
-      "en-US": "## Artifact Management",
-      "zh-Hans": "## 产物管理"
-    },
-    {
-      "en-US": "### Screenshot Strategy",
-      "zh-Hans": "### 截图策略"
-    },
-    {
-      "en-US": "```typescript\n// Take screenshot at key points\nawait page.screenshot({ path: 'artifacts/after-login.png' })\n\n// Full page screenshot\nawait page.screenshot({ path: 'artifacts/full-page.png', fullPage: true })\n\n// Element screenshot\nawait page.locator('[data-testid=\"chart\"]').screenshot({\n  path: 'artifacts/chart.png'\n})\n```",
-      "zh-Hans": "```typescript\n// Take screenshot at key points\nawait page.screenshot({ path: 'artifacts/after-login.png' })\n\n// Full page screenshot\nawait page.screenshot({ path: 'artifacts/full-page.png', fullPage: true })\n\n// Element screenshot\nawait page.locator('[data-testid=\"chart\"]').screenshot({\n  path: 'artifacts/chart.png'\n})\n```"
-    },
-    {
-      "en-US": "### Trace Collection",
-      "zh-Hans": "### 跟踪记录收集"
-    },
-    {
-      "en-US": "```typescript\n// Start trace\nawait browser.startTracing(page, {\n  path: 'artifacts/trace.json',\n  screenshots: true,\n  snapshots: true,\n})\n\n// ... test actions ...\n\n// Stop trace\nawait browser.stopTracing()\n```",
-      "zh-Hans": "```typescript\n// Start trace\nawait browser.startTracing(page, {\n  path: 'artifacts/trace.json',\n  screenshots: true,\n  snapshots: true,\n})\n\n// ... test actions ...\n\n// Stop trace\nawait browser.stopTracing()\n```"
-    },
-    {
-      "en-US": "### Video Recording",
-      "zh-Hans": "### 视频录制"
-    },
-    {
-      "en-US": "```typescript\n// Configured in playwright.config.ts\nuse: {\n  video: 'retain-on-failure', // Only save video if test fails\n  videosPath: 'artifacts/videos/'\n}\n```",
-      "zh-Hans": "```typescript\n// Configured in playwright.config.ts\nuse: {\n  video: 'retain-on-failure', // Only save video if test fails\n  videosPath: 'artifacts/videos/'\n}\n```"
-    },
-    {
-      "en-US": "## CI/CD Integration",
-      "zh-Hans": "## CI/CD 集成"
-    },
-    {
-      "en-US": "### GitHub Actions Workflow",
-      "zh-Hans": "### GitHub Actions 工作流"
-    },
-    {
-      "en-US": "```yaml\n# .github/workflows/e2e.yml\nname: E2E Tests\n\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n\n      - uses: actions/setup-node@v3\n        with:\n          node-version: 18\n\n      - name: Install dependencies\n        run: npm ci\n\n      - name: Install Playwright browsers\n        run: npx playwright install --with-deps\n\n      - name: Run E2E tests\n        run: npx playwright test\n        env:\n          BASE_URL: https://staging.pmx.trade\n\n      - name: Upload artifacts\n        if: always()\n        uses: actions/upload-artifact@v3\n        with:\n          name: playwright-report\n          path: playwright-report/\n          retention-days: 30\n\n      - name: Upload test results\n        if: always()\n        uses: actions/upload-artifact@v3\n        with:\n          name: playwright-results\n          path: playwright-results.xml\n```",
-      "zh-Hans": "```yaml\n# .github/workflows/e2e.yml\nname: E2E Tests\n\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n\n      - uses: actions/setup-node@v3\n        with:\n          node-version: 18\n\n      - name: Install dependencies\n        run: npm ci\n\n      - name: Install Playwright browsers\n        run: npx playwright install --with-deps\n\n      - name: Run E2E tests\n        run: npx playwright test\n        env:\n          BASE_URL: https://staging.pmx.trade\n\n      - name: Upload artifacts\n        if: always()\n        uses: actions/upload-artifact@v3\n        with:\n          name: playwright-report\n          path: playwright-report/\n          retention-days: 30\n\n      - name: Upload test results\n        if: always()\n        uses: actions/upload-artifact@v3\n        with:\n          name: playwright-results\n          path: playwright-results.xml\n```"
-    },
-    {
-      "en-US": "## Test Report Format",
-      "zh-Hans": "## 测试报告格式"
-    },
-    {
-      "en-US": "```markdown\n# E2E Test Report\n\n**Date:** YYYY-MM-DD HH:MM\n**Duration:** Xm Ys\n**Status:** ✅ PASSING / ❌ FAILING\n\n## Summary\n\n- **Total Tests:** X\n- **Passed:** Y (Z%)\n- **Failed:** A\n- **Flaky:** B\n- **Skipped:** C\n\n## Test Results by Suite\n\n### Markets - Browse & Search\n- ✅ user can browse markets (2.3s)\n- ✅ semantic search returns relevant results (1.8s)\n- ✅ search handles no results (1.2s)\n- ❌ search with special characters (0.9s)\n\n### Wallet - Connection\n- ✅ user can connect MetaMask (3.1s)\n- ⚠️  user can connect Phantom (2.8s) - FLAKY\n- ✅ user can disconnect wallet (1.5s)\n\n### Trading - Core Flows\n- ✅ user can place buy order (5.2s)\n- ❌ user can place sell order (4.8s)\n- ✅ insufficient balance shows error (1.9s)\n\n## Failed Tests\n\n### 1. search with special characters\n**File:** `tests/e2e/markets/search.spec.ts:45`\n**Error:** Expected element to be visible, but was not found\n**Screenshot:** artifacts/search-special-chars-failed.png\n**Trace:** artifacts/trace-123.zip\n\n**Steps to Reproduce:**\n1. Navigate to /markets\n2. Enter search query with special chars: \"trump & biden\"\n3. Verify results\n\n**Recommended Fix:** Escape special characters in search query\n\n---\n\n### 2. user can place sell order\n**File:** `tests/e2e/trading/sell.spec.ts:28`\n**Error:** Timeout waiting for API response /api/trade\n**Video:** artifacts/videos/sell-order-failed.webm\n\n**Possible Causes:**\n- Blockchain network slow\n- Insufficient gas\n- Transaction reverted\n\n**Recommended Fix:** Increase timeout or check blockchain logs\n\n## Artifacts\n\n- HTML Report: playwright-report/index.html\n- Screenshots: artifacts/*.png (12 files)\n- Videos: artifacts/videos/*.webm (2 files)\n- Traces: artifacts/*.zip (2 files)\n- JUnit XML: playwright-results.xml\n\n## Next Steps\n\n- [ ] Fix 2 failing tests\n- [ ] Investigate 1 flaky test\n- [ ] Review and merge if all green\n```",
-      "zh-Hans": "```markdown\n# E2E 测试报告\n\n**日期:** YYYY-MM-DD HH:MM\n**持续时间:** Xm Ys\n**状态:** ✅ 通过 / ❌ 失败\n\n## 概要\n\n- **总测试数:** X\n- **通过:** Y (Z%)\n- **失败:** A\n- **不稳定:** B\n- **跳过:** C\n\n## 按测试套件分类的结果\n\n### 市场 - 浏览与搜索\n- ✅ 用户可以浏览市场 (2.3s)\n- ✅ 语义搜索返回相关结果 (1.8s)\n- ✅ 搜索处理无结果情况 (1.2s)\n- ❌ 搜索包含特殊字符 (0.9s)\n\n### 钱包 - 连接\n- ✅ 用户可以连接 MetaMask (3.1s)\n- ⚠️  用户可以连接 Phantom (2.8s) - 不稳定\n- ✅ 用户可以断开钱包连接 (1.5s)\n\n### 交易 - 核心流程\n- ✅ 用户可以下买单 (5.2s)\n- ❌ 用户可以下卖单 (4.8s)\n- ✅ 余额不足显示错误 (1.9s)\n\n## 失败的测试\n\n### 1. search with special characters\n**文件:** `tests/e2e/markets/search.spec.ts:45`\n**错误:** 期望元素可见，但未找到\n**截图:** artifacts/search-special-chars-failed.png\n**跟踪文件:** artifacts/trace-123.zip\n\n**重现步骤:**\n1. 导航到 /markets\n2. 输入包含特殊字符的搜索查询：\"trump & biden\"\n3. 验证结果\n\n**建议修复:** 对搜索查询中的特殊字符进行转义\n\n---\n\n### 2. user can place sell order\n**文件:** `tests/e2e/trading/sell.spec.ts:28`\n**错误:** 等待 API 响应 /api/trade 超时\n**视频:** artifacts/videos/sell-order-failed.webm\n\n**可能原因:**\n- 区块链网络慢\n- Gas 不足\n- 交易被回退\n\n**建议修复:** 增加超时时间或检查区块链日志\n\n## 产物\n\n- HTML 报告: playwright-report/index.html\n- 截图: artifacts/*.png (12 个文件)\n- 视频: artifacts/videos/*.webm (2 个文件)\n- 跟踪文件: artifacts/*.zip (2 个文件)\n- JUnit XML: playwright-results.xml\n\n## 后续步骤\n\n- [ ] 修复 2 个失败的测试\n- [ ] 调查 1 个不稳定的测试\n- [ ] 如果全部通过，则审阅并合并\n\n```"
+      "en-US": "Common causes: race conditions (use auto-wait locators), network timing (wait for response), animation timing (wait for `networkidle`).",
+      "zh-Hans": "常见原因：竞态条件（使用自动等待定位器）、网络时序（等待响应）、动画时序（等待 `networkidle`）。"
     },
     {
       "en-US": "## Success Metrics",
       "zh-Hans": "## 成功指标"
     },
     {
-      "en-US": "After E2E test run:",
-      "zh-Hans": "E2E 测试运行后："
+      "en-US": "- All critical journeys passing (100%)\n- Overall pass rate > 95%\n- Flaky rate < 5%\n- Test duration < 10 minutes\n- Artifacts uploaded and accessible",
+      "zh-Hans": "* 所有关键旅程通过（100%）\n* 总体通过率 > 95%\n* 不稳定率 < 5%\n* 测试持续时间 < 10 分钟\n* 产物已上传并可访问"
     },
     {
-      "en-US": "- ✅ All critical journeys passing (100%)\n- ✅ Pass rate > 95% overall\n- ✅ Flaky rate < 5%\n- ✅ No failed tests blocking deployment\n- ✅ Artifacts uploaded and accessible\n- ✅ Test duration < 10 minutes\n- ✅ HTML report generated",
-      "zh-Hans": "* ✅ 所有关键旅程通过 (100%)\n* ✅ 总体通过率 > 95%\n* ✅ 不稳定率 < 5%\n* ✅ 没有失败的测试阻塞部署\n* ✅ 产物已上传并可访问\n* ✅ 测试持续时间 < 10 分钟\n* ✅ HTML 报告已生成"
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "For detailed Playwright patterns, Page Object Model examples, configuration templates, CI/CD workflows, and artifact management strategies, see skill: `e2e-testing`.",
+      "zh-Hans": "有关详细的 Playwright 模式、页面对象模型示例、配置模板、CI/CD 工作流和产物管理策略，请参阅技能：`e2e-testing`。"
     },
     {
       "en-US": "---",
       "zh-Hans": "***"
     },
     {
-      "en-US": "**Remember**: E2E tests are your last line of defense before production. They catch integration issues that unit tests miss. Invest time in making them stable, fast, and comprehensive. For Example Project, focus especially on financial flows - one bug could cost users real money.",
-      "zh-Hans": "**请记住**：E2E 测试是进入生产环境前的最后一道防线。它们能捕捉单元测试遗漏的集成问题。投入时间让它们变得稳定、快速且全面。对于示例项目，请特别关注资金流相关的测试——一个漏洞就可能让用户损失真实资金。"
+      "en-US": "**Remember**: E2E tests are your last line of defense before production. They catch integration issues that unit tests miss. Invest in stability, speed, and coverage.",
+      "zh-Hans": "**记住**：端到端测试是上线前的最后一道防线。它们能捕获单元测试遗漏的集成问题。投资于稳定性、速度和覆盖率。"
     }
   ]
 }

@@ -75,6 +75,18 @@
       "zh-Hans": "1. **具体化**：使用确切的文件路径、函数名、变量名\n2. **考虑边缘情况**：思考错误场景、空值、空状态\n3. **最小化更改**：优先扩展现有代码而非重写\n4. **保持模式**：遵循现有项目约定\n5. **支持测试**：构建易于测试的更改结构\n6. **增量思考**：每个步骤都应该是可验证的\n7. **记录决策**：解释原因，而不仅仅是内容"
     },
     {
+      "en-US": "## Worked Example: Adding Stripe Subscriptions",
+      "zh-Hans": "## 工作示例：添加 Stripe 订阅"
+    },
+    {
+      "en-US": "Here is a complete plan showing the level of detail expected:",
+      "zh-Hans": "这里展示一个完整计划，以说明所需的详细程度："
+    },
+    {
+      "en-US": "```markdown\n# Implementation Plan: Stripe Subscription Billing\n\n## Overview\nAdd subscription billing with free/pro/enterprise tiers. Users upgrade via\nStripe Checkout, and webhook events keep subscription status in sync.\n\n## Requirements\n- Three tiers: Free (default), Pro ($29/mo), Enterprise ($99/mo)\n- Stripe Checkout for payment flow\n- Webhook handler for subscription lifecycle events\n- Feature gating based on subscription tier\n\n## Architecture Changes\n- New table: `subscriptions` (user_id, stripe_customer_id, stripe_subscription_id, status, tier)\n- New API route: `app/api/checkout/route.ts` — creates Stripe Checkout session\n- New API route: `app/api/webhooks/stripe/route.ts` — handles Stripe events\n- New middleware: check subscription tier for gated features\n- New component: `PricingTable` — displays tiers with upgrade buttons\n\n## Implementation Steps\n\n### Phase 1: Database & Backend (2 files)\n1. **Create subscription migration** (File: supabase/migrations/004_subscriptions.sql)\n   - Action: CREATE TABLE subscriptions with RLS policies\n   - Why: Store billing state server-side, never trust client\n   - Dependencies: None\n   - Risk: Low\n\n2. **Create Stripe webhook handler** (File: src/app/api/webhooks/stripe/route.ts)\n   - Action: Handle checkout.session.completed, customer.subscription.updated,\n     customer.subscription.deleted events\n   - Why: Keep subscription status in sync with Stripe\n   - Dependencies: Step 1 (needs subscriptions table)\n   - Risk: High — webhook signature verification is critical\n\n### Phase 2: Checkout Flow (2 files)\n3. **Create checkout API route** (File: src/app/api/checkout/route.ts)\n   - Action: Create Stripe Checkout session with price_id and success/cancel URLs\n   - Why: Server-side session creation prevents price tampering\n   - Dependencies: Step 1\n   - Risk: Medium — must validate user is authenticated\n\n4. **Build pricing page** (File: src/components/PricingTable.tsx)\n   - Action: Display three tiers with feature comparison and upgrade buttons\n   - Why: User-facing upgrade flow\n   - Dependencies: Step 3\n   - Risk: Low\n\n### Phase 3: Feature Gating (1 file)\n5. **Add tier-based middleware** (File: src/middleware.ts)\n   - Action: Check subscription tier on protected routes, redirect free users\n   - Why: Enforce tier limits server-side\n   - Dependencies: Steps 1-2 (needs subscription data)\n   - Risk: Medium — must handle edge cases (expired, past_due)\n\n## Testing Strategy\n- Unit tests: Webhook event parsing, tier checking logic\n- Integration tests: Checkout session creation, webhook processing\n- E2E tests: Full upgrade flow (Stripe test mode)\n\n## Risks & Mitigations\n- **Risk**: Webhook events arrive out of order\n  - Mitigation: Use event timestamps, idempotent updates\n- **Risk**: User upgrades but webhook fails\n  - Mitigation: Poll Stripe as fallback, show \"processing\" state\n\n## Success Criteria\n- [ ] User can upgrade from Free to Pro via Stripe Checkout\n- [ ] Webhook correctly syncs subscription status\n- [ ] Free users cannot access Pro features\n- [ ] Downgrade/cancellation works correctly\n- [ ] All tests pass with 80%+ coverage\n```",
+      "zh-Hans": "```markdown\n# 实施计划：Stripe 订阅计费\n\n## 概述\n添加包含免费/专业版/企业版三个等级的订阅计费功能。用户通过 Stripe Checkout 进行升级，Webhook 事件将保持订阅状态的同步。\n\n## 需求\n- 三个等级：免费（默认）、专业版（29美元/月）、企业版（99美元/月）\n- 使用 Stripe Checkout 完成支付流程\n- 用于处理订阅生命周期事件的 Webhook 处理器\n- 基于订阅等级的功能权限控制\n\n## 架构变更\n- 新表：`subscriptions` (user_id, stripe_customer_id, stripe_subscription_id, status, tier)\n- 新 API 路由：`app/api/checkout/route.ts` — 创建 Stripe Checkout 会话\n- 新 API 路由：`app/api/webhooks/stripe/route.ts` — 处理 Stripe 事件\n- 新中间件：检查订阅等级以控制受保护功能\n- 新组件：`PricingTable` — 显示等级信息及升级按钮\n\n## 实施步骤\n\n### 阶段 1：数据库与后端 (2 个文件)\n1.  **创建订阅数据迁移** (文件：supabase/migrations/004_subscriptions.sql)\n    - 操作：使用 RLS 策略 CREATE TABLE subscriptions\n    - 原因：在服务器端存储计费状态，绝不信任客户端\n    - 依赖：无\n    - 风险：低\n\n2.  **创建 Stripe webhook 处理器** (文件：src/app/api/webhooks/stripe/route.ts)\n    - 操作：处理 checkout.session.completed、customer.subscription.updated、customer.subscription.deleted 事件\n    - 原因：保持订阅状态与 Stripe 同步\n    - 依赖：步骤 1（需要 subscriptions 表）\n    - 风险：高 — webhook 签名验证至关重要\n\n### 阶段 2：Checkout 流程 (2 个文件)\n3.  **创建 checkout API 路由** (文件：src/app/api/checkout/route.ts)\n    - 操作：使用 price_id 和 success/cancel URL 创建 Stripe Checkout 会话\n    - 原因：服务器端会话创建可防止价格篡改\n    - 依赖：步骤 1\n    - 风险：中 — 必须验证用户已认证\n\n4.  **构建定价页面** (文件：src/components/PricingTable.tsx)\n    - 操作：显示三个等级，包含功能对比和升级按钮\n    - 原因：面向用户的升级流程\n    - 依赖：步骤 3\n    - 风险：低\n\n### 阶段 3：功能权限控制 (1 个文件)\n5.  **添加基于等级的中间件** (文件：src/middleware.ts)\n    - 操作：在受保护的路由上检查订阅等级，重定向免费用户\n    - 原因：在服务器端强制执行等级限制\n    - 依赖：步骤 1-2（需要订阅数据）\n    - 风险：中 — 必须处理边缘情况（已过期、逾期未付）\n\n## 测试策略\n- 单元测试：Webhook 事件解析、等级检查逻辑\n- 集成测试：Checkout 会话创建、Webhook 处理\n- 端到端测试：完整升级流程（Stripe 测试模式）\n\n## 风险与缓解措施\n- **风险**：Webhook 事件到达顺序错乱\n    - 缓解措施：使用事件时间戳，实现幂等更新\n- **风险**：用户升级但 Webhook 处理失败\n    - 缓解措施：轮询 Stripe 作为后备方案，显示“处理中”状态\n\n## 成功标准\n- [ ] 用户可以通过 Stripe Checkout 从免费版升级到专业版\n- [ ] Webhook 正确同步订阅状态\n- [ ] 免费用户无法访问专业版功能\n- [ ] 降级/取消功能正常工作\n- [ ] 所有测试通过且覆盖率超过 80%\n```"
+    },
+    {
       "en-US": "## When Planning Refactors",
       "zh-Hans": "## 规划重构时"
     },
@@ -83,12 +95,28 @@
       "zh-Hans": "1. 识别代码异味和技术债务\n2. 列出需要的具体改进\n3. 保留现有功能\n4. 尽可能创建向后兼容的更改\n5. 必要时计划渐进式迁移"
     },
     {
+      "en-US": "## Sizing and Phasing",
+      "zh-Hans": "## 规模划分与阶段规划"
+    },
+    {
+      "en-US": "When the feature is large, break it into independently deliverable phases:",
+      "zh-Hans": "当功能较大时，将其分解为可独立交付的阶段："
+    },
+    {
+      "en-US": "- **Phase 1**: Minimum viable — smallest slice that provides value\n- **Phase 2**: Core experience — complete happy path\n- **Phase 3**: Edge cases — error handling, edge cases, polish\n- **Phase 4**: Optimization — performance, monitoring, analytics",
+      "zh-Hans": "* **阶段 1**：最小可行产品 — 能提供价值的最小切片\n* **阶段 2**：核心体验 — 完成主流程（Happy Path）\n* **阶段 3**：边界情况 — 错误处理、边界情况、细节完善\n* **阶段 4**：优化 — 性能、监控、分析"
+    },
+    {
+      "en-US": "Each phase should be mergeable independently. Avoid plans that require all phases to complete before anything works.",
+      "zh-Hans": "每个阶段都应该可以独立合并。避免需要所有阶段都完成后才能工作的计划。"
+    },
+    {
       "en-US": "## Red Flags to Check",
       "zh-Hans": "## 需检查的危险信号"
     },
     {
-      "en-US": "- Large functions (>50 lines)\n- Deep nesting (>4 levels)\n- Duplicated code\n- Missing error handling\n- Hardcoded values\n- Missing tests\n- Performance bottlenecks",
-      "zh-Hans": "* 过大的函数（>50行）\n* 过深的嵌套（>4层）\n* 重复的代码\n* 缺少错误处理\n* 硬编码的值\n* 缺少测试\n* 性能瓶颈"
+      "en-US": "- Large functions (>50 lines)\n- Deep nesting (>4 levels)\n- Duplicated code\n- Missing error handling\n- Hardcoded values\n- Missing tests\n- Performance bottlenecks\n- Plans with no testing strategy\n- Steps without clear file paths\n- Phases that cannot be delivered independently",
+      "zh-Hans": "* 大型函数（>50 行）\n* 深层嵌套（>4 层）\n* 重复代码\n* 缺少错误处理\n* 硬编码值\n* 缺少测试\n* 性能瓶颈\n* 没有测试策略的计划\n* 步骤没有明确文件路径\n* 无法独立交付的阶段"
     },
     {
       "en-US": "**Remember**: A great plan is specific, actionable, and considers both the happy path and edge cases. The best plans enable confident, incremental implementation.",
