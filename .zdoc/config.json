@@ -52,6 +52,10 @@
           "linkReference"
         ]
       }
+    },
+    "updateLocalFileReferences": true,
+    "keep_original_refs": {
+      "docs/zh-CN/README.md": [{ "label": "English", "link": "README.md" }]
     }
   },
   {
