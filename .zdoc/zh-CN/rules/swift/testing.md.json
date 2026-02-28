@@ -1,0 +1,62 @@
+{
+  "sourceFile": "rules/swift/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---"
+    },
+    {
+      "en-US": "# Swift Testing",
+      "zh-Hans": "# Swift 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Swift specific content.",
+      "zh-Hans": "> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Swift 特定的内容。"
+    },
+    {
+      "en-US": "## Framework",
+      "zh-Hans": "## 框架"
+    },
+    {
+      "en-US": "Use **Swift Testing** (`import Testing`) for new tests. Use `@Test` and `#expect`:",
+      "zh-Hans": "对于新测试，使用 **Swift Testing** (`import Testing`)。使用 `@Test` 和 `#expect`："
+    },
+    {
+      "en-US": "```swift\n@Test(\"User creation validates email\")\nfunc userCreationValidatesEmail() throws {\n    #expect(throws: ValidationError.invalidEmail) {\n        try User(email: \"not-an-email\")\n    }\n}\n```",
+      "zh-Hans": "```swift\n@Test(\"User creation validates email\")\nfunc userCreationValidatesEmail() throws {\n    #expect(throws: ValidationError.invalidEmail) {\n        try User(email: \"not-an-email\")\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Test Isolation",
+      "zh-Hans": "## 测试隔离"
+    },
+    {
+      "en-US": "Each test gets a fresh instance — set up in `init`, tear down in `deinit`. No shared mutable state between tests.",
+      "zh-Hans": "每个测试都会获得一个全新的实例 —— 在 `init` 中设置，在 `deinit` 中拆卸。测试之间没有共享的可变状态。"
+    },
+    {
+      "en-US": "## Parameterized Tests",
+      "zh-Hans": "## 参数化测试"
+    },
+    {
+      "en-US": "```swift\n@Test(\"Validates formats\", arguments: [\"json\", \"xml\", \"csv\"])\nfunc validatesFormat(format: String) throws {\n    let parser = try Parser(format: format)\n    #expect(parser.isValid)\n}\n```",
+      "zh-Hans": "```swift\n@Test(\"Validates formats\", arguments: [\"json\", \"xml\", \"csv\"])\nfunc validatesFormat(format: String) throws {\n    let parser = try Parser(format: format)\n    #expect(parser.isValid)\n}\n```"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "```bash\nswift test --enable-code-coverage\n```",
+      "zh-Hans": "```bash\nswift test --enable-code-coverage\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `swift-protocol-di-testing` for protocol-based dependency injection and mock patterns with Swift Testing.",
+      "zh-Hans": "关于基于协议的依赖注入和 Swift Testing 的模拟模式，请参阅技能：`swift-protocol-di-testing`。"
+    }
+  ]
+}

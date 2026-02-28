@@ -1,0 +1,158 @@
+{
+  "sourceFile": "examples/django-api-CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Django REST API — Project CLAUDE.md",
+      "zh-Hans": "# Django REST API — 项目 CLAUDE.md"
+    },
+    {
+      "en-US": "> Real-world example for a Django REST Framework API with PostgreSQL and Celery.\n> Copy this to your project root and customize for your service.",
+      "zh-Hans": "> 使用 PostgreSQL 和 Celery 的 Django REST Framework API 真实示例。\n> 将此复制到你的项目根目录并针对你的服务进行自定义。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概述"
+    },
+    {
+      "en-US": "**Stack:** Python 3.12+, Django 5.x, Django REST Framework, PostgreSQL, Celery + Redis, pytest, Docker Compose",
+      "zh-Hans": "**技术栈:** Python 3.12+, Django 5.x, Django REST Framework, PostgreSQL, Celery + Redis, pytest, Docker Compose"
+    },
+    {
+      "en-US": "**Architecture:** Domain-driven design with apps per business domain. DRF for API layer, Celery for async tasks, pytest for testing. All endpoints return JSON — no template rendering.",
+      "zh-Hans": "**架构:** 采用领域驱动设计，每个业务领域对应一个应用。DRF 用于 API 层，Celery 用于异步任务，pytest 用于测试。所有端点返回 JSON — 无模板渲染。"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "### Python Conventions",
+      "zh-Hans": "### Python 约定"
+    },
+    {
+      "en-US": "- Type hints on all function signatures — use `from __future__ import annotations`\n- No `print()` statements — use `logging.getLogger(__name__)`\n- f-strings for string formatting, never `%` or `.format()`\n- Use `pathlib.Path` not `os.path` for file operations\n- Imports sorted with isort: stdlib, third-party, local (enforced by ruff)",
+      "zh-Hans": "* 所有函数签名使用类型提示 — 使用 `from __future__ import annotations`\n* 不使用 `print()` 语句 — 使用 `logging.getLogger(__name__)`\n* 字符串格式化使用 f-strings，绝不使用 `%` 或 `.format()`\n* 文件操作使用 `pathlib.Path` 而非 `os.path`\n* 导入排序使用 isort：标准库、第三方库、本地库（由 ruff 强制执行）"
+    },
+    {
+      "en-US": "### Database",
+      "zh-Hans": "### 数据库"
+    },
+    {
+      "en-US": "- All queries use Django ORM — raw SQL only with `.raw()` and parameterized queries\n- Migrations committed to git — never use `--fake` in production\n- Use `select_related()` and `prefetch_related()` to prevent N+1 queries\n- All models must have `created_at` and `updated_at` auto-fields\n- Indexes on any field used in `filter()`, `order_by()`, or `WHERE` clauses",
+      "zh-Hans": "* 所有查询使用 Django ORM — 原始 SQL 仅与 `.raw()` 和参数化查询一起使用\n* 迁移文件提交到 git — 生产中绝不使用 `--fake`\n* 使用 `select_related()` 和 `prefetch_related()` 防止 N+1 查询\n* 所有模型必须具有 `created_at` 和 `updated_at` 自动字段\n* 在 `filter()`、`order_by()` 或 `WHERE` 子句中使用的任何字段上建立索引"
+    },
+    {
+      "en-US": "```python\n# BAD: N+1 query\norders = Order.objects.all()\nfor order in orders:\n    print(order.customer.name)  # hits DB for each order\n\n# GOOD: Single query with join\norders = Order.objects.select_related(\"customer\").all()\n```",
+      "zh-Hans": "```python\n# BAD: N+1 query\norders = Order.objects.all()\nfor order in orders:\n    print(order.customer.name)  # hits DB for each order\n\n# GOOD: Single query with join\norders = Order.objects.select_related(\"customer\").all()\n```"
+    },
+    {
+      "en-US": "### Authentication",
+      "zh-Hans": "### 认证"
+    },
+    {
+      "en-US": "- JWT via `djangorestframework-simplejwt` — access token (15 min) + refresh token (7 days)\n- Permission classes on every view — never rely on default\n- Use `IsAuthenticated` as base, add custom permissions for object-level access\n- Token blacklisting enabled for logout",
+      "zh-Hans": "* 通过 `djangorestframework-simplejwt` 使用 JWT — 访问令牌（15 分钟）+ 刷新令牌（7 天）\n* 每个视图都设置权限类 — 绝不依赖默认设置\n* 使用 `IsAuthenticated` 作为基础，为对象级访问添加自定义权限\n* 为登出启用令牌黑名单"
+    },
+    {
+      "en-US": "### Serializers",
+      "zh-Hans": "### 序列化器"
+    },
+    {
+      "en-US": "- Use `ModelSerializer` for simple CRUD, `Serializer` for complex validation\n- Separate read and write serializers when input/output shapes differ\n- Validate at serializer level, not in views — views should be thin",
+      "zh-Hans": "* 简单 CRUD 使用 `ModelSerializer`，复杂验证使用 `Serializer`\n* 当输入/输出结构不同时，分离读写序列化器\n* 在序列化器层面进行验证，而非在视图中 — 视图应保持精简"
+    },
+    {
+      "en-US": "```python\nclass CreateOrderSerializer(serializers.Serializer):\n    product_id = serializers.UUIDField()\n    quantity = serializers.IntegerField(min_value=1, max_value=100)\n\n    def validate_product_id(self, value):\n        if not Product.objects.filter(id=value, active=True).exists():\n            raise serializers.ValidationError(\"Product not found or inactive\")\n        return value\n\nclass OrderDetailSerializer(serializers.ModelSerializer):\n    customer = CustomerSerializer(read_only=True)\n    product = ProductSerializer(read_only=True)\n\n    class Meta:\n        model = Order\n        fields = [\"id\", \"customer\", \"product\", \"quantity\", \"total\", \"status\", \"created_at\"]\n```",
+      "zh-Hans": "```python\nclass CreateOrderSerializer(serializers.Serializer):\n    product_id = serializers.UUIDField()\n    quantity = serializers.IntegerField(min_value=1, max_value=100)\n\n    def validate_product_id(self, value):\n        if not Product.objects.filter(id=value, active=True).exists():\n            raise serializers.ValidationError(\"Product not found or inactive\")\n        return value\n\nclass OrderDetailSerializer(serializers.ModelSerializer):\n    customer = CustomerSerializer(read_only=True)\n    product = ProductSerializer(read_only=True)\n\n    class Meta:\n        model = Order\n        fields = [\"id\", \"customer\", \"product\", \"quantity\", \"total\", \"status\", \"created_at\"]\n```"
+    },
+    {
+      "en-US": "### Error Handling",
+      "zh-Hans": "### 错误处理"
+    },
+    {
+      "en-US": "- Use DRF exception handler for consistent error responses\n- Custom exceptions for business logic in `core/exceptions.py`\n- Never expose internal error details to clients",
+      "zh-Hans": "* 使用 DRF 异常处理器确保一致的错误响应\n* 业务逻辑中的自定义异常放在 `core/exceptions.py`\n* 绝不向客户端暴露内部错误细节"
+    },
+    {
+      "en-US": "```python\n# core/exceptions.py\nfrom rest_framework.exceptions import APIException\n\nclass InsufficientStockError(APIException):\n    status_code = 409\n    default_detail = \"Insufficient stock for this order\"\n    default_code = \"insufficient_stock\"\n```",
+      "zh-Hans": "```python\n# core/exceptions.py\nfrom rest_framework.exceptions import APIException\n\nclass InsufficientStockError(APIException):\n    status_code = 409\n    default_detail = \"Insufficient stock for this order\"\n    default_code = \"insufficient_stock\"\n```"
+    },
+    {
+      "en-US": "### Code Style",
+      "zh-Hans": "### 代码风格"
+    },
+    {
+      "en-US": "- No emojis in code or comments\n- Max line length: 120 characters (enforced by ruff)\n- Classes: PascalCase, functions/variables: snake_case, constants: UPPER_SNAKE_CASE\n- Views are thin — business logic lives in service functions or model methods",
+      "zh-Hans": "* 代码或注释中不使用表情符号\n* 最大行长度：120 个字符（由 ruff 强制执行）\n* 类名：PascalCase，函数/变量名：snake\\_case，常量：UPPER\\_SNAKE\\_CASE\n* 视图保持精简 — 业务逻辑放在服务函数或模型方法中"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\nconfig/\n  settings/\n    base.py              # Shared settings\n    local.py             # Dev overrides (DEBUG=True)\n    production.py        # Production settings\n  urls.py                # Root URL config\n  celery.py              # Celery app configuration\napps/\n  accounts/              # User auth, registration, profile\n    models.py\n    serializers.py\n    views.py\n    services.py          # Business logic\n    tests/\n      test_views.py\n      test_services.py\n      factories.py       # Factory Boy factories\n  orders/                # Order management\n    models.py\n    serializers.py\n    views.py\n    services.py\n    tasks.py             # Celery tasks\n    tests/\n  products/              # Product catalog\n    models.py\n    serializers.py\n    views.py\n    tests/\ncore/\n  exceptions.py          # Custom API exceptions\n  permissions.py         # Shared permission classes\n  pagination.py          # Custom pagination\n  middleware.py          # Request logging, timing\n  tests/\n```",
+      "zh-Hans": "```\nconfig/\n  settings/\n    base.py              # Shared settings\n    local.py             # Dev overrides (DEBUG=True)\n    production.py        # Production settings\n  urls.py                # Root URL config\n  celery.py              # Celery app configuration\napps/\n  accounts/              # User auth, registration, profile\n    models.py\n    serializers.py\n    views.py\n    services.py          # Business logic\n    tests/\n      test_views.py\n      test_services.py\n      factories.py       # Factory Boy factories\n  orders/                # Order management\n    models.py\n    serializers.py\n    views.py\n    services.py\n    tasks.py             # Celery tasks\n    tests/\n  products/              # Product catalog\n    models.py\n    serializers.py\n    views.py\n    tests/\ncore/\n  exceptions.py          # Custom API exceptions\n  permissions.py         # Shared permission classes\n  pagination.py          # Custom pagination\n  middleware.py          # Request logging, timing\n  tests/\n```"
+    },
+    {
+      "en-US": "## Key Patterns",
+      "zh-Hans": "## 关键模式"
+    },
+    {
+      "en-US": "### Service Layer",
+      "zh-Hans": "### 服务层"
+    },
+    {
+      "en-US": "```python\n# apps/orders/services.py\nfrom django.db import transaction\n\ndef create_order(*, customer, product_id: uuid.UUID, quantity: int) -> Order:\n    \"\"\"Create an order with stock validation and payment hold.\"\"\"\n    product = Product.objects.select_for_update().get(id=product_id)\n\n    if product.stock < quantity:\n        raise InsufficientStockError()\n\n    with transaction.atomic():\n        order = Order.objects.create(\n            customer=customer,\n            product=product,\n            quantity=quantity,\n            total=product.price * quantity,\n        )\n        product.stock -= quantity\n        product.save(update_fields=[\"stock\", \"updated_at\"])\n\n    # Async: send confirmation email\n    send_order_confirmation.delay(order.id)\n    return order\n```",
+      "zh-Hans": "```python\n# apps/orders/services.py\nfrom django.db import transaction\n\ndef create_order(*, customer, product_id: uuid.UUID, quantity: int) -> Order:\n    \"\"\"Create an order with stock validation and payment hold.\"\"\"\n    product = Product.objects.select_for_update().get(id=product_id)\n\n    if product.stock < quantity:\n        raise InsufficientStockError()\n\n    with transaction.atomic():\n        order = Order.objects.create(\n            customer=customer,\n            product=product,\n            quantity=quantity,\n            total=product.price * quantity,\n        )\n        product.stock -= quantity\n        product.save(update_fields=[\"stock\", \"updated_at\"])\n\n    # Async: send confirmation email\n    send_order_confirmation.delay(order.id)\n    return order\n```"
+    },
+    {
+      "en-US": "### View Pattern",
+      "zh-Hans": "### 视图模式"
+    },
+    {
+      "en-US": "```python\n# apps/orders/views.py\nclass OrderViewSet(viewsets.ModelViewSet):\n    permission_classes = [IsAuthenticated]\n    pagination_class = StandardPagination\n\n    def get_serializer_class(self):\n        if self.action == \"create\":\n            return CreateOrderSerializer\n        return OrderDetailSerializer\n\n    def get_queryset(self):\n        return (\n            Order.objects\n            .filter(customer=self.request.user)\n            .select_related(\"product\", \"customer\")\n            .order_by(\"-created_at\")\n        )\n\n    def perform_create(self, serializer):\n        order = create_order(\n            customer=self.request.user,\n            product_id=serializer.validated_data[\"product_id\"],\n            quantity=serializer.validated_data[\"quantity\"],\n        )\n        serializer.instance = order\n```",
+      "zh-Hans": "```python\n# apps/orders/views.py\nclass OrderViewSet(viewsets.ModelViewSet):\n    permission_classes = [IsAuthenticated]\n    pagination_class = StandardPagination\n\n    def get_serializer_class(self):\n        if self.action == \"create\":\n            return CreateOrderSerializer\n        return OrderDetailSerializer\n\n    def get_queryset(self):\n        return (\n            Order.objects\n            .filter(customer=self.request.user)\n            .select_related(\"product\", \"customer\")\n            .order_by(\"-created_at\")\n        )\n\n    def perform_create(self, serializer):\n        order = create_order(\n            customer=self.request.user,\n            product_id=serializer.validated_data[\"product_id\"],\n            quantity=serializer.validated_data[\"quantity\"],\n        )\n        serializer.instance = order\n```"
+    },
+    {
+      "en-US": "### Test Pattern (pytest + Factory Boy)",
+      "zh-Hans": "### 测试模式 (pytest + Factory Boy)"
+    },
+    {
+      "en-US": "```python\n# apps/orders/tests/factories.py\nimport factory\nfrom apps.accounts.tests.factories import UserFactory\nfrom apps.products.tests.factories import ProductFactory\n\nclass OrderFactory(factory.django.DjangoModelFactory):\n    class Meta:\n        model = \"orders.Order\"\n\n    customer = factory.SubFactory(UserFactory)\n    product = factory.SubFactory(ProductFactory, stock=100)\n    quantity = 1\n    total = factory.LazyAttribute(lambda o: o.product.price * o.quantity)\n\n# apps/orders/tests/test_views.py\nimport pytest\nfrom rest_framework.test import APIClient\n\n@pytest.mark.django_db\nclass TestCreateOrder:\n    def setup_method(self):\n        self.client = APIClient()\n        self.user = UserFactory()\n        self.client.force_authenticate(self.user)\n\n    def test_create_order_success(self):\n        product = ProductFactory(price=29_99, stock=10)\n        response = self.client.post(\"/api/orders/\", {\n            \"product_id\": str(product.id),\n            \"quantity\": 2,\n        })\n        assert response.status_code == 201\n        assert response.data[\"total\"] == 59_98\n\n    def test_create_order_insufficient_stock(self):\n        product = ProductFactory(stock=0)\n        response = self.client.post(\"/api/orders/\", {\n            \"product_id\": str(product.id),\n            \"quantity\": 1,\n        })\n        assert response.status_code == 409\n\n    def test_create_order_unauthenticated(self):\n        self.client.force_authenticate(None)\n        response = self.client.post(\"/api/orders/\", {})\n        assert response.status_code == 401\n```",
+      "zh-Hans": "```python\n# apps/orders/tests/factories.py\nimport factory\nfrom apps.accounts.tests.factories import UserFactory\nfrom apps.products.tests.factories import ProductFactory\n\nclass OrderFactory(factory.django.DjangoModelFactory):\n    class Meta:\n        model = \"orders.Order\"\n\n    customer = factory.SubFactory(UserFactory)\n    product = factory.SubFactory(ProductFactory, stock=100)\n    quantity = 1\n    total = factory.LazyAttribute(lambda o: o.product.price * o.quantity)\n\n# apps/orders/tests/test_views.py\nimport pytest\nfrom rest_framework.test import APIClient\n\n@pytest.mark.django_db\nclass TestCreateOrder:\n    def setup_method(self):\n        self.client = APIClient()\n        self.user = UserFactory()\n        self.client.force_authenticate(self.user)\n\n    def test_create_order_success(self):\n        product = ProductFactory(price=29_99, stock=10)\n        response = self.client.post(\"/api/orders/\", {\n            \"product_id\": str(product.id),\n            \"quantity\": 2,\n        })\n        assert response.status_code == 201\n        assert response.data[\"total\"] == 59_98\n\n    def test_create_order_insufficient_stock(self):\n        product = ProductFactory(stock=0)\n        response = self.client.post(\"/api/orders/\", {\n            \"product_id\": str(product.id),\n            \"quantity\": 1,\n        })\n        assert response.status_code == 409\n\n    def test_create_order_unauthenticated(self):\n        self.client.force_authenticate(None)\n        response = self.client.post(\"/api/orders/\", {})\n        assert response.status_code == 401\n```"
+    },
+    {
+      "en-US": "## Environment Variables",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "```bash\n# Django\nSECRET_KEY=\nDEBUG=False\nALLOWED_HOSTS=api.example.com\n\n# Database\nDATABASE_URL=postgres://user:pass@localhost:5432/myapp\n\n# Redis (Celery broker + cache)\nREDIS_URL=redis://localhost:6379/0\n\n# JWT\nJWT_ACCESS_TOKEN_LIFETIME=15       # minutes\nJWT_REFRESH_TOKEN_LIFETIME=10080   # minutes (7 days)\n\n# Email\nEMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend\nEMAIL_HOST=smtp.example.com\n```",
+      "zh-Hans": "```bash\n# Django\nSECRET_KEY=\nDEBUG=False\nALLOWED_HOSTS=api.example.com\n\n# Database\nDATABASE_URL=postgres://user:pass@localhost:5432/myapp\n\n# Redis (Celery broker + cache)\nREDIS_URL=redis://localhost:6379/0\n\n# JWT\nJWT_ACCESS_TOKEN_LIFETIME=15       # minutes\nJWT_REFRESH_TOKEN_LIFETIME=10080   # minutes (7 days)\n\n# Email\nEMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend\nEMAIL_HOST=smtp.example.com\n```"
+    },
+    {
+      "en-US": "## Testing Strategy",
+      "zh-Hans": "## 测试策略"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\npytest --cov=apps --cov-report=term-missing\n\n# Run specific app tests\npytest apps/orders/tests/ -v\n\n# Run with parallel execution\npytest -n auto\n\n# Only failing tests from last run\npytest --lf\n```",
+      "zh-Hans": "```bash\n# Run all tests\npytest --cov=apps --cov-report=term-missing\n\n# Run specific app tests\npytest apps/orders/tests/ -v\n\n# Run with parallel execution\npytest -n auto\n\n# Only failing tests from last run\npytest --lf\n```"
+    },
+    {
+      "en-US": "## ECC Workflow",
+      "zh-Hans": "## ECC 工作流"
+    },
+    {
+      "en-US": "```bash\n# Planning\n/plan \"Add order refund system with Stripe integration\"\n\n# Development with TDD\n/tdd                    # pytest-based TDD workflow\n\n# Review\n/python-review          # Python-specific code review\n/security-scan          # Django security audit\n/code-review            # General quality check\n\n# Verification\n/verify                 # Build, lint, test, security scan\n```",
+      "zh-Hans": "```bash\n# Planning\n/plan \"Add order refund system with Stripe integration\"\n\n# Development with TDD\n/tdd                    # pytest-based TDD workflow\n\n# Review\n/python-review          # Python-specific code review\n/security-scan          # Django security audit\n/code-review            # General quality check\n\n# Verification\n/verify                 # Build, lint, test, security scan\n```"
+    },
+    {
+      "en-US": "## Git Workflow",
+      "zh-Hans": "## Git 工作流"
+    },
+    {
+      "en-US": "- `feat:` new features, `fix:` bug fixes, `refactor:` code changes\n- Feature branches from `main`, PRs required\n- CI: ruff (lint + format), mypy (types), pytest (tests), safety (dep check)\n- Deploy: Docker image, managed via Kubernetes or Railway",
+      "zh-Hans": "* `feat:` 新功能，`fix:` 错误修复，`refactor:` 代码变更\n* 功能分支从 `main` 创建，需要 PR\n* CI：ruff（代码检查 + 格式化）、mypy（类型检查）、pytest（测试）、safety（依赖检查）\n* 部署：Docker 镜像，通过 Kubernetes 或 Railway 管理"
+    }
+  ]
+}

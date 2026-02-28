@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: python-testing\ndescription: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.\n---",
-      "zh-Hans": "---\nname: python-testing\ndescription: 使用pytest、TDD方法、夹具、模拟、参数化和覆盖率要求的Python测试策略。\n---"
+      "en-US": "---\nname: python-testing\ndescription: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: python-testing\ndescription: 使用pytest的Python测试策略，包括TDD方法、夹具、模拟、参数化和覆盖率要求。\norigin: ECC\n---"
     },
     {
       "en-US": "# Python Testing Patterns",

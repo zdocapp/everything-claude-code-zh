@@ -3,6 +3,10 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\nname: project-guidelines-example\ndescription: \"Example project-specific skill template based on a real production application.\"\norigin: ECC\n---",
+      "zh-Hans": "---\nname: project-guidelines-example\ndescription: \"基于真实生产应用的示例项目特定技能模板。\"\norigin: ECC\n---"
+    },
+    {
       "en-US": "# Project Guidelines Skill (Example)",
       "zh-Hans": "# 项目指南技能（示例）"
     },
@@ -13,10 +17,6 @@
     {
       "en-US": "Based on a real production application: [Zenith](https://zenith.chat) - AI-powered customer discovery platform.",
       "zh-Hans": "基于一个真实的生产应用程序：[Zenith](https://zenith.chat) - 由 AI 驱动的客户发现平台。"
-    },
-    {
-      "en-US": "---",
-      "zh-Hans": "***"
     },
     {
       "en-US": "## When to Use",

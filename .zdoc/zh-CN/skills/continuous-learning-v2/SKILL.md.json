@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: continuous-learning-v2\ndescription: Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents.\nversion: 2.0.0\n---",
-      "zh-Hans": "---\nname: continuous-learning-v2\ndescription: 基于本能的学习系统，通过钩子观察会话，创建具有置信度评分的原子本能，并将其演化为技能/命令/代理。\nversion: 2.0.0\n---"
+      "en-US": "---\nname: continuous-learning-v2\ndescription: Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents.\norigin: ECC\nversion: 2.0.0\n---",
+      "zh-Hans": "---\nname: continuous-learning-v2\ndescription: 基于本能的学习系统，通过钩子观察会话，创建具有置信度评分的原子本能，并将其进化为技能/命令/代理。\norigin: ECC\nversion: 2.0.0\n---"
     },
     {
       "en-US": "# Continuous Learning v2 - Instinct-Based Architecture",
@@ -13,6 +13,18 @@
     {
       "en-US": "An advanced learning system that turns your Claude Code sessions into reusable knowledge through atomic \"instincts\" - small learned behaviors with confidence scoring.",
       "zh-Hans": "一个高级学习系统，通过原子化的“本能”——带有置信度评分的小型习得行为——将你的 Claude Code 会话转化为可重用的知识。"
+    },
+    {
+      "en-US": "Inspired in part by the Homunculus work from [humanplane](https://github.com/humanplane).",
+      "zh-Hans": "部分灵感来源于 [humanplane](https://github.com/humanplane) 的 Homunculus 项目。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Setting up automatic learning from Claude Code sessions\n- Configuring instinct-based behavior extraction via hooks\n- Tuning confidence thresholds for learned behaviors\n- Reviewing, exporting, or importing instinct libraries\n- Evolving instincts into full skills, commands, or agents",
+      "zh-Hans": "* 设置从 Claude Code 会话中自动学习时\n* 通过钩子配置基于本能的行为提取时\n* 调整学习行为的置信度阈值时\n* 审查、导出或导入本能库时\n* 将本能进化为完整技能、命令或代理时"
     },
     {
       "en-US": "## What's New in v2",
@@ -211,8 +223,8 @@
       "zh-Hans": "## 相关链接"
     },
     {
-      "en-US": "- [Skill Creator](https://skill-creator.app) - Generate instincts from repo history\n- [Homunculus](https://github.com/humanplane/homunculus) - Inspiration for v2 architecture\n- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Continuous learning section",
-      "zh-Hans": "* [技能创建器](https://skill-creator.app) - 从仓库历史生成本能\n* [Homunculus](https://github.com/humanplane/homunculus) - v2 架构的灵感来源\n* [长文指南](https://x.com/affaanmustafa/status/2014040193557471352) - 持续学习部分"
+      "en-US": "- [Skill Creator](https://skill-creator.app) - Generate instincts from repo history\n- Homunculus - Community project that inspired the v2 instinct-based architecture (atomic observations, confidence scoring, instinct evolution pipeline)\n- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Continuous learning section",
+      "zh-Hans": "* [技能创建器](https://skill-creator.app) - 从仓库历史生成本能\n* Homunculus - 启发了 v2 基于本能的架构的社区项目（原子观察、置信度评分、本能进化管道）\n* [长篇指南](https://x.com/affaanmustafa/status/2014040193557471352) - 持续学习部分"
     },
     {
       "en-US": "---",

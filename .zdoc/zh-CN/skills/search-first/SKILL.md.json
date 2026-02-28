@@ -1,0 +1,186 @@
+{
+  "sourceFile": "skills/search-first/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: search-first\ndescription: Research-before-coding workflow. Search for existing tools, libraries, and patterns before writing custom code. Invokes the researcher agent.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: search-first\ndescription: 研究优先于编码的工作流程。在编写自定义代码之前，搜索现有的工具、库和模式。调用研究员代理。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# /search-first — Research Before You Code",
+      "zh-Hans": "# /search-first — 编码前先研究"
+    },
+    {
+      "en-US": "Systematizes the \"search for existing solutions before implementing\" workflow.",
+      "zh-Hans": "系统化“在实现之前先寻找现有解决方案”的工作流程。"
+    },
+    {
+      "en-US": "## Trigger",
+      "zh-Hans": "## 触发时机"
+    },
+    {
+      "en-US": "Use this skill when:",
+      "zh-Hans": "在以下情况使用此技能："
+    },
+    {
+      "en-US": "- Starting a new feature that likely has existing solutions\n- Adding a dependency or integration\n- The user asks \"add X functionality\" and you're about to write code\n- Before creating a new utility, helper, or abstraction",
+      "zh-Hans": "* 开始一项很可能已有解决方案的新功能\n* 添加依赖项或集成\n* 用户要求“添加 X 功能”而你准备开始编写代码\n* 在创建新的实用程序、助手或抽象之前"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "```\n┌─────────────────────────────────────────────┐\n│  1. NEED ANALYSIS                           │\n│     Define what functionality is needed      │\n│     Identify language/framework constraints  │\n├─────────────────────────────────────────────┤\n│  2. PARALLEL SEARCH (researcher agent)      │\n│     ┌──────────┐ ┌──────────┐ ┌──────────┐  │\n│     │  npm /   │ │  MCP /   │ │  GitHub / │  │\n│     │  PyPI    │ │  Skills  │ │  Web      │  │\n│     └──────────┘ └──────────┘ └──────────┘  │\n├─────────────────────────────────────────────┤\n│  3. EVALUATE                                │\n│     Score candidates (functionality, maint, │\n│     community, docs, license, deps)         │\n├─────────────────────────────────────────────┤\n│  4. DECIDE                                  │\n│     ┌─────────┐  ┌──────────┐  ┌─────────┐  │\n│     │  Adopt  │  │  Extend  │  │  Build   │  │\n│     │ as-is   │  │  /Wrap   │  │  Custom  │  │\n│     └─────────┘  └──────────┘  └─────────┘  │\n├─────────────────────────────────────────────┤\n│  5. IMPLEMENT                               │\n│     Install package / Configure MCP /       │\n│     Write minimal custom code               │\n└─────────────────────────────────────────────┘\n```",
+      "zh-Hans": "```\n┌─────────────────────────────────────────────┐\n│  1. NEED ANALYSIS                           │\n│     Define what functionality is needed      │\n│     Identify language/framework constraints  │\n├─────────────────────────────────────────────┤\n│  2. PARALLEL SEARCH (researcher agent)      │\n│     ┌──────────┐ ┌──────────┐ ┌──────────┐  │\n│     │  npm /   │ │  MCP /   │ │  GitHub / │  │\n│     │  PyPI    │ │  Skills  │ │  Web      │  │\n│     └──────────┘ └──────────┘ └──────────┘  │\n├─────────────────────────────────────────────┤\n│  3. EVALUATE                                │\n│     Score candidates (functionality, maint, │\n│     community, docs, license, deps)         │\n├─────────────────────────────────────────────┤\n│  4. DECIDE                                  │\n│     ┌─────────┐  ┌──────────┐  ┌─────────┐  │\n│     │  Adopt  │  │  Extend  │  │  Build   │  │\n│     │ as-is   │  │  /Wrap   │  │  Custom  │  │\n│     └─────────┘  └──────────┘  └─────────┘  │\n├─────────────────────────────────────────────┤\n│  5. IMPLEMENT                               │\n│     Install package / Configure MCP /       │\n│     Write minimal custom code               │\n└─────────────────────────────────────────────┘\n```"
+    },
+    {
+      "en-US": "## Decision Matrix",
+      "zh-Hans": "## 决策矩阵"
+    },
+    {
+      "en-US": "| Signal | Action |\n|--------|--------|\n| Exact match, well-maintained, MIT/Apache | **Adopt** — install and use directly |\n| Partial match, good foundation | **Extend** — install + write thin wrapper |\n| Multiple weak matches | **Compose** — combine 2-3 small packages |\n| Nothing suitable found | **Build** — write custom, but informed by research |",
+      "zh-Hans": "| 信号 | 行动 |\n|--------|--------|\n| 完全匹配，维护良好，MIT/Apache 许可证 | **采纳** — 直接安装并使用 |\n| 部分匹配，基础良好 | **扩展** — 安装 + 编写薄封装层 |\n| 多个弱匹配 | **组合** — 组合 2-3 个小包 |\n| 未找到合适的 | **构建** — 编写自定义代码，但需基于研究 |"
+    },
+    {
+      "en-US": "## How to Use",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "### Quick Mode (inline)",
+      "zh-Hans": "### 快速模式（内联）"
+    },
+    {
+      "en-US": "Before writing a utility or adding functionality, mentally run through:",
+      "zh-Hans": "在编写实用程序或添加功能之前，在脑中过一遍："
+    },
+    {
+      "en-US": "1. Is this a common problem? → Search npm/PyPI\n2. Is there an MCP for this? → Check `~/.claude/settings.json` and search\n3. Is there a skill for this? → Check `~/.claude/skills/`\n4. Is there a GitHub template? → Search GitHub",
+      "zh-Hans": "1. 这是常见问题吗？ → 搜索 npm/PyPI\n2. 有相关的 MCP 吗？ → 检查 `~/.claude/settings.json` 并搜索\n3. 有相关的技能吗？ → 检查 `~/.claude/skills/`\n4. 有 GitHub 模板吗？ → 搜索 GitHub"
+    },
+    {
+      "en-US": "### Full Mode (agent)",
+      "zh-Hans": "### 完整模式（代理）"
+    },
+    {
+      "en-US": "For non-trivial functionality, launch the researcher agent:",
+      "zh-Hans": "对于非平凡的功能，启动研究员代理："
+    },
+    {
+      "en-US": "```\nTask(subagent_type=\"general-purpose\", prompt=\"\n  Research existing tools for: [DESCRIPTION]\n  Language/framework: [LANG]\n  Constraints: [ANY]\n\n  Search: npm/PyPI, MCP servers, Claude Code skills, GitHub\n  Return: Structured comparison with recommendation\n\")\n```",
+      "zh-Hans": "```\nTask(subagent_type=\"general-purpose\", prompt=\"\n  Research existing tools for: [DESCRIPTION]\n  Language/framework: [LANG]\n  Constraints: [ANY]\n\n  Search: npm/PyPI, MCP servers, Claude Code skills, GitHub\n  Return: Structured comparison with recommendation\n\")\n```"
+    },
+    {
+      "en-US": "## Search Shortcuts by Category",
+      "zh-Hans": "## 按类别搜索快捷方式"
+    },
+    {
+      "en-US": "### Development Tooling",
+      "zh-Hans": "### 开发工具"
+    },
+    {
+      "en-US": "- Linting → `eslint`, `ruff`, `textlint`, `markdownlint`\n- Formatting → `prettier`, `black`, `gofmt`\n- Testing → `jest`, `pytest`, `go test`\n- Pre-commit → `husky`, `lint-staged`, `pre-commit`",
+      "zh-Hans": "* Linting → `eslint`, `ruff`, `textlint`, `markdownlint`\n* Formatting → `prettier`, `black`, `gofmt`\n* Testing → `jest`, `pytest`, `go test`\n* Pre-commit → `husky`, `lint-staged`, `pre-commit`"
+    },
+    {
+      "en-US": "### AI/LLM Integration",
+      "zh-Hans": "### AI/LLM 集成"
+    },
+    {
+      "en-US": "- Claude SDK → Context7 for latest docs\n- Prompt management → Check MCP servers\n- Document processing → `unstructured`, `pdfplumber`, `mammoth`",
+      "zh-Hans": "* Claude SDK → 使用 Context7 获取最新文档\n* 提示词管理 → 检查 MCP 服务器\n* 文档处理 → `unstructured`, `pdfplumber`, `mammoth`"
+    },
+    {
+      "en-US": "### Data & APIs",
+      "zh-Hans": "### 数据与 API"
+    },
+    {
+      "en-US": "- HTTP clients → `httpx` (Python), `ky`/`got` (Node)\n- Validation → `zod` (TS), `pydantic` (Python)\n- Database → Check for MCP servers first",
+      "zh-Hans": "* HTTP 客户端 → `httpx` (Python), `ky`/`got` (Node)\n* 验证 → `zod` (TS), `pydantic` (Python)\n* 数据库 → 首先检查是否有 MCP 服务器"
+    },
+    {
+      "en-US": "### Content & Publishing",
+      "zh-Hans": "### 内容与发布"
+    },
+    {
+      "en-US": "- Markdown processing → `remark`, `unified`, `markdown-it`\n- Image optimization → `sharp`, `imagemin`",
+      "zh-Hans": "* Markdown 处理 → `remark`, `unified`, `markdown-it`\n* 图片优化 → `sharp`, `imagemin`"
+    },
+    {
+      "en-US": "## Integration Points",
+      "zh-Hans": "## 集成点"
+    },
+    {
+      "en-US": "### With planner agent",
+      "zh-Hans": "### 与规划器代理"
+    },
+    {
+      "en-US": "The planner should invoke researcher before Phase 1 (Architecture Review):",
+      "zh-Hans": "规划器应在阶段 1（架构评审）之前调用研究员："
+    },
+    {
+      "en-US": "- Researcher identifies available tools\n- Planner incorporates them into the implementation plan\n- Avoids \"reinventing the wheel\" in the plan",
+      "zh-Hans": "* 研究员识别可用的工具\n* 规划器将它们纳入实施计划\n* 避免在计划中“重新发明轮子”"
+    },
+    {
+      "en-US": "### With architect agent",
+      "zh-Hans": "### 与架构师代理"
+    },
+    {
+      "en-US": "The architect should consult researcher for:",
+      "zh-Hans": "架构师应向研究员咨询："
+    },
+    {
+      "en-US": "- Technology stack decisions\n- Integration pattern discovery\n- Existing reference architectures",
+      "zh-Hans": "* 技术栈决策\n* 集成模式发现\n* 现有参考架构"
+    },
+    {
+      "en-US": "### With iterative-retrieval skill",
+      "zh-Hans": "### 与迭代检索技能"
+    },
+    {
+      "en-US": "Combine for progressive discovery:",
+      "zh-Hans": "结合进行渐进式发现："
+    },
+    {
+      "en-US": "- Cycle 1: Broad search (npm, PyPI, MCP)\n- Cycle 2: Evaluate top candidates in detail\n- Cycle 3: Test compatibility with project constraints",
+      "zh-Hans": "* 循环 1：广泛搜索 (npm, PyPI, MCP)\n* 循环 2：详细评估顶级候选方案\n* 循环 3：测试与项目约束的兼容性"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Example 1: \"Add dead link checking\"",
+      "zh-Hans": "### 示例 1：“添加死链检查”"
+    },
+    {
+      "en-US": "```\nNeed: Check markdown files for broken links\nSearch: npm \"markdown dead link checker\"\nFound: textlint-rule-no-dead-link (score: 9/10)\nAction: ADOPT — npm install textlint-rule-no-dead-link\nResult: Zero custom code, battle-tested solution\n```",
+      "zh-Hans": "```\nNeed: Check markdown files for broken links\nSearch: npm \"markdown dead link checker\"\nFound: textlint-rule-no-dead-link (score: 9/10)\nAction: ADOPT — npm install textlint-rule-no-dead-link\nResult: Zero custom code, battle-tested solution\n```"
+    },
+    {
+      "en-US": "### Example 2: \"Add HTTP client wrapper\"",
+      "zh-Hans": "### 示例 2：“添加 HTTP 客户端包装器”"
+    },
+    {
+      "en-US": "```\nNeed: Resilient HTTP client with retries and timeout handling\nSearch: npm \"http client retry\", PyPI \"httpx retry\"\nFound: got (Node) with retry plugin, httpx (Python) with built-in retry\nAction: ADOPT — use got/httpx directly with retry config\nResult: Zero custom code, production-proven libraries\n```",
+      "zh-Hans": "```\nNeed: Resilient HTTP client with retries and timeout handling\nSearch: npm \"http client retry\", PyPI \"httpx retry\"\nFound: got (Node) with retry plugin, httpx (Python) with built-in retry\nAction: ADOPT — use got/httpx directly with retry config\nResult: Zero custom code, production-proven libraries\n```"
+    },
+    {
+      "en-US": "### Example 3: \"Add config file linter\"",
+      "zh-Hans": "### 示例 3：“添加配置文件 linter”"
+    },
+    {
+      "en-US": "```\nNeed: Validate project config files against a schema\nSearch: npm \"config linter schema\", \"json schema validator cli\"\nFound: ajv-cli (score: 8/10)\nAction: ADOPT + EXTEND — install ajv-cli, write project-specific schema\nResult: 1 package + 1 schema file, no custom validation logic\n```",
+      "zh-Hans": "```\nNeed: Validate project config files against a schema\nSearch: npm \"config linter schema\", \"json schema validator cli\"\nFound: ajv-cli (score: 8/10)\nAction: ADOPT + EXTEND — install ajv-cli, write project-specific schema\nResult: 1 package + 1 schema file, no custom validation logic\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "- **Jumping to code**: Writing a utility without checking if one exists\n- **Ignoring MCP**: Not checking if an MCP server already provides the capability\n- **Over-customizing**: Wrapping a library so heavily it loses its benefits\n- **Dependency bloat**: Installing a massive package for one small feature",
+      "zh-Hans": "* **直接跳转到编码**：不检查是否存在就编写实用程序\n* **忽略 MCP**：不检查 MCP 服务器是否已提供该能力\n* **过度定制**：对库进行如此厚重的包装以至于失去了其优势\n* **依赖项膨胀**：为了一个小功能安装一个庞大的包"
+    }
+  ]
+}

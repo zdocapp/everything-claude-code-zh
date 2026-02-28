@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: cpp-testing\ndescription: Use only when writing/updating/fixing C++ tests, configuring GoogleTest/CTest, diagnosing failing or flaky tests, or adding coverage/sanitizers.\n---",
-      "zh-Hans": "---\nname: cpp-testing\ndescription: 仅在编写/更新/修复C++测试、配置GoogleTest/CTest、诊断失败或不稳定的测试，或添加覆盖率/消毒器时使用。\n---"
+      "en-US": "---\nname: cpp-testing\ndescription: Use only when writing/updating/fixing C++ tests, configuring GoogleTest/CTest, diagnosing failing or flaky tests, or adding coverage/sanitizers.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: cpp-testing\ndescription: 仅用于编写/更新/修复C++测试、配置GoogleTest/CTest、诊断失败或不稳定的测试，或添加覆盖率/消毒器时使用。\norigin: ECC\n---"
     },
     {
       "en-US": "# C++ Testing (Agent Skill)",

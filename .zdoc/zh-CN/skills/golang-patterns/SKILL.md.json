@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: golang-patterns\ndescription: Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintainable Go applications.\n---",
-      "zh-Hans": "---\nname: golang-patterns\ndescription: 构建稳健、高效且可维护的Go应用程序的惯用Go模式、最佳实践和约定。\n---"
+      "en-US": "---\nname: golang-patterns\ndescription: Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintainable Go applications.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: golang-patterns\ndescription: 用于构建健壮、高效且可维护的Go应用程序的惯用Go模式、最佳实践和约定。\norigin: ECC\n---"
     },
     {
       "en-US": "# Go Development Patterns",

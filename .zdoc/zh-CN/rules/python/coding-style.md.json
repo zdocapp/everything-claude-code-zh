@@ -3,6 +3,10 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\npaths:\n  - \"**/*.py\"\n  - \"**/*.pyi\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.py\"\n  - \"**/*.pyi\"\n---"
+    },
+    {
       "en-US": "# Python Coding Style",
       "zh-Hans": "# Python 编码风格"
     },

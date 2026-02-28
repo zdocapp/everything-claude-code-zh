@@ -1,0 +1,38 @@
+{
+  "sourceFile": "rules/swift/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---"
+    },
+    {
+      "en-US": "# Swift Hooks",
+      "zh-Hans": "# Swift 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Swift specific content.",
+      "zh-Hans": "> 此文件扩展了 [common/hooks.md](../common/hooks.md) 的内容，添加了 Swift 特定内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse 钩子"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **SwiftFormat**: Auto-format `.swift` files after edit\n- **SwiftLint**: Run lint checks after editing `.swift` files\n- **swift build**: Type-check modified packages after edit",
+      "zh-Hans": "* **SwiftFormat**: 在编辑后自动格式化 `.swift` 文件\n* **SwiftLint**: 在编辑 `.swift` 文件后运行代码检查\n* **swift build**: 在编辑后对修改的包进行类型检查"
+    },
+    {
+      "en-US": "## Warning",
+      "zh-Hans": "## 警告"
+    },
+    {
+      "en-US": "Flag `print()` statements — use `os.Logger` or structured logging instead for production code.",
+      "zh-Hans": "标记 `print()` 语句 — 在生产代码中请改用 `os.Logger` 或结构化日志记录。"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "sourceFile": "skills/liquid-glass-design/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: liquid-glass-design\ndescription: iOS 26 Liquid Glass design system — dynamic glass material with blur, reflection, and interactive morphing for SwiftUI, UIKit, and WidgetKit.\n---",
+      "zh-Hans": "---\nname: liquid-glass-design\ndescription: iOS 26 液态玻璃设计系统 — 适用于 SwiftUI、UIKit 和 WidgetKit 的动态玻璃材质，具有模糊、反射和交互式变形效果。\n---"
+    },
+    {
+      "en-US": "# Liquid Glass Design System (iOS 26)",
+      "zh-Hans": "# Liquid Glass 设计系统 (iOS 26)"
+    },
+    {
+      "en-US": "Patterns for implementing Apple's Liquid Glass — a dynamic material that blurs content behind it, reflects color and light from surrounding content, and reacts to touch and pointer interactions. Covers SwiftUI, UIKit, and WidgetKit integration.",
+      "zh-Hans": "实现苹果 Liquid Glass 的模式指南——这是一种动态材质，会模糊其后的内容，反射周围内容的颜色和光线，并对触摸和指针交互做出反应。涵盖 SwiftUI、UIKit 和 WidgetKit 集成。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Building or updating apps for iOS 26+ with the new design language\n- Implementing glass-style buttons, cards, toolbars, or containers\n- Creating morphing transitions between glass elements\n- Applying Liquid Glass effects to widgets\n- Migrating existing blur/material effects to the new Liquid Glass API",
+      "zh-Hans": "* 为 iOS 26+ 构建或更新采用新设计语言的应用程序时\n* 实现玻璃风格的按钮、卡片、工具栏或容器时\n* 在玻璃元素之间创建变形过渡时\n* 将 Liquid Glass 效果应用于小组件时\n* 将现有的模糊/材质效果迁移到新的 Liquid Glass API 时"
+    },
+    {
+      "en-US": "## Core Pattern — SwiftUI",
+      "zh-Hans": "## 核心模式 — SwiftUI"
+    },
+    {
+      "en-US": "### Basic Glass Effect",
+      "zh-Hans": "### 基本玻璃效果"
+    },
+    {
+      "en-US": "The simplest way to add Liquid Glass to any view:",
+      "zh-Hans": "为任何视图添加 Liquid Glass 的最简单方法："
+    },
+    {
+      "en-US": "```swift\nText(\"Hello, World!\")\n    .font(.title)\n    .padding()\n    .glassEffect()  // Default: regular variant, capsule shape\n```",
+      "zh-Hans": "```swift\nText(\"Hello, World!\")\n    .font(.title)\n    .padding()\n    .glassEffect()  // Default: regular variant, capsule shape\n```"
+    },
+    {
+      "en-US": "### Customizing Shape and Tint",
+      "zh-Hans": "### 自定义形状和色调"
+    },
+    {
+      "en-US": "```swift\nText(\"Hello, World!\")\n    .font(.title)\n    .padding()\n    .glassEffect(.regular.tint(.orange).interactive(), in: .rect(cornerRadius: 16.0))\n```",
+      "zh-Hans": "```swift\nText(\"Hello, World!\")\n    .font(.title)\n    .padding()\n    .glassEffect(.regular.tint(.orange).interactive(), in: .rect(cornerRadius: 16.0))\n```"
+    },
+    {
+      "en-US": "Key customization options:",
+      "zh-Hans": "关键自定义选项："
+    },
+    {
+      "en-US": "- `.regular` — standard glass effect\n- `.tint(Color)` — add color tint for prominence\n- `.interactive()` — react to touch and pointer interactions\n- Shape: `.capsule` (default), `.rect(cornerRadius:)`, `.circle`",
+      "zh-Hans": "* `.regular` — 标准玻璃效果\n* `.tint(Color)` — 添加颜色色调以增强突出度\n* `.interactive()` — 对触摸和指针交互做出反应\n* 形状：`.capsule`（默认）、`.rect(cornerRadius:)`、`.circle`"
+    },
+    {
+      "en-US": "### Glass Button Styles",
+      "zh-Hans": "### 玻璃按钮样式"
+    },
+    {
+      "en-US": "```swift\nButton(\"Click Me\") { /* action */ }\n    .buttonStyle(.glass)\n\nButton(\"Important\") { /* action */ }\n    .buttonStyle(.glassProminent)\n```",
+      "zh-Hans": "```swift\nButton(\"Click Me\") { /* action */ }\n    .buttonStyle(.glass)\n\nButton(\"Important\") { /* action */ }\n    .buttonStyle(.glassProminent)\n```"
+    },
+    {
+      "en-US": "### GlassEffectContainer for Multiple Elements",
+      "zh-Hans": "### 用于多个元素的 GlassEffectContainer"
+    },
+    {
+      "en-US": "Always wrap multiple glass views in a container for performance and morphing:",
+      "zh-Hans": "出于性能和变形考虑，始终将多个玻璃视图包装在一个容器中："
+    },
+    {
+      "en-US": "```swift\nGlassEffectContainer(spacing: 40.0) {\n    HStack(spacing: 40.0) {\n        Image(systemName: \"scribble.variable\")\n            .frame(width: 80.0, height: 80.0)\n            .font(.system(size: 36))\n            .glassEffect()\n\n        Image(systemName: \"eraser.fill\")\n            .frame(width: 80.0, height: 80.0)\n            .font(.system(size: 36))\n            .glassEffect()\n    }\n}\n```",
+      "zh-Hans": "```swift\nGlassEffectContainer(spacing: 40.0) {\n    HStack(spacing: 40.0) {\n        Image(systemName: \"scribble.variable\")\n            .frame(width: 80.0, height: 80.0)\n            .font(.system(size: 36))\n            .glassEffect()\n\n        Image(systemName: \"eraser.fill\")\n            .frame(width: 80.0, height: 80.0)\n            .font(.system(size: 36))\n            .glassEffect()\n    }\n}\n```"
+    },
+    {
+      "en-US": "The `spacing` parameter controls merge distance — closer elements blend their glass shapes together.",
+      "zh-Hans": "`spacing` 参数控制合并距离——距离更近的元素会将其玻璃形状融合在一起。"
+    },
+    {
+      "en-US": "### Uniting Glass Effects",
+      "zh-Hans": "### 统一玻璃效果"
+    },
+    {
+      "en-US": "Combine multiple views into a single glass shape with `glassEffectUnion`:",
+      "zh-Hans": "使用 `glassEffectUnion` 将多个视图组合成单个玻璃形状："
+    },
+    {
+      "en-US": "```swift\n@Namespace private var namespace\n\nGlassEffectContainer(spacing: 20.0) {\n    HStack(spacing: 20.0) {\n        ForEach(symbolSet.indices, id: \\.self) { item in\n            Image(systemName: symbolSet[item])\n                .frame(width: 80.0, height: 80.0)\n                .glassEffect()\n                .glassEffectUnion(id: item < 2 ? \"group1\" : \"group2\", namespace: namespace)\n        }\n    }\n}\n```",
+      "zh-Hans": "```swift\n@Namespace private var namespace\n\nGlassEffectContainer(spacing: 20.0) {\n    HStack(spacing: 20.0) {\n        ForEach(symbolSet.indices, id: \\.self) { item in\n            Image(systemName: symbolSet[item])\n                .frame(width: 80.0, height: 80.0)\n                .glassEffect()\n                .glassEffectUnion(id: item < 2 ? \"group1\" : \"group2\", namespace: namespace)\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Morphing Transitions",
+      "zh-Hans": "### 变形过渡"
+    },
+    {
+      "en-US": "Create smooth morphing when glass elements appear/disappear:",
+      "zh-Hans": "在玻璃元素出现/消失时创建平滑的变形效果："
+    },
+    {
+      "en-US": "```swift\n@State private var isExpanded = false\n@Namespace private var namespace\n\nGlassEffectContainer(spacing: 40.0) {\n    HStack(spacing: 40.0) {\n        Image(systemName: \"scribble.variable\")\n            .frame(width: 80.0, height: 80.0)\n            .glassEffect()\n            .glassEffectID(\"pencil\", in: namespace)\n\n        if isExpanded {\n            Image(systemName: \"eraser.fill\")\n                .frame(width: 80.0, height: 80.0)\n                .glassEffect()\n                .glassEffectID(\"eraser\", in: namespace)\n        }\n    }\n}\n\nButton(\"Toggle\") {\n    withAnimation { isExpanded.toggle() }\n}\n.buttonStyle(.glass)\n```",
+      "zh-Hans": "```swift\n@State private var isExpanded = false\n@Namespace private var namespace\n\nGlassEffectContainer(spacing: 40.0) {\n    HStack(spacing: 40.0) {\n        Image(systemName: \"scribble.variable\")\n            .frame(width: 80.0, height: 80.0)\n            .glassEffect()\n            .glassEffectID(\"pencil\", in: namespace)\n\n        if isExpanded {\n            Image(systemName: \"eraser.fill\")\n                .frame(width: 80.0, height: 80.0)\n                .glassEffect()\n                .glassEffectID(\"eraser\", in: namespace)\n        }\n    }\n}\n\nButton(\"Toggle\") {\n    withAnimation { isExpanded.toggle() }\n}\n.buttonStyle(.glass)\n```"
+    },
+    {
+      "en-US": "### Extending Horizontal Scrolling Under Sidebar",
+      "zh-Hans": "### 将水平滚动延伸到侧边栏下方"
+    },
+    {
+      "en-US": "To allow horizontal scroll content to extend under a sidebar or inspector, ensure the `ScrollView` content reaches the leading/trailing edges of the container. The system automatically handles the under-sidebar scrolling behavior when the layout extends to the edges — no additional modifier is needed.",
+      "zh-Hans": "要允许水平滚动内容延伸到侧边栏或检查器下方，请确保 `ScrollView` 内容到达容器的 leading/trailing 边缘。当布局延伸到边缘时，系统会自动处理侧边栏下方的滚动行为——无需额外的修饰符。"
+    },
+    {
+      "en-US": "## Core Pattern — UIKit",
+      "zh-Hans": "## 核心模式 — UIKit"
+    },
+    {
+      "en-US": "### Basic UIGlassEffect",
+      "zh-Hans": "### 基本 UIGlassEffect"
+    },
+    {
+      "en-US": "```swift\nlet glassEffect = UIGlassEffect()\nglassEffect.tintColor = UIColor.systemBlue.withAlphaComponent(0.3)\nglassEffect.isInteractive = true\n\nlet visualEffectView = UIVisualEffectView(effect: glassEffect)\nvisualEffectView.translatesAutoresizingMaskIntoConstraints = false\nvisualEffectView.layer.cornerRadius = 20\nvisualEffectView.clipsToBounds = true\n\nview.addSubview(visualEffectView)\nNSLayoutConstraint.activate([\n    visualEffectView.centerXAnchor.constraint(equalTo: view.centerXAnchor),\n    visualEffectView.centerYAnchor.constraint(equalTo: view.centerYAnchor),\n    visualEffectView.widthAnchor.constraint(equalToConstant: 200),\n    visualEffectView.heightAnchor.constraint(equalToConstant: 120)\n])\n\n// Add content to contentView\nlet label = UILabel()\nlabel.text = \"Liquid Glass\"\nlabel.translatesAutoresizingMaskIntoConstraints = false\nvisualEffectView.contentView.addSubview(label)\nNSLayoutConstraint.activate([\n    label.centerXAnchor.constraint(equalTo: visualEffectView.contentView.centerXAnchor),\n    label.centerYAnchor.constraint(equalTo: visualEffectView.contentView.centerYAnchor)\n])\n```",
+      "zh-Hans": "```swift\nlet glassEffect = UIGlassEffect()\nglassEffect.tintColor = UIColor.systemBlue.withAlphaComponent(0.3)\nglassEffect.isInteractive = true\n\nlet visualEffectView = UIVisualEffectView(effect: glassEffect)\nvisualEffectView.translatesAutoresizingMaskIntoConstraints = false\nvisualEffectView.layer.cornerRadius = 20\nvisualEffectView.clipsToBounds = true\n\nview.addSubview(visualEffectView)\nNSLayoutConstraint.activate([\n    visualEffectView.centerXAnchor.constraint(equalTo: view.centerXAnchor),\n    visualEffectView.centerYAnchor.constraint(equalTo: view.centerYAnchor),\n    visualEffectView.widthAnchor.constraint(equalToConstant: 200),\n    visualEffectView.heightAnchor.constraint(equalToConstant: 120)\n])\n\n// Add content to contentView\nlet label = UILabel()\nlabel.text = \"Liquid Glass\"\nlabel.translatesAutoresizingMaskIntoConstraints = false\nvisualEffectView.contentView.addSubview(label)\nNSLayoutConstraint.activate([\n    label.centerXAnchor.constraint(equalTo: visualEffectView.contentView.centerXAnchor),\n    label.centerYAnchor.constraint(equalTo: visualEffectView.contentView.centerYAnchor)\n])\n```"
+    },
+    {
+      "en-US": "### UIGlassContainerEffect for Multiple Elements",
+      "zh-Hans": "### 用于多个元素的 UIGlassContainerEffect"
+    },
+    {
+      "en-US": "```swift\nlet containerEffect = UIGlassContainerEffect()\ncontainerEffect.spacing = 40.0\n\nlet containerView = UIVisualEffectView(effect: containerEffect)\n\nlet firstGlass = UIVisualEffectView(effect: UIGlassEffect())\nlet secondGlass = UIVisualEffectView(effect: UIGlassEffect())\n\ncontainerView.contentView.addSubview(firstGlass)\ncontainerView.contentView.addSubview(secondGlass)\n```",
+      "zh-Hans": "```swift\nlet containerEffect = UIGlassContainerEffect()\ncontainerEffect.spacing = 40.0\n\nlet containerView = UIVisualEffectView(effect: containerEffect)\n\nlet firstGlass = UIVisualEffectView(effect: UIGlassEffect())\nlet secondGlass = UIVisualEffectView(effect: UIGlassEffect())\n\ncontainerView.contentView.addSubview(firstGlass)\ncontainerView.contentView.addSubview(secondGlass)\n```"
+    },
+    {
+      "en-US": "### Scroll Edge Effects",
+      "zh-Hans": "### 滚动边缘效果"
+    },
+    {
+      "en-US": "```swift\nscrollView.topEdgeEffect.style = .automatic\nscrollView.bottomEdgeEffect.style = .hard\nscrollView.leftEdgeEffect.isHidden = true\n```",
+      "zh-Hans": "```swift\nscrollView.topEdgeEffect.style = .automatic\nscrollView.bottomEdgeEffect.style = .hard\nscrollView.leftEdgeEffect.isHidden = true\n```"
+    },
+    {
+      "en-US": "### Toolbar Glass Integration",
+      "zh-Hans": "### 工具栏玻璃集成"
+    },
+    {
+      "en-US": "```swift\nlet favoriteButton = UIBarButtonItem(image: UIImage(systemName: \"heart\"), style: .plain, target: self, action: #selector(favoriteAction))\nfavoriteButton.hidesSharedBackground = true  // Opt out of shared glass background\n```",
+      "zh-Hans": "```swift\nlet favoriteButton = UIBarButtonItem(image: UIImage(systemName: \"heart\"), style: .plain, target: self, action: #selector(favoriteAction))\nfavoriteButton.hidesSharedBackground = true  // Opt out of shared glass background\n```"
+    },
+    {
+      "en-US": "## Core Pattern — WidgetKit",
+      "zh-Hans": "## 核心模式 — WidgetKit"
+    },
+    {
+      "en-US": "### Rendering Mode Detection",
+      "zh-Hans": "### 渲染模式检测"
+    },
+    {
+      "en-US": "```swift\nstruct MyWidgetView: View {\n    @Environment(\\.widgetRenderingMode) var renderingMode\n\n    var body: some View {\n        if renderingMode == .accented {\n            // Tinted mode: white-tinted, themed glass background\n        } else {\n            // Full color mode: standard appearance\n        }\n    }\n}\n```",
+      "zh-Hans": "```swift\nstruct MyWidgetView: View {\n    @Environment(\\.widgetRenderingMode) var renderingMode\n\n    var body: some View {\n        if renderingMode == .accented {\n            // Tinted mode: white-tinted, themed glass background\n        } else {\n            // Full color mode: standard appearance\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Accent Groups for Visual Hierarchy",
+      "zh-Hans": "### 用于视觉层次结构的强调色组"
+    },
+    {
+      "en-US": "```swift\nHStack {\n    VStack(alignment: .leading) {\n        Text(\"Title\")\n            .widgetAccentable()  // Accent group\n        Text(\"Subtitle\")\n            // Primary group (default)\n    }\n    Image(systemName: \"star.fill\")\n        .widgetAccentable()  // Accent group\n}\n```",
+      "zh-Hans": "```swift\nHStack {\n    VStack(alignment: .leading) {\n        Text(\"Title\")\n            .widgetAccentable()  // Accent group\n        Text(\"Subtitle\")\n            // Primary group (default)\n    }\n    Image(systemName: \"star.fill\")\n        .widgetAccentable()  // Accent group\n}\n```"
+    },
+    {
+      "en-US": "### Image Rendering in Accented Mode",
+      "zh-Hans": "### 强调模式下的图像渲染"
+    },
+    {
+      "en-US": "```swift\nImage(\"myImage\")\n    .widgetAccentedRenderingMode(.monochrome)\n```",
+      "zh-Hans": "```swift\nImage(\"myImage\")\n    .widgetAccentedRenderingMode(.monochrome)\n```"
+    },
+    {
+      "en-US": "### Container Background",
+      "zh-Hans": "### 容器背景"
+    },
+    {
+      "en-US": "```swift\nVStack { /* content */ }\n    .containerBackground(for: .widget) {\n        Color.blue.opacity(0.2)\n    }\n```",
+      "zh-Hans": "```swift\nVStack { /* content */ }\n    .containerBackground(for: .widget) {\n        Color.blue.opacity(0.2)\n    }\n```"
+    },
+    {
+      "en-US": "## Key Design Decisions",
+      "zh-Hans": "## 关键设计决策"
+    },
+    {
+      "en-US": "| Decision | Rationale |\n|----------|-----------|\n| GlassEffectContainer wrapping | Performance optimization, enables morphing between glass elements |\n| `spacing` parameter | Controls merge distance — fine-tune how close elements must be to blend |\n| `@Namespace` + `glassEffectID` | Enables smooth morphing transitions on view hierarchy changes |\n| `interactive()` modifier | Explicit opt-in for touch/pointer reactions — not all glass should respond |\n| UIGlassContainerEffect in UIKit | Same container pattern as SwiftUI for consistency |\n| Accented rendering mode in widgets | System applies tinted glass when user selects tinted Home Screen |",
+      "zh-Hans": "| 决策 | 理由 |\n|----------|-----------|\n| 使用 GlassEffectContainer 包装 | 性能优化，实现玻璃元素之间的变形 |\n| `spacing` 参数 | 控制合并距离——微调元素需要多近才能融合 |\n| `@Namespace` + `glassEffectID` | 在视图层次结构变化时实现平滑的变形过渡 |\n| `interactive()` 修饰符 | 明确选择加入触摸/指针反应——并非所有玻璃都应响应 |\n| UIKit 中的 UIGlassContainerEffect | 与 SwiftUI 保持一致的容器模式 |\n| 小组件中的强调色渲染模式 | 当用户选择带色调的主屏幕时，系统会应用带色调的玻璃效果 |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Always use GlassEffectContainer** when applying glass to multiple sibling views — it enables morphing and improves rendering performance\n- **Apply `.glassEffect()` after** other appearance modifiers (frame, font, padding)\n- **Use `.interactive()`** only on elements that respond to user interaction (buttons, toggleable items)\n- **Choose spacing carefully** in containers to control when glass effects merge\n- **Use `withAnimation`** when changing view hierarchies to enable smooth morphing transitions\n- **Test across appearances** — light mode, dark mode, and accented/tinted modes\n- **Ensure accessibility contrast** — text on glass must remain readable",
+      "zh-Hans": "* **始终使用 GlassEffectContainer** 来为多个兄弟视图应用玻璃效果——它支持变形并提高渲染性能\n* **在其他外观修饰符**（frame、font、padding）**之后应用** `.glassEffect()`\n* **仅在响应用户交互的元素**（按钮、可切换项目）**上使用** `.interactive()`\n* **仔细选择容器中的间距**，以控制玻璃效果何时合并\n* 在更改视图层次结构时**使用** `withAnimation`，以启用平滑的变形过渡\n* **在各种外观模式下测试**——浅色模式、深色模式和强调色/色调模式\n* **确保可访问性对比度**——玻璃上的文本必须保持可读性"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "- Using multiple standalone `.glassEffect()` views without a GlassEffectContainer\n- Nesting too many glass effects — degrades performance and visual clarity\n- Applying glass to every view — reserve for interactive elements, toolbars, and cards\n- Forgetting `clipsToBounds = true` in UIKit when using corner radii\n- Ignoring accented rendering mode in widgets — breaks tinted Home Screen appearance\n- Using opaque backgrounds behind glass — defeats the translucency effect",
+      "zh-Hans": "* 使用多个独立的 `.glassEffect()` 视图而不使用 GlassEffectContainer\n* 嵌套过多玻璃效果——会降低性能和视觉清晰度\n* 对每个视图都应用玻璃效果——保留给交互元素、工具栏和卡片\n* 在 UIKit 中使用圆角时忘记 `clipsToBounds = true`\n* 忽略小组件中的强调色渲染模式——破坏带色调的主屏幕外观\n* 在玻璃效果后面使用不透明背景——破坏了半透明效果"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用场景"
+    },
+    {
+      "en-US": "- Navigation bars, toolbars, and tab bars with the new iOS 26 design\n- Floating action buttons and card-style containers\n- Interactive controls that need visual depth and touch feedback\n- Widgets that should integrate with the system's Liquid Glass appearance\n- Morphing transitions between related UI states",
+      "zh-Hans": "* 采用 iOS 26 新设计的导航栏、工具栏和标签栏\n* 浮动操作按钮和卡片式容器\n* 需要视觉深度和触摸反馈的交互控件\n* 应与系统 Liquid Glass 外观集成的小组件\n* 相关 UI 状态之间的变形过渡"
+    }
+  ]
+}

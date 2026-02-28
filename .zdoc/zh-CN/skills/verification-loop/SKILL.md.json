@@ -3,6 +3,10 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\nname: verification-loop\ndescription: \"A comprehensive verification system for Claude Code sessions.\"\norigin: ECC\n---",
+      "zh-Hans": "---\nname: verification-loop\ndescription: \"Claude Code 会话的全面验证系统。\"\norigin: ECC\n---"
+    },
+    {
       "en-US": "# Verification Loop Skill",
       "zh-Hans": "# 验证循环技能"
     },

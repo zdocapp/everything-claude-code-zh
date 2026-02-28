@@ -1,0 +1,130 @@
+{
+  "sourceFile": "examples/saas-nextjs-CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# SaaS Application — Project CLAUDE.md",
+      "zh-Hans": "# SaaS 应用程序 — 项目 CLAUDE.md"
+    },
+    {
+      "en-US": "> Real-world example for a Next.js + Supabase + Stripe SaaS application.\n> Copy this to your project root and customize for your stack.",
+      "zh-Hans": "> 一个 Next.js + Supabase + Stripe SaaS 应用程序的真实示例。\n> 将此复制到您的项目根目录，并根据您的技术栈进行自定义。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概览"
+    },
+    {
+      "en-US": "**Stack:** Next.js 15 (App Router), TypeScript, Supabase (auth + DB), Stripe (billing), Tailwind CSS, Playwright (E2E)",
+      "zh-Hans": "**技术栈：** Next.js 15（App Router）、TypeScript、Supabase（身份验证 + 数据库）、Stripe（计费）、Tailwind CSS、Playwright（端到端测试）"
+    },
+    {
+      "en-US": "**Architecture:** Server Components by default. Client Components only for interactivity. API routes for webhooks and server actions for mutations.",
+      "zh-Hans": "**架构：** 默认使用服务器组件。仅在需要交互性时使用客户端组件。API 路由用于 Webhook，服务器操作用于数据变更。"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "### Database",
+      "zh-Hans": "### 数据库"
+    },
+    {
+      "en-US": "- All queries use Supabase client with RLS enabled — never bypass RLS\n- Migrations in `supabase/migrations/` — never modify the database directly\n- Use `select()` with explicit column lists, not `select('*')`\n- All user-facing queries must include `.limit()` to prevent unbounded results",
+      "zh-Hans": "* 所有查询均使用启用 RLS 的 Supabase 客户端 — 绝不要绕过 RLS\n* 迁移在 `supabase/migrations/` 中 — 绝不要直接修改数据库\n* 使用带有明确列列表的 `select()`，而不是 `select('*')`\n* 所有面向用户的查询必须包含 `.limit()` 以防止返回无限制的结果"
+    },
+    {
+      "en-US": "### Authentication",
+      "zh-Hans": "### 身份验证"
+    },
+    {
+      "en-US": "- Use `createServerClient()` from `@supabase/ssr` in Server Components\n- Use `createBrowserClient()` from `@supabase/ssr` in Client Components\n- Protected routes check `getUser()` — never trust `getSession()` alone for auth\n- Middleware in `middleware.ts` refreshes auth tokens on every request",
+      "zh-Hans": "* 在服务器组件中使用来自 `@supabase/ssr` 的 `createServerClient()`\n* 在客户端组件中使用来自 `@supabase/ssr` 的 `createBrowserClient()`\n* 受保护的路由检查 `getUser()` — 绝不要仅依赖 `getSession()` 进行身份验证\n* `middleware.ts` 中的中间件会在每个请求上刷新身份验证令牌"
+    },
+    {
+      "en-US": "### Billing",
+      "zh-Hans": "### 计费"
+    },
+    {
+      "en-US": "- Stripe webhook handler in `app/api/webhooks/stripe/route.ts`\n- Never trust client-side price data — always fetch from Stripe server-side\n- Subscription status checked via `subscription_status` column, synced by webhook\n- Free tier users: 3 projects, 100 API calls/day",
+      "zh-Hans": "* Stripe webhook 处理程序在 `app/api/webhooks/stripe/route.ts` 中\n* 绝不要信任客户端的定价数据 — 始终在服务器端从 Stripe 获取\n* 通过 `subscription_status` 列检查订阅状态，由 webhook 同步\n* 免费层用户：3 个项目，每天 100 次 API 调用"
+    },
+    {
+      "en-US": "### Code Style",
+      "zh-Hans": "### 代码风格"
+    },
+    {
+      "en-US": "- No emojis in code or comments\n- Immutable patterns only — spread operator, never mutate\n- Server Components: no `'use client'` directive, no `useState`/`useEffect`\n- Client Components: `'use client'` at top, minimal — extract logic to hooks\n- Prefer Zod schemas for all input validation (API routes, forms, env vars)",
+      "zh-Hans": "* 代码或注释中不使用表情符号\n* 仅使用不可变模式 — 使用展开运算符，永不直接修改\n* 服务器组件：不使用 `'use client'` 指令，不使用 `useState`/`useEffect`\n* 客户端组件：`'use client'` 放在顶部，保持最小化 — 将逻辑提取到钩子中\n* 所有输入验证（API 路由、表单、环境变量）优先使用 Zod 模式"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\nsrc/\n  app/\n    (auth)/          # Auth pages (login, signup, forgot-password)\n    (dashboard)/     # Protected dashboard pages\n    api/\n      webhooks/      # Stripe, Supabase webhooks\n    layout.tsx       # Root layout with providers\n  components/\n    ui/              # Shadcn/ui components\n    forms/           # Form components with validation\n    dashboard/       # Dashboard-specific components\n  hooks/             # Custom React hooks\n  lib/\n    supabase/        # Supabase client factories\n    stripe/          # Stripe client and helpers\n    utils.ts         # General utilities\n  types/             # Shared TypeScript types\nsupabase/\n  migrations/        # Database migrations\n  seed.sql           # Development seed data\n```",
+      "zh-Hans": "```\nsrc/\n  app/\n    (auth)/          # Auth pages (login, signup, forgot-password)\n    (dashboard)/     # Protected dashboard pages\n    api/\n      webhooks/      # Stripe, Supabase webhooks\n    layout.tsx       # Root layout with providers\n  components/\n    ui/              # Shadcn/ui components\n    forms/           # Form components with validation\n    dashboard/       # Dashboard-specific components\n  hooks/             # Custom React hooks\n  lib/\n    supabase/        # Supabase client factories\n    stripe/          # Stripe client and helpers\n    utils.ts         # General utilities\n  types/             # Shared TypeScript types\nsupabase/\n  migrations/        # Database migrations\n  seed.sql           # Development seed data\n```"
+    },
+    {
+      "en-US": "## Key Patterns",
+      "zh-Hans": "## 关键模式"
+    },
+    {
+      "en-US": "### API Response Format",
+      "zh-Hans": "### API 响应格式"
+    },
+    {
+      "en-US": "```typescript\ntype ApiResponse<T> =\n  | { success: true; data: T }\n  | { success: false; error: string; code?: string }\n```",
+      "zh-Hans": "```typescript\ntype ApiResponse<T> =\n  | { success: true; data: T }\n  | { success: false; error: string; code?: string }\n```"
+    },
+    {
+      "en-US": "### Server Action Pattern",
+      "zh-Hans": "### 服务器操作模式"
+    },
+    {
+      "en-US": "```typescript\n'use server'\n\nimport { z } from 'zod'\nimport { createServerClient } from '@/lib/supabase/server'\n\nconst schema = z.object({\n  name: z.string().min(1).max(100),\n})\n\nexport async function createProject(formData: FormData) {\n  const parsed = schema.safeParse({ name: formData.get('name') })\n  if (!parsed.success) {\n    return { success: false, error: parsed.error.flatten() }\n  }\n\n  const supabase = await createServerClient()\n  const { data: { user } } = await supabase.auth.getUser()\n  if (!user) return { success: false, error: 'Unauthorized' }\n\n  const { data, error } = await supabase\n    .from('projects')\n    .insert({ name: parsed.data.name, user_id: user.id })\n    .select('id, name, created_at')\n    .single()\n\n  if (error) return { success: false, error: 'Failed to create project' }\n  return { success: true, data }\n}\n```",
+      "zh-Hans": "```typescript\n'use server'\n\nimport { z } from 'zod'\nimport { createServerClient } from '@/lib/supabase/server'\n\nconst schema = z.object({\n  name: z.string().min(1).max(100),\n})\n\nexport async function createProject(formData: FormData) {\n  const parsed = schema.safeParse({ name: formData.get('name') })\n  if (!parsed.success) {\n    return { success: false, error: parsed.error.flatten() }\n  }\n\n  const supabase = await createServerClient()\n  const { data: { user } } = await supabase.auth.getUser()\n  if (!user) return { success: false, error: 'Unauthorized' }\n\n  const { data, error } = await supabase\n    .from('projects')\n    .insert({ name: parsed.data.name, user_id: user.id })\n    .select('id, name, created_at')\n    .single()\n\n  if (error) return { success: false, error: 'Failed to create project' }\n  return { success: true, data }\n}\n```"
+    },
+    {
+      "en-US": "## Environment Variables",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "```bash\n# Supabase\nNEXT_PUBLIC_SUPABASE_URL=\nNEXT_PUBLIC_SUPABASE_ANON_KEY=\nSUPABASE_SERVICE_ROLE_KEY=     # Server-only, never expose to client\n\n# Stripe\nSTRIPE_SECRET_KEY=\nSTRIPE_WEBHOOK_SECRET=\nNEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=\n\n# App\nNEXT_PUBLIC_APP_URL=http://localhost:3000\n```",
+      "zh-Hans": "```bash\n# Supabase\nNEXT_PUBLIC_SUPABASE_URL=\nNEXT_PUBLIC_SUPABASE_ANON_KEY=\nSUPABASE_SERVICE_ROLE_KEY=     # Server-only, never expose to client\n\n# Stripe\nSTRIPE_SECRET_KEY=\nSTRIPE_WEBHOOK_SECRET=\nNEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=\n\n# App\nNEXT_PUBLIC_APP_URL=http://localhost:3000\n```"
+    },
+    {
+      "en-US": "## Testing Strategy",
+      "zh-Hans": "## 测试策略"
+    },
+    {
+      "en-US": "```bash\n/tdd                    # Unit + integration tests for new features\n/e2e                    # Playwright tests for auth flow, billing, dashboard\n/test-coverage          # Verify 80%+ coverage\n```",
+      "zh-Hans": "```bash\n/tdd                    # Unit + integration tests for new features\n/e2e                    # Playwright tests for auth flow, billing, dashboard\n/test-coverage          # Verify 80%+ coverage\n```"
+    },
+    {
+      "en-US": "### Critical E2E Flows",
+      "zh-Hans": "### 关键的端到端测试流程"
+    },
+    {
+      "en-US": "1. Sign up → email verification → first project creation\n2. Login → dashboard → CRUD operations\n3. Upgrade plan → Stripe checkout → subscription active\n4. Webhook: subscription canceled → downgrade to free tier",
+      "zh-Hans": "1. 注册 → 邮箱验证 → 创建第一个项目\n2. 登录 → 仪表盘 → CRUD 操作\n3. 升级计划 → Stripe 结账 → 订阅激活\n4. Webhook：订阅取消 → 降级到免费层"
+    },
+    {
+      "en-US": "## ECC Workflow",
+      "zh-Hans": "## ECC 工作流"
+    },
+    {
+      "en-US": "```bash\n# Planning a feature\n/plan \"Add team invitations with email notifications\"\n\n# Developing with TDD\n/tdd\n\n# Before committing\n/code-review\n/security-scan\n\n# Before release\n/e2e\n/test-coverage\n```",
+      "zh-Hans": "```bash\n# Planning a feature\n/plan \"Add team invitations with email notifications\"\n\n# Developing with TDD\n/tdd\n\n# Before committing\n/code-review\n/security-scan\n\n# Before release\n/e2e\n/test-coverage\n```"
+    },
+    {
+      "en-US": "## Git Workflow",
+      "zh-Hans": "## Git 工作流"
+    },
+    {
+      "en-US": "- `feat:` new features, `fix:` bug fixes, `refactor:` code changes\n- Feature branches from `main`, PRs required\n- CI runs: lint, type-check, unit tests, E2E tests\n- Deploy: Vercel preview on PR, production on merge to `main`",
+      "zh-Hans": "* `feat:` 新功能，`fix:` 错误修复，`refactor:` 代码变更\n* 从 `main` 创建功能分支，需要 PR\n* CI 运行：代码检查、类型检查、单元测试、端到端测试\n* 部署：在 PR 上部署到 Vercel 预览环境，在合并到 `main` 时部署到生产环境"
+    }
+  ]
+}

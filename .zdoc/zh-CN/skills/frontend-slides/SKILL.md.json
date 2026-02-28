@@ -1,0 +1,262 @@
+{
+  "sourceFile": "skills/frontend-slides/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: frontend-slides\ndescription: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: frontend-slides\ndescription: 从零开始或通过转换PowerPoint文件创建令人惊艳、动画丰富的HTML演示文稿。当用户想要构建演示文稿、将PPT/PPTX转换为网页格式，或为演讲/推介创建幻灯片时使用。帮助非设计师通过视觉探索而非抽象选择发现他们的美学。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Frontend Slides",
+      "zh-Hans": "# 前端幻灯片"
+    },
+    {
+      "en-US": "Create zero-dependency, animation-rich HTML presentations that run entirely in the browser.",
+      "zh-Hans": "创建零依赖、动画丰富的 HTML 演示文稿，完全在浏览器中运行。"
+    },
+    {
+      "en-US": "Inspired by the visual exploration approach showcased in work by [zarazhangrui](https://github.com/zarazhangrui).",
+      "zh-Hans": "灵感来源于 [zarazhangrui](https://github.com/zarazhangrui) 的作品中展示的视觉探索方法。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Creating a talk deck, pitch deck, workshop deck, or internal presentation\n- Converting `.ppt` or `.pptx` slides into an HTML presentation\n- Improving an existing HTML presentation's layout, motion, or typography\n- Exploring presentation styles with a user who does not know their design preference yet",
+      "zh-Hans": "* 创建演讲文稿、推介文稿、研讨会文稿或内部演示文稿时\n* 将 `.ppt` 或 `.pptx` 幻灯片转换为 HTML 演示文稿时\n* 改进现有 HTML 演示文稿的布局、动效或排版时\n* 与尚不清楚其设计偏好的用户一起探索演示文稿风格时"
+    },
+    {
+      "en-US": "## Non-Negotiables",
+      "zh-Hans": "## 不可妥协的原则"
+    },
+    {
+      "en-US": "1. **Zero dependencies**: default to one self-contained HTML file with inline CSS and JS.\n2. **Viewport fit is mandatory**: every slide must fit inside one viewport with no internal scrolling.\n3. **Show, don't tell**: use visual previews instead of abstract style questionnaires.\n4. **Distinctive design**: avoid generic purple-gradient, Inter-on-white, template-looking decks.\n5. **Production quality**: keep code commented, accessible, responsive, and performant.",
+      "zh-Hans": "1. **零依赖**：默认使用一个包含内联 CSS 和 JS 的自包含 HTML 文件。\n2. **必须适配视口**：每张幻灯片必须适配一个视口，内部不允许滚动。\n3. **展示，而非描述**：使用视觉预览，而非抽象的风格问卷。\n4. **独特设计**：避免通用的紫色渐变、白色背景加 Inter 字体、模板化的文稿外观。\n5. **生产质量**：保持代码注释清晰、可访问、响应式且性能良好。"
+    },
+    {
+      "en-US": "Before generating, read `STYLE_PRESETS.md` for the viewport-safe CSS base, density limits, preset catalog, and CSS gotchas.",
+      "zh-Hans": "在生成之前，请阅读 `STYLE_PRESETS.md` 以了解视口安全的 CSS 基础、密度限制、预设目录和 CSS 陷阱。"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Detect Mode",
+      "zh-Hans": "### 1. 检测模式"
+    },
+    {
+      "en-US": "Choose one path:",
+      "zh-Hans": "选择一条路径："
+    },
+    {
+      "en-US": "- **New presentation**: user has a topic, notes, or full draft\n- **PPT conversion**: user has `.ppt` or `.pptx`\n- **Enhancement**: user already has HTML slides and wants improvements",
+      "zh-Hans": "* **新演示文稿**：用户有主题、笔记或完整草稿\n* **PPT 转换**：用户有 `.ppt` 或 `.pptx`\n* **增强**：用户已有 HTML 幻灯片并希望改进"
+    },
+    {
+      "en-US": "### 2. Discover Content",
+      "zh-Hans": "### 2. 发现内容"
+    },
+    {
+      "en-US": "Ask only the minimum needed:",
+      "zh-Hans": "只询问最低限度的必要信息："
+    },
+    {
+      "en-US": "- purpose: pitch, teaching, conference talk, internal update\n- length: short (5-10), medium (10-20), long (20+)\n- content state: finished copy, rough notes, topic only",
+      "zh-Hans": "* 目的：推介、教学、会议演讲、内部更新\n* 长度：短 (5-10张)、中 (10-20张)、长 (20+张)\n* 内容状态：已完成文案、粗略笔记、仅主题"
+    },
+    {
+      "en-US": "If the user has content, ask them to paste it before styling.",
+      "zh-Hans": "如果用户有内容，请他们在进行样式设计前粘贴内容。"
+    },
+    {
+      "en-US": "### 3. Discover Style",
+      "zh-Hans": "### 3. 发现风格"
+    },
+    {
+      "en-US": "Default to visual exploration.",
+      "zh-Hans": "默认采用视觉探索方式。"
+    },
+    {
+      "en-US": "If the user already knows the desired preset, skip previews and use it directly.",
+      "zh-Hans": "如果用户已经知道所需的预设，则跳过预览并直接使用。"
+    },
+    {
+      "en-US": "Otherwise:",
+      "zh-Hans": "否则："
+    },
+    {
+      "en-US": "1. Ask what feeling the deck should create: impressed, energized, focused, inspired.\n2. Generate **3 single-slide preview files** in `.ecc-design/slide-previews/`.\n3. Each preview must be self-contained, show typography/color/motion clearly, and stay under roughly 100 lines of slide content.\n4. Ask the user which preview to keep or what elements to mix.",
+      "zh-Hans": "1. 询问文稿应营造何种感觉：印象深刻、充满活力、专注、激发灵感。\n2. 在 `.ecc-design/slide-previews/` 中生成 **3 个单幻灯片预览文件**。\n3. 每个预览必须是自包含的，清晰地展示排版/色彩/动效，并且幻灯片内容大约保持在 100 行以内。\n4. 询问用户保留哪个预览或混合哪些元素。"
+    },
+    {
+      "en-US": "Use the preset guide in `STYLE_PRESETS.md` when mapping mood to style.",
+      "zh-Hans": "在将情绪映射到风格时，请使用 `STYLE_PRESETS.md` 中的预设指南。"
+    },
+    {
+      "en-US": "### 4. Build the Presentation",
+      "zh-Hans": "### 4. 构建演示文稿"
+    },
+    {
+      "en-US": "Output either:",
+      "zh-Hans": "输出以下之一："
+    },
+    {
+      "en-US": "- `presentation.html`\n- `[presentation-name].html`",
+      "zh-Hans": "* `presentation.html`\n* `[presentation-name].html`"
+    },
+    {
+      "en-US": "Use an `assets/` folder only when the deck contains extracted or user-supplied images.",
+      "zh-Hans": "仅当文稿包含提取的或用户提供的图像时，才使用 `assets/` 文件夹。"
+    },
+    {
+      "en-US": "Required structure:",
+      "zh-Hans": "必需的结构："
+    },
+    {
+      "en-US": "- semantic slide sections\n- a viewport-safe CSS base from `STYLE_PRESETS.md`\n- CSS custom properties for theme values\n- a presentation controller class for keyboard, wheel, and touch navigation\n- Intersection Observer for reveal animations\n- reduced-motion support",
+      "zh-Hans": "* 语义化的幻灯片部分\n* 来自 `STYLE_PRESETS.md` 的视口安全的 CSS 基础\n* 用于主题值的 CSS 自定义属性\n* 用于键盘、滚轮和触摸导航的演示文稿控制器类\n* 用于揭示动画的 Intersection Observer\n* 支持减少动效"
+    },
+    {
+      "en-US": "### 5. Enforce Viewport Fit",
+      "zh-Hans": "### 5. 强制执行视口适配"
+    },
+    {
+      "en-US": "Treat this as a hard gate.",
+      "zh-Hans": "将此视为硬性规定。"
+    },
+    {
+      "en-US": "Rules:",
+      "zh-Hans": "规则："
+    },
+    {
+      "en-US": "- every `.slide` must use `height: 100vh; height: 100dvh; overflow: hidden;`\n- all type and spacing must scale with `clamp()`\n- when content does not fit, split into multiple slides\n- never solve overflow by shrinking text below readable sizes\n- never allow scrollbars inside a slide",
+      "zh-Hans": "* 每个 `.slide` 必须使用 `height: 100vh; height: 100dvh; overflow: hidden;`\n* 所有字体和间距必须随 `clamp()` 缩放\n* 当内容无法适配时，将其拆分为多张幻灯片\n* 切勿通过将文本缩小到可读尺寸以下来解决溢出问题\n* 绝不允许幻灯片内部出现滚动条"
+    },
+    {
+      "en-US": "Use the density limits and mandatory CSS block in `STYLE_PRESETS.md`.",
+      "zh-Hans": "使用 `STYLE_PRESETS.md` 中的密度限制和强制性 CSS 代码块。"
+    },
+    {
+      "en-US": "### 6. Validate",
+      "zh-Hans": "### 6. 验证"
+    },
+    {
+      "en-US": "Check the finished deck at these sizes:",
+      "zh-Hans": "在这些尺寸下检查完成的文稿："
+    },
+    {
+      "en-US": "- 1920x1080\n- 1280x720\n- 768x1024\n- 375x667\n- 667x375",
+      "zh-Hans": "* 1920x1080\n* 1280x720\n* 768x1024\n* 375x667\n* 667x375"
+    },
+    {
+      "en-US": "If browser automation is available, use it to verify no slide overflows and that keyboard navigation works.",
+      "zh-Hans": "如果可以使用浏览器自动化，请使用它来验证没有幻灯片溢出且键盘导航正常工作。"
+    },
+    {
+      "en-US": "### 7. Deliver",
+      "zh-Hans": "### 7. 交付"
+    },
+    {
+      "en-US": "At handoff:",
+      "zh-Hans": "在交付时："
+    },
+    {
+      "en-US": "- delete temporary preview files unless the user wants to keep them\n- open the deck with the platform-appropriate opener when useful\n- summarize file path, preset used, slide count, and easy theme customization points",
+      "zh-Hans": "* 除非用户希望保留，否则删除临时预览文件\n* 在有用时使用适合当前平台的开源工具打开文稿\n* 总结文件路径、使用的预设、幻灯片数量以及简单的主题自定义点"
+    },
+    {
+      "en-US": "Use the correct opener for the current OS:",
+      "zh-Hans": "为当前操作系统使用正确的开源工具："
+    },
+    {
+      "en-US": "- macOS: `open file.html`\n- Linux: `xdg-open file.html`\n- Windows: `start \"\" file.html`",
+      "zh-Hans": "* macOS: `open file.html`\n* Linux: `xdg-open file.html`\n* Windows: `start \"\" file.html`"
+    },
+    {
+      "en-US": "## PPT / PPTX Conversion",
+      "zh-Hans": "## PPT / PPTX 转换"
+    },
+    {
+      "en-US": "For PowerPoint conversion:",
+      "zh-Hans": "对于 PowerPoint 转换："
+    },
+    {
+      "en-US": "1. Prefer `python3` with `python-pptx` to extract text, images, and notes.\n2. If `python-pptx` is unavailable, ask whether to install it or fall back to a manual/export-based workflow.\n3. Preserve slide order, speaker notes, and extracted assets.\n4. After extraction, run the same style-selection workflow as a new presentation.",
+      "zh-Hans": "1. 优先使用 `python3` 和 `python-pptx` 来提取文本、图像和备注。\n2. 如果 `python-pptx` 不可用，询问是安装它还是回退到基于手动/导出的工作流程。\n3. 保留幻灯片顺序、演讲者备注和提取的资源。\n4. 提取后，运行与新演示文稿相同的风格选择工作流程。"
+    },
+    {
+      "en-US": "Keep conversion cross-platform. Do not rely on macOS-only tools when Python can do the job.",
+      "zh-Hans": "保持转换跨平台。当 Python 可以完成任务时，不要依赖仅限 macOS 的工具。"
+    },
+    {
+      "en-US": "## Implementation Requirements",
+      "zh-Hans": "## 实现要求"
+    },
+    {
+      "en-US": "### HTML / CSS",
+      "zh-Hans": "### HTML / CSS"
+    },
+    {
+      "en-US": "- Use inline CSS and JS unless the user explicitly wants a multi-file project.\n- Fonts may come from Google Fonts or Fontshare.\n- Prefer atmospheric backgrounds, strong type hierarchy, and a clear visual direction.\n- Use abstract shapes, gradients, grids, noise, and geometry rather than illustrations.",
+      "zh-Hans": "* 除非用户明确希望使用多文件项目，否则使用内联 CSS 和 JS。\n* 字体可以来自 Google Fonts 或 Fontshare。\n* 优先使用氛围背景、强烈的字体层次结构和清晰的视觉方向。\n* 使用抽象形状、渐变、网格、噪点和几何图形，而非插图。"
+    },
+    {
+      "en-US": "### JavaScript",
+      "zh-Hans": "### JavaScript"
+    },
+    {
+      "en-US": "Include:",
+      "zh-Hans": "包含："
+    },
+    {
+      "en-US": "- keyboard navigation\n- touch / swipe navigation\n- mouse wheel navigation\n- progress indicator or slide index\n- reveal-on-enter animation triggers",
+      "zh-Hans": "* 键盘导航\n* 触摸/滑动导航\n* 鼠标滚轮导航\n* 进度指示器或幻灯片索引\n* 进入时触发的揭示动画"
+    },
+    {
+      "en-US": "### Accessibility",
+      "zh-Hans": "### 可访问性"
+    },
+    {
+      "en-US": "- use semantic structure (`main`, `section`, `nav`)\n- keep contrast readable\n- support keyboard-only navigation\n- respect `prefers-reduced-motion`",
+      "zh-Hans": "* 使用语义化结构 (`main`, `section`, `nav`)\n* 保持对比度可读\n* 支持仅键盘导航\n* 尊重 `prefers-reduced-motion`"
+    },
+    {
+      "en-US": "## Content Density Limits",
+      "zh-Hans": "## 内容密度限制"
+    },
+    {
+      "en-US": "Use these maxima unless the user explicitly asks for denser slides and readability still holds:",
+      "zh-Hans": "除非用户明确要求更密集的幻灯片且可读性仍然保持，否则使用以下最大值："
+    },
+    {
+      "en-US": "| Slide type | Limit |\n|------------|-------|\n| Title | 1 heading + 1 subtitle + optional tagline |\n| Content | 1 heading + 4-6 bullets or 2 short paragraphs |\n| Feature grid | 6 cards max |\n| Code | 8-10 lines max |\n| Quote | 1 quote + attribution |\n| Image | 1 image constrained by viewport |",
+      "zh-Hans": "| 幻灯片类型 | 限制 |\n|------------|-------|\n| 标题 | 1 个标题 + 1 个副标题 + 可选标语 |\n| 内容 | 1 个标题 + 4-6 个要点或 2 个短段落 |\n| 功能网格 | 最多 6 张卡片 |\n| 代码 | 最多 8-10 行 |\n| 引用 | 1 条引用 + 出处 |\n| 图像 | 1 张受视口约束的图像 |"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "- generic startup gradients with no visual identity\n- system-font decks unless intentionally editorial\n- long bullet walls\n- code blocks that need scrolling\n- fixed-height content boxes that break on short screens\n- invalid negated CSS functions like `-clamp(...)`",
+      "zh-Hans": "* 没有视觉标识的通用初创公司渐变\n* 除非是特意采用编辑风格，否则避免系统字体文稿\n* 冗长的要点列表\n* 需要滚动的代码块\n* 在短屏幕上会损坏的固定高度内容框\n* 无效的否定 CSS 函数，如 `-clamp(...)`"
+    },
+    {
+      "en-US": "## Related ECC Skills",
+      "zh-Hans": "## 相关 ECC 技能"
+    },
+    {
+      "en-US": "- `frontend-patterns` for component and interaction patterns around the deck\n- `liquid-glass-design` when a presentation intentionally borrows Apple glass aesthetics\n- `e2e-testing` if you need automated browser verification for the final deck",
+      "zh-Hans": "* `frontend-patterns` 用于围绕文稿的组件和交互模式\n* `liquid-glass-design` 当演示文稿有意借鉴苹果玻璃美学时\n* `e2e-testing` 如果您需要为最终文稿进行自动化浏览器验证"
+    },
+    {
+      "en-US": "## Deliverable Checklist",
+      "zh-Hans": "## 交付清单"
+    },
+    {
+      "en-US": "- presentation runs from a local file in a browser\n- every slide fits the viewport without scrolling\n- style is distinctive and intentional\n- animation is meaningful, not noisy\n- reduced motion is respected\n- file paths and customization points are explained at handoff",
+      "zh-Hans": "* 演示文稿可在浏览器中从本地文件运行\n* 每张幻灯片适配视口，无需滚动\n* 风格独特且有意图\n* 动画有意义，不喧闹\n* 尊重减少动效设置\n* 在交付时解释文件路径和自定义点"
+    }
+  ]
+}

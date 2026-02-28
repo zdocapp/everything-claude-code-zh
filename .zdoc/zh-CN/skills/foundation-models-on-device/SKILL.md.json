@@ -1,0 +1,170 @@
+{
+  "sourceFile": "skills/foundation-models-on-device/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: foundation-models-on-device\ndescription: Apple FoundationModels framework for on-device LLM — text generation, guided generation with @Generable, tool calling, and snapshot streaming in iOS 26+.\n---",
+      "zh-Hans": "---\nname: foundation-models-on-device\ndescription: 苹果FoundationModels框架用于设备上的LLM——文本生成、使用@Generable进行引导生成、工具调用，以及在iOS 26+中的快照流。\n---"
+    },
+    {
+      "en-US": "# FoundationModels: On-Device LLM (iOS 26)",
+      "zh-Hans": "# FoundationModels：设备端 LLM（iOS 26）"
+    },
+    {
+      "en-US": "Patterns for integrating Apple's on-device language model into apps using the FoundationModels framework. Covers text generation, structured output with `@Generable`, custom tool calling, and snapshot streaming — all running on-device for privacy and offline support.",
+      "zh-Hans": "使用 FoundationModels 框架将苹果的设备端语言模型集成到应用中的模式。涵盖文本生成、使用 `@Generable` 的结构化输出、自定义工具调用以及快照流式传输——全部在设备端运行，以保护隐私并支持离线使用。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Building AI-powered features using Apple Intelligence on-device\n- Generating or summarizing text without cloud dependency\n- Extracting structured data from natural language input\n- Implementing custom tool calling for domain-specific AI actions\n- Streaming structured responses for real-time UI updates\n- Need privacy-preserving AI (no data leaves the device)",
+      "zh-Hans": "* 使用 Apple Intelligence 在设备端构建 AI 功能\n* 无需依赖云端即可生成或总结文本\n* 从自然语言输入中提取结构化数据\n* 为特定领域的 AI 操作实现自定义工具调用\n* 流式传输结构化响应以实现实时 UI 更新\n* 需要保护隐私的 AI（数据不离开设备）"
+    },
+    {
+      "en-US": "## Core Pattern — Availability Check",
+      "zh-Hans": "## 核心模式 — 可用性检查"
+    },
+    {
+      "en-US": "Always check model availability before creating a session:",
+      "zh-Hans": "在创建会话之前，始终检查模型可用性："
+    },
+    {
+      "en-US": "```swift\nstruct GenerativeView: View {\n    private var model = SystemLanguageModel.default\n\n    var body: some View {\n        switch model.availability {\n        case .available:\n            ContentView()\n        case .unavailable(.deviceNotEligible):\n            Text(\"Device not eligible for Apple Intelligence\")\n        case .unavailable(.appleIntelligenceNotEnabled):\n            Text(\"Please enable Apple Intelligence in Settings\")\n        case .unavailable(.modelNotReady):\n            Text(\"Model is downloading or not ready\")\n        case .unavailable(let other):\n            Text(\"Model unavailable: \\(other)\")\n        }\n    }\n}\n```",
+      "zh-Hans": "```swift\nstruct GenerativeView: View {\n    private var model = SystemLanguageModel.default\n\n    var body: some View {\n        switch model.availability {\n        case .available:\n            ContentView()\n        case .unavailable(.deviceNotEligible):\n            Text(\"Device not eligible for Apple Intelligence\")\n        case .unavailable(.appleIntelligenceNotEnabled):\n            Text(\"Please enable Apple Intelligence in Settings\")\n        case .unavailable(.modelNotReady):\n            Text(\"Model is downloading or not ready\")\n        case .unavailable(let other):\n            Text(\"Model unavailable: \\(other)\")\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Core Pattern — Basic Session",
+      "zh-Hans": "## 核心模式 — 基础会话"
+    },
+    {
+      "en-US": "```swift\n// Single-turn: create a new session each time\nlet session = LanguageModelSession()\nlet response = try await session.respond(to: \"What's a good month to visit Paris?\")\nprint(response.content)\n\n// Multi-turn: reuse session for conversation context\nlet session = LanguageModelSession(instructions: \"\"\"\n    You are a cooking assistant.\n    Provide recipe suggestions based on ingredients.\n    Keep suggestions brief and practical.\n    \"\"\")\n\nlet first = try await session.respond(to: \"I have chicken and rice\")\nlet followUp = try await session.respond(to: \"What about a vegetarian option?\")\n```",
+      "zh-Hans": "```swift\n// Single-turn: create a new session each time\nlet session = LanguageModelSession()\nlet response = try await session.respond(to: \"What's a good month to visit Paris?\")\nprint(response.content)\n\n// Multi-turn: reuse session for conversation context\nlet session = LanguageModelSession(instructions: \"\"\"\n    You are a cooking assistant.\n    Provide recipe suggestions based on ingredients.\n    Keep suggestions brief and practical.\n    \"\"\")\n\nlet first = try await session.respond(to: \"I have chicken and rice\")\nlet followUp = try await session.respond(to: \"What about a vegetarian option?\")\n```"
+    },
+    {
+      "en-US": "Key points for instructions:",
+      "zh-Hans": "指令的关键点："
+    },
+    {
+      "en-US": "- Define the model's role (\"You are a mentor\")\n- Specify what to do (\"Help extract calendar events\")\n- Set style preferences (\"Respond as briefly as possible\")\n- Add safety measures (\"Respond with 'I can't help with that' for dangerous requests\")",
+      "zh-Hans": "* 定义模型的角色（\"你是一位导师\"）\n* 指定要做什么（\"帮助提取日历事件\"）\n* 设置风格偏好（\"尽可能简短地回答\"）\n* 添加安全措施（\"对于危险请求，回复'我无法提供帮助'\"）"
+    },
+    {
+      "en-US": "## Core Pattern — Guided Generation with @Generable",
+      "zh-Hans": "## 核心模式 — 使用 @Generable 进行引导式生成"
+    },
+    {
+      "en-US": "Generate structured Swift types instead of raw strings:",
+      "zh-Hans": "生成结构化的 Swift 类型，而不是原始字符串："
+    },
+    {
+      "en-US": "### 1. Define a Generable Type",
+      "zh-Hans": "### 1. 定义可生成类型"
+    },
+    {
+      "en-US": "```swift\n@Generable(description: \"Basic profile information about a cat\")\nstruct CatProfile {\n    var name: String\n\n    @Guide(description: \"The age of the cat\", .range(0...20))\n    var age: Int\n\n    @Guide(description: \"A one sentence profile about the cat's personality\")\n    var profile: String\n}\n```",
+      "zh-Hans": "```swift\n@Generable(description: \"Basic profile information about a cat\")\nstruct CatProfile {\n    var name: String\n\n    @Guide(description: \"The age of the cat\", .range(0...20))\n    var age: Int\n\n    @Guide(description: \"A one sentence profile about the cat's personality\")\n    var profile: String\n}\n```"
+    },
+    {
+      "en-US": "### 2. Request Structured Output",
+      "zh-Hans": "### 2. 请求结构化输出"
+    },
+    {
+      "en-US": "```swift\nlet response = try await session.respond(\n    to: \"Generate a cute rescue cat\",\n    generating: CatProfile.self\n)\n\n// Access structured fields directly\nprint(\"Name: \\(response.content.name)\")\nprint(\"Age: \\(response.content.age)\")\nprint(\"Profile: \\(response.content.profile)\")\n```",
+      "zh-Hans": "```swift\nlet response = try await session.respond(\n    to: \"Generate a cute rescue cat\",\n    generating: CatProfile.self\n)\n\n// Access structured fields directly\nprint(\"Name: \\(response.content.name)\")\nprint(\"Age: \\(response.content.age)\")\nprint(\"Profile: \\(response.content.profile)\")\n```"
+    },
+    {
+      "en-US": "### Supported @Guide Constraints",
+      "zh-Hans": "### 支持的 @Guide 约束"
+    },
+    {
+      "en-US": "- `.range(0...20)` — numeric range\n- `.count(3)` — array element count\n- `description:` — semantic guidance for generation",
+      "zh-Hans": "* `.range(0...20)` — 数值范围\n* `.count(3)` — 数组元素数量\n* `description:` — 生成的语义引导"
+    },
+    {
+      "en-US": "## Core Pattern — Tool Calling",
+      "zh-Hans": "## 核心模式 — 工具调用"
+    },
+    {
+      "en-US": "Let the model invoke custom code for domain-specific tasks:",
+      "zh-Hans": "让模型调用自定义代码以执行特定领域的任务："
+    },
+    {
+      "en-US": "### 1. Define a Tool",
+      "zh-Hans": "### 1. 定义工具"
+    },
+    {
+      "en-US": "```swift\nstruct RecipeSearchTool: Tool {\n    let name = \"recipe_search\"\n    let description = \"Search for recipes matching a given term and return a list of results.\"\n\n    @Generable\n    struct Arguments {\n        var searchTerm: String\n        var numberOfResults: Int\n    }\n\n    func call(arguments: Arguments) async throws -> ToolOutput {\n        let recipes = await searchRecipes(\n            term: arguments.searchTerm,\n            limit: arguments.numberOfResults\n        )\n        return .string(recipes.map { \"- \\($0.name): \\($0.description)\" }.joined(separator: \"\\n\"))\n    }\n}\n```",
+      "zh-Hans": "```swift\nstruct RecipeSearchTool: Tool {\n    let name = \"recipe_search\"\n    let description = \"Search for recipes matching a given term and return a list of results.\"\n\n    @Generable\n    struct Arguments {\n        var searchTerm: String\n        var numberOfResults: Int\n    }\n\n    func call(arguments: Arguments) async throws -> ToolOutput {\n        let recipes = await searchRecipes(\n            term: arguments.searchTerm,\n            limit: arguments.numberOfResults\n        )\n        return .string(recipes.map { \"- \\($0.name): \\($0.description)\" }.joined(separator: \"\\n\"))\n    }\n}\n```"
+    },
+    {
+      "en-US": "### 2. Create Session with Tools",
+      "zh-Hans": "### 2. 创建带工具的会话"
+    },
+    {
+      "en-US": "```swift\nlet session = LanguageModelSession(tools: [RecipeSearchTool()])\nlet response = try await session.respond(to: \"Find me some pasta recipes\")\n```",
+      "zh-Hans": "```swift\nlet session = LanguageModelSession(tools: [RecipeSearchTool()])\nlet response = try await session.respond(to: \"Find me some pasta recipes\")\n```"
+    },
+    {
+      "en-US": "### 3. Handle Tool Errors",
+      "zh-Hans": "### 3. 处理工具错误"
+    },
+    {
+      "en-US": "```swift\ndo {\n    let answer = try await session.respond(to: \"Find a recipe for tomato soup.\")\n} catch let error as LanguageModelSession.ToolCallError {\n    print(error.tool.name)\n    if case .databaseIsEmpty = error.underlyingError as? RecipeSearchToolError {\n        // Handle specific tool error\n    }\n}\n```",
+      "zh-Hans": "```swift\ndo {\n    let answer = try await session.respond(to: \"Find a recipe for tomato soup.\")\n} catch let error as LanguageModelSession.ToolCallError {\n    print(error.tool.name)\n    if case .databaseIsEmpty = error.underlyingError as? RecipeSearchToolError {\n        // Handle specific tool error\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Core Pattern — Snapshot Streaming",
+      "zh-Hans": "## 核心模式 — 快照流式传输"
+    },
+    {
+      "en-US": "Stream structured responses for real-time UI with `PartiallyGenerated` types:",
+      "zh-Hans": "使用 `PartiallyGenerated` 类型为实时 UI 流式传输结构化响应："
+    },
+    {
+      "en-US": "```swift\n@Generable\nstruct TripIdeas {\n    @Guide(description: \"Ideas for upcoming trips\")\n    var ideas: [String]\n}\n\nlet stream = session.streamResponse(\n    to: \"What are some exciting trip ideas?\",\n    generating: TripIdeas.self\n)\n\nfor try await partial in stream {\n    // partial: TripIdeas.PartiallyGenerated (all properties Optional)\n    print(partial)\n}\n```",
+      "zh-Hans": "```swift\n@Generable\nstruct TripIdeas {\n    @Guide(description: \"Ideas for upcoming trips\")\n    var ideas: [String]\n}\n\nlet stream = session.streamResponse(\n    to: \"What are some exciting trip ideas?\",\n    generating: TripIdeas.self\n)\n\nfor try await partial in stream {\n    // partial: TripIdeas.PartiallyGenerated (all properties Optional)\n    print(partial)\n}\n```"
+    },
+    {
+      "en-US": "### SwiftUI Integration",
+      "zh-Hans": "### SwiftUI 集成"
+    },
+    {
+      "en-US": "```swift\n@State private var partialResult: TripIdeas.PartiallyGenerated?\n@State private var errorMessage: String?\n\nvar body: some View {\n    List {\n        ForEach(partialResult?.ideas ?? [], id: \\.self) { idea in\n            Text(idea)\n        }\n    }\n    .overlay {\n        if let errorMessage { Text(errorMessage).foregroundStyle(.red) }\n    }\n    .task {\n        do {\n            let stream = session.streamResponse(to: prompt, generating: TripIdeas.self)\n            for try await partial in stream {\n                partialResult = partial\n            }\n        } catch {\n            errorMessage = error.localizedDescription\n        }\n    }\n}\n```",
+      "zh-Hans": "```swift\n@State private var partialResult: TripIdeas.PartiallyGenerated?\n@State private var errorMessage: String?\n\nvar body: some View {\n    List {\n        ForEach(partialResult?.ideas ?? [], id: \\.self) { idea in\n            Text(idea)\n        }\n    }\n    .overlay {\n        if let errorMessage { Text(errorMessage).foregroundStyle(.red) }\n    }\n    .task {\n        do {\n            let stream = session.streamResponse(to: prompt, generating: TripIdeas.self)\n            for try await partial in stream {\n                partialResult = partial\n            }\n        } catch {\n            errorMessage = error.localizedDescription\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Key Design Decisions",
+      "zh-Hans": "## 关键设计决策"
+    },
+    {
+      "en-US": "| Decision | Rationale |\n|----------|-----------|\n| On-device execution | Privacy — no data leaves the device; works offline |\n| 4,096 token limit | On-device model constraint; chunk large data across sessions |\n| Snapshot streaming (not deltas) | Structured output friendly; each snapshot is a complete partial state |\n| `@Generable` macro | Compile-time safety for structured generation; auto-generates `PartiallyGenerated` type |\n| Single request per session | `isResponding` prevents concurrent requests; create multiple sessions if needed |\n| `response.content` (not `.output`) | Correct API — always access results via `.content` property |",
+      "zh-Hans": "| 决策 | 理由 |\n|----------|-----------|\n| 设备端执行 | 隐私性——数据不离开设备；支持离线工作 |\n| 4,096 个令牌限制 | 设备端模型约束；跨会话分块处理大数据 |\n| 快照流式传输（非增量） | 对结构化输出友好；每个快照都是一个完整的部分状态 |\n| `@Generable` 宏 | 为结构化生成提供编译时安全性；自动生成 `PartiallyGenerated` 类型 |\n| 每个会话单次请求 | `isResponding` 防止并发请求；如有需要，创建多个会话 |\n| `response.content`（而非 `.output`） | 正确的 API——始终通过 `.content` 属性访问结果 |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Always check `model.availability`** before creating a session — handle all unavailability cases\n- **Use `instructions`** to guide model behavior — they take priority over prompts\n- **Check `isResponding`** before sending a new request — sessions handle one request at a time\n- **Access `response.content`** for results — not `.output`\n- **Break large inputs into chunks** — 4,096 token limit applies to instructions + prompt + output combined\n- **Use `@Generable`** for structured output — stronger guarantees than parsing raw strings\n- **Use `GenerationOptions(temperature:)`** to tune creativity (higher = more creative)\n- **Monitor with Instruments** — use Xcode Instruments to profile request performance",
+      "zh-Hans": "* 在创建会话之前**始终检查 `model.availability`**——处理所有不可用的情况\n* **使用 `instructions`** 来引导模型行为——它们的优先级高于提示词\n* 在发送新请求之前**检查 `isResponding`**——会话一次处理一个请求\n* 通过 `response.content` **访问结果**——而不是 `.output`\n* **将大型输入分块处理**——4,096 个令牌的限制适用于指令、提示词和输出的总和\n* 对于结构化输出**使用 `@Generable`**——比解析原始字符串提供更强的保证\n* **使用 `GenerationOptions(temperature:)`** 来调整创造力（值越高越有创意）\n* **使用 Instruments 进行监控**——使用 Xcode Instruments 来分析请求性能"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "- Creating sessions without checking `model.availability` first\n- Sending inputs exceeding the 4,096 token context window\n- Attempting concurrent requests on a single session\n- Using `.output` instead of `.content` to access response data\n- Parsing raw string responses when `@Generable` structured output would work\n- Building complex multi-step logic in a single prompt — break into multiple focused prompts\n- Assuming the model is always available — device eligibility and settings vary",
+      "zh-Hans": "* 未先检查 `model.availability` 就创建会话\n* 发送超过 4,096 个令牌上下文窗口的输入\n* 尝试在单个会话上进行并发请求\n* 使用 `.output` 而不是 `.content` 来访问响应数据\n* 当 `@Generable` 结构化输出可行时，却去解析原始字符串响应\n* 在单个提示词中构建复杂的多步逻辑——将其拆分为多个聚焦的提示词\n* 假设模型始终可用——设备的资格和设置各不相同"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- On-device text generation for privacy-sensitive apps\n- Structured data extraction from user input (forms, natural language commands)\n- AI-assisted features that must work offline\n- Streaming UI that progressively shows generated content\n- Domain-specific AI actions via tool calling (search, compute, lookup)",
+      "zh-Hans": "* 为注重隐私的应用进行设备端文本生成\n* 从用户输入（表单、自然语言命令）中提取结构化数据\n* 必须离线工作的 AI 辅助功能\n* 逐步显示生成内容的流式 UI\n* 通过工具调用（搜索、计算、查找）执行特定领域的 AI 操作"
+    }
+  ]
+}

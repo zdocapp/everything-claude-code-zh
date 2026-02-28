@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: iterative-retrieval\ndescription: Pattern for progressively refining context retrieval to solve the subagent context problem\n---",
-      "zh-Hans": "---\nname: iterative-retrieval\ndescription: 用于逐步优化上下文检索以解决子代理上下文问题的模式\n---"
+      "en-US": "---\nname: iterative-retrieval\ndescription: Pattern for progressively refining context retrieval to solve the subagent context problem\norigin: ECC\n---",
+      "zh-Hans": "---\nname: iterative-retrieval\ndescription: 逐步优化上下文检索以解决子代理上下文问题的模式\norigin: ECC\n---"
     },
     {
       "en-US": "# Iterative Retrieval Pattern",
@@ -13,6 +13,14 @@
     {
       "en-US": "Solves the \"context problem\" in multi-agent workflows where subagents don't know what context they need until they start working.",
       "zh-Hans": "解决多智能体工作流中的“上下文问题”，即子智能体在开始工作前不知道需要哪些上下文。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Spawning subagents that need codebase context they cannot predict upfront\n- Building multi-agent workflows where context is progressively refined\n- Encountering \"context too large\" or \"missing context\" failures in agent tasks\n- Designing RAG-like retrieval pipelines for code exploration\n- Optimizing token usage in agent orchestration",
+      "zh-Hans": "* 当需要生成需要代码库上下文但无法预先预测的子代理时\n* 构建需要逐步完善上下文的多代理工作流时\n* 在代理任务中遇到\"上下文过大\"或\"缺少上下文\"的失败时\n* 为代码探索设计类似 RAG 的检索管道时\n* 在代理编排中优化令牌使用时"
     },
     {
       "en-US": "## The Problem",

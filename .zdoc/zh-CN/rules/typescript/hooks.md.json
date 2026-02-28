@@ -3,6 +3,10 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\npaths:\n  - \"**/*.ts\"\n  - \"**/*.tsx\"\n  - \"**/*.js\"\n  - \"**/*.jsx\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.ts\"\n  - \"**/*.tsx\"\n  - \"**/*.js\"\n  - \"**/*.jsx\"\n---"
+    },
+    {
       "en-US": "# TypeScript/JavaScript Hooks",
       "zh-Hans": "# TypeScript/JavaScript 钩子"
     },

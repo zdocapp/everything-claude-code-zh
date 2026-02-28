@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: security-scan\ndescription: Scan your Claude Code configuration (.claude/ directory) for security vulnerabilities, misconfigurations, and injection risks using AgentShield. Checks CLAUDE.md, settings.json, MCP servers, hooks, and agent definitions.\n---",
-      "zh-Hans": "---\nname: security-scan\ndescription: 使用AgentShield扫描您的Claude Code配置（.claude/目录），检测安全漏洞、错误配置和注入风险。检查CLAUDE.md、settings.json、MCP服务器、钩子和代理定义。\n---"
+      "en-US": "---\nname: security-scan\ndescription: Scan your Claude Code configuration (.claude/ directory) for security vulnerabilities, misconfigurations, and injection risks using AgentShield. Checks CLAUDE.md, settings.json, MCP servers, hooks, and agent definitions.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: security-scan\ndescription: 使用AgentShield扫描您的Claude代码配置（.claude/目录），以发现安全漏洞、配置错误和注入风险。检查CLAUDE.md、settings.json、MCP服务器、钩子和代理定义。\norigin: ECC\n---"
     },
     {
       "en-US": "# Security Scan Skill",

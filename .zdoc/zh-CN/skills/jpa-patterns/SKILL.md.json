@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: jpa-patterns\ndescription: JPA/Hibernate patterns for entity design, relationships, query optimization, transactions, auditing, indexing, pagination, and pooling in Spring Boot.\n---",
-      "zh-Hans": "---\nname: jpa-patterns\ndescription: Spring Boot中的JPA/Hibernate实体设计、关系、查询优化、事务、审计、索引、分页和连接池模式。\n---"
+      "en-US": "---\nname: jpa-patterns\ndescription: JPA/Hibernate patterns for entity design, relationships, query optimization, transactions, auditing, indexing, pagination, and pooling in Spring Boot.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: jpa-patterns\ndescription: Spring Boot中的JPA/Hibernate模式，用于实体设计、关系处理、查询优化、事务管理、审计、索引、分页和连接池。\norigin: ECC\n---"
     },
     {
       "en-US": "# JPA/Hibernate Patterns",
@@ -13,6 +13,14 @@
     {
       "en-US": "Use for data modeling, repositories, and performance tuning in Spring Boot.",
       "zh-Hans": "用于 Spring Boot 中的数据建模、存储库和性能调优。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Designing JPA entities and table mappings\n- Defining relationships (@OneToMany, @ManyToOne, @ManyToMany)\n- Optimizing queries (N+1 prevention, fetch strategies, projections)\n- Configuring transactions, auditing, or soft deletes\n- Setting up pagination, sorting, or custom repository methods\n- Tuning connection pooling (HikariCP) or second-level caching",
+      "zh-Hans": "* 设计 JPA 实体和表映射时\n* 定义关系时 (@OneToMany, @ManyToOne, @ManyToMany)\n* 优化查询时 (N+1 问题预防、获取策略、投影)\n* 配置事务、审计或软删除时\n* 设置分页、排序或自定义存储库方法时\n* 调整连接池 (HikariCP) 或二级缓存时"
     },
     {
       "en-US": "## Entity Design",

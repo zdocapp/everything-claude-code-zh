@@ -15,8 +15,8 @@
       "zh-Hans": "规则被组织为一个**通用**层加上**语言特定**的目录："
     },
     {
-      "en-US": "```\nrules/\n├── common/          # Language-agnostic principles (always install)\n│   ├── coding-style.md\n│   ├── git-workflow.md\n│   ├── testing.md\n│   ├── performance.md\n│   ├── patterns.md\n│   ├── hooks.md\n│   ├── agents.md\n│   └── security.md\n├── typescript/      # TypeScript/JavaScript specific\n├── python/          # Python specific\n└── golang/          # Go specific\n```",
-      "zh-Hans": "```\nrules/\n├── common/          # Language-agnostic principles (always install)\n│   ├── coding-style.md\n│   ├── git-workflow.md\n│   ├── testing.md\n│   ├── performance.md\n│   ├── patterns.md\n│   ├── hooks.md\n│   ├── agents.md\n│   └── security.md\n├── typescript/      # TypeScript/JavaScript specific\n├── python/          # Python specific\n└── golang/          # Go specific\n```"
+      "en-US": "```\nrules/\n├── common/          # Language-agnostic principles (always install)\n│   ├── coding-style.md\n│   ├── git-workflow.md\n│   ├── testing.md\n│   ├── performance.md\n│   ├── patterns.md\n│   ├── hooks.md\n│   ├── agents.md\n│   └── security.md\n├── typescript/      # TypeScript/JavaScript specific\n├── python/          # Python specific\n├── golang/          # Go specific\n└── swift/           # Swift specific\n```",
+      "zh-Hans": "```\nrules/\n├── common/          # Language-agnostic principles (always install)\n│   ├── coding-style.md\n│   ├── git-workflow.md\n│   ├── testing.md\n│   ├── performance.md\n│   ├── patterns.md\n│   ├── hooks.md\n│   ├── agents.md\n│   └── security.md\n├── typescript/      # TypeScript/JavaScript specific\n├── python/          # Python specific\n├── golang/          # Go specific\n└── swift/           # Swift specific\n```"
     },
     {
       "en-US": "- **common/** contains universal principles — no language-specific code examples.\n- **Language directories** extend the common rules with framework-specific patterns, tools, and code examples. Each file references its common counterpart.",
@@ -31,8 +31,8 @@
       "zh-Hans": "### 选项 1：安装脚本（推荐）"
     },
     {
-      "en-US": "```bash\n# Install common + one or more language-specific rule sets\n./install.sh typescript\n./install.sh python\n./install.sh golang\n\n# Install multiple languages at once\n./install.sh typescript python\n```",
-      "zh-Hans": "```bash\n# Install common + one or more language-specific rule sets\n./install.sh typescript\n./install.sh python\n./install.sh golang\n\n# Install multiple languages at once\n./install.sh typescript python\n```"
+      "en-US": "```bash\n# Install common + one or more language-specific rule sets\n./install.sh typescript\n./install.sh python\n./install.sh golang\n./install.sh swift\n\n# Install multiple languages at once\n./install.sh typescript python\n```",
+      "zh-Hans": "```bash\n# Install common + one or more language-specific rule sets\n./install.sh typescript\n./install.sh python\n./install.sh golang\n./install.sh swift\n\n# Install multiple languages at once\n./install.sh typescript python\n```"
     },
     {
       "en-US": "### Option 2: Manual Installation",
@@ -43,8 +43,8 @@
       "zh-Hans": "> **重要提示：** 复制整个目录 —— 不要使用 `/*` 将其扁平化。\n> 通用目录和语言特定目录包含同名的文件。\n> 将它们扁平化到一个目录会导致语言特定的文件覆盖通用规则，并破坏语言特定文件使用的相对 `../common/` 引用。"
     },
     {
-      "en-US": "```bash\n# Install common rules (required for all projects)\ncp -r rules/common ~/.claude/rules/common\n\n# Install language-specific rules based on your project's tech stack\ncp -r rules/typescript ~/.claude/rules/typescript\ncp -r rules/python ~/.claude/rules/python\ncp -r rules/golang ~/.claude/rules/golang\n\n# Attention ! ! ! Configure according to your actual project requirements; the configuration here is for reference only.\n```",
-      "zh-Hans": "```bash\n# Install common rules (required for all projects)\ncp -r rules/common ~/.claude/rules/common\n\n# Install language-specific rules based on your project's tech stack\ncp -r rules/typescript ~/.claude/rules/typescript\ncp -r rules/python ~/.claude/rules/python\ncp -r rules/golang ~/.claude/rules/golang\n\n# Attention ! ! ! Configure according to your actual project requirements; the configuration here is for reference only.\n```"
+      "en-US": "```bash\n# Install common rules (required for all projects)\ncp -r rules/common ~/.claude/rules/common\n\n# Install language-specific rules based on your project's tech stack\ncp -r rules/typescript ~/.claude/rules/typescript\ncp -r rules/python ~/.claude/rules/python\ncp -r rules/golang ~/.claude/rules/golang\ncp -r rules/swift ~/.claude/rules/swift\n\n# Attention ! ! ! Configure according to your actual project requirements; the configuration here is for reference only.\n```",
+      "zh-Hans": "```bash\n# Install common rules (required for all projects)\ncp -r rules/common ~/.claude/rules/common\n\n# Install language-specific rules based on your project's tech stack\ncp -r rules/typescript ~/.claude/rules/typescript\ncp -r rules/python ~/.claude/rules/python\ncp -r rules/golang ~/.claude/rules/golang\ncp -r rules/swift ~/.claude/rules/swift\n\n# Attention ! ! ! Configure according to your actual project requirements; the configuration here is for reference only.\n```"
     },
     {
       "en-US": "## Rules vs Skills",
@@ -69,6 +69,42 @@
     {
       "en-US": "1. Create a `rules/rust/` directory\n2. Add files that extend the common rules:\n   - `coding-style.md` — formatting tools, idioms, error handling patterns\n   - `testing.md` — test framework, coverage tools, test organization\n   - `patterns.md` — language-specific design patterns\n   - `hooks.md` — PostToolUse hooks for formatters, linters, type checkers\n   - `security.md` — secret management, security scanning tools\n3. Each file should start with:\n   ```\n   > This file extends [common/xxx.md](../common/xxx.md) with <Language> specific content.\n   ```\n4. Reference existing skills if available, or create new ones under `skills/`.",
       "zh-Hans": "1. 创建一个 `rules/rust/` 目录\n2. 添加扩展通用规则的文件：\n   * `coding-style.md` —— 格式化工具、习惯用法、错误处理模式\n   * `testing.md` —— 测试框架、覆盖率工具、测试组织\n   * `patterns.md` —— 语言特定的设计模式\n   * `hooks.md` —— 用于格式化工具、代码检查器、类型检查器的 PostToolUse 钩子\n   * `security.md` —— 密钥管理、安全扫描工具\n3. 每个文件应以以下内容开头：\n   ```\n   > 此文件通过 <语言> 特定内容扩展了 [common/xxx.md](../common/xxx.md)。\n   ```\n4. 如果现有技能可用，则引用它们，或者在 `skills/` 下创建新的技能。"
+    },
+    {
+      "en-US": "## Rule Priority",
+      "zh-Hans": "## 规则优先级"
+    },
+    {
+      "en-US": "When language-specific rules and common rules conflict, **language-specific rules take precedence** (specific overrides general). This follows the standard layered configuration pattern (similar to CSS specificity or `.gitignore` precedence).",
+      "zh-Hans": "当语言特定规则与通用规则冲突时，**语言特定规则优先**（具体规则覆盖通用规则）。这遵循标准的分层配置模式（类似于 CSS 特异性或 `.gitignore` 优先级）。"
+    },
+    {
+      "en-US": "- `rules/common/` defines universal defaults applicable to all projects.\n- `rules/golang/`, `rules/python/`, `rules/typescript/`, etc. override those defaults where language idioms differ.",
+      "zh-Hans": "* `rules/common/` 定义了适用于所有项目的通用默认值。\n* `rules/golang/`、`rules/python/`、`rules/typescript/` 等在语言习惯用法不同的地方会覆盖这些默认值。"
+    },
+    {
+      "en-US": "### Example",
+      "zh-Hans": "### 示例"
+    },
+    {
+      "en-US": "`common/coding-style.md` recommends immutability as a default principle. A language-specific `golang/coding-style.md` can override this:",
+      "zh-Hans": "`common/coding-style.md` 建议将不可变性作为默认原则。语言特定的 `golang/coding-style.md` 可以覆盖这一点："
+    },
+    {
+      "en-US": "> Idiomatic Go uses pointer receivers for struct mutation — see [common/coding-style.md](../common/coding-style.md) for the general principle, but Go-idiomatic mutation is preferred here.",
+      "zh-Hans": "> 符合 Go 语言习惯的做法是使用指针接收器进行结构体修改——关于通用原则请参阅 [common/coding-style.md](../common/coding-style.md)，但此处更推荐符合 Go 语言习惯的修改方式。"
+    },
+    {
+      "en-US": "### Common rules with override notes",
+      "zh-Hans": "### 带有覆盖说明的通用规则"
+    },
+    {
+      "en-US": "Rules in `rules/common/` that may be overridden by language-specific files are marked with:",
+      "zh-Hans": "`rules/common/` 中可能被语言特定文件覆盖的规则会标记为："
+    },
+    {
+      "en-US": "> **Language note**: This rule may be overridden by language-specific rules for languages where this pattern is not idiomatic.",
+      "zh-Hans": "> **语言说明**：对于此模式不符合语言习惯的语言，此规则可能会被语言特定规则覆盖。"
     }
   ]
 }

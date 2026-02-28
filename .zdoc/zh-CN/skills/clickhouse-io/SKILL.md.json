@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: clickhouse-io\ndescription: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for high-performance analytical workloads.\n---",
-      "zh-Hans": "---\nname: clickhouse-io\ndescription: ClickHouse数据库模式、查询优化、分析和数据工程最佳实践，适用于高性能分析工作负载。\n---"
+      "en-US": "---\nname: clickhouse-io\ndescription: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for high-performance analytical workloads.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: clickhouse-io\ndescription: ClickHouse数据库模式、查询优化、分析以及高性能分析工作负载的数据工程最佳实践。\norigin: ECC\n---"
     },
     {
       "en-US": "# ClickHouse Analytics Patterns",
@@ -13,6 +13,14 @@
     {
       "en-US": "ClickHouse-specific patterns for high-performance analytics and data engineering.",
       "zh-Hans": "用于高性能分析和数据工程的 ClickHouse 特定模式。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Designing ClickHouse table schemas (MergeTree engine selection)\n- Writing analytical queries (aggregations, window functions, joins)\n- Optimizing query performance (partition pruning, projections, materialized views)\n- Ingesting large volumes of data (batch inserts, Kafka integration)\n- Migrating from PostgreSQL/MySQL to ClickHouse for analytics\n- Implementing real-time dashboards or time-series analytics",
+      "zh-Hans": "* 设计 ClickHouse 表架构（MergeTree 引擎选择）\n* 编写分析查询（聚合、窗口函数、连接）\n* 优化查询性能（分区裁剪、投影、物化视图）\n* 摄取大量数据（批量插入、Kafka 集成）\n* 为分析目的从 PostgreSQL/MySQL 迁移到 ClickHouse\n* 实现实时仪表板或时间序列分析"
     },
     {
       "en-US": "## Overview",

@@ -1,0 +1,118 @@
+{
+  "sourceFile": "skills/content-hash-cache-pattern/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: content-hash-cache-pattern\ndescription: Cache expensive file processing results using SHA-256 content hashes — path-independent, auto-invalidating, with service layer separation.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: content-hash-cache-pattern\ndescription: 使用SHA-256内容哈希缓存昂贵的文件处理结果——路径无关、自动失效、服务层分离。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Content-Hash File Cache Pattern",
+      "zh-Hans": "# 内容哈希文件缓存模式"
+    },
+    {
+      "en-US": "Cache expensive file processing results (PDF parsing, text extraction, image analysis) using SHA-256 content hashes as cache keys. Unlike path-based caching, this approach survives file moves/renames and auto-invalidates when content changes.",
+      "zh-Hans": "使用 SHA-256 内容哈希作为缓存键，缓存昂贵的文件处理结果（PDF 解析、文本提取、图像分析）。与基于路径的缓存不同，此方法在文件移动/重命名后仍然有效，并在内容更改时自动失效。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Building file processing pipelines (PDF, images, text extraction)\n- Processing cost is high and same files are processed repeatedly\n- Need a `--cache/--no-cache` CLI option\n- Want to add caching to existing pure functions without modifying them",
+      "zh-Hans": "* 构建文件处理管道时（PDF、图像、文本提取）\n* 处理成本高且同一文件被重复处理时\n* 需要一个 `--cache/--no-cache` CLI 选项时\n* 希望在不修改现有纯函数的情况下为其添加缓存时"
+    },
+    {
+      "en-US": "## Core Pattern",
+      "zh-Hans": "## 核心模式"
+    },
+    {
+      "en-US": "### 1. Content-Hash Based Cache Key",
+      "zh-Hans": "### 1. 基于内容哈希的缓存键"
+    },
+    {
+      "en-US": "Use file content (not path) as the cache key:",
+      "zh-Hans": "使用文件内容（而非路径）作为缓存键："
+    },
+    {
+      "en-US": "```python\nimport hashlib\nfrom pathlib import Path\n\n_HASH_CHUNK_SIZE = 65536  # 64KB chunks for large files\n\ndef compute_file_hash(path: Path) -> str:\n    \"\"\"SHA-256 of file contents (chunked for large files).\"\"\"\n    if not path.is_file():\n        raise FileNotFoundError(f\"File not found: {path}\")\n    sha256 = hashlib.sha256()\n    with open(path, \"rb\") as f:\n        while True:\n            chunk = f.read(_HASH_CHUNK_SIZE)\n            if not chunk:\n                break\n            sha256.update(chunk)\n    return sha256.hexdigest()\n```",
+      "zh-Hans": "```python\nimport hashlib\nfrom pathlib import Path\n\n_HASH_CHUNK_SIZE = 65536  # 64KB chunks for large files\n\ndef compute_file_hash(path: Path) -> str:\n    \"\"\"SHA-256 of file contents (chunked for large files).\"\"\"\n    if not path.is_file():\n        raise FileNotFoundError(f\"File not found: {path}\")\n    sha256 = hashlib.sha256()\n    with open(path, \"rb\") as f:\n        while True:\n            chunk = f.read(_HASH_CHUNK_SIZE)\n            if not chunk:\n                break\n            sha256.update(chunk)\n    return sha256.hexdigest()\n```"
+    },
+    {
+      "en-US": "**Why content hash?** File rename/move = cache hit. Content change = automatic invalidation. No index file needed.",
+      "zh-Hans": "**为什么使用内容哈希？** 文件重命名/移动 = 缓存命中。内容更改 = 自动失效。无需索引文件。"
+    },
+    {
+      "en-US": "### 2. Frozen Dataclass for Cache Entry",
+      "zh-Hans": "### 2. 用于缓存条目的冻结数据类"
+    },
+    {
+      "en-US": "```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True, slots=True)\nclass CacheEntry:\n    file_hash: str\n    source_path: str\n    document: ExtractedDocument  # The cached result\n```",
+      "zh-Hans": "```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True, slots=True)\nclass CacheEntry:\n    file_hash: str\n    source_path: str\n    document: ExtractedDocument  # The cached result\n```"
+    },
+    {
+      "en-US": "### 3. File-Based Cache Storage",
+      "zh-Hans": "### 3. 基于文件的缓存存储"
+    },
+    {
+      "en-US": "Each cache entry is stored as `{hash}.json` — O(1) lookup by hash, no index file required.",
+      "zh-Hans": "每个缓存条目都存储为 `{hash}.json` —— 通过哈希实现 O(1) 查找，无需索引文件。"
+    },
+    {
+      "en-US": "```python\nimport json\nfrom typing import Any\n\ndef write_cache(cache_dir: Path, entry: CacheEntry) -> None:\n    cache_dir.mkdir(parents=True, exist_ok=True)\n    cache_file = cache_dir / f\"{entry.file_hash}.json\"\n    data = serialize_entry(entry)\n    cache_file.write_text(json.dumps(data, ensure_ascii=False), encoding=\"utf-8\")\n\ndef read_cache(cache_dir: Path, file_hash: str) -> CacheEntry | None:\n    cache_file = cache_dir / f\"{file_hash}.json\"\n    if not cache_file.is_file():\n        return None\n    try:\n        raw = cache_file.read_text(encoding=\"utf-8\")\n        data = json.loads(raw)\n        return deserialize_entry(data)\n    except (json.JSONDecodeError, ValueError, KeyError):\n        return None  # Treat corruption as cache miss\n```",
+      "zh-Hans": "```python\nimport json\nfrom typing import Any\n\ndef write_cache(cache_dir: Path, entry: CacheEntry) -> None:\n    cache_dir.mkdir(parents=True, exist_ok=True)\n    cache_file = cache_dir / f\"{entry.file_hash}.json\"\n    data = serialize_entry(entry)\n    cache_file.write_text(json.dumps(data, ensure_ascii=False), encoding=\"utf-8\")\n\ndef read_cache(cache_dir: Path, file_hash: str) -> CacheEntry | None:\n    cache_file = cache_dir / f\"{file_hash}.json\"\n    if not cache_file.is_file():\n        return None\n    try:\n        raw = cache_file.read_text(encoding=\"utf-8\")\n        data = json.loads(raw)\n        return deserialize_entry(data)\n    except (json.JSONDecodeError, ValueError, KeyError):\n        return None  # Treat corruption as cache miss\n```"
+    },
+    {
+      "en-US": "### 4. Service Layer Wrapper (SRP)",
+      "zh-Hans": "### 4. 服务层包装器（单一职责原则）"
+    },
+    {
+      "en-US": "Keep the processing function pure. Add caching as a separate service layer.",
+      "zh-Hans": "保持处理函数的纯净性。将缓存作为一个单独的服务层添加。"
+    },
+    {
+      "en-US": "```python\ndef extract_with_cache(\n    file_path: Path,\n    *,\n    cache_enabled: bool = True,\n    cache_dir: Path = Path(\".cache\"),\n) -> ExtractedDocument:\n    \"\"\"Service layer: cache check -> extraction -> cache write.\"\"\"\n    if not cache_enabled:\n        return extract_text(file_path)  # Pure function, no cache knowledge\n\n    file_hash = compute_file_hash(file_path)\n\n    # Check cache\n    cached = read_cache(cache_dir, file_hash)\n    if cached is not None:\n        logger.info(\"Cache hit: %s (hash=%s)\", file_path.name, file_hash[:12])\n        return cached.document\n\n    # Cache miss -> extract -> store\n    logger.info(\"Cache miss: %s (hash=%s)\", file_path.name, file_hash[:12])\n    doc = extract_text(file_path)\n    entry = CacheEntry(file_hash=file_hash, source_path=str(file_path), document=doc)\n    write_cache(cache_dir, entry)\n    return doc\n```",
+      "zh-Hans": "```python\ndef extract_with_cache(\n    file_path: Path,\n    *,\n    cache_enabled: bool = True,\n    cache_dir: Path = Path(\".cache\"),\n) -> ExtractedDocument:\n    \"\"\"Service layer: cache check -> extraction -> cache write.\"\"\"\n    if not cache_enabled:\n        return extract_text(file_path)  # Pure function, no cache knowledge\n\n    file_hash = compute_file_hash(file_path)\n\n    # Check cache\n    cached = read_cache(cache_dir, file_hash)\n    if cached is not None:\n        logger.info(\"Cache hit: %s (hash=%s)\", file_path.name, file_hash[:12])\n        return cached.document\n\n    # Cache miss -> extract -> store\n    logger.info(\"Cache miss: %s (hash=%s)\", file_path.name, file_hash[:12])\n    doc = extract_text(file_path)\n    entry = CacheEntry(file_hash=file_hash, source_path=str(file_path), document=doc)\n    write_cache(cache_dir, entry)\n    return doc\n```"
+    },
+    {
+      "en-US": "## Key Design Decisions",
+      "zh-Hans": "## 关键设计决策"
+    },
+    {
+      "en-US": "| Decision | Rationale |\n|----------|-----------|\n| SHA-256 content hash | Path-independent, auto-invalidates on content change |\n| `{hash}.json` file naming | O(1) lookup, no index file needed |\n| Service layer wrapper | SRP: extraction stays pure, cache is a separate concern |\n| Manual JSON serialization | Full control over frozen dataclass serialization |\n| Corruption returns `None` | Graceful degradation, re-processes on next run |\n| `cache_dir.mkdir(parents=True)` | Lazy directory creation on first write |",
+      "zh-Hans": "| 决策 | 理由 |\n|----------|-----------|\n| SHA-256 内容哈希 | 与路径无关，内容更改时自动失效 |\n| `{hash}.json` 文件命名 | O(1) 查找，无需索引文件 |\n| 服务层包装器 | 单一职责原则：提取功能保持纯净，缓存是独立的关注点 |\n| 手动 JSON 序列化 | 完全控制冻结数据类的序列化 |\n| 损坏时返回 `None` | 优雅降级，在下次运行时重新处理 |\n| `cache_dir.mkdir(parents=True)` | 在首次写入时惰性创建目录 |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Hash content, not paths** — paths change, content identity doesn't\n- **Chunk large files** when hashing — avoid loading entire files into memory\n- **Keep processing functions pure** — they should know nothing about caching\n- **Log cache hit/miss** with truncated hashes for debugging\n- **Handle corruption gracefully** — treat invalid cache entries as misses, never crash",
+      "zh-Hans": "* **哈希内容，而非路径** —— 路径会变，内容标识不变\n* 对大文件进行哈希时**分块处理** —— 避免将整个文件加载到内存中\n* **保持处理函数的纯净性** —— 它们不应了解任何关于缓存的信息\n* **记录缓存命中/未命中**，并使用截断的哈希值以便调试\n* **优雅地处理损坏** —— 将无效的缓存条目视为未命中，永不崩溃"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "```python\n# BAD: Path-based caching (breaks on file move/rename)\ncache = {\"/path/to/file.pdf\": result}\n\n# BAD: Adding cache logic inside the processing function (SRP violation)\ndef extract_text(path, *, cache_enabled=False, cache_dir=None):\n    if cache_enabled:  # Now this function has two responsibilities\n        ...\n\n# BAD: Using dataclasses.asdict() with nested frozen dataclasses\n# (can cause issues with complex nested types)\ndata = dataclasses.asdict(entry)  # Use manual serialization instead\n```",
+      "zh-Hans": "```python\n# BAD: Path-based caching (breaks on file move/rename)\ncache = {\"/path/to/file.pdf\": result}\n\n# BAD: Adding cache logic inside the processing function (SRP violation)\ndef extract_text(path, *, cache_enabled=False, cache_dir=None):\n    if cache_enabled:  # Now this function has two responsibilities\n        ...\n\n# BAD: Using dataclasses.asdict() with nested frozen dataclasses\n# (can cause issues with complex nested types)\ndata = dataclasses.asdict(entry)  # Use manual serialization instead\n```"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 适用场景"
+    },
+    {
+      "en-US": "- File processing pipelines (PDF parsing, OCR, text extraction, image analysis)\n- CLI tools that benefit from `--cache/--no-cache` options\n- Batch processing where the same files appear across runs\n- Adding caching to existing pure functions without modifying them",
+      "zh-Hans": "* 文件处理管道（PDF 解析、OCR、文本提取、图像分析）\n* 受益于 `--cache/--no-cache` 选项的 CLI 工具\n* 跨多次运行出现相同文件的批处理\n* 在不修改现有纯函数的情况下为其添加缓存"
+    },
+    {
+      "en-US": "## When NOT to Use",
+      "zh-Hans": "## 不适用场景"
+    },
+    {
+      "en-US": "- Data that must always be fresh (real-time feeds)\n- Cache entries that would be extremely large (consider streaming instead)\n- Results that depend on parameters beyond file content (e.g., different extraction configs)",
+      "zh-Hans": "* 必须始终保持最新的数据（实时数据流）\n* 缓存条目可能极其庞大的情况（应考虑使用流式处理）\n* 结果依赖于文件内容之外参数的情况（例如，不同的提取配置）"
+    }
+  ]
+}

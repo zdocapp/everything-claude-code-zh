@@ -3,6 +3,10 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\npaths:\n  - \"**/*.go\"\n  - \"**/go.mod\"\n  - \"**/go.sum\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.go\"\n  - \"**/go.mod\"\n  - \"**/go.sum\"\n---"
+    },
+    {
       "en-US": "# Go Security",
       "zh-Hans": "# Go 安全"
     },

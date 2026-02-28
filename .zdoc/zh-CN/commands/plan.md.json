@@ -79,8 +79,8 @@
       "zh-Hans": "计划之后："
     },
     {
-      "en-US": "- Use `/tdd` to implement with test-driven development\n- Use `/build-and-fix` if build errors occur\n- Use `/code-review` to review completed implementation",
-      "zh-Hans": "* 使用 `/tdd` 以测试驱动开发的方式实施\n* 如果出现构建错误，使用 `/build-and-fix`\n* 使用 `/code-review` 审查已完成的实施"
+      "en-US": "- Use `/tdd` to implement with test-driven development\n- Use `/build-fix` if build errors occur\n- Use `/code-review` to review completed implementation",
+      "zh-Hans": "* 使用 `/tdd` 通过测试驱动开发来实现\n* 如果出现构建错误，请使用 `/build-fix`\n* 使用 `/code-review` 来审查已完成的实现"
     },
     {
       "en-US": "## Related Agents",

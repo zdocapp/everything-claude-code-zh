@@ -43,8 +43,8 @@
       "zh-Hans": "错误调查与修复工作流："
     },
     {
-      "en-US": "```\nexplorer -> tdd-guide -> code-reviewer\n```",
-      "zh-Hans": "```\nexplorer -> tdd-guide -> code-reviewer\n```"
+      "en-US": "```\nplanner -> tdd-guide -> code-reviewer\n```",
+      "zh-Hans": "```\nplanner -> tdd-guide -> code-reviewer\n```"
     },
     {
       "en-US": "### refactor",

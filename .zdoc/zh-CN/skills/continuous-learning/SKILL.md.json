@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: continuous-learning\ndescription: Automatically extract reusable patterns from Claude Code sessions and save them as learned skills for future use.\n---",
-      "zh-Hans": "---\nname: continuous-learning\ndescription: 自动从Claude Code会话中提取可重用模式，并将其保存为学习技能供未来使用。\n---"
+      "en-US": "---\nname: continuous-learning\ndescription: Automatically extract reusable patterns from Claude Code sessions and save them as learned skills for future use.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: continuous-learning\ndescription: 自动从Claude Code会话中提取可重复使用的模式，并将其保存为学习到的技能以供将来使用。\norigin: ECC\n---"
     },
     {
       "en-US": "# Continuous Learning Skill",
@@ -13,6 +13,14 @@
     {
       "en-US": "Automatically evaluates Claude Code sessions on end to extract reusable patterns that can be saved as learned skills.",
       "zh-Hans": "自动评估 Claude Code 会话的结尾，以提取可重用的模式，这些模式可以保存为学习到的技能。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Setting up automatic pattern extraction from Claude Code sessions\n- Configuring the Stop hook for session evaluation\n- Reviewing or curating learned skills in `~/.claude/skills/learned/`\n- Adjusting extraction thresholds or pattern categories\n- Comparing v1 (this) vs v2 (instinct-based) approaches",
+      "zh-Hans": "* 设置从 Claude Code 会话中自动提取模式\n* 为会话评估配置停止钩子\n* 在 `~/.claude/skills/learned/` 中审查或整理已学习的技能\n* 调整提取阈值或模式类别\n* 比较 v1（本方法）与 v2（基于本能的方法）"
     },
     {
       "en-US": "## How It Works",
@@ -83,8 +91,8 @@
       "zh-Hans": "## 对比说明（研究：2025年1月）"
     },
     {
-      "en-US": "### vs Homunculus (github.com/humanplane/homunculus)",
-      "zh-Hans": "### 与 Homunculus (github.com/humanplane/homunculus) 对比"
+      "en-US": "### vs Homunculus",
+      "zh-Hans": "### 与 Homunculus 的对比"
     },
     {
       "en-US": "Homunculus v2 takes a more sophisticated approach:",

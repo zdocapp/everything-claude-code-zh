@@ -1,0 +1,26 @@
+{
+  "sourceFile": "rules/common/development-workflow.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Development Workflow",
+      "zh-Hans": "# 开发工作流程"
+    },
+    {
+      "en-US": "> This file extends [common/git-workflow.md](./git-workflow.md) with the full feature development process that happens before git operations.",
+      "zh-Hans": "> 本文档在 [common/git-workflow.md](./git-workflow.md) 的基础上进行了扩展，涵盖了在 git 操作之前发生的完整功能开发过程。"
+    },
+    {
+      "en-US": "The Feature Implementation Workflow describes the development pipeline: planning, TDD, code review, and then committing to git.",
+      "zh-Hans": "功能实现工作流程描述了开发管道：规划、测试驱动开发、代码审查，然后提交到 git。"
+    },
+    {
+      "en-US": "## Feature Implementation Workflow",
+      "zh-Hans": "## 功能实现工作流程"
+    },
+    {
+      "en-US": "1. **Plan First**\n   - Use **planner** agent to create implementation plan\n   - Identify dependencies and risks\n   - Break down into phases\n\n2. **TDD Approach**\n   - Use **tdd-guide** agent\n   - Write tests first (RED)\n   - Implement to pass tests (GREEN)\n   - Refactor (IMPROVE)\n   - Verify 80%+ coverage\n\n3. **Code Review**\n   - Use **code-reviewer** agent immediately after writing code\n   - Address CRITICAL and HIGH issues\n   - Fix MEDIUM issues when possible\n\n4. **Commit & Push**\n   - Detailed commit messages\n   - Follow conventional commits format\n   - See [git-workflow.md](./git-workflow.md) for commit message format and PR process",
+      "zh-Hans": "1. **先行规划**\n   * 使用 **planner** 代理创建实现计划\n   * 识别依赖项和风险\n   * 分解为多个阶段\n\n2. **测试驱动开发方法**\n   * 使用 **tdd-guide** 代理\n   * 先编写测试（红）\n   * 实现代码以通过测试（绿）\n   * 重构（改进）\n   * 验证 80% 以上的覆盖率\n\n3. **代码审查**\n   * 编写代码后立即使用 **code-reviewer** 代理\n   * 解决 CRITICAL 和 HIGH 级别的问题\n   * 尽可能修复 MEDIUM 级别的问题\n\n4. **提交与推送**\n   * 详细的提交信息\n   * 遵循约定式提交格式\n   * 有关提交信息格式和 PR 流程，请参阅 [git-workflow.md](./git-workflow.md)"
+    }
+  ]
+}

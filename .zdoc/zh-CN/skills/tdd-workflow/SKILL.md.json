@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: tdd-workflow\ndescription: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.\n---",
-      "zh-Hans": "---\nname: tdd-workflow\ndescription: 在编写新功能、修复错误或重构代码时使用此技能。强制执行测试驱动开发，包含单元测试、集成测试和端到端测试，覆盖率超过80%。\n---"
+      "en-US": "---\nname: tdd-workflow\ndescription: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: tdd-workflow\ndescription: 在编写新功能、修复错误或重构代码时使用此技能。强制执行测试驱动开发，确保单元测试、集成测试和端到端测试的覆盖率超过80%。\norigin: ECC\n---"
     },
     {
       "en-US": "# Test-Driven Development Workflow",

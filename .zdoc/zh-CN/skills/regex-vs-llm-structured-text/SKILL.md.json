@@ -1,0 +1,118 @@
+{
+  "sourceFile": "skills/regex-vs-llm-structured-text/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: regex-vs-llm-structured-text\ndescription: Decision framework for choosing between regex and LLM when parsing structured text — start with regex, add LLM only for low-confidence edge cases.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: regex-vs-llm-structured-text\ndescription: 选择在解析结构化文本时使用正则表达式还是大型语言模型的决策框架——从正则表达式开始，仅在低置信度的边缘情况下添加大型语言模型。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Regex vs LLM for Structured Text Parsing",
+      "zh-Hans": "# 正则表达式 vs LLM 用于结构化文本解析"
+    },
+    {
+      "en-US": "A practical decision framework for parsing structured text (quizzes, forms, invoices, documents). The key insight: regex handles 95-98% of cases cheaply and deterministically. Reserve expensive LLM calls for the remaining edge cases.",
+      "zh-Hans": "一个用于解析结构化文本（测验、表单、发票、文档）的实用决策框架。核心见解是：正则表达式能以低成本、确定性的方式处理 95-98% 的情况。将昂贵的 LLM 调用留给剩余的边缘情况。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Parsing structured text with repeating patterns (questions, forms, tables)\n- Deciding between regex and LLM for text extraction\n- Building hybrid pipelines that combine both approaches\n- Optimizing cost/accuracy tradeoffs in text processing",
+      "zh-Hans": "* 解析具有重复模式的结构化文本（问题、表单、表格）\n* 决定在文本提取时使用正则表达式还是 LLM\n* 构建结合两种方法的混合管道\n* 在文本处理中优化成本/准确性权衡"
+    },
+    {
+      "en-US": "## Decision Framework",
+      "zh-Hans": "## 决策框架"
+    },
+    {
+      "en-US": "```\nIs the text format consistent and repeating?\n├── Yes (>90% follows a pattern) → Start with Regex\n│   ├── Regex handles 95%+ → Done, no LLM needed\n│   └── Regex handles <95% → Add LLM for edge cases only\n└── No (free-form, highly variable) → Use LLM directly\n```",
+      "zh-Hans": "```\nIs the text format consistent and repeating?\n├── Yes (>90% follows a pattern) → Start with Regex\n│   ├── Regex handles 95%+ → Done, no LLM needed\n│   └── Regex handles <95% → Add LLM for edge cases only\n└── No (free-form, highly variable) → Use LLM directly\n```"
+    },
+    {
+      "en-US": "## Architecture Pattern",
+      "zh-Hans": "## 架构模式"
+    },
+    {
+      "en-US": "```\nSource Text\n    │\n    ▼\n[Regex Parser] ─── Extracts structure (95-98% accuracy)\n    │\n    ▼\n[Text Cleaner] ─── Removes noise (markers, page numbers, artifacts)\n    │\n    ▼\n[Confidence Scorer] ─── Flags low-confidence extractions\n    │\n    ├── High confidence (≥0.95) → Direct output\n    │\n    └── Low confidence (<0.95) → [LLM Validator] → Output\n```",
+      "zh-Hans": "```\nSource Text\n    │\n    ▼\n[Regex Parser] ─── Extracts structure (95-98% accuracy)\n    │\n    ▼\n[Text Cleaner] ─── Removes noise (markers, page numbers, artifacts)\n    │\n    ▼\n[Confidence Scorer] ─── Flags low-confidence extractions\n    │\n    ├── High confidence (≥0.95) → Direct output\n    │\n    └── Low confidence (<0.95) → [LLM Validator] → Output\n```"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "### 1. Regex Parser (Handles the Majority)",
+      "zh-Hans": "### 1. 正则表达式解析器（处理大多数情况）"
+    },
+    {
+      "en-US": "```python\nimport re\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass ParsedItem:\n    id: str\n    text: str\n    choices: tuple[str, ...]\n    answer: str\n    confidence: float = 1.0\n\ndef parse_structured_text(content: str) -> list[ParsedItem]:\n    \"\"\"Parse structured text using regex patterns.\"\"\"\n    pattern = re.compile(\n        r\"(?P<id>\\d+)\\.\\s*(?P<text>.+?)\\n\"\n        r\"(?P<choices>(?:[A-D]\\..+?\\n)+)\"\n        r\"Answer:\\s*(?P<answer>[A-D])\",\n        re.MULTILINE | re.DOTALL,\n    )\n    items = []\n    for match in pattern.finditer(content):\n        choices = tuple(\n            c.strip() for c in re.findall(r\"[A-D]\\.\\s*(.+)\", match.group(\"choices\"))\n        )\n        items.append(ParsedItem(\n            id=match.group(\"id\"),\n            text=match.group(\"text\").strip(),\n            choices=choices,\n            answer=match.group(\"answer\"),\n        ))\n    return items\n```",
+      "zh-Hans": "```python\nimport re\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass ParsedItem:\n    id: str\n    text: str\n    choices: tuple[str, ...]\n    answer: str\n    confidence: float = 1.0\n\ndef parse_structured_text(content: str) -> list[ParsedItem]:\n    \"\"\"Parse structured text using regex patterns.\"\"\"\n    pattern = re.compile(\n        r\"(?P<id>\\d+)\\.\\s*(?P<text>.+?)\\n\"\n        r\"(?P<choices>(?:[A-D]\\..+?\\n)+)\"\n        r\"Answer:\\s*(?P<answer>[A-D])\",\n        re.MULTILINE | re.DOTALL,\n    )\n    items = []\n    for match in pattern.finditer(content):\n        choices = tuple(\n            c.strip() for c in re.findall(r\"[A-D]\\.\\s*(.+)\", match.group(\"choices\"))\n        )\n        items.append(ParsedItem(\n            id=match.group(\"id\"),\n            text=match.group(\"text\").strip(),\n            choices=choices,\n            answer=match.group(\"answer\"),\n        ))\n    return items\n```"
+    },
+    {
+      "en-US": "### 2. Confidence Scoring",
+      "zh-Hans": "### 2. 置信度评分"
+    },
+    {
+      "en-US": "Flag items that may need LLM review:",
+      "zh-Hans": "标记可能需要 LLM 审核的项："
+    },
+    {
+      "en-US": "```python\n@dataclass(frozen=True)\nclass ConfidenceFlag:\n    item_id: str\n    score: float\n    reasons: tuple[str, ...]\n\ndef score_confidence(item: ParsedItem) -> ConfidenceFlag:\n    \"\"\"Score extraction confidence and flag issues.\"\"\"\n    reasons = []\n    score = 1.0\n\n    if len(item.choices) < 3:\n        reasons.append(\"few_choices\")\n        score -= 0.3\n\n    if not item.answer:\n        reasons.append(\"missing_answer\")\n        score -= 0.5\n\n    if len(item.text) < 10:\n        reasons.append(\"short_text\")\n        score -= 0.2\n\n    return ConfidenceFlag(\n        item_id=item.id,\n        score=max(0.0, score),\n        reasons=tuple(reasons),\n    )\n\ndef identify_low_confidence(\n    items: list[ParsedItem],\n    threshold: float = 0.95,\n) -> list[ConfidenceFlag]:\n    \"\"\"Return items below confidence threshold.\"\"\"\n    flags = [score_confidence(item) for item in items]\n    return [f for f in flags if f.score < threshold]\n```",
+      "zh-Hans": "```python\n@dataclass(frozen=True)\nclass ConfidenceFlag:\n    item_id: str\n    score: float\n    reasons: tuple[str, ...]\n\ndef score_confidence(item: ParsedItem) -> ConfidenceFlag:\n    \"\"\"Score extraction confidence and flag issues.\"\"\"\n    reasons = []\n    score = 1.0\n\n    if len(item.choices) < 3:\n        reasons.append(\"few_choices\")\n        score -= 0.3\n\n    if not item.answer:\n        reasons.append(\"missing_answer\")\n        score -= 0.5\n\n    if len(item.text) < 10:\n        reasons.append(\"short_text\")\n        score -= 0.2\n\n    return ConfidenceFlag(\n        item_id=item.id,\n        score=max(0.0, score),\n        reasons=tuple(reasons),\n    )\n\ndef identify_low_confidence(\n    items: list[ParsedItem],\n    threshold: float = 0.95,\n) -> list[ConfidenceFlag]:\n    \"\"\"Return items below confidence threshold.\"\"\"\n    flags = [score_confidence(item) for item in items]\n    return [f for f in flags if f.score < threshold]\n```"
+    },
+    {
+      "en-US": "### 3. LLM Validator (Edge Cases Only)",
+      "zh-Hans": "### 3. LLM 验证器（仅用于边缘情况）"
+    },
+    {
+      "en-US": "```python\ndef validate_with_llm(\n    item: ParsedItem,\n    original_text: str,\n    client,\n) -> ParsedItem:\n    \"\"\"Use LLM to fix low-confidence extractions.\"\"\"\n    response = client.messages.create(\n        model=\"claude-haiku-4-5-20251001\",  # Cheapest model for validation\n        max_tokens=500,\n        messages=[{\n            \"role\": \"user\",\n            \"content\": (\n                f\"Extract the question, choices, and answer from this text.\\n\\n\"\n                f\"Text: {original_text}\\n\\n\"\n                f\"Current extraction: {item}\\n\\n\"\n                f\"Return corrected JSON if needed, or 'CORRECT' if accurate.\"\n            ),\n        }],\n    )\n    # Parse LLM response and return corrected item...\n    return corrected_item\n```",
+      "zh-Hans": "```python\ndef validate_with_llm(\n    item: ParsedItem,\n    original_text: str,\n    client,\n) -> ParsedItem:\n    \"\"\"Use LLM to fix low-confidence extractions.\"\"\"\n    response = client.messages.create(\n        model=\"claude-haiku-4-5-20251001\",  # Cheapest model for validation\n        max_tokens=500,\n        messages=[{\n            \"role\": \"user\",\n            \"content\": (\n                f\"Extract the question, choices, and answer from this text.\\n\\n\"\n                f\"Text: {original_text}\\n\\n\"\n                f\"Current extraction: {item}\\n\\n\"\n                f\"Return corrected JSON if needed, or 'CORRECT' if accurate.\"\n            ),\n        }],\n    )\n    # Parse LLM response and return corrected item...\n    return corrected_item\n```"
+    },
+    {
+      "en-US": "### 4. Hybrid Pipeline",
+      "zh-Hans": "### 4. 混合管道"
+    },
+    {
+      "en-US": "```python\ndef process_document(\n    content: str,\n    *,\n    llm_client=None,\n    confidence_threshold: float = 0.95,\n) -> list[ParsedItem]:\n    \"\"\"Full pipeline: regex -> confidence check -> LLM for edge cases.\"\"\"\n    # Step 1: Regex extraction (handles 95-98%)\n    items = parse_structured_text(content)\n\n    # Step 2: Confidence scoring\n    low_confidence = identify_low_confidence(items, confidence_threshold)\n\n    if not low_confidence or llm_client is None:\n        return items\n\n    # Step 3: LLM validation (only for flagged items)\n    low_conf_ids = {f.item_id for f in low_confidence}\n    result = []\n    for item in items:\n        if item.id in low_conf_ids:\n            result.append(validate_with_llm(item, content, llm_client))\n        else:\n            result.append(item)\n\n    return result\n```",
+      "zh-Hans": "```python\ndef process_document(\n    content: str,\n    *,\n    llm_client=None,\n    confidence_threshold: float = 0.95,\n) -> list[ParsedItem]:\n    \"\"\"Full pipeline: regex -> confidence check -> LLM for edge cases.\"\"\"\n    # Step 1: Regex extraction (handles 95-98%)\n    items = parse_structured_text(content)\n\n    # Step 2: Confidence scoring\n    low_confidence = identify_low_confidence(items, confidence_threshold)\n\n    if not low_confidence or llm_client is None:\n        return items\n\n    # Step 3: LLM validation (only for flagged items)\n    low_conf_ids = {f.item_id for f in low_confidence}\n    result = []\n    for item in items:\n        if item.id in low_conf_ids:\n            result.append(validate_with_llm(item, content, llm_client))\n        else:\n            result.append(item)\n\n    return result\n```"
+    },
+    {
+      "en-US": "## Real-World Metrics",
+      "zh-Hans": "## 实际指标"
+    },
+    {
+      "en-US": "From a production quiz parsing pipeline (410 items):",
+      "zh-Hans": "来自一个生产中的测验解析管道（410 个项目）："
+    },
+    {
+      "en-US": "| Metric | Value |\n|--------|-------|\n| Regex success rate | 98.0% |\n| Low confidence items | 8 (2.0%) |\n| LLM calls needed | ~5 |\n| Cost savings vs all-LLM | ~95% |\n| Test coverage | 93% |",
+      "zh-Hans": "| 指标 | 值 |\n|--------|-------|\n| 正则表达式成功率 | 98.0% |\n| 低置信度项目 | 8 (2.0%) |\n| 所需 LLM 调用次数 | ~5 |\n| 相比全 LLM 的成本节省 | ~95% |\n| 测试覆盖率 | 93% |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Start with regex** — even imperfect regex gives you a baseline to improve\n- **Use confidence scoring** to programmatically identify what needs LLM help\n- **Use the cheapest LLM** for validation (Haiku-class models are sufficient)\n- **Never mutate** parsed items — return new instances from cleaning/validation steps\n- **TDD works well** for parsers — write tests for known patterns first, then edge cases\n- **Log metrics** (regex success rate, LLM call count) to track pipeline health",
+      "zh-Hans": "* **从正则表达式开始** — 即使不完美的正则表达式也能提供一个改进的基线\n* **使用置信度评分** 来以编程方式识别需要 LLM 帮助的内容\n* **使用最便宜的 LLM** 进行验证（Haiku 类模型已足够）\n* **切勿修改** 已解析的项 — 从清理/验证步骤返回新实例\n* **TDD 效果很好** 用于解析器 — 首先为已知模式编写测试，然后是边缘情况\n* **记录指标**（正则表达式成功率、LLM 调用次数）以跟踪管道健康状况"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "- Sending all text to an LLM when regex handles 95%+ of cases (expensive and slow)\n- Using regex for free-form, highly variable text (LLM is better here)\n- Skipping confidence scoring and hoping regex \"just works\"\n- Mutating parsed objects during cleaning/validation steps\n- Not testing edge cases (malformed input, missing fields, encoding issues)",
+      "zh-Hans": "* 当正则表达式能处理 95% 以上的情况时，将所有文本发送给 LLM（昂贵且缓慢）\n* 对自由格式、高度可变的文本使用正则表达式（LLM 在此处更合适）\n* 跳过置信度评分，希望正则表达式“能正常工作”\n* 在清理/验证步骤中修改已解析的对象\n* 不测试边缘情况（格式错误的输入、缺失字段、编码问题）"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 适用场景"
+    },
+    {
+      "en-US": "- Quiz/exam question parsing\n- Form data extraction\n- Invoice/receipt processing\n- Document structure parsing (headers, sections, tables)\n- Any structured text with repeating patterns where cost matters",
+      "zh-Hans": "* 测验/考试题目解析\n* 表单数据提取\n* 发票/收据处理\n* 文档结构解析（标题、章节、表格）\n* 任何具有重复模式且成本重要的结构化文本"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "sourceFile": "skills/swift-protocol-di-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: swift-protocol-di-testing\ndescription: Protocol-based dependency injection for testable Swift code — mock file system, network, and external APIs using focused protocols and Swift Testing.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: swift-protocol-di-testing\ndescription: 基于协议的依赖注入，用于可测试的Swift代码——使用聚焦协议和Swift Testing模拟文件系统、网络和外部API。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Swift Protocol-Based Dependency Injection for Testing",
+      "zh-Hans": "# 基于协议的 Swift 依赖注入测试"
+    },
+    {
+      "en-US": "Patterns for making Swift code testable by abstracting external dependencies (file system, network, iCloud) behind small, focused protocols. Enables deterministic tests without I/O.",
+      "zh-Hans": "通过将外部依赖（文件系统、网络、iCloud）抽象为小型、专注的协议，使 Swift 代码可测试的模式。支持无需 I/O 的确定性测试。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Writing Swift code that accesses file system, network, or external APIs\n- Need to test error handling paths without triggering real failures\n- Building modules that work across environments (app, test, SwiftUI preview)\n- Designing testable architecture with Swift concurrency (actors, Sendable)",
+      "zh-Hans": "* 编写访问文件系统、网络或外部 API 的 Swift 代码时\n* 需要在未触发真实故障的情况下测试错误处理路径时\n* 构建需要在不同环境（应用、测试、SwiftUI 预览）中工作的模块时\n* 设计支持 Swift 并发（actor、Sendable）的可测试架构时"
+    },
+    {
+      "en-US": "## Core Pattern",
+      "zh-Hans": "## 核心模式"
+    },
+    {
+      "en-US": "### 1. Define Small, Focused Protocols",
+      "zh-Hans": "### 1. 定义小型、专注的协议"
+    },
+    {
+      "en-US": "Each protocol handles exactly one external concern.",
+      "zh-Hans": "每个协议仅处理一个外部关注点。"
+    },
+    {
+      "en-US": "```swift\n// File system access\npublic protocol FileSystemProviding: Sendable {\n    func containerURL(for purpose: Purpose) -> URL?\n}\n\n// File read/write operations\npublic protocol FileAccessorProviding: Sendable {\n    func read(from url: URL) throws -> Data\n    func write(_ data: Data, to url: URL) throws\n    func fileExists(at url: URL) -> Bool\n}\n\n// Bookmark storage (e.g., for sandboxed apps)\npublic protocol BookmarkStorageProviding: Sendable {\n    func saveBookmark(_ data: Data, for key: String) throws\n    func loadBookmark(for key: String) throws -> Data?\n}\n```",
+      "zh-Hans": "```swift\n// File system access\npublic protocol FileSystemProviding: Sendable {\n    func containerURL(for purpose: Purpose) -> URL?\n}\n\n// File read/write operations\npublic protocol FileAccessorProviding: Sendable {\n    func read(from url: URL) throws -> Data\n    func write(_ data: Data, to url: URL) throws\n    func fileExists(at url: URL) -> Bool\n}\n\n// Bookmark storage (e.g., for sandboxed apps)\npublic protocol BookmarkStorageProviding: Sendable {\n    func saveBookmark(_ data: Data, for key: String) throws\n    func loadBookmark(for key: String) throws -> Data?\n}\n```"
+    },
+    {
+      "en-US": "### 2. Create Default (Production) Implementations",
+      "zh-Hans": "### 2. 创建默认（生产）实现"
+    },
+    {
+      "en-US": "```swift\npublic struct DefaultFileSystemProvider: FileSystemProviding {\n    public init() {}\n\n    public func containerURL(for purpose: Purpose) -> URL? {\n        FileManager.default.url(forUbiquityContainerIdentifier: nil)\n    }\n}\n\npublic struct DefaultFileAccessor: FileAccessorProviding {\n    public init() {}\n\n    public func read(from url: URL) throws -> Data {\n        try Data(contentsOf: url)\n    }\n\n    public func write(_ data: Data, to url: URL) throws {\n        try data.write(to: url, options: .atomic)\n    }\n\n    public func fileExists(at url: URL) -> Bool {\n        FileManager.default.fileExists(atPath: url.path)\n    }\n}\n```",
+      "zh-Hans": "```swift\npublic struct DefaultFileSystemProvider: FileSystemProviding {\n    public init() {}\n\n    public func containerURL(for purpose: Purpose) -> URL? {\n        FileManager.default.url(forUbiquityContainerIdentifier: nil)\n    }\n}\n\npublic struct DefaultFileAccessor: FileAccessorProviding {\n    public init() {}\n\n    public func read(from url: URL) throws -> Data {\n        try Data(contentsOf: url)\n    }\n\n    public func write(_ data: Data, to url: URL) throws {\n        try data.write(to: url, options: .atomic)\n    }\n\n    public func fileExists(at url: URL) -> Bool {\n        FileManager.default.fileExists(atPath: url.path)\n    }\n}\n```"
+    },
+    {
+      "en-US": "### 3. Create Mock Implementations for Testing",
+      "zh-Hans": "### 3. 创建用于测试的模拟实现"
+    },
+    {
+      "en-US": "```swift\npublic final class MockFileAccessor: FileAccessorProviding, @unchecked Sendable {\n    public var files: [URL: Data] = [:]\n    public var readError: Error?\n    public var writeError: Error?\n\n    public init() {}\n\n    public func read(from url: URL) throws -> Data {\n        if let error = readError { throw error }\n        guard let data = files[url] else {\n            throw CocoaError(.fileReadNoSuchFile)\n        }\n        return data\n    }\n\n    public func write(_ data: Data, to url: URL) throws {\n        if let error = writeError { throw error }\n        files[url] = data\n    }\n\n    public func fileExists(at url: URL) -> Bool {\n        files[url] != nil\n    }\n}\n```",
+      "zh-Hans": "```swift\npublic final class MockFileAccessor: FileAccessorProviding, @unchecked Sendable {\n    public var files: [URL: Data] = [:]\n    public var readError: Error?\n    public var writeError: Error?\n\n    public init() {}\n\n    public func read(from url: URL) throws -> Data {\n        if let error = readError { throw error }\n        guard let data = files[url] else {\n            throw CocoaError(.fileReadNoSuchFile)\n        }\n        return data\n    }\n\n    public func write(_ data: Data, to url: URL) throws {\n        if let error = writeError { throw error }\n        files[url] = data\n    }\n\n    public func fileExists(at url: URL) -> Bool {\n        files[url] != nil\n    }\n}\n```"
+    },
+    {
+      "en-US": "### 4. Inject Dependencies with Default Parameters",
+      "zh-Hans": "### 4. 使用默认参数注入依赖项"
+    },
+    {
+      "en-US": "Production code uses defaults; tests inject mocks.",
+      "zh-Hans": "生产代码使用默认值；测试注入模拟对象。"
+    },
+    {
+      "en-US": "```swift\npublic actor SyncManager {\n    private let fileSystem: FileSystemProviding\n    private let fileAccessor: FileAccessorProviding\n\n    public init(\n        fileSystem: FileSystemProviding = DefaultFileSystemProvider(),\n        fileAccessor: FileAccessorProviding = DefaultFileAccessor()\n    ) {\n        self.fileSystem = fileSystem\n        self.fileAccessor = fileAccessor\n    }\n\n    public func sync() async throws {\n        guard let containerURL = fileSystem.containerURL(for: .sync) else {\n            throw SyncError.containerNotAvailable\n        }\n        let data = try fileAccessor.read(\n            from: containerURL.appendingPathComponent(\"data.json\")\n        )\n        // Process data...\n    }\n}\n```",
+      "zh-Hans": "```swift\npublic actor SyncManager {\n    private let fileSystem: FileSystemProviding\n    private let fileAccessor: FileAccessorProviding\n\n    public init(\n        fileSystem: FileSystemProviding = DefaultFileSystemProvider(),\n        fileAccessor: FileAccessorProviding = DefaultFileAccessor()\n    ) {\n        self.fileSystem = fileSystem\n        self.fileAccessor = fileAccessor\n    }\n\n    public func sync() async throws {\n        guard let containerURL = fileSystem.containerURL(for: .sync) else {\n            throw SyncError.containerNotAvailable\n        }\n        let data = try fileAccessor.read(\n            from: containerURL.appendingPathComponent(\"data.json\")\n        )\n        // Process data...\n    }\n}\n```"
+    },
+    {
+      "en-US": "### 5. Write Tests with Swift Testing",
+      "zh-Hans": "### 5. 使用 Swift Testing 编写测试"
+    },
+    {
+      "en-US": "```swift\nimport Testing\n\n@Test(\"Sync manager handles missing container\")\nfunc testMissingContainer() async {\n    let mockFileSystem = MockFileSystemProvider(containerURL: nil)\n    let manager = SyncManager(fileSystem: mockFileSystem)\n\n    await #expect(throws: SyncError.containerNotAvailable) {\n        try await manager.sync()\n    }\n}\n\n@Test(\"Sync manager reads data correctly\")\nfunc testReadData() async throws {\n    let mockFileAccessor = MockFileAccessor()\n    mockFileAccessor.files[testURL] = testData\n\n    let manager = SyncManager(fileAccessor: mockFileAccessor)\n    let result = try await manager.loadData()\n\n    #expect(result == expectedData)\n}\n\n@Test(\"Sync manager handles read errors gracefully\")\nfunc testReadError() async {\n    let mockFileAccessor = MockFileAccessor()\n    mockFileAccessor.readError = CocoaError(.fileReadCorruptFile)\n\n    let manager = SyncManager(fileAccessor: mockFileAccessor)\n\n    await #expect(throws: SyncError.self) {\n        try await manager.sync()\n    }\n}\n```",
+      "zh-Hans": "```swift\nimport Testing\n\n@Test(\"Sync manager handles missing container\")\nfunc testMissingContainer() async {\n    let mockFileSystem = MockFileSystemProvider(containerURL: nil)\n    let manager = SyncManager(fileSystem: mockFileSystem)\n\n    await #expect(throws: SyncError.containerNotAvailable) {\n        try await manager.sync()\n    }\n}\n\n@Test(\"Sync manager reads data correctly\")\nfunc testReadData() async throws {\n    let mockFileAccessor = MockFileAccessor()\n    mockFileAccessor.files[testURL] = testData\n\n    let manager = SyncManager(fileAccessor: mockFileAccessor)\n    let result = try await manager.loadData()\n\n    #expect(result == expectedData)\n}\n\n@Test(\"Sync manager handles read errors gracefully\")\nfunc testReadError() async {\n    let mockFileAccessor = MockFileAccessor()\n    mockFileAccessor.readError = CocoaError(.fileReadCorruptFile)\n\n    let manager = SyncManager(fileAccessor: mockFileAccessor)\n\n    await #expect(throws: SyncError.self) {\n        try await manager.sync()\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Single Responsibility**: Each protocol should handle one concern — don't create \"god protocols\" with many methods\n- **Sendable conformance**: Required when protocols are used across actor boundaries\n- **Default parameters**: Let production code use real implementations by default; only tests need to specify mocks\n- **Error simulation**: Design mocks with configurable error properties for testing failure paths\n- **Only mock boundaries**: Mock external dependencies (file system, network, APIs), not internal types",
+      "zh-Hans": "* **单一职责**：每个协议应处理一个关注点——不要创建包含许多方法的“上帝协议”\n* **Sendable 一致性**：当协议跨 actor 边界使用时需要\n* **默认参数**：让生产代码默认使用真实实现；只有测试需要指定模拟对象\n* **错误模拟**：设计具有可配置错误属性的模拟对象以测试故障路径\n* **仅模拟边界**：模拟外部依赖（文件系统、网络、API），而非内部类型"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 需要避免的反模式"
+    },
+    {
+      "en-US": "- Creating a single large protocol that covers all external access\n- Mocking internal types that have no external dependencies\n- Using `#if DEBUG` conditionals instead of proper dependency injection\n- Forgetting `Sendable` conformance when used with actors\n- Over-engineering: if a type has no external dependencies, it doesn't need a protocol",
+      "zh-Hans": "* 创建覆盖所有外部访问的单个大型协议\n* 模拟没有外部依赖的内部类型\n* 使用 `#if DEBUG` 条件语句代替适当的依赖注入\n* 与 actor 一起使用时忘记 `Sendable` 一致性\n* 过度设计：如果一个类型没有外部依赖，则不需要协议"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Any Swift code that touches file system, network, or external APIs\n- Testing error handling paths that are hard to trigger in real environments\n- Building modules that need to work in app, test, and SwiftUI preview contexts\n- Apps using Swift concurrency (actors, structured concurrency) that need testable architecture",
+      "zh-Hans": "* 任何触及文件系统、网络或外部 API 的 Swift 代码\n* 测试在真实环境中难以触发的错误处理路径时\n* 构建需要在应用、测试和 SwiftUI 预览上下文中工作的模块时\n* 需要使用可测试架构的、采用 Swift 并发（actor、结构化并发）的应用"
+    }
+  ]
+}

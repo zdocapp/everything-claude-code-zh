@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: security-review\ndescription: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.\n---",
-      "zh-Hans": "---\nname: security-review\ndescription: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.\n---"
+      "en-US": "---\nname: security-review\ndescription: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: security-review\ndescription: 在添加身份验证、处理用户输入、处理机密信息、创建API端点或实现支付/敏感功能时使用此技能。提供全面的安全检查清单和模式。\norigin: ECC\n---"
     },
     {
       "en-US": "# Security Review Skill",

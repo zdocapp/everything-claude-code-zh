@@ -7,16 +7,76 @@
       "zh-Hans": "# 构建与修复"
     },
     {
-      "en-US": "Incrementally fix TypeScript and build errors:",
-      "zh-Hans": "逐步修复 TypeScript 和构建错误："
+      "en-US": "Incrementally fix build and type errors with minimal, safe changes.",
+      "zh-Hans": "以最小、安全的更改逐步修复构建和类型错误。"
     },
     {
-      "en-US": "1. Run build: npm run build or pnpm build\n\n2. Parse error output:\n   - Group by file\n   - Sort by severity\n\n3. For each error:\n   - Show error context (5 lines before/after)\n   - Explain the issue\n   - Propose fix\n   - Apply fix\n   - Re-run build\n   - Verify error resolved\n\n4. Stop if:\n   - Fix introduces new errors\n   - Same error persists after 3 attempts\n   - User requests pause\n\n5. Show summary:\n   - Errors fixed\n   - Errors remaining\n   - New errors introduced",
-      "zh-Hans": "1. 运行构建：npm run build 或 pnpm build\n\n2. 解析错误输出：\n   * 按文件分组\n   * 按严重性排序\n\n3. 对于每个错误：\n   * 显示错误上下文（前后 5 行）\n   * 解释问题\n   * 提出修复方案\n   * 应用修复\n   * 重新运行构建\n   * 验证错误是否已解决\n\n4. 在以下情况停止：\n   * 修复引入了新的错误\n   * 同一错误在 3 次尝试后仍然存在\n   * 用户请求暂停\n\n5. 显示摘要：\n   * 已修复的错误\n   * 剩余的错误\n   * 新引入的错误"
+      "en-US": "## Step 1: Detect Build System",
+      "zh-Hans": "## 步骤 1：检测构建系统"
     },
     {
-      "en-US": "Fix one error at a time for safety!",
-      "zh-Hans": "为了安全起见，一次只修复一个错误！"
+      "en-US": "Identify the project's build tool and run the build:",
+      "zh-Hans": "识别项目的构建工具并运行构建："
+    },
+    {
+      "en-US": "| Indicator | Build Command |\n|-----------|---------------|\n| `package.json` with `build` script | `npm run build` or `pnpm build` |\n| `tsconfig.json` (TypeScript only) | `npx tsc --noEmit` |\n| `Cargo.toml` | `cargo build 2>&1` |\n| `pom.xml` | `mvn compile` |\n| `build.gradle` | `./gradlew compileJava` |\n| `go.mod` | `go build ./...` |\n| `pyproject.toml` | `python -m py_compile` or `mypy .` |",
+      "zh-Hans": "| 指示器 | 构建命令 |\n|-----------|---------------|\n| `package.json` 包含 `build` 脚本 | `npm run build` 或 `pnpm build` |\n| `tsconfig.json`（仅限 TypeScript） | `npx tsc --noEmit` |\n| `Cargo.toml` | `cargo build 2>&1` |\n| `pom.xml` | `mvn compile` |\n| `build.gradle` | `./gradlew compileJava` |\n| `go.mod` | `go build ./...` |\n| `pyproject.toml` | `python -m py_compile` 或 `mypy .` |"
+    },
+    {
+      "en-US": "## Step 2: Parse and Group Errors",
+      "zh-Hans": "## 步骤 2：解析并分组错误"
+    },
+    {
+      "en-US": "1. Run the build command and capture stderr\n2. Group errors by file path\n3. Sort by dependency order (fix imports/types before logic errors)\n4. Count total errors for progress tracking",
+      "zh-Hans": "1. 运行构建命令并捕获 stderr\n2. 按文件路径对错误进行分组\n3. 按依赖顺序排序（先修复导入/类型错误，再修复逻辑错误）\n4. 统计错误总数以跟踪进度"
+    },
+    {
+      "en-US": "## Step 3: Fix Loop (One Error at a Time)",
+      "zh-Hans": "## 步骤 3：修复循环（一次处理一个错误）"
+    },
+    {
+      "en-US": "For each error:",
+      "zh-Hans": "对于每个错误："
+    },
+    {
+      "en-US": "1. **Read the file** — Use Read tool to see error context (10 lines around the error)\n2. **Diagnose** — Identify root cause (missing import, wrong type, syntax error)\n3. **Fix minimally** — Use Edit tool for the smallest change that resolves the error\n4. **Re-run build** — Verify the error is gone and no new errors introduced\n5. **Move to next** — Continue with remaining errors",
+      "zh-Hans": "1. **读取文件** — 使用读取工具查看错误上下文（错误周围的 10 行代码）\n2. **诊断** — 确定根本原因（缺少导入、类型错误、语法错误）\n3. **最小化修复** — 使用编辑工具进行最小的更改以解决错误\n4. **重新运行构建** — 验证错误已消失且未引入新错误\n5. **移至下一个** — 继续处理剩余的错误"
+    },
+    {
+      "en-US": "## Step 4: Guardrails",
+      "zh-Hans": "## 步骤 4：防护措施"
+    },
+    {
+      "en-US": "Stop and ask the user if:",
+      "zh-Hans": "在以下情况下停止并询问用户："
+    },
+    {
+      "en-US": "- A fix introduces **more errors than it resolves**\n- The **same error persists after 3 attempts** (likely a deeper issue)\n- The fix requires **architectural changes** (not just a build fix)\n- Build errors stem from **missing dependencies** (need `npm install`, `cargo add`, etc.)",
+      "zh-Hans": "* 一个修复**引入的错误比它解决的更多**\n* **同一错误在 3 次尝试后仍然存在**（可能是更深层次的问题）\n* 修复需要**架构更改**（不仅仅是构建修复）\n* 构建错误源于**缺少依赖项**（需要 `npm install`、`cargo add` 等）"
+    },
+    {
+      "en-US": "## Step 5: Summary",
+      "zh-Hans": "## 步骤 5：总结"
+    },
+    {
+      "en-US": "Show results:",
+      "zh-Hans": "显示结果："
+    },
+    {
+      "en-US": "- Errors fixed (with file paths)\n- Errors remaining (if any)\n- New errors introduced (should be zero)\n- Suggested next steps for unresolved issues",
+      "zh-Hans": "* 已修复的错误（包含文件路径）\n* 剩余的错误（如果有）\n* 引入的新错误（应为零）\n* 针对未解决问题的建议后续步骤"
+    },
+    {
+      "en-US": "## Recovery Strategies",
+      "zh-Hans": "## 恢复策略"
+    },
+    {
+      "en-US": "| Situation | Action |\n|-----------|--------|\n| Missing module/import | Check if package is installed; suggest install command |\n| Type mismatch | Read both type definitions; fix the narrower type |\n| Circular dependency | Identify cycle with import graph; suggest extraction |\n| Version conflict | Check `package.json` / `Cargo.toml` for version constraints |\n| Build tool misconfiguration | Read config file; compare with working defaults |",
+      "zh-Hans": "| 情况 | 操作 |\n|-----------|--------|\n| 缺少模块/导入 | 检查包是否已安装；建议安装命令 |\n| 类型不匹配 | 读取两种类型定义；修复更窄的类型 |\n| 循环依赖 | 使用导入图识别循环；建议提取 |\n| 版本冲突 | 检查 `package.json` / `Cargo.toml` 中的版本约束 |\n| 构建工具配置错误 | 读取配置文件；与有效的默认配置进行比较 |"
+    },
+    {
+      "en-US": "Fix one error at a time for safety. Prefer minimal diffs over refactoring.",
+      "zh-Hans": "为了安全起见，一次只修复一个错误。优先使用最小的改动，而不是重构。"
     }
   ]
 }

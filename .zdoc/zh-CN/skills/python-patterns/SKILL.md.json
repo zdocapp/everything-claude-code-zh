@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: python-patterns\ndescription: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications.\n---",
-      "zh-Hans": "---\nname: python-patterns\ndescription: Pythonic 惯用法、PEP 8 标准、类型提示以及构建健壮、高效、可维护的 Python 应用程序的最佳实践。\n---"
+      "en-US": "---\nname: python-patterns\ndescription: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: python-patterns\ndescription: Pythonic 惯用法、PEP 8 标准、类型提示以及构建稳健、高效且可维护的 Python 应用程序的最佳实践。\norigin: ECC\n---"
     },
     {
       "en-US": "# Python Development Patterns",

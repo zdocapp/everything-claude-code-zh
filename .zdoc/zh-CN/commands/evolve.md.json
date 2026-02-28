@@ -71,8 +71,8 @@
       "zh-Hans": "* `new-table-step1`: \"当添加数据库表时，创建迁移\"\n* `new-table-step2`: \"当添加数据库表时，更新模式\"\n* `new-table-step3`: \"当添加数据库表时，重新生成类型\""
     },
     {
-      "en-US": "→ Creates: `/new-table` command",
-      "zh-Hans": "→ 创建：`/new-table` 命令"
+      "en-US": "→ Creates: **new-table** command",
+      "zh-Hans": "→ 创建：**new-table** 命令"
     },
     {
       "en-US": "### → Skill (Auto-Triggered)",
@@ -119,8 +119,8 @@
       "zh-Hans": "* `debug-step1`: \"当调试时，首先检查日志\"\n* `debug-step2`: \"当调试时，隔离故障组件\"\n* `debug-step3`: \"当调试时，创建最小复现\"\n* `debug-step4`: \"当调试时，用测试验证修复\""
     },
     {
-      "en-US": "→ Creates: `debugger` agent",
-      "zh-Hans": "→ 创建：`debugger` 代理"
+      "en-US": "→ Creates: **debugger** agent",
+      "zh-Hans": "→ 创建：**debugger** 代理"
     },
     {
       "en-US": "## What to Do",

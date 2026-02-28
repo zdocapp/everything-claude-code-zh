@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: springboot-tdd\ndescription: Test-driven development for Spring Boot using JUnit 5, Mockito, MockMvc, Testcontainers, and JaCoCo. Use when adding features, fixing bugs, or refactoring.\n---",
-      "zh-Hans": "---\nname: springboot-tdd\ndescription: 使用JUnit 5、Mockito、MockMvc、Testcontainers和JaCoCo进行Spring Boot的测试驱动开发。适用于添加功能、修复错误或重构时。\n---"
+      "en-US": "---\nname: springboot-tdd\ndescription: Test-driven development for Spring Boot using JUnit 5, Mockito, MockMvc, Testcontainers, and JaCoCo. Use when adding features, fixing bugs, or refactoring.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: springboot-tdd\ndescription: 使用JUnit 5、Mockito、MockMvc、Testcontainers和JaCoCo进行Spring Boot的测试驱动开发。适用于添加功能、修复错误或重构时。\norigin: ECC\n---"
     },
     {
       "en-US": "# Spring Boot TDD Workflow",

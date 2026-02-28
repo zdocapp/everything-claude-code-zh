@@ -3,6 +3,10 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\npaths:\n  - \"**/*.py\"\n  - \"**/*.pyi\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.py\"\n  - \"**/*.pyi\"\n---"
+    },
+    {
       "en-US": "# Python Hooks",
       "zh-Hans": "# Python 钩子"
     },

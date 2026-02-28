@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: springboot-patterns\ndescription: Spring Boot architecture patterns, REST API design, layered services, data access, caching, async processing, and logging. Use for Java Spring Boot backend work.\n---",
-      "zh-Hans": "---\nname: springboot-patterns\ndescription: Spring Boot 架构模式、REST API 设计、分层服务、数据访问、缓存、异步处理和日志记录。适用于 Java Spring Boot 后端工作。\n---"
+      "en-US": "---\nname: springboot-patterns\ndescription: Spring Boot architecture patterns, REST API design, layered services, data access, caching, async processing, and logging. Use for Java Spring Boot backend work.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: springboot-patterns\ndescription: Spring Boot架构模式、REST API设计、分层服务、数据访问、缓存、异步处理和日志记录。用于Java Spring Boot后端工作。\norigin: ECC\n---"
     },
     {
       "en-US": "# Spring Boot Development Patterns",
@@ -13,6 +13,14 @@
     {
       "en-US": "Spring Boot architecture and API patterns for scalable, production-grade services.",
       "zh-Hans": "用于可扩展、生产级服务的 Spring Boot 架构和 API 模式。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Building REST APIs with Spring MVC or WebFlux\n- Structuring controller → service → repository layers\n- Configuring Spring Data JPA, caching, or async processing\n- Adding validation, exception handling, or pagination\n- Setting up profiles for dev/staging/production environments\n- Implementing event-driven patterns with Spring Events or Kafka",
+      "zh-Hans": "* 使用 Spring MVC 或 WebFlux 构建 REST API\n* 构建控制器 → 服务 → 仓库层结构\n* 配置 Spring Data JPA、缓存或异步处理\n* 添加验证、异常处理或分页\n* 为开发/预发布/生产环境设置配置文件\n* 使用 Spring Events 或 Kafka 实现事件驱动模式"
     },
     {
       "en-US": "## REST API Structure",

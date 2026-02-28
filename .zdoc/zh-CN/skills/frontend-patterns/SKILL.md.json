@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: frontend-patterns\ndescription: Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices.\n---",
-      "zh-Hans": "---\nname: frontend-patterns\ndescription: React、Next.js、状态管理、性能优化和UI最佳实践的前端开发模式。\n---"
+      "en-US": "---\nname: frontend-patterns\ndescription: Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: frontend-patterns\ndescription: React、Next.js、状态管理、性能优化和UI最佳实践的前端开发模式。\norigin: ECC\n---"
     },
     {
       "en-US": "# Frontend Development Patterns",
@@ -13,6 +13,14 @@
     {
       "en-US": "Modern frontend patterns for React, Next.js, and performant user interfaces.",
       "zh-Hans": "适用于 React、Next.js 和高性能用户界面的现代前端模式。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Building React components (composition, props, rendering)\n- Managing state (useState, useReducer, Zustand, Context)\n- Implementing data fetching (SWR, React Query, server components)\n- Optimizing performance (memoization, virtualization, code splitting)\n- Working with forms (validation, controlled inputs, Zod schemas)\n- Handling client-side routing and navigation\n- Building accessible, responsive UI patterns",
+      "zh-Hans": "* 构建 React 组件（组合、属性、渲染）\n* 管理状态（useState、useReducer、Zustand、Context）\n* 实现数据获取（SWR、React Query、服务器组件）\n* 优化性能（记忆化、虚拟化、代码分割）\n* 处理表单（验证、受控输入、Zod 模式）\n* 处理客户端路由和导航\n* 构建可访问、响应式的 UI 模式"
     },
     {
       "en-US": "## Component Patterns",

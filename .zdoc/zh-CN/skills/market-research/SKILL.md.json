@@ -1,0 +1,110 @@
+{
+  "sourceFile": "skills/market-research/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: market-research\ndescription: Conduct market research, competitive analysis, investor due diligence, and industry intelligence with source attribution and decision-oriented summaries. Use when the user wants market sizing, competitor comparisons, fund research, technology scans, or research that informs business decisions.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: market-research\ndescription: 进行市场研究、竞争分析、投资者尽职调查和行业情报，附带来源归属和决策导向的摘要。适用于用户需要市场规模、竞争对手比较、基金研究、技术扫描或为商业决策提供信息的研究时。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Market Research",
+      "zh-Hans": "# 市场研究"
+    },
+    {
+      "en-US": "Produce research that supports decisions, not research theater.",
+      "zh-Hans": "产出支持决策的研究，而非研究表演。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- researching a market, category, company, investor, or technology trend\n- building TAM/SAM/SOM estimates\n- comparing competitors or adjacent products\n- preparing investor dossiers before outreach\n- pressure-testing a thesis before building, funding, or entering a market",
+      "zh-Hans": "* 研究市场、品类、公司、投资者或技术趋势时\n* 构建 TAM/SAM/SOM 估算时\n* 比较竞争对手或相邻产品时\n* 在接触前准备投资者档案时\n* 在构建、投资或进入市场前对论点进行压力测试时"
+    },
+    {
+      "en-US": "## Research Standards",
+      "zh-Hans": "## 研究标准"
+    },
+    {
+      "en-US": "1. Every important claim needs a source.\n2. Prefer recent data and call out stale data.\n3. Include contrarian evidence and downside cases.\n4. Translate findings into a decision, not just a summary.\n5. Separate fact, inference, and recommendation clearly.",
+      "zh-Hans": "1. 每个重要主张都需要有来源。\n2. 优先使用近期数据，并明确指出陈旧数据。\n3. 包含反面证据和不利情况。\n4. 将发现转化为决策，而不仅仅是总结。\n5. 清晰区分事实、推论和建议。"
+    },
+    {
+      "en-US": "## Common Research Modes",
+      "zh-Hans": "## 常见研究模式"
+    },
+    {
+      "en-US": "### Investor / Fund Diligence",
+      "zh-Hans": "### 投资者 / 基金尽职调查"
+    },
+    {
+      "en-US": "Collect:",
+      "zh-Hans": "收集："
+    },
+    {
+      "en-US": "- fund size, stage, and typical check size\n- relevant portfolio companies\n- public thesis and recent activity\n- reasons the fund is or is not a fit\n- any obvious red flags or mismatches",
+      "zh-Hans": "* 基金规模、阶段和典型投资额度\n* 相关的投资组合公司\n* 公开的投资理念和近期动态\n* 该基金适合或不适合的理由\n* 任何明显的危险信号或不匹配之处"
+    },
+    {
+      "en-US": "### Competitive Analysis",
+      "zh-Hans": "### 竞争分析"
+    },
+    {
+      "en-US": "Collect:",
+      "zh-Hans": "收集："
+    },
+    {
+      "en-US": "- product reality, not marketing copy\n- funding and investor history if public\n- traction metrics if public\n- distribution and pricing clues\n- strengths, weaknesses, and positioning gaps",
+      "zh-Hans": "* 产品现实情况，而非营销文案\n* 公开的融资和投资者历史\n* 公开的吸引力指标\n* 分销和定价线索\n* 优势、劣势和定位差距"
+    },
+    {
+      "en-US": "### Market Sizing",
+      "zh-Hans": "### 市场规模估算"
+    },
+    {
+      "en-US": "Use:",
+      "zh-Hans": "使用："
+    },
+    {
+      "en-US": "- top-down estimates from reports or public datasets\n- bottom-up sanity checks from realistic customer acquisition assumptions\n- explicit assumptions for every leap in logic",
+      "zh-Hans": "* 来自报告或公共数据集的\"自上而下\"估算\n* 基于现实的客户获取假设进行的\"自下而上\"合理性检查\n* 对每个逻辑跳跃的明确假设"
+    },
+    {
+      "en-US": "### Technology / Vendor Research",
+      "zh-Hans": "### 技术 / 供应商研究"
+    },
+    {
+      "en-US": "Collect:",
+      "zh-Hans": "收集："
+    },
+    {
+      "en-US": "- how it works\n- trade-offs and adoption signals\n- integration complexity\n- lock-in, security, compliance, and operational risk",
+      "zh-Hans": "* 其工作原理\n* 权衡取舍和采用信号\n* 集成复杂度\n* 锁定、安全、合规和运营风险"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Default structure:",
+      "zh-Hans": "默认结构："
+    },
+    {
+      "en-US": "1. executive summary\n2. key findings\n3. implications\n4. risks and caveats\n5. recommendation\n6. sources",
+      "zh-Hans": "1. 执行摘要\n2. 关键发现\n3. 影响\n4. 风险和注意事项\n5. 建议\n6. 来源"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量门"
+    },
+    {
+      "en-US": "Before delivering:",
+      "zh-Hans": "在交付前检查："
+    },
+    {
+      "en-US": "- all numbers are sourced or labeled as estimates\n- old data is flagged\n- the recommendation follows from the evidence\n- risks and counterarguments are included\n- the output makes a decision easier",
+      "zh-Hans": "* 所有数字均已注明来源或标记为估算\n* 陈旧数据已标注\n* 建议源自证据\n* 风险和反对论点已包含在内\n* 输出使决策更容易"
+    }
+  ]
+}

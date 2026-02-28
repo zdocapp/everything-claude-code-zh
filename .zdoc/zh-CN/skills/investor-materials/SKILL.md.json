@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/investor-materials/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: investor-materials\ndescription: Create and update pitch decks, one-pagers, investor memos, accelerator applications, financial models, and fundraising materials. Use when the user needs investor-facing documents, projections, use-of-funds tables, milestone plans, or materials that must stay internally consistent across multiple fundraising assets.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: investor-materials\ndescription: 创建和更新宣传文稿、一页简介、投资者备忘录、加速器申请、财务模型和融资材料。当用户需要面向投资者的文件、预测、资金用途表、里程碑计划或必须在多个融资资产中保持内部一致性的材料时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Investor Materials",
+      "zh-Hans": "# 投资者材料"
+    },
+    {
+      "en-US": "Build investor-facing materials that are consistent, credible, and easy to defend.",
+      "zh-Hans": "构建面向投资者的材料，要求一致、可信且易于辩护。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- creating or revising a pitch deck\n- writing an investor memo or one-pager\n- building a financial model, milestone plan, or use-of-funds table\n- answering accelerator or incubator application questions\n- aligning multiple fundraising docs around one source of truth",
+      "zh-Hans": "* 创建或修订融资演讲稿\n* 撰写投资者备忘录或一页摘要\n* 构建财务模型、里程碑计划或资金使用表\n* 回答加速器或孵化器申请问题\n* 围绕单一事实来源统一多个融资文件"
+    },
+    {
+      "en-US": "## Golden Rule",
+      "zh-Hans": "## 黄金法则"
+    },
+    {
+      "en-US": "All investor materials must agree with each other.",
+      "zh-Hans": "所有投资者材料必须彼此一致。"
+    },
+    {
+      "en-US": "Create or confirm a single source of truth before writing:",
+      "zh-Hans": "在撰写前创建或确认单一事实来源："
+    },
+    {
+      "en-US": "- traction metrics\n- pricing and revenue assumptions\n- raise size and instrument\n- use of funds\n- team bios and titles\n- milestones and timelines",
+      "zh-Hans": "* 增长指标\n* 定价和收入假设\n* 融资规模和工具\n* 资金用途\n* 团队简介和头衔\n* 里程碑和时间线"
+    },
+    {
+      "en-US": "If conflicting numbers appear, stop and resolve them before drafting.",
+      "zh-Hans": "如果出现冲突的数字，请停止起草并解决它们。"
+    },
+    {
+      "en-US": "## Core Workflow",
+      "zh-Hans": "## 核心工作流程"
+    },
+    {
+      "en-US": "1. inventory the canonical facts\n2. identify missing assumptions\n3. choose the asset type\n4. draft the asset with explicit logic\n5. cross-check every number against the source of truth",
+      "zh-Hans": "1. 清点规范事实\n2. 识别缺失的假设\n3. 选择资产类型\n4. 用明确的逻辑起草资产\n5. 根据事实来源交叉核对每个数字"
+    },
+    {
+      "en-US": "## Asset Guidance",
+      "zh-Hans": "## 资产指南"
+    },
+    {
+      "en-US": "### Pitch Deck",
+      "zh-Hans": "### 融资演讲稿"
+    },
+    {
+      "en-US": "Recommended flow:",
+      "zh-Hans": "推荐流程："
+    },
+    {
+      "en-US": "1. company + wedge\n2. problem\n3. solution\n4. product / demo\n5. market\n6. business model\n7. traction\n8. team\n9. competition / differentiation\n10. ask\n11. use of funds / milestones\n12. appendix",
+      "zh-Hans": "1. 公司 + 切入点\n2. 问题\n3. 解决方案\n4. 产品 / 演示\n5. 市场\n6. 商业模式\n7. 增长\n8. 团队\n9. 竞争 / 差异化\n10. 融资需求\n11. 资金用途 / 里程碑\n12. 附录"
+    },
+    {
+      "en-US": "If the user wants a web-native deck, pair this skill with `frontend-slides`.",
+      "zh-Hans": "如果用户想要一个基于网页的演讲稿，请将此技能与 `frontend-slides` 配对使用。"
+    },
+    {
+      "en-US": "### One-Pager / Memo",
+      "zh-Hans": "### 一页摘要 / 备忘录"
+    },
+    {
+      "en-US": "- state what the company does in one clean sentence\n- show why now\n- include traction and proof points early\n- make the ask precise\n- keep claims easy to verify",
+      "zh-Hans": "* 用一句清晰的话说明公司做什么\n* 展示为什么是现在\n* 尽早包含增长数据和证明点\n* 使融资需求精确\n* 保持主张易于验证"
+    },
+    {
+      "en-US": "### Financial Model",
+      "zh-Hans": "### 财务模型"
+    },
+    {
+      "en-US": "Include:",
+      "zh-Hans": "包含："
+    },
+    {
+      "en-US": "- explicit assumptions\n- bear / base / bull cases when useful\n- clean layer-by-layer revenue logic\n- milestone-linked spending\n- sensitivity analysis where the decision hinges on assumptions",
+      "zh-Hans": "* 明确的假设\n* 在有用时包含悲观/基准/乐观情景\n* 清晰的逐层收入逻辑\n* 与里程碑挂钩的支出\n* 在决策依赖于假设的地方进行敏感性分析"
+    },
+    {
+      "en-US": "### Accelerator Applications",
+      "zh-Hans": "### 加速器申请"
+    },
+    {
+      "en-US": "- answer the exact question asked\n- prioritize traction, insight, and team advantage\n- avoid puffery\n- keep internal metrics consistent with the deck and model",
+      "zh-Hans": "* 回答被问的确切问题\n* 优先考虑增长数据、洞察力和团队优势\n* 避免夸大其词\n* 保持内部指标与演讲稿和模型一致"
+    },
+    {
+      "en-US": "## Red Flags to Avoid",
+      "zh-Hans": "## 需避免的危险信号"
+    },
+    {
+      "en-US": "- unverifiable claims\n- fuzzy market sizing without assumptions\n- inconsistent team roles or titles\n- revenue math that does not sum cleanly\n- inflated certainty where assumptions are fragile",
+      "zh-Hans": "* 无法验证的主张\n* 没有假设的模糊市场规模估算\n* 不一致的团队角色或头衔\n* 收入计算不清晰\n* 在假设脆弱的地方夸大确定性"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量关卡"
+    },
+    {
+      "en-US": "Before delivering:",
+      "zh-Hans": "在交付前："
+    },
+    {
+      "en-US": "- every number matches the current source of truth\n- use of funds and revenue layers sum correctly\n- assumptions are visible, not buried\n- the story is clear without hype language\n- the final asset is defensible in a partner meeting",
+      "zh-Hans": "* 每个数字都与当前事实来源匹配\n* 资金用途和收入层级计算正确\n* 假设可见，而非隐藏\n* 故事清晰，没有夸张语言\n* 最终资产在合伙人会议上可辩护"
+    }
+  ]
+}

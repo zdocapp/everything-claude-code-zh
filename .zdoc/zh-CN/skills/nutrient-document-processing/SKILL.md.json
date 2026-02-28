@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: nutrient-document-processing\ndescription: Process, convert, OCR, extract, redact, sign, and fill documents using the Nutrient DWS API. Works with PDFs, DOCX, XLSX, PPTX, HTML, and images.\n---",
-      "zh-Hans": "---\nname: nutrient-document-processing\ndescription: 使用Nutrient DWS API处理、转换、OCR、提取、编辑、签署和填写文档。支持PDF、DOCX、XLSX、PPTX、HTML和图像文件。\n---"
+      "en-US": "---\nname: nutrient-document-processing\ndescription: Process, convert, OCR, extract, redact, sign, and fill documents using the Nutrient DWS API. Works with PDFs, DOCX, XLSX, PPTX, HTML, and images.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: nutrient-document-processing\ndescription: 使用Nutrient DWS API处理、转换、OCR识别、提取、编辑、签名和填写文档。支持PDF、DOCX、XLSX、PPTX、HTML和图像格式。\norigin: ECC\n---"
     },
     {
       "en-US": "# Nutrient Document Processing",
@@ -127,8 +127,8 @@
       "zh-Hans": "## 链接"
     },
     {
-      "en-US": "- [API Playground](https://dashboard.nutrient.io/processor-api/playground/)\n- [Full API Docs](https://www.nutrient.io/guides/dws-processor/)\n- [Agent Skill Repo](https://github.com/PSPDFKit-labs/nutrient-agent-skill)\n- [npm MCP Server](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)",
-      "zh-Hans": "* [API 演练场](https://dashboard.nutrient.io/processor-api/playground/)\n* [完整 API 文档](https://www.nutrient.io/guides/dws-processor/)\n* [代理技能仓库](https://github.com/PSPDFKit-labs/nutrient-agent-skill)\n* [npm MCP 服务器](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)"
+      "en-US": "- [API Playground](https://dashboard.nutrient.io/processor-api/playground/)\n- [Full API Docs](https://www.nutrient.io/guides/dws-processor/)\n- [npm MCP Server](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)",
+      "zh-Hans": "* [API 游乐场](https://dashboard.nutrient.io/processor-api/playground/)\n* [完整 API 文档](https://www.nutrient.io/guides/dws-processor/)\n* [npm MCP 服务器](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)"
     }
   ]
 }

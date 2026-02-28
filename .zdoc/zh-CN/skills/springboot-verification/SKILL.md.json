@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: springboot-verification\ndescription: Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\n---",
-      "zh-Hans": "---\nname: springboot-verification\ndescription: Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\n---"
+      "en-US": "---\nname: springboot-verification\ndescription: \"Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\"\norigin: ECC\n---",
+      "zh-Hans": "---\nname: springboot-verification\ndescription: \"Spring Boot项目验证循环：构建、静态分析、测试覆盖、安全扫描，以及发布或PR前的差异审查。\"\norigin: ECC\n---"
     },
     {
       "en-US": "# Spring Boot Verification Loop",
@@ -13,6 +13,14 @@
     {
       "en-US": "Run before PRs, after major changes, and pre-deploy.",
       "zh-Hans": "在提交 PR 前、重大变更后以及部署前运行。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Before opening a pull request for a Spring Boot service\n- After major refactoring or dependency upgrades\n- Pre-deployment verification for staging or production\n- Running full build → lint → test → security scan pipeline\n- Validating test coverage meets thresholds",
+      "zh-Hans": "* 为 Spring Boot 服务开启拉取请求之前\n* 在重大重构或依赖项升级之后\n* 用于暂存或生产环境的部署前验证\n* 运行完整的构建 → 代码检查 → 测试 → 安全扫描流水线\n* 验证测试覆盖率是否满足阈值"
     },
     {
       "en-US": "## Phase 1: Build",
@@ -63,12 +71,56 @@
       "zh-Hans": "* 总测试数，通过/失败\n* 覆盖率百分比（行/分支）"
     },
     {
+      "en-US": "### Unit Tests",
+      "zh-Hans": "### 单元测试"
+    },
+    {
+      "en-US": "Test service logic in isolation with mocked dependencies:",
+      "zh-Hans": "使用模拟的依赖项来隔离测试服务逻辑："
+    },
+    {
+      "en-US": "```java\n@ExtendWith(MockitoExtension.class)\nclass UserServiceTest {\n\n  @Mock private UserRepository userRepository;\n  @InjectMocks private UserService userService;\n\n  @Test\n  void createUser_validInput_returnsUser() {\n    var dto = new CreateUserDto(\"Alice\", \"alice@example.com\");\n    var expected = new User(1L, \"Alice\", \"alice@example.com\");\n    when(userRepository.save(any(User.class))).thenReturn(expected);\n\n    var result = userService.create(dto);\n\n    assertThat(result.name()).isEqualTo(\"Alice\");\n    verify(userRepository).save(any(User.class));\n  }\n\n  @Test\n  void createUser_duplicateEmail_throwsException() {\n    var dto = new CreateUserDto(\"Alice\", \"existing@example.com\");\n    when(userRepository.existsByEmail(dto.email())).thenReturn(true);\n\n    assertThatThrownBy(() -> userService.create(dto))\n        .isInstanceOf(DuplicateEmailException.class);\n  }\n}\n```",
+      "zh-Hans": "```java\n@ExtendWith(MockitoExtension.class)\nclass UserServiceTest {\n\n  @Mock private UserRepository userRepository;\n  @InjectMocks private UserService userService;\n\n  @Test\n  void createUser_validInput_returnsUser() {\n    var dto = new CreateUserDto(\"Alice\", \"alice@example.com\");\n    var expected = new User(1L, \"Alice\", \"alice@example.com\");\n    when(userRepository.save(any(User.class))).thenReturn(expected);\n\n    var result = userService.create(dto);\n\n    assertThat(result.name()).isEqualTo(\"Alice\");\n    verify(userRepository).save(any(User.class));\n  }\n\n  @Test\n  void createUser_duplicateEmail_throwsException() {\n    var dto = new CreateUserDto(\"Alice\", \"existing@example.com\");\n    when(userRepository.existsByEmail(dto.email())).thenReturn(true);\n\n    assertThatThrownBy(() -> userService.create(dto))\n        .isInstanceOf(DuplicateEmailException.class);\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Integration Tests with Testcontainers",
+      "zh-Hans": "### 使用 Testcontainers 进行集成测试"
+    },
+    {
+      "en-US": "Test against a real database instead of H2:",
+      "zh-Hans": "针对真实数据库（而非 H2）进行测试："
+    },
+    {
+      "en-US": "```java\n@SpringBootTest\n@Testcontainers\nclass UserRepositoryIntegrationTest {\n\n  @Container\n  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(\"postgres:16-alpine\")\n      .withDatabaseName(\"testdb\");\n\n  @DynamicPropertySource\n  static void configureProperties(DynamicPropertyRegistry registry) {\n    registry.add(\"spring.datasource.url\", postgres::getJdbcUrl);\n    registry.add(\"spring.datasource.username\", postgres::getUsername);\n    registry.add(\"spring.datasource.password\", postgres::getPassword);\n  }\n\n  @Autowired private UserRepository userRepository;\n\n  @Test\n  void findByEmail_existingUser_returnsUser() {\n    userRepository.save(new User(\"Alice\", \"alice@example.com\"));\n\n    var found = userRepository.findByEmail(\"alice@example.com\");\n\n    assertThat(found).isPresent();\n    assertThat(found.get().getName()).isEqualTo(\"Alice\");\n  }\n}\n```",
+      "zh-Hans": "```java\n@SpringBootTest\n@Testcontainers\nclass UserRepositoryIntegrationTest {\n\n  @Container\n  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(\"postgres:16-alpine\")\n      .withDatabaseName(\"testdb\");\n\n  @DynamicPropertySource\n  static void configureProperties(DynamicPropertyRegistry registry) {\n    registry.add(\"spring.datasource.url\", postgres::getJdbcUrl);\n    registry.add(\"spring.datasource.username\", postgres::getUsername);\n    registry.add(\"spring.datasource.password\", postgres::getPassword);\n  }\n\n  @Autowired private UserRepository userRepository;\n\n  @Test\n  void findByEmail_existingUser_returnsUser() {\n    userRepository.save(new User(\"Alice\", \"alice@example.com\"));\n\n    var found = userRepository.findByEmail(\"alice@example.com\");\n\n    assertThat(found).isPresent();\n    assertThat(found.get().getName()).isEqualTo(\"Alice\");\n  }\n}\n```"
+    },
+    {
+      "en-US": "### API Tests with MockMvc",
+      "zh-Hans": "### 使用 MockMvc 进行 API 测试"
+    },
+    {
+      "en-US": "Test controller layer with full Spring context:",
+      "zh-Hans": "在完整的 Spring 上下文中测试控制器层："
+    },
+    {
+      "en-US": "```java\n@WebMvcTest(UserController.class)\nclass UserControllerTest {\n\n  @Autowired private MockMvc mockMvc;\n  @MockBean private UserService userService;\n\n  @Test\n  void createUser_validInput_returns201() throws Exception {\n    var user = new UserDto(1L, \"Alice\", \"alice@example.com\");\n    when(userService.create(any())).thenReturn(user);\n\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"alice@example.com\"}\n                \"\"\"))\n        .andExpect(status().isCreated())\n        .andExpect(jsonPath(\"$.name\").value(\"Alice\"));\n  }\n\n  @Test\n  void createUser_invalidEmail_returns400() throws Exception {\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"not-an-email\"}\n                \"\"\"))\n        .andExpect(status().isBadRequest());\n  }\n}\n```",
+      "zh-Hans": "```java\n@WebMvcTest(UserController.class)\nclass UserControllerTest {\n\n  @Autowired private MockMvc mockMvc;\n  @MockBean private UserService userService;\n\n  @Test\n  void createUser_validInput_returns201() throws Exception {\n    var user = new UserDto(1L, \"Alice\", \"alice@example.com\");\n    when(userService.create(any())).thenReturn(user);\n\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"alice@example.com\"}\n                \"\"\"))\n        .andExpect(status().isCreated())\n        .andExpect(jsonPath(\"$.name\").value(\"Alice\"));\n  }\n\n  @Test\n  void createUser_invalidEmail_returns400() throws Exception {\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"not-an-email\"}\n                \"\"\"))\n        .andExpect(status().isBadRequest());\n  }\n}\n```"
+    },
+    {
       "en-US": "## Phase 4: Security Scan",
       "zh-Hans": "## 阶段 4：安全扫描"
     },
     {
-      "en-US": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets (git)\ngit secrets --scan  # if configured\n```",
-      "zh-Hans": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets (git)\ngit secrets --scan  # if configured\n```"
+      "en-US": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets in source\ngrep -rn \"password\\s*=\\s*\\\"\" src/ --include=\"*.java\" --include=\"*.yml\" --include=\"*.properties\"\ngrep -rn \"sk-\\|api_key\\|secret\" src/ --include=\"*.java\" --include=\"*.yml\"\n\n# Secrets (git history)\ngit secrets --scan  # if configured\n```",
+      "zh-Hans": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets in source\ngrep -rn \"password\\s*=\\s*\\\"\" src/ --include=\"*.java\" --include=\"*.yml\" --include=\"*.properties\"\ngrep -rn \"sk-\\|api_key\\|secret\" src/ --include=\"*.java\" --include=\"*.yml\"\n\n# Secrets (git history)\ngit secrets --scan  # if configured\n```"
+    },
+    {
+      "en-US": "### Common Security Findings",
+      "zh-Hans": "### 常见安全发现"
+    },
+    {
+      "en-US": "```\n# Check for System.out.println (use logger instead)\ngrep -rn \"System\\.out\\.print\" src/main/ --include=\"*.java\"\n\n# Check for raw exception messages in responses\ngrep -rn \"e\\.getMessage()\" src/main/ --include=\"*.java\"\n\n# Check for wildcard CORS\ngrep -rn \"allowedOrigins.*\\*\" src/main/ --include=\"*.java\"\n```",
+      "zh-Hans": "```\n# Check for System.out.println (use logger instead)\ngrep -rn \"System\\.out\\.print\" src/main/ --include=\"*.java\"\n\n# Check for raw exception messages in responses\ngrep -rn \"e\\.getMessage()\" src/main/ --include=\"*.java\"\n\n# Check for wildcard CORS\ngrep -rn \"allowedOrigins.*\\*\" src/main/ --include=\"*.java\"\n```"
     },
     {
       "en-US": "## Phase 5: Lint/Format (optional gate)",

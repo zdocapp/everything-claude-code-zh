@@ -111,8 +111,8 @@
       "zh-Hans": "### SKILL.md 模板"
     },
     {
-      "en-US": "```markdown\n---\nname: your-skill-name\ndescription: Brief description shown in skill list\n---\n\n# Your Skill Title\n\nBrief overview of what this skill covers.\n\n## Core Concepts\n\nExplain key patterns and guidelines.\n\n## Code Examples\n\n\\`\\`\\`typescript\n// Include practical, tested examples\nfunction example() {\n  // Well-commented code\n}\n\\`\\`\\`\n\n## Best Practices\n\n- Actionable guidelines\n- Do's and don'ts\n- Common pitfalls to avoid\n\n## When to Use\n\nDescribe scenarios where this skill applies.\n```",
-      "zh-Hans": "```markdown\n---\nname: your-skill-name\ndescription: Brief description shown in skill list\n---\n\n# 你的技能标题\n\n简要概述此技能涵盖的内容。\n\n## 核心概念\n\n解释关键模式和准则。\n\n## 代码示例\n\n`​`​`typescript\n\n// 包含实用、经过测试的示例\nfunction example() {\n  // 注释良好的代码\n}\n`​`​`\n\n\n## 最佳实践\n\n- 可操作的指导原则\n- 该做与不该做的事项\n- 需要避免的常见陷阱\n\n## 适用场景\n\n描述此技能适用的场景。\n\n```"
+      "en-US": "```markdown\n---\nname: your-skill-name\ndescription: Brief description shown in skill list\norigin: ECC\n---\n\n# Your Skill Title\n\nBrief overview of what this skill covers.\n\n## Core Concepts\n\nExplain key patterns and guidelines.\n\n## Code Examples\n\n\\`\\`\\`typescript\n// Include practical, tested examples\nfunction example() {\n  // Well-commented code\n}\n\\`\\`\\`\n\n## Best Practices\n\n- Actionable guidelines\n- Do's and don'ts\n- Common pitfalls to avoid\n\n## When to Use\n\nDescribe scenarios where this skill applies.\n```",
+      "zh-Hans": "````markdown\n---\nname: your-skill-name\ndescription: Brief description shown in skill list\norigin: ECC\n---\n\n# 你的技能标题\n\n简要概述此技能涵盖的内容。\n\n## 核心概念\n\n解释关键模式和指导原则。\n\n## 代码示例\n\n```typescript\n// 包含实用、经过测试的示例\nfunction example() {\n  // 注释良好的代码\n}\n````"
     },
     {
       "en-US": "### Skill Checklist",

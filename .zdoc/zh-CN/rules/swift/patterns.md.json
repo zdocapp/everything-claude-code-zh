@@ -1,0 +1,74 @@
+{
+  "sourceFile": "rules/swift/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---"
+    },
+    {
+      "en-US": "# Swift Patterns",
+      "zh-Hans": "# Swift 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Swift specific content.",
+      "zh-Hans": "> 此文件使用 Swift 特定内容扩展了 [common/patterns.md](../common/patterns.md)。"
+    },
+    {
+      "en-US": "## Protocol-Oriented Design",
+      "zh-Hans": "## 面向协议的设计"
+    },
+    {
+      "en-US": "Define small, focused protocols. Use protocol extensions for shared defaults:",
+      "zh-Hans": "定义小型、专注的协议。使用协议扩展来提供共享的默认实现："
+    },
+    {
+      "en-US": "```swift\nprotocol Repository: Sendable {\n    associatedtype Item: Identifiable & Sendable\n    func find(by id: Item.ID) async throws -> Item?\n    func save(_ item: Item) async throws\n}\n```",
+      "zh-Hans": "```swift\nprotocol Repository: Sendable {\n    associatedtype Item: Identifiable & Sendable\n    func find(by id: Item.ID) async throws -> Item?\n    func save(_ item: Item) async throws\n}\n```"
+    },
+    {
+      "en-US": "## Value Types",
+      "zh-Hans": "## 值类型"
+    },
+    {
+      "en-US": "- Use structs for data transfer objects and models\n- Use enums with associated values to model distinct states:",
+      "zh-Hans": "* 使用结构体（struct）作为数据传输对象和模型\n* 使用带有关联值的枚举（enum）来建模不同的状态："
+    },
+    {
+      "en-US": "```swift\nenum LoadState<T: Sendable>: Sendable {\n    case idle\n    case loading\n    case loaded(T)\n    case failed(Error)\n}\n```",
+      "zh-Hans": "```swift\nenum LoadState<T: Sendable>: Sendable {\n    case idle\n    case loading\n    case loaded(T)\n    case failed(Error)\n}\n```"
+    },
+    {
+      "en-US": "## Actor Pattern",
+      "zh-Hans": "## Actor 模式"
+    },
+    {
+      "en-US": "Use actors for shared mutable state instead of locks or dispatch queues:",
+      "zh-Hans": "使用 actor 来处理共享可变状态，而不是锁或调度队列："
+    },
+    {
+      "en-US": "```swift\nactor Cache<Key: Hashable & Sendable, Value: Sendable> {\n    private var storage: [Key: Value] = [:]\n\n    func get(_ key: Key) -> Value? { storage[key] }\n    func set(_ key: Key, value: Value) { storage[key] = value }\n}\n```",
+      "zh-Hans": "```swift\nactor Cache<Key: Hashable & Sendable, Value: Sendable> {\n    private var storage: [Key: Value] = [:]\n\n    func get(_ key: Key) -> Value? { storage[key] }\n    func set(_ key: Key, value: Value) { storage[key] = value }\n}\n```"
+    },
+    {
+      "en-US": "## Dependency Injection",
+      "zh-Hans": "## 依赖注入"
+    },
+    {
+      "en-US": "Inject protocols with default parameters — production uses defaults, tests inject mocks:",
+      "zh-Hans": "使用默认参数注入协议 —— 生产环境使用默认值，测试时注入模拟对象："
+    },
+    {
+      "en-US": "```swift\nstruct UserService {\n    private let repository: any UserRepository\n\n    init(repository: any UserRepository = DefaultUserRepository()) {\n        self.repository = repository\n    }\n}\n```",
+      "zh-Hans": "```swift\nstruct UserService {\n    private let repository: any UserRepository\n\n    init(repository: any UserRepository = DefaultUserRepository()) {\n        self.repository = repository\n    }\n}\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `swift-actor-persistence` for actor-based persistence patterns.\nSee skill: `swift-protocol-di-testing` for protocol-based DI and testing.",
+      "zh-Hans": "查看技能：`swift-actor-persistence` 以了解基于 actor 的持久化模式。\n查看技能：`swift-protocol-di-testing` 以了解基于协议的依赖注入和测试。"
+    }
+  ]
+}

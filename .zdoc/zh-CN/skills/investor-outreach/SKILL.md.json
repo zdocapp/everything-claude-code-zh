@@ -1,0 +1,110 @@
+{
+  "sourceFile": "skills/investor-outreach/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: investor-outreach\ndescription: Draft cold emails, warm intro blurbs, follow-ups, update emails, and investor communications for fundraising. Use when the user wants outreach to angels, VCs, strategic investors, or accelerators and needs concise, personalized, investor-facing messaging.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: investor-outreach\ndescription: 草拟冷邮件、热情介绍简介、跟进邮件、更新邮件和投资者沟通以筹集资金。当用户需要向天使投资人、风险投资公司、战略投资者或加速器进行推广，并需要简洁、个性化的面向投资者的消息时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Investor Outreach",
+      "zh-Hans": "# 投资者接洽"
+    },
+    {
+      "en-US": "Write investor communication that is short, personalized, and easy to act on.",
+      "zh-Hans": "撰写简短、个性化且易于采取行动的投资者沟通内容。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- writing a cold email to an investor\n- drafting a warm intro request\n- sending follow-ups after a meeting or no response\n- writing investor updates during a process\n- tailoring outreach based on fund thesis or partner fit",
+      "zh-Hans": "* 向投资者发送冷邮件时\n* 起草熟人介绍请求时\n* 在会议后或无回复时发送跟进邮件时\n* 在融资过程中撰写投资者更新时\n* 根据基金投资主题或合伙人契合度定制接洽内容时"
+    },
+    {
+      "en-US": "## Core Rules",
+      "zh-Hans": "## 核心规则"
+    },
+    {
+      "en-US": "1. Personalize every outbound message.\n2. Keep the ask low-friction.\n3. Use proof, not adjectives.\n4. Stay concise.\n5. Never send generic copy that could go to any investor.",
+      "zh-Hans": "1. 个性化每一条外发信息。\n2. 保持请求低门槛。\n3. 使用证据，而非形容词。\n4. 保持简洁。\n5. 绝不发送可发给任何投资者的通用文案。"
+    },
+    {
+      "en-US": "## Cold Email Structure",
+      "zh-Hans": "## 冷邮件结构"
+    },
+    {
+      "en-US": "1. subject line: short and specific\n2. opener: why this investor specifically\n3. pitch: what the company does, why now, what proof matters\n4. ask: one concrete next step\n5. sign-off: name, role, one credibility anchor if needed",
+      "zh-Hans": "1. 主题行：简短且具体\n2. 开头：说明为何选择这位特定投资者\n3. 推介：公司做什么，为何是现在，什么证据重要\n4. 请求：一个具体的下一步行动\n5. 签名：姓名、职位，如需可加上一个可信度锚点"
+    },
+    {
+      "en-US": "## Personalization Sources",
+      "zh-Hans": "## 个性化来源"
+    },
+    {
+      "en-US": "Reference one or more of:",
+      "zh-Hans": "参考以下一项或多项："
+    },
+    {
+      "en-US": "- relevant portfolio companies\n- a public thesis, talk, post, or article\n- a mutual connection\n- a clear market or product fit with the investor's focus",
+      "zh-Hans": "* 相关的投资组合公司\n* 公开的投资主题、演讲、帖子或文章\n* 共同的联系人\n* 与投资者关注点明确匹配的市场或产品契合度"
+    },
+    {
+      "en-US": "If that context is missing, ask for it or state that the draft is a template awaiting personalization.",
+      "zh-Hans": "如果缺少相关背景信息，请询问或说明草稿是等待个性化的模板。"
+    },
+    {
+      "en-US": "## Follow-Up Cadence",
+      "zh-Hans": "## 跟进节奏"
+    },
+    {
+      "en-US": "Default:",
+      "zh-Hans": "默认节奏："
+    },
+    {
+      "en-US": "- day 0: initial outbound\n- day 4-5: short follow-up with one new data point\n- day 10-12: final follow-up with a clean close",
+      "zh-Hans": "* 第 0 天：初次外发\n* 第 4-5 天：简短跟进，附带一个新数据点\n* 第 10-12 天：最终跟进，干净利落地收尾"
+    },
+    {
+      "en-US": "Do not keep nudging after that unless the user wants a longer sequence.",
+      "zh-Hans": "之后除非用户要求更长的跟进序列，否则不再继续提醒。"
+    },
+    {
+      "en-US": "## Warm Intro Requests",
+      "zh-Hans": "## 熟人介绍请求"
+    },
+    {
+      "en-US": "Make life easy for the connector:",
+      "zh-Hans": "为介绍人提供便利："
+    },
+    {
+      "en-US": "- explain why the intro is a fit\n- include a forwardable blurb\n- keep the forwardable blurb under 100 words",
+      "zh-Hans": "* 解释为何这次介绍是合适的\n* 包含可转发的简介\n* 将可转发的简介控制在 100 字以内"
+    },
+    {
+      "en-US": "## Post-Meeting Updates",
+      "zh-Hans": "## 会后更新"
+    },
+    {
+      "en-US": "Include:",
+      "zh-Hans": "包含："
+    },
+    {
+      "en-US": "- the specific thing discussed\n- the answer or update promised\n- one new proof point if available\n- the next step",
+      "zh-Hans": "* 讨论的具体事项\n* 承诺的答复或更新\n* 如有可能，提供一个新证据点\n* 下一步行动"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量关卡"
+    },
+    {
+      "en-US": "Before delivering:",
+      "zh-Hans": "在交付前检查："
+    },
+    {
+      "en-US": "- message is personalized\n- the ask is explicit\n- there is no fluff or begging language\n- the proof point is concrete\n- word count stays tight",
+      "zh-Hans": "* 信息已个性化\n* 请求明确\n* 没有废话或乞求性语言\n* 证据点具体\n* 字数保持紧凑"
+    }
+  ]
+}

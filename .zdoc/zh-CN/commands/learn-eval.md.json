@@ -1,0 +1,62 @@
+{
+  "sourceFile": "commands/learn-eval.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Extract reusable patterns from the session, self-evaluate quality before saving, and determine the right save location (Global vs Project).\n---",
+      "zh-Hans": "---\ndescription: 从会话中提取可重用模式，在保存前自我评估质量，并确定正确的保存位置（全局与项目）。\n---"
+    },
+    {
+      "en-US": "# /learn-eval - Extract, Evaluate, then Save",
+      "zh-Hans": "# /learn-eval - 提取、评估、然后保存"
+    },
+    {
+      "en-US": "Extends `/learn` with a quality gate and save-location decision before writing any skill file.",
+      "zh-Hans": "扩展 `/learn`，在写入任何技能文件之前加入质量门和保存位置决策。"
+    },
+    {
+      "en-US": "## What to Extract",
+      "zh-Hans": "## 提取内容"
+    },
+    {
+      "en-US": "Look for:",
+      "zh-Hans": "寻找："
+    },
+    {
+      "en-US": "1. **Error Resolution Patterns** — root cause + fix + reusability\n2. **Debugging Techniques** — non-obvious steps, tool combinations\n3. **Workarounds** — library quirks, API limitations, version-specific fixes\n4. **Project-Specific Patterns** — conventions, architecture decisions, integration patterns",
+      "zh-Hans": "1. **错误解决模式** — 根本原因 + 修复方法 + 可重用性\n2. **调试技术** — 非显而易见的步骤、工具组合\n3. **变通方法** — 库的怪癖、API 限制、特定版本的修复\n4. **项目特定模式** — 约定、架构决策、集成模式"
+    },
+    {
+      "en-US": "## Process",
+      "zh-Hans": "## 流程"
+    },
+    {
+      "en-US": "1. Review the session for extractable patterns\n2. Identify the most valuable/reusable insight\n\n3. **Determine save location:**\n   - Ask: \"Would this pattern be useful in a different project?\"\n   - **Global** (`~/.claude/skills/learned/`): Generic patterns usable across 2+ projects (bash compatibility, LLM API behavior, debugging techniques, etc.)\n   - **Project** (`.claude/skills/learned/` in current project): Project-specific knowledge (quirks of a particular config file, project-specific architecture decisions, etc.)\n   - When in doubt, choose Global (moving Global → Project is easier than the reverse)\n\n4. Draft the skill file using this format:",
+      "zh-Hans": "1. 回顾会话，寻找可提取的模式\n\n2. 识别最有价值/可重用的见解\n\n3. **确定保存位置：**\n   * 提问：\"这个模式在其他项目中会有用吗？\"\n   * **全局** (`~/.claude/skills/learned/`)：可在 2 个以上项目中使用的通用模式（bash 兼容性、LLM API 行为、调试技术等）\n   * **项目** (当前项目中的 `.claude/skills/learned/`)：项目特定的知识（特定配置文件的怪癖、项目特定的架构决策等）\n   * 不确定时，选择全局（将全局 → 项目移动比反向操作更容易）\n\n4. 使用此格式起草技能文件："
+    },
+    {
+      "en-US": "```markdown\n---\nname: pattern-name\ndescription: \"Under 130 characters\"\nuser-invocable: false\norigin: auto-extracted\n---\n\n# [Descriptive Pattern Name]\n\n**Extracted:** [Date]\n**Context:** [Brief description of when this applies]\n\n## Problem\n[What problem this solves - be specific]\n\n## Solution\n[The pattern/technique/workaround - with code examples]\n\n## When to Use\n[Trigger conditions]\n```",
+      "zh-Hans": "```markdown\n---\nname: pattern-name\ndescription: \"Under 130 characters\"\nuser-invocable: false\norigin: auto-extracted\n---\n\n# [描述性模式名称]\n\n**提取日期：** [日期]\n**上下文：** [简要描述此模式适用的场景]\n\n## 问题\n[此模式解决的具体问题 - 请详细说明]\n\n## 解决方案\n[模式/技术/变通方案 - 附带代码示例]\n\n## 何时使用\n[触发条件]\n```"
+    },
+    {
+      "en-US": "5. **Self-evaluate before saving** using this rubric:\n\n   | Dimension | 1 | 3 | 5 |\n   |-----------|---|---|---|\n   | Specificity | Abstract principles only, no code examples | Representative code example present | Rich examples covering all usage patterns |\n   | Actionability | Unclear what to do | Main steps are understandable | Immediately actionable, edge cases covered |\n   | Scope Fit | Too broad or too narrow | Mostly appropriate, some boundary ambiguity | Name, trigger, and content perfectly aligned |\n   | Non-redundancy | Nearly identical to another skill | Some overlap but unique perspective exists | Completely unique value |\n   | Coverage | Covers only a fraction of the target task | Main cases covered, common variants missing | Main cases, edge cases, and pitfalls covered |\n\n   - Score each dimension 1–5\n   - If any dimension scores 1–2, improve the draft and re-score until all dimensions are ≥ 3\n   - Show the user the scores table and the final draft\n\n6. Ask user to confirm:\n   - Show: proposed save path + scores table + final draft\n   - Wait for explicit confirmation before writing\n\n7. Save to the determined location",
+      "zh-Hans": "5. **在保存前自我评估**，使用此评分标准：\n\n   | 维度 | 1 | 3 | 5 |\n   |-----------|---|---|---|\n   | 具体性 | 仅抽象原则，无代码示例 | 有代表性代码示例 | 包含所有使用模式的丰富示例 |\n   | 可操作性 | 不清楚要做什么 | 主要步骤可理解 | 立即可操作，涵盖边界情况 |\n   | 范围契合度 | 过于宽泛或过于狭窄 | 基本合适，存在一些边界模糊 | 名称、触发器和内容完美匹配 |\n   | 非冗余性 | 几乎与另一技能相同 | 存在一些重叠但有独特视角 | 完全独特的价值 |\n   | 覆盖率 | 仅涵盖目标任务的一小部分 | 涵盖主要情况，缺少常见变体 | 涵盖主要情况、边界情况和陷阱 |\n\n   * 为每个维度评分 1–5\n   * 如果任何维度评分为 1–2，改进草案并重新评分，直到所有维度 ≥ 3\n   * 向用户展示评分表和最终草案\n\n6. 请求用户确认：\n   * 展示：提议的保存路径 + 评分表 + 最终草案\n   * 在写入前等待明确确认\n\n7. 保存到确定的位置"
+    },
+    {
+      "en-US": "## Output Format for Step 5 (scores table)",
+      "zh-Hans": "## 第 5 步的输出格式（评分表）"
+    },
+    {
+      "en-US": "| Dimension | Score | Rationale |\n|-----------|-------|-----------|\n| Specificity | N/5 | ... |\n| Actionability | N/5 | ... |\n| Scope Fit | N/5 | ... |\n| Non-redundancy | N/5 | ... |\n| Coverage | N/5 | ... |\n| **Total** | **N/25** | |",
+      "zh-Hans": "| 维度 | 评分 | 理由 |\n|-----------|-------|-----------|\n| 具体性 | N/5 | ... |\n| 可操作性 | N/5 | ... |\n| 范围契合度 | N/5 | ... |\n| 非冗余性 | N/5 | ... |\n| 覆盖率 | N/5 | ... |\n| **总计** | **N/25** | |"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 注意事项"
+    },
+    {
+      "en-US": "- Don't extract trivial fixes (typos, simple syntax errors)\n- Don't extract one-time issues (specific API outages, etc.)\n- Focus on patterns that will save time in future sessions\n- Keep skills focused — one pattern per skill\n- If Coverage score is low, add related variants before saving",
+      "zh-Hans": "* 不要提取琐碎的修复（拼写错误、简单的语法错误）\n* 不要提取一次性问题（特定的 API 中断等）\n* 专注于能在未来会话中节省时间的模式\n* 保持技能聚焦 — 每个技能一个模式\n* 如果覆盖率评分低，在保存前添加相关变体"
+    }
+  ]
+}

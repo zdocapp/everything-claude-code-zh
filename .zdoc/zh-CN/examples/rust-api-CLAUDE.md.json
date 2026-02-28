@@ -1,0 +1,154 @@
+{
+  "sourceFile": "examples/rust-api-CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Rust API Service — Project CLAUDE.md",
+      "zh-Hans": "# Rust API 服务 — 项目 CLAUDE.md"
+    },
+    {
+      "en-US": "> Real-world example for a Rust API service with Axum, PostgreSQL, and Docker.\n> Copy this to your project root and customize for your service.",
+      "zh-Hans": "> 使用 Axum、PostgreSQL 和 Docker 构建 Rust API 服务的真实示例。\n> 将此文件复制到您的项目根目录，并根据您的服务进行自定义。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概述"
+    },
+    {
+      "en-US": "**Stack:** Rust 1.78+, Axum (web framework), SQLx (async database), PostgreSQL, Tokio (async runtime), Docker",
+      "zh-Hans": "**技术栈：** Rust 1.78+, Axum (Web 框架), SQLx (异步数据库), PostgreSQL, Tokio (异步运行时), Docker"
+    },
+    {
+      "en-US": "**Architecture:** Layered architecture with handler → service → repository separation. Axum for HTTP, SQLx for type-checked SQL at compile time, Tower middleware for cross-cutting concerns.",
+      "zh-Hans": "**架构：** 采用分层架构，包含 handler → service → repository 分离。Axum 用于 HTTP，SQLx 用于编译时类型检查的 SQL，Tower 中间件用于横切关注点。"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "### Rust Conventions",
+      "zh-Hans": "### Rust 约定"
+    },
+    {
+      "en-US": "- Use `thiserror` for library errors, `anyhow` only in binary crates or tests\n- No `.unwrap()` or `.expect()` in production code — propagate errors with `?`\n- Prefer `&str` over `String` in function parameters; return `String` when ownership transfers\n- Use `clippy` with `#![deny(clippy::all, clippy::pedantic)]` — fix all warnings\n- Derive `Debug` on all public types; derive `Clone`, `PartialEq` only when needed\n- No `unsafe` blocks unless justified with a `// SAFETY:` comment",
+      "zh-Hans": "* 库错误使用 `thiserror`，仅在二进制 crate 或测试中使用 `anyhow`\n* 生产代码中不使用 `.unwrap()` 或 `.expect()` — 使用 `?` 传播错误\n* 函数参数中优先使用 `&str` 而非 `String`；所有权转移时返回 `String`\n* 使用 `clippy` 和 `#![deny(clippy::all, clippy::pedantic)]` — 修复所有警告\n* 在所有公共类型上派生 `Debug`；仅在需要时派生 `Clone`、`PartialEq`\n* 除非有 `// SAFETY:` 注释说明理由，否则不使用 `unsafe` 块"
+    },
+    {
+      "en-US": "### Database",
+      "zh-Hans": "### 数据库"
+    },
+    {
+      "en-US": "- All queries use SQLx `query!` or `query_as!` macros — compile-time verified against the schema\n- Migrations in `migrations/` using `sqlx migrate` — never alter the database directly\n- Use `sqlx::Pool<Postgres>` as shared state — never create connections per request\n- All queries use parameterized placeholders (`$1`, `$2`) — never string formatting",
+      "zh-Hans": "* 所有查询使用 SQLx 的 `query!` 或 `query_as!` 宏 — 针对模式进行编译时验证\n* 在 `migrations/` 中使用 `sqlx migrate` 进行迁移 — 切勿直接修改数据库\n* 使用 `sqlx::Pool<Postgres>` 作为共享状态 — 切勿为每个请求创建连接\n* 所有查询使用参数化占位符 (`$1`, `$2`) — 切勿使用字符串格式化"
+    },
+    {
+      "en-US": "```rust\n// BAD: String interpolation (SQL injection risk)\nlet q = format!(\"SELECT * FROM users WHERE id = '{}'\", id);\n\n// GOOD: Parameterized query, compile-time checked\nlet user = sqlx::query_as!(User, \"SELECT * FROM users WHERE id = $1\", id)\n    .fetch_optional(&pool)\n    .await?;\n```",
+      "zh-Hans": "```rust\n// BAD: String interpolation (SQL injection risk)\nlet q = format!(\"SELECT * FROM users WHERE id = '{}'\", id);\n\n// GOOD: Parameterized query, compile-time checked\nlet user = sqlx::query_as!(User, \"SELECT * FROM users WHERE id = $1\", id)\n    .fetch_optional(&pool)\n    .await?;\n```"
+    },
+    {
+      "en-US": "### Error Handling",
+      "zh-Hans": "### 错误处理"
+    },
+    {
+      "en-US": "- Define a domain error enum per module with `thiserror`\n- Map errors to HTTP responses via `IntoResponse` — never expose internal details\n- Use `tracing` for structured logging — never `println!` or `eprintln!`",
+      "zh-Hans": "* 为每个模块使用 `thiserror` 定义一个领域错误枚举\n* 通过 `IntoResponse` 将错误映射到 HTTP 响应 — 切勿暴露内部细节\n* 使用 `tracing` 进行结构化日志记录 — 切勿使用 `println!` 或 `eprintln!`"
+    },
+    {
+      "en-US": "```rust\nuse thiserror::Error;\n\n#[derive(Debug, Error)]\npub enum AppError {\n    #[error(\"Resource not found\")]\n    NotFound,\n    #[error(\"Validation failed: {0}\")]\n    Validation(String),\n    #[error(\"Unauthorized\")]\n    Unauthorized,\n    #[error(transparent)]\n    Internal(#[from] anyhow::Error),\n}\n\nimpl IntoResponse for AppError {\n    fn into_response(self) -> Response {\n        let (status, message) = match &self {\n            Self::NotFound => (StatusCode::NOT_FOUND, self.to_string()),\n            Self::Validation(msg) => (StatusCode::BAD_REQUEST, msg.clone()),\n            Self::Unauthorized => (StatusCode::UNAUTHORIZED, self.to_string()),\n            Self::Internal(err) => {\n                tracing::error!(?err, \"internal error\");\n                (StatusCode::INTERNAL_SERVER_ERROR, \"Internal error\".into())\n            }\n        };\n        (status, Json(json!({ \"error\": message }))).into_response()\n    }\n}\n```",
+      "zh-Hans": "```rust\nuse thiserror::Error;\n\n#[derive(Debug, Error)]\npub enum AppError {\n    #[error(\"Resource not found\")]\n    NotFound,\n    #[error(\"Validation failed: {0}\")]\n    Validation(String),\n    #[error(\"Unauthorized\")]\n    Unauthorized,\n    #[error(transparent)]\n    Internal(#[from] anyhow::Error),\n}\n\nimpl IntoResponse for AppError {\n    fn into_response(self) -> Response {\n        let (status, message) = match &self {\n            Self::NotFound => (StatusCode::NOT_FOUND, self.to_string()),\n            Self::Validation(msg) => (StatusCode::BAD_REQUEST, msg.clone()),\n            Self::Unauthorized => (StatusCode::UNAUTHORIZED, self.to_string()),\n            Self::Internal(err) => {\n                tracing::error!(?err, \"internal error\");\n                (StatusCode::INTERNAL_SERVER_ERROR, \"Internal error\".into())\n            }\n        };\n        (status, Json(json!({ \"error\": message }))).into_response()\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Testing",
+      "zh-Hans": "### 测试"
+    },
+    {
+      "en-US": "- Unit tests in `#[cfg(test)]` modules within each source file\n- Integration tests in `tests/` directory using a real PostgreSQL (Testcontainers or Docker)\n- Use `#[sqlx::test]` for database tests with automatic migration and rollback\n- Mock external services with `mockall` or `wiremock`",
+      "zh-Hans": "* 单元测试放在每个源文件内的 `#[cfg(test)]` 模块中\n* 集成测试放在 `tests/` 目录中，使用真实的 PostgreSQL (Testcontainers 或 Docker)\n* 使用 `#[sqlx::test]` 进行数据库测试，包含自动迁移和回滚\n* 使用 `mockall` 或 `wiremock` 模拟外部服务"
+    },
+    {
+      "en-US": "### Code Style",
+      "zh-Hans": "### 代码风格"
+    },
+    {
+      "en-US": "- Max line length: 100 characters (enforced by rustfmt)\n- Group imports: `std`, external crates, `crate`/`super` — separated by blank lines\n- Modules: one file per module, `mod.rs` only for re-exports\n- Types: PascalCase, functions/variables: snake_case, constants: UPPER_SNAKE_CASE",
+      "zh-Hans": "* 最大行长度：100 个字符（由 rustfmt 强制执行）\n* 导入分组：`std`、外部 crate、`crate`/`super` — 用空行分隔\n* 模块：每个模块一个文件，`mod.rs` 仅用于重新导出\n* 类型：PascalCase，函数/变量：snake\\_case，常量：UPPER\\_SNAKE\\_CASE"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\nsrc/\n  main.rs              # Entrypoint, server setup, graceful shutdown\n  lib.rs               # Re-exports for integration tests\n  config.rs            # Environment config with envy or figment\n  router.rs            # Axum router with all routes\n  middleware/\n    auth.rs            # JWT extraction and validation\n    logging.rs         # Request/response tracing\n  handlers/\n    mod.rs             # Route handlers (thin — delegate to services)\n    users.rs\n    orders.rs\n  services/\n    mod.rs             # Business logic\n    users.rs\n    orders.rs\n  repositories/\n    mod.rs             # Database access (SQLx queries)\n    users.rs\n    orders.rs\n  domain/\n    mod.rs             # Domain types, error enums\n    user.rs\n    order.rs\nmigrations/\n  001_create_users.sql\n  002_create_orders.sql\ntests/\n  common/mod.rs        # Shared test helpers, test server setup\n  api_users.rs         # Integration tests for user endpoints\n  api_orders.rs        # Integration tests for order endpoints\n```",
+      "zh-Hans": "```\nsrc/\n  main.rs              # Entrypoint, server setup, graceful shutdown\n  lib.rs               # Re-exports for integration tests\n  config.rs            # Environment config with envy or figment\n  router.rs            # Axum router with all routes\n  middleware/\n    auth.rs            # JWT extraction and validation\n    logging.rs         # Request/response tracing\n  handlers/\n    mod.rs             # Route handlers (thin — delegate to services)\n    users.rs\n    orders.rs\n  services/\n    mod.rs             # Business logic\n    users.rs\n    orders.rs\n  repositories/\n    mod.rs             # Database access (SQLx queries)\n    users.rs\n    orders.rs\n  domain/\n    mod.rs             # Domain types, error enums\n    user.rs\n    order.rs\nmigrations/\n  001_create_users.sql\n  002_create_orders.sql\ntests/\n  common/mod.rs        # Shared test helpers, test server setup\n  api_users.rs         # Integration tests for user endpoints\n  api_orders.rs        # Integration tests for order endpoints\n```"
+    },
+    {
+      "en-US": "## Key Patterns",
+      "zh-Hans": "## 关键模式"
+    },
+    {
+      "en-US": "### Handler (Thin)",
+      "zh-Hans": "### Handler (薄层)"
+    },
+    {
+      "en-US": "```rust\nasync fn create_user(\n    State(ctx): State<AppState>,\n    Json(payload): Json<CreateUserRequest>,\n) -> Result<(StatusCode, Json<UserResponse>), AppError> {\n    let user = ctx.user_service.create(payload).await?;\n    Ok((StatusCode::CREATED, Json(UserResponse::from(user))))\n}\n```",
+      "zh-Hans": "```rust\nasync fn create_user(\n    State(ctx): State<AppState>,\n    Json(payload): Json<CreateUserRequest>,\n) -> Result<(StatusCode, Json<UserResponse>), AppError> {\n    let user = ctx.user_service.create(payload).await?;\n    Ok((StatusCode::CREATED, Json(UserResponse::from(user))))\n}\n```"
+    },
+    {
+      "en-US": "### Service (Business Logic)",
+      "zh-Hans": "### Service (业务逻辑)"
+    },
+    {
+      "en-US": "```rust\nimpl UserService {\n    pub async fn create(&self, req: CreateUserRequest) -> Result<User, AppError> {\n        if self.repo.find_by_email(&req.email).await?.is_some() {\n            return Err(AppError::Validation(\"Email already registered\".into()));\n        }\n\n        let password_hash = hash_password(&req.password)?;\n        let user = self.repo.insert(&req.email, &req.name, &password_hash).await?;\n\n        Ok(user)\n    }\n}\n```",
+      "zh-Hans": "```rust\nimpl UserService {\n    pub async fn create(&self, req: CreateUserRequest) -> Result<User, AppError> {\n        if self.repo.find_by_email(&req.email).await?.is_some() {\n            return Err(AppError::Validation(\"Email already registered\".into()));\n        }\n\n        let password_hash = hash_password(&req.password)?;\n        let user = self.repo.insert(&req.email, &req.name, &password_hash).await?;\n\n        Ok(user)\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Repository (Data Access)",
+      "zh-Hans": "### Repository (数据访问)"
+    },
+    {
+      "en-US": "```rust\nimpl UserRepository {\n    pub async fn find_by_email(&self, email: &str) -> Result<Option<User>, sqlx::Error> {\n        sqlx::query_as!(User, \"SELECT * FROM users WHERE email = $1\", email)\n            .fetch_optional(&self.pool)\n            .await\n    }\n\n    pub async fn insert(\n        &self,\n        email: &str,\n        name: &str,\n        password_hash: &str,\n    ) -> Result<User, sqlx::Error> {\n        sqlx::query_as!(\n            User,\n            r#\"INSERT INTO users (email, name, password_hash)\n               VALUES ($1, $2, $3) RETURNING *\"#,\n            email, name, password_hash,\n        )\n        .fetch_one(&self.pool)\n        .await\n    }\n}\n```",
+      "zh-Hans": "```rust\nimpl UserRepository {\n    pub async fn find_by_email(&self, email: &str) -> Result<Option<User>, sqlx::Error> {\n        sqlx::query_as!(User, \"SELECT * FROM users WHERE email = $1\", email)\n            .fetch_optional(&self.pool)\n            .await\n    }\n\n    pub async fn insert(\n        &self,\n        email: &str,\n        name: &str,\n        password_hash: &str,\n    ) -> Result<User, sqlx::Error> {\n        sqlx::query_as!(\n            User,\n            r#\"INSERT INTO users (email, name, password_hash)\n               VALUES ($1, $2, $3) RETURNING *\"#,\n            email, name, password_hash,\n        )\n        .fetch_one(&self.pool)\n        .await\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Integration Test",
+      "zh-Hans": "### 集成测试"
+    },
+    {
+      "en-US": "```rust\n#[tokio::test]\nasync fn test_create_user() {\n    let app = spawn_test_app().await;\n\n    let response = app\n        .client\n        .post(&format!(\"{}/api/v1/users\", app.address))\n        .json(&json!({\n            \"email\": \"alice@example.com\",\n            \"name\": \"Alice\",\n            \"password\": \"securepassword123\"\n        }))\n        .send()\n        .await\n        .expect(\"Failed to send request\");\n\n    assert_eq!(response.status(), StatusCode::CREATED);\n    let body: serde_json::Value = response.json().await.unwrap();\n    assert_eq!(body[\"email\"], \"alice@example.com\");\n}\n\n#[tokio::test]\nasync fn test_create_user_duplicate_email() {\n    let app = spawn_test_app().await;\n    // Create first user\n    create_test_user(&app, \"alice@example.com\").await;\n    // Attempt duplicate\n    let response = create_user_request(&app, \"alice@example.com\").await;\n    assert_eq!(response.status(), StatusCode::BAD_REQUEST);\n}\n```",
+      "zh-Hans": "```rust\n#[tokio::test]\nasync fn test_create_user() {\n    let app = spawn_test_app().await;\n\n    let response = app\n        .client\n        .post(&format!(\"{}/api/v1/users\", app.address))\n        .json(&json!({\n            \"email\": \"alice@example.com\",\n            \"name\": \"Alice\",\n            \"password\": \"securepassword123\"\n        }))\n        .send()\n        .await\n        .expect(\"Failed to send request\");\n\n    assert_eq!(response.status(), StatusCode::CREATED);\n    let body: serde_json::Value = response.json().await.unwrap();\n    assert_eq!(body[\"email\"], \"alice@example.com\");\n}\n\n#[tokio::test]\nasync fn test_create_user_duplicate_email() {\n    let app = spawn_test_app().await;\n    // Create first user\n    create_test_user(&app, \"alice@example.com\").await;\n    // Attempt duplicate\n    let response = create_user_request(&app, \"alice@example.com\").await;\n    assert_eq!(response.status(), StatusCode::BAD_REQUEST);\n}\n```"
+    },
+    {
+      "en-US": "## Environment Variables",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "```bash\n# Server\nHOST=0.0.0.0\nPORT=8080\nRUST_LOG=info,tower_http=debug\n\n# Database\nDATABASE_URL=postgres://user:pass@localhost:5432/myapp\n\n# Auth\nJWT_SECRET=your-secret-key-min-32-chars\nJWT_EXPIRY_HOURS=24\n\n# Optional\nCORS_ALLOWED_ORIGINS=http://localhost:3000\n```",
+      "zh-Hans": "```bash\n# Server\nHOST=0.0.0.0\nPORT=8080\nRUST_LOG=info,tower_http=debug\n\n# Database\nDATABASE_URL=postgres://user:pass@localhost:5432/myapp\n\n# Auth\nJWT_SECRET=your-secret-key-min-32-chars\nJWT_EXPIRY_HOURS=24\n\n# Optional\nCORS_ALLOWED_ORIGINS=http://localhost:3000\n```"
+    },
+    {
+      "en-US": "## Testing Strategy",
+      "zh-Hans": "## 测试策略"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\ncargo test\n\n# Run with output\ncargo test -- --nocapture\n\n# Run specific test module\ncargo test api_users\n\n# Check coverage (requires cargo-llvm-cov)\ncargo llvm-cov --html\nopen target/llvm-cov/html/index.html\n\n# Lint\ncargo clippy -- -D warnings\n\n# Format check\ncargo fmt -- --check\n```",
+      "zh-Hans": "```bash\n# Run all tests\ncargo test\n\n# Run with output\ncargo test -- --nocapture\n\n# Run specific test module\ncargo test api_users\n\n# Check coverage (requires cargo-llvm-cov)\ncargo llvm-cov --html\nopen target/llvm-cov/html/index.html\n\n# Lint\ncargo clippy -- -D warnings\n\n# Format check\ncargo fmt -- --check\n```"
+    },
+    {
+      "en-US": "## ECC Workflow",
+      "zh-Hans": "## ECC 工作流"
+    },
+    {
+      "en-US": "```bash\n# Planning\n/plan \"Add order fulfillment with Stripe payment\"\n\n# Development with TDD\n/tdd                    # cargo test-based TDD workflow\n\n# Review\n/code-review            # Rust-specific code review\n/security-scan          # Dependency audit + unsafe scan\n\n# Verification\n/verify                 # Build, clippy, test, security scan\n```",
+      "zh-Hans": "```bash\n# Planning\n/plan \"Add order fulfillment with Stripe payment\"\n\n# Development with TDD\n/tdd                    # cargo test-based TDD workflow\n\n# Review\n/code-review            # Rust-specific code review\n/security-scan          # Dependency audit + unsafe scan\n\n# Verification\n/verify                 # Build, clippy, test, security scan\n```"
+    },
+    {
+      "en-US": "## Git Workflow",
+      "zh-Hans": "## Git 工作流"
+    },
+    {
+      "en-US": "- `feat:` new features, `fix:` bug fixes, `refactor:` code changes\n- Feature branches from `main`, PRs required\n- CI: `cargo fmt --check`, `cargo clippy`, `cargo test`, `cargo audit`\n- Deploy: Docker multi-stage build with `scratch` or `distroless` base",
+      "zh-Hans": "* `feat:` 新功能，`fix:` 错误修复，`refactor:` 代码变更\n* 从 `main` 创建功能分支，需要 PR\n* CI：`cargo fmt --check`、`cargo clippy`、`cargo test`、`cargo audit`\n* 部署：使用 `scratch` 或 `distroless` 基础镜像的 Docker 多阶段构建"
+    }
+  ]
+}

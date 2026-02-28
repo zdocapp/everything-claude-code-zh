@@ -296,7 +296,7 @@ cd ../project-feature-a && claude
 
 你可以使用 `/statusline` 来设置它 - 然后 Claude 会说你没有状态栏，但可以为你设置，并询问你想要在里面放什么。
 
-另请参阅：ccstatusline（用于自定义 Claude Code 状态栏的社区项目）
+另请参阅：ccstatusline（用于自定义 Claude Code 状态行的社区项目）
 
 ### 语音转录
 
@@ -327,7 +327,7 @@ alias q='cd ~/Desktop/projects'
 
 **智能体编排：**
 
-* claude-flow — 拥有 54+ 个专业智能体的社区企业级编排平台
+* claude-flow — 社区构建的企业级编排平台，包含 54+ 个专业代理
 
 **自我改进记忆：**
 
@@ -336,7 +336,7 @@ alias q='cd ~/Desktop/projects'
 
 **系统提示词参考：**
 
-* system-prompts-and-models-of-ai-tools — AI 系统提示词社区集合（110k+ stars）
+* system-prompts-and-models-of-ai-tools — 社区收集的 AI 系统提示（110k+ 星标）
 
 **官方：**
 

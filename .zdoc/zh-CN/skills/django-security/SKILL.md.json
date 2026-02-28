@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: django-security\ndescription: Django security best practices, authentication, authorization, CSRF protection, SQL injection prevention, XSS prevention, and secure deployment configurations.\n---",
-      "zh-Hans": "---\nname: django-security\ndescription: Django安全最佳实践，身份验证，授权，CSRF保护，SQL注入预防，XSS预防和安全部署配置。\n---"
+      "en-US": "---\nname: django-security\ndescription: Django security best practices, authentication, authorization, CSRF protection, SQL injection prevention, XSS prevention, and secure deployment configurations.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: django-security\ndescription: Django 安全最佳实践、认证、授权、CSRF 防护、SQL 注入预防、XSS 预防和安全部署配置。\norigin: ECC\n---"
     },
     {
       "en-US": "# Django Security Best Practices",
