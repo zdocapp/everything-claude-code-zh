@@ -7,7 +7,9 @@
       "CONTRIBUTING.md",
       "SPONSORS.md",
       "the-longform-guide.md",
-      "the-shortform-guide.md"
+      "the-shortform-guide.md",
+      "the-openclaw-guide.md",
+      "the-security-guide.md"
     ],
     "ignore": [],
     "translation_store": {
