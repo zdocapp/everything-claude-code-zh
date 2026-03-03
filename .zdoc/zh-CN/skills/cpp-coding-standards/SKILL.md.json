@@ -384,7 +384,7 @@
     },
     {
       "en-US": "### Anti-Patterns",
-      "zh-Hans": "### 反面模式"
+      "zh-Hans": "### 反模式"
     },
     {
       "en-US": "- `using namespace std;` in a header at global scope (SF.7)\n- Headers that depend on inclusion order (SF.10, SF.11)\n- Hungarian notation like `strName`, `iCount` (NL.5)\n- ALL_CAPS for anything other than macros (NL.9)",
@@ -412,7 +412,7 @@
     },
     {
       "en-US": "### Anti-Patterns",
-      "zh-Hans": "### 反面模式"
+      "zh-Hans": "### 反模式"
     },
     {
       "en-US": "- Optimizing without profiling data (Per.1, Per.6)\n- Choosing \"clever\" low-level code over clear abstractions (Per.4, Per.5)\n- Ignoring data layout and cache behavior (Per.19)",
