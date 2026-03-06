@@ -2,23 +2,8 @@
   {
     "source_language": "en-US",
     "target_languages": ["zh-Hans"],
-    "include": [
-      "README.md",
-      "CONTRIBUTING.md",
-      "SPONSORS.md",
-      "the-longform-guide.md",
-      "the-shortform-guide.md",
-      "the-openclaw-guide.md",
-      "the-security-guide.md",
-      "agents/**/*.md",
-      "commands/**/*.md",
-      "contexts/**/*.md",
-      "examples/**/*.md",
-      "plugins/**/*.md",
-      "rules/**/*.md",
-      "skills/**/*.md"
-    ],
-    "ignore": [],
+    "include": ["**/*.md"],
+    "ignore": ["README.zh-CN.md", "docs", "node_modules"],
     "translation_store": {
       "dir": ".zdoc/zh-CN"
     },

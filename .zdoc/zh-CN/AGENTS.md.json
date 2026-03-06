@@ -1,0 +1,186 @@
+{
+  "sourceFile": "AGENTS.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Everything Claude Code (ECC) — Agent Instructions",
+      "zh-Hans": "# Everything Claude Code (ECC) — 智能体指令"
+    },
+    {
+      "en-US": "This is a **production-ready AI coding plugin** providing 13 specialized agents, 50+ skills, 33 commands, and automated hook workflows for software development.",
+      "zh-Hans": "这是一个**生产就绪的 AI 编码插件**，提供 13 个专业智能体、50+ 项技能、33 条命令以及用于软件开发的自动化钩子工作流。"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "1. **Agent-First** — Delegate to specialized agents for domain tasks\n2. **Test-Driven** — Write tests before implementation, 80%+ coverage required\n3. **Security-First** — Never compromise on security; validate all inputs\n4. **Immutability** — Always create new objects, never mutate existing ones\n5. **Plan Before Execute** — Plan complex features before writing code",
+      "zh-Hans": "1. **智能体优先** — 将领域任务委托给专业智能体\n2. **测试驱动** — 先写测试再实现，要求 80%+ 覆盖率\n3. **安全第一** — 绝不妥协安全；验证所有输入\n4. **不可变性** — 总是创建新对象，永不修改现有对象\n5. **先规划后执行** — 在编写代码前规划复杂功能"
+    },
+    {
+      "en-US": "## Available Agents",
+      "zh-Hans": "## 可用智能体"
+    },
+    {
+      "en-US": "| Agent | Purpose | When to Use |\n|-------|---------|-------------|\n| planner | Implementation planning | Complex features, refactoring |\n| architect | System design and scalability | Architectural decisions |\n| tdd-guide | Test-driven development | New features, bug fixes |\n| code-reviewer | Code quality and maintainability | After writing/modifying code |\n| security-reviewer | Vulnerability detection | Before commits, sensitive code |\n| build-error-resolver | Fix build/type errors | When build fails |\n| e2e-runner | End-to-end Playwright testing | Critical user flows |\n| refactor-cleaner | Dead code cleanup | Code maintenance |\n| doc-updater | Documentation and codemaps | Updating docs |\n| go-reviewer | Go code review | Go projects |\n| go-build-resolver | Go build errors | Go build failures |\n| database-reviewer | PostgreSQL/Supabase specialist | Schema design, query optimization |\n| python-reviewer | Python code review | Python projects |",
+      "zh-Hans": "| 智能体 | 目的 | 何时使用 |\n|-------|---------|-------------|\n| planner | 实施规划 | 复杂功能、重构 |\n| architect | 系统设计与可扩展性 | 架构决策 |\n| tdd-guide | 测试驱动开发 | 新功能、错误修复 |\n| code-reviewer | 代码质量与可维护性 | 编写/修改代码后 |\n| security-reviewer | 漏洞检测 | 提交前、敏感代码 |\n| build-error-resolver | 修复构建/类型错误 | 构建失败时 |\n| e2e-runner | 端到端 Playwright 测试 | 关键用户流程 |\n| refactor-cleaner | 清理无用代码 | 代码维护 |\n| doc-updater | 文档和代码地图更新 | 更新文档 |\n| go-reviewer | Go 代码审查 | Go 项目 |\n| go-build-resolver | Go 构建错误 | Go 构建失败 |\n| database-reviewer | PostgreSQL/Supabase 专家 | 模式设计、查询优化 |\n| python-reviewer | Python 代码审查 | Python 项目 |"
+    },
+    {
+      "en-US": "## Agent Orchestration",
+      "zh-Hans": "## 智能体编排"
+    },
+    {
+      "en-US": "Use agents proactively without user prompt:",
+      "zh-Hans": "主动使用智能体，无需用户提示："
+    },
+    {
+      "en-US": "- Complex feature requests → **planner**\n- Code just written/modified → **code-reviewer**\n- Bug fix or new feature → **tdd-guide**\n- Architectural decision → **architect**\n- Security-sensitive code → **security-reviewer**",
+      "zh-Hans": "* 复杂功能请求 → **planner**\n* 刚编写/修改的代码 → **code-reviewer**\n* 错误修复或新功能 → **tdd-guide**\n* 架构决策 → **architect**\n* 安全敏感代码 → **security-reviewer**"
+    },
+    {
+      "en-US": "Use parallel execution for independent operations — launch multiple agents simultaneously.",
+      "zh-Hans": "对于独立操作使用并行执行 — 同时启动多个智能体。"
+    },
+    {
+      "en-US": "## Security Guidelines",
+      "zh-Hans": "## 安全指南"
+    },
+    {
+      "en-US": "**Before ANY commit:**",
+      "zh-Hans": "**在任何提交之前：**"
+    },
+    {
+      "en-US": "- No hardcoded secrets (API keys, passwords, tokens)\n- All user inputs validated\n- SQL injection prevention (parameterized queries)\n- XSS prevention (sanitized HTML)\n- CSRF protection enabled\n- Authentication/authorization verified\n- Rate limiting on all endpoints\n- Error messages don't leak sensitive data",
+      "zh-Hans": "* 没有硬编码的密钥（API 密钥、密码、令牌）\n* 所有用户输入都经过验证\n* 防止 SQL 注入（参数化查询）\n* 防止 XSS（已清理的 HTML）\n* 启用 CSRF 保护\n* 已验证身份验证/授权\n* 所有端点都有限速\n* 错误消息不泄露敏感数据"
+    },
+    {
+      "en-US": "**Secret management:** NEVER hardcode secrets. Use environment variables or a secret manager. Validate required secrets at startup. Rotate any exposed secrets immediately.",
+      "zh-Hans": "**密钥管理：** 绝不硬编码密钥。使用环境变量或密钥管理器。在启动时验证所需的密钥。立即轮换任何暴露的密钥。"
+    },
+    {
+      "en-US": "**If security issue found:** STOP → use security-reviewer agent → fix CRITICAL issues → rotate exposed secrets → review codebase for similar issues.",
+      "zh-Hans": "**如果发现安全问题：** 停止 → 使用 security-reviewer 智能体 → 修复 CRITICAL 问题 → 轮换暴露的密钥 → 审查代码库中的类似问题。"
+    },
+    {
+      "en-US": "## Coding Style",
+      "zh-Hans": "## 编码风格"
+    },
+    {
+      "en-US": "**Immutability (CRITICAL):** Always create new objects, never mutate. Return new copies with changes applied.",
+      "zh-Hans": "**不可变性（关键）：** 总是创建新对象，永不修改。返回带有更改的新副本。"
+    },
+    {
+      "en-US": "**File organization:** Many small files over few large ones. 200-400 lines typical, 800 max. Organize by feature/domain, not by type. High cohesion, low coupling.",
+      "zh-Hans": "**文件组织：** 许多小文件优于少数大文件。通常 200-400 行，最多 800 行。按功能/领域组织，而不是按类型组织。高内聚，低耦合。"
+    },
+    {
+      "en-US": "**Error handling:** Handle errors at every level. Provide user-friendly messages in UI code. Log detailed context server-side. Never silently swallow errors.",
+      "zh-Hans": "**错误处理：** 在每个层级处理错误。在 UI 代码中提供用户友好的消息。在服务器端记录详细的上下文。绝不静默地忽略错误。"
+    },
+    {
+      "en-US": "**Input validation:** Validate all user input at system boundaries. Use schema-based validation. Fail fast with clear messages. Never trust external data.",
+      "zh-Hans": "**输入验证：** 在系统边界验证所有用户输入。使用基于模式的验证。快速失败并给出清晰的消息。绝不信任外部数据。"
+    },
+    {
+      "en-US": "**Code quality checklist:**",
+      "zh-Hans": "**代码质量检查清单：**"
+    },
+    {
+      "en-US": "- Functions small (<50 lines), files focused (<800 lines)\n- No deep nesting (>4 levels)\n- Proper error handling, no hardcoded values\n- Readable, well-named identifiers",
+      "zh-Hans": "* 函数小巧（<50 行），文件专注（<800 行）\n* 没有深层嵌套（>4 层）\n* 适当的错误处理，没有硬编码的值\n* 可读性强、命名良好的标识符"
+    },
+    {
+      "en-US": "## Testing Requirements",
+      "zh-Hans": "## 测试要求"
+    },
+    {
+      "en-US": "**Minimum coverage: 80%**",
+      "zh-Hans": "**最低覆盖率：80%**"
+    },
+    {
+      "en-US": "Test types (all required):",
+      "zh-Hans": "测试类型（全部必需）："
+    },
+    {
+      "en-US": "1. **Unit tests** — Individual functions, utilities, components\n2. **Integration tests** — API endpoints, database operations\n3. **E2E tests** — Critical user flows",
+      "zh-Hans": "1. **单元测试** — 单个函数、工具、组件\n2. **集成测试** — API 端点、数据库操作\n3. **端到端测试** — 关键用户流程"
+    },
+    {
+      "en-US": "**TDD workflow (mandatory):**",
+      "zh-Hans": "**TDD 工作流（强制）：**"
+    },
+    {
+      "en-US": "1. Write test first (RED) — test should FAIL\n2. Write minimal implementation (GREEN) — test should PASS\n3. Refactor (IMPROVE) — verify coverage 80%+",
+      "zh-Hans": "1. 先写测试（RED） — 测试应该失败\n2. 编写最小实现（GREEN） — 测试应该通过\n3. 重构（IMPROVE） — 验证覆盖率 80%+"
+    },
+    {
+      "en-US": "Troubleshoot failures: check test isolation → verify mocks → fix implementation (not tests, unless tests are wrong).",
+      "zh-Hans": "故障排除：检查测试隔离 → 验证模拟 → 修复实现（而不是测试，除非测试是错误的）。"
+    },
+    {
+      "en-US": "## Development Workflow",
+      "zh-Hans": "## 开发工作流"
+    },
+    {
+      "en-US": "1. **Plan** — Use planner agent, identify dependencies and risks, break into phases\n2. **TDD** — Use tdd-guide agent, write tests first, implement, refactor\n3. **Review** — Use code-reviewer agent immediately, address CRITICAL/HIGH issues\n4. **Commit** — Conventional commits format, comprehensive PR summaries",
+      "zh-Hans": "1. **规划** — 使用 planner 智能体，识别依赖项和风险，分解为阶段\n2. **TDD** — 使用 tdd-guide 智能体，先写测试，实现，重构\n3. **审查** — 立即使用 code-reviewer 智能体，解决 CRITICAL/HIGH 问题\n4. **提交** — 约定式提交格式，全面的 PR 摘要"
+    },
+    {
+      "en-US": "## Git Workflow",
+      "zh-Hans": "## Git 工作流"
+    },
+    {
+      "en-US": "**Commit format:** `<type>: <description>` — Types: feat, fix, refactor, docs, test, chore, perf, ci",
+      "zh-Hans": "**提交格式：** `<type>: <description>` — 类型：feat, fix, refactor, docs, test, chore, perf, ci"
+    },
+    {
+      "en-US": "**PR workflow:** Analyze full commit history → draft comprehensive summary → include test plan → push with `-u` flag.",
+      "zh-Hans": "**PR 工作流：** 分析完整的提交历史 → 起草全面的摘要 → 包含测试计划 → 使用 `-u` 标志推送。"
+    },
+    {
+      "en-US": "## Architecture Patterns",
+      "zh-Hans": "## 架构模式"
+    },
+    {
+      "en-US": "**API response format:** Consistent envelope with success indicator, data payload, error message, and pagination metadata.",
+      "zh-Hans": "**API 响应格式：** 具有成功指示器、数据负载、错误消息和分页元数据的一致信封。"
+    },
+    {
+      "en-US": "**Repository pattern:** Encapsulate data access behind standard interface (findAll, findById, create, update, delete). Business logic depends on abstract interface, not storage mechanism.",
+      "zh-Hans": "**仓储模式：** 将数据访问封装在标准接口（findAll, findById, create, update, delete）后面。业务逻辑依赖于抽象接口，而不是存储机制。"
+    },
+    {
+      "en-US": "**Skeleton projects:** Search for battle-tested templates, evaluate with parallel agents (security, extensibility, relevance), clone best match, iterate within proven structure.",
+      "zh-Hans": "**骨架项目：** 搜索经过实战检验的模板，使用并行智能体（安全性、可扩展性、相关性）进行评估，克隆最佳匹配，在已验证的结构内迭代。"
+    },
+    {
+      "en-US": "## Performance",
+      "zh-Hans": "## 性能"
+    },
+    {
+      "en-US": "**Context management:** Avoid last 20% of context window for large refactoring and multi-file features. Lower-sensitivity tasks (single edits, docs, simple fixes) tolerate higher utilization.",
+      "zh-Hans": "**上下文管理：** 对于大型重构和多文件功能，避免使用上下文窗口的最后 20%。敏感性较低的任务（单次编辑、文档、简单修复）可以容忍较高的利用率。"
+    },
+    {
+      "en-US": "**Build troubleshooting:** Use build-error-resolver agent → analyze errors → fix incrementally → verify after each fix.",
+      "zh-Hans": "**构建故障排除：** 使用 build-error-resolver 智能体 → 分析错误 → 增量修复 → 每次修复后验证。"
+    },
+    {
+      "en-US": "## Project Structure",
+      "zh-Hans": "## 项目结构"
+    },
+    {
+      "en-US": "```\nagents/          — 13 specialized subagents\nskills/          — 50+ workflow skills and domain knowledge\ncommands/        — 33 slash commands\nhooks/           — Trigger-based automations\nrules/           — Always-follow guidelines (common + per-language)\nscripts/         — Cross-platform Node.js utilities\nmcp-configs/     — 14 MCP server configurations\ntests/           — Test suite\n```",
+      "zh-Hans": "```\nagents/          — 13 specialized subagents\nskills/          — 50+ workflow skills and domain knowledge\ncommands/        — 33 slash commands\nhooks/           — Trigger-based automations\nrules/           — Always-follow guidelines (common + per-language)\nscripts/         — Cross-platform Node.js utilities\nmcp-configs/     — 14 MCP server configurations\ntests/           — Test suite\n```"
+    },
+    {
+      "en-US": "## Success Metrics",
+      "zh-Hans": "## 成功指标"
+    },
+    {
+      "en-US": "- All tests pass with 80%+ coverage\n- No security vulnerabilities\n- Code is readable and maintainable\n- Performance is acceptable\n- User requirements are met",
+      "zh-Hans": "* 所有测试通过且覆盖率 80%+\n* 没有安全漏洞\n* 代码可读且可维护\n* 性能可接受\n* 满足用户需求"
+    }
+  ]
+}

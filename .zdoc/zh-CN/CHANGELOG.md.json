@@ -1,0 +1,62 @@
+{
+  "sourceFile": "CHANGELOG.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Changelog",
+      "zh-Hans": "# 更新日志"
+    },
+    {
+      "en-US": "## 1.8.0 - 2026-03-04",
+      "zh-Hans": "## 1.8.0 - 2026-03-04"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Harness-first release focused on reliability, eval discipline, and autonomous loop operations.\n- Hook runtime now supports profile-based control and targeted hook disabling.\n- NanoClaw v2 adds model routing, skill hot-load, branching, search, compaction, export, and metrics.",
+      "zh-Hans": "* 首次发布以可靠性、评估规程和自主循环操作为核心的版本。\n* Hook 运行时现在支持基于配置文件的控制和针对性的 Hook 禁用。\n* NanoClaw v2 增加了模型路由、技能热加载、分支、搜索、压缩、导出和指标功能。"
+    },
+    {
+      "en-US": "### Core",
+      "zh-Hans": "### 核心"
+    },
+    {
+      "en-US": "- Added new commands: `/harness-audit`, `/loop-start`, `/loop-status`, `/quality-gate`, `/model-route`.\n- Added new skills:\n  - `agent-harness-construction`\n  - `agentic-engineering`\n  - `ralphinho-rfc-pipeline`\n  - `ai-first-engineering`\n  - `enterprise-agent-ops`\n  - `nanoclaw-repl`\n  - `continuous-agent-loop`\n- Added new agents:\n  - `harness-optimizer`\n  - `loop-operator`",
+      "zh-Hans": "* 新增命令：`/harness-audit`, `/loop-start`, `/loop-status`, `/quality-gate`, `/model-route`。\n* 新增技能：\n  * `agent-harness-construction`\n  * `agentic-engineering`\n  * `ralphinho-rfc-pipeline`\n  * `ai-first-engineering`\n  * `enterprise-agent-ops`\n  * `nanoclaw-repl`\n  * `continuous-agent-loop`\n* 新增代理：\n  * `harness-optimizer`\n  * `loop-operator`"
+    },
+    {
+      "en-US": "### Hook Reliability",
+      "zh-Hans": "### Hook 可靠性"
+    },
+    {
+      "en-US": "- Fixed SessionStart root resolution with robust fallback search.\n- Moved session summary persistence to `Stop` where transcript payload is available.\n- Added quality-gate and cost-tracker hooks.\n- Replaced fragile inline hook one-liners with dedicated script files.\n- Added `ECC_HOOK_PROFILE` and `ECC_DISABLED_HOOKS` controls.",
+      "zh-Hans": "* 修复了 SessionStart 的根路径解析，增加了健壮的回退搜索。\n* 将会话摘要持久化移至 `Stop`，此处可获得转录负载。\n* 增加了质量门和成本追踪钩子。\n* 用专门的脚本文件替换了脆弱的单行内联钩子。\n* 增加了 `ECC_HOOK_PROFILE` 和 `ECC_DISABLED_HOOKS` 控制。"
+    },
+    {
+      "en-US": "### Cross-Platform",
+      "zh-Hans": "### 跨平台"
+    },
+    {
+      "en-US": "- Improved Windows-safe path handling in doc warning logic.\n- Hardened observer loop behavior to avoid non-interactive hangs.",
+      "zh-Hans": "* 改进了文档警告逻辑中 Windows 安全路径的处理。\n* 强化了观察者循环行为，以避免非交互式挂起。"
+    },
+    {
+      "en-US": "### Notes",
+      "zh-Hans": "### 备注"
+    },
+    {
+      "en-US": "- `autonomous-loops` is kept as a compatibility alias for one release; `continuous-agent-loop` is the canonical name.",
+      "zh-Hans": "* `autonomous-loops` 作为一个兼容性别名保留一个版本；`continuous-agent-loop` 是规范名称。"
+    },
+    {
+      "en-US": "### Credits",
+      "zh-Hans": "### 鸣谢"
+    },
+    {
+      "en-US": "- inspired by [zarazhangrui](https://github.com/zarazhangrui)\n- homunculus-inspired by [humanplane](https://github.com/humanplane)",
+      "zh-Hans": "* 灵感来自 [zarazhangrui](https://github.com/zarazhangrui)\n* homunculus 灵感来自 [humanplane](https://github.com/humanplane)"
+    }
+  ]
+}
