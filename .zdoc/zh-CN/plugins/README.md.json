@@ -27,16 +27,16 @@
       "zh-Hans": "### 添加市场"
     },
     {
-      "en-US": "```bash\n# Add official Anthropic marketplace\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\n\n# Add community marketplaces\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n```",
-      "zh-Hans": "```bash\n# Add official Anthropic marketplace\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\n\n# Add community marketplaces\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n```"
+      "en-US": "```bash\n# Add official Anthropic marketplace\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\n\n# Add community marketplaces (mgrep by @mixedbread-ai)\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n```",
+      "zh-Hans": "```bash\n# Add official Anthropic marketplace\nclaude plugin marketplace add https://github.com/anthropics/claude-plugins-official\n\n# Add community marketplaces (mgrep by @mixedbread-ai)\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n```"
     },
     {
       "en-US": "### Recommended Marketplaces",
       "zh-Hans": "### 推荐市场"
     },
     {
-      "en-US": "| Marketplace | Source |\n|-------------|--------|\n| claude-plugins-official | `anthropics/claude-plugins-official` |\n| claude-code-plugins | `anthropics/claude-code` |\n| Mixedbread-Grep | `mixedbread-ai/mgrep` |",
-      "zh-Hans": "| 市场 | 来源 |\n|-------------|--------|\n| claude-plugins-official | `anthropics/claude-plugins-official` |\n| claude-code-plugins | `anthropics/claude-code` |\n| Mixedbread-Grep | `mixedbread-ai/mgrep` |"
+      "en-US": "| Marketplace | Source |\n|-------------|--------|\n| claude-plugins-official | `anthropics/claude-plugins-official` |\n| claude-code-plugins | `anthropics/claude-code` |\n| Mixedbread-Grep (@mixedbread-ai) | `mixedbread-ai/mgrep` |",
+      "zh-Hans": "| 市场 | 来源 |\n|-------------|--------|\n| claude-plugins-official | `anthropics/claude-plugins-official` |\n| claude-code-plugins | `anthropics/claude-code` |\n| Mixedbread-Grep (@mixedbread-ai) | `mixedbread-ai/mgrep` |"
     },
     {
       "en-US": "---",

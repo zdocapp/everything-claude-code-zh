@@ -223,8 +223,8 @@
       "zh-Hans": "用 mgrep 替换 grep——与传统 grep 或 ripgrep 相比，平均减少约 50% 的令牌："
     },
     {
-      "en-US": "![mgrep Benchmark](./assets/images/longform/06-mgrep-benchmark.png)\n*In our 50-task benchmark, mgrep + Claude Code used ~2x fewer tokens than grep-based workflows at similar or better judged quality. Source: https://github.com/mixedbread-ai/mgrep*",
-      "zh-Hans": "![mgrep Benchmark](./assets/images/longform/06-mgrep-benchmark.png)\n*在我们的 50 项任务基准测试中，mgrep + Claude Code 使用的 token 数量比基于 grep 的工作流少约 2 倍，且判断质量相似或更好。来源：https://github.com/mixedbread-ai/mgrep*"
+      "en-US": "![mgrep Benchmark](./assets/images/longform/06-mgrep-benchmark.png)\n*In our 50-task benchmark, mgrep + Claude Code used ~2x fewer tokens than grep-based workflows at similar or better judged quality. Source: mgrep by @mixedbread-ai*",
+      "zh-Hans": "![mgrep 基准测试](./assets/images/longform/06-mgrep-benchmark.png)\n*在我们的 50 个任务基准测试中，mgrep + Claude Code 在相似或更好的判断质量下，使用的 token 数比基于 grep 的工作流少约 2 倍。来源：@mixedbread-ai 的 mgrep*"
     },
     {
       "en-US": "**Modular Codebase Benefits:**",

@@ -101,6 +101,22 @@
     {
       "en-US": "For detailed mocking patterns and framework-specific examples, see `skill: tdd-workflow`.",
       "zh-Hans": "有关详细的模拟模式和特定框架示例，请参阅 `skill: tdd-workflow`。"
+    },
+    {
+      "en-US": "## v1.8 Eval-Driven TDD Addendum",
+      "zh-Hans": "## v1.8 评估驱动型 TDD 附录"
+    },
+    {
+      "en-US": "Integrate eval-driven development into TDD flow:",
+      "zh-Hans": "将评估驱动开发集成到 TDD 流程中："
+    },
+    {
+      "en-US": "1. Define capability + regression evals before implementation.\n2. Run baseline and capture failure signatures.\n3. Implement minimum passing change.\n4. Re-run tests and evals; report pass@1 and pass@3.",
+      "zh-Hans": "1. 在实现之前，定义能力评估和回归评估。\n2. 运行基线测试并捕获失败特征。\n3. 实施能通过测试的最小变更。\n4. 重新运行测试和评估；报告 pass@1 和 pass@3 结果。"
+    },
+    {
+      "en-US": "Release-critical paths should target pass^3 stability before merge.",
+      "zh-Hans": "发布关键路径在合并前应达到 pass@3 的稳定性目标。"
     }
   ]
 }

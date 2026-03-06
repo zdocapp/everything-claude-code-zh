@@ -83,8 +83,8 @@
       "zh-Hans": "## 快速开始"
     },
     {
-      "en-US": "```bash\n# 1. Fork and clone\ngh repo fork affaan-m/everything-claude-code --clone\ncd everything-claude-code\n\n# 2. Create a branch\ngit checkout -b feat/my-contribution\n\n# 3. Add your contribution (see sections below)\n\n# 4. Test locally\ncp -r skills/my-skill ~/.claude/skills/  # for skills\n# Then test with Claude Code\n\n# 5. Submit PR\ngit add . && git commit -m \"feat: add my-skill\" && git push\n```",
-      "zh-Hans": "```bash\n# 1. Fork and clone\ngh repo fork affaan-m/everything-claude-code --clone\ncd everything-claude-code\n\n# 2. Create a branch\ngit checkout -b feat/my-contribution\n\n# 3. Add your contribution (see sections below)\n\n# 4. Test locally\ncp -r skills/my-skill ~/.claude/skills/  # for skills\n# Then test with Claude Code\n\n# 5. Submit PR\ngit add . && git commit -m \"feat: add my-skill\" && git push\n```"
+      "en-US": "```bash\n# 1. Fork and clone\ngh repo fork affaan-m/everything-claude-code --clone\ncd everything-claude-code\n\n# 2. Create a branch\ngit checkout -b feat/my-contribution\n\n# 3. Add your contribution (see sections below)\n\n# 4. Test locally\ncp -r skills/my-skill ~/.claude/skills/  # for skills\n# Then test with Claude Code\n\n# 5. Submit PR\ngit add . && git commit -m \"feat: add my-skill\" && git push -u origin feat/my-contribution\n```",
+      "zh-Hans": "```bash\n# 1. Fork and clone\ngh repo fork affaan-m/everything-claude-code --clone\ncd everything-claude-code\n\n# 2. Create a branch\ngit checkout -b feat/my-contribution\n\n# 3. Add your contribution (see sections below)\n\n# 4. Test locally\ncp -r skills/my-skill ~/.claude/skills/  # for skills\n# Then test with Claude Code\n\n# 5. Submit PR\ngit add . && git commit -m \"feat: add my-skill\" && git push -u origin feat/my-contribution\n```"
     },
     {
       "en-US": "---",

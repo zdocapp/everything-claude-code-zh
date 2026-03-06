@@ -207,8 +207,8 @@
       "zh-Hans": "**安装插件：**"
     },
     {
-      "en-US": "```bash\n# Add a marketplace\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open Claude, run /plugins, find new marketplace, install from there\n```",
-      "zh-Hans": "```bash\n# Add a marketplace\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open Claude, run /plugins, find new marketplace, install from there\n```"
+      "en-US": "```bash\n# Add a marketplace\n# mgrep plugin by @mixedbread-ai\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open Claude, run /plugins, find new marketplace, install from there\n```",
+      "zh-Hans": "```bash\n# Add a marketplace\n# mgrep plugin by @mixedbread-ai\nclaude plugin marketplace add https://github.com/mixedbread-ai/mgrep\n\n# Open Claude, run /plugins, find new marketplace, install from there\n```"
     },
     {
       "en-US": "![Marketplaces tab showing mgrep](./assets/images/shortform/06-marketplaces-mgrep.jpeg)\n*Displaying the newly installed Mixedbread-Grep marketplace*",

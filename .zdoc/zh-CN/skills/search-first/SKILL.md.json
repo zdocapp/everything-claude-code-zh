@@ -55,8 +55,8 @@
       "zh-Hans": "在编写实用程序或添加功能之前，在脑中过一遍："
     },
     {
-      "en-US": "1. Is this a common problem? → Search npm/PyPI\n2. Is there an MCP for this? → Check `~/.claude/settings.json` and search\n3. Is there a skill for this? → Check `~/.claude/skills/`\n4. Is there a GitHub template? → Search GitHub",
-      "zh-Hans": "1. 这是常见问题吗？ → 搜索 npm/PyPI\n2. 有相关的 MCP 吗？ → 检查 `~/.claude/settings.json` 并搜索\n3. 有相关的技能吗？ → 检查 `~/.claude/skills/`\n4. 有 GitHub 模板吗？ → 搜索 GitHub"
+      "en-US": "0. Does this already exist in the repo? → `rg` through relevant modules/tests first\n1. Is this a common problem? → Search npm/PyPI\n2. Is there an MCP for this? → Check `~/.claude/settings.json` and search\n3. Is there a skill for this? → Check `~/.claude/skills/`\n4. Is there a GitHub implementation/template? → Run GitHub code search for maintained OSS before writing net-new code",
+      "zh-Hans": "0. 这已经在仓库中存在吗？ → 首先通过相关模块/测试检查 `rg`\n1. 这是一个常见问题吗？ → 搜索 npm/PyPI\n2. 有对应的 MCP 吗？ → 检查 `~/.claude/settings.json` 并进行搜索\n3. 有对应的技能吗？ → 检查 `~/.claude/skills/`\n4. 有 GitHub 上的实现/模板吗？ → 在编写全新代码之前，先运行 GitHub 代码搜索以查找维护中的开源项目"
     },
     {
       "en-US": "### Full Mode (agent)",

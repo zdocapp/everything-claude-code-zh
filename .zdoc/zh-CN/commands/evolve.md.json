@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: evolve\ndescription: Cluster related instincts into skills, commands, or agents\ncommand: true\n---",
-      "zh-Hans": "---\nname: evolve\ndescription: 将相关本能聚类为技能、命令或代理\ncommand: true\n---"
+      "en-US": "---\nname: evolve\ndescription: Analyze instincts and suggest or generate evolved structures\ncommand: true\n---",
+      "zh-Hans": "---\nname: evolve\ndescription: 分析本能并建议或生成进化结构\ncommand: true\n---"
     },
     {
       "en-US": "# Evolve Command",
@@ -43,8 +43,8 @@
       "zh-Hans": "## 使用方法"
     },
     {
-      "en-US": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --domain testing   # Only evolve instincts in testing domain\n/evolve --dry-run          # Show what would be created without creating\n/evolve --threshold 5      # Require 5+ related instincts to cluster\n```",
-      "zh-Hans": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --domain testing   # Only evolve instincts in testing domain\n/evolve --dry-run          # Show what would be created without creating\n/evolve --threshold 5      # Require 5+ related instincts to cluster\n```"
+      "en-US": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --generate         # Also generate files under evolved/{skills,commands,agents}\n```",
+      "zh-Hans": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --generate         # Also generate files under evolved/{skills,commands,agents}\n```"
     },
     {
       "en-US": "## Evolution Rules",
@@ -127,24 +127,24 @@
       "zh-Hans": "## 操作步骤"
     },
     {
-      "en-US": "1. Read all instincts from `~/.claude/homunculus/instincts/`\n2. Group instincts by:\n   - Domain similarity\n   - Trigger pattern overlap\n   - Action sequence relationship\n3. For each cluster of 3+ related instincts:\n   - Determine evolution type (command/skill/agent)\n   - Generate the appropriate file\n   - Save to `~/.claude/homunculus/evolved/{commands,skills,agents}/`\n4. Link evolved structure back to source instincts",
-      "zh-Hans": "1. 从 `~/.claude/homunculus/instincts/` 读取所有本能\n2. 按以下方式对本能进行分组：\n   * 领域相似性\n   * 触发器模式重叠\n   * 操作序列关联性\n3. 对于每个包含 3 个以上相关本能的集群：\n   * 确定演化类型（命令/技能/代理）\n   * 生成相应的文件\n   * 保存到 `~/.claude/homunculus/evolved/{commands,skills,agents}/`\n4. 将演化后的结构链接回源本能"
+      "en-US": "1. Detect current project context\n2. Read project + global instincts (project takes precedence on ID conflicts)\n3. Group instincts by trigger/domain patterns\n4. Identify:\n   - Skill candidates (trigger clusters with 2+ instincts)\n   - Command candidates (high-confidence workflow instincts)\n   - Agent candidates (larger, high-confidence clusters)\n5. Show promotion candidates (project -> global) when applicable\n6. If `--generate` is passed, write files to:\n   - Project scope: `~/.claude/homunculus/projects/<project-id>/evolved/`\n   - Global fallback: `~/.claude/homunculus/evolved/`",
+      "zh-Hans": "1. 检测当前项目上下文\n2. 读取项目 + 全局本能（项目优先级高于 ID 冲突）\n3. 按触发器/领域模式分组本能\n4. 识别：\n   * 技能候选（包含 2+ 个本能的触发器簇）\n   * 命令候选（高置信度工作流本能）\n   * 智能体候选（更大、高置信度的簇）\n5. 在适用时显示升级候选（项目 -> 全局）\n6. 如果传入了 `--generate`，则将文件写入：\n   * 项目范围：`~/.claude/homunculus/projects/<project-id>/evolved/`\n   * 全局回退：`~/.claude/homunculus/evolved/`"
     },
     {
       "en-US": "## Output Format",
       "zh-Hans": "## 输出格式"
     },
     {
-      "en-US": "```\n🧬 Evolve Analysis\n==================\n\nFound 3 clusters ready for evolution:\n\n## Cluster 1: Database Migration Workflow\nInstincts: new-table-migration, update-schema, regenerate-types\nType: Command\nConfidence: 85% (based on 12 observations)\n\nWould create: /new-table command\nFiles:\n  - ~/.claude/homunculus/evolved/commands/new-table.md\n\n## Cluster 2: Functional Code Style\nInstincts: prefer-functional, use-immutable, avoid-classes, pure-functions\nType: Skill\nConfidence: 78% (based on 8 observations)\n\nWould create: functional-patterns skill\nFiles:\n  - ~/.claude/homunculus/evolved/skills/functional-patterns.md\n\n## Cluster 3: Debugging Process\nInstincts: debug-check-logs, debug-isolate, debug-reproduce, debug-verify\nType: Agent\nConfidence: 72% (based on 6 observations)\n\nWould create: debugger agent\nFiles:\n  - ~/.claude/homunculus/evolved/agents/debugger.md\n\n---\nRun `/evolve --execute` to create these files.\n```",
-      "zh-Hans": "```\n🧬 Evolve Analysis\n==================\n\nFound 3 clusters ready for evolution:\n\n## Cluster 1: Database Migration Workflow\nInstincts: new-table-migration, update-schema, regenerate-types\nType: Command\nConfidence: 85% (based on 12 observations)\n\nWould create: /new-table command\nFiles:\n  - ~/.claude/homunculus/evolved/commands/new-table.md\n\n## Cluster 2: Functional Code Style\nInstincts: prefer-functional, use-immutable, avoid-classes, pure-functions\nType: Skill\nConfidence: 78% (based on 8 observations)\n\nWould create: functional-patterns skill\nFiles:\n  - ~/.claude/homunculus/evolved/skills/functional-patterns.md\n\n## Cluster 3: Debugging Process\nInstincts: debug-check-logs, debug-isolate, debug-reproduce, debug-verify\nType: Agent\nConfidence: 72% (based on 6 observations)\n\nWould create: debugger agent\nFiles:\n  - ~/.claude/homunculus/evolved/agents/debugger.md\n\n---\nRun `/evolve --execute` to create these files.\n```"
+      "en-US": "```\n============================================================\n  EVOLVE ANALYSIS - 12 instincts\n  Project: my-app (a1b2c3d4e5f6)\n  Project-scoped: 8 | Global: 4\n============================================================\n\nHigh confidence instincts (>=80%): 5\n\n## SKILL CANDIDATES\n1. Cluster: \"adding tests\"\n   Instincts: 3\n   Avg confidence: 82%\n   Domains: testing\n   Scopes: project\n\n## COMMAND CANDIDATES (2)\n  /adding-tests\n    From: test-first-workflow [project]\n    Confidence: 84%\n\n## AGENT CANDIDATES (1)\n  adding-tests-agent\n    Covers 3 instincts\n    Avg confidence: 82%\n```",
+      "zh-Hans": "```\n============================================================\n  EVOLVE ANALYSIS - 12 instincts\n  Project: my-app (a1b2c3d4e5f6)\n  Project-scoped: 8 | Global: 4\n============================================================\n\nHigh confidence instincts (>=80%): 5\n\n## SKILL CANDIDATES\n1. Cluster: \"adding tests\"\n   Instincts: 3\n   Avg confidence: 82%\n   Domains: testing\n   Scopes: project\n\n## COMMAND CANDIDATES (2)\n  /adding-tests\n    From: test-first-workflow [project]\n    Confidence: 84%\n\n## AGENT CANDIDATES (1)\n  adding-tests-agent\n    Covers 3 instincts\n    Avg confidence: 82%\n```"
     },
     {
       "en-US": "## Flags",
       "zh-Hans": "## 标志"
     },
     {
-      "en-US": "- `--execute`: Actually create the evolved structures (default is preview)\n- `--dry-run`: Preview without creating\n- `--domain <name>`: Only evolve instincts in specified domain\n- `--threshold <n>`: Minimum instincts required to form cluster (default: 3)\n- `--type <command|skill|agent>`: Only create specified type",
-      "zh-Hans": "* `--execute`: 实际创建演化后的结构（默认为预览）\n* `--dry-run`: 仅预览而不创建\n* `--domain <name>`: 仅演化指定领域的本能\n* `--threshold <n>`: 形成集群所需的最小本能数（默认：3）\n* `--type <command|skill|agent>`: 仅创建指定类型"
+      "en-US": "- `--generate`: Generate evolved files in addition to analysis output",
+      "zh-Hans": "* `--generate`：除了分析输出外，还生成进化后的文件"
     },
     {
       "en-US": "## Generated File Format",

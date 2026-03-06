@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: observer\ndescription: Background agent that analyzes session observations to detect patterns and create instincts. Uses Haiku for cost-efficiency.\nmodel: haiku\nrun_mode: background\n---",
-      "zh-Hans": "---\nname: observer\ndescription: 背景代理，通过分析会话观察来检测模式并创建本能。使用俳句以实现成本效益。\nmodel: haiku\nrun_mode: background\n---"
+      "en-US": "---\nname: observer\ndescription: Background agent that analyzes session observations to detect patterns and create instincts. Uses Haiku for cost-efficiency. v2.1 adds project-scoped instincts.\nmodel: haiku\n---",
+      "zh-Hans": "---\nname: observer\ndescription: 分析会话观察以检测模式并创建本能的背景代理。使用Haiku以实现成本效益。v2.1版本增加了项目范围的本能。\nmodel: haiku\n---"
     },
     {
       "en-US": "# Observer Agent",
@@ -19,20 +19,24 @@
       "zh-Hans": "## 何时运行"
     },
     {
-      "en-US": "- After significant session activity (20+ tool calls)\n- When user runs `/analyze-patterns`\n- On a scheduled interval (configurable, default 5 minutes)\n- When triggered by observation hook (SIGUSR1)",
-      "zh-Hans": "* 在显著会话活动后（20+ 工具调用）\n* 当用户运行 `/analyze-patterns` 时\n* 按计划间隔（可配置，默认 5 分钟）\n* 当被观察钩子触发时 (SIGUSR1)"
+      "en-US": "- After enough observations accumulate (configurable, default 20)\n- On a scheduled interval (configurable, default 5 minutes)\n- When triggered on demand via SIGUSR1 to the observer process",
+      "zh-Hans": "* 在积累足够多的观察后（可配置，默认 20 条）\n* 在计划的时间间隔（可配置，默认 5 分钟）\n* 当通过向观察者进程发送 SIGUSR1 信号手动触发时"
     },
     {
       "en-US": "## Input",
       "zh-Hans": "## 输入"
     },
     {
-      "en-US": "Reads observations from `~/.claude/homunculus/observations.jsonl`:",
-      "zh-Hans": "从 `~/.claude/homunculus/observations.jsonl` 读取观察结果："
+      "en-US": "Reads observations from the **project-scoped** observations file:",
+      "zh-Hans": "从**项目作用域**的观察文件中读取观察记录："
     },
     {
-      "en-US": "```jsonl\n{\"timestamp\":\"2025-01-22T10:30:00Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Edit\",\"input\":\"...\"}\n{\"timestamp\":\"2025-01-22T10:30:01Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Edit\",\"output\":\"...\"}\n{\"timestamp\":\"2025-01-22T10:30:05Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Bash\",\"input\":\"npm test\"}\n{\"timestamp\":\"2025-01-22T10:30:10Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Bash\",\"output\":\"All tests pass\"}\n```",
-      "zh-Hans": "```jsonl\n{\"timestamp\":\"2025-01-22T10:30:00Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Edit\",\"input\":\"...\"}\n{\"timestamp\":\"2025-01-22T10:30:01Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Edit\",\"output\":\"...\"}\n{\"timestamp\":\"2025-01-22T10:30:05Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Bash\",\"input\":\"npm test\"}\n{\"timestamp\":\"2025-01-22T10:30:10Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Bash\",\"output\":\"All tests pass\"}\n```"
+      "en-US": "- Project: `~/.claude/homunculus/projects/<project-hash>/observations.jsonl`\n- Global fallback: `~/.claude/homunculus/observations.jsonl`",
+      "zh-Hans": "* 项目：`~/.claude/homunculus/projects/<project-hash>/observations.jsonl`\n* 全局后备：`~/.claude/homunculus/observations.jsonl`"
+    },
+    {
+      "en-US": "```jsonl\n{\"timestamp\":\"2025-01-22T10:30:00Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Edit\",\"input\":\"...\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n{\"timestamp\":\"2025-01-22T10:30:01Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Edit\",\"output\":\"...\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n{\"timestamp\":\"2025-01-22T10:30:05Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Bash\",\"input\":\"npm test\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n{\"timestamp\":\"2025-01-22T10:30:10Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Bash\",\"output\":\"All tests pass\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n```",
+      "zh-Hans": "```jsonl\n{\"timestamp\":\"2025-01-22T10:30:00Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Edit\",\"input\":\"...\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n{\"timestamp\":\"2025-01-22T10:30:01Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Edit\",\"output\":\"...\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n{\"timestamp\":\"2025-01-22T10:30:05Z\",\"event\":\"tool_start\",\"session\":\"abc123\",\"tool\":\"Bash\",\"input\":\"npm test\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n{\"timestamp\":\"2025-01-22T10:30:10Z\",\"event\":\"tool_complete\",\"session\":\"abc123\",\"tool\":\"Bash\",\"output\":\"All tests pass\",\"project_id\":\"a1b2c3d4e5f6\",\"project_name\":\"my-react-app\"}\n```"
     },
     {
       "en-US": "## Pattern Detection",
@@ -111,12 +115,44 @@
       "zh-Hans": "## 输出"
     },
     {
-      "en-US": "Creates/updates instincts in `~/.claude/homunculus/instincts/personal/`:",
-      "zh-Hans": "在 `~/.claude/homunculus/instincts/personal/` 中创建/更新本能："
+      "en-US": "Creates/updates instincts in the **project-scoped** instincts directory:",
+      "zh-Hans": "在**项目作用域**的本能目录中创建/更新本能："
     },
     {
-      "en-US": "```yaml\n---\nid: prefer-grep-before-edit\ntrigger: \"when searching for code to modify\"\nconfidence: 0.65\ndomain: \"workflow\"\nsource: \"session-observation\"\n---\n\n# Prefer Grep Before Edit\n\n## Action\nAlways use Grep to find the exact location before using Edit.\n\n## Evidence\n- Observed 8 times in session abc123\n- Pattern: Grep → Read → Edit sequence\n- Last observed: 2025-01-22\n```",
-      "zh-Hans": "```yaml\n---\nid: prefer-grep-before-edit\ntrigger: \"when searching for code to modify\"\nconfidence: 0.65\ndomain: \"workflow\"\nsource: \"session-observation\"\n---\n\n# Prefer Grep Before Edit\n\n## Action\nAlways use Grep to find the exact location before using Edit.\n\n## Evidence\n- Observed 8 times in session abc123\n- Pattern: Grep → Read → Edit sequence\n- Last observed: 2025-01-22\n```"
+      "en-US": "- Project: `~/.claude/homunculus/projects/<project-hash>/instincts/personal/`\n- Global: `~/.claude/homunculus/instincts/personal/` (for universal patterns)",
+      "zh-Hans": "* 项目：`~/.claude/homunculus/projects/<project-hash>/instincts/personal/`\n* 全局：`~/.claude/homunculus/instincts/personal/`（用于通用模式）"
+    },
+    {
+      "en-US": "### Project-Scoped Instinct (default)",
+      "zh-Hans": "### 项目作用域本能（默认）"
+    },
+    {
+      "en-US": "```yaml\n---\nid: use-react-hooks-pattern\ntrigger: \"when creating React components\"\nconfidence: 0.65\ndomain: \"code-style\"\nsource: \"session-observation\"\nscope: project\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-react-app\"\n---\n\n# Use React Hooks Pattern\n\n## Action\nAlways use functional components with hooks instead of class components.\n\n## Evidence\n- Observed 8 times in session abc123\n- Pattern: All new components use useState/useEffect\n- Last observed: 2025-01-22\n```",
+      "zh-Hans": "```yaml\n---\nid: use-react-hooks-pattern\ntrigger: \"when creating React components\"\nconfidence: 0.65\ndomain: \"code-style\"\nsource: \"session-observation\"\nscope: project\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-react-app\"\n---\n\n# Use React Hooks Pattern\n\n## Action\nAlways use functional components with hooks instead of class components.\n\n## Evidence\n- Observed 8 times in session abc123\n- Pattern: All new components use useState/useEffect\n- Last observed: 2025-01-22\n```"
+    },
+    {
+      "en-US": "### Global Instinct (universal patterns)",
+      "zh-Hans": "### 全局本能（通用模式）"
+    },
+    {
+      "en-US": "```yaml\n---\nid: always-validate-user-input\ntrigger: \"when handling user input\"\nconfidence: 0.75\ndomain: \"security\"\nsource: \"session-observation\"\nscope: global\n---\n\n# Always Validate User Input\n\n## Action\nValidate and sanitize all user input before processing.\n\n## Evidence\n- Observed across 3 different projects\n- Pattern: User consistently adds input validation\n- Last observed: 2025-01-22\n```",
+      "zh-Hans": "```yaml\n---\nid: always-validate-user-input\ntrigger: \"when handling user input\"\nconfidence: 0.75\ndomain: \"security\"\nsource: \"session-observation\"\nscope: global\n---\n\n# Always Validate User Input\n\n## Action\nValidate and sanitize all user input before processing.\n\n## Evidence\n- Observed across 3 different projects\n- Pattern: User consistently adds input validation\n- Last observed: 2025-01-22\n```"
+    },
+    {
+      "en-US": "## Scope Decision Guide",
+      "zh-Hans": "## 作用域决策指南"
+    },
+    {
+      "en-US": "When creating instincts, determine scope based on these heuristics:",
+      "zh-Hans": "创建本能时，请根据以下经验法则确定其作用域："
+    },
+    {
+      "en-US": "| Pattern Type | Scope | Examples |\n|-------------|-------|---------|\n| Language/framework conventions | **project** | \"Use React hooks\", \"Follow Django REST patterns\" |\n| File structure preferences | **project** | \"Tests in `__tests__`/\", \"Components in src/components/\" |\n| Code style | **project** | \"Use functional style\", \"Prefer dataclasses\" |\n| Error handling strategies | **project** (usually) | \"Use Result type for errors\" |\n| Security practices | **global** | \"Validate user input\", \"Sanitize SQL\" |\n| General best practices | **global** | \"Write tests first\", \"Always handle errors\" |\n| Tool workflow preferences | **global** | \"Grep before Edit\", \"Read before Write\" |\n| Git practices | **global** | \"Conventional commits\", \"Small focused commits\" |",
+      "zh-Hans": "| 模式类型 | 作用域 | 示例 |\n|-------------|-------|---------|\n| 语言/框架约定 | **项目** | \"使用 React hooks\"、\"遵循 Django REST 模式\" |\n| 文件结构偏好 | **项目** | \"测试在 `__tests__`/\"、\"组件在 src/components/\" |\n| 代码风格 | **项目** | \"使用函数式风格\"、\"首选数据类\" |\n| 错误处理策略 | **项目**（通常） | \"使用 Result 类型处理错误\" |\n| 安全实践 | **全局** | \"验证用户输入\"、\"清理 SQL\" |\n| 通用最佳实践 | **全局** | \"先写测试\"、\"始终处理错误\" |\n| 工具工作流偏好 | **全局** | \"编辑前先 Grep\"、\"写之前先读\" |\n| Git 实践 | **全局** | \"约定式提交\"、\"小而专注的提交\" |"
+    },
+    {
+      "en-US": "**When in doubt, default to `scope: project`** — it's safer to be project-specific and promote later than to contaminate the global space.",
+      "zh-Hans": "**如果不确定，默认选择 `scope: project`** — 先设为项目作用域，之后再提升，这比污染全局空间更安全。"
     },
     {
       "en-US": "## Confidence Calculation",
@@ -139,12 +175,28 @@
       "zh-Hans": "* 每次确认性观察 +0.05\n* 每次矛盾性观察 -0.1\n* 每周无观察 -0.02（衰减）"
     },
     {
+      "en-US": "## Instinct Promotion (Project → Global)",
+      "zh-Hans": "## 本能提升（项目 → 全局）"
+    },
+    {
+      "en-US": "An instinct should be promoted from project-scoped to global when:",
+      "zh-Hans": "当一个本能满足以下条件时，应从项目作用域提升到全局："
+    },
+    {
+      "en-US": "1. The **same pattern** (by id or similar trigger) exists in **2+ different projects**\n2. Each instance has confidence **>= 0.8**\n3. The domain is in the global-friendly list (security, general-best-practices, workflow)",
+      "zh-Hans": "1. **相同模式**（通过 id 或类似触发器）存在于 **2 个以上不同的项目**中\n2. 每个实例的置信度 **>= 0.8**\n3. 其领域属于全局友好列表（安全、通用最佳实践、工作流）"
+    },
+    {
+      "en-US": "Promotion is handled by the `instinct-cli.py promote` command or the `/evolve` analysis.",
+      "zh-Hans": "提升操作由 `instinct-cli.py promote` 命令或 `/evolve` 分析处理。"
+    },
+    {
       "en-US": "## Important Guidelines",
       "zh-Hans": "## 重要准则"
     },
     {
-      "en-US": "1. **Be Conservative**: Only create instincts for clear patterns (3+ observations)\n2. **Be Specific**: Narrow triggers are better than broad ones\n3. **Track Evidence**: Always include what observations led to the instinct\n4. **Respect Privacy**: Never include actual code snippets, only patterns\n5. **Merge Similar**: If a new instinct is similar to existing, update rather than duplicate",
-      "zh-Hans": "1. **保持保守**：仅为清晰模式（3+ 次观察）创建本能\n2. **保持具体**：狭窄的触发器优于宽泛的触发器\n3. **跟踪证据**：始终包含导致本能的观察结果\n4. **尊重隐私**：绝不包含实际代码片段，只包含模式\n5. **合并相似项**：如果新本能与现有本能相似，则更新而非重复"
+      "en-US": "1. **Be Conservative**: Only create instincts for clear patterns (3+ observations)\n2. **Be Specific**: Narrow triggers are better than broad ones\n3. **Track Evidence**: Always include what observations led to the instinct\n4. **Respect Privacy**: Never include actual code snippets, only patterns\n5. **Merge Similar**: If a new instinct is similar to existing, update rather than duplicate\n6. **Default to Project Scope**: Unless the pattern is clearly universal, make it project-scoped\n7. **Include Project Context**: Always set `project_id` and `project_name` for project-scoped instincts",
+      "zh-Hans": "1. **保持保守**：只为明确的模式（3 次以上观察）创建本能\n2. **保持具体**：狭窄的触发器优于宽泛的触发器\n3. **追踪证据**：始终包含导致该本能的观察记录\n4. **尊重隐私**：切勿包含实际的代码片段，只包含模式\n5. **合并相似项**：如果新本能与现有本能相似，则更新而非重复创建\n6. **默认项目作用域**：除非模式明显是通用的，否则设为项目作用域\n7. **包含项目上下文**：对于项目作用域的本能，始终设置 `project_id` 和 `project_name`"
     },
     {
       "en-US": "## Example Analysis Session",
@@ -155,16 +207,16 @@
       "zh-Hans": "给定观察结果："
     },
     {
-      "en-US": "```jsonl\n{\"event\":\"tool_start\",\"tool\":\"Grep\",\"input\":\"pattern: useState\"}\n{\"event\":\"tool_complete\",\"tool\":\"Grep\",\"output\":\"Found in 3 files\"}\n{\"event\":\"tool_start\",\"tool\":\"Read\",\"input\":\"src/hooks/useAuth.ts\"}\n{\"event\":\"tool_complete\",\"tool\":\"Read\",\"output\":\"[file content]\"}\n{\"event\":\"tool_start\",\"tool\":\"Edit\",\"input\":\"src/hooks/useAuth.ts...\"}\n```",
-      "zh-Hans": "```jsonl\n{\"event\":\"tool_start\",\"tool\":\"Grep\",\"input\":\"pattern: useState\"}\n{\"event\":\"tool_complete\",\"tool\":\"Grep\",\"output\":\"Found in 3 files\"}\n{\"event\":\"tool_start\",\"tool\":\"Read\",\"input\":\"src/hooks/useAuth.ts\"}\n{\"event\":\"tool_complete\",\"tool\":\"Read\",\"output\":\"[file content]\"}\n{\"event\":\"tool_start\",\"tool\":\"Edit\",\"input\":\"src/hooks/useAuth.ts...\"}\n```"
+      "en-US": "```jsonl\n{\"event\":\"tool_start\",\"tool\":\"Grep\",\"input\":\"pattern: useState\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_complete\",\"tool\":\"Grep\",\"output\":\"Found in 3 files\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_start\",\"tool\":\"Read\",\"input\":\"src/hooks/useAuth.ts\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_complete\",\"tool\":\"Read\",\"output\":\"[file content]\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_start\",\"tool\":\"Edit\",\"input\":\"src/hooks/useAuth.ts...\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n```",
+      "zh-Hans": "```jsonl\n{\"event\":\"tool_start\",\"tool\":\"Grep\",\"input\":\"pattern: useState\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_complete\",\"tool\":\"Grep\",\"output\":\"Found in 3 files\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_start\",\"tool\":\"Read\",\"input\":\"src/hooks/useAuth.ts\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_complete\",\"tool\":\"Read\",\"output\":\"[file content]\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n{\"event\":\"tool_start\",\"tool\":\"Edit\",\"input\":\"src/hooks/useAuth.ts...\",\"project_id\":\"a1b2c3\",\"project_name\":\"my-app\"}\n```"
     },
     {
       "en-US": "Analysis:",
       "zh-Hans": "分析："
     },
     {
-      "en-US": "- Detected workflow: Grep → Read → Edit\n- Frequency: Seen 5 times this session\n- Create instinct:\n  - trigger: \"when modifying code\"\n  - action: \"Search with Grep, confirm with Read, then Edit\"\n  - confidence: 0.6\n  - domain: \"workflow\"",
-      "zh-Hans": "* 检测到工作流：Grep → Read → Edit\n* 频率：本次会话中看到 5 次\n* 创建本能：\n  * 触发器：\"when modifying code\"\n  * 操作：\"Search with Grep, confirm with Read, then Edit\"\n  * 置信度：0.6\n  * 领域：\"workflow\""
+      "en-US": "- Detected workflow: Grep → Read → Edit\n- Frequency: Seen 5 times this session\n- **Scope decision**: This is a general workflow pattern (not project-specific) → **global**\n- Create instinct:\n  - trigger: \"when modifying code\"\n  - action: \"Search with Grep, confirm with Read, then Edit\"\n  - confidence: 0.6\n  - domain: \"workflow\"\n  - scope: \"global\"",
+      "zh-Hans": "* 检测到的工作流：Grep → Read → Edit\n* 频率：本次会话中观察到 5 次\n* **作用域决策**：这是一种通用工作流模式（非项目特定）→ **全局**\n* 创建本能：\n  * 触发器：\"当修改代码时\"\n  * 操作：\"用 Grep 搜索，用 Read 确认，然后 Edit\"\n  * 置信度：0.6\n  * 领域：\"workflow\"\n  * 作用域：\"global\""
     },
     {
       "en-US": "## Integration with Skill Creator",
@@ -175,8 +227,8 @@
       "zh-Hans": "当本能从 Skill Creator（仓库分析）导入时，它们具有："
     },
     {
-      "en-US": "- `source: \"repo-analysis\"`\n- `source_repo: \"https://github.com/...\"`",
-      "zh-Hans": "* `source: \"repo-analysis\"`\n* `source_repo: \"https://github.com/...\"`"
+      "en-US": "- `source: \"repo-analysis\"`\n- `source_repo: \"https://github.com/...\"`\n- `scope: \"project\"` (since they come from a specific repo)",
+      "zh-Hans": "* `source: \"repo-analysis\"`\n* `source_repo: \"https://github.com/...\"`\n* `scope: \"project\"`（因为它们来自特定的仓库）"
     },
     {
       "en-US": "These should be treated as team/project conventions with higher initial confidence (0.7+).",

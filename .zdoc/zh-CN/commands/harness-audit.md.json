@@ -1,0 +1,78 @@
+{
+  "sourceFile": "commands/harness-audit.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Harness Audit Command",
+      "zh-Hans": "# 工具链审计命令"
+    },
+    {
+      "en-US": "Audit the current repository's agent harness setup and return a prioritized scorecard.",
+      "zh-Hans": "审计当前代码库的智能体工具链设置并返回一份优先级评分卡。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方式"
+    },
+    {
+      "en-US": "`/harness-audit [scope] [--format text|json]`",
+      "zh-Hans": "`/harness-audit [scope] [--format text|json]`"
+    },
+    {
+      "en-US": "- `scope` (optional): `repo` (default), `hooks`, `skills`, `commands`, `agents`\n- `--format`: output style (`text` default, `json` for automation)",
+      "zh-Hans": "* `scope` (可选): `repo` (默认), `hooks`, `skills`, `commands`, `agents`\n* `--format`: 输出样式 (`text` 默认, `json` 用于自动化)"
+    },
+    {
+      "en-US": "## What to Evaluate",
+      "zh-Hans": "## 评估内容"
+    },
+    {
+      "en-US": "Score each category from `0` to `10`:",
+      "zh-Hans": "将每个类别从 `0` 到 `10` 进行评分："
+    },
+    {
+      "en-US": "1. Tool Coverage\n2. Context Efficiency\n3. Quality Gates\n4. Memory Persistence\n5. Eval Coverage\n6. Security Guardrails\n7. Cost Efficiency",
+      "zh-Hans": "1. 工具覆盖度\n2. 上下文效率\n3. 质量门禁\n4. 记忆持久化\n5. 评估覆盖度\n6. 安全护栏\n7. 成本效率"
+    },
+    {
+      "en-US": "## Output Contract",
+      "zh-Hans": "## 输出约定"
+    },
+    {
+      "en-US": "Return:",
+      "zh-Hans": "返回："
+    },
+    {
+      "en-US": "1. `overall_score` out of 70\n2. Category scores and concrete findings\n3. Top 3 actions with exact file paths\n4. Suggested ECC skills to apply next",
+      "zh-Hans": "1. `overall_score` (满分 70)\n2. 类别得分和具体发现\n3. 前 3 项待办事项及其确切文件路径\n4. 建议接下来应用的 ECC 技能"
+    },
+    {
+      "en-US": "## Checklist",
+      "zh-Hans": "## 检查清单"
+    },
+    {
+      "en-US": "- Inspect `hooks/hooks.json`, `scripts/hooks/`, and hook tests.\n- Inspect `skills/`, command coverage, and agent coverage.\n- Verify cross-harness parity for `.cursor/`, `.opencode/`, `.codex/`.\n- Flag broken or stale references.",
+      "zh-Hans": "* 检查 `hooks/hooks.json`, `scripts/hooks/` 以及钩子测试。\n* 检查 `skills/`、命令覆盖度和智能体覆盖度。\n* 验证 `.cursor/`, `.opencode/`, `.codex/` 在跨工具链间的一致性。\n* 标记已损坏或过时的引用。"
+    },
+    {
+      "en-US": "## Example Result",
+      "zh-Hans": "## 结果示例"
+    },
+    {
+      "en-US": "```text\nHarness Audit (repo): 52/70\n- Quality Gates: 9/10\n- Eval Coverage: 6/10\n- Cost Efficiency: 4/10\n\nTop 3 Actions:\n1) Add cost tracking hook in scripts/hooks/cost-tracker.js\n2) Add pass@k docs and templates in skills/eval-harness/SKILL.md\n3) Add command parity for /harness-audit in .opencode/commands/\n```",
+      "zh-Hans": "```text\nHarness Audit (repo): 52/70\n- Quality Gates: 9/10\n- Eval Coverage: 6/10\n- Cost Efficiency: 4/10\n\nTop 3 Actions:\n1) Add cost tracking hook in scripts/hooks/cost-tracker.js\n2) Add pass@k docs and templates in skills/eval-harness/SKILL.md\n3) Add command parity for /harness-audit in .opencode/commands/\n```"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `repo|hooks|skills|commands|agents` (optional scope)\n- `--format text|json` (optional output format)",
+      "zh-Hans": "* `repo|hooks|skills|commands|agents` (可选范围)\n* `--format text|json` (可选输出格式)"
+    }
+  ]
+}

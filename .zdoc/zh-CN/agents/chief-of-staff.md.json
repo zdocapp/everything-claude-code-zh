@@ -151,8 +151,8 @@
       "zh-Hans": "## 先决条件"
     },
     {
-      "en-US": "- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)\n- Gmail CLI (e.g., [gog](https://github.com/pterm/gog))\n- Node.js 18+ (for calendar-suggest.js)\n- Optional: Slack MCP server, Matrix bridge (LINE), Chrome + Playwright (Messenger)",
-      "zh-Hans": "* [Claude Code](https://docs.anthropic.com/en/docs/claude-code)\n* Gmail CLI (例如 [gog](https://github.com/pterm/gog))\n* Node.js 18+ (用于 calendar-suggest.js)\n* 可选：Slack MCP 服务器、Matrix 桥接 (LINE)、Chrome + Playwright (Messenger)"
+      "en-US": "- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)\n- Gmail CLI (e.g., gog by @pterm)\n- Node.js 18+ (for calendar-suggest.js)\n- Optional: Slack MCP server, Matrix bridge (LINE), Chrome + Playwright (Messenger)",
+      "zh-Hans": "* [Claude Code](https://docs.anthropic.com/en/docs/claude-code)\n* Gmail CLI（例如，@pterm 的 gog）\n* Node.js 18+（用于 calendar-suggest.js）\n* 可选：Slack MCP 服务器、Matrix 桥接（LINE）、Chrome + Playwright（Messenger）"
     }
   ]
 }

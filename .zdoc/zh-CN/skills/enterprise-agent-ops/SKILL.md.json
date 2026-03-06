@@ -1,0 +1,66 @@
+{
+  "sourceFile": "skills/enterprise-agent-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: enterprise-agent-ops\ndescription: Operate long-lived agent workloads with observability, security boundaries, and lifecycle management.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: enterprise-agent-ops\ndescription: 通过可观测性、安全边界和生命周期管理来操作长期运行的代理工作负载。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Enterprise Agent Ops",
+      "zh-Hans": "# 企业级智能体运维"
+    },
+    {
+      "en-US": "Use this skill for cloud-hosted or continuously running agent systems that need operational controls beyond single CLI sessions.",
+      "zh-Hans": "使用此技能用于需要超越单次 CLI 会话操作控制的云托管或持续运行的智能体系统。"
+    },
+    {
+      "en-US": "## Operational Domains",
+      "zh-Hans": "## 运维领域"
+    },
+    {
+      "en-US": "1. runtime lifecycle (start, pause, stop, restart)\n2. observability (logs, metrics, traces)\n3. safety controls (scopes, permissions, kill switches)\n4. change management (rollout, rollback, audit)",
+      "zh-Hans": "1. 运行时生命周期（启动、暂停、停止、重启）\n2. 可观测性（日志、指标、追踪）\n3. 安全控制（作用域、权限、紧急停止开关）\n4. 变更管理（发布、回滚、审计）"
+    },
+    {
+      "en-US": "## Baseline Controls",
+      "zh-Hans": "## 基线控制"
+    },
+    {
+      "en-US": "- immutable deployment artifacts\n- least-privilege credentials\n- environment-level secret injection\n- hard timeout and retry budgets\n- audit log for high-risk actions",
+      "zh-Hans": "* 不可变的部署工件\n* 最小权限凭证\n* 环境级别的密钥注入\n* 硬性超时和重试预算\n* 高风险操作的审计日志"
+    },
+    {
+      "en-US": "## Metrics to Track",
+      "zh-Hans": "## 需跟踪的指标"
+    },
+    {
+      "en-US": "- success rate\n- mean retries per task\n- time to recovery\n- cost per successful task\n- failure class distribution",
+      "zh-Hans": "* 成功率\n* 每项任务的平均重试次数\n* 恢复时间\n* 每项成功任务的成本\n* 故障类别分布"
+    },
+    {
+      "en-US": "## Incident Pattern",
+      "zh-Hans": "## 事故处理模式"
+    },
+    {
+      "en-US": "When failure spikes:",
+      "zh-Hans": "当故障激增时："
+    },
+    {
+      "en-US": "1. freeze new rollout\n2. capture representative traces\n3. isolate failing route\n4. patch with smallest safe change\n5. run regression + security checks\n6. resume gradually",
+      "zh-Hans": "1. 冻结新发布\n2. 捕获代表性追踪数据\n3. 隔离故障路径\n4. 应用最小的安全变更进行修补\n5. 运行回归测试 + 安全检查\n6. 逐步恢复"
+    },
+    {
+      "en-US": "## Deployment Integrations",
+      "zh-Hans": "## 部署集成"
+    },
+    {
+      "en-US": "This skill pairs with:",
+      "zh-Hans": "此技能可与以下工具配合使用："
+    },
+    {
+      "en-US": "- PM2 workflows\n- systemd services\n- container orchestrators\n- CI/CD gates",
+      "zh-Hans": "* PM2 工作流\n* systemd 服务\n* 容器编排器\n* CI/CD 门控"
+    }
+  ]
+}

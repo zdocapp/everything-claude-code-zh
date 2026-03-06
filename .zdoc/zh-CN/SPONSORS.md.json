@@ -59,12 +59,28 @@
       "zh-Hans": "* **更快地交付** — 更多时间投入到工具和功能的开发上\n* **保持免费** — 高级功能为所有人的免费层级提供资金支持\n* **更好的支持** — 赞助者获得优先响应\n* **影响路线图** — Pro+ 赞助者可以对功能进行投票"
     },
     {
+      "en-US": "## Sponsor Readiness Signals",
+      "zh-Hans": "## 赞助者准备度信号"
+    },
+    {
+      "en-US": "Use these proof points in sponsor conversations:",
+      "zh-Hans": "在赞助者对话中使用这些证明点："
+    },
+    {
+      "en-US": "- Live npm install/download metrics for `ecc-universal` and `ecc-agentshield`\n- GitHub App distribution via Marketplace installs\n- Public adoption signals: stars, forks, contributors, release cadence\n- Cross-harness support: Claude Code, Cursor, OpenCode, Codex app/CLI",
+      "zh-Hans": "* `ecc-universal` 和 `ecc-agentshield` 的实时 npm 安装/下载指标\n* 通过 Marketplace 安装的 GitHub App 分发\n* 公开采用信号：星标、分叉、贡献者、发布节奏\n* 跨平台支持：Claude Code、Cursor、OpenCode、Codex 应用/CLI"
+    },
+    {
+      "en-US": "See [`docs/business/metrics-and-sponsorship.md`](docs/business/metrics-and-sponsorship.md) for a copy/paste metrics pull workflow.",
+      "zh-Hans": "有关复制/粘贴指标拉取工作流程，请参阅 [`docs/business/metrics-and-sponsorship.md`](docs/business/metrics-and-sponsorship.md)。"
+    },
+    {
       "en-US": "## Sponsor Tiers",
       "zh-Hans": "## 赞助等级"
     },
     {
-      "en-US": "| Tier | Price | Benefits |\n|------|-------|----------|\n| Supporter | $5/mo | Name in README, early access |\n| Builder | $10/mo | Premium tools access |\n| Pro | $25/mo | Priority support, office hours |\n| Team | $100/mo | 5 seats, team configs |\n| Business | $500/mo | 25 seats, consulting credit |\n| Enterprise | $2K/mo | Unlimited seats, custom tools |",
-      "zh-Hans": "| 等级 | 价格 | 权益 |\n|------|-------|----------|\n| 支持者 | $5/月 | 名字出现在 README 中，早期访问 |\n| 建造者 | $10/月 | 高级工具访问权限 |\n| 专业版 | $25/月 | 优先支持，办公时间咨询 |\n| 团队 | $100/月 | 5个席位，团队配置 |\n| 商业 | $500/月 | 25个席位，咨询额度 |\n| 企业 | $2K/月 | 无限席位，定制工具 |"
+      "en-US": "| Tier | Price | Benefits |\n|------|-------|----------|\n| Supporter | $5/mo | Name in README, early access |\n| Builder | $10/mo | Premium tools access |\n| Pro | $25/mo | Priority support, office hours |\n| Team | $100/mo | 5 seats, team configs |\n| Harness Partner | $200/mo | Monthly roadmap sync, prioritized maintainer feedback, release-note mention |\n| Business | $500/mo | 25 seats, consulting credit |\n| Enterprise | $2K/mo | Unlimited seats, custom tools |",
+      "zh-Hans": "| 层级 | 价格 | 权益 |\n|------|-------|----------|\n| 支持者 | 每月 $5 | 名字出现在 README 中，早期访问 |\n| 构建者 | 每月 $10 | 高级工具访问权限 |\n| 专业版 | 每月 $25 | 优先支持，办公时间 |\n| 团队版 | 每月 $100 | 5 个席位，团队配置 |\n| 平台合作伙伴 | 每月 $200 | 月度路线图同步，优先维护者反馈，发布说明提及 |\n| 商业版 | 每月 $500 | 25 个席位，咨询积分 |\n| 企业版 | 每月 $2K | 无限制席位，自定义工具 |"
     },
     {
       "en-US": "[**Become a Sponsor →**](https://github.com/sponsors/affaan-m)",

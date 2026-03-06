@@ -27,8 +27,8 @@
       "zh-Hans": "## 上下文"
     },
     {
-      "en-US": "- Task to develop: $ARGUMENTS\n- Structured 6-phase workflow with quality gates\n- Multi-model collaboration: Codex (backend) + Gemini (frontend) + Claude (orchestration)\n- MCP service integration (ace-tool) for enhanced capabilities",
-      "zh-Hans": "* 待开发任务：$ARGUMENTS\n* 结构化的 6 阶段工作流程，包含质量门控\n* 多模型协作：Codex（后端） + Gemini（前端） + Claude（编排）\n* MCP 服务集成（ace-tool）以增强能力"
+      "en-US": "- Task to develop: $ARGUMENTS\n- Structured 6-phase workflow with quality gates\n- Multi-model collaboration: Codex (backend) + Gemini (frontend) + Claude (orchestration)\n- MCP service integration (ace-tool, optional) for enhanced capabilities",
+      "zh-Hans": "* 待开发任务：$ARGUMENTS\n* 结构化的 6 阶段工作流程，带有质量关卡\n* 多模型协作：Codex（后端） + Gemini（前端） + Claude（编排）\n* 集成 MCP 服务（ace-tool，可选）以增强能力"
     },
     {
       "en-US": "## Your Role",
@@ -43,8 +43,8 @@
       "zh-Hans": "**协作模型**："
     },
     {
-      "en-US": "- **ace-tool MCP** – Code retrieval + Prompt enhancement\n- **Codex** – Backend logic, algorithms, debugging (**Backend authority, trustworthy**)\n- **Gemini** – Frontend UI/UX, visual design (**Frontend expert, backend opinions for reference only**)\n- **Claude (self)** – Orchestration, planning, execution, delivery",
-      "zh-Hans": "* **ace-tool MCP** – 代码检索 + 提示词增强\n* **Codex** – 后端逻辑、算法、调试（**后端权威，可信赖**）\n* **Gemini** – 前端 UI/UX、视觉设计（**前端专家，后端意见仅供参考**）\n* **Claude（自身）** – 编排、规划、执行、交付"
+      "en-US": "- **ace-tool MCP** (optional) – Code retrieval + Prompt enhancement\n- **Codex** – Backend logic, algorithms, debugging (**Backend authority, trustworthy**)\n- **Gemini** – Frontend UI/UX, visual design (**Frontend expert, backend opinions for reference only**)\n- **Claude (self)** – Orchestration, planning, execution, delivery",
+      "zh-Hans": "* **ace-tool MCP**（可选） – 代码检索 + 提示增强\n* **Codex** – 后端逻辑、算法、调试（**后端权威，值得信赖**）\n* **Gemini** – 前端 UI/UX、视觉设计（**前端专家，后端意见仅供参考**）\n* **Claude（自身）** – 编排、规划、执行、交付"
     },
     {
       "en-US": "---",
@@ -135,8 +135,8 @@
       "zh-Hans": "`[Mode: Research]` - 理解需求并收集上下文："
     },
     {
-      "en-US": "1. **Prompt Enhancement**: Call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for all subsequent Codex/Gemini calls**\n2. **Context Retrieval**: Call `mcp__ace-tool__search_context`\n3. **Requirement Completeness Score** (0-10):\n   - Goal clarity (0-3), Expected outcome (0-3), Scope boundaries (0-2), Constraints (0-2)\n   - ≥7: Continue | <7: Stop, ask clarifying questions",
-      "zh-Hans": "1. **提示词增强**：调用 `mcp__ace-tool__enhance_prompt`，**将所有后续对 Codex/Gemini 的调用中的原始 $ARGUMENTS 替换为增强后的结果**\n2. **上下文检索**：调用 `mcp__ace-tool__search_context`\n3. **需求完整性评分** (0-10)：\n   * 目标清晰度 (0-3)，预期成果 (0-3)，范围边界 (0-2)，约束条件 (0-2)\n   * ≥7：继续 | <7：停止，询问澄清问题"
+      "en-US": "1. **Prompt Enhancement** (if ace-tool MCP available): Call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for all subsequent Codex/Gemini calls**. If unavailable, use `$ARGUMENTS` as-is.\n2. **Context Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context`. If unavailable, use built-in tools: `Glob` for file discovery, `Grep` for symbol search, `Read` for context gathering, `Task` (Explore agent) for deeper exploration.\n3. **Requirement Completeness Score** (0-10):\n   - Goal clarity (0-3), Expected outcome (0-3), Scope boundaries (0-2), Constraints (0-2)\n   - ≥7: Continue | <7: Stop, ask clarifying questions",
+      "zh-Hans": "1. **提示增强**（如果 ace-tool MCP 可用）：调用 `mcp__ace-tool__enhance_prompt`，**用增强后的结果替换原始的 $ARGUMENTS，用于所有后续的 Codex/Gemini 调用**。如果不可用，直接使用 `$ARGUMENTS`。\n2. **上下文检索**（如果 ace-tool MCP 可用）：调用 `mcp__ace-tool__search_context`。如果不可用，使用内置工具：`Glob` 用于文件发现，`Grep` 用于符号搜索，`Read` 用于上下文收集，`Task`（探索代理）用于更深入的探索。\n3. **需求完整性评分**（0-10）：\n   * 目标清晰度（0-3）、预期结果（0-3）、范围边界（0-2）、约束条件（0-2）\n   * ≥7：继续 | <7：停止，询问澄清性问题"
     },
     {
       "en-US": "### Phase 2: Solution Ideation",

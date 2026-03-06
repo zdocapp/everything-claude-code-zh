@@ -131,8 +131,8 @@
       "zh-Hans": "***"
     },
     {
-      "en-US": "*Based on [Supabase Agent Skills](https://github.com/supabase/agent-skills) (MIT License)*",
-      "zh-Hans": "*基于 [Supabase Agent Skills](https://github.com/supabase/agent-skills) (MIT License)*"
+      "en-US": "*Based on Supabase Agent Skills (credit: Supabase team) (MIT License)*",
+      "zh-Hans": "*基于 Supabase 代理技能（致谢：Supabase 团队）（MIT 许可证）*"
     }
   ]
 }

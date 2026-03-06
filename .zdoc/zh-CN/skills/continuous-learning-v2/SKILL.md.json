@@ -3,36 +3,48 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: continuous-learning-v2\ndescription: Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents.\norigin: ECC\nversion: 2.0.0\n---",
-      "zh-Hans": "---\nname: continuous-learning-v2\ndescription: 基于本能的学习系统，通过钩子观察会话，创建具有置信度评分的原子本能，并将其进化为技能/命令/代理。\norigin: ECC\nversion: 2.0.0\n---"
+      "en-US": "---\nname: continuous-learning-v2\ndescription: Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents. v2.1 adds project-scoped instincts to prevent cross-project contamination.\norigin: ECC\nversion: 2.1.0\n---",
+      "zh-Hans": "---\nname: continuous-learning-v2\ndescription: 基于本能的学习系统，通过钩子观察会话，创建带置信度评分的原子本能，并将其进化为技能/命令/代理。v2.1版本增加了项目范围的本能，以防止跨项目污染。\norigin: ECC\nversion: 2.1.0\n---"
     },
     {
-      "en-US": "# Continuous Learning v2 - Instinct-Based Architecture",
-      "zh-Hans": "# 持续学习 v2 - 基于本能的架构"
+      "en-US": "# Continuous Learning v2.1 - Instinct",
+      "zh-Hans": "# 持续学习 v2.1 - 基于本能"
+    },
+    {
+      "en-US": "-Based Architecture",
+      "zh-Hans": "的架构"
     },
     {
       "en-US": "An advanced learning system that turns your Claude Code sessions into reusable knowledge through atomic \"instincts\" - small learned behaviors with confidence scoring.",
       "zh-Hans": "一个高级学习系统，通过原子化的“本能”——带有置信度评分的小型习得行为——将你的 Claude Code 会话转化为可重用的知识。"
     },
     {
-      "en-US": "Inspired in part by the Homunculus work from [humanplane](https://github.com/humanplane).",
-      "zh-Hans": "部分灵感来源于 [humanplane](https://github.com/humanplane) 的 Homunculus 项目。"
+      "en-US": "**v2.1** adds **project-scoped instincts** — React patterns stay in your React project, Python conventions stay in your Python project, and universal patterns (like \"always validate input\") are shared globally.",
+      "zh-Hans": "**v2.1** 新增了**项目作用域的本能** — React 模式保留在你的 React 项目中，Python 约定保留在你的 Python 项目中，而通用模式（如“始终验证输入”）则全局共享。"
     },
     {
       "en-US": "## When to Activate",
       "zh-Hans": "## 何时激活"
     },
     {
-      "en-US": "- Setting up automatic learning from Claude Code sessions\n- Configuring instinct-based behavior extraction via hooks\n- Tuning confidence thresholds for learned behaviors\n- Reviewing, exporting, or importing instinct libraries\n- Evolving instincts into full skills, commands, or agents",
-      "zh-Hans": "* 设置从 Claude Code 会话中自动学习时\n* 通过钩子配置基于本能的行为提取时\n* 调整学习行为的置信度阈值时\n* 审查、导出或导入本能库时\n* 将本能进化为完整技能、命令或代理时"
+      "en-US": "- Setting up automatic learning from Claude Code sessions\n- Configuring instinct-based behavior extraction via hooks\n- Tuning confidence thresholds for learned behaviors\n- Reviewing, exporting, or importing instinct libraries\n- Evolving instincts into full skills, commands, or agents\n- Managing project-scoped vs global instincts\n- Promoting instincts from project to global scope",
+      "zh-Hans": "* 设置从 Claude Code 会话自动学习\n* 通过钩子配置基于本能的行为提取\n* 调整已学习行为的置信度阈值\n* 查看、导出或导入本能库\n* 将本能进化为完整的技能、命令或代理\n* 管理项目作用域与全局本能\n* 将本能从项目作用域提升到全局作用域"
     },
     {
-      "en-US": "## What's New in v2",
-      "zh-Hans": "## v2 的新特性"
+      "en-US": "## What's New in v2.1",
+      "zh-Hans": "## v2.1 的新特性"
     },
     {
-      "en-US": "| Feature | v1 | v2 |\n|---------|----|----|\n| Observation | Stop hook (session end) | PreToolUse/PostToolUse (100% reliable) |\n| Analysis | Main context | Background agent (Haiku) |\n| Granularity | Full skills | Atomic \"instincts\" |\n| Confidence | None | 0.3-0.9 weighted |\n| Evolution | Direct to skill | Instincts → cluster → skill/command/agent |\n| Sharing | None | Export/import instincts |",
-      "zh-Hans": "| 特性 | v1 | v2 |\n|---------|----|----|\n| 观察 | 停止钩子（会话结束） | 工具使用前/后（100% 可靠） |\n| 分析 | 主上下文 | 后台代理（Haiku） |\n| 粒度 | 完整技能 | 原子化的“本能” |\n| 置信度 | 无 | 0.3-0.9 加权 |\n| 演进 | 直接到技能 | 本能 → 聚类 → 技能/命令/代理 |\n| 共享 | 无 | 导出/导入本能 |"
+      "en-US": "| Feature | v2.0 | v2.1 |\n|---------|------|------|\n| Storage | Global (~/.claude/homunculus/) | Project-scoped (projects/<hash>/) |\n| Scope | All instincts apply everywhere | Project-scoped + global |\n| Detection | None | git remote URL / repo path |\n| Promotion | N/A | Project → global when seen in 2+ projects |\n| Commands | 4 (status/evolve/export/import) | 6 (+promote/projects) |\n| Cross-project | Contamination risk | Isolated by default |",
+      "zh-Hans": "| 特性 | v2.0 | v2.1 |\n|---------|------|------|\n| 存储 | 全局 (~/.claude/homunculus/) | 项目作用域 (projects/<hash>/) |\n| 作用域 | 所有本能随处适用 | 项目作用域 + 全局 |\n| 检测 | 无 | git remote URL / 仓库路径 |\n| 提升 | 不适用 | 在 2+ 个项目中出现时，项目 → 全局 |\n| 命令 | 4个 (status/evolve/export/import) | 6个 (+promote/projects) |\n| 跨项目 | 存在污染风险 | 默认隔离 |"
+    },
+    {
+      "en-US": "## What's New in v2 (vs v1)",
+      "zh-Hans": "## v2 的新特性（对比 v1）"
+    },
+    {
+      "en-US": "| Feature | v1 | v2 |\n|---------|----|----|\n| Observation | Stop hook (session end) | PreToolUse/PostToolUse (100% reliable) |\n| Analysis | Main context | Background agent (Haiku) |\n| Granularity | Full skills | Atomic \"instincts\" |\n| Confidence | None | 0.3-0.9 weighted |\n| Evolution | Direct to skill | Instincts -> cluster -> skill/command/agent |\n| Sharing | None | Export/import instincts |",
+      "zh-Hans": "| 特性 | v1 | v2 |\n|---------|----|----|\n| 观察 | 停止钩子（会话结束） | PreToolUse/PostToolUse (100% 可靠) |\n| 分析 | 主上下文 | 后台代理 (Haiku) |\n| 粒度 | 完整技能 | 原子化“本能” |\n| 置信度 | 无 | 0.3-0.9 加权 |\n| 进化 | 直接进化为技能 | 本能 -> 聚类 -> 技能/命令/代理 |\n| 共享 | 无 | 导出/导入本能 |"
     },
     {
       "en-US": "## The Instinct Model",
@@ -43,24 +55,40 @@
       "zh-Hans": "一个本能是一个小型习得行为："
     },
     {
-      "en-US": "```yaml\n---\nid: prefer-functional-style\ntrigger: \"when writing new functions\"\nconfidence: 0.7\ndomain: \"code-style\"\nsource: \"session-observation\"\n---\n\n# Prefer Functional Style\n\n## Action\nUse functional patterns over classes when appropriate.\n\n## Evidence\n- Observed 5 instances of functional pattern preference\n- User corrected class-based approach to functional on 2025-01-15\n```",
-      "zh-Hans": "```yaml\n---\nid: prefer-functional-style\ntrigger: \"when writing new functions\"\nconfidence: 0.7\ndomain: \"code-style\"\nsource: \"session-observation\"\n---\n\n# Prefer Functional Style\n\n## Action\nUse functional patterns over classes when appropriate.\n\n## Evidence\n- Observed 5 instances of functional pattern preference\n- User corrected class-based approach to functional on 2025-01-15\n```"
+      "en-US": "```yaml\n---\nid: prefer-functional-style\ntrigger: \"when writing new functions\"\nconfidence: 0.7\ndomain: \"code-style\"\nsource: \"session-observation\"\nscope: project\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-react-app\"\n---\n\n# Prefer Functional Style\n\n## Action\nUse functional patterns over classes when appropriate.\n\n## Evidence\n- Observed 5 instances of functional pattern preference\n- User corrected class-based approach to functional on 2025-01-15\n```",
+      "zh-Hans": "```yaml\n---\nid: prefer-functional-style\ntrigger: \"when writing new functions\"\nconfidence: 0.7\ndomain: \"code-style\"\nsource: \"session-observation\"\nscope: project\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-react-app\"\n---\n\n# Prefer Functional Style\n\n## Action\nUse functional patterns over classes when appropriate.\n\n## Evidence\n- Observed 5 instances of functional pattern preference\n- User corrected class-based approach to functional on 2025-01-15\n```"
     },
     {
       "en-US": "**Properties:**",
       "zh-Hans": "**属性：**"
     },
     {
-      "en-US": "- **Atomic** — one trigger, one action\n- **Confidence-weighted** — 0.3 = tentative, 0.9 = near certain\n- **Domain-tagged** — code-style, testing, git, debugging, workflow, etc.\n- **Evidence-backed** — tracks what observations created it",
-      "zh-Hans": "* **原子性** — 一个触发条件，一个动作\n* **置信度加权** — 0.3 = 尝试性的，0.9 = 近乎确定\n* **领域标记** — 代码风格、测试、git、调试、工作流等\n* **证据支持** — 追踪是哪些观察创建了它"
+      "en-US": "- **Atomic** -- one trigger, one action\n- **Confidence-weighted** -- 0.3 = tentative, 0.9 = near certain\n- **Domain-tagged** -- code-style, testing, git, debugging, workflow, etc.\n- **Evidence-backed** -- tracks what observations created it\n- **Scope-aware** -- `project` (default) or `global`",
+      "zh-Hans": "* **原子化** -- 一个触发条件，一个动作\n* **置信度加权** -- 0.3 = 试探性，0.9 = 几乎确定\n* **领域标记** -- 代码风格、测试、git、调试、工作流等\n* **有证据支持** -- 追踪是哪些观察创建了它\n* **作用域感知** -- `project` (默认) 或 `global`"
     },
     {
       "en-US": "## How It Works",
       "zh-Hans": "## 工作原理"
     },
     {
-      "en-US": "```\nSession Activity\n      │\n      │ Hooks capture prompts + tool use (100% reliable)\n      ▼\n┌─────────────────────────────────────────┐\n│         observations.jsonl              │\n│   (prompts, tool calls, outcomes)       │\n└─────────────────────────────────────────┘\n      │\n      │ Observer agent reads (background, Haiku)\n      ▼\n┌─────────────────────────────────────────┐\n│          PATTERN DETECTION              │\n│   • User corrections → instinct         │\n│   • Error resolutions → instinct        │\n│   • Repeated workflows → instinct       │\n└─────────────────────────────────────────┘\n      │\n      │ Creates/updates\n      ▼\n┌─────────────────────────────────────────┐\n│         instincts/personal/             │\n│   • prefer-functional.md (0.7)          │\n│   • always-test-first.md (0.9)          │\n│   • use-zod-validation.md (0.6)         │\n└─────────────────────────────────────────┘\n      │\n      │ /evolve clusters\n      ▼\n┌─────────────────────────────────────────┐\n│              evolved/                   │\n│   • commands/new-feature.md             │\n│   • skills/testing-workflow.md          │\n│   • agents/refactor-specialist.md       │\n└─────────────────────────────────────────┘\n```",
-      "zh-Hans": "```\nSession Activity\n      │\n      │ Hooks capture prompts + tool use (100% reliable)\n      ▼\n┌─────────────────────────────────────────┐\n│         observations.jsonl              │\n│   (prompts, tool calls, outcomes)       │\n└─────────────────────────────────────────┘\n      │\n      │ Observer agent reads (background, Haiku)\n      ▼\n┌─────────────────────────────────────────┐\n│          PATTERN DETECTION              │\n│   • User corrections → instinct         │\n│   • Error resolutions → instinct        │\n│   • Repeated workflows → instinct       │\n└─────────────────────────────────────────┘\n      │\n      │ Creates/updates\n      ▼\n┌─────────────────────────────────────────┐\n│         instincts/personal/             │\n│   • prefer-functional.md (0.7)          │\n│   • always-test-first.md (0.9)          │\n│   • use-zod-validation.md (0.6)         │\n└─────────────────────────────────────────┘\n      │\n      │ /evolve clusters\n      ▼\n┌─────────────────────────────────────────┐\n│              evolved/                   │\n│   • commands/new-feature.md             │\n│   • skills/testing-workflow.md          │\n│   • agents/refactor-specialist.md       │\n└─────────────────────────────────────────┘\n```"
+      "en-US": "```\nSession Activity (in a git repo)\n      |\n      | Hooks capture prompts + tool use (100% reliable)\n      | + detect project context (git remote / repo path)\n      v\n+---------------------------------------------+\n|  projects/<project-hash>/observations.jsonl  |\n|   (prompts, tool calls, outcomes, project)   |\n+---------------------------------------------+\n      |\n      | Observer agent reads (background, Haiku)\n      v\n+---------------------------------------------+\n|          PATTERN DETECTION                   |\n|   * User corrections -> instinct             |\n|   * Error resolutions -> instinct            |\n|   * Repeated workflows -> instinct           |\n|   * Scope decision: project or global?       |\n+---------------------------------------------+\n      |\n      | Creates/updates\n      v\n+---------------------------------------------+\n|  projects/<project-hash>/instincts/personal/ |\n|   * prefer-functional.yaml (0.7) [project]   |\n|   * use-react-hooks.yaml (0.9) [project]     |\n+---------------------------------------------+\n|  instincts/personal/  (GLOBAL)               |\n|   * always-validate-input.yaml (0.85) [global]|\n|   * grep-before-edit.yaml (0.6) [global]     |\n+---------------------------------------------+\n      |\n      | /evolve clusters + /promote\n      v\n+---------------------------------------------+\n|  projects/<hash>/evolved/ (project-scoped)   |\n|  evolved/ (global)                           |\n|   * commands/new-feature.md                  |\n|   * skills/testing-workflow.md               |\n|   * agents/refactor-specialist.md            |\n+---------------------------------------------+\n```",
+      "zh-Hans": "```\nSession Activity (in a git repo)\n      |\n      | Hooks capture prompts + tool use (100% reliable)\n      | + detect project context (git remote / repo path)\n      v\n+---------------------------------------------+\n|  projects/<project-hash>/observations.jsonl  |\n|   (prompts, tool calls, outcomes, project)   |\n+---------------------------------------------+\n      |\n      | Observer agent reads (background, Haiku)\n      v\n+---------------------------------------------+\n|          PATTERN DETECTION                   |\n|   * User corrections -> instinct             |\n|   * Error resolutions -> instinct            |\n|   * Repeated workflows -> instinct           |\n|   * Scope decision: project or global?       |\n+---------------------------------------------+\n      |\n      | Creates/updates\n      v\n+---------------------------------------------+\n|  projects/<project-hash>/instincts/personal/ |\n|   * prefer-functional.yaml (0.7) [project]   |\n|   * use-react-hooks.yaml (0.9) [project]     |\n+---------------------------------------------+\n|  instincts/personal/  (GLOBAL)               |\n|   * always-validate-input.yaml (0.85) [global]|\n|   * grep-before-edit.yaml (0.6) [global]     |\n+---------------------------------------------+\n      |\n      | /evolve clusters + /promote\n      v\n+---------------------------------------------+\n|  projects/<hash>/evolved/ (project-scoped)   |\n|  evolved/ (global)                           |\n|   * commands/new-feature.md                  |\n|   * skills/testing-workflow.md               |\n|   * agents/refactor-specialist.md            |\n+---------------------------------------------+\n```"
+    },
+    {
+      "en-US": "## Project Detection",
+      "zh-Hans": "## 项目检测"
+    },
+    {
+      "en-US": "The system automatically detects your current project:",
+      "zh-Hans": "系统会自动检测您当前的项目："
+    },
+    {
+      "en-US": "1. **`CLAUDE_PROJECT_DIR` env var** (highest priority)\n2. **`git remote get-url origin`** -- hashed to create a portable project ID (same repo on different machines gets the same ID)\n3. **`git rev-parse --show-toplevel`** -- fallback using repo path (machine-specific)\n4. **Global fallback** -- if no project is detected, instincts go to global scope",
+      "zh-Hans": "1. **`CLAUDE_PROJECT_DIR` 环境变量** (最高优先级)\n2. **`git remote get-url origin`** -- 哈希化以创建可移植的项目 ID (同一仓库在不同机器上获得相同的 ID)\n3. **`git rev-parse --show-toplevel`** -- 使用仓库路径作为后备方案 (机器特定)\n4. **全局后备方案** -- 如果未检测到项目，本能将进入全局作用域"
+    },
+    {
+      "en-US": "Each project gets a 12-character hash ID (e.g., `a1b2c3d4e5f6`). A registry file at `~/.claude/homunculus/projects.json` maps IDs to human-readable names.",
+      "zh-Hans": "每个项目都会获得一个 12 字符的哈希 ID (例如 `a1b2c3d4e5f6`)。`~/.claude/homunculus/projects.json` 处的注册表文件将 ID 映射到人类可读的名称。"
     },
     {
       "en-US": "## Quick Start",
@@ -79,80 +107,108 @@
       "zh-Hans": "**如果作为插件安装**（推荐）："
     },
     {
-      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh pre\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh post\"\n      }]\n    }]\n  }\n}\n```",
-      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh pre\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh post\"\n      }]\n    }]\n  }\n}\n```"
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }]\n  }\n}\n```"
     },
     {
       "en-US": "**If installed manually** to `~/.claude/skills`:",
       "zh-Hans": "**如果手动安装**到 `~/.claude/skills`："
     },
     {
-      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh pre\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh post\"\n      }]\n    }]\n  }\n}\n```",
-      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh pre\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh post\"\n      }]\n    }]\n  }\n}\n```"
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }],\n    \"PostToolUse\": [{\n      \"matcher\": \"*\",\n      \"hooks\": [{\n        \"type\": \"command\",\n        \"command\": \"~/.claude/skills/continuous-learning-v2/hooks/observe.sh\"\n      }]\n    }]\n  }\n}\n```"
     },
     {
       "en-US": "### 2. Initialize Directory Structure",
       "zh-Hans": "### 2. 初始化目录结构"
     },
     {
-      "en-US": "The Python CLI will create these automatically, but you can also create them manually:",
-      "zh-Hans": "Python CLI 会自动创建这些目录，但你也可以手动创建："
+      "en-US": "The system creates directories automatically on first use, but you can also create them manually:",
+      "zh-Hans": "系统会在首次使用时自动创建目录，但您也可以手动创建："
     },
     {
-      "en-US": "```bash\nmkdir -p ~/.claude/homunculus/{instincts/{personal,inherited},evolved/{agents,skills,commands}}\ntouch ~/.claude/homunculus/observations.jsonl\n```",
-      "zh-Hans": "```bash\nmkdir -p ~/.claude/homunculus/{instincts/{personal,inherited},evolved/{agents,skills,commands}}\ntouch ~/.claude/homunculus/observations.jsonl\n```"
+      "en-US": "```bash\n# Global directories\nmkdir -p ~/.claude/homunculus/{instincts/{personal,inherited},evolved/{agents,skills,commands},projects}\n\n# Project directories are auto-created when the hook first runs in a git repo\n```",
+      "zh-Hans": "```bash\n# Global directories\nmkdir -p ~/.claude/homunculus/{instincts/{personal,inherited},evolved/{agents,skills,commands},projects}\n\n# Project directories are auto-created when the hook first runs in a git repo\n```"
     },
     {
       "en-US": "### 3. Use the Instinct Commands",
       "zh-Hans": "### 3. 使用本能命令"
     },
     {
-      "en-US": "```bash\n/instinct-status     # Show learned instincts with confidence scores\n/evolve              # Cluster related instincts into skills/commands\n/instinct-export     # Export instincts for sharing\n/instinct-import     # Import instincts from others\n```",
-      "zh-Hans": "```bash\n/instinct-status     # Show learned instincts with confidence scores\n/evolve              # Cluster related instincts into skills/commands\n/instinct-export     # Export instincts for sharing\n/instinct-import     # Import instincts from others\n```"
+      "en-US": "```bash\n/instinct-status     # Show learned instincts (project + global)\n/evolve              # Cluster related instincts into skills/commands\n/instinct-export     # Export instincts to file\n/instinct-import     # Import instincts from others\n/promote             # Promote project instincts to global scope\n/projects            # List all known projects and their instinct counts\n```",
+      "zh-Hans": "```bash\n/instinct-status     # Show learned instincts (project + global)\n/evolve              # Cluster related instincts into skills/commands\n/instinct-export     # Export instincts to file\n/instinct-import     # Import instincts from others\n/promote             # Promote project instincts to global scope\n/projects            # List all known projects and their instinct counts\n```"
     },
     {
       "en-US": "## Commands",
       "zh-Hans": "## 命令"
     },
     {
-      "en-US": "| Command | Description |\n|---------|-------------|\n| `/instinct-status` | Show all learned instincts with confidence |\n| `/evolve` | Cluster related instincts into skills/commands |\n| `/instinct-export` | Export instincts for sharing |\n| `/instinct-import <file>` | Import instincts from others |",
-      "zh-Hans": "| 命令 | 描述 |\n|---------|-------------|\n| `/instinct-status` | 显示所有已习得的本能及其置信度 |\n| `/evolve` | 将相关本能聚类为技能/命令 |\n| `/instinct-export` | 导出本能用于共享 |\n| `/instinct-import <file>` | 从他人处导入本能 |"
+      "en-US": "| Command | Description |\n|---------|-------------|\n| `/instinct-status` | Show all instincts (project-scoped + global) with confidence |\n| `/evolve` | Cluster related instincts into skills/commands, suggest promotions |\n| `/instinct-export` | Export instincts (filterable by scope/domain) |\n| `/instinct-import <file>` | Import instincts with scope control |\n| `/promote [id]` | Promote project instincts to global scope |\n| `/projects` | List all known projects and their instinct counts |",
+      "zh-Hans": "| 命令 | 描述 |\n|---------|-------------|\n| `/instinct-status` | 显示所有本能 (项目作用域 + 全局) 及其置信度 |\n| `/evolve` | 将相关本能聚类成技能/命令，建议提升 |\n| `/instinct-export` | 导出本能 (可按作用域/领域过滤) |\n| `/instinct-import <file>` | 导入本能 (带作用域控制) |\n| `/promote [id]` | 将项目本能提升到全局作用域 |\n| `/projects` | 列出所有已知项目及其本能数量 |"
     },
     {
       "en-US": "## Configuration",
       "zh-Hans": "## 配置"
     },
     {
-      "en-US": "Edit `config.json`:",
-      "zh-Hans": "编辑 `config.json`："
+      "en-US": "Edit `config.json` to control the background observer:",
+      "zh-Hans": "编辑 `config.json` 以控制后台观察器："
     },
     {
-      "en-US": "```json\n{\n  \"version\": \"2.0\",\n  \"observation\": {\n    \"enabled\": true,\n    \"store_path\": \"~/.claude/homunculus/observations.jsonl\",\n    \"max_file_size_mb\": 10,\n    \"archive_after_days\": 7\n  },\n  \"instincts\": {\n    \"personal_path\": \"~/.claude/homunculus/instincts/personal/\",\n    \"inherited_path\": \"~/.claude/homunculus/instincts/inherited/\",\n    \"min_confidence\": 0.3,\n    \"auto_approve_threshold\": 0.7,\n    \"confidence_decay_rate\": 0.05\n  },\n  \"observer\": {\n    \"enabled\": true,\n    \"model\": \"haiku\",\n    \"run_interval_minutes\": 5,\n    \"patterns_to_detect\": [\n      \"user_corrections\",\n      \"error_resolutions\",\n      \"repeated_workflows\",\n      \"tool_preferences\"\n    ]\n  },\n  \"evolution\": {\n    \"cluster_threshold\": 3,\n    \"evolved_path\": \"~/.claude/homunculus/evolved/\"\n  }\n}\n```",
-      "zh-Hans": "```json\n{\n  \"version\": \"2.0\",\n  \"observation\": {\n    \"enabled\": true,\n    \"store_path\": \"~/.claude/homunculus/observations.jsonl\",\n    \"max_file_size_mb\": 10,\n    \"archive_after_days\": 7\n  },\n  \"instincts\": {\n    \"personal_path\": \"~/.claude/homunculus/instincts/personal/\",\n    \"inherited_path\": \"~/.claude/homunculus/instincts/inherited/\",\n    \"min_confidence\": 0.3,\n    \"auto_approve_threshold\": 0.7,\n    \"confidence_decay_rate\": 0.05\n  },\n  \"observer\": {\n    \"enabled\": true,\n    \"model\": \"haiku\",\n    \"run_interval_minutes\": 5,\n    \"patterns_to_detect\": [\n      \"user_corrections\",\n      \"error_resolutions\",\n      \"repeated_workflows\",\n      \"tool_preferences\"\n    ]\n  },\n  \"evolution\": {\n    \"cluster_threshold\": 3,\n    \"evolved_path\": \"~/.claude/homunculus/evolved/\"\n  }\n}\n```"
+      "en-US": "```json\n{\n  \"version\": \"2.1\",\n  \"observer\": {\n    \"enabled\": false,\n    \"run_interval_minutes\": 5,\n    \"min_observations_to_analyze\": 20\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"version\": \"2.1\",\n  \"observer\": {\n    \"enabled\": false,\n    \"run_interval_minutes\": 5,\n    \"min_observations_to_analyze\": 20\n  }\n}\n```"
+    },
+    {
+      "en-US": "| Key | Default | Description |\n|-----|---------|-------------|\n| `observer.enabled` | `false` | Enable the background observer agent |\n| `observer.run_interval_minutes` | `5` | How often the observer analyzes observations |\n| `observer.min_observations_to_analyze` | `20` | Minimum observations before analysis runs |",
+      "zh-Hans": "| 键 | 默认值 | 描述 |\n|-----|---------|-------------|\n| `observer.enabled` | `false` | 启用后台观察器代理 |\n| `observer.run_interval_minutes` | `5` | 观察器分析观察结果的频率 |\n| `observer.min_observations_to_analyze` | `20` | 运行分析所需的最小观察次数 |"
+    },
+    {
+      "en-US": "Other behavior (observation capture, instinct thresholds, project scoping, promotion criteria) is configured via code defaults in `instinct-cli.py` and `observe.sh`.",
+      "zh-Hans": "其他行为 (观察捕获、本能阈值、项目作用域、提升标准) 通过 `instinct-cli.py` 和 `observe.sh` 中的代码默认值进行配置。"
     },
     {
       "en-US": "## File Structure",
       "zh-Hans": "## 文件结构"
     },
     {
-      "en-US": "```\n~/.claude/homunculus/\n├── identity.json           # Your profile, technical level\n├── observations.jsonl      # Current session observations\n├── observations.archive/   # Processed observations\n├── instincts/\n│   ├── personal/           # Auto-learned instincts\n│   └── inherited/          # Imported from others\n└── evolved/\n    ├── agents/             # Generated specialist agents\n    ├── skills/             # Generated skills\n    └── commands/           # Generated commands\n```",
-      "zh-Hans": "```\n~/.claude/homunculus/\n├── identity.json           # Your profile, technical level\n├── observations.jsonl      # Current session observations\n├── observations.archive/   # Processed observations\n├── instincts/\n│   ├── personal/           # Auto-learned instincts\n│   └── inherited/          # Imported from others\n└── evolved/\n    ├── agents/             # Generated specialist agents\n    ├── skills/             # Generated skills\n    └── commands/           # Generated commands\n```"
+      "en-US": "```\n~/.claude/homunculus/\n+-- identity.json           # Your profile, technical level\n+-- projects.json           # Registry: project hash -> name/path/remote\n+-- observations.jsonl      # Global observations (fallback)\n+-- instincts/\n|   +-- personal/           # Global auto-learned instincts\n|   +-- inherited/          # Global imported instincts\n+-- evolved/\n|   +-- agents/             # Global generated agents\n|   +-- skills/             # Global generated skills\n|   +-- commands/           # Global generated commands\n+-- projects/\n    +-- a1b2c3d4e5f6/       # Project hash (from git remote URL)\n    |   +-- observations.jsonl\n    |   +-- observations.archive/\n    |   +-- instincts/\n    |   |   +-- personal/   # Project-specific auto-learned\n    |   |   +-- inherited/  # Project-specific imported\n    |   +-- evolved/\n    |       +-- skills/\n    |       +-- commands/\n    |       +-- agents/\n    +-- f6e5d4c3b2a1/       # Another project\n        +-- ...\n```",
+      "zh-Hans": "```\n~/.claude/homunculus/\n+-- identity.json           # Your profile, technical level\n+-- projects.json           # Registry: project hash -> name/path/remote\n+-- observations.jsonl      # Global observations (fallback)\n+-- instincts/\n|   +-- personal/           # Global auto-learned instincts\n|   +-- inherited/          # Global imported instincts\n+-- evolved/\n|   +-- agents/             # Global generated agents\n|   +-- skills/             # Global generated skills\n|   +-- commands/           # Global generated commands\n+-- projects/\n    +-- a1b2c3d4e5f6/       # Project hash (from git remote URL)\n    |   +-- observations.jsonl\n    |   +-- observations.archive/\n    |   +-- instincts/\n    |   |   +-- personal/   # Project-specific auto-learned\n    |   |   +-- inherited/  # Project-specific imported\n    |   +-- evolved/\n    |       +-- skills/\n    |       +-- commands/\n    |       +-- agents/\n    +-- f6e5d4c3b2a1/       # Another project\n        +-- ...\n```"
     },
     {
-      "en-US": "## Integration with Skill Creator",
-      "zh-Hans": "## 与技能创建器的集成"
+      "en-US": "## Scope Decision Guide",
+      "zh-Hans": "## 作用域决策指南"
     },
     {
-      "en-US": "When you use the [Skill Creator GitHub App](https://skill-creator.app), it now generates **both**:",
-      "zh-Hans": "当你使用 [技能创建器 GitHub 应用](https://skill-creator.app) 时，它现在会生成**两者**："
+      "en-US": "| Pattern Type | Scope | Examples |\n|-------------|-------|---------|\n| Language/framework conventions | **project** | \"Use React hooks\", \"Follow Django REST patterns\" |\n| File structure preferences | **project** | \"Tests in `__tests__`/\", \"Components in src/components/\" |\n| Code style | **project** | \"Use functional style\", \"Prefer dataclasses\" |\n| Error handling strategies | **project** | \"Use Result type for errors\" |\n| Security practices | **global** | \"Validate user input\", \"Sanitize SQL\" |\n| General best practices | **global** | \"Write tests first\", \"Always handle errors\" |\n| Tool workflow preferences | **global** | \"Grep before Edit\", \"Read before Write\" |\n| Git practices | **global** | \"Conventional commits\", \"Small focused commits\" |",
+      "zh-Hans": "| 模式类型 | 作用域 | 示例 |\n|-------------|-------|---------|\n| 语言/框架约定 | **项目** | \"使用 React hooks\", \"遵循 Django REST 模式\" |\n| 文件结构偏好 | **项目** | \"测试放在 `__tests__`/\", \"组件放在 src/components/\" |\n| 代码风格 | **项目** | \"使用函数式风格\", \"首选数据类\" |\n| 错误处理策略 | **项目** | \"对错误使用 Result 类型\" |\n| 安全实践 | **全局** | \"验证用户输入\", \"清理 SQL\" |\n| 通用最佳实践 | **全局** | \"先写测试\", \"始终处理错误\" |\n| 工具工作流偏好 | **全局** | \"编辑前先 Grep\", \"写入前先读取\" |\n| Git 实践 | **全局** | \"约定式提交\", \"小而专注的提交\" |"
     },
     {
-      "en-US": "- Traditional SKILL.md files (for backward compatibility)\n- Instinct collections (for v2 learning system)",
-      "zh-Hans": "* 传统的 SKILL.md 文件（用于向后兼容）\n* 本能集合（用于 v2 学习系统）"
+      "en-US": "## Instinct Promotion (Project -> Global)",
+      "zh-Hans": "## 本能提升 (项目 -> 全局)"
     },
     {
-      "en-US": "Instincts from repo analysis have `source: \"repo-analysis\"` and include the source repository URL.",
-      "zh-Hans": "来自仓库分析的本能带有 `source: \"repo-analysis\"` 标记，并包含源仓库 URL。"
+      "en-US": "When the same instinct appears in multiple projects with high confidence, it's a candidate for promotion to global scope.",
+      "zh-Hans": "当同一个本能在多个项目中以高置信度出现时，它就有资格被提升到全局作用域。"
+    },
+    {
+      "en-US": "**Auto-promotion criteria:**",
+      "zh-Hans": "**自动提升标准：**"
+    },
+    {
+      "en-US": "- Same instinct ID in 2+ projects\n- Average confidence >= 0.8",
+      "zh-Hans": "* 相同的本能 ID 出现在 2+ 个项目中\n* 平均置信度 >= 0.8"
+    },
+    {
+      "en-US": "**How to promote:**",
+      "zh-Hans": "**如何提升：**"
+    },
+    {
+      "en-US": "```bash\n# Promote a specific instinct\npython3 instinct-cli.py promote prefer-explicit-errors\n\n# Auto-promote all qualifying instincts\npython3 instinct-cli.py promote\n\n# Preview without changes\npython3 instinct-cli.py promote --dry-run\n```",
+      "zh-Hans": "```bash\n# Promote a specific instinct\npython3 instinct-cli.py promote prefer-explicit-errors\n\n# Auto-promote all qualifying instincts\npython3 instinct-cli.py promote\n\n# Preview without changes\npython3 instinct-cli.py promote --dry-run\n```"
+    },
+    {
+      "en-US": "The `/evolve` command also suggests promotion candidates.",
+      "zh-Hans": "`/evolve` 命令也会建议可提升的候选本能。"
     },
     {
       "en-US": "## Confidence Scoring",
@@ -187,8 +243,8 @@
       "zh-Hans": "## 为什么用钩子而非技能进行观察？"
     },
     {
-      "en-US": "> \"v1 relied on skills to observe. Skills are probabilistic—they fire ~50-80% of the time based on Claude's judgment.\"",
-      "zh-Hans": "> “v1 依赖技能进行观察。技能是概率性的——它们基于 Claude 的判断，大约有 50-80% 的概率触发。”"
+      "en-US": "> \"v1 relied on skills to observe. Skills are probabilistic -- they fire ~50-80% of the time based on Claude's judgment.\"",
+      "zh-Hans": "> \"v1 依赖技能来观察。技能是概率性的 -- 根据 Claude 的判断，它们触发的概率约为 50-80%。\""
     },
     {
       "en-US": "Hooks fire **100% of the time**, deterministically. This means:",
@@ -203,20 +259,20 @@
       "zh-Hans": "## 向后兼容性"
     },
     {
-      "en-US": "v2 is fully compatible with v1:",
-      "zh-Hans": "v2 与 v1 完全兼容："
+      "en-US": "v2.1 is fully compatible with v2.0 and v1:",
+      "zh-Hans": "v2.1 与 v2.0 和 v1 完全兼容："
     },
     {
-      "en-US": "- Existing `~/.claude/skills/learned/` skills still work\n- Stop hook still runs (but now also feeds into v2)\n- Gradual migration path: run both in parallel",
-      "zh-Hans": "* 现有的 `~/.claude/skills/learned/` 技能仍然有效\n* 停止钩子仍然运行（但现在也输入到 v2）\n* 渐进式迁移路径：并行运行两者"
+      "en-US": "- Existing global instincts in `~/.claude/homunculus/instincts/` still work as global instincts\n- Existing `~/.claude/skills/learned/` skills from v1 still work\n- Stop hook still runs (but now also feeds into v2)\n- Gradual migration: run both in parallel",
+      "zh-Hans": "* `~/.claude/homunculus/instincts/` 中现有的全局本能仍然作为全局本能工作\n* 来自 v1 的现有 `~/.claude/skills/learned/` 技能仍然有效\n* 停止钩子仍然运行 (但现在也会输入到 v2)\n* 逐步迁移：并行运行两者"
     },
     {
       "en-US": "## Privacy",
       "zh-Hans": "## 隐私"
     },
     {
-      "en-US": "- Observations stay **local** on your machine\n- Only **instincts** (patterns) can be exported\n- No actual code or conversation content is shared\n- You control what gets exported",
-      "zh-Hans": "* 观察数据**保留在**你的本地机器上\n* 只有**本能**（模式）可以被导出\n* 不会共享实际的代码或对话内容\n* 你控制导出的内容"
+      "en-US": "- Observations stay **local** on your machine\n- Project-scoped instincts are isolated per project\n- Only **instincts** (patterns) can be exported — not raw observations\n- No actual code or conversation content is shared\n- You control what gets exported and promoted",
+      "zh-Hans": "* 观察结果**本地**保留在您的机器上\n* 项目作用域的本能按项目隔离\n* 只有**本能** (模式) 可以被导出 — 而不是原始观察数据\n* 不会共享实际的代码或对话内容\n* 您控制导出和提升的内容"
     },
     {
       "en-US": "## Related",
@@ -231,8 +287,8 @@
       "zh-Hans": "***"
     },
     {
-      "en-US": "*Instinct-based learning: teaching Claude your patterns, one observation at a time.*",
-      "zh-Hans": "*基于本能的学习：一次一个观察，教会 Claude 你的模式。*"
+      "en-US": "*Instinct-based learning: teaching Claude your patterns, one project at a time.*",
+      "zh-Hans": "*基于本能的学习：一次一个项目，教会 Claude 您的模式。*"
     }
   ]
 }

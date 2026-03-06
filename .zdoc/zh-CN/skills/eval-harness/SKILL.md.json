@@ -233,6 +233,54 @@
     {
       "en-US": "```markdown\n## EVAL: add-authentication\n\n### Phase 1: Define (10 min)\nCapability Evals:\n- [ ] User can register with email/password\n- [ ] User can login with valid credentials\n- [ ] Invalid credentials rejected with proper error\n- [ ] Sessions persist across page reloads\n- [ ] Logout clears session\n\nRegression Evals:\n- [ ] Public routes still accessible\n- [ ] API responses unchanged\n- [ ] Database schema compatible\n\n### Phase 2: Implement (varies)\n[Write code]\n\n### Phase 3: Evaluate\nRun: /eval check add-authentication\n\n### Phase 4: Report\nEVAL REPORT: add-authentication\n==============================\nCapability: 5/5 passed (pass@3: 100%)\nRegression: 3/3 passed (pass^3: 100%)\nStatus: SHIP IT\n```",
       "zh-Hans": "```markdown\n## EVAL：添加身份验证\n\n### 第 1 阶段：定义 (10 分钟)\n能力评估：\n- [ ] 用户可以使用邮箱/密码注册\n- [ ] 用户可以使用有效凭证登录\n- [ ] 无效凭证被拒绝并显示适当的错误\n- [ ] 会话在页面重新加载后保持\n- [ ] 登出操作清除会话\n\n回归评估：\n- [ ] 公共路由仍可访问\n- [ ] API 响应未改变\n- [ ] 数据库模式兼容\n\n### 第 2 阶段：实施 (时间不定)\n[编写代码]\n\n### 第 3 阶段：评估\n运行：/eval check add-authentication\n\n### 第 4 阶段：报告\n评估报告：添加身份验证\n==============================\n能力：5/5 通过 (pass@3: 100%)\n回归：3/3 通过 (pass^3: 100%)\n状态：可以发布\n\n```"
+    },
+    {
+      "en-US": "## Product Evals (v1.8)",
+      "zh-Hans": "## 产品评估 (v1.8)"
+    },
+    {
+      "en-US": "Use product evals when behavior quality cannot be captured by unit tests alone.",
+      "zh-Hans": "当单元测试无法单独捕获行为质量时，使用产品评估。"
+    },
+    {
+      "en-US": "### Grader Types",
+      "zh-Hans": "### 评分器类型"
+    },
+    {
+      "en-US": "1. Code grader (deterministic assertions)\n2. Rule grader (regex/schema constraints)\n3. Model grader (LLM-as-judge rubric)\n4. Human grader (manual adjudication for ambiguous outputs)",
+      "zh-Hans": "1. 代码评分器（确定性断言）\n2. 规则评分器（正则表达式/模式约束）\n3. 模型评分器（LLM 作为评判者的评估准则）\n4. 人工评分器（针对模糊输出的人工裁定）"
+    },
+    {
+      "en-US": "### pass@k Guidance",
+      "zh-Hans": "### pass@k 指南"
+    },
+    {
+      "en-US": "- `pass@1`: direct reliability\n- `pass@3`: practical reliability under controlled retries\n- `pass^3`: stability test (all 3 runs must pass)",
+      "zh-Hans": "* `pass@1`：直接可靠性\n* `pass@3`：受控重试下的实际可靠性\n* `pass^3`：稳定性测试（所有 3 次运行必须通过）"
+    },
+    {
+      "en-US": "Recommended thresholds:",
+      "zh-Hans": "推荐阈值："
+    },
+    {
+      "en-US": "- Capability evals: pass@3 >= 0.90\n- Regression evals: pass^3 = 1.00 for release-critical paths",
+      "zh-Hans": "* 能力评估：pass@3 >= 0.90\n* 回归评估：对于发布关键路径，pass^3 = 1.00"
+    },
+    {
+      "en-US": "### Eval Anti-Patterns",
+      "zh-Hans": "### 评估反模式"
+    },
+    {
+      "en-US": "- Overfitting prompts to known eval examples\n- Measuring only happy-path outputs\n- Ignoring cost and latency drift while chasing pass rates\n- Allowing flaky graders in release gates",
+      "zh-Hans": "* 将提示过度拟合到已知的评估示例\n* 仅测量正常路径输出\n* 在追求通过率时忽略成本和延迟漂移\n* 在发布关卡中允许不稳定的评分器"
+    },
+    {
+      "en-US": "### Minimal Eval Artifact Layout",
+      "zh-Hans": "### 最小评估工件布局"
+    },
+    {
+      "en-US": "- `.claude/evals/<feature>.md` definition\n- `.claude/evals/<feature>.log` run history\n- `docs/releases/<version>/eval-summary.md` release snapshot",
+      "zh-Hans": "* `.claude/evals/<feature>.md` 定义\n* `.claude/evals/<feature>.log` 运行历史\n* `docs/releases/<version>/eval-summary.md` 发布快照"
     }
   ]
 }

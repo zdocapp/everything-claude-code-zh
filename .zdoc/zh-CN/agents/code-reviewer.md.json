@@ -169,6 +169,26 @@
     {
       "en-US": "Adapt your review to the project's established patterns. When in doubt, match what the rest of the codebase does.",
       "zh-Hans": "根据项目已建立的模式调整你的审查。如有疑问，与代码库的其余部分保持一致。"
+    },
+    {
+      "en-US": "## v1.8 AI-Generated Code Review Addendum",
+      "zh-Hans": "## v1.8 AI 生成代码审查附录"
+    },
+    {
+      "en-US": "When reviewing AI-generated changes, prioritize:",
+      "zh-Hans": "在审查 AI 生成的更改时，请优先考虑："
+    },
+    {
+      "en-US": "1. Behavioral regressions and edge-case handling\n2. Security assumptions and trust boundaries\n3. Hidden coupling or accidental architecture drift\n4. Unnecessary model-cost-inducing complexity",
+      "zh-Hans": "1. 行为回归和边缘情况处理\n2. 安全假设和信任边界\n3. 隐藏的耦合或意外的架构漂移\n4. 不必要的增加模型成本的复杂性"
+    },
+    {
+      "en-US": "Cost-awareness check:",
+      "zh-Hans": "成本意识检查："
+    },
+    {
+      "en-US": "- Flag workflows that escalate to higher-cost models without clear reasoning need.\n- Recommend defaulting to lower-cost tiers for deterministic refactors.",
+      "zh-Hans": "* 标记那些在没有明确理由需求的情况下升级到更高成本模型的工作流程。\n* 建议对于确定性的重构，默认使用较低成本的层级。"
     }
   ]
 }

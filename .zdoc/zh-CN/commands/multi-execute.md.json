@@ -123,8 +123,8 @@
       "zh-Hans": "`[Mode: Retrieval]`"
     },
     {
-      "en-US": "**Must use MCP tool for quick context retrieval, do NOT manually read files one by one**",
-      "zh-Hans": "**必须使用 MCP 工具进行快速上下文检索，切勿手动逐个读取文件**"
+      "en-US": "**If ace-tool MCP is available**, use it for quick context retrieval:",
+      "zh-Hans": "**如果 ace-tool MCP 可用**，使用它进行快速上下文检索："
     },
     {
       "en-US": "Based on \"Key Files\" list in plan, call `mcp__ace-tool__search_context`:",
@@ -139,8 +139,16 @@
       "zh-Hans": "**检索策略**："
     },
     {
-      "en-US": "- Extract target paths from plan's \"Key Files\" table\n- Build semantic query covering: entry files, dependency modules, related type definitions\n- If results insufficient, add 1-2 recursive retrievals\n- **NEVER** use Bash + find/ls to manually explore project structure",
-      "zh-Hans": "* 从计划的“关键文件”表中提取目标路径\n* 构建语义查询覆盖：入口文件、依赖模块、相关类型定义\n* 如果结果不足，添加 1-2 次递归检索\n* **切勿**使用 Bash + find/ls 手动探索项目结构"
+      "en-US": "- Extract target paths from plan's \"Key Files\" table\n- Build semantic query covering: entry files, dependency modules, related type definitions\n- If results insufficient, add 1-2 recursive retrievals",
+      "zh-Hans": "* 从计划的“关键文件”表中提取目标路径\n* 构建语义查询，涵盖：入口文件、依赖模块、相关类型定义\n* 如果结果不足，添加 1-2 次递归检索"
+    },
+    {
+      "en-US": "**If ace-tool MCP is NOT available**, use Claude Code built-in tools as fallback:",
+      "zh-Hans": "**如果 ace-tool MCP 不可用**，使用 Claude Code 内置工具作为后备方案："
+    },
+    {
+      "en-US": "1. **Glob**: Find target files from plan's \"Key Files\" table (e.g., `Glob(\"src/components/**/*.tsx\")`)\n2. **Grep**: Search for key symbols, function names, type definitions across the codebase\n3. **Read**: Read the discovered files to gather complete context\n4. **Task (Explore agent)**: For broader exploration, use `Task` with `subagent_type: \"Explore\"`",
+      "zh-Hans": "1. **Glob**：从计划的“关键文件”表中查找目标文件（例如，`Glob(\"src/components/**/*.tsx\")`）\n2. **Grep**：在代码库中搜索关键符号、函数名、类型定义\n3. **Read**：读取发现的文件以收集完整的上下文\n4. **Task (探索代理)**：对于更广泛的探索，使用 `Task` 和 `subagent_type: \"Explore\"`"
     },
     {
       "en-US": "**After Retrieval**:",
