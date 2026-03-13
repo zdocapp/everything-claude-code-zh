@@ -1,0 +1,94 @@
+{
+  "sourceFile": "rules/perl/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---"
+    },
+    {
+      "en-US": "# Perl Security",
+      "zh-Hans": "# Perl 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with Perl-specific content.",
+      "zh-Hans": "> 本文档在 [common/security.md](../common/security.md) 的基础上扩展了 Perl 相关的内容。"
+    },
+    {
+      "en-US": "## Taint Mode",
+      "zh-Hans": "## 污染模式"
+    },
+    {
+      "en-US": "- Use `-T` flag on all CGI/web-facing scripts\n- Sanitize `%ENV` (`$ENV{PATH}`, `$ENV{CDPATH}`, etc.) before any external command",
+      "zh-Hans": "* 在所有 CGI/面向 Web 的脚本中使用 `-T` 标志\n* 在执行任何外部命令前，清理 `%ENV` (`$ENV{PATH}`、`$ENV{CDPATH}` 等)"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "- Use allowlist regex for untainting — never `/(.*)/s`\n- Validate all user input with explicit patterns:",
+      "zh-Hans": "* 使用允许列表正则表达式进行去污化 — 绝不要使用 `/(.*)/s`\n* 使用明确的模式验证所有用户输入："
+    },
+    {
+      "en-US": "```perl\nif ($input =~ /\\A([a-zA-Z0-9_-]+)\\z/) {\n    my $clean = $1;\n}\n```",
+      "zh-Hans": "```perl\nif ($input =~ /\\A([a-zA-Z0-9_-]+)\\z/) {\n    my $clean = $1;\n}\n```"
+    },
+    {
+      "en-US": "## File I/O",
+      "zh-Hans": "## 文件 I/O"
+    },
+    {
+      "en-US": "- **Three-arg open only** — never two-arg open\n- Prevent path traversal with `Cwd::realpath`:",
+      "zh-Hans": "* **仅使用三参数 open** — 绝不要使用两参数 open\n* 使用 `Cwd::realpath` 防止路径遍历："
+    },
+    {
+      "en-US": "```perl\nuse Cwd 'realpath';\nmy $safe_path = realpath($user_path);\ndie \"Path traversal\" unless $safe_path =~ m{\\A/allowed/directory/};\n```",
+      "zh-Hans": "```perl\nuse Cwd 'realpath';\nmy $safe_path = realpath($user_path);\ndie \"Path traversal\" unless $safe_path =~ m{\\A/allowed/directory/};\n```"
+    },
+    {
+      "en-US": "## Process Execution",
+      "zh-Hans": "## 进程执行"
+    },
+    {
+      "en-US": "- Use **list-form `system()`** — never single-string form\n- Use **IPC::Run3** for capturing output\n- Never use backticks with variable interpolation",
+      "zh-Hans": "* 使用 **列表形式的 `system()`** — 绝不要使用单字符串形式\n* 使用 **IPC::Run3** 来捕获输出\n* 绝对不要在反引号中使用变量插值"
+    },
+    {
+      "en-US": "```perl\nsystem('grep', '-r', $pattern, $directory);  # safe\n```",
+      "zh-Hans": "```perl\nsystem('grep', '-r', $pattern, $directory);  # safe\n```"
+    },
+    {
+      "en-US": "## SQL Injection Prevention",
+      "zh-Hans": "## SQL 注入预防"
+    },
+    {
+      "en-US": "Always use DBI placeholders — never interpolate into SQL:",
+      "zh-Hans": "始终使用 DBI 占位符 — 绝不要将变量插值到 SQL 中："
+    },
+    {
+      "en-US": "```perl\nmy $sth = $dbh->prepare('SELECT * FROM users WHERE email = ?');\n$sth->execute($email);\n```",
+      "zh-Hans": "```perl\nmy $sth = $dbh->prepare('SELECT * FROM users WHERE email = ?');\n$sth->execute($email);\n```"
+    },
+    {
+      "en-US": "## Security Scanning",
+      "zh-Hans": "## 安全扫描"
+    },
+    {
+      "en-US": "Run **perlcritic** with the security theme at severity 4+:",
+      "zh-Hans": "运行 **perlcritic** 并使用安全主题，严重级别设为 4 或更高："
+    },
+    {
+      "en-US": "```bash\nperlcritic --severity 4 --theme security lib/\n```",
+      "zh-Hans": "```bash\nperlcritic --severity 4 --theme security lib/\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `perl-security` for comprehensive Perl security patterns, taint mode, and safe I/O.",
+      "zh-Hans": "有关全面的 Perl 安全模式、污染模式和安全 I/O，请参阅技能：`perl-security`。"
+    }
+  ]
+}

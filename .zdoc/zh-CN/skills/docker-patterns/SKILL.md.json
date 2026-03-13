@@ -1,0 +1,170 @@
+{
+  "sourceFile": "skills/docker-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: docker-patterns\ndescription: Docker and Docker Compose patterns for local development, container security, networking, volume strategies, and multi-service orchestration.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: docker-patterns\ndescription: 用于本地开发的Docker和Docker Compose模式，包括容器安全、网络、卷策略和多服务编排。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Docker Patterns",
+      "zh-Hans": "# Docker 模式"
+    },
+    {
+      "en-US": "Docker and Docker Compose best practices for containerized development.",
+      "zh-Hans": "适用于容器化开发的 Docker 和 Docker Compose 最佳实践。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Setting up Docker Compose for local development\n- Designing multi-container architectures\n- Troubleshooting container networking or volume issues\n- Reviewing Dockerfiles for security and size\n- Migrating from local dev to containerized workflow",
+      "zh-Hans": "* 为本地开发设置 Docker Compose\n* 设计多容器架构\n* 排查容器网络或卷问题\n* 审查 Dockerfile 的安全性和大小\n* 从本地开发迁移到容器化工作流"
+    },
+    {
+      "en-US": "## Docker Compose for Local Development",
+      "zh-Hans": "## 用于本地开发的 Docker Compose"
+    },
+    {
+      "en-US": "### Standard Web App Stack",
+      "zh-Hans": "### 标准 Web 应用栈"
+    },
+    {
+      "en-US": "```yaml\n# docker-compose.yml\nservices:\n  app:\n    build:\n      context: .\n      target: dev                     # Use dev stage of multi-stage Dockerfile\n    ports:\n      - \"3000:3000\"\n    volumes:\n      - .:/app                        # Bind mount for hot reload\n      - /app/node_modules             # Anonymous volume -- preserves container deps\n    environment:\n      - DATABASE_URL=postgres://postgres:postgres@db:5432/app_dev\n      - REDIS_URL=redis://redis:6379/0\n      - NODE_ENV=development\n    depends_on:\n      db:\n        condition: service_healthy\n      redis:\n        condition: service_started\n    command: npm run dev\n\n  db:\n    image: postgres:16-alpine\n    ports:\n      - \"5432:5432\"\n    environment:\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: postgres\n      POSTGRES_DB: app_dev\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      timeout: 3s\n      retries: 5\n\n  redis:\n    image: redis:7-alpine\n    ports:\n      - \"6379:6379\"\n    volumes:\n      - redisdata:/data\n\n  mailpit:                            # Local email testing\n    image: axllent/mailpit\n    ports:\n      - \"8025:8025\"                   # Web UI\n      - \"1025:1025\"                   # SMTP\n\nvolumes:\n  pgdata:\n  redisdata:\n```",
+      "zh-Hans": "```yaml\n# docker-compose.yml\nservices:\n  app:\n    build:\n      context: .\n      target: dev                     # Use dev stage of multi-stage Dockerfile\n    ports:\n      - \"3000:3000\"\n    volumes:\n      - .:/app                        # Bind mount for hot reload\n      - /app/node_modules             # Anonymous volume -- preserves container deps\n    environment:\n      - DATABASE_URL=postgres://postgres:postgres@db:5432/app_dev\n      - REDIS_URL=redis://redis:6379/0\n      - NODE_ENV=development\n    depends_on:\n      db:\n        condition: service_healthy\n      redis:\n        condition: service_started\n    command: npm run dev\n\n  db:\n    image: postgres:16-alpine\n    ports:\n      - \"5432:5432\"\n    environment:\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: postgres\n      POSTGRES_DB: app_dev\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      timeout: 3s\n      retries: 5\n\n  redis:\n    image: redis:7-alpine\n    ports:\n      - \"6379:6379\"\n    volumes:\n      - redisdata:/data\n\n  mailpit:                            # Local email testing\n    image: axllent/mailpit\n    ports:\n      - \"8025:8025\"                   # Web UI\n      - \"1025:1025\"                   # SMTP\n\nvolumes:\n  pgdata:\n  redisdata:\n```"
+    },
+    {
+      "en-US": "### Development vs Production Dockerfile",
+      "zh-Hans": "### 开发与生产 Dockerfile"
+    },
+    {
+      "en-US": "```dockerfile\n# Stage: dependencies\nFROM node:22-alpine AS deps\nWORKDIR /app\nCOPY package.json package-lock.json ./\nRUN npm ci\n\n# Stage: dev (hot reload, debug tools)\nFROM node:22-alpine AS dev\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nEXPOSE 3000\nCMD [\"npm\", \"run\", \"dev\"]\n\n# Stage: build\nFROM node:22-alpine AS build\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nRUN npm run build && npm prune --production\n\n# Stage: production (minimal image)\nFROM node:22-alpine AS production\nWORKDIR /app\nRUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001\nUSER appuser\nCOPY --from=build --chown=appuser:appgroup /app/dist ./dist\nCOPY --from=build --chown=appuser:appgroup /app/node_modules ./node_modules\nCOPY --from=build --chown=appuser:appgroup /app/package.json ./\nENV NODE_ENV=production\nEXPOSE 3000\nHEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1\nCMD [\"node\", \"dist/server.js\"]\n```",
+      "zh-Hans": "```dockerfile\n# Stage: dependencies\nFROM node:22-alpine AS deps\nWORKDIR /app\nCOPY package.json package-lock.json ./\nRUN npm ci\n\n# Stage: dev (hot reload, debug tools)\nFROM node:22-alpine AS dev\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nEXPOSE 3000\nCMD [\"npm\", \"run\", \"dev\"]\n\n# Stage: build\nFROM node:22-alpine AS build\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nRUN npm run build && npm prune --production\n\n# Stage: production (minimal image)\nFROM node:22-alpine AS production\nWORKDIR /app\nRUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001\nUSER appuser\nCOPY --from=build --chown=appuser:appgroup /app/dist ./dist\nCOPY --from=build --chown=appuser:appgroup /app/node_modules ./node_modules\nCOPY --from=build --chown=appuser:appgroup /app/package.json ./\nENV NODE_ENV=production\nEXPOSE 3000\nHEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1\nCMD [\"node\", \"dist/server.js\"]\n```"
+    },
+    {
+      "en-US": "### Override Files",
+      "zh-Hans": "### 覆盖文件"
+    },
+    {
+      "en-US": "```yaml\n# docker-compose.override.yml (auto-loaded, dev-only settings)\nservices:\n  app:\n    environment:\n      - DEBUG=app:*\n      - LOG_LEVEL=debug\n    ports:\n      - \"9229:9229\"                   # Node.js debugger\n\n# docker-compose.prod.yml (explicit for production)\nservices:\n  app:\n    build:\n      target: production\n    restart: always\n    deploy:\n      resources:\n        limits:\n          cpus: \"1.0\"\n          memory: 512M\n```",
+      "zh-Hans": "```yaml\n# docker-compose.override.yml (auto-loaded, dev-only settings)\nservices:\n  app:\n    environment:\n      - DEBUG=app:*\n      - LOG_LEVEL=debug\n    ports:\n      - \"9229:9229\"                   # Node.js debugger\n\n# docker-compose.prod.yml (explicit for production)\nservices:\n  app:\n    build:\n      target: production\n    restart: always\n    deploy:\n      resources:\n        limits:\n          cpus: \"1.0\"\n          memory: 512M\n```"
+    },
+    {
+      "en-US": "```bash\n# Development (auto-loads override)\ndocker compose up\n\n# Production\ndocker compose -f docker-compose.yml -f docker-compose.prod.yml up -d\n```",
+      "zh-Hans": "```bash\n# Development (auto-loads override)\ndocker compose up\n\n# Production\ndocker compose -f docker-compose.yml -f docker-compose.prod.yml up -d\n```"
+    },
+    {
+      "en-US": "## Networking",
+      "zh-Hans": "## 网络"
+    },
+    {
+      "en-US": "### Service Discovery",
+      "zh-Hans": "### 服务发现"
+    },
+    {
+      "en-US": "Services in the same Compose network resolve by service name:",
+      "zh-Hans": "同一 Compose 网络中的服务可通过服务名解析："
+    },
+    {
+      "en-US": "```\n# From \"app\" container:\npostgres://postgres:postgres@db:5432/app_dev    # \"db\" resolves to the db container\nredis://redis:6379/0                             # \"redis\" resolves to the redis container\n```",
+      "zh-Hans": "```\n# From \"app\" container:\npostgres://postgres:postgres@db:5432/app_dev    # \"db\" resolves to the db container\nredis://redis:6379/0                             # \"redis\" resolves to the redis container\n```"
+    },
+    {
+      "en-US": "### Custom Networks",
+      "zh-Hans": "### 自定义网络"
+    },
+    {
+      "en-US": "```yaml\nservices:\n  frontend:\n    networks:\n      - frontend-net\n\n  api:\n    networks:\n      - frontend-net\n      - backend-net\n\n  db:\n    networks:\n      - backend-net              # Only reachable from api, not frontend\n\nnetworks:\n  frontend-net:\n  backend-net:\n```",
+      "zh-Hans": "```yaml\nservices:\n  frontend:\n    networks:\n      - frontend-net\n\n  api:\n    networks:\n      - frontend-net\n      - backend-net\n\n  db:\n    networks:\n      - backend-net              # Only reachable from api, not frontend\n\nnetworks:\n  frontend-net:\n  backend-net:\n```"
+    },
+    {
+      "en-US": "### Exposing Only What's Needed",
+      "zh-Hans": "### 仅暴露所需内容"
+    },
+    {
+      "en-US": "```yaml\nservices:\n  db:\n    ports:\n      - \"127.0.0.1:5432:5432\"   # Only accessible from host, not network\n    # Omit ports entirely in production -- accessible only within Docker network\n```",
+      "zh-Hans": "```yaml\nservices:\n  db:\n    ports:\n      - \"127.0.0.1:5432:5432\"   # Only accessible from host, not network\n    # Omit ports entirely in production -- accessible only within Docker network\n```"
+    },
+    {
+      "en-US": "## Volume Strategies",
+      "zh-Hans": "## 卷策略"
+    },
+    {
+      "en-US": "```yaml\nvolumes:\n  # Named volume: persists across container restarts, managed by Docker\n  pgdata:\n\n  # Bind mount: maps host directory into container (for development)\n  # - ./src:/app/src\n\n  # Anonymous volume: preserves container-generated content from bind mount override\n  # - /app/node_modules\n```",
+      "zh-Hans": "```yaml\nvolumes:\n  # Named volume: persists across container restarts, managed by Docker\n  pgdata:\n\n  # Bind mount: maps host directory into container (for development)\n  # - ./src:/app/src\n\n  # Anonymous volume: preserves container-generated content from bind mount override\n  # - /app/node_modules\n```"
+    },
+    {
+      "en-US": "### Common Patterns",
+      "zh-Hans": "### 常见模式"
+    },
+    {
+      "en-US": "```yaml\nservices:\n  app:\n    volumes:\n      - .:/app                   # Source code (bind mount for hot reload)\n      - /app/node_modules        # Protect container's node_modules from host\n      - /app/.next               # Protect build cache\n\n  db:\n    volumes:\n      - pgdata:/var/lib/postgresql/data          # Persistent data\n      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql  # Init scripts\n```",
+      "zh-Hans": "```yaml\nservices:\n  app:\n    volumes:\n      - .:/app                   # Source code (bind mount for hot reload)\n      - /app/node_modules        # Protect container's node_modules from host\n      - /app/.next               # Protect build cache\n\n  db:\n    volumes:\n      - pgdata:/var/lib/postgresql/data          # Persistent data\n      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql  # Init scripts\n```"
+    },
+    {
+      "en-US": "## Container Security",
+      "zh-Hans": "## 容器安全"
+    },
+    {
+      "en-US": "### Dockerfile Hardening",
+      "zh-Hans": "### Dockerfile 加固"
+    },
+    {
+      "en-US": "```dockerfile\n# 1. Use specific tags (never :latest)\nFROM node:22.12-alpine3.20\n\n# 2. Run as non-root\nRUN addgroup -g 1001 -S app && adduser -S app -u 1001\nUSER app\n\n# 3. Drop capabilities (in compose)\n# 4. Read-only root filesystem where possible\n# 5. No secrets in image layers\n```",
+      "zh-Hans": "```dockerfile\n# 1. Use specific tags (never :latest)\nFROM node:22.12-alpine3.20\n\n# 2. Run as non-root\nRUN addgroup -g 1001 -S app && adduser -S app -u 1001\nUSER app\n\n# 3. Drop capabilities (in compose)\n# 4. Read-only root filesystem where possible\n# 5. No secrets in image layers\n```"
+    },
+    {
+      "en-US": "### Compose Security",
+      "zh-Hans": "### Compose 安全"
+    },
+    {
+      "en-US": "```yaml\nservices:\n  app:\n    security_opt:\n      - no-new-privileges:true\n    read_only: true\n    tmpfs:\n      - /tmp\n      - /app/.cache\n    cap_drop:\n      - ALL\n    cap_add:\n      - NET_BIND_SERVICE          # Only if binding to ports < 1024\n```",
+      "zh-Hans": "```yaml\nservices:\n  app:\n    security_opt:\n      - no-new-privileges:true\n    read_only: true\n    tmpfs:\n      - /tmp\n      - /app/.cache\n    cap_drop:\n      - ALL\n    cap_add:\n      - NET_BIND_SERVICE          # Only if binding to ports < 1024\n```"
+    },
+    {
+      "en-US": "### Secret Management",
+      "zh-Hans": "### 密钥管理"
+    },
+    {
+      "en-US": "```yaml\n# GOOD: Use environment variables (injected at runtime)\nservices:\n  app:\n    env_file:\n      - .env                     # Never commit .env to git\n    environment:\n      - API_KEY                  # Inherits from host environment\n\n# GOOD: Docker secrets (Swarm mode)\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt\n\nservices:\n  db:\n    secrets:\n      - db_password\n\n# BAD: Hardcoded in image\n# ENV API_KEY=sk-proj-xxxxx      # NEVER DO THIS\n```",
+      "zh-Hans": "```yaml\n# GOOD: Use environment variables (injected at runtime)\nservices:\n  app:\n    env_file:\n      - .env                     # Never commit .env to git\n    environment:\n      - API_KEY                  # Inherits from host environment\n\n# GOOD: Docker secrets (Swarm mode)\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt\n\nservices:\n  db:\n    secrets:\n      - db_password\n\n# BAD: Hardcoded in image\n# ENV API_KEY=sk-proj-xxxxx      # NEVER DO THIS\n```"
+    },
+    {
+      "en-US": "## .dockerignore",
+      "zh-Hans": "## .dockerignore"
+    },
+    {
+      "en-US": "```\nnode_modules\n.git\n.env\n.env.*\ndist\ncoverage\n*.log\n.next\n.cache\ndocker-compose*.yml\nDockerfile*\nREADME.md\ntests/\n```",
+      "zh-Hans": "```\nnode_modules\n.git\n.env\n.env.*\ndist\ncoverage\n*.log\n.next\n.cache\ndocker-compose*.yml\nDockerfile*\nREADME.md\ntests/\n```"
+    },
+    {
+      "en-US": "## Debugging",
+      "zh-Hans": "## 调试"
+    },
+    {
+      "en-US": "### Common Commands",
+      "zh-Hans": "### 常用命令"
+    },
+    {
+      "en-US": "```bash\n# View logs\ndocker compose logs -f app           # Follow app logs\ndocker compose logs --tail=50 db     # Last 50 lines from db\n\n# Execute commands in running container\ndocker compose exec app sh           # Shell into app\ndocker compose exec db psql -U postgres  # Connect to postgres\n\n# Inspect\ndocker compose ps                     # Running services\ndocker compose top                    # Processes in each container\ndocker stats                          # Resource usage\n\n# Rebuild\ndocker compose up --build             # Rebuild images\ndocker compose build --no-cache app   # Force full rebuild\n\n# Clean up\ndocker compose down                   # Stop and remove containers\ndocker compose down -v                # Also remove volumes (DESTRUCTIVE)\ndocker system prune                   # Remove unused images/containers\n```",
+      "zh-Hans": "```bash\n# View logs\ndocker compose logs -f app           # Follow app logs\ndocker compose logs --tail=50 db     # Last 50 lines from db\n\n# Execute commands in running container\ndocker compose exec app sh           # Shell into app\ndocker compose exec db psql -U postgres  # Connect to postgres\n\n# Inspect\ndocker compose ps                     # Running services\ndocker compose top                    # Processes in each container\ndocker stats                          # Resource usage\n\n# Rebuild\ndocker compose up --build             # Rebuild images\ndocker compose build --no-cache app   # Force full rebuild\n\n# Clean up\ndocker compose down                   # Stop and remove containers\ndocker compose down -v                # Also remove volumes (DESTRUCTIVE)\ndocker system prune                   # Remove unused images/containers\n```"
+    },
+    {
+      "en-US": "### Debugging Network Issues",
+      "zh-Hans": "### 调试网络问题"
+    },
+    {
+      "en-US": "```bash\n# Check DNS resolution inside container\ndocker compose exec app nslookup db\n\n# Check connectivity\ndocker compose exec app wget -qO- http://api:3000/health\n\n# Inspect network\ndocker network ls\ndocker network inspect <project>_default\n```",
+      "zh-Hans": "```bash\n# Check DNS resolution inside container\ndocker compose exec app nslookup db\n\n# Check connectivity\ndocker compose exec app wget -qO- http://api:3000/health\n\n# Inspect network\ndocker network ls\ndocker network inspect <project>_default\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "```\n# BAD: Using docker compose in production without orchestration\n# Use Kubernetes, ECS, or Docker Swarm for production multi-container workloads\n\n# BAD: Storing data in containers without volumes\n# Containers are ephemeral -- all data lost on restart without volumes\n\n# BAD: Running as root\n# Always create and use a non-root user\n\n# BAD: Using :latest tag\n# Pin to specific versions for reproducible builds\n\n# BAD: One giant container with all services\n# Separate concerns: one process per container\n\n# BAD: Putting secrets in docker-compose.yml\n# Use .env files (gitignored) or Docker secrets\n```",
+      "zh-Hans": "```\n# BAD: Using docker compose in production without orchestration\n# Use Kubernetes, ECS, or Docker Swarm for production multi-container workloads\n\n# BAD: Storing data in containers without volumes\n# Containers are ephemeral -- all data lost on restart without volumes\n\n# BAD: Running as root\n# Always create and use a non-root user\n\n# BAD: Using :latest tag\n# Pin to specific versions for reproducible builds\n\n# BAD: One giant container with all services\n# Separate concerns: one process per container\n\n# BAD: Putting secrets in docker-compose.yml\n# Use .env files (gitignored) or Docker secrets\n```"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "sourceFile": "examples/go-microservice-CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Go Microservice — Project CLAUDE.md",
+      "zh-Hans": "# Go 微服务 — 项目 CLAUDE.md"
+    },
+    {
+      "en-US": "> Real-world example for a Go microservice with PostgreSQL, gRPC, and Docker.\n> Copy this to your project root and customize for your service.",
+      "zh-Hans": "> 一个使用 PostgreSQL、gRPC 和 Docker 的 Go 微服务真实示例。\n> 将此文件复制到您的项目根目录，并根据您的服务进行自定义。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概述"
+    },
+    {
+      "en-US": "**Stack:** Go 1.22+, PostgreSQL, gRPC + REST (grpc-gateway), Docker, sqlc (type-safe SQL), Wire (dependency injection)",
+      "zh-Hans": "**技术栈:** Go 1.22+, PostgreSQL, gRPC + REST (grpc-gateway), Docker, sqlc (类型安全的 SQL), Wire (依赖注入)"
+    },
+    {
+      "en-US": "**Architecture:** Clean architecture with domain, repository, service, and handler layers. gRPC as primary transport with REST gateway for external clients.",
+      "zh-Hans": "**架构:** 采用领域、仓库、服务和处理器层的清晰架构。gRPC 作为主要传输方式，REST 网关用于外部客户端。"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "### Go Conventions",
+      "zh-Hans": "### Go 规范"
+    },
+    {
+      "en-US": "- Follow Effective Go and the Go Code Review Comments guide\n- Use `errors.New` / `fmt.Errorf` with `%w` for wrapping — never string matching on errors\n- No `init()` functions — explicit initialization in `main()` or constructors\n- No global mutable state — pass dependencies via constructors\n- Context must be the first parameter and propagated through all layers",
+      "zh-Hans": "* 遵循 Effective Go 和 Go Code Review Comments 指南\n* 使用 `errors.New` / `fmt.Errorf` 配合 `%w` 进行包装 — 绝不对错误进行字符串匹配\n* 不使用 `init()` 函数 — 在 `main()` 或构造函数中进行显式初始化\n* 没有全局可变状态 — 通过构造函数传递依赖项\n* Context 必须是第一个参数，并在所有层中传播"
+    },
+    {
+      "en-US": "### Database",
+      "zh-Hans": "### 数据库"
+    },
+    {
+      "en-US": "- All queries in `queries/` as plain SQL — sqlc generates type-safe Go code\n- Migrations in `migrations/` using golang-migrate — never alter the database directly\n- Use transactions for multi-step operations via `pgx.Tx`\n- All queries must use parameterized placeholders (`$1`, `$2`) — never string formatting",
+      "zh-Hans": "* `queries/` 中的所有查询都使用纯 SQL — sqlc 生成类型安全的 Go 代码\n* 在 `migrations/` 中使用 golang-migrate 进行迁移 — 绝不直接更改数据库\n* 通过 `pgx.Tx` 为多步骤操作使用事务\n* 所有查询必须使用参数化占位符 (`$1`, `$2`) — 绝不使用字符串格式化"
+    },
+    {
+      "en-US": "### Error Handling",
+      "zh-Hans": "### 错误处理"
+    },
+    {
+      "en-US": "- Return errors, don't panic — panics are only for truly unrecoverable situations\n- Wrap errors with context: `fmt.Errorf(\"creating user: %w\", err)`\n- Define sentinel errors in `domain/errors.go` for business logic\n- Map domain errors to gRPC status codes in the handler layer",
+      "zh-Hans": "* 返回错误，不要 panic — panic 仅用于真正无法恢复的情况\n* 使用上下文包装错误：`fmt.Errorf(\"creating user: %w\", err)`\n* 在 `domain/errors.go` 中定义业务逻辑的哨兵错误\n* 在处理器层将领域错误映射到 gRPC 状态码"
+    },
+    {
+      "en-US": "```go\n// Domain layer — sentinel errors\nvar (\n    ErrUserNotFound  = errors.New(\"user not found\")\n    ErrEmailTaken    = errors.New(\"email already registered\")\n)\n\n// Handler layer — map to gRPC status\nfunc toGRPCError(err error) error {\n    switch {\n    case errors.Is(err, domain.ErrUserNotFound):\n        return status.Error(codes.NotFound, err.Error())\n    case errors.Is(err, domain.ErrEmailTaken):\n        return status.Error(codes.AlreadyExists, err.Error())\n    default:\n        return status.Error(codes.Internal, \"internal error\")\n    }\n}\n```",
+      "zh-Hans": "```go\n// Domain layer — sentinel errors\nvar (\n    ErrUserNotFound  = errors.New(\"user not found\")\n    ErrEmailTaken    = errors.New(\"email already registered\")\n)\n\n// Handler layer — map to gRPC status\nfunc toGRPCError(err error) error {\n    switch {\n    case errors.Is(err, domain.ErrUserNotFound):\n        return status.Error(codes.NotFound, err.Error())\n    case errors.Is(err, domain.ErrEmailTaken):\n        return status.Error(codes.AlreadyExists, err.Error())\n    default:\n        return status.Error(codes.Internal, \"internal error\")\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Code Style",
+      "zh-Hans": "### 代码风格"
+    },
+    {
+      "en-US": "- No emojis in code or comments\n- Exported types and functions must have doc comments\n- Keep functions under 50 lines — extract helpers\n- Use table-driven tests for all logic with multiple cases\n- Prefer `struct{}` for signal channels, not `bool`",
+      "zh-Hans": "* 代码或注释中不使用表情符号\n* 导出的类型和函数必须有文档注释\n* 函数保持在 50 行以内 — 提取辅助函数\n* 对所有具有多个用例的逻辑使用表格驱动测试\n* 对于信号通道，优先使用 `struct{}`，而不是 `bool`"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\ncmd/\n  server/\n    main.go              # Entrypoint, Wire injection, graceful shutdown\ninternal/\n  domain/                # Business types and interfaces\n    user.go              # User entity and repository interface\n    errors.go            # Sentinel errors\n  service/               # Business logic\n    user_service.go\n    user_service_test.go\n  repository/            # Data access (sqlc-generated + custom)\n    postgres/\n      user_repo.go\n      user_repo_test.go  # Integration tests with testcontainers\n  handler/               # gRPC + REST handlers\n    grpc/\n      user_handler.go\n    rest/\n      user_handler.go\n  config/                # Configuration loading\n    config.go\nproto/                   # Protobuf definitions\n  user/v1/\n    user.proto\nqueries/                 # SQL queries for sqlc\n  user.sql\nmigrations/              # Database migrations\n  001_create_users.up.sql\n  001_create_users.down.sql\n```",
+      "zh-Hans": "```\ncmd/\n  server/\n    main.go              # Entrypoint, Wire injection, graceful shutdown\ninternal/\n  domain/                # Business types and interfaces\n    user.go              # User entity and repository interface\n    errors.go            # Sentinel errors\n  service/               # Business logic\n    user_service.go\n    user_service_test.go\n  repository/            # Data access (sqlc-generated + custom)\n    postgres/\n      user_repo.go\n      user_repo_test.go  # Integration tests with testcontainers\n  handler/               # gRPC + REST handlers\n    grpc/\n      user_handler.go\n    rest/\n      user_handler.go\n  config/                # Configuration loading\n    config.go\nproto/                   # Protobuf definitions\n  user/v1/\n    user.proto\nqueries/                 # SQL queries for sqlc\n  user.sql\nmigrations/              # Database migrations\n  001_create_users.up.sql\n  001_create_users.down.sql\n```"
+    },
+    {
+      "en-US": "## Key Patterns",
+      "zh-Hans": "## 关键模式"
+    },
+    {
+      "en-US": "### Repository Interface",
+      "zh-Hans": "### 仓库接口"
+    },
+    {
+      "en-US": "```go\ntype UserRepository interface {\n    Create(ctx context.Context, user *User) error\n    FindByID(ctx context.Context, id uuid.UUID) (*User, error)\n    FindByEmail(ctx context.Context, email string) (*User, error)\n    Update(ctx context.Context, user *User) error\n    Delete(ctx context.Context, id uuid.UUID) error\n}\n```",
+      "zh-Hans": "```go\ntype UserRepository interface {\n    Create(ctx context.Context, user *User) error\n    FindByID(ctx context.Context, id uuid.UUID) (*User, error)\n    FindByEmail(ctx context.Context, email string) (*User, error)\n    Update(ctx context.Context, user *User) error\n    Delete(ctx context.Context, id uuid.UUID) error\n}\n```"
+    },
+    {
+      "en-US": "### Service with Dependency Injection",
+      "zh-Hans": "### 使用依赖注入的服务"
+    },
+    {
+      "en-US": "```go\ntype UserService struct {\n    repo   domain.UserRepository\n    hasher PasswordHasher\n    logger *slog.Logger\n}\n\nfunc NewUserService(repo domain.UserRepository, hasher PasswordHasher, logger *slog.Logger) *UserService {\n    return &UserService{repo: repo, hasher: hasher, logger: logger}\n}\n\nfunc (s *UserService) Create(ctx context.Context, req CreateUserRequest) (*domain.User, error) {\n    existing, err := s.repo.FindByEmail(ctx, req.Email)\n    if err != nil && !errors.Is(err, domain.ErrUserNotFound) {\n        return nil, fmt.Errorf(\"checking email: %w\", err)\n    }\n    if existing != nil {\n        return nil, domain.ErrEmailTaken\n    }\n\n    hashed, err := s.hasher.Hash(req.Password)\n    if err != nil {\n        return nil, fmt.Errorf(\"hashing password: %w\", err)\n    }\n\n    user := &domain.User{\n        ID:       uuid.New(),\n        Name:     req.Name,\n        Email:    req.Email,\n        Password: hashed,\n    }\n    if err := s.repo.Create(ctx, user); err != nil {\n        return nil, fmt.Errorf(\"creating user: %w\", err)\n    }\n    return user, nil\n}\n```",
+      "zh-Hans": "```go\ntype UserService struct {\n    repo   domain.UserRepository\n    hasher PasswordHasher\n    logger *slog.Logger\n}\n\nfunc NewUserService(repo domain.UserRepository, hasher PasswordHasher, logger *slog.Logger) *UserService {\n    return &UserService{repo: repo, hasher: hasher, logger: logger}\n}\n\nfunc (s *UserService) Create(ctx context.Context, req CreateUserRequest) (*domain.User, error) {\n    existing, err := s.repo.FindByEmail(ctx, req.Email)\n    if err != nil && !errors.Is(err, domain.ErrUserNotFound) {\n        return nil, fmt.Errorf(\"checking email: %w\", err)\n    }\n    if existing != nil {\n        return nil, domain.ErrEmailTaken\n    }\n\n    hashed, err := s.hasher.Hash(req.Password)\n    if err != nil {\n        return nil, fmt.Errorf(\"hashing password: %w\", err)\n    }\n\n    user := &domain.User{\n        ID:       uuid.New(),\n        Name:     req.Name,\n        Email:    req.Email,\n        Password: hashed,\n    }\n    if err := s.repo.Create(ctx, user); err != nil {\n        return nil, fmt.Errorf(\"creating user: %w\", err)\n    }\n    return user, nil\n}\n```"
+    },
+    {
+      "en-US": "### Table-Driven Tests",
+      "zh-Hans": "### 表格驱动测试"
+    },
+    {
+      "en-US": "```go\nfunc TestUserService_Create(t *testing.T) {\n    tests := []struct {\n        name    string\n        req     CreateUserRequest\n        setup   func(*MockUserRepo)\n        wantErr error\n    }{\n        {\n            name: \"valid user\",\n            req:  CreateUserRequest{Name: \"Alice\", Email: \"alice@example.com\", Password: \"secure123\"},\n            setup: func(m *MockUserRepo) {\n                m.On(\"FindByEmail\", mock.Anything, \"alice@example.com\").Return(nil, domain.ErrUserNotFound)\n                m.On(\"Create\", mock.Anything, mock.Anything).Return(nil)\n            },\n            wantErr: nil,\n        },\n        {\n            name: \"duplicate email\",\n            req:  CreateUserRequest{Name: \"Alice\", Email: \"taken@example.com\", Password: \"secure123\"},\n            setup: func(m *MockUserRepo) {\n                m.On(\"FindByEmail\", mock.Anything, \"taken@example.com\").Return(&domain.User{}, nil)\n            },\n            wantErr: domain.ErrEmailTaken,\n        },\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            repo := new(MockUserRepo)\n            tt.setup(repo)\n            svc := NewUserService(repo, &bcryptHasher{}, slog.Default())\n\n            _, err := svc.Create(context.Background(), tt.req)\n\n            if tt.wantErr != nil {\n                assert.ErrorIs(t, err, tt.wantErr)\n            } else {\n                assert.NoError(t, err)\n            }\n        })\n    }\n}\n```",
+      "zh-Hans": "```go\nfunc TestUserService_Create(t *testing.T) {\n    tests := []struct {\n        name    string\n        req     CreateUserRequest\n        setup   func(*MockUserRepo)\n        wantErr error\n    }{\n        {\n            name: \"valid user\",\n            req:  CreateUserRequest{Name: \"Alice\", Email: \"alice@example.com\", Password: \"secure123\"},\n            setup: func(m *MockUserRepo) {\n                m.On(\"FindByEmail\", mock.Anything, \"alice@example.com\").Return(nil, domain.ErrUserNotFound)\n                m.On(\"Create\", mock.Anything, mock.Anything).Return(nil)\n            },\n            wantErr: nil,\n        },\n        {\n            name: \"duplicate email\",\n            req:  CreateUserRequest{Name: \"Alice\", Email: \"taken@example.com\", Password: \"secure123\"},\n            setup: func(m *MockUserRepo) {\n                m.On(\"FindByEmail\", mock.Anything, \"taken@example.com\").Return(&domain.User{}, nil)\n            },\n            wantErr: domain.ErrEmailTaken,\n        },\n    }\n\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            repo := new(MockUserRepo)\n            tt.setup(repo)\n            svc := NewUserService(repo, &bcryptHasher{}, slog.Default())\n\n            _, err := svc.Create(context.Background(), tt.req)\n\n            if tt.wantErr != nil {\n                assert.ErrorIs(t, err, tt.wantErr)\n            } else {\n                assert.NoError(t, err)\n            }\n        })\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Environment Variables",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "```bash\n# Database\nDATABASE_URL=postgres://user:pass@localhost:5432/myservice?sslmode=disable\n\n# gRPC\nGRPC_PORT=50051\nREST_PORT=8080\n\n# Auth\nJWT_SECRET=           # Load from vault in production\nTOKEN_EXPIRY=24h\n\n# Observability\nLOG_LEVEL=info        # debug, info, warn, error\nOTEL_ENDPOINT=        # OpenTelemetry collector\n```",
+      "zh-Hans": "```bash\n# Database\nDATABASE_URL=postgres://user:pass@localhost:5432/myservice?sslmode=disable\n\n# gRPC\nGRPC_PORT=50051\nREST_PORT=8080\n\n# Auth\nJWT_SECRET=           # Load from vault in production\nTOKEN_EXPIRY=24h\n\n# Observability\nLOG_LEVEL=info        # debug, info, warn, error\nOTEL_ENDPOINT=        # OpenTelemetry collector\n```"
+    },
+    {
+      "en-US": "## Testing Strategy",
+      "zh-Hans": "## 测试策略"
+    },
+    {
+      "en-US": "```bash\n/go-test             # TDD workflow for Go\n/go-review           # Go-specific code review\n/go-build            # Fix build errors\n```",
+      "zh-Hans": "```bash\n/go-test             # TDD workflow for Go\n/go-review           # Go-specific code review\n/go-build            # Fix build errors\n```"
+    },
+    {
+      "en-US": "### Test Commands",
+      "zh-Hans": "### 测试命令"
+    },
+    {
+      "en-US": "```bash\n# Unit tests (fast, no external deps)\ngo test ./internal/... -short -count=1\n\n# Integration tests (requires Docker for testcontainers)\ngo test ./internal/repository/... -count=1 -timeout 120s\n\n# All tests with coverage\ngo test ./... -coverprofile=coverage.out -count=1\ngo tool cover -func=coverage.out  # summary\ngo tool cover -html=coverage.out  # browser\n\n# Race detector\ngo test ./... -race -count=1\n```",
+      "zh-Hans": "```bash\n# Unit tests (fast, no external deps)\ngo test ./internal/... -short -count=1\n\n# Integration tests (requires Docker for testcontainers)\ngo test ./internal/repository/... -count=1 -timeout 120s\n\n# All tests with coverage\ngo test ./... -coverprofile=coverage.out -count=1\ngo tool cover -func=coverage.out  # summary\ngo tool cover -html=coverage.out  # browser\n\n# Race detector\ngo test ./... -race -count=1\n```"
+    },
+    {
+      "en-US": "## ECC Workflow",
+      "zh-Hans": "## ECC 工作流"
+    },
+    {
+      "en-US": "```bash\n# Planning\n/plan \"Add rate limiting to user endpoints\"\n\n# Development\n/go-test                  # TDD with Go-specific patterns\n\n# Review\n/go-review                # Go idioms, error handling, concurrency\n/security-scan            # Secrets and vulnerabilities\n\n# Before merge\ngo vet ./...\nstaticcheck ./...\n```",
+      "zh-Hans": "```bash\n# Planning\n/plan \"Add rate limiting to user endpoints\"\n\n# Development\n/go-test                  # TDD with Go-specific patterns\n\n# Review\n/go-review                # Go idioms, error handling, concurrency\n/security-scan            # Secrets and vulnerabilities\n\n# Before merge\ngo vet ./...\nstaticcheck ./...\n```"
+    },
+    {
+      "en-US": "## Git Workflow",
+      "zh-Hans": "## Git 工作流"
+    },
+    {
+      "en-US": "- `feat:` new features, `fix:` bug fixes, `refactor:` code changes\n- Feature branches from `main`, PRs required\n- CI: `go vet`, `staticcheck`, `go test -race`, `golangci-lint`\n- Deploy: Docker image built in CI, deployed to Kubernetes",
+      "zh-Hans": "* `feat:` 新功能，`fix:` 错误修复，`refactor:` 代码更改\n* 从 `main` 创建功能分支，需要 PR\n* CI: `go vet`, `staticcheck`, `go test -race`, `golangci-lint`\n* 部署: 在 CI 中构建 Docker 镜像，部署到 Kubernetes"
+    }
+  ]
+}

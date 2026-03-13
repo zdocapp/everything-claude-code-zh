@@ -1,0 +1,242 @@
+{
+  "sourceFile": "skills/frontend-slides/STYLE_PRESETS.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Style Presets Reference",
+      "zh-Hans": "# 样式预设参考"
+    },
+    {
+      "en-US": "Curated visual styles for `frontend-slides`.",
+      "zh-Hans": "为 `frontend-slides` 整理的视觉样式。"
+    },
+    {
+      "en-US": "Use this file for:",
+      "zh-Hans": "使用此文件用于："
+    },
+    {
+      "en-US": "- the mandatory viewport-fitting CSS base\n- preset selection and mood mapping\n- CSS gotchas and validation rules",
+      "zh-Hans": "* 强制性的视口适配 CSS 基础\n* 预设选择和情绪映射\n* CSS 陷阱和验证规则"
+    },
+    {
+      "en-US": "Abstract shapes only. Avoid illustrations unless the user explicitly asks for them.",
+      "zh-Hans": "仅使用抽象形状。除非用户明确要求，否则避免使用插图。"
+    },
+    {
+      "en-US": "## Viewport Fit Is Non-Negotiable",
+      "zh-Hans": "## 视口适配不容妥协"
+    },
+    {
+      "en-US": "Every slide must fully fit in one viewport.",
+      "zh-Hans": "每张幻灯片必须完全适配一个视口。"
+    },
+    {
+      "en-US": "### Golden Rule",
+      "zh-Hans": "### 黄金法则"
+    },
+    {
+      "en-US": "```text\nEach slide = exactly one viewport height.\nToo much content = split into more slides.\nNever scroll inside a slide.\n```",
+      "zh-Hans": "```text\nEach slide = exactly one viewport height.\nToo much content = split into more slides.\nNever scroll inside a slide.\n```"
+    },
+    {
+      "en-US": "### Density Limits",
+      "zh-Hans": "### 内容密度限制"
+    },
+    {
+      "en-US": "| Slide Type | Maximum Content |\n|------------|-----------------|\n| Title slide | 1 heading + 1 subtitle + optional tagline |\n| Content slide | 1 heading + 4-6 bullets or 2 paragraphs |\n| Feature grid | 6 cards maximum |\n| Code slide | 8-10 lines maximum |\n| Quote slide | 1 quote + attribution |\n| Image slide | 1 image, ideally under 60vh |",
+      "zh-Hans": "| 幻灯片类型 | 最大内容量 |\n|---|---|\n| 标题幻灯片 | 1 个标题 + 1 个副标题 + 可选标语 |\n| 内容幻灯片 | 1 个标题 + 4-6 个要点或 2 个段落 |\n| 功能网格 | 最多 6 张卡片 |\n| 代码幻灯片 | 最多 8-10 行 |\n| 引用幻灯片 | 1 条引用 + 出处 |\n| 图片幻灯片 | 1 张图片，理想情况下低于 60vh |"
+    },
+    {
+      "en-US": "## Mandatory Base CSS",
+      "zh-Hans": "## 强制基础 CSS"
+    },
+    {
+      "en-US": "Copy this block into every generated presentation and then theme on top of it.",
+      "zh-Hans": "将此代码块复制到每个生成的演示文稿中，然后在其基础上应用主题。"
+    },
+    {
+      "en-US": "```css\n/* ===========================================\n   VIEWPORT FITTING: MANDATORY BASE STYLES\n   =========================================== */\n\nhtml, body {\n    height: 100%;\n    overflow-x: hidden;\n}\n\nhtml {\n    scroll-snap-type: y mandatory;\n    scroll-behavior: smooth;\n}\n\n.slide {\n    width: 100vw;\n    height: 100vh;\n    height: 100dvh;\n    overflow: hidden;\n    scroll-snap-align: start;\n    display: flex;\n    flex-direction: column;\n    position: relative;\n}\n\n.slide-content {\n    flex: 1;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    max-height: 100%;\n    overflow: hidden;\n    padding: var(--slide-padding);\n}\n\n:root {\n    --title-size: clamp(1.5rem, 5vw, 4rem);\n    --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);\n    --h3-size: clamp(1rem, 2.5vw, 1.75rem);\n    --body-size: clamp(0.75rem, 1.5vw, 1.125rem);\n    --small-size: clamp(0.65rem, 1vw, 0.875rem);\n\n    --slide-padding: clamp(1rem, 4vw, 4rem);\n    --content-gap: clamp(0.5rem, 2vw, 2rem);\n    --element-gap: clamp(0.25rem, 1vw, 1rem);\n}\n\n.card, .container, .content-box {\n    max-width: min(90vw, 1000px);\n    max-height: min(80vh, 700px);\n}\n\n.feature-list, .bullet-list {\n    gap: clamp(0.4rem, 1vh, 1rem);\n}\n\n.feature-list li, .bullet-list li {\n    font-size: var(--body-size);\n    line-height: 1.4;\n}\n\n.grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));\n    gap: clamp(0.5rem, 1.5vw, 1rem);\n}\n\nimg, .image-container {\n    max-width: 100%;\n    max-height: min(50vh, 400px);\n    object-fit: contain;\n}\n\n@media (max-height: 700px) {\n    :root {\n        --slide-padding: clamp(0.75rem, 3vw, 2rem);\n        --content-gap: clamp(0.4rem, 1.5vw, 1rem);\n        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);\n        --h2-size: clamp(1rem, 3vw, 1.75rem);\n    }\n}\n\n@media (max-height: 600px) {\n    :root {\n        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);\n        --content-gap: clamp(0.3rem, 1vw, 0.75rem);\n        --title-size: clamp(1.1rem, 4vw, 2rem);\n        --body-size: clamp(0.7rem, 1.2vw, 0.95rem);\n    }\n\n    .nav-dots, .keyboard-hint, .decorative {\n        display: none;\n    }\n}\n\n@media (max-height: 500px) {\n    :root {\n        --slide-padding: clamp(0.4rem, 2vw, 1rem);\n        --title-size: clamp(1rem, 3.5vw, 1.5rem);\n        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);\n        --body-size: clamp(0.65rem, 1vw, 0.85rem);\n    }\n}\n\n@media (max-width: 600px) {\n    :root {\n        --title-size: clamp(1.25rem, 7vw, 2.5rem);\n    }\n\n    .grid {\n        grid-template-columns: 1fr;\n    }\n}\n\n@media (prefers-reduced-motion: reduce) {\n    *, *::before, *::after {\n        animation-duration: 0.01ms !important;\n        transition-duration: 0.2s !important;\n    }\n\n    html {\n        scroll-behavior: auto;\n    }\n}\n```",
+      "zh-Hans": "```css\n/* ===========================================\n   VIEWPORT FITTING: MANDATORY BASE STYLES\n   =========================================== */\n\nhtml, body {\n    height: 100%;\n    overflow-x: hidden;\n}\n\nhtml {\n    scroll-snap-type: y mandatory;\n    scroll-behavior: smooth;\n}\n\n.slide {\n    width: 100vw;\n    height: 100vh;\n    height: 100dvh;\n    overflow: hidden;\n    scroll-snap-align: start;\n    display: flex;\n    flex-direction: column;\n    position: relative;\n}\n\n.slide-content {\n    flex: 1;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    max-height: 100%;\n    overflow: hidden;\n    padding: var(--slide-padding);\n}\n\n:root {\n    --title-size: clamp(1.5rem, 5vw, 4rem);\n    --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);\n    --h3-size: clamp(1rem, 2.5vw, 1.75rem);\n    --body-size: clamp(0.75rem, 1.5vw, 1.125rem);\n    --small-size: clamp(0.65rem, 1vw, 0.875rem);\n\n    --slide-padding: clamp(1rem, 4vw, 4rem);\n    --content-gap: clamp(0.5rem, 2vw, 2rem);\n    --element-gap: clamp(0.25rem, 1vw, 1rem);\n}\n\n.card, .container, .content-box {\n    max-width: min(90vw, 1000px);\n    max-height: min(80vh, 700px);\n}\n\n.feature-list, .bullet-list {\n    gap: clamp(0.4rem, 1vh, 1rem);\n}\n\n.feature-list li, .bullet-list li {\n    font-size: var(--body-size);\n    line-height: 1.4;\n}\n\n.grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));\n    gap: clamp(0.5rem, 1.5vw, 1rem);\n}\n\nimg, .image-container {\n    max-width: 100%;\n    max-height: min(50vh, 400px);\n    object-fit: contain;\n}\n\n@media (max-height: 700px) {\n    :root {\n        --slide-padding: clamp(0.75rem, 3vw, 2rem);\n        --content-gap: clamp(0.4rem, 1.5vw, 1rem);\n        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);\n        --h2-size: clamp(1rem, 3vw, 1.75rem);\n    }\n}\n\n@media (max-height: 600px) {\n    :root {\n        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);\n        --content-gap: clamp(0.3rem, 1vw, 0.75rem);\n        --title-size: clamp(1.1rem, 4vw, 2rem);\n        --body-size: clamp(0.7rem, 1.2vw, 0.95rem);\n    }\n\n    .nav-dots, .keyboard-hint, .decorative {\n        display: none;\n    }\n}\n\n@media (max-height: 500px) {\n    :root {\n        --slide-padding: clamp(0.4rem, 2vw, 1rem);\n        --title-size: clamp(1rem, 3.5vw, 1.5rem);\n        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);\n        --body-size: clamp(0.65rem, 1vw, 0.85rem);\n    }\n}\n\n@media (max-width: 600px) {\n    :root {\n        --title-size: clamp(1.25rem, 7vw, 2.5rem);\n    }\n\n    .grid {\n        grid-template-columns: 1fr;\n    }\n}\n\n@media (prefers-reduced-motion: reduce) {\n    *, *::before, *::after {\n        animation-duration: 0.01ms !important;\n        transition-duration: 0.2s !important;\n    }\n\n    html {\n        scroll-behavior: auto;\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Viewport Checklist",
+      "zh-Hans": "## 视口检查清单"
+    },
+    {
+      "en-US": "- every `.slide` has `height: 100vh`, `height: 100dvh`, and `overflow: hidden`\n- all typography uses `clamp()`\n- all spacing uses `clamp()` or viewport units\n- images have `max-height` constraints\n- grids adapt with `auto-fit` + `minmax()`\n- short-height breakpoints exist at `700px`, `600px`, and `500px`\n- if anything feels cramped, split the slide",
+      "zh-Hans": "* 每个 `.slide` 都有 `height: 100vh`、`height: 100dvh` 和 `overflow: hidden`\n* 所有排版都使用 `clamp()`\n* 所有间距都使用 `clamp()` 或视口单位\n* 图片有 `max-height` 约束\n* 网格使用 `auto-fit` + `minmax()` 进行适配\n* 短高度断点存在于 `700px`、`600px` 和 `500px`\n* 如果感觉任何内容拥挤，请拆分幻灯片"
+    },
+    {
+      "en-US": "## Mood to Preset Mapping",
+      "zh-Hans": "## 情绪到预设的映射"
+    },
+    {
+      "en-US": "| Mood | Good Presets |\n|------|--------------|\n| Impressed / Confident | Bold Signal, Electric Studio, Dark Botanical |\n| Excited / Energized | Creative Voltage, Neon Cyber, Split Pastel |\n| Calm / Focused | Notebook Tabs, Paper & Ink, Swiss Modern |\n| Inspired / Moved | Dark Botanical, Vintage Editorial, Pastel Geometry |",
+      "zh-Hans": "| 情绪 | 推荐的预设 |\n|---|---|\n| 印象深刻 / 自信 | Bold Signal, Electric Studio, Dark Botanical |\n| 兴奋 / 充满活力 | Creative Voltage, Neon Cyber, Split Pastel |\n| 平静 / 专注 | Notebook Tabs, Paper & Ink, Swiss Modern |\n| 受启发 / 感动 | Dark Botanical, Vintage Editorial, Pastel Geometry |"
+    },
+    {
+      "en-US": "## Preset Catalog",
+      "zh-Hans": "## 预设目录"
+    },
+    {
+      "en-US": "### 1. Bold Signal",
+      "zh-Hans": "### 1. Bold Signal"
+    },
+    {
+      "en-US": "- Vibe: confident, high-impact, keynote-ready\n- Best for: pitch decks, launches, statements\n- Fonts: Archivo Black + Space Grotesk\n- Palette: charcoal base, hot orange focal card, crisp white text\n- Signature: oversized section numbers, high-contrast card on dark field",
+      "zh-Hans": "* 氛围：自信，高冲击力，适合主题演讲\n* 最适合：推介演示，产品发布，声明\n* 字体：Archivo Black + Space Grotesk\n* 调色板：炭灰色基底，亮橙色焦点卡片，纯白色文本\n* 特色：超大章节编号，深色背景上的高对比度卡片"
+    },
+    {
+      "en-US": "### 2. Electric Studio",
+      "zh-Hans": "### 2. Electric Studio"
+    },
+    {
+      "en-US": "- Vibe: clean, bold, agency-polished\n- Best for: client presentations, strategic reviews\n- Fonts: Manrope only\n- Palette: black, white, saturated cobalt accent\n- Signature: two-panel split and sharp editorial alignment",
+      "zh-Hans": "* 氛围：简洁，大胆，机构级精致\n* 最适合：客户演示，战略评审\n* 字体：仅 Manrope\n* 调色板：黑色，白色，饱和钴蓝色点缀\n* 特色：双面板分割和锐利的编辑式对齐"
+    },
+    {
+      "en-US": "### 3. Creative Voltage",
+      "zh-Hans": "### 3. Creative Voltage"
+    },
+    {
+      "en-US": "- Vibe: energetic, retro-modern, playful confidence\n- Best for: creative studios, brand work, product storytelling\n- Fonts: Syne + Space Mono\n- Palette: electric blue, neon yellow, deep navy\n- Signature: halftone textures, badges, punchy contrast",
+      "zh-Hans": "* 氛围：充满活力，复古现代，俏皮自信\n* 最适合：创意工作室，品牌工作，产品故事叙述\n* 字体：Syne + Space Mono\n* 调色板：电光蓝，霓虹黄，深海军蓝\n* 特色：半色调纹理，徽章，强烈的对比"
+    },
+    {
+      "en-US": "### 4. Dark Botanical",
+      "zh-Hans": "### 4. Dark Botanical"
+    },
+    {
+      "en-US": "- Vibe: elegant, premium, atmospheric\n- Best for: luxury brands, thoughtful narratives, premium product decks\n- Fonts: Cormorant + IBM Plex Sans\n- Palette: near-black, warm ivory, blush, gold, terracotta\n- Signature: blurred abstract circles, fine rules, restrained motion",
+      "zh-Hans": "* 氛围：优雅，高端，有氛围感\n* 最适合：奢侈品牌，深思熟虑的叙述，高端产品演示\n* 字体：Cormorant + IBM Plex Sans\n* 调色板：接近黑色，温暖的象牙色，腮红，金色，赤陶色\n* 特色：模糊的抽象圆形，精细的线条，克制的动效"
+    },
+    {
+      "en-US": "### 5. Notebook Tabs",
+      "zh-Hans": "### 5. Notebook Tabs"
+    },
+    {
+      "en-US": "- Vibe: editorial, organized, tactile\n- Best for: reports, reviews, structured storytelling\n- Fonts: Bodoni Moda + DM Sans\n- Palette: cream paper on charcoal with pastel tabs\n- Signature: paper sheet, colored side tabs, binder details",
+      "zh-Hans": "* 氛围：编辑感，有条理，有触感\n* 最适合：报告，评审，结构化的故事叙述\n* 字体：Bodoni Moda + DM Sans\n* 调色板：炭灰色上的奶油色纸张搭配柔和色彩标签\n* 特色：纸张效果，彩色侧边标签，活页夹细节"
+    },
+    {
+      "en-US": "### 6. Pastel Geometry",
+      "zh-Hans": "### 6. Pastel Geometry"
+    },
+    {
+      "en-US": "- Vibe: approachable, modern, friendly\n- Best for: product overviews, onboarding, lighter brand decks\n- Fonts: Plus Jakarta Sans only\n- Palette: pale blue field, cream card, soft pink/mint/lavender accents\n- Signature: vertical pills, rounded cards, soft shadows",
+      "zh-Hans": "* 氛围：平易近人，现代，友好\n* 最适合：产品概览，入门介绍，较轻松的品牌演示\n* 字体：仅 Plus Jakarta Sans\n* 调色板：淡蓝色背景，奶油色卡片，柔和的粉色/薄荷色/薰衣草色点缀\n* 特色：垂直药丸形状，圆角卡片，柔和阴影"
+    },
+    {
+      "en-US": "### 7. Split Pastel",
+      "zh-Hans": "### 7. Split Pastel"
+    },
+    {
+      "en-US": "- Vibe: playful, modern, creative\n- Best for: agency intros, workshops, portfolios\n- Fonts: Outfit only\n- Palette: peach + lavender split with mint badges\n- Signature: split backdrop, rounded tags, light grid overlays",
+      "zh-Hans": "* 氛围：有趣，现代，有创意\n* 最适合：机构介绍，研讨会，作品集\n* 字体：仅 Outfit\n* 调色板：桃色 + 薰衣草色分割背景搭配薄荷色徽章\n* 特色：分割背景，圆角标签，轻网格叠加层"
+    },
+    {
+      "en-US": "### 8. Vintage Editorial",
+      "zh-Hans": "### 8. Vintage Editorial"
+    },
+    {
+      "en-US": "- Vibe: witty, personality-driven, magazine-inspired\n- Best for: personal brands, opinionated talks, storytelling\n- Fonts: Fraunces + Work Sans\n- Palette: cream, charcoal, dusty warm accents\n- Signature: geometric accents, bordered callouts, punchy serif headlines",
+      "zh-Hans": "* 氛围：诙谐，个性鲜明，受杂志启发\n* 最适合：个人品牌，观点性演讲，故事叙述\n* 字体：Fraunces + Work Sans\n* 调色板：奶油色，炭灰色，灰暗的暖色点缀\n* 特色：几何点缀，带边框的标注，醒目的衬线标题"
+    },
+    {
+      "en-US": "### 9. Neon Cyber",
+      "zh-Hans": "### 9. Neon Cyber"
+    },
+    {
+      "en-US": "- Vibe: futuristic, techy, kinetic\n- Best for: AI, infra, dev tools, future-of-X talks\n- Fonts: Clash Display + Satoshi\n- Palette: midnight navy, cyan, magenta\n- Signature: glow, particles, grids, data-radar energy",
+      "zh-Hans": "* 氛围：未来感，科技感，动感\n* 最适合：AI，基础设施，开发工具，关于未来趋势的演讲\n* 字体：Clash Display + Satoshi\n* 调色板：午夜海军蓝，青色，洋红色\n* 特色：发光效果，粒子，网格，数据雷达能量感"
+    },
+    {
+      "en-US": "### 10. Terminal Green",
+      "zh-Hans": "### 10. Terminal Green"
+    },
+    {
+      "en-US": "- Vibe: developer-focused, hacker-clean\n- Best for: APIs, CLI tools, engineering demos\n- Fonts: JetBrains Mono only\n- Palette: GitHub dark + terminal green\n- Signature: scan lines, command-line framing, precise monospace rhythm",
+      "zh-Hans": "* 氛围：面向开发者，黑客风格简洁\n* 最适合：API，CLI 工具，工程演示\n* 字体：仅 JetBrains Mono\n* 调色板：GitHub 深色 + 终端绿色\n* 特色：扫描线，命令行框架，精确的等宽字体节奏"
+    },
+    {
+      "en-US": "### 11. Swiss Modern",
+      "zh-Hans": "### 11. Swiss Modern"
+    },
+    {
+      "en-US": "- Vibe: minimal, precise, data-forward\n- Best for: corporate, product strategy, analytics\n- Fonts: Archivo + Nunito\n- Palette: white, black, signal red\n- Signature: visible grids, asymmetry, geometric discipline",
+      "zh-Hans": "* 氛围：极简，精确，数据导向\n* 最适合：企业，产品战略，分析\n* 字体：Archivo + Nunito\n* 调色板：白色，黑色，信号红色\n* 特色：可见的网格，不对称，几何秩序感"
+    },
+    {
+      "en-US": "### 12. Paper & Ink",
+      "zh-Hans": "### 12. Paper & Ink"
+    },
+    {
+      "en-US": "- Vibe: literary, thoughtful, story-driven\n- Best for: essays, keynote narratives, manifesto decks\n- Fonts: Cormorant Garamond + Source Serif 4\n- Palette: warm cream, charcoal, crimson accent\n- Signature: pull quotes, drop caps, elegant rules",
+      "zh-Hans": "* 氛围：文学性，深思熟虑，故事驱动\n* 最适合：散文，主题演讲叙述，宣言式演示\n* 字体：Cormorant Garamond + Source Serif 4\n* 调色板：温暖的奶油色，炭灰色，深红色点缀\n* 特色：引文突出，首字下沉，优雅的线条"
+    },
+    {
+      "en-US": "## Direct Selection Prompts",
+      "zh-Hans": "## 直接选择提示"
+    },
+    {
+      "en-US": "If the user already knows the style they want, let them pick directly from the preset names above instead of forcing preview generation.",
+      "zh-Hans": "如果用户已经知道他们想要的样式，让他们直接从上面的预设名称中选择，而不是强制生成预览。"
+    },
+    {
+      "en-US": "## Animation Feel Mapping",
+      "zh-Hans": "## 动画感觉映射"
+    },
+    {
+      "en-US": "| Feeling | Motion Direction |\n|---------|------------------|\n| Dramatic / Cinematic | slow fades, parallax, large scale-ins |\n| Techy / Futuristic | glow, particles, grid motion, scramble text |\n| Playful / Friendly | springy easing, rounded shapes, floating motion |\n| Professional / Corporate | subtle 200-300ms transitions, clean slides |\n| Calm / Minimal | very restrained movement, whitespace-first |\n| Editorial / Magazine | strong hierarchy, staggered text and image interplay |",
+      "zh-Hans": "| 感觉 | 动效方向 |\n|---|---|\n| 戏剧性 / 电影感 | 缓慢淡入淡出，视差滚动，大比例缩放进入 |\n| 科技感 / 未来感 | 发光，粒子，网格运动，文字乱序出现 |\n| 有趣 / 友好 | 弹性缓动，圆角形状，漂浮运动 |\n| 专业 / 企业 | 微妙的 200-300 毫秒过渡，干净的幻灯片切换 |\n| 平静 / 极简 | 非常克制的运动，留白优先 |\n| 编辑感 / 杂志感 | 强烈的层次感，错落的文字和图片互动 |"
+    },
+    {
+      "en-US": "## CSS Gotcha: Negating Functions",
+      "zh-Hans": "## CSS 陷阱：否定函数"
+    },
+    {
+      "en-US": "Never write these:",
+      "zh-Hans": "切勿编写这些："
+    },
+    {
+      "en-US": "```css\nright: -clamp(28px, 3.5vw, 44px);\nmargin-left: -min(10vw, 100px);\n```",
+      "zh-Hans": "```css\nright: -clamp(28px, 3.5vw, 44px);\nmargin-left: -min(10vw, 100px);\n```"
+    },
+    {
+      "en-US": "Browsers ignore them silently.",
+      "zh-Hans": "浏览器会静默忽略它们。"
+    },
+    {
+      "en-US": "Always write this instead:",
+      "zh-Hans": "始终改为编写这个："
+    },
+    {
+      "en-US": "```css\nright: calc(-1 * clamp(28px, 3.5vw, 44px));\nmargin-left: calc(-1 * min(10vw, 100px));\n```",
+      "zh-Hans": "```css\nright: calc(-1 * clamp(28px, 3.5vw, 44px));\nmargin-left: calc(-1 * min(10vw, 100px));\n```"
+    },
+    {
+      "en-US": "## Validation Sizes",
+      "zh-Hans": "## 验证尺寸"
+    },
+    {
+      "en-US": "Test at minimum:",
+      "zh-Hans": "至少测试以下尺寸："
+    },
+    {
+      "en-US": "- Desktop: `1920x1080`, `1440x900`, `1280x720`\n- Tablet: `1024x768`, `768x1024`\n- Mobile: `375x667`, `414x896`\n- Landscape phone: `667x375`, `896x414`",
+      "zh-Hans": "* 桌面：`1920x1080`，`1440x900`，`1280x720`\n* 平板：`1024x768`，`768x1024`\n* 手机：`375x667`，`414x896`\n* 横屏手机：`667x375`，`896x414`"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "Do not use:",
+      "zh-Hans": "请勿使用："
+    },
+    {
+      "en-US": "- purple-on-white startup templates\n- Inter / Roboto / Arial as the visual voice unless the user explicitly wants utilitarian neutrality\n- bullet walls, tiny type, or code blocks that require scrolling\n- decorative illustrations when abstract geometry would do the job better",
+      "zh-Hans": "* 紫底白字的初创公司模板\n* Inter / Roboto / Arial 作为视觉声音，除非用户明确想要实用主义的中性风格\n* 要点堆砌、过小字体或需要滚动的代码块\n* 装饰性插图，当抽象几何形状能更好地完成工作时"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "sourceFile": "rules/php/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.json\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.json\"\n---"
+    },
+    {
+      "en-US": "# PHP Coding Style",
+      "zh-Hans": "# PHP 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with PHP specific content.",
+      "zh-Hans": "> 此文件在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 PHP 相关内容。"
+    },
+    {
+      "en-US": "## Standards",
+      "zh-Hans": "## 标准"
+    },
+    {
+      "en-US": "- Follow **PSR-12** formatting and naming conventions.\n- Prefer `declare(strict_types=1);` in application code.\n- Use scalar type hints, return types, and typed properties everywhere new code permits.",
+      "zh-Hans": "* 遵循 **PSR-12** 的格式化和命名约定。\n* 在应用程序代码中优先使用 `declare(strict_types=1);`。\n* 在所有新代码允许的地方使用标量类型提示、返回类型和类型化属性。"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "- Prefer immutable DTOs and value objects for data crossing service boundaries.\n- Use `readonly` properties or immutable constructors for request/response payloads where possible.\n- Keep arrays for simple maps; promote business-critical structures into explicit classes.",
+      "zh-Hans": "* 对于跨越服务边界的数据，优先使用不可变的 DTO 和值对象。\n* 在可能的情况下，对请求/响应负载使用 `readonly` 属性或不可变构造函数。\n* 对于简单的映射使用数组；将业务关键的结构提升为显式类。"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- Use **PHP-CS-Fixer** or **Laravel Pint** for formatting.\n- Use **PHPStan** or **Psalm** for static analysis.\n- Keep Composer scripts checked in so the same commands run locally and in CI.",
+      "zh-Hans": "* 使用 **PHP-CS-Fixer** 或 **Laravel Pint** 进行格式化。\n* 使用 **PHPStan** 或 **Psalm** 进行静态分析。\n* 将 Composer 脚本纳入版本控制，以便在本地和 CI 中运行相同的命令。"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Throw exceptions for exceptional states; avoid returning `false`/`null` as hidden error channels in new code.\n- Convert framework/request input into validated DTOs before it reaches domain logic.",
+      "zh-Hans": "* 对于异常状态抛出异常；避免在新代码中返回 `false`/`null` 作为隐藏的错误通道。\n* 在框架/请求输入到达领域逻辑之前，将其转换为经过验证的 DTO。"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `backend-patterns` for broader service/repository layering guidance.",
+      "zh-Hans": "有关更广泛的服务/仓库分层指导，请参阅技能：`backend-patterns`。"
+    }
+  ]
+}

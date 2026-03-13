@@ -1,0 +1,242 @@
+{
+  "sourceFile": "skills/videodb/reference/use-cases.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Use Cases",
+      "zh-Hans": "# 使用场景"
+    },
+    {
+      "en-US": "Common workflows and what VideoDB enables. For code details, see [api-reference.md](api-reference.md), [capture.md](capture.md), [editor.md](editor.md), and [search.md](search.md).",
+      "zh-Hans": "常见工作流及 VideoDB 所实现的功能。代码详情请参阅 [api-reference.md](api-reference.md)、[capture.md](capture.md)、[editor.md](editor.md) 和 [search.md](search.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Video Search & Highlights",
+      "zh-Hans": "## 视频搜索与精彩片段"
+    },
+    {
+      "en-US": "### Create Highlight Reels",
+      "zh-Hans": "### 创建精彩集锦"
+    },
+    {
+      "en-US": "Upload a long video (conference talk, lecture, meeting recording), search for key moments by topic (\"product announcement\", \"Q&A session\", \"demo\"), and automatically compile matching segments into a shareable highlight reel.",
+      "zh-Hans": "上传长视频（会议演讲、讲座、会议录音），按主题（\"产品发布\"、\"问答环节\"、\"演示\"）搜索关键片段，并自动将匹配的片段汇编成可分享的精彩集锦。"
+    },
+    {
+      "en-US": "### Build Searchable Video Libraries",
+      "zh-Hans": "### 构建可搜索视频库"
+    },
+    {
+      "en-US": "Batch upload videos to a collection, index them for spoken word search, then query across the entire library. Find specific topics across hundreds of hours of content instantly.",
+      "zh-Hans": "批量上传视频到集合中，为语音内容建立索引以便搜索，然后在整个库中进行查询。即时在数百小时的内容中找到特定主题。"
+    },
+    {
+      "en-US": "### Extract Specific Clips",
+      "zh-Hans": "### 提取特定片段"
+    },
+    {
+      "en-US": "Search for moments matching a query (\"budget discussion\", \"action items\") and extract each matching segment as an individual clip with its own stream URL.",
+      "zh-Hans": "搜索与查询匹配的片段（\"预算讨论\"、\"行动项\"），并将每个匹配的片段提取为独立的剪辑，拥有自己的流媒体 URL。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Video Enhancement",
+      "zh-Hans": "## 视频增强"
+    },
+    {
+      "en-US": "### Add Professional Polish",
+      "zh-Hans": "### 增添专业质感"
+    },
+    {
+      "en-US": "Take raw footage and enhance it with:",
+      "zh-Hans": "获取原始素材并进行增强："
+    },
+    {
+      "en-US": "- Auto-generated subtitles from speech\n- Custom thumbnails at specific timestamps\n- Background music overlays\n- Intro/outro sequences with generated images",
+      "zh-Hans": "* 根据语音自动生成字幕\n* 在特定时间戳添加自定义缩略图\n* 背景音乐叠加\n* 带有生成图像的开场/结尾序列"
+    },
+    {
+      "en-US": "### AI-Enhanced Content",
+      "zh-Hans": "### AI 增强内容"
+    },
+    {
+      "en-US": "Combine existing video with generative AI:",
+      "zh-Hans": "将现有视频与生成式 AI 结合："
+    },
+    {
+      "en-US": "- Generate text summaries from transcript\n- Create background music matching video duration\n- Generate title cards and overlay images\n- Mix all elements into a polished final output",
+      "zh-Hans": "* 根据转录内容生成文本摘要\n* 创建与视频时长匹配的背景音乐\n* 生成标题卡和叠加图像\n* 将所有元素混合成精美的最终输出"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Real-Time Capture (Desktop/Meeting)",
+      "zh-Hans": "## 实时录制（桌面/会议）"
+    },
+    {
+      "en-US": "### Screen + Audio Recording with AI",
+      "zh-Hans": "### 带 AI 的屏幕 + 音频录制"
+    },
+    {
+      "en-US": "Capture screen, microphone, and system audio simultaneously. Get real-time:",
+      "zh-Hans": "同时捕获屏幕、麦克风和系统音频。实时获取："
+    },
+    {
+      "en-US": "- **Live transcription** - Speech to text as it happens\n- **Audio summaries** - Periodic AI-generated summaries of discussions\n- **Visual indexing** - AI descriptions of screen activity",
+      "zh-Hans": "* **实时转录** - 语音即时转文本\n* **音频摘要** - 定期生成的 AI 讨论摘要\n* **视觉索引** - AI 对屏幕活动的描述"
+    },
+    {
+      "en-US": "### Meeting Capture with Summarization",
+      "zh-Hans": "### 带摘要功能的会议录制"
+    },
+    {
+      "en-US": "Record meetings with live transcription of all participants. Get periodic summaries with key discussion points, decisions, and action items delivered in real-time.",
+      "zh-Hans": "录制会议并实时转录所有参与者的发言。获取包含关键讨论点、决策和行动项的定期摘要，实时交付。"
+    },
+    {
+      "en-US": "### Screen Activity Tracking",
+      "zh-Hans": "### 屏幕活动追踪"
+    },
+    {
+      "en-US": "Track what's happening on screen with AI-generated descriptions:",
+      "zh-Hans": "通过 AI 生成的描述追踪屏幕活动："
+    },
+    {
+      "en-US": "- \"User is browsing a spreadsheet in Google Sheets\"\n- \"User switched to a code editor with a Python file\"\n- \"Video call with screen sharing enabled\"",
+      "zh-Hans": "* \"用户正在 Google Sheets 中浏览电子表格\"\n* \"用户切换到了包含 Python 文件的代码编辑器\"\n* \"正在进行屏幕共享的视频通话\""
+    },
+    {
+      "en-US": "### Post-Session Processing",
+      "zh-Hans": "### 会话后处理"
+    },
+    {
+      "en-US": "After capture ends, the recording is exported as a permanent video. Then:",
+      "zh-Hans": "录制结束后，录音将导出为永久视频。然后："
+    },
+    {
+      "en-US": "- Generate searchable transcript\n- Search for specific topics within the recording\n- Extract clips of important moments\n- Share via stream URL or player link",
+      "zh-Hans": "* 生成可搜索的转录稿\n* 在录制内容中搜索特定主题\n* 提取重要时刻的片段\n* 通过流媒体 URL 或播放器链接分享"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Live Stream Intelligence (RTSP/RTMP)",
+      "zh-Hans": "## 直播流智能处理（RTSP/RTMP）"
+    },
+    {
+      "en-US": "### Connect External Streams",
+      "zh-Hans": "### 连接外部流"
+    },
+    {
+      "en-US": "Ingest live video from RTSP/RTMP sources (security cameras, encoders, broadcasts). Process and index content in real-time.",
+      "zh-Hans": "从 RTSP/RTMP 源（安全摄像头、编码器、广播）摄取实时视频。实时处理和索引内容。"
+    },
+    {
+      "en-US": "### Real-Time Event Detection",
+      "zh-Hans": "### 实时事件检测"
+    },
+    {
+      "en-US": "Define events to detect in live streams:",
+      "zh-Hans": "定义要在直播流中检测的事件："
+    },
+    {
+      "en-US": "- \"Person entering restricted area\"\n- \"Traffic violation at intersection\"\n- \"Product visible on shelf\"",
+      "zh-Hans": "* \"人员进入限制区域\"\n* \"十字路口交通违规\"\n* \"货架上可见产品\""
+    },
+    {
+      "en-US": "Get alerts via WebSocket or webhook when events occur.",
+      "zh-Hans": "当事件发生时，通过 WebSocket 或 webhook 获取警报。"
+    },
+    {
+      "en-US": "### Live Stream Search",
+      "zh-Hans": "### 直播流搜索"
+    },
+    {
+      "en-US": "Search across recorded live stream content. Find specific moments and generate clips from hours of continuous footage.",
+      "zh-Hans": "在已录制的直播流内容中搜索。从数小时的连续素材中找到特定时刻并生成剪辑。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Content Moderation & Safety",
+      "zh-Hans": "## 内容审核与安全"
+    },
+    {
+      "en-US": "### Automated Content Review",
+      "zh-Hans": "### 自动化内容审查"
+    },
+    {
+      "en-US": "Index video scenes with AI and search for problematic content. Flag videos containing violence, inappropriate content, or policy violations.",
+      "zh-Hans": "使用 AI 索引视频场景并搜索有问题内容。标记包含暴力、不当内容或违反政策的视频。"
+    },
+    {
+      "en-US": "### Profanity Detection",
+      "zh-Hans": "### 脏话检测"
+    },
+    {
+      "en-US": "Detect and locate profanity in audio. Optionally overlay beep sounds at detected timestamps.",
+      "zh-Hans": "检测并定位音频中的脏话。可选择在检测到的时间戳叠加哔声。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Platform Integration",
+      "zh-Hans": "## 平台集成"
+    },
+    {
+      "en-US": "### Social Media Formatting",
+      "zh-Hans": "### 社交媒体格式调整"
+    },
+    {
+      "en-US": "Reframe videos for different platforms:",
+      "zh-Hans": "为不同平台调整视频格式："
+    },
+    {
+      "en-US": "- Vertical (9:16) for TikTok, Reels, Shorts\n- Square (1:1) for Instagram feed\n- Landscape (16:9) for YouTube",
+      "zh-Hans": "* 垂直（9:16）用于 TikTok、Reels、Shorts\n* 方形（1:1）用于 Instagram 动态\n* 横屏（16:9）用于 YouTube"
+    },
+    {
+      "en-US": "### Transcode for Delivery",
+      "zh-Hans": "### 为分发转码"
+    },
+    {
+      "en-US": "Change resolution, bitrate, or quality for different delivery targets. Output optimized streams for web, mobile, or broadcast.",
+      "zh-Hans": "针对不同的分发目标更改分辨率、比特率或质量。为网页、移动端或广播输出优化的流。"
+    },
+    {
+      "en-US": "### Generate Shareable Links",
+      "zh-Hans": "### 生成可分享链接"
+    },
+    {
+      "en-US": "Every operation produces playable stream URLs. Embed in web players, share directly, or integrate with existing platforms.",
+      "zh-Hans": "每次操作都会生成可播放的流媒体 URL。可嵌入网页播放器、直接分享或与现有平台集成。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Workflow Summary",
+      "zh-Hans": "## 工作流摘要"
+    },
+    {
+      "en-US": "| Goal | VideoDB Approach |\n|------|------------------|\n| Find moments in video | Index spoken words/scenes → Search → Compile clips |\n| Create highlights | Search multiple topics → Build timeline → Generate stream |\n| Add subtitles | Index spoken words → Add subtitle overlay |\n| Record screen + AI | Start capture → Run AI pipelines → Export video |\n| Monitor live streams | Connect RTSP → Index scenes → Create alerts |\n| Reformat for social | Reframe to target aspect ratio |\n| Combine clips | Build timeline with multiple assets → Generate stream |",
+      "zh-Hans": "| 目标 | VideoDB 方法 |\n|------|------------------|\n| 在视频中查找片段 | 索引语音/场景 → 搜索 → 汇编剪辑 |\n| 创建精彩集锦 | 搜索多个主题 → 构建时间线 → 生成流 |\n| 添加字幕 | 索引语音 → 添加字幕叠加层 |\n| 录制屏幕 + AI | 开始录制 → 运行 AI 流水线 → 导出视频 |\n| 监控直播流 | 连接 RTSP → 索引场景 → 创建警报 |\n| 为社交媒体调整格式 | 调整为目标宽高比 |\n| 合并剪辑 | 使用多个素材构建时间线 → 生成流 |"
+    }
+  ]
+}

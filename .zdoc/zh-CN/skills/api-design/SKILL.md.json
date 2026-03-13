@@ -1,0 +1,306 @@
+{
+  "sourceFile": "skills/api-design/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: api-design\ndescription: REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: api-design\ndescription: REST API设计模式，包括资源命名、状态码、分页、过滤、错误响应、版本控制和生产API的速率限制。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# API Design Patterns",
+      "zh-Hans": "# API 设计模式"
+    },
+    {
+      "en-US": "Conventions and best practices for designing consistent, developer-friendly REST APIs.",
+      "zh-Hans": "用于设计一致、对开发者友好的 REST API 的约定和最佳实践。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Designing new API endpoints\n- Reviewing existing API contracts\n- Adding pagination, filtering, or sorting\n- Implementing error handling for APIs\n- Planning API versioning strategy\n- Building public or partner-facing APIs",
+      "zh-Hans": "* 设计新的 API 端点时\n* 审查现有的 API 契约时\n* 添加分页、过滤或排序功能时\n* 为 API 实现错误处理时\n* 规划 API 版本策略时\n* 构建面向公众或合作伙伴的 API 时"
+    },
+    {
+      "en-US": "## Resource Design",
+      "zh-Hans": "## 资源设计"
+    },
+    {
+      "en-US": "### URL Structure",
+      "zh-Hans": "### URL 结构"
+    },
+    {
+      "en-US": "```\n# Resources are nouns, plural, lowercase, kebab-case\nGET    /api/v1/users\nGET    /api/v1/users/:id\nPOST   /api/v1/users\nPUT    /api/v1/users/:id\nPATCH  /api/v1/users/:id\nDELETE /api/v1/users/:id\n\n# Sub-resources for relationships\nGET    /api/v1/users/:id/orders\nPOST   /api/v1/users/:id/orders\n\n# Actions that don't map to CRUD (use verbs sparingly)\nPOST   /api/v1/orders/:id/cancel\nPOST   /api/v1/auth/login\nPOST   /api/v1/auth/refresh\n```",
+      "zh-Hans": "```\n# Resources are nouns, plural, lowercase, kebab-case\nGET    /api/v1/users\nGET    /api/v1/users/:id\nPOST   /api/v1/users\nPUT    /api/v1/users/:id\nPATCH  /api/v1/users/:id\nDELETE /api/v1/users/:id\n\n# Sub-resources for relationships\nGET    /api/v1/users/:id/orders\nPOST   /api/v1/users/:id/orders\n\n# Actions that don't map to CRUD (use verbs sparingly)\nPOST   /api/v1/orders/:id/cancel\nPOST   /api/v1/auth/login\nPOST   /api/v1/auth/refresh\n```"
+    },
+    {
+      "en-US": "### Naming Rules",
+      "zh-Hans": "### 命名规则"
+    },
+    {
+      "en-US": "```\n# GOOD\n/api/v1/team-members          # kebab-case for multi-word resources\n/api/v1/orders?status=active  # query params for filtering\n/api/v1/users/123/orders      # nested resources for ownership\n\n# BAD\n/api/v1/getUsers              # verb in URL\n/api/v1/user                  # singular (use plural)\n/api/v1/team_members          # snake_case in URLs\n/api/v1/users/123/getOrders   # verb in nested resource\n```",
+      "zh-Hans": "```\n# GOOD\n/api/v1/team-members          # kebab-case for multi-word resources\n/api/v1/orders?status=active  # query params for filtering\n/api/v1/users/123/orders      # nested resources for ownership\n\n# BAD\n/api/v1/getUsers              # verb in URL\n/api/v1/user                  # singular (use plural)\n/api/v1/team_members          # snake_case in URLs\n/api/v1/users/123/getOrders   # verb in nested resource\n```"
+    },
+    {
+      "en-US": "## HTTP Methods and Status Codes",
+      "zh-Hans": "## HTTP 方法和状态码"
+    },
+    {
+      "en-US": "### Method Semantics",
+      "zh-Hans": "### 方法语义"
+    },
+    {
+      "en-US": "| Method | Idempotent | Safe | Use For |\n|--------|-----------|------|---------|\n| GET | Yes | Yes | Retrieve resources |\n| POST | No | No | Create resources, trigger actions |\n| PUT | Yes | No | Full replacement of a resource |\n| PATCH | No* | No | Partial update of a resource |\n| DELETE | Yes | No | Remove a resource |",
+      "zh-Hans": "| 方法 | 幂等性 | 安全性 | 用途 |\n|--------|-----------|------|---------|\n| GET | 是 | 是 | 检索资源 |\n| POST | 否 | 否 | 创建资源，触发操作 |\n| PUT | 是 | 否 | 完全替换资源 |\n| PATCH | 否\\* | 否 | 部分更新资源 |\n| DELETE | 是 | 否 | 删除资源 |"
+    },
+    {
+      "en-US": "*PATCH can be made idempotent with proper implementation",
+      "zh-Hans": "\\*通过适当的实现，PATCH 可以实现幂等"
+    },
+    {
+      "en-US": "### Status Code Reference",
+      "zh-Hans": "### 状态码参考"
+    },
+    {
+      "en-US": "```\n# Success\n200 OK                    — GET, PUT, PATCH (with response body)\n201 Created               — POST (include Location header)\n204 No Content            — DELETE, PUT (no response body)\n\n# Client Errors\n400 Bad Request           — Validation failure, malformed JSON\n401 Unauthorized          — Missing or invalid authentication\n403 Forbidden             — Authenticated but not authorized\n404 Not Found             — Resource doesn't exist\n409 Conflict              — Duplicate entry, state conflict\n422 Unprocessable Entity  — Semantically invalid (valid JSON, bad data)\n429 Too Many Requests     — Rate limit exceeded\n\n# Server Errors\n500 Internal Server Error — Unexpected failure (never expose details)\n502 Bad Gateway           — Upstream service failed\n503 Service Unavailable   — Temporary overload, include Retry-After\n```",
+      "zh-Hans": "```\n# Success\n200 OK                    — GET, PUT, PATCH (with response body)\n201 Created               — POST (include Location header)\n204 No Content            — DELETE, PUT (no response body)\n\n# Client Errors\n400 Bad Request           — Validation failure, malformed JSON\n401 Unauthorized          — Missing or invalid authentication\n403 Forbidden             — Authenticated but not authorized\n404 Not Found             — Resource doesn't exist\n409 Conflict              — Duplicate entry, state conflict\n422 Unprocessable Entity  — Semantically invalid (valid JSON, bad data)\n429 Too Many Requests     — Rate limit exceeded\n\n# Server Errors\n500 Internal Server Error — Unexpected failure (never expose details)\n502 Bad Gateway           — Upstream service failed\n503 Service Unavailable   — Temporary overload, include Retry-After\n```"
+    },
+    {
+      "en-US": "### Common Mistakes",
+      "zh-Hans": "### 常见错误"
+    },
+    {
+      "en-US": "```\n# BAD: 200 for everything\n{ \"status\": 200, \"success\": false, \"error\": \"Not found\" }\n\n# GOOD: Use HTTP status codes semantically\nHTTP/1.1 404 Not Found\n{ \"error\": { \"code\": \"not_found\", \"message\": \"User not found\" } }\n\n# BAD: 500 for validation errors\n# GOOD: 400 or 422 with field-level details\n\n# BAD: 200 for created resources\n# GOOD: 201 with Location header\nHTTP/1.1 201 Created\nLocation: /api/v1/users/abc-123\n```",
+      "zh-Hans": "```\n# BAD: 200 for everything\n{ \"status\": 200, \"success\": false, \"error\": \"Not found\" }\n\n# GOOD: Use HTTP status codes semantically\nHTTP/1.1 404 Not Found\n{ \"error\": { \"code\": \"not_found\", \"message\": \"User not found\" } }\n\n# BAD: 500 for validation errors\n# GOOD: 400 or 422 with field-level details\n\n# BAD: 200 for created resources\n# GOOD: 201 with Location header\nHTTP/1.1 201 Created\nLocation: /api/v1/users/abc-123\n```"
+    },
+    {
+      "en-US": "## Response Format",
+      "zh-Hans": "## 响应格式"
+    },
+    {
+      "en-US": "### Success Response",
+      "zh-Hans": "### 成功响应"
+    },
+    {
+      "en-US": "```json\n{\n  \"data\": {\n    \"id\": \"abc-123\",\n    \"email\": \"alice@example.com\",\n    \"name\": \"Alice\",\n    \"created_at\": \"2025-01-15T10:30:00Z\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"data\": {\n    \"id\": \"abc-123\",\n    \"email\": \"alice@example.com\",\n    \"name\": \"Alice\",\n    \"created_at\": \"2025-01-15T10:30:00Z\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Collection Response (with Pagination)",
+      "zh-Hans": "### 集合响应（带分页）"
+    },
+    {
+      "en-US": "```json\n{\n  \"data\": [\n    { \"id\": \"abc-123\", \"name\": \"Alice\" },\n    { \"id\": \"def-456\", \"name\": \"Bob\" }\n  ],\n  \"meta\": {\n    \"total\": 142,\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total_pages\": 8\n  },\n  \"links\": {\n    \"self\": \"/api/v1/users?page=1&per_page=20\",\n    \"next\": \"/api/v1/users?page=2&per_page=20\",\n    \"last\": \"/api/v1/users?page=8&per_page=20\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"data\": [\n    { \"id\": \"abc-123\", \"name\": \"Alice\" },\n    { \"id\": \"def-456\", \"name\": \"Bob\" }\n  ],\n  \"meta\": {\n    \"total\": 142,\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total_pages\": 8\n  },\n  \"links\": {\n    \"self\": \"/api/v1/users?page=1&per_page=20\",\n    \"next\": \"/api/v1/users?page=2&per_page=20\",\n    \"last\": \"/api/v1/users?page=8&per_page=20\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Error Response",
+      "zh-Hans": "### 错误响应"
+    },
+    {
+      "en-US": "```json\n{\n  \"error\": {\n    \"code\": \"validation_error\",\n    \"message\": \"Request validation failed\",\n    \"details\": [\n      {\n        \"field\": \"email\",\n        \"message\": \"Must be a valid email address\",\n        \"code\": \"invalid_format\"\n      },\n      {\n        \"field\": \"age\",\n        \"message\": \"Must be between 0 and 150\",\n        \"code\": \"out_of_range\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"error\": {\n    \"code\": \"validation_error\",\n    \"message\": \"Request validation failed\",\n    \"details\": [\n      {\n        \"field\": \"email\",\n        \"message\": \"Must be a valid email address\",\n        \"code\": \"invalid_format\"\n      },\n      {\n        \"field\": \"age\",\n        \"message\": \"Must be between 0 and 150\",\n        \"code\": \"out_of_range\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Response Envelope Variants",
+      "zh-Hans": "### 响应包装器变体"
+    },
+    {
+      "en-US": "```typescript\n// Option A: Envelope with data wrapper (recommended for public APIs)\ninterface ApiResponse<T> {\n  data: T;\n  meta?: PaginationMeta;\n  links?: PaginationLinks;\n}\n\ninterface ApiError {\n  error: {\n    code: string;\n    message: string;\n    details?: FieldError[];\n  };\n}\n\n// Option B: Flat response (simpler, common for internal APIs)\n// Success: just return the resource directly\n// Error: return error object\n// Distinguish by HTTP status code\n```",
+      "zh-Hans": "```typescript\n// Option A: Envelope with data wrapper (recommended for public APIs)\ninterface ApiResponse<T> {\n  data: T;\n  meta?: PaginationMeta;\n  links?: PaginationLinks;\n}\n\ninterface ApiError {\n  error: {\n    code: string;\n    message: string;\n    details?: FieldError[];\n  };\n}\n\n// Option B: Flat response (simpler, common for internal APIs)\n// Success: just return the resource directly\n// Error: return error object\n// Distinguish by HTTP status code\n```"
+    },
+    {
+      "en-US": "## Pagination",
+      "zh-Hans": "## 分页"
+    },
+    {
+      "en-US": "### Offset-Based (Simple)",
+      "zh-Hans": "### 基于偏移量（简单）"
+    },
+    {
+      "en-US": "```\nGET /api/v1/users?page=2&per_page=20\n\n# Implementation\nSELECT * FROM users\nORDER BY created_at DESC\nLIMIT 20 OFFSET 20;\n```",
+      "zh-Hans": "```\nGET /api/v1/users?page=2&per_page=20\n\n# Implementation\nSELECT * FROM users\nORDER BY created_at DESC\nLIMIT 20 OFFSET 20;\n```"
+    },
+    {
+      "en-US": "**Pros:** Easy to implement, supports \"jump to page N\"\n**Cons:** Slow on large offsets (OFFSET 100000), inconsistent with concurrent inserts",
+      "zh-Hans": "**优点：** 易于实现，支持“跳转到第 N 页”\n**缺点：** 在大偏移量时速度慢（例如 OFFSET 100000），并发插入时结果不一致"
+    },
+    {
+      "en-US": "### Cursor-Based (Scalable)",
+      "zh-Hans": "### 基于游标（可扩展）"
+    },
+    {
+      "en-US": "```\nGET /api/v1/users?cursor=eyJpZCI6MTIzfQ&limit=20\n\n# Implementation\nSELECT * FROM users\nWHERE id > :cursor_id\nORDER BY id ASC\nLIMIT 21;  -- fetch one extra to determine has_next\n```",
+      "zh-Hans": "```\nGET /api/v1/users?cursor=eyJpZCI6MTIzfQ&limit=20\n\n# Implementation\nSELECT * FROM users\nWHERE id > :cursor_id\nORDER BY id ASC\nLIMIT 21;  -- fetch one extra to determine has_next\n```"
+    },
+    {
+      "en-US": "```json\n{\n  \"data\": [...],\n  \"meta\": {\n    \"has_next\": true,\n    \"next_cursor\": \"eyJpZCI6MTQzfQ\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"data\": [...],\n  \"meta\": {\n    \"has_next\": true,\n    \"next_cursor\": \"eyJpZCI6MTQzfQ\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "**Pros:** Consistent performance regardless of position, stable with concurrent inserts\n**Cons:** Cannot jump to arbitrary page, cursor is opaque",
+      "zh-Hans": "**优点：** 无论位置如何，性能一致；在并发插入时结果稳定\n**缺点：** 无法跳转到任意页面；游标是不透明的"
+    },
+    {
+      "en-US": "### When to Use Which",
+      "zh-Hans": "### 何时使用哪种"
+    },
+    {
+      "en-US": "| Use Case | Pagination Type |\n|----------|----------------|\n| Admin dashboards, small datasets (<10K) | Offset |\n| Infinite scroll, feeds, large datasets | Cursor |\n| Public APIs | Cursor (default) with offset (optional) |\n| Search results | Offset (users expect page numbers) |",
+      "zh-Hans": "| 用例 | 分页类型 |\n|----------|----------------|\n| 管理仪表板，小数据集 (<10K) | 偏移量 |\n| 无限滚动，信息流，大数据集 | 游标 |\n| 公共 API | 游标（默认）配合偏移量（可选） |\n| 搜索结果 | 偏移量（用户期望有页码） |"
+    },
+    {
+      "en-US": "## Filtering, Sorting, and Search",
+      "zh-Hans": "## 过滤、排序和搜索"
+    },
+    {
+      "en-US": "### Filtering",
+      "zh-Hans": "### 过滤"
+    },
+    {
+      "en-US": "```\n# Simple equality\nGET /api/v1/orders?status=active&customer_id=abc-123\n\n# Comparison operators (use bracket notation)\nGET /api/v1/products?price[gte]=10&price[lte]=100\nGET /api/v1/orders?created_at[after]=2025-01-01\n\n# Multiple values (comma-separated)\nGET /api/v1/products?category=electronics,clothing\n\n# Nested fields (dot notation)\nGET /api/v1/orders?customer.country=US\n```",
+      "zh-Hans": "```\n# Simple equality\nGET /api/v1/orders?status=active&customer_id=abc-123\n\n# Comparison operators (use bracket notation)\nGET /api/v1/products?price[gte]=10&price[lte]=100\nGET /api/v1/orders?created_at[after]=2025-01-01\n\n# Multiple values (comma-separated)\nGET /api/v1/products?category=electronics,clothing\n\n# Nested fields (dot notation)\nGET /api/v1/orders?customer.country=US\n```"
+    },
+    {
+      "en-US": "### Sorting",
+      "zh-Hans": "### 排序"
+    },
+    {
+      "en-US": "```\n# Single field (prefix - for descending)\nGET /api/v1/products?sort=-created_at\n\n# Multiple fields (comma-separated)\nGET /api/v1/products?sort=-featured,price,-created_at\n```",
+      "zh-Hans": "```\n# Single field (prefix - for descending)\nGET /api/v1/products?sort=-created_at\n\n# Multiple fields (comma-separated)\nGET /api/v1/products?sort=-featured,price,-created_at\n```"
+    },
+    {
+      "en-US": "### Full-Text Search",
+      "zh-Hans": "### 全文搜索"
+    },
+    {
+      "en-US": "```\n# Search query parameter\nGET /api/v1/products?q=wireless+headphones\n\n# Field-specific search\nGET /api/v1/users?email=alice\n```",
+      "zh-Hans": "```\n# Search query parameter\nGET /api/v1/products?q=wireless+headphones\n\n# Field-specific search\nGET /api/v1/users?email=alice\n```"
+    },
+    {
+      "en-US": "### Sparse Fieldsets",
+      "zh-Hans": "### 稀疏字段集"
+    },
+    {
+      "en-US": "```\n# Return only specified fields (reduces payload)\nGET /api/v1/users?fields=id,name,email\nGET /api/v1/orders?fields=id,total,status&include=customer.name\n```",
+      "zh-Hans": "```\n# Return only specified fields (reduces payload)\nGET /api/v1/users?fields=id,name,email\nGET /api/v1/orders?fields=id,total,status&include=customer.name\n```"
+    },
+    {
+      "en-US": "## Authentication and Authorization",
+      "zh-Hans": "## 认证和授权"
+    },
+    {
+      "en-US": "### Token-Based Auth",
+      "zh-Hans": "### 基于令牌的认证"
+    },
+    {
+      "en-US": "```\n# Bearer token in Authorization header\nGET /api/v1/users\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n# API key (for server-to-server)\nGET /api/v1/data\nX-API-Key: sk_live_abc123\n```",
+      "zh-Hans": "```\n# Bearer token in Authorization header\nGET /api/v1/users\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n# API key (for server-to-server)\nGET /api/v1/data\nX-API-Key: sk_live_abc123\n```"
+    },
+    {
+      "en-US": "### Authorization Patterns",
+      "zh-Hans": "### 授权模式"
+    },
+    {
+      "en-US": "```typescript\n// Resource-level: check ownership\napp.get(\"/api/v1/orders/:id\", async (req, res) => {\n  const order = await Order.findById(req.params.id);\n  if (!order) return res.status(404).json({ error: { code: \"not_found\" } });\n  if (order.userId !== req.user.id) return res.status(403).json({ error: { code: \"forbidden\" } });\n  return res.json({ data: order });\n});\n\n// Role-based: check permissions\napp.delete(\"/api/v1/users/:id\", requireRole(\"admin\"), async (req, res) => {\n  await User.delete(req.params.id);\n  return res.status(204).send();\n});\n```",
+      "zh-Hans": "```typescript\n// Resource-level: check ownership\napp.get(\"/api/v1/orders/:id\", async (req, res) => {\n  const order = await Order.findById(req.params.id);\n  if (!order) return res.status(404).json({ error: { code: \"not_found\" } });\n  if (order.userId !== req.user.id) return res.status(403).json({ error: { code: \"forbidden\" } });\n  return res.json({ data: order });\n});\n\n// Role-based: check permissions\napp.delete(\"/api/v1/users/:id\", requireRole(\"admin\"), async (req, res) => {\n  await User.delete(req.params.id);\n  return res.status(204).send();\n});\n```"
+    },
+    {
+      "en-US": "## Rate Limiting",
+      "zh-Hans": "## 速率限制"
+    },
+    {
+      "en-US": "### Headers",
+      "zh-Hans": "### 响应头"
+    },
+    {
+      "en-US": "```\nHTTP/1.1 200 OK\nX-RateLimit-Limit: 100\nX-RateLimit-Remaining: 95\nX-RateLimit-Reset: 1640000000\n\n# When exceeded\nHTTP/1.1 429 Too Many Requests\nRetry-After: 60\n{\n  \"error\": {\n    \"code\": \"rate_limit_exceeded\",\n    \"message\": \"Rate limit exceeded. Try again in 60 seconds.\"\n  }\n}\n```",
+      "zh-Hans": "```\nHTTP/1.1 200 OK\nX-RateLimit-Limit: 100\nX-RateLimit-Remaining: 95\nX-RateLimit-Reset: 1640000000\n\n# When exceeded\nHTTP/1.1 429 Too Many Requests\nRetry-After: 60\n{\n  \"error\": {\n    \"code\": \"rate_limit_exceeded\",\n    \"message\": \"Rate limit exceeded. Try again in 60 seconds.\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Rate Limit Tiers",
+      "zh-Hans": "### 速率限制层级"
+    },
+    {
+      "en-US": "| Tier | Limit | Window | Use Case |\n|------|-------|--------|----------|\n| Anonymous | 30/min | Per IP | Public endpoints |\n| Authenticated | 100/min | Per user | Standard API access |\n| Premium | 1000/min | Per API key | Paid API plans |\n| Internal | 10000/min | Per service | Service-to-service |",
+      "zh-Hans": "| 层级 | 限制 | 时间窗口 | 用例 |\n|------|-------|--------|----------|\n| 匿名用户 | 30/分钟 | 每个 IP | 公共端点 |\n| 认证用户 | 100/分钟 | 每个用户 | 标准 API 访问 |\n| 高级用户 | 1000/分钟 | 每个 API 密钥 | 付费 API 套餐 |\n| 内部服务 | 10000/分钟 | 每个服务 | 服务间调用 |"
+    },
+    {
+      "en-US": "## Versioning",
+      "zh-Hans": "## 版本控制"
+    },
+    {
+      "en-US": "### URL Path Versioning (Recommended)",
+      "zh-Hans": "### URL 路径版本控制（推荐）"
+    },
+    {
+      "en-US": "```\n/api/v1/users\n/api/v2/users\n```",
+      "zh-Hans": "```\n/api/v1/users\n/api/v2/users\n```"
+    },
+    {
+      "en-US": "**Pros:** Explicit, easy to route, cacheable\n**Cons:** URL changes between versions",
+      "zh-Hans": "**优点：** 明确，易于路由，可缓存\n**缺点：** 版本间 URL 会变化"
+    },
+    {
+      "en-US": "### Header Versioning",
+      "zh-Hans": "### 请求头版本控制"
+    },
+    {
+      "en-US": "```\nGET /api/users\nAccept: application/vnd.myapp.v2+json\n```",
+      "zh-Hans": "```\nGET /api/users\nAccept: application/vnd.myapp.v2+json\n```"
+    },
+    {
+      "en-US": "**Pros:** Clean URLs\n**Cons:** Harder to test, easy to forget",
+      "zh-Hans": "**优点：** URL 简洁\n**缺点：** 测试更困难，容易忘记"
+    },
+    {
+      "en-US": "### Versioning Strategy",
+      "zh-Hans": "### 版本控制策略"
+    },
+    {
+      "en-US": "```\n1. Start with /api/v1/ — don't version until you need to\n2. Maintain at most 2 active versions (current + previous)\n3. Deprecation timeline:\n   - Announce deprecation (6 months notice for public APIs)\n   - Add Sunset header: Sunset: Sat, 01 Jan 2026 00:00:00 GMT\n   - Return 410 Gone after sunset date\n4. Non-breaking changes don't need a new version:\n   - Adding new fields to responses\n   - Adding new optional query parameters\n   - Adding new endpoints\n5. Breaking changes require a new version:\n   - Removing or renaming fields\n   - Changing field types\n   - Changing URL structure\n   - Changing authentication method\n```",
+      "zh-Hans": "```\n1. Start with /api/v1/ — don't version until you need to\n2. Maintain at most 2 active versions (current + previous)\n3. Deprecation timeline:\n   - Announce deprecation (6 months notice for public APIs)\n   - Add Sunset header: Sunset: Sat, 01 Jan 2026 00:00:00 GMT\n   - Return 410 Gone after sunset date\n4. Non-breaking changes don't need a new version:\n   - Adding new fields to responses\n   - Adding new optional query parameters\n   - Adding new endpoints\n5. Breaking changes require a new version:\n   - Removing or renaming fields\n   - Changing field types\n   - Changing URL structure\n   - Changing authentication method\n```"
+    },
+    {
+      "en-US": "## Implementation Patterns",
+      "zh-Hans": "## 实现模式"
+    },
+    {
+      "en-US": "### TypeScript (Next.js API Route)",
+      "zh-Hans": "### TypeScript (Next.js API 路由)"
+    },
+    {
+      "en-US": "```typescript\nimport { z } from \"zod\";\nimport { NextRequest, NextResponse } from \"next/server\";\n\nconst createUserSchema = z.object({\n  email: z.string().email(),\n  name: z.string().min(1).max(100),\n});\n\nexport async function POST(req: NextRequest) {\n  const body = await req.json();\n  const parsed = createUserSchema.safeParse(body);\n\n  if (!parsed.success) {\n    return NextResponse.json({\n      error: {\n        code: \"validation_error\",\n        message: \"Request validation failed\",\n        details: parsed.error.issues.map(i => ({\n          field: i.path.join(\".\"),\n          message: i.message,\n          code: i.code,\n        })),\n      },\n    }, { status: 422 });\n  }\n\n  const user = await createUser(parsed.data);\n\n  return NextResponse.json(\n    { data: user },\n    {\n      status: 201,\n      headers: { Location: `/api/v1/users/${user.id}` },\n    },\n  );\n}\n```",
+      "zh-Hans": "```typescript\nimport { z } from \"zod\";\nimport { NextRequest, NextResponse } from \"next/server\";\n\nconst createUserSchema = z.object({\n  email: z.string().email(),\n  name: z.string().min(1).max(100),\n});\n\nexport async function POST(req: NextRequest) {\n  const body = await req.json();\n  const parsed = createUserSchema.safeParse(body);\n\n  if (!parsed.success) {\n    return NextResponse.json({\n      error: {\n        code: \"validation_error\",\n        message: \"Request validation failed\",\n        details: parsed.error.issues.map(i => ({\n          field: i.path.join(\".\"),\n          message: i.message,\n          code: i.code,\n        })),\n      },\n    }, { status: 422 });\n  }\n\n  const user = await createUser(parsed.data);\n\n  return NextResponse.json(\n    { data: user },\n    {\n      status: 201,\n      headers: { Location: `/api/v1/users/${user.id}` },\n    },\n  );\n}\n```"
+    },
+    {
+      "en-US": "### Python (Django REST Framework)",
+      "zh-Hans": "### Python (Django REST Framework)"
+    },
+    {
+      "en-US": "```python\nfrom rest_framework import serializers, viewsets, status\nfrom rest_framework.response import Response\n\nclass CreateUserSerializer(serializers.Serializer):\n    email = serializers.EmailField()\n    name = serializers.CharField(max_length=100)\n\nclass UserSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = User\n        fields = [\"id\", \"email\", \"name\", \"created_at\"]\n\nclass UserViewSet(viewsets.ModelViewSet):\n    serializer_class = UserSerializer\n    permission_classes = [IsAuthenticated]\n\n    def get_serializer_class(self):\n        if self.action == \"create\":\n            return CreateUserSerializer\n        return UserSerializer\n\n    def create(self, request):\n        serializer = CreateUserSerializer(data=request.data)\n        serializer.is_valid(raise_exception=True)\n        user = UserService.create(**serializer.validated_data)\n        return Response(\n            {\"data\": UserSerializer(user).data},\n            status=status.HTTP_201_CREATED,\n            headers={\"Location\": f\"/api/v1/users/{user.id}\"},\n        )\n```",
+      "zh-Hans": "```python\nfrom rest_framework import serializers, viewsets, status\nfrom rest_framework.response import Response\n\nclass CreateUserSerializer(serializers.Serializer):\n    email = serializers.EmailField()\n    name = serializers.CharField(max_length=100)\n\nclass UserSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = User\n        fields = [\"id\", \"email\", \"name\", \"created_at\"]\n\nclass UserViewSet(viewsets.ModelViewSet):\n    serializer_class = UserSerializer\n    permission_classes = [IsAuthenticated]\n\n    def get_serializer_class(self):\n        if self.action == \"create\":\n            return CreateUserSerializer\n        return UserSerializer\n\n    def create(self, request):\n        serializer = CreateUserSerializer(data=request.data)\n        serializer.is_valid(raise_exception=True)\n        user = UserService.create(**serializer.validated_data)\n        return Response(\n            {\"data\": UserSerializer(user).data},\n            status=status.HTTP_201_CREATED,\n            headers={\"Location\": f\"/api/v1/users/{user.id}\"},\n        )\n```"
+    },
+    {
+      "en-US": "### Go (net/http)",
+      "zh-Hans": "### Go (net/http)"
+    },
+    {
+      "en-US": "```go\nfunc (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {\n    var req CreateUserRequest\n    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {\n        writeError(w, http.StatusBadRequest, \"invalid_json\", \"Invalid request body\")\n        return\n    }\n\n    if err := req.Validate(); err != nil {\n        writeError(w, http.StatusUnprocessableEntity, \"validation_error\", err.Error())\n        return\n    }\n\n    user, err := h.service.Create(r.Context(), req)\n    if err != nil {\n        switch {\n        case errors.Is(err, domain.ErrEmailTaken):\n            writeError(w, http.StatusConflict, \"email_taken\", \"Email already registered\")\n        default:\n            writeError(w, http.StatusInternalServerError, \"internal_error\", \"Internal error\")\n        }\n        return\n    }\n\n    w.Header().Set(\"Location\", fmt.Sprintf(\"/api/v1/users/%s\", user.ID))\n    writeJSON(w, http.StatusCreated, map[string]any{\"data\": user})\n}\n```",
+      "zh-Hans": "```go\nfunc (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {\n    var req CreateUserRequest\n    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {\n        writeError(w, http.StatusBadRequest, \"invalid_json\", \"Invalid request body\")\n        return\n    }\n\n    if err := req.Validate(); err != nil {\n        writeError(w, http.StatusUnprocessableEntity, \"validation_error\", err.Error())\n        return\n    }\n\n    user, err := h.service.Create(r.Context(), req)\n    if err != nil {\n        switch {\n        case errors.Is(err, domain.ErrEmailTaken):\n            writeError(w, http.StatusConflict, \"email_taken\", \"Email already registered\")\n        default:\n            writeError(w, http.StatusInternalServerError, \"internal_error\", \"Internal error\")\n        }\n        return\n    }\n\n    w.Header().Set(\"Location\", fmt.Sprintf(\"/api/v1/users/%s\", user.ID))\n    writeJSON(w, http.StatusCreated, map[string]any{\"data\": user})\n}\n```"
+    },
+    {
+      "en-US": "## API Design Checklist",
+      "zh-Hans": "## API 设计清单"
+    },
+    {
+      "en-US": "Before shipping a new endpoint:",
+      "zh-Hans": "发布新端点前请检查："
+    },
+    {
+      "en-US": "- [ ] Resource URL follows naming conventions (plural, kebab-case, no verbs)\n- [ ] Correct HTTP method used (GET for reads, POST for creates, etc.)\n- [ ] Appropriate status codes returned (not 200 for everything)\n- [ ] Input validated with schema (Zod, Pydantic, Bean Validation)\n- [ ] Error responses follow standard format with codes and messages\n- [ ] Pagination implemented for list endpoints (cursor or offset)\n- [ ] Authentication required (or explicitly marked as public)\n- [ ] Authorization checked (user can only access their own resources)\n- [ ] Rate limiting configured\n- [ ] Response does not leak internal details (stack traces, SQL errors)\n- [ ] Consistent naming with existing endpoints (camelCase vs snake_case)\n- [ ] Documented (OpenAPI/Swagger spec updated)",
+      "zh-Hans": "* \\[ ] 资源 URL 遵循命名约定（复数、短横线连接、不含动词）\n* \\[ ] 使用了正确的 HTTP 方法（GET 用于读取，POST 用于创建等）\n* \\[ ] 返回了适当的状态码（不要所有情况都返回 200）\n* \\[ ] 使用模式（Zod, Pydantic, Bean Validation）验证了输入\n* \\[ ] 错误响应遵循带代码和消息的标准格式\n* \\[ ] 列表端点实现了分页（游标或偏移量）\n* \\[ ] 需要认证（或明确标记为公开）\n* \\[ ] 检查了授权（用户只能访问自己的资源）\n* \\[ ] 配置了速率限制\n* \\[ ] 响应未泄露内部细节（堆栈跟踪、SQL 错误）\n* \\[ ] 与现有端点命名一致（camelCase 对比 snake\\_case）\n* \\[ ] 已记录（更新了 OpenAPI/Swagger 规范）"
+    }
+  ]
+}

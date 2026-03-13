@@ -1,0 +1,74 @@
+{
+  "sourceFile": "rules/common/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Coding Style",
+      "zh-Hans": "# 编码风格"
+    },
+    {
+      "en-US": "## Immutability (CRITICAL)",
+      "zh-Hans": "## 不可变性（关键）"
+    },
+    {
+      "en-US": "ALWAYS create new objects, NEVER mutate existing ones:",
+      "zh-Hans": "始终创建新对象，绝不改变现有对象："
+    },
+    {
+      "en-US": "```\n// Pseudocode\nWRONG:  modify(original, field, value) → changes original in-place\nCORRECT: update(original, field, value) → returns new copy with change\n```",
+      "zh-Hans": "```\n// Pseudocode\nWRONG:  modify(original, field, value) → changes original in-place\nCORRECT: update(original, field, value) → returns new copy with change\n```"
+    },
+    {
+      "en-US": "Rationale: Immutable data prevents hidden side effects, makes debugging easier, and enables safe concurrency.",
+      "zh-Hans": "理由：不可变数据可以防止隐藏的副作用，使调试更容易，并支持安全的并发。"
+    },
+    {
+      "en-US": "## File Organization",
+      "zh-Hans": "## 文件组织"
+    },
+    {
+      "en-US": "MANY SMALL FILES > FEW LARGE FILES:",
+      "zh-Hans": "多个小文件 > 少数大文件："
+    },
+    {
+      "en-US": "- High cohesion, low coupling\n- 200-400 lines typical, 800 max\n- Extract utilities from large modules\n- Organize by feature/domain, not by type",
+      "zh-Hans": "* 高内聚，低耦合\n* 通常 200-400 行，最多 800 行\n* 从大型模块中提取实用工具\n* 按功能/领域组织，而不是按类型组织"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "ALWAYS handle errors comprehensively:",
+      "zh-Hans": "始终全面处理错误："
+    },
+    {
+      "en-US": "- Handle errors explicitly at every level\n- Provide user-friendly error messages in UI-facing code\n- Log detailed error context on the server side\n- Never silently swallow errors",
+      "zh-Hans": "* 在每个层级明确处理错误\n* 在面向用户的代码中提供用户友好的错误消息\n* 在服务器端记录详细的错误上下文\n* 绝不默默地忽略错误"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "ALWAYS validate at system boundaries:",
+      "zh-Hans": "始终在系统边界处进行验证："
+    },
+    {
+      "en-US": "- Validate all user input before processing\n- Use schema-based validation where available\n- Fail fast with clear error messages\n- Never trust external data (API responses, user input, file content)",
+      "zh-Hans": "* 在处理前验证所有用户输入\n* 在可用时使用基于模式的验证\n* 快速失败并提供清晰的错误消息\n* 绝不信任外部数据（API 响应、用户输入、文件内容）"
+    },
+    {
+      "en-US": "## Code Quality Checklist",
+      "zh-Hans": "## 代码质量检查清单"
+    },
+    {
+      "en-US": "Before marking work complete:",
+      "zh-Hans": "在标记工作完成之前："
+    },
+    {
+      "en-US": "- [ ] Code is readable and well-named\n- [ ] Functions are small (<50 lines)\n- [ ] Files are focused (<800 lines)\n- [ ] No deep nesting (>4 levels)\n- [ ] Proper error handling\n- [ ] No hardcoded values (use constants or config)\n- [ ] No mutation (immutable patterns used)",
+      "zh-Hans": "* \\[ ] 代码可读且命名良好\n* \\[ ] 函数短小（<50 行）\n* \\[ ] 文件专注（<800 行）\n* \\[ ] 没有深度嵌套（>4 层）\n* \\[ ] 正确的错误处理\n* \\[ ] 没有硬编码的值（使用常量或配置）\n* \\[ ] 没有突变（使用不可变模式）"
+    }
+  ]
+}

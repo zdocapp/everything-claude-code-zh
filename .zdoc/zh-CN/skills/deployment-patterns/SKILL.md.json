@@ -1,0 +1,242 @@
+{
+  "sourceFile": "skills/deployment-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: deployment-patterns\ndescription: Deployment workflows, CI/CD pipeline patterns, Docker containerization, health checks, rollback strategies, and production readiness checklists for web applications.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: deployment-patterns\ndescription: 部署工作流、CI/CD流水线模式、Docker容器化、健康检查、回滚策略以及Web应用程序的生产就绪检查清单。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Deployment Patterns",
+      "zh-Hans": "# 部署模式"
+    },
+    {
+      "en-US": "Production deployment workflows and CI/CD best practices.",
+      "zh-Hans": "生产环境部署工作流和 CI/CD 最佳实践。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Setting up CI/CD pipelines\n- Dockerizing an application\n- Planning deployment strategy (blue-green, canary, rolling)\n- Implementing health checks and readiness probes\n- Preparing for a production release\n- Configuring environment-specific settings",
+      "zh-Hans": "* 设置 CI/CD 流水线时\n* 将应用容器化（Docker）时\n* 规划部署策略（蓝绿、金丝雀、滚动）时\n* 实现健康检查和就绪探针时\n* 准备生产发布时\n* 配置环境特定设置时"
+    },
+    {
+      "en-US": "## Deployment Strategies",
+      "zh-Hans": "## 部署策略"
+    },
+    {
+      "en-US": "### Rolling Deployment (Default)",
+      "zh-Hans": "### 滚动部署（默认）"
+    },
+    {
+      "en-US": "Replace instances gradually — old and new versions run simultaneously during rollout.",
+      "zh-Hans": "逐步替换实例——在发布过程中，新旧版本同时运行。"
+    },
+    {
+      "en-US": "```\nInstance 1: v1 → v2  (update first)\nInstance 2: v1        (still running v1)\nInstance 3: v1        (still running v1)\n\nInstance 1: v2\nInstance 2: v1 → v2  (update second)\nInstance 3: v1\n\nInstance 1: v2\nInstance 2: v2\nInstance 3: v1 → v2  (update last)\n```",
+      "zh-Hans": "```\nInstance 1: v1 → v2  (update first)\nInstance 2: v1        (still running v1)\nInstance 3: v1        (still running v1)\n\nInstance 1: v2\nInstance 2: v1 → v2  (update second)\nInstance 3: v1\n\nInstance 1: v2\nInstance 2: v2\nInstance 3: v1 → v2  (update last)\n```"
+    },
+    {
+      "en-US": "**Pros:** Zero downtime, gradual rollout\n**Cons:** Two versions run simultaneously — requires backward-compatible changes\n**Use when:** Standard deployments, backward-compatible changes",
+      "zh-Hans": "**优点：** 零停机时间，渐进式发布\n**缺点：** 两个版本同时运行——需要向后兼容的更改\n**适用场景：** 标准部署，向后兼容的更改"
+    },
+    {
+      "en-US": "### Blue-Green Deployment",
+      "zh-Hans": "### 蓝绿部署"
+    },
+    {
+      "en-US": "Run two identical environments. Switch traffic atomically.",
+      "zh-Hans": "运行两个相同的环境。原子化地切换流量。"
+    },
+    {
+      "en-US": "```\nBlue  (v1) ← traffic\nGreen (v2)   idle, running new version\n\n# After verification:\nBlue  (v1)   idle (becomes standby)\nGreen (v2) ← traffic\n```",
+      "zh-Hans": "```\nBlue  (v1) ← traffic\nGreen (v2)   idle, running new version\n\n# After verification:\nBlue  (v1)   idle (becomes standby)\nGreen (v2) ← traffic\n```"
+    },
+    {
+      "en-US": "**Pros:** Instant rollback (switch back to blue), clean cutover\n**Cons:** Requires 2x infrastructure during deployment\n**Use when:** Critical services, zero-tolerance for issues",
+      "zh-Hans": "**优点：** 即时回滚（切换回蓝色环境），切换干净利落\n**缺点：** 部署期间需要双倍的基础设施\n**适用场景：** 关键服务，对问题零容忍"
+    },
+    {
+      "en-US": "### Canary Deployment",
+      "zh-Hans": "### 金丝雀部署"
+    },
+    {
+      "en-US": "Route a small percentage of traffic to the new version first.",
+      "zh-Hans": "首先将一小部分流量路由到新版本。"
+    },
+    {
+      "en-US": "```\nv1: 95% of traffic\nv2:  5% of traffic  (canary)\n\n# If metrics look good:\nv1: 50% of traffic\nv2: 50% of traffic\n\n# Final:\nv2: 100% of traffic\n```",
+      "zh-Hans": "```\nv1: 95% of traffic\nv2:  5% of traffic  (canary)\n\n# If metrics look good:\nv1: 50% of traffic\nv2: 50% of traffic\n\n# Final:\nv2: 100% of traffic\n```"
+    },
+    {
+      "en-US": "**Pros:** Catches issues with real traffic before full rollout\n**Cons:** Requires traffic splitting infrastructure, monitoring\n**Use when:** High-traffic services, risky changes, feature flags",
+      "zh-Hans": "**优点：** 在全量发布前，通过真实流量发现问题\n**缺点：** 需要流量分割基础设施和监控\n**适用场景：** 高流量服务，风险性更改，功能标志"
+    },
+    {
+      "en-US": "## Docker",
+      "zh-Hans": "## Docker"
+    },
+    {
+      "en-US": "### Multi-Stage Dockerfile (Node.js)",
+      "zh-Hans": "### 多阶段 Dockerfile (Node.js)"
+    },
+    {
+      "en-US": "```dockerfile\n# Stage 1: Install dependencies\nFROM node:22-alpine AS deps\nWORKDIR /app\nCOPY package.json package-lock.json ./\nRUN npm ci --production=false\n\n# Stage 2: Build\nFROM node:22-alpine AS builder\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nRUN npm run build\nRUN npm prune --production\n\n# Stage 3: Production image\nFROM node:22-alpine AS runner\nWORKDIR /app\n\nRUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001\nUSER appuser\n\nCOPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules\nCOPY --from=builder --chown=appuser:appgroup /app/dist ./dist\nCOPY --from=builder --chown=appuser:appgroup /app/package.json ./\n\nENV NODE_ENV=production\nEXPOSE 3000\n\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\n  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1\n\nCMD [\"node\", \"dist/server.js\"]\n```",
+      "zh-Hans": "```dockerfile\n# Stage 1: Install dependencies\nFROM node:22-alpine AS deps\nWORKDIR /app\nCOPY package.json package-lock.json ./\nRUN npm ci --production=false\n\n# Stage 2: Build\nFROM node:22-alpine AS builder\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nRUN npm run build\nRUN npm prune --production\n\n# Stage 3: Production image\nFROM node:22-alpine AS runner\nWORKDIR /app\n\nRUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001\nUSER appuser\n\nCOPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules\nCOPY --from=builder --chown=appuser:appgroup /app/dist ./dist\nCOPY --from=builder --chown=appuser:appgroup /app/package.json ./\n\nENV NODE_ENV=production\nEXPOSE 3000\n\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\n  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1\n\nCMD [\"node\", \"dist/server.js\"]\n```"
+    },
+    {
+      "en-US": "### Multi-Stage Dockerfile (Go)",
+      "zh-Hans": "### 多阶段 Dockerfile (Go)"
+    },
+    {
+      "en-US": "```dockerfile\nFROM golang:1.22-alpine AS builder\nWORKDIR /app\nCOPY go.mod go.sum ./\nRUN go mod download\nCOPY . .\nRUN CGO_ENABLED=0 GOOS=linux go build -ldflags=\"-s -w\" -o /server ./cmd/server\n\nFROM alpine:3.19 AS runner\nRUN apk --no-cache add ca-certificates\nRUN adduser -D -u 1001 appuser\nUSER appuser\n\nCOPY --from=builder /server /server\n\nEXPOSE 8080\nHEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:8080/health || exit 1\nCMD [\"/server\"]\n```",
+      "zh-Hans": "```dockerfile\nFROM golang:1.22-alpine AS builder\nWORKDIR /app\nCOPY go.mod go.sum ./\nRUN go mod download\nCOPY . .\nRUN CGO_ENABLED=0 GOOS=linux go build -ldflags=\"-s -w\" -o /server ./cmd/server\n\nFROM alpine:3.19 AS runner\nRUN apk --no-cache add ca-certificates\nRUN adduser -D -u 1001 appuser\nUSER appuser\n\nCOPY --from=builder /server /server\n\nEXPOSE 8080\nHEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:8080/health || exit 1\nCMD [\"/server\"]\n```"
+    },
+    {
+      "en-US": "### Multi-Stage Dockerfile (Python/Django)",
+      "zh-Hans": "### 多阶段 Dockerfile (Python/Django)"
+    },
+    {
+      "en-US": "```dockerfile\nFROM python:3.12-slim AS builder\nWORKDIR /app\nRUN pip install --no-cache-dir uv\nCOPY requirements.txt .\nRUN uv pip install --system --no-cache -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\n\nRUN useradd -r -u 1001 appuser\nUSER appuser\n\nCOPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages\nCOPY --from=builder /usr/local/bin /usr/local/bin\nCOPY . .\n\nENV PYTHONUNBUFFERED=1\nEXPOSE 8000\n\nHEALTHCHECK --interval=30s --timeout=3s CMD python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')\" || exit 1\nCMD [\"gunicorn\", \"config.wsgi:application\", \"--bind\", \"0.0.0.0:8000\", \"--workers\", \"4\"]\n```",
+      "zh-Hans": "```dockerfile\nFROM python:3.12-slim AS builder\nWORKDIR /app\nRUN pip install --no-cache-dir uv\nCOPY requirements.txt .\nRUN uv pip install --system --no-cache -r requirements.txt\n\nFROM python:3.12-slim AS runner\nWORKDIR /app\n\nRUN useradd -r -u 1001 appuser\nUSER appuser\n\nCOPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages\nCOPY --from=builder /usr/local/bin /usr/local/bin\nCOPY . .\n\nENV PYTHONUNBUFFERED=1\nEXPOSE 8000\n\nHEALTHCHECK --interval=30s --timeout=3s CMD python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')\" || exit 1\nCMD [\"gunicorn\", \"config.wsgi:application\", \"--bind\", \"0.0.0.0:8000\", \"--workers\", \"4\"]\n```"
+    },
+    {
+      "en-US": "### Docker Best Practices",
+      "zh-Hans": "### Docker 最佳实践"
+    },
+    {
+      "en-US": "```\n# GOOD practices\n- Use specific version tags (node:22-alpine, not node:latest)\n- Multi-stage builds to minimize image size\n- Run as non-root user\n- Copy dependency files first (layer caching)\n- Use .dockerignore to exclude node_modules, .git, tests\n- Add HEALTHCHECK instruction\n- Set resource limits in docker-compose or k8s\n\n# BAD practices\n- Running as root\n- Using :latest tags\n- Copying entire repo in one COPY layer\n- Installing dev dependencies in production image\n- Storing secrets in image (use env vars or secrets manager)\n```",
+      "zh-Hans": "```\n# GOOD practices\n- Use specific version tags (node:22-alpine, not node:latest)\n- Multi-stage builds to minimize image size\n- Run as non-root user\n- Copy dependency files first (layer caching)\n- Use .dockerignore to exclude node_modules, .git, tests\n- Add HEALTHCHECK instruction\n- Set resource limits in docker-compose or k8s\n\n# BAD practices\n- Running as root\n- Using :latest tags\n- Copying entire repo in one COPY layer\n- Installing dev dependencies in production image\n- Storing secrets in image (use env vars or secrets manager)\n```"
+    },
+    {
+      "en-US": "## CI/CD Pipeline",
+      "zh-Hans": "## CI/CD 流水线"
+    },
+    {
+      "en-US": "### GitHub Actions (Standard Pipeline)",
+      "zh-Hans": "### GitHub Actions (标准流水线)"
+    },
+    {
+      "en-US": "```yaml\nname: CI/CD\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 22\n          cache: npm\n      - run: npm ci\n      - run: npm run lint\n      - run: npm run typecheck\n      - run: npm test -- --coverage\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: coverage\n          path: coverage/\n\n  build:\n    needs: test\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    steps:\n      - uses: actions/checkout@v4\n      - uses: docker/setup-buildx-action@v3\n      - uses: docker/login-action@v3\n        with:\n          registry: ghcr.io\n          username: ${{ github.actor }}\n          password: ${{ secrets.GITHUB_TOKEN }}\n      - uses: docker/build-push-action@v5\n        with:\n          push: true\n          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}\n          cache-from: type=gha\n          cache-to: type=gha,mode=max\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    environment: production\n    steps:\n      - name: Deploy to production\n        run: |\n          # Platform-specific deployment command\n          # Railway: railway up\n          # Vercel: vercel --prod\n          # K8s: kubectl set image deployment/app app=ghcr.io/${{ github.repository }}:${{ github.sha }}\n          echo \"Deploying ${{ github.sha }}\"\n```",
+      "zh-Hans": "```yaml\nname: CI/CD\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 22\n          cache: npm\n      - run: npm ci\n      - run: npm run lint\n      - run: npm run typecheck\n      - run: npm test -- --coverage\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: coverage\n          path: coverage/\n\n  build:\n    needs: test\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    steps:\n      - uses: actions/checkout@v4\n      - uses: docker/setup-buildx-action@v3\n      - uses: docker/login-action@v3\n        with:\n          registry: ghcr.io\n          username: ${{ github.actor }}\n          password: ${{ secrets.GITHUB_TOKEN }}\n      - uses: docker/build-push-action@v5\n        with:\n          push: true\n          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}\n          cache-from: type=gha\n          cache-to: type=gha,mode=max\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    environment: production\n    steps:\n      - name: Deploy to production\n        run: |\n          # Platform-specific deployment command\n          # Railway: railway up\n          # Vercel: vercel --prod\n          # K8s: kubectl set image deployment/app app=ghcr.io/${{ github.repository }}:${{ github.sha }}\n          echo \"Deploying ${{ github.sha }}\"\n```"
+    },
+    {
+      "en-US": "### Pipeline Stages",
+      "zh-Hans": "### 流水线阶段"
+    },
+    {
+      "en-US": "```\nPR opened:\n  lint → typecheck → unit tests → integration tests → preview deploy\n\nMerged to main:\n  lint → typecheck → unit tests → integration tests → build image → deploy staging → smoke tests → deploy production\n```",
+      "zh-Hans": "```\nPR opened:\n  lint → typecheck → unit tests → integration tests → preview deploy\n\nMerged to main:\n  lint → typecheck → unit tests → integration tests → build image → deploy staging → smoke tests → deploy production\n```"
+    },
+    {
+      "en-US": "## Health Checks",
+      "zh-Hans": "## 健康检查"
+    },
+    {
+      "en-US": "### Health Check Endpoint",
+      "zh-Hans": "### 健康检查端点"
+    },
+    {
+      "en-US": "```typescript\n// Simple health check\napp.get(\"/health\", (req, res) => {\n  res.status(200).json({ status: \"ok\" });\n});\n\n// Detailed health check (for internal monitoring)\napp.get(\"/health/detailed\", async (req, res) => {\n  const checks = {\n    database: await checkDatabase(),\n    redis: await checkRedis(),\n    externalApi: await checkExternalApi(),\n  };\n\n  const allHealthy = Object.values(checks).every(c => c.status === \"ok\");\n\n  res.status(allHealthy ? 200 : 503).json({\n    status: allHealthy ? \"ok\" : \"degraded\",\n    timestamp: new Date().toISOString(),\n    version: process.env.APP_VERSION || \"unknown\",\n    uptime: process.uptime(),\n    checks,\n  });\n});\n\nasync function checkDatabase(): Promise<HealthCheck> {\n  try {\n    await db.query(\"SELECT 1\");\n    return { status: \"ok\", latency_ms: 2 };\n  } catch (err) {\n    return { status: \"error\", message: \"Database unreachable\" };\n  }\n}\n```",
+      "zh-Hans": "```typescript\n// Simple health check\napp.get(\"/health\", (req, res) => {\n  res.status(200).json({ status: \"ok\" });\n});\n\n// Detailed health check (for internal monitoring)\napp.get(\"/health/detailed\", async (req, res) => {\n  const checks = {\n    database: await checkDatabase(),\n    redis: await checkRedis(),\n    externalApi: await checkExternalApi(),\n  };\n\n  const allHealthy = Object.values(checks).every(c => c.status === \"ok\");\n\n  res.status(allHealthy ? 200 : 503).json({\n    status: allHealthy ? \"ok\" : \"degraded\",\n    timestamp: new Date().toISOString(),\n    version: process.env.APP_VERSION || \"unknown\",\n    uptime: process.uptime(),\n    checks,\n  });\n});\n\nasync function checkDatabase(): Promise<HealthCheck> {\n  try {\n    await db.query(\"SELECT 1\");\n    return { status: \"ok\", latency_ms: 2 };\n  } catch (err) {\n    return { status: \"error\", message: \"Database unreachable\" };\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Kubernetes Probes",
+      "zh-Hans": "### Kubernetes 探针"
+    },
+    {
+      "en-US": "```yaml\nlivenessProbe:\n  httpGet:\n    path: /health\n    port: 3000\n  initialDelaySeconds: 10\n  periodSeconds: 30\n  failureThreshold: 3\n\nreadinessProbe:\n  httpGet:\n    path: /health\n    port: 3000\n  initialDelaySeconds: 5\n  periodSeconds: 10\n  failureThreshold: 2\n\nstartupProbe:\n  httpGet:\n    path: /health\n    port: 3000\n  initialDelaySeconds: 0\n  periodSeconds: 5\n  failureThreshold: 30    # 30 * 5s = 150s max startup time\n```",
+      "zh-Hans": "```yaml\nlivenessProbe:\n  httpGet:\n    path: /health\n    port: 3000\n  initialDelaySeconds: 10\n  periodSeconds: 30\n  failureThreshold: 3\n\nreadinessProbe:\n  httpGet:\n    path: /health\n    port: 3000\n  initialDelaySeconds: 5\n  periodSeconds: 10\n  failureThreshold: 2\n\nstartupProbe:\n  httpGet:\n    path: /health\n    port: 3000\n  initialDelaySeconds: 0\n  periodSeconds: 5\n  failureThreshold: 30    # 30 * 5s = 150s max startup time\n```"
+    },
+    {
+      "en-US": "## Environment Configuration",
+      "zh-Hans": "## 环境配置"
+    },
+    {
+      "en-US": "### Twelve-Factor App Pattern",
+      "zh-Hans": "### 十二要素应用模式"
+    },
+    {
+      "en-US": "```bash\n# All config via environment variables — never in code\nDATABASE_URL=postgres://user:pass@host:5432/db\nREDIS_URL=redis://host:6379/0\nAPI_KEY=${API_KEY}           # injected by secrets manager\nLOG_LEVEL=info\nPORT=3000\n\n# Environment-specific behavior\nNODE_ENV=production          # or staging, development\nAPP_ENV=production           # explicit app environment\n```",
+      "zh-Hans": "```bash\n# All config via environment variables — never in code\nDATABASE_URL=postgres://user:pass@host:5432/db\nREDIS_URL=redis://host:6379/0\nAPI_KEY=${API_KEY}           # injected by secrets manager\nLOG_LEVEL=info\nPORT=3000\n\n# Environment-specific behavior\nNODE_ENV=production          # or staging, development\nAPP_ENV=production           # explicit app environment\n```"
+    },
+    {
+      "en-US": "### Configuration Validation",
+      "zh-Hans": "### 配置验证"
+    },
+    {
+      "en-US": "```typescript\nimport { z } from \"zod\";\n\nconst envSchema = z.object({\n  NODE_ENV: z.enum([\"development\", \"staging\", \"production\"]),\n  PORT: z.coerce.number().default(3000),\n  DATABASE_URL: z.string().url(),\n  REDIS_URL: z.string().url(),\n  JWT_SECRET: z.string().min(32),\n  LOG_LEVEL: z.enum([\"debug\", \"info\", \"warn\", \"error\"]).default(\"info\"),\n});\n\n// Validate at startup — fail fast if config is wrong\nexport const env = envSchema.parse(process.env);\n```",
+      "zh-Hans": "```typescript\nimport { z } from \"zod\";\n\nconst envSchema = z.object({\n  NODE_ENV: z.enum([\"development\", \"staging\", \"production\"]),\n  PORT: z.coerce.number().default(3000),\n  DATABASE_URL: z.string().url(),\n  REDIS_URL: z.string().url(),\n  JWT_SECRET: z.string().min(32),\n  LOG_LEVEL: z.enum([\"debug\", \"info\", \"warn\", \"error\"]).default(\"info\"),\n});\n\n// Validate at startup — fail fast if config is wrong\nexport const env = envSchema.parse(process.env);\n```"
+    },
+    {
+      "en-US": "## Rollback Strategy",
+      "zh-Hans": "## 回滚策略"
+    },
+    {
+      "en-US": "### Instant Rollback",
+      "zh-Hans": "### 即时回滚"
+    },
+    {
+      "en-US": "```bash\n# Docker/Kubernetes: point to previous image\nkubectl rollout undo deployment/app\n\n# Vercel: promote previous deployment\nvercel rollback\n\n# Railway: redeploy previous commit\nrailway up --commit <previous-sha>\n\n# Database: rollback migration (if reversible)\nnpx prisma migrate resolve --rolled-back <migration-name>\n```",
+      "zh-Hans": "```bash\n# Docker/Kubernetes: point to previous image\nkubectl rollout undo deployment/app\n\n# Vercel: promote previous deployment\nvercel rollback\n\n# Railway: redeploy previous commit\nrailway up --commit <previous-sha>\n\n# Database: rollback migration (if reversible)\nnpx prisma migrate resolve --rolled-back <migration-name>\n```"
+    },
+    {
+      "en-US": "### Rollback Checklist",
+      "zh-Hans": "### 回滚检查清单"
+    },
+    {
+      "en-US": "- [ ] Previous image/artifact is available and tagged\n- [ ] Database migrations are backward-compatible (no destructive changes)\n- [ ] Feature flags can disable new features without deploy\n- [ ] Monitoring alerts configured for error rate spikes\n- [ ] Rollback tested in staging before production release",
+      "zh-Hans": "* \\[ ] 之前的镜像/制品可用且已标记\n* \\[ ] 数据库迁移向后兼容（无破坏性更改）\n* \\[ ] 功能标志可以在不部署的情况下禁用新功能\n* \\[ ] 监控警报已配置，用于错误率飙升\n* \\[ ] 在生产发布前，回滚已在预演环境测试"
+    },
+    {
+      "en-US": "## Production Readiness Checklist",
+      "zh-Hans": "## 生产就绪检查清单"
+    },
+    {
+      "en-US": "Before any production deployment:",
+      "zh-Hans": "在任何生产部署之前："
+    },
+    {
+      "en-US": "### Application",
+      "zh-Hans": "### 应用"
+    },
+    {
+      "en-US": "- [ ] All tests pass (unit, integration, E2E)\n- [ ] No hardcoded secrets in code or config files\n- [ ] Error handling covers all edge cases\n- [ ] Logging is structured (JSON) and does not contain PII\n- [ ] Health check endpoint returns meaningful status",
+      "zh-Hans": "* \\[ ] 所有测试通过（单元、集成、端到端）\n* \\[ ] 代码或配置文件中没有硬编码的密钥\n* \\[ ] 错误处理覆盖所有边缘情况\n* \\[ ] 日志是结构化的（JSON）且不包含 PII\n* \\[ ] 健康检查端点返回有意义的状态"
+    },
+    {
+      "en-US": "### Infrastructure",
+      "zh-Hans": "### 基础设施"
+    },
+    {
+      "en-US": "- [ ] Docker image builds reproducibly (pinned versions)\n- [ ] Environment variables documented and validated at startup\n- [ ] Resource limits set (CPU, memory)\n- [ ] Horizontal scaling configured (min/max instances)\n- [ ] SSL/TLS enabled on all endpoints",
+      "zh-Hans": "* \\[ ] Docker 镜像可重复构建（版本已固定）\n* \\[ ] 环境变量已记录并在启动时验证\n* \\[ ] 资源限制已设置（CPU、内存）\n* \\[ ] 水平伸缩已配置（最小/最大实例数）\n* \\[ ] 所有端点均已启用 SSL/TLS"
+    },
+    {
+      "en-US": "### Monitoring",
+      "zh-Hans": "### 监控"
+    },
+    {
+      "en-US": "- [ ] Application metrics exported (request rate, latency, errors)\n- [ ] Alerts configured for error rate > threshold\n- [ ] Log aggregation set up (structured logs, searchable)\n- [ ] Uptime monitoring on health endpoint",
+      "zh-Hans": "* \\[ ] 应用指标已导出（请求率、延迟、错误）\n* \\[ ] 已配置错误率超过阈值的警报\n* \\[ ] 日志聚合已设置（结构化日志，可搜索）\n* \\[ ] 健康端点有正常运行时间监控"
+    },
+    {
+      "en-US": "### Security",
+      "zh-Hans": "### 安全"
+    },
+    {
+      "en-US": "- [ ] Dependencies scanned for CVEs\n- [ ] CORS configured for allowed origins only\n- [ ] Rate limiting enabled on public endpoints\n- [ ] Authentication and authorization verified\n- [ ] Security headers set (CSP, HSTS, X-Frame-Options)",
+      "zh-Hans": "* \\[ ] 依赖项已扫描 CVE\n* \\[ ] CORS 仅配置允许的来源\n* \\[ ] 公共端点已启用速率限制\n* \\[ ] 身份验证和授权已验证\n* \\[ ] 安全头已设置（CSP、HSTS、X-Frame-Options）"
+    },
+    {
+      "en-US": "### Operations",
+      "zh-Hans": "### 运维"
+    },
+    {
+      "en-US": "- [ ] Rollback plan documented and tested\n- [ ] Database migration tested against production-sized data\n- [ ] Runbook for common failure scenarios\n- [ ] On-call rotation and escalation path defined",
+      "zh-Hans": "* \\[ ] 回滚计划已记录并测试\n* \\[ ] 数据库迁移已针对生产规模的数据进行测试\n* \\[ ] 常见故障场景的应急预案\n* \\[ ] 待命轮换和升级路径已定义"
+    }
+  ]
+}

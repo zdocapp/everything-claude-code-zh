@@ -1,0 +1,66 @@
+{
+  "sourceFile": "rules/perl/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---"
+    },
+    {
+      "en-US": "# Perl Coding Style",
+      "zh-Hans": "# Perl 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Perl-specific content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上，补充了 Perl 相关的内容。"
+    },
+    {
+      "en-US": "## Standards",
+      "zh-Hans": "## 标准"
+    },
+    {
+      "en-US": "- Always `use v5.36` (enables `strict`, `warnings`, `say`, subroutine signatures)\n- Use subroutine signatures — never unpack `@_` manually\n- Prefer `say` over `print` with explicit newlines",
+      "zh-Hans": "* 始终 `use v5.36`（启用 `strict`、`warnings`、`say` 和子程序签名）\n* 使用子程序签名 — 切勿手动解包 `@_`\n* 优先使用 `say` 而非显式换行的 `print`"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "- Use **Moo** with `is => 'ro'` and `Types::Standard` for all attributes\n- Never use blessed hashrefs directly — always use Moo/Moose accessors\n- **OO override note**: Moo `has` attributes with `builder` or `default` are acceptable for computed read-only values",
+      "zh-Hans": "* 对所有属性使用 **Moo**，并配合 `is => 'ro'` 和 `Types::Standard`\n* 切勿直接使用被祝福的哈希引用 — 始终通过 Moo/Moose 访问器\n* **面向对象覆盖说明**：对于计算得出的只读值，使用 Moo `has` 属性并配合 `builder` 或 `default` 是可以接受的"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "Use **perltidy** with these settings:",
+      "zh-Hans": "使用 **perltidy** 并采用以下设置："
+    },
+    {
+      "en-US": "```\n-i=4    # 4-space indent\n-l=100  # 100 char line length\n-ce     # cuddled else\n-bar    # opening brace always right\n```",
+      "zh-Hans": "```\n-i=4    # 4-space indent\n-l=100  # 100 char line length\n-ce     # cuddled else\n-bar    # opening brace always right\n```"
+    },
+    {
+      "en-US": "## Linting",
+      "zh-Hans": "## 代码检查"
+    },
+    {
+      "en-US": "Use **perlcritic** at severity 3 with themes: `core`, `pbp`, `security`.",
+      "zh-Hans": "使用 **perlcritic**，严重级别设为 3，并启用主题：`core`、`pbp`、`security`。"
+    },
+    {
+      "en-US": "```bash\nperlcritic --severity 3 --theme 'core || pbp || security' lib/\n```",
+      "zh-Hans": "```bash\nperlcritic --severity 3 --theme 'core || pbp || security' lib/\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `perl-patterns` for comprehensive modern Perl idioms and best practices.",
+      "zh-Hans": "查看技能：`perl-patterns`，了解全面的现代 Perl 惯用法和最佳实践。"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "sourceFile": "commands/claw.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Start NanoClaw v2 — ECC's persistent, zero-dependency REPL with model routing, skill hot-load, branching, compaction, export, and metrics.\n---",
+      "zh-Hans": "---\ndescription: 启动 NanoClaw v2 — ECC 的持久、零依赖 REPL，具备模型路由、技能热加载、分支、压缩、导出和指标功能。\n---"
+    },
+    {
+      "en-US": "# Claw Command",
+      "zh-Hans": "# Claw 命令"
+    },
+    {
+      "en-US": "Start an interactive AI agent session with persistent markdown history and operational controls.",
+      "zh-Hans": "启动一个具有持久化 Markdown 历史记录和操作控制的交互式 AI 代理会话。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```bash\nnode scripts/claw.js\n```",
+      "zh-Hans": "```bash\nnode scripts/claw.js\n```"
+    },
+    {
+      "en-US": "Or via npm:",
+      "zh-Hans": "或通过 npm："
+    },
+    {
+      "en-US": "```bash\nnpm run claw\n```",
+      "zh-Hans": "```bash\nnpm run claw\n```"
+    },
+    {
+      "en-US": "## Environment Variables",
+      "zh-Hans": "## 环境变量"
+    },
+    {
+      "en-US": "| Variable | Default | Description |\n|----------|---------|-------------|\n| `CLAW_SESSION` | `default` | Session name (alphanumeric + hyphens) |\n| `CLAW_SKILLS` | *(empty)* | Comma-separated skills loaded at startup |\n| `CLAW_MODEL` | `sonnet` | Default model for the session |",
+      "zh-Hans": "| 变量 | 默认值 | 描述 |\n|----------|---------|-------------|\n| `CLAW_SESSION` | `default` | 会话名称（字母数字 + 连字符） |\n| `CLAW_SKILLS` | *(空)* | 启动时加载的以逗号分隔的技能列表 |\n| `CLAW_MODEL` | `sonnet` | 会话的默认模型 |"
+    },
+    {
+      "en-US": "## REPL Commands",
+      "zh-Hans": "## REPL 命令"
+    },
+    {
+      "en-US": "```text\n/help                          Show help\n/clear                         Clear current session history\n/history                       Print full conversation history\n/sessions                      List saved sessions\n/model [name]                  Show/set model\n/load <skill-name>             Hot-load a skill into context\n/branch <session-name>         Branch current session\n/search <query>                Search query across sessions\n/compact                       Compact old turns, keep recent context\n/export <md|json|txt> [path]   Export session\n/metrics                       Show session metrics\nexit                           Quit\n```",
+      "zh-Hans": "```text\n/help                          Show help\n/clear                         Clear current session history\n/history                       Print full conversation history\n/sessions                      List saved sessions\n/model [name]                  Show/set model\n/load <skill-name>             Hot-load a skill into context\n/branch <session-name>         Branch current session\n/search <query>                Search query across sessions\n/compact                       Compact old turns, keep recent context\n/export <md|json|txt> [path]   Export session\n/metrics                       Show session metrics\nexit                           Quit\n```"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 说明"
+    },
+    {
+      "en-US": "- NanoClaw remains zero-dependency.\n- Sessions are stored at `~/.claude/claw/<session>.md`.\n- Compaction keeps the most recent turns and writes a compaction header.\n- Export supports markdown, JSON turns, and plain text.",
+      "zh-Hans": "* NanoClaw 保持零依赖。\n* 会话存储在 `~/.claude/claw/<session>.md`。\n* 压缩会保留最近的回合并写入压缩头。\n* 导出支持 Markdown、JSON 回合和纯文本。"
+    }
+  ]
+}

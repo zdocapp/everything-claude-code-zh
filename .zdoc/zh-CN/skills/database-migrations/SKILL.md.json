@@ -1,0 +1,230 @@
+{
+  "sourceFile": "skills/database-migrations/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: database-migrations\ndescription: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime deployments across PostgreSQL, MySQL, and common ORMs (Prisma, Drizzle, Django, TypeORM, golang-migrate).\norigin: ECC\n---",
+      "zh-Hans": "---\nname: database-migrations\ndescription: 数据库迁移最佳实践，涵盖模式变更、数据迁移、回滚以及零停机部署，适用于PostgreSQL、MySQL及常用ORM（Prisma、Drizzle、Django、TypeORM、golang-migrate）。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Database Migration Patterns",
+      "zh-Hans": "# 数据库迁移模式"
+    },
+    {
+      "en-US": "Safe, reversible database schema changes for production systems.",
+      "zh-Hans": "为生产系统提供安全、可逆的数据库模式变更。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Creating or altering database tables\n- Adding/removing columns or indexes\n- Running data migrations (backfill, transform)\n- Planning zero-downtime schema changes\n- Setting up migration tooling for a new project",
+      "zh-Hans": "* 创建或修改数据库表\n* 添加/删除列或索引\n* 运行数据迁移（回填、转换）\n* 计划零停机模式变更\n* 为新项目设置迁移工具"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "1. **Every change is a migration** — never alter production databases manually\n2. **Migrations are forward-only in production** — rollbacks use new forward migrations\n3. **Schema and data migrations are separate** — never mix DDL and DML in one migration\n4. **Test migrations against production-sized data** — a migration that works on 100 rows may lock on 10M\n5. **Migrations are immutable once deployed** — never edit a migration that has run in production",
+      "zh-Hans": "1. **每个变更都是一次迁移** — 切勿手动更改生产数据库\n2. **迁移在生产环境中是只进不退的** — 回滚使用新的前向迁移\n3. **模式迁移和数据迁移是分开的** — 切勿在一个迁移中混合 DDL 和 DML\n4. **针对生产规模的数据测试迁移** — 适用于 100 行的迁移可能在 1000 万行时锁定\n5. **迁移一旦部署就是不可变的** — 切勿编辑已在生产中运行的迁移"
+    },
+    {
+      "en-US": "## Migration Safety Checklist",
+      "zh-Hans": "## 迁移安全检查清单"
+    },
+    {
+      "en-US": "Before applying any migration:",
+      "zh-Hans": "应用任何迁移之前："
+    },
+    {
+      "en-US": "- [ ] Migration has both UP and DOWN (or is explicitly marked irreversible)\n- [ ] No full table locks on large tables (use concurrent operations)\n- [ ] New columns have defaults or are nullable (never add NOT NULL without default)\n- [ ] Indexes created concurrently (not inline with CREATE TABLE for existing tables)\n- [ ] Data backfill is a separate migration from schema change\n- [ ] Tested against a copy of production data\n- [ ] Rollback plan documented",
+      "zh-Hans": "* \\[ ] 迁移同时包含 UP 和 DOWN（或明确标记为不可逆）\n* \\[ ] 对大表没有全表锁（使用并发操作）\n* \\[ ] 新列有默认值或可为空（切勿添加没有默认值的 NOT NULL）\n* \\[ ] 索引是并发创建的（对于现有表，不与 CREATE TABLE 内联创建）\n* \\[ ] 数据回填是与模式变更分开的迁移\n* \\[ ] 已针对生产数据副本进行测试\n* \\[ ] 回滚计划已记录"
+    },
+    {
+      "en-US": "## PostgreSQL Patterns",
+      "zh-Hans": "## PostgreSQL 模式"
+    },
+    {
+      "en-US": "### Adding a Column Safely",
+      "zh-Hans": "### 安全地添加列"
+    },
+    {
+      "en-US": "```sql\n-- GOOD: Nullable column, no lock\nALTER TABLE users ADD COLUMN avatar_url TEXT;\n\n-- GOOD: Column with default (Postgres 11+ is instant, no rewrite)\nALTER TABLE users ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true;\n\n-- BAD: NOT NULL without default on existing table (requires full rewrite)\nALTER TABLE users ADD COLUMN role TEXT NOT NULL;\n-- This locks the table and rewrites every row\n```",
+      "zh-Hans": "```sql\n-- GOOD: Nullable column, no lock\nALTER TABLE users ADD COLUMN avatar_url TEXT;\n\n-- GOOD: Column with default (Postgres 11+ is instant, no rewrite)\nALTER TABLE users ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true;\n\n-- BAD: NOT NULL without default on existing table (requires full rewrite)\nALTER TABLE users ADD COLUMN role TEXT NOT NULL;\n-- This locks the table and rewrites every row\n```"
+    },
+    {
+      "en-US": "### Adding an Index Without Downtime",
+      "zh-Hans": "### 无停机添加索引"
+    },
+    {
+      "en-US": "```sql\n-- BAD: Blocks writes on large tables\nCREATE INDEX idx_users_email ON users (email);\n\n-- GOOD: Non-blocking, allows concurrent writes\nCREATE INDEX CONCURRENTLY idx_users_email ON users (email);\n\n-- Note: CONCURRENTLY cannot run inside a transaction block\n-- Most migration tools need special handling for this\n```",
+      "zh-Hans": "```sql\n-- BAD: Blocks writes on large tables\nCREATE INDEX idx_users_email ON users (email);\n\n-- GOOD: Non-blocking, allows concurrent writes\nCREATE INDEX CONCURRENTLY idx_users_email ON users (email);\n\n-- Note: CONCURRENTLY cannot run inside a transaction block\n-- Most migration tools need special handling for this\n```"
+    },
+    {
+      "en-US": "### Renaming a Column (Zero-Downtime)",
+      "zh-Hans": "### 重命名列（零停机）"
+    },
+    {
+      "en-US": "Never rename directly in production. Use the expand-contract pattern:",
+      "zh-Hans": "切勿在生产中直接重命名。使用扩展-收缩模式："
+    },
+    {
+      "en-US": "```sql\n-- Step 1: Add new column (migration 001)\nALTER TABLE users ADD COLUMN display_name TEXT;\n\n-- Step 2: Backfill data (migration 002, data migration)\nUPDATE users SET display_name = username WHERE display_name IS NULL;\n\n-- Step 3: Update application code to read/write both columns\n-- Deploy application changes\n\n-- Step 4: Stop writing to old column, drop it (migration 003)\nALTER TABLE users DROP COLUMN username;\n```",
+      "zh-Hans": "```sql\n-- Step 1: Add new column (migration 001)\nALTER TABLE users ADD COLUMN display_name TEXT;\n\n-- Step 2: Backfill data (migration 002, data migration)\nUPDATE users SET display_name = username WHERE display_name IS NULL;\n\n-- Step 3: Update application code to read/write both columns\n-- Deploy application changes\n\n-- Step 4: Stop writing to old column, drop it (migration 003)\nALTER TABLE users DROP COLUMN username;\n```"
+    },
+    {
+      "en-US": "### Removing a Column Safely",
+      "zh-Hans": "### 安全地删除列"
+    },
+    {
+      "en-US": "```sql\n-- Step 1: Remove all application references to the column\n-- Step 2: Deploy application without the column reference\n-- Step 3: Drop column in next migration\nALTER TABLE orders DROP COLUMN legacy_status;\n\n-- For Django: use SeparateDatabaseAndState to remove from model\n-- without generating DROP COLUMN (then drop in next migration)\n```",
+      "zh-Hans": "```sql\n-- Step 1: Remove all application references to the column\n-- Step 2: Deploy application without the column reference\n-- Step 3: Drop column in next migration\nALTER TABLE orders DROP COLUMN legacy_status;\n\n-- For Django: use SeparateDatabaseAndState to remove from model\n-- without generating DROP COLUMN (then drop in next migration)\n```"
+    },
+    {
+      "en-US": "### Large Data Migrations",
+      "zh-Hans": "### 大型数据迁移"
+    },
+    {
+      "en-US": "```sql\n-- BAD: Updates all rows in one transaction (locks table)\nUPDATE users SET normalized_email = LOWER(email);\n\n-- GOOD: Batch update with progress\nDO $$\nDECLARE\n  batch_size INT := 10000;\n  rows_updated INT;\nBEGIN\n  LOOP\n    UPDATE users\n    SET normalized_email = LOWER(email)\n    WHERE id IN (\n      SELECT id FROM users\n      WHERE normalized_email IS NULL\n      LIMIT batch_size\n      FOR UPDATE SKIP LOCKED\n    );\n    GET DIAGNOSTICS rows_updated = ROW_COUNT;\n    RAISE NOTICE 'Updated % rows', rows_updated;\n    EXIT WHEN rows_updated = 0;\n    COMMIT;\n  END LOOP;\nEND $$;\n```",
+      "zh-Hans": "```sql\n-- BAD: Updates all rows in one transaction (locks table)\nUPDATE users SET normalized_email = LOWER(email);\n\n-- GOOD: Batch update with progress\nDO $$\nDECLARE\n  batch_size INT := 10000;\n  rows_updated INT;\nBEGIN\n  LOOP\n    UPDATE users\n    SET normalized_email = LOWER(email)\n    WHERE id IN (\n      SELECT id FROM users\n      WHERE normalized_email IS NULL\n      LIMIT batch_size\n      FOR UPDATE SKIP LOCKED\n    );\n    GET DIAGNOSTICS rows_updated = ROW_COUNT;\n    RAISE NOTICE 'Updated % rows', rows_updated;\n    EXIT WHEN rows_updated = 0;\n    COMMIT;\n  END LOOP;\nEND $$;\n```"
+    },
+    {
+      "en-US": "## Prisma (TypeScript/Node.js)",
+      "zh-Hans": "## Prisma (TypeScript/Node.js)"
+    },
+    {
+      "en-US": "### Workflow",
+      "zh-Hans": "### 工作流"
+    },
+    {
+      "en-US": "```bash\n# Create migration from schema changes\nnpx prisma migrate dev --name add_user_avatar\n\n# Apply pending migrations in production\nnpx prisma migrate deploy\n\n# Reset database (dev only)\nnpx prisma migrate reset\n\n# Generate client after schema changes\nnpx prisma generate\n```",
+      "zh-Hans": "```bash\n# Create migration from schema changes\nnpx prisma migrate dev --name add_user_avatar\n\n# Apply pending migrations in production\nnpx prisma migrate deploy\n\n# Reset database (dev only)\nnpx prisma migrate reset\n\n# Generate client after schema changes\nnpx prisma generate\n```"
+    },
+    {
+      "en-US": "### Schema Example",
+      "zh-Hans": "### 模式示例"
+    },
+    {
+      "en-US": "```prisma\nmodel User {\n  id        String   @id @default(cuid())\n  email     String   @unique\n  name      String?\n  avatarUrl String?  @map(\"avatar_url\")\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n  orders    Order[]\n\n  @@map(\"users\")\n  @@index([email])\n}\n```",
+      "zh-Hans": "```prisma\nmodel User {\n  id        String   @id @default(cuid())\n  email     String   @unique\n  name      String?\n  avatarUrl String?  @map(\"avatar_url\")\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n  orders    Order[]\n\n  @@map(\"users\")\n  @@index([email])\n}\n```"
+    },
+    {
+      "en-US": "### Custom SQL Migration",
+      "zh-Hans": "### 自定义 SQL 迁移"
+    },
+    {
+      "en-US": "For operations Prisma cannot express (concurrent indexes, data backfills):",
+      "zh-Hans": "对于 Prisma 无法表达的操作（并发索引、数据回填）："
+    },
+    {
+      "en-US": "```bash\n# Create empty migration, then edit the SQL manually\nnpx prisma migrate dev --create-only --name add_email_index\n```",
+      "zh-Hans": "```bash\n# Create empty migration, then edit the SQL manually\nnpx prisma migrate dev --create-only --name add_email_index\n```"
+    },
+    {
+      "en-US": "```sql\n-- migrations/20240115_add_email_index/migration.sql\n-- Prisma cannot generate CONCURRENTLY, so we write it manually\nCREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_email ON users (email);\n```",
+      "zh-Hans": "```sql\n-- migrations/20240115_add_email_index/migration.sql\n-- Prisma cannot generate CONCURRENTLY, so we write it manually\nCREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_email ON users (email);\n```"
+    },
+    {
+      "en-US": "## Drizzle (TypeScript/Node.js)",
+      "zh-Hans": "## Drizzle (TypeScript/Node.js)"
+    },
+    {
+      "en-US": "### Workflow",
+      "zh-Hans": "### 工作流"
+    },
+    {
+      "en-US": "```bash\n# Generate migration from schema changes\nnpx drizzle-kit generate\n\n# Apply migrations\nnpx drizzle-kit migrate\n\n# Push schema directly (dev only, no migration file)\nnpx drizzle-kit push\n```",
+      "zh-Hans": "```bash\n# Generate migration from schema changes\nnpx drizzle-kit generate\n\n# Apply migrations\nnpx drizzle-kit migrate\n\n# Push schema directly (dev only, no migration file)\nnpx drizzle-kit push\n```"
+    },
+    {
+      "en-US": "### Schema Example",
+      "zh-Hans": "### 模式示例"
+    },
+    {
+      "en-US": "```typescript\nimport { pgTable, text, timestamp, uuid, boolean } from \"drizzle-orm/pg-core\";\n\nexport const users = pgTable(\"users\", {\n  id: uuid(\"id\").primaryKey().defaultRandom(),\n  email: text(\"email\").notNull().unique(),\n  name: text(\"name\"),\n  isActive: boolean(\"is_active\").notNull().default(true),\n  createdAt: timestamp(\"created_at\").notNull().defaultNow(),\n  updatedAt: timestamp(\"updated_at\").notNull().defaultNow(),\n});\n```",
+      "zh-Hans": "```typescript\nimport { pgTable, text, timestamp, uuid, boolean } from \"drizzle-orm/pg-core\";\n\nexport const users = pgTable(\"users\", {\n  id: uuid(\"id\").primaryKey().defaultRandom(),\n  email: text(\"email\").notNull().unique(),\n  name: text(\"name\"),\n  isActive: boolean(\"is_active\").notNull().default(true),\n  createdAt: timestamp(\"created_at\").notNull().defaultNow(),\n  updatedAt: timestamp(\"updated_at\").notNull().defaultNow(),\n});\n```"
+    },
+    {
+      "en-US": "## Django (Python)",
+      "zh-Hans": "## Django (Python)"
+    },
+    {
+      "en-US": "### Workflow",
+      "zh-Hans": "### 工作流"
+    },
+    {
+      "en-US": "```bash\n# Generate migration from model changes\npython manage.py makemigrations\n\n# Apply migrations\npython manage.py migrate\n\n# Show migration status\npython manage.py showmigrations\n\n# Generate empty migration for custom SQL\npython manage.py makemigrations --empty app_name -n description\n```",
+      "zh-Hans": "```bash\n# Generate migration from model changes\npython manage.py makemigrations\n\n# Apply migrations\npython manage.py migrate\n\n# Show migration status\npython manage.py showmigrations\n\n# Generate empty migration for custom SQL\npython manage.py makemigrations --empty app_name -n description\n```"
+    },
+    {
+      "en-US": "### Data Migration",
+      "zh-Hans": "### 数据迁移"
+    },
+    {
+      "en-US": "```python\nfrom django.db import migrations\n\ndef backfill_display_names(apps, schema_editor):\n    User = apps.get_model(\"accounts\", \"User\")\n    batch_size = 5000\n    users = User.objects.filter(display_name=\"\")\n    while users.exists():\n        batch = list(users[:batch_size])\n        for user in batch:\n            user.display_name = user.username\n        User.objects.bulk_update(batch, [\"display_name\"], batch_size=batch_size)\n\ndef reverse_backfill(apps, schema_editor):\n    pass  # Data migration, no reverse needed\n\nclass Migration(migrations.Migration):\n    dependencies = [(\"accounts\", \"0015_add_display_name\")]\n\n    operations = [\n        migrations.RunPython(backfill_display_names, reverse_backfill),\n    ]\n```",
+      "zh-Hans": "```python\nfrom django.db import migrations\n\ndef backfill_display_names(apps, schema_editor):\n    User = apps.get_model(\"accounts\", \"User\")\n    batch_size = 5000\n    users = User.objects.filter(display_name=\"\")\n    while users.exists():\n        batch = list(users[:batch_size])\n        for user in batch:\n            user.display_name = user.username\n        User.objects.bulk_update(batch, [\"display_name\"], batch_size=batch_size)\n\ndef reverse_backfill(apps, schema_editor):\n    pass  # Data migration, no reverse needed\n\nclass Migration(migrations.Migration):\n    dependencies = [(\"accounts\", \"0015_add_display_name\")]\n\n    operations = [\n        migrations.RunPython(backfill_display_names, reverse_backfill),\n    ]\n```"
+    },
+    {
+      "en-US": "### SeparateDatabaseAndState",
+      "zh-Hans": "### SeparateDatabaseAndState"
+    },
+    {
+      "en-US": "Remove a column from the Django model without dropping it from the database immediately:",
+      "zh-Hans": "从 Django 模型中删除列，而不立即从数据库中删除："
+    },
+    {
+      "en-US": "```python\nclass Migration(migrations.Migration):\n    operations = [\n        migrations.SeparateDatabaseAndState(\n            state_operations=[\n                migrations.RemoveField(model_name=\"user\", name=\"legacy_field\"),\n            ],\n            database_operations=[],  # Don't touch the DB yet\n        ),\n    ]\n```",
+      "zh-Hans": "```python\nclass Migration(migrations.Migration):\n    operations = [\n        migrations.SeparateDatabaseAndState(\n            state_operations=[\n                migrations.RemoveField(model_name=\"user\", name=\"legacy_field\"),\n            ],\n            database_operations=[],  # Don't touch the DB yet\n        ),\n    ]\n```"
+    },
+    {
+      "en-US": "## golang-migrate (Go)",
+      "zh-Hans": "## golang-migrate (Go)"
+    },
+    {
+      "en-US": "### Workflow",
+      "zh-Hans": "### 工作流"
+    },
+    {
+      "en-US": "```bash\n# Create migration pair\nmigrate create -ext sql -dir migrations -seq add_user_avatar\n\n# Apply all pending migrations\nmigrate -path migrations -database \"$DATABASE_URL\" up\n\n# Rollback last migration\nmigrate -path migrations -database \"$DATABASE_URL\" down 1\n\n# Force version (fix dirty state)\nmigrate -path migrations -database \"$DATABASE_URL\" force VERSION\n```",
+      "zh-Hans": "```bash\n# Create migration pair\nmigrate create -ext sql -dir migrations -seq add_user_avatar\n\n# Apply all pending migrations\nmigrate -path migrations -database \"$DATABASE_URL\" up\n\n# Rollback last migration\nmigrate -path migrations -database \"$DATABASE_URL\" down 1\n\n# Force version (fix dirty state)\nmigrate -path migrations -database \"$DATABASE_URL\" force VERSION\n```"
+    },
+    {
+      "en-US": "### Migration Files",
+      "zh-Hans": "### 迁移文件"
+    },
+    {
+      "en-US": "```sql\n-- migrations/000003_add_user_avatar.up.sql\nALTER TABLE users ADD COLUMN avatar_url TEXT;\nCREATE INDEX CONCURRENTLY idx_users_avatar ON users (avatar_url) WHERE avatar_url IS NOT NULL;\n\n-- migrations/000003_add_user_avatar.down.sql\nDROP INDEX IF EXISTS idx_users_avatar;\nALTER TABLE users DROP COLUMN IF EXISTS avatar_url;\n```",
+      "zh-Hans": "```sql\n-- migrations/000003_add_user_avatar.up.sql\nALTER TABLE users ADD COLUMN avatar_url TEXT;\nCREATE INDEX CONCURRENTLY idx_users_avatar ON users (avatar_url) WHERE avatar_url IS NOT NULL;\n\n-- migrations/000003_add_user_avatar.down.sql\nDROP INDEX IF EXISTS idx_users_avatar;\nALTER TABLE users DROP COLUMN IF EXISTS avatar_url;\n```"
+    },
+    {
+      "en-US": "## Zero-Downtime Migration Strategy",
+      "zh-Hans": "## 零停机迁移策略"
+    },
+    {
+      "en-US": "For critical production changes, follow the expand-contract pattern:",
+      "zh-Hans": "对于关键的生产变更，遵循扩展-收缩模式："
+    },
+    {
+      "en-US": "```\nPhase 1: EXPAND\n  - Add new column/table (nullable or with default)\n  - Deploy: app writes to BOTH old and new\n  - Backfill existing data\n\nPhase 2: MIGRATE\n  - Deploy: app reads from NEW, writes to BOTH\n  - Verify data consistency\n\nPhase 3: CONTRACT\n  - Deploy: app only uses NEW\n  - Drop old column/table in separate migration\n```",
+      "zh-Hans": "```\nPhase 1: EXPAND\n  - Add new column/table (nullable or with default)\n  - Deploy: app writes to BOTH old and new\n  - Backfill existing data\n\nPhase 2: MIGRATE\n  - Deploy: app reads from NEW, writes to BOTH\n  - Verify data consistency\n\nPhase 3: CONTRACT\n  - Deploy: app only uses NEW\n  - Drop old column/table in separate migration\n```"
+    },
+    {
+      "en-US": "### Timeline Example",
+      "zh-Hans": "### 时间线示例"
+    },
+    {
+      "en-US": "```\nDay 1: Migration adds new_status column (nullable)\nDay 1: Deploy app v2 — writes to both status and new_status\nDay 2: Run backfill migration for existing rows\nDay 3: Deploy app v3 — reads from new_status only\nDay 7: Migration drops old status column\n```",
+      "zh-Hans": "```\nDay 1: Migration adds new_status column (nullable)\nDay 1: Deploy app v2 — writes to both status and new_status\nDay 2: Run backfill migration for existing rows\nDay 3: Deploy app v3 — reads from new_status only\nDay 7: Migration drops old status column\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "| Anti-Pattern | Why It Fails | Better Approach |\n|-------------|-------------|-----------------|\n| Manual SQL in production | No audit trail, unrepeatable | Always use migration files |\n| Editing deployed migrations | Causes drift between environments | Create new migration instead |\n| NOT NULL without default | Locks table, rewrites all rows | Add nullable, backfill, then add constraint |\n| Inline index on large table | Blocks writes during build | CREATE INDEX CONCURRENTLY |\n| Schema + data in one migration | Hard to rollback, long transactions | Separate migrations |\n| Dropping column before removing code | Application errors on missing column | Remove code first, drop column next deploy |",
+      "zh-Hans": "| 反模式 | 为何会失败 | 更好的方法 |\n|-------------|-------------|-----------------|\n| 在生产中手动执行 SQL | 没有审计追踪，不可重复 | 始终使用迁移文件 |\n| 编辑已部署的迁移 | 导致环境间出现差异 | 改为创建新迁移 |\n| 没有默认值的 NOT NULL | 锁定表，重写所有行 | 添加可为空列，回填数据，然后添加约束 |\n| 在大表上内联创建索引 | 在构建期间阻塞写入 | 使用 CREATE INDEX CONCURRENTLY |\n| 在一个迁移中混合模式和数据的变更 | 难以回滚，事务时间长 | 分开的迁移 |\n| 在移除代码之前删除列 | 应用程序在缺失列时出错 | 先移除代码，下一次部署再删除列 |"
+    }
+  ]
+}

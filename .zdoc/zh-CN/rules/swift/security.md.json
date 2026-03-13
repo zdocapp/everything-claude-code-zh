@@ -1,0 +1,46 @@
+{
+  "sourceFile": "rules/swift/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.swift\"\n  - \"**/Package.swift\"\n---"
+    },
+    {
+      "en-US": "# Swift Security",
+      "zh-Hans": "# Swift 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with Swift specific content.",
+      "zh-Hans": "> 此文件扩展了 [common/security.md](../common/security.md)，并包含 Swift 特定的内容。"
+    },
+    {
+      "en-US": "## Secret Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "- Use **Keychain Services** for sensitive data (tokens, passwords, keys) — never `UserDefaults`\n- Use environment variables or `.xcconfig` files for build-time secrets\n- Never hardcode secrets in source — decompilation tools extract them trivially",
+      "zh-Hans": "* 使用 **Keychain Services** 处理敏感数据（令牌、密码、密钥）—— 切勿使用 `UserDefaults`\n* 使用环境变量或 `.xcconfig` 文件来管理构建时的密钥\n* 切勿在源代码中硬编码密钥 —— 反编译工具可以轻易提取它们"
+    },
+    {
+      "en-US": "```swift\nlet apiKey = ProcessInfo.processInfo.environment[\"API_KEY\"]\nguard let apiKey, !apiKey.isEmpty else {\n    fatalError(\"API_KEY not configured\")\n}\n```",
+      "zh-Hans": "```swift\nlet apiKey = ProcessInfo.processInfo.environment[\"API_KEY\"]\nguard let apiKey, !apiKey.isEmpty else {\n    fatalError(\"API_KEY not configured\")\n}\n```"
+    },
+    {
+      "en-US": "## Transport Security",
+      "zh-Hans": "## 传输安全"
+    },
+    {
+      "en-US": "- App Transport Security (ATS) is enforced by default — do not disable it\n- Use certificate pinning for critical endpoints\n- Validate all server certificates",
+      "zh-Hans": "* 默认强制执行 App Transport Security (ATS) —— 不要禁用它\n* 对关键端点使用证书锁定\n* 验证所有服务器证书"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "- Sanitize all user input before display to prevent injection\n- Use `URL(string:)` with validation rather than force-unwrapping\n- Validate data from external sources (APIs, deep links, pasteboard) before processing",
+      "zh-Hans": "* 在显示之前清理所有用户输入，以防止注入攻击\n* 使用带验证的 `URL(string:)`，而不是强制解包\n* 在处理来自外部源（API、深度链接、剪贴板）的数据之前，先进行验证"
+    }
+  ]
+}

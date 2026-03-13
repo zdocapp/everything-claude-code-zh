@@ -1,0 +1,94 @@
+{
+  "sourceFile": "commands/checkpoint.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Checkpoint Command",
+      "zh-Hans": "# 检查点命令"
+    },
+    {
+      "en-US": "Create or verify a checkpoint in your workflow.",
+      "zh-Hans": "在你的工作流中创建或验证一个检查点。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "`/checkpoint [create|verify|list] [name]`",
+      "zh-Hans": "`/checkpoint [create|verify|list] [name]`"
+    },
+    {
+      "en-US": "## Create Checkpoint",
+      "zh-Hans": "## 创建检查点"
+    },
+    {
+      "en-US": "When creating a checkpoint:",
+      "zh-Hans": "创建检查点时："
+    },
+    {
+      "en-US": "1. Run `/verify quick` to ensure current state is clean\n2. Create a git stash or commit with checkpoint name\n3. Log checkpoint to `.claude/checkpoints.log`:",
+      "zh-Hans": "1. 运行 `/verify quick` 以确保当前状态是干净的\n2. 使用检查点名称创建一个 git stash 或提交\n3. 将检查点记录到 `.claude/checkpoints.log`："
+    },
+    {
+      "en-US": "```bash\necho \"$(date +%Y-%m-%d-%H:%M) | $CHECKPOINT_NAME | $(git rev-parse --short HEAD)\" >> .claude/checkpoints.log\n```",
+      "zh-Hans": "```bash\necho \"$(date +%Y-%m-%d-%H:%M) | $CHECKPOINT_NAME | $(git rev-parse --short HEAD)\" >> .claude/checkpoints.log\n```"
+    },
+    {
+      "en-US": "4. Report checkpoint created",
+      "zh-Hans": "4. 报告检查点已创建"
+    },
+    {
+      "en-US": "## Verify Checkpoint",
+      "zh-Hans": "## 验证检查点"
+    },
+    {
+      "en-US": "When verifying against a checkpoint:",
+      "zh-Hans": "根据检查点进行验证时："
+    },
+    {
+      "en-US": "1. Read checkpoint from log\n2. Compare current state to checkpoint:\n   - Files added since checkpoint\n   - Files modified since checkpoint\n   - Test pass rate now vs then\n   - Coverage now vs then\n\n3. Report:",
+      "zh-Hans": "1. 从日志中读取检查点\n\n2. 将当前状态与检查点进行比较：\n   * 自检查点以来新增的文件\n   * 自检查点以来修改的文件\n   * 现在的测试通过率与当时对比\n   * 现在的覆盖率与当时对比\n\n3. 报告："
+    },
+    {
+      "en-US": "```\nCHECKPOINT COMPARISON: $NAME\n============================\nFiles changed: X\nTests: +Y passed / -Z failed\nCoverage: +X% / -Y%\nBuild: [PASS/FAIL]\n```",
+      "zh-Hans": "```\nCHECKPOINT COMPARISON: $NAME\n============================\nFiles changed: X\nTests: +Y passed / -Z failed\nCoverage: +X% / -Y%\nBuild: [PASS/FAIL]\n```"
+    },
+    {
+      "en-US": "## List Checkpoints",
+      "zh-Hans": "## 列出检查点"
+    },
+    {
+      "en-US": "Show all checkpoints with:",
+      "zh-Hans": "显示所有检查点，包含："
+    },
+    {
+      "en-US": "- Name\n- Timestamp\n- Git SHA\n- Status (current, behind, ahead)",
+      "zh-Hans": "* 名称\n* 时间戳\n* Git SHA\n* 状态（当前、落后、超前）"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流"
+    },
+    {
+      "en-US": "Typical checkpoint flow:",
+      "zh-Hans": "典型的检查点流程："
+    },
+    {
+      "en-US": "```\n[Start] --> /checkpoint create \"feature-start\"\n   |\n[Implement] --> /checkpoint create \"core-done\"\n   |\n[Test] --> /checkpoint verify \"core-done\"\n   |\n[Refactor] --> /checkpoint create \"refactor-done\"\n   |\n[PR] --> /checkpoint verify \"feature-start\"\n```",
+      "zh-Hans": "```\n[Start] --> /checkpoint create \"feature-start\"\n   |\n[Implement] --> /checkpoint create \"core-done\"\n   |\n[Test] --> /checkpoint verify \"core-done\"\n   |\n[Refactor] --> /checkpoint create \"refactor-done\"\n   |\n[PR] --> /checkpoint verify \"feature-start\"\n```"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `create <name>` - Create named checkpoint\n- `verify <name>` - Verify against named checkpoint\n- `list` - Show all checkpoints\n- `clear` - Remove old checkpoints (keeps last 5)",
+      "zh-Hans": "* `create <name>` - 创建指定名称的检查点\n* `verify <name>` - 根据指定名称的检查点进行验证\n* `list` - 显示所有检查点\n* `clear` - 删除旧的检查点（保留最后5个）"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "sourceFile": "commands/aside.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Answer a quick side question without interrupting or losing context from the current task. Resume work automatically after answering.\n---",
+      "zh-Hans": "---\ndescription: 在不打断或丢失当前任务上下文的情况下，快速回答一个附带问题。回答后自动恢复工作。\n---"
+    },
+    {
+      "en-US": "# Aside Command",
+      "zh-Hans": "# 旁述指令"
+    },
+    {
+      "en-US": "Ask a question mid-task and get an immediate, focused answer — then continue right where you left off. The current task, files, and context are never modified.",
+      "zh-Hans": "在任务进行中提问，获得即时、聚焦的回答——然后立即从暂停处继续。当前任务、文件和上下文绝不会被修改。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- You're curious about something while Claude is working and don't want to lose momentum\n- You need a quick explanation of code Claude is currently editing\n- You want a second opinion or clarification on a decision without derailing the task\n- You need to understand an error, concept, or pattern before Claude proceeds\n- You want to ask something unrelated to the current task without starting a new session",
+      "zh-Hans": "* 你在 Claude 工作时对某事感到好奇，但又不想打断工作节奏\n* 你需要快速解释 Claude 当前正在编辑的代码\n* 你想就某个决定征求第二意见或进行澄清，而不会使任务偏离方向\n* 在 Claude 继续之前，你需要理解一个错误、概念或模式\n* 你想询问与当前任务无关的事情，而无需开启新会话"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/aside <your question>\n/aside what does this function actually return?\n/aside is this pattern thread-safe?\n/aside why are we using X instead of Y here?\n/aside what's the difference between foo() and bar()?\n/aside should we be worried about the N+1 query we just added?\n```",
+      "zh-Hans": "```\n/aside <your question>\n/aside what does this function actually return?\n/aside is this pattern thread-safe?\n/aside why are we using X instead of Y here?\n/aside what's the difference between foo() and bar()?\n/aside should we be worried about the N+1 query we just added?\n```"
+    },
+    {
+      "en-US": "## Process",
+      "zh-Hans": "## 流程"
+    },
+    {
+      "en-US": "### Step 1: Freeze the current task state",
+      "zh-Hans": "### 步骤 1：冻结当前任务状态"
+    },
+    {
+      "en-US": "Before answering anything, mentally note:",
+      "zh-Hans": "在回答任何问题之前，先在心里记下："
+    },
+    {
+      "en-US": "- What is the active task? (what file, feature, or problem was being worked on)\n- What step was in progress at the moment `/aside` was invoked?\n- What was about to happen next?",
+      "zh-Hans": "* 当前活动任务是什么？（正在处理哪个文件、功能或问题）\n* 在调用 `/aside` 时，进行到哪一步了？\n* 接下来原本要发生什么？"
+    },
+    {
+      "en-US": "Do NOT touch, edit, create, or delete any files during the aside.",
+      "zh-Hans": "在旁述期间，**不要**触碰、编辑、创建或删除任何文件。"
+    },
+    {
+      "en-US": "### Step 2: Answer the question directly",
+      "zh-Hans": "### 步骤 2：直接回答问题"
+    },
+    {
+      "en-US": "Answer the question in the most concise form that is still complete and useful.",
+      "zh-Hans": "以最简洁但仍完整有用的形式回答问题。"
+    },
+    {
+      "en-US": "- Lead with the answer, not the reasoning\n- Keep it short — if a full explanation is needed, offer to go deeper after the task\n- If the question is about the current file or code being worked on, reference it precisely (file path and line number if relevant)\n- If answering requires reading a file, read it — but read only, never write",
+      "zh-Hans": "* 先说答案，再说推理过程\n* 保持简短——如果需要完整解释，请在任务结束后再提供\n* 如果问题涉及当前正在处理的文件或代码，请精确引用（相关时包括文件路径和行号）\n* 如果回答问题需要读取文件，就读它——但只读不写"
+    },
+    {
+      "en-US": "Format the response as:",
+      "zh-Hans": "将响应格式化为："
+    },
+    {
+      "en-US": "```\nASIDE: [restate the question briefly]\n\n[Your answer here]\n\n— Back to task: [one-line description of what was being done]\n```",
+      "zh-Hans": "```\nASIDE: [restate the question briefly]\n\n[Your answer here]\n\n— Back to task: [one-line description of what was being done]\n```"
+    },
+    {
+      "en-US": "### Step 3: Resume the main task",
+      "zh-Hans": "### 步骤 3：恢复主任务"
+    },
+    {
+      "en-US": "After delivering the answer, immediately continue the active task from the exact point it was paused. Do not ask for permission to resume unless the aside answer revealed a blocker or a reason to reconsider the current approach (see Edge Cases).",
+      "zh-Hans": "在给出答案后，立即从暂停的确切点继续执行活动任务。除非旁述回答揭示了阻碍或需要重新考虑当前方法的理由（见边缘情况），否则不要请求恢复许可。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Edge Cases",
+      "zh-Hans": "## 边缘情况"
+    },
+    {
+      "en-US": "**No question provided (`/aside` with nothing after it):**\nRespond:",
+      "zh-Hans": "**未提供问题（`/aside` 后面没有内容）：**\n回复："
+    },
+    {
+      "en-US": "```\nASIDE: no question provided\n\nWhat would you like to know? (ask your question and I'll answer without losing the current task context)\n\n— Back to task: [one-line description of what was being done]\n```",
+      "zh-Hans": "```\nASIDE: no question provided\n\nWhat would you like to know? (ask your question and I'll answer without losing the current task context)\n\n— Back to task: [one-line description of what was being done]\n```"
+    },
+    {
+      "en-US": "**Question reveals a potential problem with the current task:**\nFlag it clearly before resuming:",
+      "zh-Hans": "**问题揭示了当前任务的潜在问题：**\n在恢复之前清楚地标记出来："
+    },
+    {
+      "en-US": "```\nASIDE: [answer]\n\n⚠️ Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?\n```",
+      "zh-Hans": "```\nASIDE: [answer]\n\n⚠️ Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?\n```"
+    },
+    {
+      "en-US": "Wait for the user's decision before resuming.",
+      "zh-Hans": "等待用户的决定后再恢复。"
+    },
+    {
+      "en-US": "**Question is actually a task redirect (not a side question):**\nIf the question implies changing what is being built (e.g., `/aside actually, let's use Redis instead`), clarify:",
+      "zh-Hans": "**问题实际上是任务重定向（而非旁述问题）：**\n如果问题暗示要改变正在构建的内容（例如，`/aside actually, let's use Redis instead`），请澄清："
+    },
+    {
+      "en-US": "```\nASIDE: That sounds like a direction change, not just a side question.\nDo you want to:\n  (a) Answer this as information only and keep the current plan\n  (b) Pause the current task and change approach\n```",
+      "zh-Hans": "```\nASIDE: That sounds like a direction change, not just a side question.\nDo you want to:\n  (a) Answer this as information only and keep the current plan\n  (b) Pause the current task and change approach\n```"
+    },
+    {
+      "en-US": "Wait for the user's answer — do not make assumptions.",
+      "zh-Hans": "等待用户的回答——不要自行假设。"
+    },
+    {
+      "en-US": "**Question is about the currently open file or code:**\nAnswer from the live context. If the file was read earlier in the session, reference it directly. If not, read it now (read-only) and answer with a file:line reference.",
+      "zh-Hans": "**问题涉及当前打开的文件或代码：**\n根据实时上下文回答。如果该文件在会话早期已被读取，直接引用它。如果尚未读取，现在读取它（只读）并在回答时附带文件:行号引用。"
+    },
+    {
+      "en-US": "**No active task (nothing in progress when `/aside` is invoked):**\nStill use the standard wrapper so the response shape stays consistent:",
+      "zh-Hans": "**无活动任务（调用 `/aside` 时没有进行中的任务）：**\n仍然使用标准包装器，以保持响应格式一致："
+    },
+    {
+      "en-US": "```\nASIDE: [restate the question briefly]\n\n[Your answer here]\n\n— Back to task: no active task to resume\n```",
+      "zh-Hans": "```\nASIDE: [restate the question briefly]\n\n[Your answer here]\n\n— Back to task: no active task to resume\n```"
+    },
+    {
+      "en-US": "**Question requires a long answer:**\nGive the essential answer concisely, then offer:",
+      "zh-Hans": "**问题需要长篇回答：**\n简洁地给出核心答案，然后提供："
+    },
+    {
+      "en-US": "```\nThat's the short version. Want a deeper explanation after we finish [current task]?\n```",
+      "zh-Hans": "```\nThat's the short version. Want a deeper explanation after we finish [current task]?\n```"
+    },
+    {
+      "en-US": "**Multiple `/aside` questions in a row:**\nAnswer each one in sequence. After the last answer, resume the main task. Do not lose task state across a chain of asides.",
+      "zh-Hans": "**连续多个 `/aside` 问题：**\n依次回答每个问题。在回答完最后一个问题后，恢复主任务。不要在一连串旁述中丢失任务状态。"
+    },
+    {
+      "en-US": "**Aside answer implies a code change is needed:**\nNote the change needed but do not make it during the aside:",
+      "zh-Hans": "**旁述回答暗示需要进行代码更改：**\n记下所需的更改，但不要在旁述期间进行更改："
+    },
+    {
+      "en-US": "```\nASIDE: [answer]\n\n📝 Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.\n```",
+      "zh-Hans": "```\nASIDE: [answer]\n\n📝 Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.\n```"
+    },
+    {
+      "en-US": "**Question is ambiguous or too vague:**\nAsk one clarifying question — the shortest question that gets the information needed to answer. Do not ask multiple questions.",
+      "zh-Hans": "**问题含糊不清或过于笼统：**\n提出一个澄清性问题——一个能获取回答所需信息的最简短问题。不要提出多个问题。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Example Output",
+      "zh-Hans": "## 示例输出"
+    },
+    {
+      "en-US": "```\nUser: /aside what does fetchWithRetry() actually do?\n\nASIDE: what does fetchWithRetry() do?\n\nfetchWithRetry() (src/api/retry.ts:12) attempts the request up to 3 times with\nexponential backoff (250ms → 500ms → 1s). It only retries on 5xx responses and\nnetwork errors — 4xx errors are treated as final and not retried.\n\n— Back to task: refactoring the auth middleware in src/middleware/auth.ts\n```",
+      "zh-Hans": "```\nUser: /aside what does fetchWithRetry() actually do?\n\nASIDE: what does fetchWithRetry() do?\n\nfetchWithRetry() (src/api/retry.ts:12) attempts the request up to 3 times with\nexponential backoff (250ms → 500ms → 1s). It only retries on 5xx responses and\nnetwork errors — 4xx errors are treated as final and not retried.\n\n— Back to task: refactoring the auth middleware in src/middleware/auth.ts\n```"
+    },
+    {
+      "en-US": "```\nUser: /aside is the approach we're taking thread-safe?\n\nASIDE: is the current approach thread-safe?\n\nNo — the shared cache object in src/cache/store.ts:34 is mutated without locking.\nUnder concurrent requests this is a race condition. It's low risk in a single-process\nNode.js server but would be a real problem with worker threads or clustering.\n\n⚠️ Note: This could affect the feature we're building. Want to address this now or continue and fix it in a follow-up?\n```",
+      "zh-Hans": "```\nUser: /aside is the approach we're taking thread-safe?\n\nASIDE: is the current approach thread-safe?\n\nNo — the shared cache object in src/cache/store.ts:34 is mutated without locking.\nUnder concurrent requests this is a race condition. It's low risk in a single-process\nNode.js server but would be a real problem with worker threads or clustering.\n\n⚠️ Note: This could affect the feature we're building. Want to address this now or continue and fix it in a follow-up?\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 注意事项"
+    },
+    {
+      "en-US": "- Never modify files during an aside — read-only access only\n- The aside is a conversation pause, not a new task — the original task must always resume\n- Keep answers focused: the goal is to unblock the user quickly, not to deliver a lecture\n- If an aside sparks a larger discussion, finish the current task first unless the aside reveals a blocker\n- Asides are not saved to session files unless explicitly relevant to the task outcome",
+      "zh-Hans": "* 在旁述期间**绝不**修改文件——仅限只读访问\n* 旁述是对话暂停，不是新任务——必须始终恢复原始任务\n* 保持回答聚焦：目标是快速为用户扫清障碍，而不是进行长篇大论\n* 如果旁述引发了更广泛的讨论，请先完成当前任务，除非旁述揭示了阻碍\n* 除非明确与任务结果相关，否则旁述内容不会保存到会话文件中"
+    }
+  ]
+}

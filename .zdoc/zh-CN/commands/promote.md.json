@@ -1,0 +1,54 @@
+{
+  "sourceFile": "commands/promote.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: promote\ndescription: Promote project-scoped instincts to global scope\ncommand: true\n---",
+      "zh-Hans": "---\nname: promote\ndescription: 将项目范围内的本能推广到全局范围\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Promote Command",
+      "zh-Hans": "# 提升命令"
+    },
+    {
+      "en-US": "Promote instincts from project scope to global scope in continuous-learning-v2.",
+      "zh-Hans": "在 continuous-learning-v2 中将本能从项目范围提升到全局范围。"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行本能 CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" promote [instinct-id] [--force] [--dry-run]\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" promote [instinct-id] [--force] [--dry-run]\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):",
+      "zh-Hans": "或者如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装）："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote [instinct-id] [--force] [--dry-run]\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote [instinct-id] [--force] [--dry-run]\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```bash\n/promote                      # Auto-detect promotion candidates\n/promote --dry-run            # Preview auto-promotion candidates\n/promote --force              # Promote all qualified candidates without prompt\n/promote grep-before-edit     # Promote one specific instinct from current project\n```",
+      "zh-Hans": "```bash\n/promote                      # Auto-detect promotion candidates\n/promote --dry-run            # Preview auto-promotion candidates\n/promote --force              # Promote all qualified candidates without prompt\n/promote grep-before-edit     # Promote one specific instinct from current project\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 操作步骤"
+    },
+    {
+      "en-US": "1. Detect current project\n2. If `instinct-id` is provided, promote only that instinct (if present in current project)\n3. Otherwise, find cross-project candidates that:\n   - Appear in at least 2 projects\n   - Meet confidence threshold\n4. Write promoted instincts to `~/.claude/homunculus/instincts/personal/` with `scope: global`",
+      "zh-Hans": "1. 检测当前项目\n2. 如果提供了 `instinct-id`，则仅提升该本能（如果存在于当前项目中）\n3. 否则，查找跨项目候选本能，这些本能：\n   * 出现在至少 2 个项目中\n   * 满足置信度阈值\n4. 将提升后的本能写入 `~/.claude/homunculus/instincts/personal/`，并设置 `scope: global`"
+    }
+  ]
+}

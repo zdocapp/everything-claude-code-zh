@@ -1,0 +1,122 @@
+{
+  "sourceFile": "commands/go-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Comprehensive Go code review for idiomatic patterns, concurrency safety, error handling, and security. Invokes the go-reviewer agent.\n---",
+      "zh-Hans": "---\ndescription: 全面的Go代码审查，涵盖惯用模式、并发安全性、错误处理和安全性。调用go-reviewer代理。\n---"
+    },
+    {
+      "en-US": "# Go Code Review",
+      "zh-Hans": "# Go 代码审查"
+    },
+    {
+      "en-US": "This command invokes the **go-reviewer** agent for comprehensive Go-specific code review.",
+      "zh-Hans": "此命令调用 **go-reviewer** 代理进行全面的 Go 语言特定代码审查。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的作用"
+    },
+    {
+      "en-US": "1. **Identify Go Changes**: Find modified `.go` files via `git diff`\n2. **Run Static Analysis**: Execute `go vet`, `staticcheck`, and `golangci-lint`\n3. **Security Scan**: Check for SQL injection, command injection, race conditions\n4. **Concurrency Review**: Analyze goroutine safety, channel usage, mutex patterns\n5. **Idiomatic Go Check**: Verify code follows Go conventions and best practices\n6. **Generate Report**: Categorize issues by severity",
+      "zh-Hans": "1. **识别 Go 变更**：通过 `git diff` 查找修改过的 `.go` 文件\n2. **运行静态分析**：执行 `go vet`、`staticcheck` 和 `golangci-lint`\n3. **安全扫描**：检查 SQL 注入、命令注入、竞态条件\n4. **并发性审查**：分析 goroutine 安全性、通道使用、互斥锁模式\n5. **惯用 Go 检查**：验证代码是否遵循 Go 约定和最佳实践\n6. **生成报告**：按严重程度分类问题"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "Use `/go-review` when:",
+      "zh-Hans": "在以下情况使用 `/go-review`："
+    },
+    {
+      "en-US": "- After writing or modifying Go code\n- Before committing Go changes\n- Reviewing pull requests with Go code\n- Onboarding to a new Go codebase\n- Learning idiomatic Go patterns",
+      "zh-Hans": "* 编写或修改 Go 代码之后\n* 提交 Go 变更之前\n* 审查包含 Go 代码的拉取请求时\n* 接手新的 Go 代码库时\n* 学习惯用 Go 模式时"
+    },
+    {
+      "en-US": "## Review Categories",
+      "zh-Hans": "## 审查类别"
+    },
+    {
+      "en-US": "### CRITICAL (Must Fix)",
+      "zh-Hans": "### 严重（必须修复）"
+    },
+    {
+      "en-US": "- SQL/Command injection vulnerabilities\n- Race conditions without synchronization\n- Goroutine leaks\n- Hardcoded credentials\n- Unsafe pointer usage\n- Ignored errors in critical paths",
+      "zh-Hans": "* SQL/命令注入漏洞\n* 无同步的竞态条件\n* Goroutine 泄漏\n* 硬编码凭证\n* 不安全的指针使用\n* 关键路径中忽略的错误"
+    },
+    {
+      "en-US": "### HIGH (Should Fix)",
+      "zh-Hans": "### 高（应该修复）"
+    },
+    {
+      "en-US": "- Missing error wrapping with context\n- Panic instead of error returns\n- Context not propagated\n- Unbuffered channels causing deadlocks\n- Interface not satisfied errors\n- Missing mutex protection",
+      "zh-Hans": "* 缺少带上下文的错误包装\n* 使用 panic 而非返回错误\n* 上下文未传播\n* 无缓冲通道导致死锁\n* 接口未满足错误\n* 缺少互斥锁保护"
+    },
+    {
+      "en-US": "### MEDIUM (Consider)",
+      "zh-Hans": "### 中（考虑修复）"
+    },
+    {
+      "en-US": "- Non-idiomatic code patterns\n- Missing godoc comments on exports\n- Inefficient string concatenation\n- Slice not preallocated\n- Table-driven tests not used",
+      "zh-Hans": "* 非惯用代码模式\n* 导出项缺少 godoc 注释\n* 低效的字符串拼接\n* 切片未预分配\n* 未使用表格驱动测试"
+    },
+    {
+      "en-US": "## Automated Checks Run",
+      "zh-Hans": "## 运行的自动化检查"
+    },
+    {
+      "en-US": "```bash\n# Static analysis\ngo vet ./...\n\n# Advanced checks (if installed)\nstaticcheck ./...\ngolangci-lint run\n\n# Race detection\ngo build -race ./...\n\n# Security vulnerabilities\ngovulncheck ./...\n```",
+      "zh-Hans": "```bash\n# Static analysis\ngo vet ./...\n\n# Advanced checks (if installed)\nstaticcheck ./...\ngolangci-lint run\n\n# Race detection\ngo build -race ./...\n\n# Security vulnerabilities\ngovulncheck ./...\n```"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```text\nUser: /go-review\n\nAgent:\n# Go Code Review Report\n\n## Files Reviewed\n- internal/handler/user.go (modified)\n- internal/service/auth.go (modified)\n\n## Static Analysis Results\n✓ go vet: No issues\n✓ staticcheck: No issues\n\n## Issues Found\n\n[CRITICAL] Race Condition\nFile: internal/service/auth.go:45\nIssue: Shared map accessed without synchronization\n```go\nvar cache = map[string]*Session{}  // Concurrent access!\n\nfunc GetSession(id string) *Session {\n    return cache[id]  // Race condition\n}\n```",
+      "zh-Hans": "````text\nUser: /go-review\n\nAgent:\n# Go Code Review Report\n\n## Files Reviewed\n- internal/handler/user.go (modified)\n- internal/service/auth.go (modified)\n\n## Static Analysis Results\n✓ go vet: No issues\n✓ staticcheck: No issues\n\n## Issues Found\n\n[CRITICAL] Race Condition\nFile: internal/service/auth.go:45\nIssue: Shared map accessed without synchronization\n```go\nvar cache = map[string]*Session{}  // Concurrent access!\n\nfunc GetSession(id string) *Session {\n    return cache[id]  // Race condition\n}\n````"
+    },
+    {
+      "en-US": "Fix: Use sync.RWMutex or sync.Map",
+      "zh-Hans": "修复：使用 sync.RWMutex 或 sync.Map"
+    },
+    {
+      "en-US": "```go\nvar (\n    cache   = map[string]*Session{}\n    cacheMu sync.RWMutex\n)\n\nfunc GetSession(id string) *Session {\n    cacheMu.RLock()\n    defer cacheMu.RUnlock()\n    return cache[id]\n}\n```",
+      "zh-Hans": "```go\nvar (\n    cache   = map[string]*Session{}\n    cacheMu sync.RWMutex\n)\n\nfunc GetSession(id string) *Session {\n    cacheMu.RLock()\n    defer cacheMu.RUnlock()\n    return cache[id]\n}\n```"
+    },
+    {
+      "en-US": "[HIGH] Missing Error Context\nFile: internal/handler/user.go:28\nIssue: Error returned without context",
+      "zh-Hans": "\\[高] 缺少错误上下文\n文件：internal/handler/user.go:28\n问题：返回的错误缺少上下文"
+    },
+    {
+      "en-US": "```go\nreturn err  // No context\n```",
+      "zh-Hans": "```go\nreturn err  // No context\n```"
+    },
+    {
+      "en-US": "Fix: Wrap with context",
+      "zh-Hans": "修复：使用上下文包装"
+    },
+    {
+      "en-US": "```go\nreturn fmt.Errorf(\"get user %s: %w\", userID, err)\n```",
+      "zh-Hans": "```go\nreturn fmt.Errorf(\"get user %s: %w\", userID, err)\n```"
+    },
+    {
+      "en-US": "## Summary",
+      "zh-Hans": "## 摘要"
+    },
+    {
+      "en-US": "- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 0",
+      "zh-Hans": "* 严重：1\n* 高：1\n* 中：0"
+    },
+    {
+      "en-US": "Recommendation: ❌ Block merge until CRITICAL issue is fixed",
+      "zh-Hans": "建议：❌ 在严重问题修复前阻止合并"
+    },
+    {
+      "en-US": "```\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| ✅ Approve | No CRITICAL or HIGH issues |\n| ⚠️ Warning | Only MEDIUM issues (merge with caution) |\n| ❌ Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/go-test` first to ensure tests pass\n- Use `/go-build` if build errors occur\n- Use `/go-review` before committing\n- Use `/code-review` for non-Go specific concerns\n\n## Related\n\n- Agent: `agents/go-reviewer.md`\n- Skills: `skills/golang-patterns/`, `skills/golang-testing/`\n",
+      "zh-Hans": "```\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| ✅ Approve | No CRITICAL or HIGH issues |\n| ⚠️ Warning | Only MEDIUM issues (merge with caution) |\n| ❌ Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/go-test` first to ensure tests pass\n- Use `/go-build` if build errors occur\n- Use `/go-review` before committing\n- Use `/code-review` for non-Go specific concerns\n\n## Related\n\n- Agent: `agents/go-reviewer.md`\n- Skills: `skills/golang-patterns/`, `skills/golang-testing/`\n\n```"
+    }
+  ]
+}

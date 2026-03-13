@@ -1,0 +1,102 @@
+{
+  "sourceFile": "rules/kotlin/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---"
+    },
+    {
+      "en-US": "# Kotlin Testing",
+      "zh-Hans": "# Kotlin 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Kotlin and Android/KMP-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/testing.md](../common/testing.md)，补充了 Kotlin 和 Android/KMP 特有的内容。"
+    },
+    {
+      "en-US": "## Test Framework",
+      "zh-Hans": "## 测试框架"
+    },
+    {
+      "en-US": "- **kotlin.test** for multiplatform (KMP) — `@Test`, `assertEquals`, `assertTrue`\n- **JUnit 4/5** for Android-specific tests\n- **Turbine** for testing Flows and StateFlow\n- **kotlinx-coroutines-test** for coroutine testing (`runTest`, `TestDispatcher`)",
+      "zh-Hans": "* **kotlin.test** 用于跨平台 (KMP) — `@Test`, `assertEquals`, `assertTrue`\n* **JUnit 4/5** 用于 Android 特定测试\n* **Turbine** 用于测试 Flow 和 StateFlow\n* **kotlinx-coroutines-test** 用于协程测试 (`runTest`, `TestDispatcher`)"
+    },
+    {
+      "en-US": "## ViewModel Testing with Turbine",
+      "zh-Hans": "## 使用 Turbine 测试 ViewModel"
+    },
+    {
+      "en-US": "```kotlin\n@Test\nfun `loading state emitted then data`() = runTest {\n    val repo = FakeItemRepository()\n    repo.addItem(testItem)\n    val viewModel = ItemListViewModel(GetItemsUseCase(repo))\n\n    viewModel.state.test {\n        assertEquals(ItemListState(), awaitItem())     // initial state\n        viewModel.onEvent(ItemListEvent.Load)\n        assertTrue(awaitItem().isLoading)               // loading\n        assertEquals(listOf(testItem), awaitItem().items) // loaded\n    }\n}\n```",
+      "zh-Hans": "```kotlin\n@Test\nfun `loading state emitted then data`() = runTest {\n    val repo = FakeItemRepository()\n    repo.addItem(testItem)\n    val viewModel = ItemListViewModel(GetItemsUseCase(repo))\n\n    viewModel.state.test {\n        assertEquals(ItemListState(), awaitItem())     // initial state\n        viewModel.onEvent(ItemListEvent.Load)\n        assertTrue(awaitItem().isLoading)               // loading\n        assertEquals(listOf(testItem), awaitItem().items) // loaded\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Fakes Over Mocks",
+      "zh-Hans": "## 使用伪造对象而非模拟对象"
+    },
+    {
+      "en-US": "Prefer hand-written fakes over mocking frameworks:",
+      "zh-Hans": "优先使用手写的伪造对象，而非模拟框架："
+    },
+    {
+      "en-US": "```kotlin\nclass FakeItemRepository : ItemRepository {\n    private val items = mutableListOf<Item>()\n    var fetchError: Throwable? = null\n\n    override suspend fun getAll(): Result<List<Item>> {\n        fetchError?.let { return Result.failure(it) }\n        return Result.success(items.toList())\n    }\n\n    override fun observeAll(): Flow<List<Item>> = flowOf(items.toList())\n\n    fun addItem(item: Item) { items.add(item) }\n}\n```",
+      "zh-Hans": "```kotlin\nclass FakeItemRepository : ItemRepository {\n    private val items = mutableListOf<Item>()\n    var fetchError: Throwable? = null\n\n    override suspend fun getAll(): Result<List<Item>> {\n        fetchError?.let { return Result.failure(it) }\n        return Result.success(items.toList())\n    }\n\n    override fun observeAll(): Flow<List<Item>> = flowOf(items.toList())\n\n    fun addItem(item: Item) { items.add(item) }\n}\n```"
+    },
+    {
+      "en-US": "## Coroutine Testing",
+      "zh-Hans": "## 协程测试"
+    },
+    {
+      "en-US": "```kotlin\n@Test\nfun `parallel operations complete`() = runTest {\n    val repo = FakeRepository()\n    val result = loadDashboard(repo)\n    advanceUntilIdle()\n    assertNotNull(result.items)\n    assertNotNull(result.stats)\n}\n```",
+      "zh-Hans": "```kotlin\n@Test\nfun `parallel operations complete`() = runTest {\n    val repo = FakeRepository()\n    val result = loadDashboard(repo)\n    advanceUntilIdle()\n    assertNotNull(result.items)\n    assertNotNull(result.stats)\n}\n```"
+    },
+    {
+      "en-US": "Use `runTest` — it auto-advances virtual time and provides `TestScope`.",
+      "zh-Hans": "使用 `runTest` — 它会自动推进虚拟时间并提供 `TestScope`。"
+    },
+    {
+      "en-US": "## Ktor MockEngine",
+      "zh-Hans": "## Ktor MockEngine"
+    },
+    {
+      "en-US": "```kotlin\nval mockEngine = MockEngine { request ->\n    when (request.url.encodedPath) {\n        \"/api/items\" -> respond(\n            content = Json.encodeToString(testItems),\n            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())\n        )\n        else -> respondError(HttpStatusCode.NotFound)\n    }\n}\n\nval client = HttpClient(mockEngine) {\n    install(ContentNegotiation) { json() }\n}\n```",
+      "zh-Hans": "```kotlin\nval mockEngine = MockEngine { request ->\n    when (request.url.encodedPath) {\n        \"/api/items\" -> respond(\n            content = Json.encodeToString(testItems),\n            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())\n        )\n        else -> respondError(HttpStatusCode.NotFound)\n    }\n}\n\nval client = HttpClient(mockEngine) {\n    install(ContentNegotiation) { json() }\n}\n```"
+    },
+    {
+      "en-US": "## Room/SQLDelight Testing",
+      "zh-Hans": "## Room/SQLDelight 测试"
+    },
+    {
+      "en-US": "- Room: Use `Room.inMemoryDatabaseBuilder()` for in-memory testing\n- SQLDelight: Use `JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)` for JVM tests",
+      "zh-Hans": "* Room: 使用 `Room.inMemoryDatabaseBuilder()` 进行内存测试\n* SQLDelight: 在 JVM 测试中使用 `JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)`"
+    },
+    {
+      "en-US": "```kotlin\n@Test\nfun `insert and query items`() = runTest {\n    val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)\n    Database.Schema.create(driver)\n    val db = Database(driver)\n\n    db.itemQueries.insert(\"1\", \"Sample Item\", \"description\")\n    val items = db.itemQueries.getAll().executeAsList()\n    assertEquals(1, items.size)\n}\n```",
+      "zh-Hans": "```kotlin\n@Test\nfun `insert and query items`() = runTest {\n    val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)\n    Database.Schema.create(driver)\n    val db = Database(driver)\n\n    db.itemQueries.insert(\"1\", \"Sample Item\", \"description\")\n    val items = db.itemQueries.getAll().executeAsList()\n    assertEquals(1, items.size)\n}\n```"
+    },
+    {
+      "en-US": "## Test Naming",
+      "zh-Hans": "## 测试命名"
+    },
+    {
+      "en-US": "Use backtick-quoted descriptive names:",
+      "zh-Hans": "使用反引号包裹的描述性名称："
+    },
+    {
+      "en-US": "```kotlin\n@Test\nfun `search with empty query returns all items`() = runTest { }\n\n@Test\nfun `delete item emits updated list without deleted item`() = runTest { }\n```",
+      "zh-Hans": "```kotlin\n@Test\nfun `search with empty query returns all items`() = runTest { }\n\n@Test\nfun `delete item emits updated list without deleted item`() = runTest { }\n```"
+    },
+    {
+      "en-US": "## Test Organization",
+      "zh-Hans": "## 测试组织"
+    },
+    {
+      "en-US": "```\nsrc/\n├── commonTest/kotlin/     # Shared tests (ViewModel, UseCase, Repository)\n├── androidUnitTest/kotlin/ # Android unit tests (JUnit)\n├── androidInstrumentedTest/kotlin/  # Instrumented tests (Room, UI)\n└── iosTest/kotlin/        # iOS-specific tests\n```",
+      "zh-Hans": "```\nsrc/\n├── commonTest/kotlin/     # Shared tests (ViewModel, UseCase, Repository)\n├── androidUnitTest/kotlin/ # Android unit tests (JUnit)\n├── androidInstrumentedTest/kotlin/  # Instrumented tests (Room, UI)\n└── iosTest/kotlin/        # iOS-specific tests\n```"
+    },
+    {
+      "en-US": "Minimum test coverage: ViewModel + UseCase for every feature.",
+      "zh-Hans": "最低测试覆盖率：每个功能都需要覆盖 ViewModel + UseCase。"
+    }
+  ]
+}

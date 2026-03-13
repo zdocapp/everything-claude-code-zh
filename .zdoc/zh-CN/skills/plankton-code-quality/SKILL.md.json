@@ -1,0 +1,246 @@
+{
+  "sourceFile": "skills/plankton-code-quality/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: plankton-code-quality\ndescription: \"Write-time code quality enforcement using Plankton — auto-formatting, linting, and Claude-powered fixes on every file edit via hooks.\"\norigin: community\n---",
+      "zh-Hans": "---\nname: plankton-code-quality\ndescription: \"使用Plankton进行编写时代码质量强制执行——通过钩子在每次文件编辑时自动格式化、代码检查和Claude驱动的修复。\"\norigin: community\n---"
+    },
+    {
+      "en-US": "# Plankton Code Quality Skill",
+      "zh-Hans": "# Plankton 代码质量技能"
+    },
+    {
+      "en-US": "Integration reference for Plankton (credit: @alxfazio), a write-time code quality enforcement system for Claude Code. Plankton runs formatters and linters on every file edit via PostToolUse hooks, then spawns Claude subprocesses to fix violations the agent didn't catch.",
+      "zh-Hans": "Plankton（作者：@alxfazio）的集成参考，这是一个用于 Claude Code 的编写时代码质量强制执行系统。Plankton 通过 PostToolUse 钩子在每次文件编辑时运行格式化程序和 linter，然后生成 Claude 子进程来修复代理未捕获的违规。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- You want automatic formatting and linting on every file edit (not just at commit time)\n- You need defense against agents modifying linter configs to pass instead of fixing code\n- You want tiered model routing for fixes (Haiku for simple style, Sonnet for logic, Opus for types)\n- You work with multiple languages (Python, TypeScript, Shell, YAML, JSON, TOML, Markdown, Dockerfile)",
+      "zh-Hans": "* 你希望每次文件编辑时都自动格式化和检查（不仅仅是提交时）\n* 你需要防御代理修改 linter 配置以通过检查，而不是修复代码\n* 你想要针对修复的分层模型路由（简单样式用 Haiku，逻辑用 Sonnet，类型用 Opus）\n* 你使用多种语言（Python、TypeScript、Shell、YAML、JSON、TOML、Markdown、Dockerfile）"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Three-Phase Architecture",
+      "zh-Hans": "### 三阶段架构"
+    },
+    {
+      "en-US": "Every time Claude Code edits or writes a file, Plankton's `multi_linter.sh` PostToolUse hook runs:",
+      "zh-Hans": "每次 Claude Code 编辑或写入文件时，Plankton 的 `multi_linter.sh` PostToolUse 钩子都会运行："
+    },
+    {
+      "en-US": "```\nPhase 1: Auto-Format (Silent)\n├─ Runs formatters (ruff format, biome, shfmt, taplo, markdownlint)\n├─ Fixes 40-50% of issues silently\n└─ No output to main agent\n\nPhase 2: Collect Violations (JSON)\n├─ Runs linters and collects unfixable violations\n├─ Returns structured JSON: {line, column, code, message, linter}\n└─ Still no output to main agent\n\nPhase 3: Delegate + Verify\n├─ Spawns claude -p subprocess with violations JSON\n├─ Routes to model tier based on violation complexity:\n│   ├─ Haiku: formatting, imports, style (E/W/F codes) — 120s timeout\n│   ├─ Sonnet: complexity, refactoring (C901, PLR codes) — 300s timeout\n│   └─ Opus: type system, deep reasoning (unresolved-attribute) — 600s timeout\n├─ Re-runs Phase 1+2 to verify fixes\n└─ Exit 0 if clean, Exit 2 if violations remain (reported to main agent)\n```",
+      "zh-Hans": "```\nPhase 1: Auto-Format (Silent)\n├─ Runs formatters (ruff format, biome, shfmt, taplo, markdownlint)\n├─ Fixes 40-50% of issues silently\n└─ No output to main agent\n\nPhase 2: Collect Violations (JSON)\n├─ Runs linters and collects unfixable violations\n├─ Returns structured JSON: {line, column, code, message, linter}\n└─ Still no output to main agent\n\nPhase 3: Delegate + Verify\n├─ Spawns claude -p subprocess with violations JSON\n├─ Routes to model tier based on violation complexity:\n│   ├─ Haiku: formatting, imports, style (E/W/F codes) — 120s timeout\n│   ├─ Sonnet: complexity, refactoring (C901, PLR codes) — 300s timeout\n│   └─ Opus: type system, deep reasoning (unresolved-attribute) — 600s timeout\n├─ Re-runs Phase 1+2 to verify fixes\n└─ Exit 0 if clean, Exit 2 if violations remain (reported to main agent)\n```"
+    },
+    {
+      "en-US": "### What the Main Agent Sees",
+      "zh-Hans": "### 主代理看到的内容"
+    },
+    {
+      "en-US": "| Scenario | Agent sees | Hook exit |\n|----------|-----------|-----------|\n| No violations | Nothing | 0 |\n| All fixed by subprocess | Nothing | 0 |\n| Violations remain after subprocess | `[hook] N violation(s) remain` | 2 |\n| Advisory (duplicates, old tooling) | `[hook:advisory] ...` | 0 |",
+      "zh-Hans": "| 场景 | 代理看到 | 钩子退出码 |\n|----------|-----------|-----------|\n| 无违规 | 无 | 0 |\n| 全部由子进程修复 | 无 | 0 |\n| 子进程后仍存在违规 | `[hook] N violation(s) remain` | 2 |\n| 建议性警告（重复项、旧工具） | `[hook:advisory] ...` | 0 |"
+    },
+    {
+      "en-US": "The main agent only sees issues the subprocess couldn't fix. Most quality problems are resolved transparently.",
+      "zh-Hans": "主代理只看到子进程无法修复的问题。大多数质量问题都是透明解决的。"
+    },
+    {
+      "en-US": "### Config Protection (Defense Against Rule-Gaming)",
+      "zh-Hans": "### 配置保护（防御规则博弈）"
+    },
+    {
+      "en-US": "LLMs will modify `.ruff.toml` or `biome.json` to disable rules rather than fix code. Plankton blocks this with three layers:",
+      "zh-Hans": "LLM 会修改 `.ruff.toml` 或 `biome.json` 来禁用规则，而不是修复代码。Plankton 通过三层防御阻止这种行为："
+    },
+    {
+      "en-US": "1. **PreToolUse hook** — `protect_linter_configs.sh` blocks edits to all linter configs before they happen\n2. **Stop hook** — `stop_config_guardian.sh` detects config changes via `git diff` at session end\n3. **Protected files list** — `.ruff.toml`, `biome.json`, `.shellcheckrc`, `.yamllint`, `.hadolint.yaml`, and more",
+      "zh-Hans": "1. **PreToolUse 钩子** — `protect_linter_configs.sh` 在编辑发生前阻止对所有 linter 配置的修改\n2. **Stop 钩子** — `stop_config_guardian.sh` 在会话结束时通过 `git diff` 检测配置更改\n3. **受保护文件列表** — `.ruff.toml`, `biome.json`, `.shellcheckrc`, `.yamllint`, `.hadolint.yaml` 等"
+    },
+    {
+      "en-US": "### Package Manager Enforcement",
+      "zh-Hans": "### 包管理器强制执行"
+    },
+    {
+      "en-US": "A PreToolUse hook on Bash blocks legacy package managers:",
+      "zh-Hans": "Bash 上的 PreToolUse 钩子会阻止遗留包管理器："
+    },
+    {
+      "en-US": "- `pip`, `pip3`, `poetry`, `pipenv` → Blocked (use `uv`)\n- `npm`, `yarn`, `pnpm` → Blocked (use `bun`)\n- Allowed exceptions: `npm audit`, `npm view`, `npm publish`",
+      "zh-Hans": "* `pip`, `pip3`, `poetry`, `pipenv` → 被阻止（使用 `uv`）\n* `npm`, `yarn`, `pnpm` → 被阻止（使用 `bun`）\n* 允许的例外：`npm audit`, `npm view`, `npm publish`"
+    },
+    {
+      "en-US": "## Setup",
+      "zh-Hans": "## 设置"
+    },
+    {
+      "en-US": "### Quick Start",
+      "zh-Hans": "### 快速开始"
+    },
+    {
+      "en-US": "```bash\n# Clone Plankton into your project (or a shared location)\n# Note: Plankton is by @alxfazio\ngit clone https://github.com/alexfazio/plankton.git\ncd plankton\n\n# Install core dependencies\nbrew install jaq ruff uv\n\n# Install Python linters\nuv sync --all-extras\n\n# Start Claude Code — hooks activate automatically\nclaude\n```",
+      "zh-Hans": "```bash\n# Clone Plankton into your project (or a shared location)\n# Note: Plankton is by @alxfazio\ngit clone https://github.com/alexfazio/plankton.git\ncd plankton\n\n# Install core dependencies\nbrew install jaq ruff uv\n\n# Install Python linters\nuv sync --all-extras\n\n# Start Claude Code — hooks activate automatically\nclaude\n```"
+    },
+    {
+      "en-US": "No install command, no plugin config. The hooks in `.claude/settings.json` are picked up automatically when you run Claude Code in the Plankton directory.",
+      "zh-Hans": "无需安装命令，无需插件配置。当你运行 Claude Code 时，`.claude/settings.json` 中的钩子会在 Plankton 目录中被自动拾取。"
+    },
+    {
+      "en-US": "### Per-Project Integration",
+      "zh-Hans": "### 按项目集成"
+    },
+    {
+      "en-US": "To use Plankton hooks in your own project:",
+      "zh-Hans": "要在你自己的项目中使用 Plankton 钩子："
+    },
+    {
+      "en-US": "1. Copy `.claude/hooks/` directory to your project\n2. Copy `.claude/settings.json` hook configuration\n3. Copy linter config files (`.ruff.toml`, `biome.json`, etc.)\n4. Install the linters for your languages",
+      "zh-Hans": "1. 将 `.claude/hooks/` 目录复制到你的项目\n2. 复制 `.claude/settings.json` 钩子配置\n3. 复制 linter 配置文件（`.ruff.toml`, `biome.json` 等）\n4. 为你使用的语言安装 linter"
+    },
+    {
+      "en-US": "### Language-Specific Dependencies",
+      "zh-Hans": "### 语言特定依赖"
+    },
+    {
+      "en-US": "| Language | Required | Optional |\n|----------|----------|----------|\n| Python | `ruff`, `uv` | `ty` (types), `vulture` (dead code), `bandit` (security) |\n| TypeScript/JS | `biome` | `oxlint`, `semgrep`, `knip` (dead exports) |\n| Shell | `shellcheck`, `shfmt` | — |\n| YAML | `yamllint` | — |\n| Markdown | `markdownlint-cli2` | — |\n| Dockerfile | `hadolint` (>= 2.12.0) | — |\n| TOML | `taplo` | — |\n| JSON | `jaq` | — |",
+      "zh-Hans": "| 语言 | 必需 | 可选 |\n|----------|----------|----------|\n| Python | `ruff`, `uv` | `ty`（类型）, `vulture`（死代码）, `bandit`（安全） |\n| TypeScript/JS | `biome` | `oxlint`, `semgrep`, `knip`（死导出） |\n| Shell | `shellcheck`, `shfmt` | — |\n| YAML | `yamllint` | — |\n| Markdown | `markdownlint-cli2` | — |\n| Dockerfile | `hadolint` (>= 2.12.0) | — |\n| TOML | `taplo` | — |\n| JSON | `jaq` | — |"
+    },
+    {
+      "en-US": "## Pairing with ECC",
+      "zh-Hans": "## 与 ECC 配对使用"
+    },
+    {
+      "en-US": "### Complementary, Not Overlapping",
+      "zh-Hans": "### 互补而非重叠"
+    },
+    {
+      "en-US": "| Concern | ECC | Plankton |\n|---------|-----|----------|\n| Code quality enforcement | PostToolUse hooks (Prettier, tsc) | PostToolUse hooks (20+ linters + subprocess fixes) |\n| Security scanning | AgentShield, security-reviewer agent | Bandit (Python), Semgrep (TypeScript) |\n| Config protection | — | PreToolUse blocks + Stop hook detection |\n| Package manager | Detection + setup | Enforcement (blocks legacy PMs) |\n| CI integration | — | Pre-commit hooks for git |\n| Model routing | Manual (`/model opus`) | Automatic (violation complexity → tier) |",
+      "zh-Hans": "| 关注点 | ECC | Plankton |\n|---------|-----|----------|\n| 代码质量强制执行 | PostToolUse 钩子 (Prettier, tsc) | PostToolUse 钩子 (20+ linter + 子进程修复) |\n| 安全扫描 | AgentShield, security-reviewer 代理 | Bandit (Python), Semgrep (TypeScript) |\n| 配置保护 | — | PreToolUse 阻止 + Stop 钩子检测 |\n| 包管理器 | 检测 + 设置 | 强制执行（阻止遗留包管理器） |\n| CI 集成 | — | 用于 git 的 pre-commit 钩子 |\n| 模型路由 | 手动 (`/model opus`) | 自动（违规复杂度 → 层级） |"
+    },
+    {
+      "en-US": "### Recommended Combination",
+      "zh-Hans": "### 推荐组合"
+    },
+    {
+      "en-US": "1. Install ECC as your plugin (agents, skills, commands, rules)\n2. Add Plankton hooks for write-time quality enforcement\n3. Use AgentShield for security audits\n4. Use ECC's verification-loop as a final gate before PRs",
+      "zh-Hans": "1. 将 ECC 安装为你的插件（代理、技能、命令、规则）\n2. 添加 Plankton 钩子以实现编写时质量强制执行\n3. 使用 AgentShield 进行安全审计\n4. 在 PR 之前使用 ECC 的 verification-loop 作为最后一道关卡"
+    },
+    {
+      "en-US": "### Avoiding Hook Conflicts",
+      "zh-Hans": "### 避免钩子冲突"
+    },
+    {
+      "en-US": "If running both ECC and Plankton hooks:",
+      "zh-Hans": "如果同时运行 ECC 和 Plankton 钩子："
+    },
+    {
+      "en-US": "- ECC's Prettier hook and Plankton's biome formatter may conflict on JS/TS files\n- Resolution: disable ECC's Prettier PostToolUse hook when using Plankton (Plankton's biome is more comprehensive)\n- Both can coexist on different file types (ECC handles what Plankton doesn't cover)",
+      "zh-Hans": "* ECC 的 Prettier 钩子和 Plankton 的 biome 格式化程序可能在 JS/TS 文件上冲突\n* 解决方案：使用 Plankton 时禁用 ECC 的 Prettier PostToolUse 钩子（Plankton 的 biome 更全面）\n* 两者可以在不同的文件类型上共存（ECC 处理 Plankton 未覆盖的内容）"
+    },
+    {
+      "en-US": "## Configuration Reference",
+      "zh-Hans": "## 配置参考"
+    },
+    {
+      "en-US": "Plankton's `.claude/hooks/config.json` controls all behavior:",
+      "zh-Hans": "Plankton 的 `.claude/hooks/config.json` 控制所有行为："
+    },
+    {
+      "en-US": "```json\n{\n  \"languages\": {\n    \"python\": true,\n    \"shell\": true,\n    \"yaml\": true,\n    \"json\": true,\n    \"toml\": true,\n    \"dockerfile\": true,\n    \"markdown\": true,\n    \"typescript\": {\n      \"enabled\": true,\n      \"js_runtime\": \"auto\",\n      \"biome_nursery\": \"warn\",\n      \"semgrep\": true\n    }\n  },\n  \"phases\": {\n    \"auto_format\": true,\n    \"subprocess_delegation\": true\n  },\n  \"subprocess\": {\n    \"tiers\": {\n      \"haiku\":  { \"timeout\": 120, \"max_turns\": 10 },\n      \"sonnet\": { \"timeout\": 300, \"max_turns\": 10 },\n      \"opus\":   { \"timeout\": 600, \"max_turns\": 15 }\n    },\n    \"volume_threshold\": 5\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"languages\": {\n    \"python\": true,\n    \"shell\": true,\n    \"yaml\": true,\n    \"json\": true,\n    \"toml\": true,\n    \"dockerfile\": true,\n    \"markdown\": true,\n    \"typescript\": {\n      \"enabled\": true,\n      \"js_runtime\": \"auto\",\n      \"biome_nursery\": \"warn\",\n      \"semgrep\": true\n    }\n  },\n  \"phases\": {\n    \"auto_format\": true,\n    \"subprocess_delegation\": true\n  },\n  \"subprocess\": {\n    \"tiers\": {\n      \"haiku\":  { \"timeout\": 120, \"max_turns\": 10 },\n      \"sonnet\": { \"timeout\": 300, \"max_turns\": 10 },\n      \"opus\":   { \"timeout\": 600, \"max_turns\": 15 }\n    },\n    \"volume_threshold\": 5\n  }\n}\n```"
+    },
+    {
+      "en-US": "**Key settings:**",
+      "zh-Hans": "**关键设置：**"
+    },
+    {
+      "en-US": "- Disable languages you don't use to speed up hooks\n- `volume_threshold` — violations > this count auto-escalate to a higher model tier\n- `subprocess_delegation: false` — skip Phase 3 entirely (just report violations)",
+      "zh-Hans": "* 禁用你不使用的语言以加速钩子\n* `volume_threshold` — 违规数量超过此值自动升级到更高的模型层级\n* `subprocess_delegation: false` — 完全跳过第 3 阶段（仅报告违规）"
+    },
+    {
+      "en-US": "## Environment Overrides",
+      "zh-Hans": "## 环境变量覆盖"
+    },
+    {
+      "en-US": "| Variable | Purpose |\n|----------|---------|\n| `HOOK_SKIP_SUBPROCESS=1` | Skip Phase 3, report violations directly |\n| `HOOK_SUBPROCESS_TIMEOUT=N` | Override tier timeout |\n| `HOOK_DEBUG_MODEL=1` | Log model selection decisions |\n| `HOOK_SKIP_PM=1` | Bypass package manager enforcement |",
+      "zh-Hans": "| 变量 | 目的 |\n|----------|---------|\n| `HOOK_SKIP_SUBPROCESS=1` | 跳过第 3 阶段，直接报告违规 |\n| `HOOK_SUBPROCESS_TIMEOUT=N` | 覆盖层级超时时间 |\n| `HOOK_DEBUG_MODEL=1` | 记录模型选择决策 |\n| `HOOK_SKIP_PM=1` | 绕过包管理器强制执行 |"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "- Plankton (credit: @alxfazio)\n- Plankton REFERENCE.md — Full architecture documentation (credit: @alxfazio)\n- Plankton SETUP.md — Detailed installation guide (credit: @alxfazio)",
+      "zh-Hans": "* Plankton（作者：@alxfazio）\n* Plankton REFERENCE.md — 完整的架构文档（作者：@alxfazio）\n* Plankton SETUP.md — 详细的安装指南（作者：@alxfazio）"
+    },
+    {
+      "en-US": "## ECC v1.8 Additions",
+      "zh-Hans": "## ECC v1.8 新增内容"
+    },
+    {
+      "en-US": "### Copyable Hook Profile",
+      "zh-Hans": "### 可复制的钩子配置文件"
+    },
+    {
+      "en-US": "Set strict quality behavior:",
+      "zh-Hans": "设置严格的质量行为："
+    },
+    {
+      "en-US": "```bash\nexport ECC_HOOK_PROFILE=strict\nexport ECC_QUALITY_GATE_FIX=true\nexport ECC_QUALITY_GATE_STRICT=true\n```",
+      "zh-Hans": "```bash\nexport ECC_HOOK_PROFILE=strict\nexport ECC_QUALITY_GATE_FIX=true\nexport ECC_QUALITY_GATE_STRICT=true\n```"
+    },
+    {
+      "en-US": "### Language Gate Table",
+      "zh-Hans": "### 语言关卡表"
+    },
+    {
+      "en-US": "- TypeScript/JavaScript: Biome preferred, Prettier fallback\n- Python: Ruff format/check\n- Go: gofmt",
+      "zh-Hans": "* TypeScript/JavaScript：首选 Biome，Prettier 作为后备\n* Python：Ruff 格式/检查\n* Go：gofmt"
+    },
+    {
+      "en-US": "### Config Tamper Guard",
+      "zh-Hans": "### 配置篡改防护"
+    },
+    {
+      "en-US": "During quality enforcement, flag changes to config files in same iteration:",
+      "zh-Hans": "在质量强制执行期间，标记同一迭代中对配置文件的更改："
+    },
+    {
+      "en-US": "- `biome.json`, `.eslintrc*`, `prettier.config*`, `tsconfig.json`, `pyproject.toml`",
+      "zh-Hans": "* `biome.json`, `.eslintrc*`, `prettier.config*`, `tsconfig.json`, `pyproject.toml`"
+    },
+    {
+      "en-US": "If config is changed to suppress violations, require explicit review before merge.",
+      "zh-Hans": "如果配置被更改以抑制违规，则要求在合并前进行明确审查。"
+    },
+    {
+      "en-US": "### CI Integration Pattern",
+      "zh-Hans": "### CI 集成模式"
+    },
+    {
+      "en-US": "Use the same commands in CI as local hooks:",
+      "zh-Hans": "在 CI 中使用与本地钩子相同的命令："
+    },
+    {
+      "en-US": "1. run formatter checks\n2. run lint/type checks\n3. fail fast on strict mode\n4. publish remediation summary",
+      "zh-Hans": "1. 运行格式化程序检查\n2. 运行 lint/类型检查\n3. 严格模式下快速失败\n4. 发布修复摘要"
+    },
+    {
+      "en-US": "### Health Metrics",
+      "zh-Hans": "### 健康指标"
+    },
+    {
+      "en-US": "Track:",
+      "zh-Hans": "跟踪："
+    },
+    {
+      "en-US": "- edits flagged by gates\n- average remediation time\n- repeat violations by category\n- merge blocks due to gate failures",
+      "zh-Hans": "* 被关卡标记的编辑\n* 平均修复时间\n* 按类别重复违规\n* 因关卡失败导致的合并阻塞"
+    }
+  ]
+}

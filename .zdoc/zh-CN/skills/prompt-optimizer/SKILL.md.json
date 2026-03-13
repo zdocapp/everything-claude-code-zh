@@ -1,0 +1,354 @@
+{
+  "sourceFile": "skills/prompt-optimizer/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: prompt-optimizer\ndescription: >-\n  Analyze raw prompts, identify intent and gaps, match ECC components\n  (skills/commands/agents/hooks), and output a ready-to-paste optimized\n  prompt. Advisory role only — never executes the task itself.\n  TRIGGER when: user says \"optimize prompt\", \"improve my prompt\",\n  \"how to write a prompt for\", \"help me prompt\", \"rewrite this prompt\",\n  or explicitly asks to enhance prompt quality. Also triggers on Chinese\n  equivalents: \"优化prompt\", \"改进prompt\", \"怎么写prompt\", \"帮我优化这个指令\".\n  DO NOT TRIGGER when: user wants the task executed directly, or says\n  \"just do it\" / \"直接做\". DO NOT TRIGGER when user says \"优化代码\",\n  \"优化性能\", \"optimize performance\", \"optimize this code\" — those are\n  refactoring/performance tasks, not prompt optimization.\norigin: community\nmetadata:\n  author: YannJY02\n  version: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: prompt-optimizer\ndescription: 分析原始提示，识别意图和差距，匹配ECC组件（技能/命令/代理/钩子），并输出一个可直接粘贴的优化提示。仅提供咨询角色——绝不自行执行任务。触发时机：当用户说“优化提示”、“改进我的提示”、“如何编写提示”、“帮我优化这个指令”或明确要求提高提示质量时。中文等效表达同样触发：“优化prompt”、“改进prompt”、“怎么写prompt”、“帮我优化这个指令”。不触发时机：当用户希望直接执行任务，或说“直接做”时。不触发时机：当用户说“优化代码”、“优化性能”、“optimize performance”、“optimize this code”时——这些是重构/性能优化任务，而非提示优化。origin: community\nmetadata:\n  author: YannJY02\n  version: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Prompt Optimizer",
+      "zh-Hans": "# Prompt 优化器"
+    },
+    {
+      "en-US": "Analyze a draft prompt, critique it, match it to ECC ecosystem components,\nand output a complete optimized prompt the user can paste and run.",
+      "zh-Hans": "分析一个草稿提示，对其进行评估，匹配到 ECC 生态系统组件，并输出一个完整的优化提示供用户复制粘贴并运行。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- User says \"optimize this prompt\", \"improve my prompt\", \"rewrite this prompt\"\n- User says \"help me write a better prompt for...\"\n- User says \"what's the best way to ask Claude Code to...\"\n- User says \"优化prompt\", \"改进prompt\", \"怎么写prompt\", \"帮我优化这个指令\"\n- User pastes a draft prompt and asks for feedback or enhancement\n- User says \"I don't know how to prompt for this\"\n- User says \"how should I use ECC for...\"\n- User explicitly invokes `/prompt-optimize`",
+      "zh-Hans": "* 用户说“优化这个提示”、“改进我的提示”、“重写这个提示”\n* 用户说“帮我写一个更好的提示来...”\n* 用户说“询问 Claude Code 的...最佳方式是什么？”\n* 用户说“优化prompt”、“改进prompt”、“怎么写prompt”、“帮我优化这个指令”\n* 用户粘贴一个草稿提示并要求反馈或改进\n* 用户说“我不知道如何为此编写提示”\n* 用户说“我应该如何使用 ECC 来...”\n* 用户明确调用 `/prompt-optimize`"
+    },
+    {
+      "en-US": "### Do Not Use When",
+      "zh-Hans": "### 不要用于"
+    },
+    {
+      "en-US": "- User wants the task done directly (just execute it)\n- User says \"优化代码\", \"优化性能\", \"optimize this code\", \"optimize performance\" — these are refactoring tasks, not prompt optimization\n- User is asking about ECC configuration (use `configure-ecc` instead)\n- User wants a skill inventory (use `skill-stocktake` instead)\n- User says \"just do it\" or \"直接做\"",
+      "zh-Hans": "* 用户希望直接执行任务（直接执行即可）\n* 用户说“优化代码”、“优化性能”、“optimize this code”、“optimize performance”——这些是重构任务，不是提示优化\n* 用户询问 ECC 配置（改用 `configure-ecc`）\n* 用户想要技能清单（改用 `skill-stocktake`）\n* 用户说“直接做”或“just do it”"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "**Advisory only — do not execute the user's task.**",
+      "zh-Hans": "**仅提供建议——不要执行用户的任务。**"
+    },
+    {
+      "en-US": "Do NOT write code, create files, run commands, or take any implementation\naction. Your ONLY output is an analysis plus an optimized prompt.",
+      "zh-Hans": "不要编写代码、创建文件、运行命令或采取任何实现行动。你的**唯一**输出是分析加上一个优化后的提示。"
+    },
+    {
+      "en-US": "If the user says \"just do it\", \"直接做\", or \"don't optimize, just execute\",\ndo not switch into implementation mode inside this skill. Tell the user this\nskill only produces optimized prompts, and instruct them to make a normal\ntask request if they want execution instead.",
+      "zh-Hans": "如果用户说“直接做”、“just do it”或“不要优化，直接执行”，不要在此技能内切换到实现模式。告诉用户此技能只生成优化提示，并指示他们如果要执行任务，请提出正常的任务请求。"
+    },
+    {
+      "en-US": "Run this 6-phase pipeline sequentially. Present results using the Output Format below.",
+      "zh-Hans": "按顺序运行这个 6 阶段流程。使用下面的输出格式呈现结果。"
+    },
+    {
+      "en-US": "### Analysis Pipeline",
+      "zh-Hans": "### 分析流程"
+    },
+    {
+      "en-US": "### Phase 0: Project Detection",
+      "zh-Hans": "### 阶段 0：项目检测"
+    },
+    {
+      "en-US": "Before analyzing the prompt, detect the current project context:",
+      "zh-Hans": "在分析提示之前，检测当前项目上下文："
+    },
+    {
+      "en-US": "1. Check if a `CLAUDE.md` exists in the working directory — read it for project conventions\n2. Detect tech stack from project files:\n   - `package.json` → Node.js / TypeScript / React / Next.js\n   - `go.mod` → Go\n   - `pyproject.toml` / `requirements.txt` → Python\n   - `Cargo.toml` → Rust\n   - `build.gradle` / `pom.xml` → Java / Kotlin / Spring Boot\n   - `Package.swift` → Swift\n   - `Gemfile` → Ruby\n   - `composer.json` → PHP\n   - `*.csproj` / `*.sln` → .NET\n   - `Makefile` / `CMakeLists.txt` → C / C++\n   - `cpanfile` / `Makefile.PL` → Perl\n3. Note detected tech stack for use in Phase 3 and Phase 4",
+      "zh-Hans": "1. 检查工作目录中是否存在 `CLAUDE.md`——读取它以了解项目惯例\n2. 从项目文件中检测技术栈：\n   * `package.json` → Node.js / TypeScript / React / Next.js\n   * `go.mod` → Go\n   * `pyproject.toml` / `requirements.txt` → Python\n   * `Cargo.toml` → Rust\n   * `build.gradle` / `pom.xml` → Java / Kotlin / Spring Boot\n   * `Package.swift` → Swift\n   * `Gemfile` → Ruby\n   * `composer.json` → PHP\n   * `*.csproj` / `*.sln` → .NET\n   * `Makefile` / `CMakeLists.txt` → C / C++\n   * `cpanfile` / `Makefile.PL` → Perl\n3. 记录检测到的技术栈，用于阶段 3 和阶段 4"
+    },
+    {
+      "en-US": "If no project files are found (e.g., the prompt is abstract or for a new project),\nskip detection and flag \"tech stack unknown\" in Phase 4.",
+      "zh-Hans": "如果未找到项目文件（例如，提示是抽象的或用于新项目），则跳过检测并在阶段 4 标记“技术栈未知”。"
+    },
+    {
+      "en-US": "### Phase 1: Intent Detection",
+      "zh-Hans": "### 阶段 1：意图检测"
+    },
+    {
+      "en-US": "Classify the user's task into one or more categories:",
+      "zh-Hans": "将用户的任务分类为一个或多个类别："
+    },
+    {
+      "en-US": "| Category | Signal Words | Example |\n|----------|-------------|---------|\n| New Feature | build, create, add, implement, 创建, 实现, 添加 | \"Build a login page\" |\n| Bug Fix | fix, broken, not working, error, 修复, 报错 | \"Fix the auth flow\" |\n| Refactor | refactor, clean up, restructure, 重构, 整理 | \"Refactor the API layer\" |\n| Research | how to, what is, explore, investigate, 怎么, 如何 | \"How to add SSO\" |\n| Testing | test, coverage, verify, 测试, 覆盖率 | \"Add tests for the cart\" |\n| Review | review, audit, check, 审查, 检查 | \"Review my PR\" |\n| Documentation | document, update docs, 文档 | \"Update the API docs\" |\n| Infrastructure | deploy, CI, docker, database, 部署, 数据库 | \"Set up CI/CD pipeline\" |\n| Design | design, architecture, plan, 设计, 架构 | \"Design the data model\" |",
+      "zh-Hans": "| 类别 | 信号词 | 示例 |\n|----------|-------------|---------|\n| 新功能 | build, create, add, implement, 创建, 实现, 添加 | \"Build a login page\" |\n| 错误修复 | fix, broken, not working, error, 修复, 报错 | \"Fix the auth flow\" |\n| 重构 | refactor, clean up, restructure, 重构, 整理 | \"Refactor the API layer\" |\n| 研究 | how to, what is, explore, investigate, 怎么, 如何 | \"How to add SSO\" |\n| 测试 | test, coverage, verify, 测试, 覆盖率 | \"Add tests for the cart\" |\n| 审查 | review, audit, check, 审查, 检查 | \"Review my PR\" |\n| 文档 | document, update docs, 文档 | \"Update the API docs\" |\n| 基础设施 | deploy, CI, docker, database, 部署, 数据库 | \"Set up CI/CD pipeline\" |\n| 设计 | design, architecture, plan, 设计, 架构 | \"Design the data model\" |"
+    },
+    {
+      "en-US": "### Phase 2: Scope Assessment",
+      "zh-Hans": "### 阶段 2：范围评估"
+    },
+    {
+      "en-US": "If Phase 0 detected a project, use codebase size as a signal. Otherwise, estimate\nfrom the prompt description alone and mark the estimate as uncertain.",
+      "zh-Hans": "如果阶段 0 检测到项目，则使用代码库大小作为信号。否则，仅根据提示描述进行估算，并将估算标记为不确定。"
+    },
+    {
+      "en-US": "| Scope | Heuristic | Orchestration |\n|-------|-----------|---------------|\n| TRIVIAL | Single file, < 50 lines | Direct execution |\n| LOW | Single component or module | Single command or skill |\n| MEDIUM | Multiple components, same domain | Command chain + /verify |\n| HIGH | Cross-domain, 5+ files | /plan first, then phased execution |\n| EPIC | Multi-session, multi-PR, architectural shift | Use blueprint skill for multi-session plan |",
+      "zh-Hans": "| 范围 | 启发式判断 | 编排 |\n|-------|-----------|---------------|\n| 微小 | 单个文件，< 50 行 | 直接执行 |\n| 低 | 单个组件或模块 | 单个命令或技能 |\n| 中 | 多个组件，同一领域 | 命令链 + /verify |\n| 高 | 跨领域，5+ 个文件 | 先使用 /plan，然后分阶段执行 |\n| 史诗级 | 多会话，多 PR，架构性变更 | 使用蓝图技能制定多会话计划 |"
+    },
+    {
+      "en-US": "### Phase 3: ECC Component Matching",
+      "zh-Hans": "### 阶段 3：ECC 组件匹配"
+    },
+    {
+      "en-US": "Map intent + scope + tech stack (from Phase 0) to specific ECC components.",
+      "zh-Hans": "将意图 + 范围 + 技术栈（来自阶段 0）映射到特定的 ECC 组件。"
+    },
+    {
+      "en-US": "#### By Intent Type",
+      "zh-Hans": "#### 按意图类型"
+    },
+    {
+      "en-US": "| Intent | Commands | Skills | Agents |\n|--------|----------|--------|--------|\n| New Feature | /plan, /tdd, /code-review, /verify | tdd-workflow, verification-loop | planner, tdd-guide, code-reviewer |\n| Bug Fix | /tdd, /build-fix, /verify | tdd-workflow | tdd-guide, build-error-resolver |\n| Refactor | /refactor-clean, /code-review, /verify | verification-loop | refactor-cleaner, code-reviewer |\n| Research | /plan | search-first, iterative-retrieval | — |\n| Testing | /tdd, /e2e, /test-coverage | tdd-workflow, e2e-testing | tdd-guide, e2e-runner |\n| Review | /code-review | security-review | code-reviewer, security-reviewer |\n| Documentation | /update-docs, /update-codemaps | — | doc-updater |\n| Infrastructure | /plan, /verify | docker-patterns, deployment-patterns, database-migrations | architect |\n| Design (MEDIUM-HIGH) | /plan | — | planner, architect |\n| Design (EPIC) | — | blueprint (invoke as skill) | planner, architect |",
+      "zh-Hans": "| 意图 | 命令 | 技能 | 代理 |\n|--------|----------|--------|--------|\n| 新功能 | /plan, /tdd, /code-review, /verify | tdd-workflow, verification-loop | planner, tdd-guide, code-reviewer |\n| 错误修复 | /tdd, /build-fix, /verify | tdd-workflow | tdd-guide, build-error-resolver |\n| 重构 | /refactor-clean, /code-review, /verify | verification-loop | refactor-cleaner, code-reviewer |\n| 研究 | /plan | search-first, iterative-retrieval | — |\n| 测试 | /tdd, /e2e, /test-coverage | tdd-workflow, e2e-testing | tdd-guide, e2e-runner |\n| 审查 | /code-review | security-review | code-reviewer, security-reviewer |\n| 文档 | /update-docs, /update-codemaps | — | doc-updater |\n| 基础设施 | /plan, /verify | docker-patterns, deployment-patterns, database-migrations | architect |\n| 设计 (中-高) | /plan | — | planner, architect |\n| 设计 (史诗级) | — | blueprint (作为技能调用) | planner, architect |"
+    },
+    {
+      "en-US": "#### By Tech Stack",
+      "zh-Hans": "#### 按技术栈"
+    },
+    {
+      "en-US": "| Tech Stack | Skills to Add | Agent |\n|------------|--------------|-------|\n| Python / Django | django-patterns, django-tdd, django-security, django-verification, python-patterns, python-testing | python-reviewer |\n| Go | golang-patterns, golang-testing | go-reviewer, go-build-resolver |\n| Spring Boot / Java | springboot-patterns, springboot-tdd, springboot-security, springboot-verification, java-coding-standards, jpa-patterns | code-reviewer |\n| Kotlin / Android | kotlin-coroutines-flows, compose-multiplatform-patterns, android-clean-architecture | kotlin-reviewer |\n| TypeScript / React | frontend-patterns, backend-patterns, coding-standards | code-reviewer |\n| Swift / iOS | swiftui-patterns, swift-concurrency-6-2, swift-actor-persistence, swift-protocol-di-testing | code-reviewer |\n| PostgreSQL | postgres-patterns, database-migrations | database-reviewer |\n| Perl | perl-patterns, perl-testing, perl-security | code-reviewer |\n| C++ | cpp-coding-standards, cpp-testing | code-reviewer |\n| Other / Unlisted | coding-standards (universal) | code-reviewer |",
+      "zh-Hans": "| 技术栈 | 要添加的技能 | 代理 |\n|------------|--------------|-------|\n| Python / Django | django-patterns, django-tdd, django-security, django-verification, python-patterns, python-testing | python-reviewer |\n| Go | golang-patterns, golang-testing | go-reviewer, go-build-resolver |\n| Spring Boot / Java | springboot-patterns, springboot-tdd, springboot-security, springboot-verification, java-coding-standards, jpa-patterns | code-reviewer |\n| Kotlin / Android | kotlin-coroutines-flows, compose-multiplatform-patterns, android-clean-architecture | kotlin-reviewer |\n| TypeScript / React | frontend-patterns, backend-patterns, coding-standards | code-reviewer |\n| Swift / iOS | swiftui-patterns, swift-concurrency-6-2, swift-actor-persistence, swift-protocol-di-testing | code-reviewer |\n| PostgreSQL | postgres-patterns, database-migrations | database-reviewer |\n| Perl | perl-patterns, perl-testing, perl-security | code-reviewer |\n| C++ | cpp-coding-standards, cpp-testing | code-reviewer |\n| 其他 / 未列出 | coding-standards (通用) | code-reviewer |"
+    },
+    {
+      "en-US": "### Phase 4: Missing Context Detection",
+      "zh-Hans": "### 阶段 4：缺失上下文检测"
+    },
+    {
+      "en-US": "Scan the prompt for missing critical information. Check each item and mark\nwhether Phase 0 auto-detected it or the user must supply it:",
+      "zh-Hans": "扫描提示中缺失的关键信息。检查每个项目，并标记是阶段 0 自动检测到的还是用户必须提供的："
+    },
+    {
+      "en-US": "- [ ] **Tech stack** — Detected in Phase 0, or must user specify?\n- [ ] **Target scope** — Files, directories, or modules mentioned?\n- [ ] **Acceptance criteria** — How to know the task is done?\n- [ ] **Error handling** — Edge cases and failure modes addressed?\n- [ ] **Security requirements** — Auth, input validation, secrets?\n- [ ] **Testing expectations** — Unit, integration, E2E?\n- [ ] **Performance constraints** — Load, latency, resource limits?\n- [ ] **UI/UX requirements** — Design specs, responsive, a11y? (if frontend)\n- [ ] **Database changes** — Schema, migrations, indexes? (if data layer)\n- [ ] **Existing patterns** — Reference files or conventions to follow?\n- [ ] **Scope boundaries** — What NOT to do?",
+      "zh-Hans": "* \\[ ] **技术栈** —— 阶段 0 检测到的，还是用户必须指定？\n* \\[ ] **目标范围** —— 提到了文件、目录或模块吗？\n* \\[ ] **验收标准** —— 如何知道任务已完成？\n* \\[ ] **错误处理** —— 是否考虑了边界情况和故障模式？\n* \\[ ] **安全要求** —— 身份验证、输入验证、密钥？\n* \\[ ] **测试期望** —— 单元测试、集成测试、E2E？\n* \\[ ] **性能约束** —— 负载、延迟、资源限制？\n* \\[ ] **UI/UX 要求** —— 设计规范、响应式、无障碍访问？（如果是前端）\n* \\[ ] **数据库变更** —— 模式、迁移、索引？（如果是数据层）\n* \\[ ] **现有模式** —— 要遵循的参考文件或惯例？\n* \\[ ] **范围边界** —— 什么**不要**做？"
+    },
+    {
+      "en-US": "**If 3+ critical items are missing**, ask the user up to 3 clarification\nquestions before generating the optimized prompt. Then incorporate the\nanswers into the optimized prompt.",
+      "zh-Hans": "**如果缺少 3 个以上关键项目**，则在生成优化提示之前询问用户最多 3 个澄清问题。然后将答案纳入优化提示中。"
+    },
+    {
+      "en-US": "### Phase 5: Workflow & Model Recommendation",
+      "zh-Hans": "### 阶段 5：工作流和模型推荐"
+    },
+    {
+      "en-US": "Determine where this prompt sits in the development lifecycle:",
+      "zh-Hans": "确定此提示在开发生命周期中的位置："
+    },
+    {
+      "en-US": "```\nResearch → Plan → Implement (TDD) → Review → Verify → Commit\n```",
+      "zh-Hans": "```\nResearch → Plan → Implement (TDD) → Review → Verify → Commit\n```"
+    },
+    {
+      "en-US": "For MEDIUM+ tasks, always start with /plan. For EPIC tasks, use blueprint skill.",
+      "zh-Hans": "对于中等级别及以上的任务，始终以 /plan 开始。对于史诗级任务，使用蓝图技能。"
+    },
+    {
+      "en-US": "**Model recommendation** (include in output):",
+      "zh-Hans": "**模型推荐**（包含在输出中）："
+    },
+    {
+      "en-US": "| Scope | Recommended Model | Rationale |\n|-------|------------------|-----------|\n| TRIVIAL-LOW | Sonnet 4.6 | Fast, cost-efficient for simple tasks |\n| MEDIUM | Sonnet 4.6 | Best coding model for standard work |\n| HIGH | Sonnet 4.6 (main) + Opus 4.6 (planning) | Opus for architecture, Sonnet for implementation |\n| EPIC | Opus 4.6 (blueprint) + Sonnet 4.6 (execution) | Deep reasoning for multi-session planning |",
+      "zh-Hans": "| 范围 | 推荐模型 | 理由 |\n|-------|------------------|-----------|\n| 微小-低 | Sonnet 4.6 | 快速、成本效益高，适合简单任务 |\n| 中 | Sonnet 4.6 | 标准工作的最佳编码模型 |\n| 高 | Sonnet 4.6 (主) + Opus 4.6 (规划) | Opus 用于架构，Sonnet 用于实现 |\n| 史诗级 | Opus 4.6 (蓝图) + Sonnet 4.6 (执行) | 深度推理用于多会话规划 |"
+    },
+    {
+      "en-US": "**Multi-prompt splitting** (for HIGH/EPIC scope):",
+      "zh-Hans": "**多提示拆分**（针对高/史诗级范围）："
+    },
+    {
+      "en-US": "For tasks that exceed a single session, split into sequential prompts:",
+      "zh-Hans": "对于超出单个会话的任务，拆分为顺序提示："
+    },
+    {
+      "en-US": "- Prompt 1: Research + Plan (use search-first skill, then /plan)\n- Prompt 2-N: Implement one phase per prompt (each ends with /verify)\n- Final Prompt: Integration test + /code-review across all phases\n- Use /save-session and /resume-session to preserve context between sessions",
+      "zh-Hans": "* 提示 1：研究 + 计划（使用 search-first 技能，然后 /plan）\n* 提示 2-N：每个提示实现一个阶段（每个阶段以 /verify 结束）\n* 最终提示：集成测试 + 跨所有阶段的 /code-review\n* 使用 /save-session 和 /resume-session 在会话之间保存上下文"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Present your analysis in this exact structure. Respond in the same language\nas the user's input.",
+      "zh-Hans": "按照此确切结构呈现你的分析。使用与用户输入相同的语言进行回应。"
+    },
+    {
+      "en-US": "### Section 1: Prompt Diagnosis",
+      "zh-Hans": "### 第 1 部分：提示诊断"
+    },
+    {
+      "en-US": "**Strengths:** List what the original prompt does well.",
+      "zh-Hans": "**优点：** 列出原始提示做得好的地方。"
+    },
+    {
+      "en-US": "**Issues:**",
+      "zh-Hans": "**问题：**"
+    },
+    {
+      "en-US": "| Issue | Impact | Suggested Fix |\n|-------|--------|---------------|\n| (problem) | (consequence) | (how to fix) |",
+      "zh-Hans": "| 问题 | 影响 | 建议的修复方法 |\n|-------|--------|---------------|\n| (问题) | (后果) | (如何修复) |"
+    },
+    {
+      "en-US": "**Needs Clarification:** Numbered list of questions the user should answer.\nIf Phase 0 auto-detected the answer, state it instead of asking.",
+      "zh-Hans": "**需要澄清：** 用户应回答的问题编号列表。如果阶段 0 自动检测到答案，请陈述该答案而不是提问。"
+    },
+    {
+      "en-US": "### Section 2: Recommended ECC Components",
+      "zh-Hans": "### 第 2 部分：推荐的 ECC 组件"
+    },
+    {
+      "en-US": "| Type | Component | Purpose |\n|------|-----------|---------|\n| Command | /plan | Plan architecture before coding |\n| Skill | tdd-workflow | TDD methodology guidance |\n| Agent | code-reviewer | Post-implementation review |\n| Model | Sonnet 4.6 | Recommended for this scope |",
+      "zh-Hans": "| 类型 | 组件 | 目的 |\n|------|-----------|---------|\n| 命令 | /plan | 编码前规划架构 |\n| 技能 | tdd-workflow | TDD 方法指导 |\n| 代理 | code-reviewer | 实施后审查 |\n| 模型 | Sonnet 4.6 | 针对此范围的推荐模型 |"
+    },
+    {
+      "en-US": "### Section 3: Optimized Prompt — Full Version",
+      "zh-Hans": "### 第 3 部分：优化提示 —— 完整版本"
+    },
+    {
+      "en-US": "Present the complete optimized prompt inside a single fenced code block.\nThe prompt must be self-contained and ready to copy-paste. Include:",
+      "zh-Hans": "在单个围栏代码块内呈现完整的优化提示。该提示必须是自包含的，可以复制粘贴。包括："
+    },
+    {
+      "en-US": "- Clear task description with context\n- Tech stack (detected or specified)\n- /command invocations at the right workflow stages\n- Acceptance criteria\n- Verification steps\n- Scope boundaries (what NOT to do)",
+      "zh-Hans": "* 清晰的任务描述和上下文\n* 技术栈（检测到的或指定的）\n* 在正确工作流阶段调用的 /command\n* 验收标准\n* 验证步骤\n* 范围边界（什么**不要**做）"
+    },
+    {
+      "en-US": "For items that reference blueprint, write: \"Use the blueprint skill to...\"\n(not `/blueprint`, since blueprint is a skill, not a command).",
+      "zh-Hans": "对于引用蓝图的项目，写成：“使用蓝图技能来...”（而不是 `/blueprint`，因为蓝图是技能，不是命令）。"
+    },
+    {
+      "en-US": "### Section 4: Optimized Prompt — Quick Version",
+      "zh-Hans": "### 第 4 部分：优化提示 —— 快速版本"
+    },
+    {
+      "en-US": "A compact version for experienced ECC users. Vary by intent type:",
+      "zh-Hans": "为有经验的 ECC 用户提供的紧凑版本。根据意图类型而变化："
+    },
+    {
+      "en-US": "| Intent | Quick Pattern |\n|--------|--------------|\n| New Feature | `/plan [feature]. /tdd to implement. /code-review. /verify.` |\n| Bug Fix | `/tdd — write failing test for [bug]. Fix to green. /verify.` |\n| Refactor | `/refactor-clean [scope]. /code-review. /verify.` |\n| Research | `Use search-first skill for [topic]. /plan based on findings.` |\n| Testing | `/tdd [module]. /e2e for critical flows. /test-coverage.` |\n| Review | `/code-review. Then use security-reviewer agent.` |\n| Docs | `/update-docs. /update-codemaps.` |\n| EPIC | `Use blueprint skill for \"[objective]\". Execute phases with /verify gates.` |",
+      "zh-Hans": "| 意图 | 快速模式 |\n|--------|--------------|\n| 新功能 | `/plan [feature]. /tdd to implement. /code-review. /verify.` |\n| 错误修复 | `/tdd — write failing test for [bug]. Fix to green. /verify.` |\n| 重构 | `/refactor-clean [scope]. /code-review. /verify.` |\n| 研究 | `Use search-first skill for [topic]. /plan based on findings.` |\n| 测试 | `/tdd [module]. /e2e for critical flows. /test-coverage.` |\n| 审查 | `/code-review. Then use security-reviewer agent.` |\n| 文档 | `/update-docs. /update-codemaps.` |\n| 史诗级 | `Use blueprint skill for \"[objective]\". Execute phases with /verify gates.` |"
+    },
+    {
+      "en-US": "### Section 5: Enhancement Rationale",
+      "zh-Hans": "### 第 5 部分：改进理由"
+    },
+    {
+      "en-US": "| Enhancement | Reason |\n|-------------|--------|\n| (what was added) | (why it matters) |",
+      "zh-Hans": "| 改进 | 理由 |\n|-------------|--------|\n| (添加了什么) | (为什么重要) |"
+    },
+    {
+      "en-US": "### Footer",
+      "zh-Hans": "### 页脚"
+    },
+    {
+      "en-US": "> Not what you need? Tell me what to adjust, or make a normal task request\n> if you want execution instead of prompt optimization.",
+      "zh-Hans": "> 不符合你的需求？告诉我需要调整什么，或者如果你想执行任务而不是优化提示，请提出正常的任务请求。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Trigger Examples",
+      "zh-Hans": "### 触发示例"
+    },
+    {
+      "en-US": "- \"Optimize this prompt for ECC\"\n- \"Rewrite this prompt so Claude Code uses the right commands\"\n- \"帮我优化这个指令\"\n- \"How should I prompt ECC for this task?\"",
+      "zh-Hans": "* \"Optimize this prompt for ECC\"\n* \"Rewrite this prompt so Claude Code uses the right commands\"\n* \"帮我优化这个指令\"\n* \"How should I prompt ECC for this task?\""
+    },
+    {
+      "en-US": "### Example 1: Vague Chinese Prompt (Project Detected)",
+      "zh-Hans": "### 示例 1：模糊的中文提示（检测到项目）"
+    },
+    {
+      "en-US": "**User input:**",
+      "zh-Hans": "**用户输入：**"
+    },
+    {
+      "en-US": "```\n帮我写一个用户登录页面\n```",
+      "zh-Hans": "```\n帮我写一个用户登录页面\n```"
+    },
+    {
+      "en-US": "**Phase 0 detects:** `package.json` with Next.js 15, TypeScript, Tailwind CSS",
+      "zh-Hans": "**阶段 0 检测到：** `package.json`，使用 Next.js 15, TypeScript, Tailwind CSS"
+    },
+    {
+      "en-US": "**Optimized Prompt (Full):**",
+      "zh-Hans": "**优化提示（完整）：**"
+    },
+    {
+      "en-US": "```\n使用项目现有技术栈（Next.js 15 + TypeScript + Tailwind CSS）实现用户登录页面。\n\n技术要求：\n- 沿用项目现有的组件结构和路由约定\n- 表单验证使用项目中已有的验证方案（检查是否已用 Zod/Yup/其他）\n- 认证方式：沿用项目现有认证方案（如无，默认 JWT）\n- 包含：邮箱/密码登录表单、表单验证、错误提示、加载状态、响应式布局\n\n工作流：\n1. /plan 先规划组件结构和认证流程，参考现有页面的模式\n2. /tdd 测试先行：编写登录表单的单元测试和认证流程的集成测试\n3. 实现登录页面和认证逻辑\n4. /code-review 审查实现\n5. /verify 验证所有测试通过且页面正常渲染\n\n安全要求：\n- 密码不明文传输\n- 防止暴力破解（rate limiting）\n- XSS 防护\n- CSRF token\n\n验收标准：\n- 所有测试通过，覆盖率 80%+\n- 页面在移动端和桌面端正常渲染\n- 登录成功跳转到 dashboard，失败显示错误信息\n\n不要做：\n- 不要实现注册页面\n- 不要实现忘记密码功能\n- 不要修改现有的路由结构\n```",
+      "zh-Hans": "```\n使用项目现有技术栈（Next.js 15 + TypeScript + Tailwind CSS）实现用户登录页面。\n\n技术要求：\n- 沿用项目现有的组件结构和路由约定\n- 表单验证使用项目中已有的验证方案（检查是否已用 Zod/Yup/其他）\n- 认证方式：沿用项目现有认证方案（如无，默认 JWT）\n- 包含：邮箱/密码登录表单、表单验证、错误提示、加载状态、响应式布局\n\n工作流：\n1. /plan 先规划组件结构和认证流程，参考现有页面的模式\n2. /tdd 测试先行：编写登录表单的单元测试和认证流程的集成测试\n3. 实现登录页面和认证逻辑\n4. /code-review 审查实现\n5. /verify 验证所有测试通过且页面正常渲染\n\n安全要求：\n- 密码不明文传输\n- 防止暴力破解（rate limiting）\n- XSS 防护\n- CSRF token\n\n验收标准：\n- 所有测试通过，覆盖率 80%+\n- 页面在移动端和桌面端正常渲染\n- 登录成功跳转到 dashboard，失败显示错误信息\n\n不要做：\n- 不要实现注册页面\n- 不要实现忘记密码功能\n- 不要修改现有的路由结构\n```"
+    },
+    {
+      "en-US": "### Example 2: Moderate English Prompt",
+      "zh-Hans": "### 示例 2：中等英文提示"
+    },
+    {
+      "en-US": "**User input:**",
+      "zh-Hans": "**用户输入：**"
+    },
+    {
+      "en-US": "```\nAdd a REST API endpoint for user profile updates with validation\n```",
+      "zh-Hans": "```\nAdd a REST API endpoint for user profile updates with validation\n```"
+    },
+    {
+      "en-US": "**Phase 0 detects:** `go.mod` with Go 1.22, Chi router",
+      "zh-Hans": "**阶段 0 检测到：** `go.mod`，使用 Go 1.22, Chi router"
+    },
+    {
+      "en-US": "**Optimized Prompt (Full):**",
+      "zh-Hans": "**优化提示（完整）：**"
+    },
+    {
+      "en-US": "```\nAdd a REST API endpoint for user profile updates (PATCH /api/users/:id).\n\nTech stack: Go 1.22 + Chi router (detected from project)\n\nRequirements:\n- PATCH /api/users/:id — partial update of user profile\n- Input validation for fields: name, email, avatar_url, bio\n- Auth: require valid token, users can only update own profile\n- Return 200 with updated user on success\n- Return 400 with validation errors on invalid input\n- Return 401/403 for auth failures\n- Follow existing API patterns in the codebase\n\nWorkflow:\n1. /plan the endpoint structure, middleware chain, and validation logic\n2. /tdd — write table-driven tests for success, validation failure, auth failure, not-found\n3. Implement following existing handler patterns\n4. /go-review\n5. /verify — run full test suite, confirm no regressions\n\nDo not:\n- Modify existing endpoints\n- Change the database schema (use existing user table)\n- Add new dependencies without checking existing ones first (use search-first skill)\n```",
+      "zh-Hans": "```\nAdd a REST API endpoint for user profile updates (PATCH /api/users/:id).\n\nTech stack: Go 1.22 + Chi router (detected from project)\n\nRequirements:\n- PATCH /api/users/:id — partial update of user profile\n- Input validation for fields: name, email, avatar_url, bio\n- Auth: require valid token, users can only update own profile\n- Return 200 with updated user on success\n- Return 400 with validation errors on invalid input\n- Return 401/403 for auth failures\n- Follow existing API patterns in the codebase\n\nWorkflow:\n1. /plan the endpoint structure, middleware chain, and validation logic\n2. /tdd — write table-driven tests for success, validation failure, auth failure, not-found\n3. Implement following existing handler patterns\n4. /go-review\n5. /verify — run full test suite, confirm no regressions\n\nDo not:\n- Modify existing endpoints\n- Change the database schema (use existing user table)\n- Add new dependencies without checking existing ones first (use search-first skill)\n```"
+    },
+    {
+      "en-US": "### Example 3: EPIC Project",
+      "zh-Hans": "### 示例 3：史诗级项目"
+    },
+    {
+      "en-US": "**User input:**",
+      "zh-Hans": "**用户输入：**"
+    },
+    {
+      "en-US": "```\nMigrate our monolith to microservices\n```",
+      "zh-Hans": "```\nMigrate our monolith to microservices\n```"
+    },
+    {
+      "en-US": "**Optimized Prompt (Full):**",
+      "zh-Hans": "**优化提示（完整）：**"
+    },
+    {
+      "en-US": "```\nUse the blueprint skill to plan: \"Migrate monolith to microservices architecture\"\n\nBefore executing, answer these questions in the blueprint:\n1. Which domain boundaries exist in the current monolith?\n2. Which service should be extracted first (lowest coupling)?\n3. Communication pattern: REST APIs, gRPC, or event-driven (Kafka/RabbitMQ)?\n4. Database strategy: shared DB initially or database-per-service from start?\n5. Deployment target: Kubernetes, Docker Compose, or serverless?\n\nThe blueprint should produce phases like:\n- Phase 1: Identify service boundaries and create domain map\n- Phase 2: Set up infrastructure (API gateway, service mesh, CI/CD per service)\n- Phase 3: Extract first service (strangler fig pattern)\n- Phase 4: Verify with integration tests, then extract next service\n- Phase N: Decommission monolith\n\nEach phase = 1 PR, with /verify gates between phases.\nUse /save-session between phases. Use /resume-session to continue.\nUse git worktrees for parallel service extraction when dependencies allow.\n\nRecommended: Opus 4.6 for blueprint planning, Sonnet 4.6 for phase execution.\n```",
+      "zh-Hans": "```\nUse the blueprint skill to plan: \"Migrate monolith to microservices architecture\"\n\nBefore executing, answer these questions in the blueprint:\n1. Which domain boundaries exist in the current monolith?\n2. Which service should be extracted first (lowest coupling)?\n3. Communication pattern: REST APIs, gRPC, or event-driven (Kafka/RabbitMQ)?\n4. Database strategy: shared DB initially or database-per-service from start?\n5. Deployment target: Kubernetes, Docker Compose, or serverless?\n\nThe blueprint should produce phases like:\n- Phase 1: Identify service boundaries and create domain map\n- Phase 2: Set up infrastructure (API gateway, service mesh, CI/CD per service)\n- Phase 3: Extract first service (strangler fig pattern)\n- Phase 4: Verify with integration tests, then extract next service\n- Phase N: Decommission monolith\n\nEach phase = 1 PR, with /verify gates between phases.\nUse /save-session between phases. Use /resume-session to continue.\nUse git worktrees for parallel service extraction when dependencies allow.\n\nRecommended: Opus 4.6 for blueprint planning, Sonnet 4.6 for phase execution.\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Related Components",
+      "zh-Hans": "## 相关组件"
+    },
+    {
+      "en-US": "| Component | When to Reference |\n|-----------|------------------|\n| `configure-ecc` | User hasn't set up ECC yet |\n| `skill-stocktake` | Audit which components are installed (use instead of hardcoded catalog) |\n| `search-first` | Research phase in optimized prompts |\n| `blueprint` | EPIC-scope optimized prompts (invoke as skill, not command) |\n| `strategic-compact` | Long session context management |\n| `cost-aware-llm-pipeline` | Token optimization recommendations |",
+      "zh-Hans": "| 组件 | 何时引用 |\n|-----------|------------------|\n| `configure-ecc` | 用户尚未设置 ECC |\n| `skill-stocktake` | 审计安装了哪些组件（使用它而不是硬编码的目录） |\n| `search-first` | 优化提示中的研究阶段 |\n| `blueprint` | 史诗级范围的优化提示（作为技能调用，而非命令） |\n| `strategic-compact` | 长会话上下文管理 |\n| `cost-aware-llm-pipeline` | Token 优化推荐 |"
+    }
+  ]
+}

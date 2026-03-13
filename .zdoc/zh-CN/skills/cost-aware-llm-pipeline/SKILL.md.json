@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/cost-aware-llm-pipeline/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: cost-aware-llm-pipeline\ndescription: Cost optimization patterns for LLM API usage — model routing by task complexity, budget tracking, retry logic, and prompt caching.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: cost-aware-llm-pipeline\ndescription: LLM API 使用成本优化模式 —— 基于任务复杂度的模型路由、预算跟踪、重试逻辑和提示缓存。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Cost-Aware LLM Pipeline",
+      "zh-Hans": "# 成本感知型 LLM 流水线"
+    },
+    {
+      "en-US": "Patterns for controlling LLM API costs while maintaining quality. Combines model routing, budget tracking, retry logic, and prompt caching into a composable pipeline.",
+      "zh-Hans": "在保持质量的同时控制 LLM API 成本的模式。将模型路由、预算跟踪、重试逻辑和提示词缓存组合成一个可组合的流水线。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Building applications that call LLM APIs (Claude, GPT, etc.)\n- Processing batches of items with varying complexity\n- Need to stay within a budget for API spend\n- Optimizing cost without sacrificing quality on complex tasks",
+      "zh-Hans": "* 构建调用 LLM API（Claude、GPT 等）的应用程序时\n* 处理具有不同复杂度的批量项目时\n* 需要将 API 支出控制在预算范围内时\n* 需要在复杂任务上优化成本而不牺牲质量时"
+    },
+    {
+      "en-US": "## Core Concepts",
+      "zh-Hans": "## 核心概念"
+    },
+    {
+      "en-US": "### 1. Model Routing by Task Complexity",
+      "zh-Hans": "### 1. 根据任务复杂度进行模型路由"
+    },
+    {
+      "en-US": "Automatically select cheaper models for simple tasks, reserving expensive models for complex ones.",
+      "zh-Hans": "自动为简单任务选择更便宜的模型，为复杂任务保留昂贵的模型。"
+    },
+    {
+      "en-US": "```python\nMODEL_SONNET = \"claude-sonnet-4-6\"\nMODEL_HAIKU = \"claude-haiku-4-5-20251001\"\n\n_SONNET_TEXT_THRESHOLD = 10_000  # chars\n_SONNET_ITEM_THRESHOLD = 30     # items\n\ndef select_model(\n    text_length: int,\n    item_count: int,\n    force_model: str | None = None,\n) -> str:\n    \"\"\"Select model based on task complexity.\"\"\"\n    if force_model is not None:\n        return force_model\n    if text_length >= _SONNET_TEXT_THRESHOLD or item_count >= _SONNET_ITEM_THRESHOLD:\n        return MODEL_SONNET  # Complex task\n    return MODEL_HAIKU  # Simple task (3-4x cheaper)\n```",
+      "zh-Hans": "```python\nMODEL_SONNET = \"claude-sonnet-4-6\"\nMODEL_HAIKU = \"claude-haiku-4-5-20251001\"\n\n_SONNET_TEXT_THRESHOLD = 10_000  # chars\n_SONNET_ITEM_THRESHOLD = 30     # items\n\ndef select_model(\n    text_length: int,\n    item_count: int,\n    force_model: str | None = None,\n) -> str:\n    \"\"\"Select model based on task complexity.\"\"\"\n    if force_model is not None:\n        return force_model\n    if text_length >= _SONNET_TEXT_THRESHOLD or item_count >= _SONNET_ITEM_THRESHOLD:\n        return MODEL_SONNET  # Complex task\n    return MODEL_HAIKU  # Simple task (3-4x cheaper)\n```"
+    },
+    {
+      "en-US": "### 2. Immutable Cost Tracking",
+      "zh-Hans": "### 2. 不可变的成本跟踪"
+    },
+    {
+      "en-US": "Track cumulative spend with frozen dataclasses. Each API call returns a new tracker — never mutates state.",
+      "zh-Hans": "使用冻结的数据类跟踪累计支出。每个 API 调用都会返回一个新的跟踪器 —— 永不改变状态。"
+    },
+    {
+      "en-US": "```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True, slots=True)\nclass CostRecord:\n    model: str\n    input_tokens: int\n    output_tokens: int\n    cost_usd: float\n\n@dataclass(frozen=True, slots=True)\nclass CostTracker:\n    budget_limit: float = 1.00\n    records: tuple[CostRecord, ...] = ()\n\n    def add(self, record: CostRecord) -> \"CostTracker\":\n        \"\"\"Return new tracker with added record (never mutates self).\"\"\"\n        return CostTracker(\n            budget_limit=self.budget_limit,\n            records=(*self.records, record),\n        )\n\n    @property\n    def total_cost(self) -> float:\n        return sum(r.cost_usd for r in self.records)\n\n    @property\n    def over_budget(self) -> bool:\n        return self.total_cost > self.budget_limit\n```",
+      "zh-Hans": "```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True, slots=True)\nclass CostRecord:\n    model: str\n    input_tokens: int\n    output_tokens: int\n    cost_usd: float\n\n@dataclass(frozen=True, slots=True)\nclass CostTracker:\n    budget_limit: float = 1.00\n    records: tuple[CostRecord, ...] = ()\n\n    def add(self, record: CostRecord) -> \"CostTracker\":\n        \"\"\"Return new tracker with added record (never mutates self).\"\"\"\n        return CostTracker(\n            budget_limit=self.budget_limit,\n            records=(*self.records, record),\n        )\n\n    @property\n    def total_cost(self) -> float:\n        return sum(r.cost_usd for r in self.records)\n\n    @property\n    def over_budget(self) -> bool:\n        return self.total_cost > self.budget_limit\n```"
+    },
+    {
+      "en-US": "### 3. Narrow Retry Logic",
+      "zh-Hans": "### 3. 窄范围重试逻辑"
+    },
+    {
+      "en-US": "Retry only on transient errors. Fail fast on authentication or bad request errors.",
+      "zh-Hans": "仅在暂时性错误时重试。对于认证或错误请求错误，快速失败。"
+    },
+    {
+      "en-US": "```python\nfrom anthropic import (\n    APIConnectionError,\n    InternalServerError,\n    RateLimitError,\n)\n\n_RETRYABLE_ERRORS = (APIConnectionError, RateLimitError, InternalServerError)\n_MAX_RETRIES = 3\n\ndef call_with_retry(func, *, max_retries: int = _MAX_RETRIES):\n    \"\"\"Retry only on transient errors, fail fast on others.\"\"\"\n    for attempt in range(max_retries):\n        try:\n            return func()\n        except _RETRYABLE_ERRORS:\n            if attempt == max_retries - 1:\n                raise\n            time.sleep(2 ** attempt)  # Exponential backoff\n    # AuthenticationError, BadRequestError etc. → raise immediately\n```",
+      "zh-Hans": "```python\nfrom anthropic import (\n    APIConnectionError,\n    InternalServerError,\n    RateLimitError,\n)\n\n_RETRYABLE_ERRORS = (APIConnectionError, RateLimitError, InternalServerError)\n_MAX_RETRIES = 3\n\ndef call_with_retry(func, *, max_retries: int = _MAX_RETRIES):\n    \"\"\"Retry only on transient errors, fail fast on others.\"\"\"\n    for attempt in range(max_retries):\n        try:\n            return func()\n        except _RETRYABLE_ERRORS:\n            if attempt == max_retries - 1:\n                raise\n            time.sleep(2 ** attempt)  # Exponential backoff\n    # AuthenticationError, BadRequestError etc. → raise immediately\n```"
+    },
+    {
+      "en-US": "### 4. Prompt Caching",
+      "zh-Hans": "### 4. 提示词缓存"
+    },
+    {
+      "en-US": "Cache long system prompts to avoid resending them on every request.",
+      "zh-Hans": "缓存长的系统提示词，以避免在每个请求上重新发送它们。"
+    },
+    {
+      "en-US": "```python\nmessages = [\n    {\n        \"role\": \"user\",\n        \"content\": [\n            {\n                \"type\": \"text\",\n                \"text\": system_prompt,\n                \"cache_control\": {\"type\": \"ephemeral\"},  # Cache this\n            },\n            {\n                \"type\": \"text\",\n                \"text\": user_input,  # Variable part\n            },\n        ],\n    }\n]\n```",
+      "zh-Hans": "```python\nmessages = [\n    {\n        \"role\": \"user\",\n        \"content\": [\n            {\n                \"type\": \"text\",\n                \"text\": system_prompt,\n                \"cache_control\": {\"type\": \"ephemeral\"},  # Cache this\n            },\n            {\n                \"type\": \"text\",\n                \"text\": user_input,  # Variable part\n            },\n        ],\n    }\n]\n```"
+    },
+    {
+      "en-US": "## Composition",
+      "zh-Hans": "## 组合"
+    },
+    {
+      "en-US": "Combine all four techniques in a single pipeline function:",
+      "zh-Hans": "将所有四种技术组合到一个流水线函数中："
+    },
+    {
+      "en-US": "```python\ndef process(text: str, config: Config, tracker: CostTracker) -> tuple[Result, CostTracker]:\n    # 1. Route model\n    model = select_model(len(text), estimated_items, config.force_model)\n\n    # 2. Check budget\n    if tracker.over_budget:\n        raise BudgetExceededError(tracker.total_cost, tracker.budget_limit)\n\n    # 3. Call with retry + caching\n    response = call_with_retry(lambda: client.messages.create(\n        model=model,\n        messages=build_cached_messages(system_prompt, text),\n    ))\n\n    # 4. Track cost (immutable)\n    record = CostRecord(model=model, input_tokens=..., output_tokens=..., cost_usd=...)\n    tracker = tracker.add(record)\n\n    return parse_result(response), tracker\n```",
+      "zh-Hans": "```python\ndef process(text: str, config: Config, tracker: CostTracker) -> tuple[Result, CostTracker]:\n    # 1. Route model\n    model = select_model(len(text), estimated_items, config.force_model)\n\n    # 2. Check budget\n    if tracker.over_budget:\n        raise BudgetExceededError(tracker.total_cost, tracker.budget_limit)\n\n    # 3. Call with retry + caching\n    response = call_with_retry(lambda: client.messages.create(\n        model=model,\n        messages=build_cached_messages(system_prompt, text),\n    ))\n\n    # 4. Track cost (immutable)\n    record = CostRecord(model=model, input_tokens=..., output_tokens=..., cost_usd=...)\n    tracker = tracker.add(record)\n\n    return parse_result(response), tracker\n```"
+    },
+    {
+      "en-US": "## Pricing Reference (2025-2026)",
+      "zh-Hans": "## 价格参考（2025-2026）"
+    },
+    {
+      "en-US": "| Model | Input ($/1M tokens) | Output ($/1M tokens) | Relative Cost |\n|-------|---------------------|----------------------|---------------|\n| Haiku 4.5 | $0.80 | $4.00 | 1x |\n| Sonnet 4.6 | $3.00 | $15.00 | ~4x |\n| Opus 4.5 | $15.00 | $75.00 | ~19x |",
+      "zh-Hans": "| 模型 | 输入（美元/百万令牌） | 输出（美元/百万令牌） | 相对成本 |\n|-------|---------------------|----------------------|---------------|\n| Haiku 4.5 | $0.80 | $4.00 | 1x |\n| Sonnet 4.6 | $3.00 | $15.00 | ~4x |\n| Opus 4.5 | $15.00 | $75.00 | ~19x |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Start with the cheapest model** and only route to expensive models when complexity thresholds are met\n- **Set explicit budget limits** before processing batches — fail early rather than overspend\n- **Log model selection decisions** so you can tune thresholds based on real data\n- **Use prompt caching** for system prompts over 1024 tokens — saves both cost and latency\n- **Never retry on authentication or validation errors** — only transient failures (network, rate limit, server error)",
+      "zh-Hans": "* **从最便宜的模型开始**，仅在达到复杂度阈值时才路由到昂贵的模型\n* **在处理批次之前设置明确的预算限制** —— 尽早失败而不是超支\n* **记录模型选择决策**，以便您可以根据实际数据调整阈值\n* **对于超过 1024 个令牌的系统提示词，使用提示词缓存** —— 既能节省成本，又能降低延迟\n* **切勿在认证或验证错误时重试** —— 仅针对暂时性故障（网络、速率限制、服务器错误）重试"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "- Using the most expensive model for all requests regardless of complexity\n- Retrying on all errors (wastes budget on permanent failures)\n- Mutating cost tracking state (makes debugging and auditing difficult)\n- Hardcoding model names throughout the codebase (use constants or config)\n- Ignoring prompt caching for repetitive system prompts",
+      "zh-Hans": "* 无论复杂度如何，对所有请求都使用最昂贵的模型\n* 对所有错误都进行重试（在永久性故障上浪费预算）\n* 改变成本跟踪状态（使调试和审计变得困难）\n* 在整个代码库中硬编码模型名称（使用常量或配置）\n* 对重复的系统提示词忽略提示词缓存"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 适用场景"
+    },
+    {
+      "en-US": "- Any application calling Claude, OpenAI, or similar LLM APIs\n- Batch processing pipelines where cost adds up quickly\n- Multi-model architectures that need intelligent routing\n- Production systems that need budget guardrails",
+      "zh-Hans": "* 任何调用 Claude、OpenAI 或类似 LLM API 的应用程序\n* 成本快速累积的批处理流水线\n* 需要智能路由的多模型架构\n* 需要预算护栏的生产系统"
+    }
+  ]
+}
