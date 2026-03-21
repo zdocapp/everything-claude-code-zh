@@ -1,0 +1,58 @@
+{
+  "sourceFile": "commands/prompt-optimize.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Analyze a draft prompt and output an optimized, ECC-enriched version ready to paste and run. Does NOT execute the task — outputs advisory analysis only.\n---",
+      "zh-Hans": "---\ndescription: 分析一个草稿提示，输出一个经过优化、富含ECC的版本，准备粘贴并运行。不执行任务——仅输出咨询分析。\n---"
+    },
+    {
+      "en-US": "# /prompt-optimize",
+      "zh-Hans": "# /prompt-optimize"
+    },
+    {
+      "en-US": "Analyze and optimize the following prompt for maximum ECC leverage.",
+      "zh-Hans": "分析并优化以下提示语，以实现最大化的ECC杠杆效应。"
+    },
+    {
+      "en-US": "## Your Task",
+      "zh-Hans": "## 你的任务"
+    },
+    {
+      "en-US": "Apply the **prompt-optimizer** skill to the user's input below. Follow the 6-phase analysis pipeline:",
+      "zh-Hans": "对下方用户的输入应用 **prompt-optimizer** 技能。遵循6阶段分析流程："
+    },
+    {
+      "en-US": "0. **Project Detection** — Read CLAUDE.md, detect tech stack from project files (package.json, go.mod, pyproject.toml, etc.)\n1. **Intent Detection** — Classify the task type (new feature, bug fix, refactor, research, testing, review, documentation, infrastructure, design)\n2. **Scope Assessment** — Evaluate complexity (TRIVIAL / LOW / MEDIUM / HIGH / EPIC), using codebase size as signal if detected\n3. **ECC Component Matching** — Map to specific skills, commands, agents, and model tier\n4. **Missing Context Detection** — Identify gaps. If 3+ critical items missing, ask the user to clarify before generating\n5. **Workflow & Model** — Determine lifecycle position, recommend model tier, and split into multiple prompts if HIGH/EPIC",
+      "zh-Hans": "0. **项目检测** — 读取 CLAUDE.md，从项目文件（package.json, go.mod, pyproject.toml 等）检测技术栈\n1. **意图检测** — 对任务类型进行分类（新功能、错误修复、重构、研究、测试、评审、文档、基础设施、设计）\n2. **范围评估** — 评估复杂度（简单 / 低 / 中 / 高 / 史诗级），如果检测到代码库，则使用其大小作为信号\n3. **ECC组件匹配** — 映射到特定的技能、命令、代理和模型层级\n4. **缺失上下文检测** — 识别信息缺口。如果缺少3个以上关键项，请在生成前请用户澄清\n5. **工作流与模型** — 确定生命周期阶段，推荐模型层级，如果复杂度为高/史诗级，则将其拆分为多个提示语"
+    },
+    {
+      "en-US": "## Output Requirements",
+      "zh-Hans": "## 输出要求"
+    },
+    {
+      "en-US": "- Present diagnosis, recommended ECC components, and an optimized prompt using the Output Format from the prompt-optimizer skill\n- Provide both **Full Version** (detailed) and **Quick Version** (compact, varied by intent type)\n- Respond in the same language as the user's input\n- The optimized prompt must be complete and ready to copy-paste into a new session\n- End with a footer offering adjustment or a clear next step for starting a separate execution request",
+      "zh-Hans": "* 呈现诊断结果、推荐的ECC组件以及使用 prompt-optimizer 技能中输出格式的优化后提示语\n* 提供 **完整版本**（详细）和 **快速版本**（紧凑，根据意图类型变化）\n* 使用与用户输入相同的语言进行回复\n* 优化后的提示语必须完整且可复制粘贴到新会话中直接使用\n* 以提供调整选项或明确下一步操作（用于启动单独的执行请求）的页脚结束"
+    },
+    {
+      "en-US": "## CRITICAL",
+      "zh-Hans": "## 关键"
+    },
+    {
+      "en-US": "Do NOT execute the user's task. Output ONLY the analysis and optimized prompt.\nIf the user asks for direct execution, explain that `/prompt-optimize` only produces advisory output and tell them to start a normal task request instead.",
+      "zh-Hans": "请勿执行用户的任务。仅输出分析结果和优化后的提示语。\n如果用户要求直接执行，请说明 `/prompt-optimize` 仅产生咨询性输出，并告诉他们应启动一个常规的任务请求。"
+    },
+    {
+      "en-US": "Note: `blueprint` is a **skill**, not a slash command. Write \"Use the blueprint skill\"\ninstead of presenting it as a `/...` command.",
+      "zh-Hans": "注意：`blueprint` 是一个**技能**，而非斜杠命令。请写作“使用蓝图技能”，而不是将其呈现为 `/...` 命令。"
+    },
+    {
+      "en-US": "## User Input",
+      "zh-Hans": "## 用户输入"
+    },
+    {
+      "en-US": "$ARGUMENTS",
+      "zh-Hans": "$ARGUMENTS"
+    }
+  ]
+}

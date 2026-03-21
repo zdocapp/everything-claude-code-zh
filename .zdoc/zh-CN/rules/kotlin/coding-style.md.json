@@ -1,0 +1,110 @@
+{
+  "sourceFile": "rules/kotlin/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---"
+    },
+    {
+      "en-US": "# Kotlin Coding Style",
+      "zh-Hans": "# Kotlin 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Kotlin-specific content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Kotlin 相关内容。"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- **ktlint** or **Detekt** for style enforcement\n- Official Kotlin code style (`kotlin.code.style=official` in `gradle.properties`)",
+      "zh-Hans": "* 使用 **ktlint** 或 **Detekt** 进行风格检查\n* 遵循官方 Kotlin 代码风格 (`kotlin.code.style=official` 在 `gradle.properties` 中)"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "- Prefer `val` over `var` — default to `val` and only use `var` when mutation is required\n- Use `data class` for value types; use immutable collections (`List`, `Map`, `Set`) in public APIs\n- Copy-on-write for state updates: `state.copy(field = newValue)`",
+      "zh-Hans": "* 优先使用 `val` 而非 `var` — 默认使用 `val`，仅在需要可变性时使用 `var`\n* 对值类型使用 `data class`；在公共 API 中使用不可变集合 (`List`, `Map`, `Set`)\n* 状态更新使用写时复制：`state.copy(field = newValue)`"
+    },
+    {
+      "en-US": "## Naming",
+      "zh-Hans": "## 命名"
+    },
+    {
+      "en-US": "Follow Kotlin conventions:",
+      "zh-Hans": "遵循 Kotlin 约定："
+    },
+    {
+      "en-US": "- `camelCase` for functions and properties\n- `PascalCase` for classes, interfaces, objects, and type aliases\n- `SCREAMING_SNAKE_CASE` for constants (`const val` or `@JvmStatic`)\n- Prefix interfaces with behavior, not `I`: `Clickable` not `IClickable`",
+      "zh-Hans": "* 函数和属性使用 `camelCase`\n* 类、接口、对象和类型别名使用 `PascalCase`\n* 常量 (`const val` 或 `@JvmStatic`) 使用 `SCREAMING_SNAKE_CASE`\n* 接口以行为而非 `I` 为前缀：使用 `Clickable` 而非 `IClickable`"
+    },
+    {
+      "en-US": "## Null Safety",
+      "zh-Hans": "## 空安全"
+    },
+    {
+      "en-US": "- Never use `!!` — prefer `?.`, `?:`, `requireNotNull()`, or `checkNotNull()`\n- Use `?.let {}` for scoped null-safe operations\n- Return nullable types from functions that can legitimately have no result",
+      "zh-Hans": "* 绝不使用 `!!` — 优先使用 `?.`, `?:`, `requireNotNull()` 或 `checkNotNull()`\n* 使用 `?.let {}` 进行作用域内的空安全操作\n* 对于确实可能没有结果的函数，返回可为空的类型"
+    },
+    {
+      "en-US": "```kotlin\n// BAD\nval name = user!!.name\n\n// GOOD\nval name = user?.name ?: \"Unknown\"\nval name = requireNotNull(user) { \"User must be set before accessing name\" }.name\n```",
+      "zh-Hans": "```kotlin\n// BAD\nval name = user!!.name\n\n// GOOD\nval name = user?.name ?: \"Unknown\"\nval name = requireNotNull(user) { \"User must be set before accessing name\" }.name\n```"
+    },
+    {
+      "en-US": "## Sealed Types",
+      "zh-Hans": "## 密封类型"
+    },
+    {
+      "en-US": "Use sealed classes/interfaces to model closed state hierarchies:",
+      "zh-Hans": "使用密封类/接口来建模封闭的状态层次结构："
+    },
+    {
+      "en-US": "```kotlin\nsealed interface UiState<out T> {\n    data object Loading : UiState<Nothing>\n    data class Success<T>(val data: T) : UiState<T>\n    data class Error(val message: String) : UiState<Nothing>\n}\n```",
+      "zh-Hans": "```kotlin\nsealed interface UiState<out T> {\n    data object Loading : UiState<Nothing>\n    data class Success<T>(val data: T) : UiState<T>\n    data class Error(val message: String) : UiState<Nothing>\n}\n```"
+    },
+    {
+      "en-US": "Always use exhaustive `when` with sealed types — no `else` branch.",
+      "zh-Hans": "对密封类型始终使用详尽的 `when` — 不要使用 `else` 分支。"
+    },
+    {
+      "en-US": "## Extension Functions",
+      "zh-Hans": "## 扩展函数"
+    },
+    {
+      "en-US": "Use extension functions for utility operations, but keep them discoverable:",
+      "zh-Hans": "使用扩展函数实现工具操作，但要确保其可发现性："
+    },
+    {
+      "en-US": "- Place in a file named after the receiver type (`StringExt.kt`, `FlowExt.kt`)\n- Keep scope limited — don't add extensions to `Any` or overly generic types",
+      "zh-Hans": "* 放在以接收者类型命名的文件中 (`StringExt.kt`, `FlowExt.kt`)\n* 限制作用域 — 不要向 `Any` 或过于泛化的类型添加扩展"
+    },
+    {
+      "en-US": "## Scope Functions",
+      "zh-Hans": "## 作用域函数"
+    },
+    {
+      "en-US": "Use the right scope function:",
+      "zh-Hans": "使用合适的作用域函数："
+    },
+    {
+      "en-US": "- `let` — null check + transform: `user?.let { greet(it) }`\n- `run` — compute a result using receiver: `service.run { fetch(config) }`\n- `apply` — configure an object: `builder.apply { timeout = 30 }`\n- `also` — side effects: `result.also { log(it) }`\n- Avoid deep nesting of scope functions (max 2 levels)",
+      "zh-Hans": "* `let` — 空检查并转换：`user?.let { greet(it) }`\n* `run` — 使用接收者计算结果：`service.run { fetch(config) }`\n* `apply` — 配置对象：`builder.apply { timeout = 30 }`\n* `also` — 副作用：`result.also { log(it) }`\n* 避免深度嵌套作用域函数（最多 2 层）"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Use `Result<T>` or custom sealed types\n- Use `runCatching {}` for wrapping throwable code\n- Never catch `CancellationException` — always rethrow it\n- Avoid `try-catch` for control flow",
+      "zh-Hans": "* 使用 `Result<T>` 或自定义密封类型\n* 使用 `runCatching {}` 包装可能抛出异常的代码\n* 绝不捕获 `CancellationException` — 始终重新抛出它\n* 避免使用 `try-catch` 进行控制流"
+    },
+    {
+      "en-US": "```kotlin\n// BAD — using exceptions for control flow\nval user = try { repository.getUser(id) } catch (e: NotFoundException) { null }\n\n// GOOD — nullable return\nval user: User? = repository.findUser(id)\n```",
+      "zh-Hans": "```kotlin\n// BAD — using exceptions for control flow\nval user = try { repository.getUser(id) } catch (e: NotFoundException) { null }\n\n// GOOD — nullable return\nval user: User? = repository.findUser(id)\n```"
+    }
+  ]
+}

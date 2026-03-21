@@ -1,0 +1,98 @@
+{
+  "sourceFile": "rules/java/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.java\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.java\"\n---"
+    },
+    {
+      "en-US": "# Java Testing",
+      "zh-Hans": "# Java 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Java-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/testing.md](../common/testing.md) 中与 Java 相关的内容。"
+    },
+    {
+      "en-US": "## Test Framework",
+      "zh-Hans": "## 测试框架"
+    },
+    {
+      "en-US": "- **JUnit 5** (`@Test`, `@ParameterizedTest`, `@Nested`, `@DisplayName`)\n- **AssertJ** for fluent assertions (`assertThat(result).isEqualTo(expected)`)\n- **Mockito** for mocking dependencies\n- **Testcontainers** for integration tests requiring databases or services",
+      "zh-Hans": "* **JUnit 5** (`@Test`, `@ParameterizedTest`, `@Nested`, `@DisplayName`)\n* **AssertJ** 用于流式断言 (`assertThat(result).isEqualTo(expected)`)\n* **Mockito** 用于模拟依赖\n* **Testcontainers** 用于需要数据库或服务的集成测试"
+    },
+    {
+      "en-US": "## Test Organization",
+      "zh-Hans": "## 测试组织"
+    },
+    {
+      "en-US": "```\nsrc/test/java/com/example/app/\n  service/           # Unit tests for service layer\n  controller/        # Web layer / API tests\n  repository/        # Data access tests\n  integration/       # Cross-layer integration tests\n```",
+      "zh-Hans": "```\nsrc/test/java/com/example/app/\n  service/           # 服务层单元测试\n  controller/        # Web 层/API 测试\n  repository/        # 数据访问测试\n  integration/       # 跨层集成测试\n```"
+    },
+    {
+      "en-US": "Mirror the `src/main/java` package structure in `src/test/java`.",
+      "zh-Hans": "在 `src/test/java` 中镜像 `src/main/java` 的包结构。"
+    },
+    {
+      "en-US": "## Unit Test Pattern",
+      "zh-Hans": "## 单元测试模式"
+    },
+    {
+      "en-US": "```java\n@ExtendWith(MockitoExtension.class)\nclass OrderServiceTest {\n\n    @Mock\n    private OrderRepository orderRepository;\n\n    private OrderService orderService;\n\n    @BeforeEach\n    void setUp() {\n        orderService = new OrderService(orderRepository);\n    }\n\n    @Test\n    @DisplayName(\"findById returns order when exists\")\n    void findById_existingOrder_returnsOrder() {\n        var order = new Order(1L, \"Alice\", BigDecimal.TEN);\n        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));\n\n        var result = orderService.findById(1L);\n\n        assertThat(result.customerName()).isEqualTo(\"Alice\");\n        verify(orderRepository).findById(1L);\n    }\n\n    @Test\n    @DisplayName(\"findById throws when order not found\")\n    void findById_missingOrder_throws() {\n        when(orderRepository.findById(99L)).thenReturn(Optional.empty());\n\n        assertThatThrownBy(() -> orderService.findById(99L))\n            .isInstanceOf(OrderNotFoundException.class)\n            .hasMessageContaining(\"99\");\n    }\n}\n```",
+      "zh-Hans": "```java\n@ExtendWith(MockitoExtension.class)\nclass OrderServiceTest {\n\n    @Mock\n    private OrderRepository orderRepository;\n\n    private OrderService orderService;\n\n    @BeforeEach\n    void setUp() {\n        orderService = new OrderService(orderRepository);\n    }\n\n    @Test\n    @DisplayName(\"findById returns order when exists\")\n    void findById_existingOrder_returnsOrder() {\n        var order = new Order(1L, \"Alice\", BigDecimal.TEN);\n        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));\n\n        var result = orderService.findById(1L);\n\n        assertThat(result.customerName()).isEqualTo(\"Alice\");\n        verify(orderRepository).findById(1L);\n    }\n\n    @Test\n    @DisplayName(\"findById throws when order not found\")\n    void findById_missingOrder_throws() {\n        when(orderRepository.findById(99L)).thenReturn(Optional.empty());\n\n        assertThatThrownBy(() -> orderService.findById(99L))\n            .isInstanceOf(OrderNotFoundException.class)\n            .hasMessageContaining(\"99\");\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Parameterized Tests",
+      "zh-Hans": "## 参数化测试"
+    },
+    {
+      "en-US": "```java\n@ParameterizedTest\n@CsvSource({\n    \"100.00, 10, 90.00\",\n    \"50.00, 0, 50.00\",\n    \"200.00, 25, 150.00\"\n})\n@DisplayName(\"discount applied correctly\")\nvoid applyDiscount(BigDecimal price, int pct, BigDecimal expected) {\n    assertThat(PricingUtils.discount(price, pct)).isEqualByComparingTo(expected);\n}\n```",
+      "zh-Hans": "```java\n@ParameterizedTest\n@CsvSource({\n    \"100.00, 10, 90.00\",\n    \"50.00, 0, 50.00\",\n    \"200.00, 25, 150.00\"\n})\n@DisplayName(\"discount applied correctly\")\nvoid applyDiscount(BigDecimal price, int pct, BigDecimal expected) {\n    assertThat(PricingUtils.discount(price, pct)).isEqualByComparingTo(expected);\n}\n```"
+    },
+    {
+      "en-US": "## Integration Tests",
+      "zh-Hans": "## 集成测试"
+    },
+    {
+      "en-US": "Use Testcontainers for real database integration:",
+      "zh-Hans": "使用 Testcontainers 进行真实的数据库集成："
+    },
+    {
+      "en-US": "```java\n@Testcontainers\nclass OrderRepositoryIT {\n\n    @Container\n    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(\"postgres:16\");\n\n    private OrderRepository repository;\n\n    @BeforeEach\n    void setUp() {\n        var dataSource = new PGSimpleDataSource();\n        dataSource.setUrl(postgres.getJdbcUrl());\n        dataSource.setUser(postgres.getUsername());\n        dataSource.setPassword(postgres.getPassword());\n        repository = new JdbcOrderRepository(dataSource);\n    }\n\n    @Test\n    void save_and_findById() {\n        var saved = repository.save(new Order(null, \"Bob\", BigDecimal.ONE));\n        var found = repository.findById(saved.getId());\n        assertThat(found).isPresent();\n    }\n}\n```",
+      "zh-Hans": "```java\n@Testcontainers\nclass OrderRepositoryIT {\n\n    @Container\n    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(\"postgres:16\");\n\n    private OrderRepository repository;\n\n    @BeforeEach\n    void setUp() {\n        var dataSource = new PGSimpleDataSource();\n        dataSource.setUrl(postgres.getJdbcUrl());\n        dataSource.setUser(postgres.getUsername());\n        dataSource.setPassword(postgres.getPassword());\n        repository = new JdbcOrderRepository(dataSource);\n    }\n\n    @Test\n    void save_and_findById() {\n        var saved = repository.save(new Order(null, \"Bob\", BigDecimal.ONE));\n        var found = repository.findById(saved.getId());\n        assertThat(found).isPresent();\n    }\n}\n```"
+    },
+    {
+      "en-US": "For Spring Boot integration tests, see skill: `springboot-tdd`.",
+      "zh-Hans": "关于 Spring Boot 集成测试，请参阅技能：`springboot-tdd`。"
+    },
+    {
+      "en-US": "## Test Naming",
+      "zh-Hans": "## 测试命名"
+    },
+    {
+      "en-US": "Use descriptive names with `@DisplayName`:",
+      "zh-Hans": "使用带有 `@DisplayName` 的描述性名称："
+    },
+    {
+      "en-US": "- `methodName_scenario_expectedBehavior()` for method names\n- `@DisplayName(\"human-readable description\")` for reports",
+      "zh-Hans": "* `methodName_scenario_expectedBehavior()` 用于方法名\n* `@DisplayName(\"human-readable description\")` 用于报告"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "- Target 80%+ line coverage\n- Use JaCoCo for coverage reporting\n- Focus on service and domain logic — skip trivial getters/config classes",
+      "zh-Hans": "* 目标为 80%+ 的行覆盖率\n* 使用 JaCoCo 生成覆盖率报告\n* 重点关注服务和领域逻辑 — 跳过简单的 getter/配置类"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `springboot-tdd` for Spring Boot TDD patterns with MockMvc and Testcontainers.\nSee skill: `java-coding-standards` for testing expectations.",
+      "zh-Hans": "关于使用 MockMvc 和 Testcontainers 的 Spring Boot TDD 模式，请参阅技能：`springboot-tdd`。\n关于测试期望，请参阅技能：`java-coding-standards`。"
+    }
+  ]
+}

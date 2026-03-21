@@ -1,0 +1,106 @@
+{
+  "sourceFile": "commands/instinct-import.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: instinct-import\ndescription: Import instincts from file or URL into project/global scope\ncommand: true\n---",
+      "zh-Hans": "---\nname: instinct-import\ndescription: 从文件或URL导入本能到项目/全局作用域\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Instinct Import Command",
+      "zh-Hans": "# 本能导入命令"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行本能 CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" import <file-or-url> [--dry-run] [--force] [--min-confidence 0.7] [--scope project|global]\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" import <file-or-url> [--dry-run] [--force] [--min-confidence 0.7] [--scope project|global]\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):",
+      "zh-Hans": "或者，如果 `CLAUDE_PLUGIN_ROOT` 未设置（手动安装）："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py import <file-or-url>\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py import <file-or-url>\n```"
+    },
+    {
+      "en-US": "Import instincts from local file paths or HTTP(S) URLs.",
+      "zh-Hans": "从本地文件路径或 HTTP(S) URL 导入本能。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```\n/instinct-import team-instincts.yaml\n/instinct-import https://github.com/org/repo/instincts.yaml\n/instinct-import team-instincts.yaml --dry-run\n/instinct-import team-instincts.yaml --scope global --force\n```",
+      "zh-Hans": "```\n/instinct-import team-instincts.yaml\n/instinct-import https://github.com/org/repo/instincts.yaml\n/instinct-import team-instincts.yaml --dry-run\n/instinct-import team-instincts.yaml --scope global --force\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 执行步骤"
+    },
+    {
+      "en-US": "1. Fetch the instinct file (local path or URL)\n2. Parse and validate the format\n3. Check for duplicates with existing instincts\n4. Merge or add new instincts\n5. Save to inherited instincts directory:\n   - Project scope: `~/.claude/homunculus/projects/<project-id>/instincts/inherited/`\n   - Global scope: `~/.claude/homunculus/instincts/inherited/`",
+      "zh-Hans": "1. 获取本能文件（本地路径或 URL）\n2. 解析并验证格式\n3. 检查与现有本能的重复项\n4. 合并或添加新本能\n5. 保存到继承的本能目录：\n   * 项目范围：`~/.claude/homunculus/projects/<project-id>/instincts/inherited/`\n   * 全局范围：`~/.claude/homunculus/instincts/inherited/`"
+    },
+    {
+      "en-US": "## Import Process",
+      "zh-Hans": "## 导入过程"
+    },
+    {
+      "en-US": "```\n📥 Importing instincts from: team-instincts.yaml\n================================================\n\nFound 12 instincts to import.\n\nAnalyzing conflicts...\n\n## New Instincts (8)\nThese will be added:\n  ✓ use-zod-validation (confidence: 0.7)\n  ✓ prefer-named-exports (confidence: 0.65)\n  ✓ test-async-functions (confidence: 0.8)\n  ...\n\n## Duplicate Instincts (3)\nAlready have similar instincts:\n  ⚠️ prefer-functional-style\n     Local: 0.8 confidence, 12 observations\n     Import: 0.7 confidence\n     → Keep local (higher confidence)\n\n  ⚠️ test-first-workflow\n     Local: 0.75 confidence\n     Import: 0.9 confidence\n     → Update to import (higher confidence)\n\nImport 8 new, update 1?\n```",
+      "zh-Hans": "```\n📥 从 team-instincts.yaml 导入本能\n================================================\n\n发现 12 个待导入的本能。\n\n正在分析冲突...\n\n## 新本能 (8)\n这些将被添加：\n  ✓ use-zod-validation (置信度: 0.7)\n  ✓ prefer-named-exports (置信度: 0.65)\n  ✓ test-async-functions (置信度: 0.8)\n  ...\n\n## 重复本能 (3)\n已存在类似本能：\n  ⚠️ prefer-functional-style\n     本地: 0.8 置信度, 12 次观察\n     导入: 0.7 置信度\n     → 保留本地 (置信度更高)\n\n  ⚠️ test-first-workflow\n     本地: 0.75 置信度\n     导入: 0.9 置信度\n     → 更新为导入 (置信度更高)\n\n导入 8 个新的，更新 1 个？\n```"
+    },
+    {
+      "en-US": "## Merge Behavior",
+      "zh-Hans": "## 合并行为"
+    },
+    {
+      "en-US": "When importing an instinct with an existing ID:",
+      "zh-Hans": "当导入一个已存在 ID 的本能时："
+    },
+    {
+      "en-US": "- Higher-confidence import becomes an update candidate\n- Equal/lower-confidence import is skipped\n- User confirms unless `--force` is used",
+      "zh-Hans": "* 置信度更高的导入会成为更新候选\n* 置信度相等或更低的导入将被跳过\n* 除非使用 `--force`，否则需要用户确认"
+    },
+    {
+      "en-US": "## Source Tracking",
+      "zh-Hans": "## 来源追踪"
+    },
+    {
+      "en-US": "Imported instincts are marked with:",
+      "zh-Hans": "导入的本能被标记为："
+    },
+    {
+      "en-US": "```yaml\nsource: inherited\nscope: project\nimported_from: \"team-instincts.yaml\"\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-project\"\n```",
+      "zh-Hans": "```yaml\nsource: inherited\nscope: project\nimported_from: \"team-instincts.yaml\"\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-project\"\n```"
+    },
+    {
+      "en-US": "## Flags",
+      "zh-Hans": "## 标志"
+    },
+    {
+      "en-US": "- `--dry-run`: Preview without importing\n- `--force`: Skip confirmation prompt\n- `--min-confidence <n>`: Only import instincts above threshold\n- `--scope <project|global>`: Select target scope (default: `project`)",
+      "zh-Hans": "* `--dry-run`：仅预览而不导入\n* `--force`：跳过确认提示\n* `--min-confidence <n>`：仅导入高于阈值的本能\n* `--scope <project|global>`：选择目标范围（默认：`project`）"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "After import:",
+      "zh-Hans": "导入后："
+    },
+    {
+      "en-US": "```\n✅ Import complete!\n\nAdded: 8 instincts\nUpdated: 1 instinct\nSkipped: 3 instincts (equal/higher confidence already exists)\n\nNew instincts saved to: ~/.claude/homunculus/instincts/inherited/\n\nRun /instinct-status to see all instincts.\n```",
+      "zh-Hans": "```\n✅ 导入完成！\n\n新增：8 项本能  \n更新：1 项本能  \n跳过：3 项本能（已存在同等或更高置信度的版本）\n\n新本能已保存至：~/.claude/homunculus/instincts/inherited/\n\n运行 /instinct-status 以查看所有本能。\n```"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "sourceFile": "contexts/review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Code Review Context",
+      "zh-Hans": "# 代码审查上下文"
+    },
+    {
+      "en-US": "Mode: PR review, code analysis\nFocus: Quality, security, maintainability",
+      "zh-Hans": "模式：PR 审查，代码分析\n重点：质量、安全性、可维护性"
+    },
+    {
+      "en-US": "## Behavior",
+      "zh-Hans": "## 行为准则"
+    },
+    {
+      "en-US": "- Read thoroughly before commenting\n- Prioritize issues by severity (critical > high > medium > low)\n- Suggest fixes, don't just point out problems\n- Check for security vulnerabilities",
+      "zh-Hans": "* 评论前仔细阅读\n* 按严重性对问题排序（关键 > 高 > 中 > 低）\n* 建议修复方法，而不仅仅是指出问题\n* 检查安全漏洞"
+    },
+    {
+      "en-US": "## Review Checklist",
+      "zh-Hans": "## 审查清单"
+    },
+    {
+      "en-US": "- [ ] Logic errors\n- [ ] Edge cases\n- [ ] Error handling\n- [ ] Security (injection, auth, secrets)\n- [ ] Performance\n- [ ] Readability\n- [ ] Test coverage",
+      "zh-Hans": "* \\[ ] 逻辑错误\n* \\[ ] 边界情况\n* \\[ ] 错误处理\n* \\[ ] 安全性（注入、身份验证、密钥）\n* \\[ ] 性能\n* \\[ ] 可读性\n* \\[ ] 测试覆盖率"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Group findings by file, severity first",
+      "zh-Hans": "按文件分组发现的问题，严重性优先"
+    }
+  ]
+}

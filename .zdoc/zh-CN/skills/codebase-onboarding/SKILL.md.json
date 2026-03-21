@@ -1,0 +1,190 @@
+{
+  "sourceFile": "skills/codebase-onboarding/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: codebase-onboarding\ndescription: Analyze an unfamiliar codebase and generate a structured onboarding guide with architecture map, key entry points, conventions, and a starter CLAUDE.md. Use when joining a new project or setting up Claude Code for the first time in a repo.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: codebase-onboarding\ndescription: 分析一个陌生的代码库，并生成一个结构化的入门指南，包括架构图、关键入口点、规范和一个起始的CLAUDE.md文件。适用于加入新项目或首次在代码仓库中设置Claude Code时。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Codebase Onboarding",
+      "zh-Hans": "# 代码库入门引导"
+    },
+    {
+      "en-US": "Systematically analyze an unfamiliar codebase and produce a structured onboarding guide. Designed for developers joining a new project or setting up Claude Code in an existing repo for the first time.",
+      "zh-Hans": "系统性地分析一个不熟悉的代码库，并生成结构化的入门指南。专为加入新项目的开发者或首次在现有仓库中设置 Claude Code 的用户设计。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- First time opening a project with Claude Code\n- Joining a new team or repository\n- User asks \"help me understand this codebase\"\n- User asks to generate a CLAUDE.md for a project\n- User says \"onboard me\" or \"walk me through this repo\"",
+      "zh-Hans": "* 首次使用 Claude Code 打开项目时\n* 加入新团队或新仓库时\n* 用户询问“帮我理解这个代码库”\n* 用户要求为项目生成 CLAUDE.md 文件\n* 用户说“带我入门”或“带我浏览这个仓库”"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Phase 1: Reconnaissance",
+      "zh-Hans": "### 阶段 1：初步侦察"
+    },
+    {
+      "en-US": "Gather raw signals about the project without reading every file. Run these checks in parallel:",
+      "zh-Hans": "在不阅读每个文件的情况下，收集关于项目的原始信息。并行运行以下检查："
+    },
+    {
+      "en-US": "```\n1. Package manifest detection\n   → package.json, go.mod, Cargo.toml, pyproject.toml, pom.xml, build.gradle,\n     Gemfile, composer.json, mix.exs, pubspec.yaml\n\n2. Framework fingerprinting\n   → next.config.*, nuxt.config.*, angular.json, vite.config.*,\n     django settings, flask app factory, fastapi main, rails config\n\n3. Entry point identification\n   → main.*, index.*, app.*, server.*, cmd/, src/main/\n\n4. Directory structure snapshot\n   → Top 2 levels of the directory tree, ignoring node_modules, vendor,\n     .git, dist, build, __pycache__, .next\n\n5. Config and tooling detection\n   → .eslintrc*, .prettierrc*, tsconfig.json, Makefile, Dockerfile,\n     docker-compose*, .github/workflows/, .env.example, CI configs\n\n6. Test structure detection\n   → tests/, test/, __tests__/, *_test.go, *.spec.ts, *.test.js,\n     pytest.ini, jest.config.*, vitest.config.*\n```",
+      "zh-Hans": "```\n1. 包清单检测\n   → package.json、go.mod、Cargo.toml、pyproject.toml、pom.xml、build.gradle、\n     Gemfile、composer.json、mix.exs、pubspec.yaml\n\n2. 框架指纹识别\n   → next.config.*、nuxt.config.*、angular.json、vite.config.*、\n     django 设置、flask 应用工厂、fastapi 主程序、rails 配置\n\n3. 入口点识别\n   → main.*、index.*、app.*、server.*、cmd/、src/main/\n\n4. 目录结构快照\n   → 目录树的前 2 层，忽略 node_modules、vendor、\n     .git、dist、build、__pycache__、.next\n\n5. 配置与工具检测\n   → .eslintrc*、.prettierrc*、tsconfig.json、Makefile、Dockerfile、\n     docker-compose*、.github/workflows/、.env.example、CI 配置\n\n6. 测试结构检测\n   → tests/、test/、__tests__/、*_test.go、*.spec.ts、*.test.js、\n     pytest.ini、jest.config.*、vitest.config.*\n```"
+    },
+    {
+      "en-US": "### Phase 2: Architecture Mapping",
+      "zh-Hans": "### 阶段 2：架构映射"
+    },
+    {
+      "en-US": "From the reconnaissance data, identify:",
+      "zh-Hans": "根据侦察数据，识别："
+    },
+    {
+      "en-US": "**Tech Stack**",
+      "zh-Hans": "**技术栈**"
+    },
+    {
+      "en-US": "- Language(s) and version constraints\n- Framework(s) and major libraries\n- Database(s) and ORMs\n- Build tools and bundlers\n- CI/CD platform",
+      "zh-Hans": "* 语言及版本限制\n* 框架及主要库\n* 数据库及 ORM\n* 构建工具和打包器\n* CI/CD 平台"
+    },
+    {
+      "en-US": "**Architecture Pattern**",
+      "zh-Hans": "**架构模式**"
+    },
+    {
+      "en-US": "- Monolith, monorepo, microservices, or serverless\n- Frontend/backend split or full-stack\n- API style: REST, GraphQL, gRPC, tRPC",
+      "zh-Hans": "* 单体、单体仓库、微服务，还是无服务器\n* 前端/后端分离，还是全栈\n* API 风格：REST、GraphQL、gRPC、tRPC"
+    },
+    {
+      "en-US": "**Key Directories**\nMap the top-level directories to their purpose:",
+      "zh-Hans": "**关键目录**\n将顶级目录映射到其用途："
+    },
+    {
+      "en-US": "<!-- Example for a React project — replace with detected directories -->",
+      "zh-Hans": "<!-- Example for a React project — replace with detected directories -->"
+    },
+    {
+      "en-US": "```\nsrc/components/  → React UI components\nsrc/api/         → API route handlers\nsrc/lib/         → Shared utilities\nsrc/db/          → Database models and migrations\ntests/           → Test suites\nscripts/         → Build and deployment scripts\n```",
+      "zh-Hans": "```\nsrc/components/  → React UI 组件\nsrc/api/         → API 路由处理程序\nsrc/lib/         → 共享工具库\nsrc/db/          → 数据库模型和迁移文件\ntests/           → 测试套件\nscripts/         → 构建和部署脚本\n```"
+    },
+    {
+      "en-US": "**Data Flow**\nTrace one request from entry to response:",
+      "zh-Hans": "**数据流**\n追踪一个请求从入口到响应的路径："
+    },
+    {
+      "en-US": "- Where does a request enter? (router, handler, controller)\n- How is it validated? (middleware, schemas, guards)\n- Where is business logic? (services, models, use cases)\n- How does it reach the database? (ORM, raw queries, repositories)",
+      "zh-Hans": "* 请求从哪里进入？（路由器、处理器、控制器）\n* 如何进行验证？（中间件、模式、守卫）\n* 业务逻辑在哪里？（服务、模型、用例）\n* 如何访问数据库？（ORM、原始查询、存储库）"
+    },
+    {
+      "en-US": "### Phase 3: Convention Detection",
+      "zh-Hans": "### 阶段 3：规范检测"
+    },
+    {
+      "en-US": "Identify patterns the codebase already follows:",
+      "zh-Hans": "识别代码库已遵循的模式："
+    },
+    {
+      "en-US": "**Naming Conventions**",
+      "zh-Hans": "**命名规范**"
+    },
+    {
+      "en-US": "- File naming: kebab-case, camelCase, PascalCase, snake_case\n- Component/class naming patterns\n- Test file naming: `*.test.ts`, `*.spec.ts`, `*_test.go`",
+      "zh-Hans": "* 文件命名：kebab-case、camelCase、PascalCase、snake\\_case\n* 组件/类命名模式\n* 测试文件命名：`*.test.ts`、`*.spec.ts`、`*_test.go`"
+    },
+    {
+      "en-US": "**Code Patterns**",
+      "zh-Hans": "**代码模式**"
+    },
+    {
+      "en-US": "- Error handling style: try/catch, Result types, error codes\n- Dependency injection or direct imports\n- State management approach\n- Async patterns: callbacks, promises, async/await, channels",
+      "zh-Hans": "* 错误处理风格：try/catch、Result 类型、错误码\n* 依赖注入还是直接导入\n* 状态管理方法\n* 异步模式：回调、Promise、async/await、通道"
+    },
+    {
+      "en-US": "**Git Conventions**",
+      "zh-Hans": "**Git 规范**"
+    },
+    {
+      "en-US": "- Branch naming from recent branches\n- Commit message style from recent commits\n- PR workflow (squash, merge, rebase)\n- If the repo has no commits yet or only a shallow history (e.g. `git clone --depth 1`), skip this section and note \"Git history unavailable or too shallow to detect conventions\"",
+      "zh-Hans": "* 根据最近分支推断分支命名\n* 根据最近提交推断提交信息风格\n* PR 工作流（压缩合并、合并、变基）\n* 如果仓库尚无提交记录或历史记录很浅（例如 `git clone --depth 1`），则跳过此部分并注明“Git 历史记录不可用或过浅，无法检测规范”"
+    },
+    {
+      "en-US": "### Phase 4: Generate Onboarding Artifacts",
+      "zh-Hans": "### 阶段 4：生成入门工件"
+    },
+    {
+      "en-US": "Produce two outputs:",
+      "zh-Hans": "生成两个输出："
+    },
+    {
+      "en-US": "#### Output 1: Onboarding Guide",
+      "zh-Hans": "#### 输出 1：入门指南"
+    },
+    {
+      "en-US": "```markdown\n# Onboarding Guide: [Project Name]\n\n## Overview\n[2-3 sentences: what this project does and who it serves]\n\n## Tech Stack\n<!-- Example for a Next.js project — replace with detected stack -->\n| Layer | Technology | Version |\n|-------|-----------|---------|\n| Language | TypeScript | 5.x |\n| Framework | Next.js | 14.x |\n| Database | PostgreSQL | 16 |\n| ORM | Prisma | 5.x |\n| Testing | Jest + Playwright | - |\n\n## Architecture\n[Diagram or description of how components connect]\n\n## Key Entry Points\n<!-- Example for a Next.js project — replace with detected paths -->\n- **API routes**: `src/app/api/` — Next.js route handlers\n- **UI pages**: `src/app/(dashboard)/` — authenticated pages\n- **Database**: `prisma/schema.prisma` — data model source of truth\n- **Config**: `next.config.ts` — build and runtime config\n\n## Directory Map\n[Top-level directory → purpose mapping]\n\n## Request Lifecycle\n[Trace one API request from entry to response]\n\n## Conventions\n- [File naming pattern]\n- [Error handling approach]\n- [Testing patterns]\n- [Git workflow]\n\n## Common Tasks\n<!-- Example for a Node.js project — replace with detected commands -->\n- **Run dev server**: `npm run dev`\n- **Run tests**: `npm test`\n- **Run linter**: `npm run lint`\n- **Database migrations**: `npx prisma migrate dev`\n- **Build for production**: `npm run build`\n\n## Where to Look\n<!-- Example for a Next.js project — replace with detected paths -->\n| I want to... | Look at... |\n|--------------|-----------|\n| Add an API endpoint | `src/app/api/` |\n| Add a UI page | `src/app/(dashboard)/` |\n| Add a database table | `prisma/schema.prisma` |\n| Add a test | `tests/` matching the source path |\n| Change build config | `next.config.ts` |\n```",
+      "zh-Hans": "```markdown\n# 新手上路指南：[项目名称]\n\n## 概述\n[2-3句话：说明本项目的作用及服务对象]\n\n## 技术栈\n<!-- Example for a Next.js project — replace with detected stack -->\n| 层级 | 技术 | 版本 |\n|-------|-----------|---------|\n| 语言 | TypeScript | 5.x |\n| 框架 | Next.js | 14.x |\n| 数据库 | PostgreSQL | 16 |\n| ORM | Prisma | 5.x |\n| 测试 | Jest + Playwright | - |\n\n## 架构\n[组件连接方式的图表或描述]\n\n## 关键入口点\n<!-- Example for a Next.js project — replace with detected paths -->\n- **API 路由**: `src/app/api/` — Next.js 路由处理器\n- **UI 页面**: `src/app/(dashboard)/` — 经过身份验证的页面\n- **数据库**: `prisma/schema.prisma` — 数据模型的单一事实来源\n- **配置**: `next.config.ts` — 构建和运行时配置\n\n## 目录结构\n[顶级目录 → 用途映射]\n\n## 请求生命周期\n[追踪一个 API 请求从入口到响应的全过程]\n\n## 约定\n- [文件命名模式]\n- [错误处理方法]\n- [测试模式]\n- [Git 工作流程]\n\n## 常见任务\n<!-- Example for a Node.js project — replace with detected commands -->\n- **运行开发服务器**: `npm run dev`\n- **运行测试**: `npm test`\n- **运行代码检查工具**: `npm run lint`\n- **数据库迁移**: `npx prisma migrate dev`\n- **生产环境构建**: `npm run build`\n\n## 查找位置\n<!-- Example for a Next.js project — replace with detected paths -->\n| 我想... | 查看... |\n|--------------|-----------|\n| 添加 API 端点 | `src/app/api/` |\n| 添加 UI 页面 | `src/app/(dashboard)/` |\n| 添加数据库表 | `prisma/schema.prisma` |\n| 添加测试 | `tests/` （与源路径匹配） |\n| 更改构建配置 | `next.config.ts` |\n```"
+    },
+    {
+      "en-US": "#### Output 2: Starter CLAUDE.md",
+      "zh-Hans": "#### 输出 2：初始 CLAUDE.md"
+    },
+    {
+      "en-US": "Generate or update a project-specific CLAUDE.md based on detected conventions. If `CLAUDE.md` already exists, read it first and enhance it — preserve existing project-specific instructions and clearly call out what was added or changed.",
+      "zh-Hans": "根据检测到的规范，生成或更新项目特定的 CLAUDE.md。如果 `CLAUDE.md` 已存在，请先读取它并进行增强——保留现有的项目特定说明，并明确标注新增或更改的内容。"
+    },
+    {
+      "en-US": "```markdown\n# Project Instructions\n\n## Tech Stack\n[Detected stack summary]\n\n## Code Style\n- [Detected naming conventions]\n- [Detected patterns to follow]\n\n## Testing\n- Run tests: `[detected test command]`\n- Test pattern: [detected test file convention]\n- Coverage: [if configured, the coverage command]\n\n## Build & Run\n- Dev: `[detected dev command]`\n- Build: `[detected build command]`\n- Lint: `[detected lint command]`\n\n## Project Structure\n[Key directory → purpose map]\n\n## Conventions\n- [Commit style if detectable]\n- [PR workflow if detectable]\n- [Error handling patterns]\n```",
+      "zh-Hans": "```markdown\n# 项目说明\n\n## 技术栈\n[检测到的技术栈摘要]\n\n## 代码风格\n- [检测到的命名规范]\n- [检测到的应遵循的模式]\n\n## 测试\n- 运行测试：`[detected test command]`\n- 测试模式：[检测到的测试文件约定]\n- 覆盖率：[如果已配置，覆盖率命令]\n\n## 构建与运行\n- 开发：`[detected dev command]`\n- 构建：`[detected build command]`\n- 代码检查：`[detected lint command]`\n\n## 项目结构\n[关键目录 → 用途映射]\n\n## 约定\n- [可检测到的提交风格]\n- [可检测到的 PR 工作流程]\n- [错误处理模式]\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "1. **Don't read everything** — reconnaissance should use Glob and Grep, not Read on every file. Read selectively only for ambiguous signals.\n2. **Verify, don't guess** — if a framework is detected from config but the actual code uses something different, trust the code.\n3. **Respect existing CLAUDE.md** — if one already exists, enhance it rather than replacing it. Call out what's new vs existing.\n4. **Stay concise** — the onboarding guide should be scannable in 2 minutes. Details belong in the code, not the guide.\n5. **Flag unknowns** — if a convention can't be confidently detected, say so rather than guessing. \"Could not determine test runner\" is better than a wrong answer.",
+      "zh-Hans": "1. **不要通读所有内容** —— 侦察阶段应使用 Glob 和 Grep，而非读取每个文件。仅在信号不明确时有选择性地读取。\n2. **验证而非猜测** —— 如果从配置文件中检测到某个框架，但实际代码使用了不同的东西，请以代码为准。\n3. **尊重现有的 CLAUDE.md** —— 如果文件已存在，请增强它而不是替换它。明确标注哪些是新增内容，哪些是原有内容。\n4. **保持简洁** —— 入门指南应在 2 分钟内可快速浏览。细节应留在代码中，而非指南里。\n5. **标记未知项** —— 如果无法自信地检测到某个规范，请如实说明而非猜测。“无法确定测试运行器”比给出错误答案更好。"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "- Generating a CLAUDE.md that's longer than 100 lines — keep it focused\n- Listing every dependency — highlight only the ones that shape how you write code\n- Describing obvious directory names — `src/` doesn't need an explanation\n- Copying the README — the onboarding guide adds structural insight the README lacks",
+      "zh-Hans": "* 生成超过 100 行的 CLAUDE.md —— 保持其聚焦\n* 列出每个依赖项 —— 仅突出那些影响编码方式的依赖\n* 描述显而易见的目录名 —— `src/` 不需要解释\n* 复制 README —— 入门指南应提供 README 所缺乏的结构性见解"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Example 1: First time in a new repo",
+      "zh-Hans": "### 示例 1：首次进入新仓库"
+    },
+    {
+      "en-US": "**User**: \"Onboard me to this codebase\"\n**Action**: Run full 4-phase workflow → produce Onboarding Guide + Starter CLAUDE.md\n**Output**: Onboarding Guide printed directly to the conversation, plus a `CLAUDE.md` written to the project root",
+      "zh-Hans": "**用户**：“带我入门这个代码库”\n**操作**：运行完整的 4 阶段工作流 → 生成入门指南 + 初始 CLAUDE.md\n**输出**：入门指南直接打印到对话中，并在项目根目录写入一个 `CLAUDE.md`"
+    },
+    {
+      "en-US": "### Example 2: Generate CLAUDE.md for existing project",
+      "zh-Hans": "### 示例 2：为现有项目生成 CLAUDE.md"
+    },
+    {
+      "en-US": "**User**: \"Generate a CLAUDE.md for this project\"\n**Action**: Run Phases 1-3, skip Onboarding Guide, produce only CLAUDE.md\n**Output**: Project-specific `CLAUDE.md` with detected conventions",
+      "zh-Hans": "**用户**：“为这个项目生成一个 CLAUDE.md”\n**操作**：运行阶段 1-3，跳过入门指南，仅生成 CLAUDE.md\n**输出**：包含检测到的规范的项目特定 `CLAUDE.md`"
+    },
+    {
+      "en-US": "### Example 3: Enhance existing CLAUDE.md",
+      "zh-Hans": "### 示例 3：增强现有的 CLAUDE.md"
+    },
+    {
+      "en-US": "**User**: \"Update the CLAUDE.md with current project conventions\"\n**Action**: Read existing CLAUDE.md, run Phases 1-3, merge new findings\n**Output**: Updated `CLAUDE.md` with additions clearly marked",
+      "zh-Hans": "**用户**：“用当前项目规范更新 CLAUDE.md”\n**操作**：读取现有 CLAUDE.md，运行阶段 1-3，合并新发现\n**输出**：更新后的 `CLAUDE.md`，并明确标记了新增内容"
+    }
+  ]
+}

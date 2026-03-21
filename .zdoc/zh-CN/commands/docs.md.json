@@ -1,0 +1,58 @@
+{
+  "sourceFile": "commands/docs.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Look up current documentation for a library or topic via Context7.\n---",
+      "zh-Hans": "---\ndescription: 通过 Context7 查找库或主题的当前文档。\n---"
+    },
+    {
+      "en-US": "# /docs",
+      "zh-Hans": "# /docs"
+    },
+    {
+      "en-US": "## Purpose",
+      "zh-Hans": "## 目的"
+    },
+    {
+      "en-US": "Look up up-to-date documentation for a library, framework, or API and return a summarized answer with relevant code snippets. Uses the Context7 MCP (resolve-library-id and query-docs) so answers reflect current docs, not training data.",
+      "zh-Hans": "查找库、框架或 API 的最新文档，并返回包含相关代码片段的摘要答案。使用 Context7 MCP（resolve-library-id 和 query-docs），因此答案反映的是当前文档，而非训练数据。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```\n/docs [library name] [question]\n```",
+      "zh-Hans": "```\n/docs [library name] [question]\n```"
+    },
+    {
+      "en-US": "Use quotes for multi-word arguments so they are parsed as a single token. Example: `/docs \"Next.js\" \"How do I configure middleware?\"`",
+      "zh-Hans": "对于多单词参数，使用引号以便它们被解析为单个标记。示例：`/docs \"Next.js\" \"How do I configure middleware?\"`"
+    },
+    {
+      "en-US": "If library or question is omitted, prompt the user for:",
+      "zh-Hans": "如果省略了库或问题，则提示用户输入："
+    },
+    {
+      "en-US": "1. The library or product name (e.g. Next.js, Prisma, Supabase).\n2. The specific question or task (e.g. \"How do I set up middleware?\", \"Auth methods\").",
+      "zh-Hans": "1. 库或产品名称（例如 Next.js、Prisma、Supabase）。\n2. 具体问题或任务（例如“如何设置中间件？”、“认证方法”）。"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "1. **Resolve library ID** — Call the Context7 tool `resolve-library-id` with the library name and the user's question to get a Context7-compatible library ID (e.g. `/vercel/next.js`).\n2. **Query docs** — Call `query-docs` with that library ID and the user's question.\n3. **Summarize** — Return a concise answer and include relevant code examples from the fetched documentation. Mention the library (and version if relevant).",
+      "zh-Hans": "1. **解析库 ID** — 调用 Context7 工具 `resolve-library-id`，传入库名称和用户问题，以获取 Context7 兼容的库 ID（例如 `/vercel/next.js`）。\n2. **查询文档** — 使用该库 ID 和用户问题调用 `query-docs`。\n3. **总结** — 返回简洁的答案，并包含从获取的文档中提取的相关代码示例。提及库（如果相关，包括版本）。"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "The user receives a short, accurate answer backed by current docs, plus any code snippets that help. If Context7 is not available, say so and answer from training data with a note that docs may be outdated.",
+      "zh-Hans": "用户收到一个简短、准确的答案，该答案基于当前文档，并附带任何有帮助的代码片段。如果 Context7 不可用，则说明情况，并根据训练数据回答问题，并注明文档可能已过时。"
+    }
+  ]
+}

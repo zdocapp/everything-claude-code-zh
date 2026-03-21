@@ -1,0 +1,130 @@
+{
+  "sourceFile": "rules/typescript/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.ts\"\n  - \"**/*.tsx\"\n  - \"**/*.js\"\n  - \"**/*.jsx\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.ts\"\n  - \"**/*.tsx\"\n  - \"**/*.js\"\n  - \"**/*.jsx\"\n---"
+    },
+    {
+      "en-US": "# TypeScript/JavaScript Coding Style",
+      "zh-Hans": "# TypeScript/JavaScript 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with TypeScript/JavaScript specific content.",
+      "zh-Hans": "> 本文件基于 [common/coding-style.md](../common/coding-style.md) 扩展，包含 TypeScript/JavaScript 特定内容。"
+    },
+    {
+      "en-US": "## Types and Interfaces",
+      "zh-Hans": "## 类型与接口"
+    },
+    {
+      "en-US": "Use types to make public APIs, shared models, and component props explicit, readable, and reusable.",
+      "zh-Hans": "使用类型使公共 API、共享模型和组件属性显式化、可读且可复用。"
+    },
+    {
+      "en-US": "### Public APIs",
+      "zh-Hans": "### 公共 API"
+    },
+    {
+      "en-US": "- Add parameter and return types to exported functions, shared utilities, and public class methods\n- Let TypeScript infer obvious local variable types\n- Extract repeated inline object shapes into named types or interfaces",
+      "zh-Hans": "* 为导出的函数、共享工具函数和公共类方法添加参数类型和返回类型\n* 让 TypeScript 推断明显的局部变量类型\n* 将重复的内联对象结构提取为命名类型或接口"
+    },
+    {
+      "en-US": "```typescript\n// WRONG: Exported function without explicit types\nexport function formatUser(user) {\n  return `${user.firstName} ${user.lastName}`\n}\n\n// CORRECT: Explicit types on public APIs\ninterface User {\n  firstName: string\n  lastName: string\n}\n\nexport function formatUser(user: User): string {\n  return `${user.firstName} ${user.lastName}`\n}\n```",
+      "zh-Hans": "```typescript\n// WRONG: Exported function without explicit types\nexport function formatUser(user) {\n  return `${user.firstName} ${user.lastName}`\n}\n\n// CORRECT: Explicit types on public APIs\ninterface User {\n  firstName: string\n  lastName: string\n}\n\nexport function formatUser(user: User): string {\n  return `${user.firstName} ${user.lastName}`\n}\n```"
+    },
+    {
+      "en-US": "### Interfaces vs. Type Aliases",
+      "zh-Hans": "### 接口与类型别名"
+    },
+    {
+      "en-US": "- Use `interface` for object shapes that may be extended or implemented\n- Use `type` for unions, intersections, tuples, mapped types, and utility types\n- Prefer string literal unions over `enum` unless an `enum` is required for interoperability",
+      "zh-Hans": "* 使用 `interface` 定义可能被扩展或实现的对象结构\n* 使用 `type` 定义联合类型、交叉类型、元组、映射类型和工具类型\n* 优先使用字符串字面量联合类型而非 `enum`，除非需要 `enum` 以实现互操作性"
+    },
+    {
+      "en-US": "```typescript\ninterface User {\n  id: string\n  email: string\n}\n\ntype UserRole = 'admin' | 'member'\ntype UserWithRole = User & {\n  role: UserRole\n}\n```",
+      "zh-Hans": "```typescript\ninterface User {\n  id: string\n  email: string\n}\n\ntype UserRole = 'admin' | 'member'\ntype UserWithRole = User & {\n  role: UserRole\n}\n```"
+    },
+    {
+      "en-US": "### Avoid `any`",
+      "zh-Hans": "### 避免使用 `any`"
+    },
+    {
+      "en-US": "- Avoid `any` in application code\n- Use `unknown` for external or untrusted input, then narrow it safely\n- Use generics when a value's type depends on the caller",
+      "zh-Hans": "* 在应用程序代码中避免使用 `any`\n* 对外部或不受信任的输入使用 `unknown`，然后安全地缩小其类型范围\n* 当值的类型依赖于调用者时，使用泛型"
+    },
+    {
+      "en-US": "```typescript\n// WRONG: any removes type safety\nfunction getErrorMessage(error: any) {\n  return error.message\n}\n\n// CORRECT: unknown forces safe narrowing\nfunction getErrorMessage(error: unknown): string {\n  if (error instanceof Error) {\n    return error.message\n  }\n\n  return 'Unexpected error'\n}\n```",
+      "zh-Hans": "```typescript\n// WRONG: any removes type safety\nfunction getErrorMessage(error: any) {\n  return error.message\n}\n\n// CORRECT: unknown forces safe narrowing\nfunction getErrorMessage(error: unknown): string {\n  if (error instanceof Error) {\n    return error.message\n  }\n\n  return 'Unexpected error'\n}\n```"
+    },
+    {
+      "en-US": "### React Props",
+      "zh-Hans": "### React 属性"
+    },
+    {
+      "en-US": "- Define component props with a named `interface` or `type`\n- Type callback props explicitly\n- Do not use `React.FC` unless there is a specific reason to do so",
+      "zh-Hans": "* 使用命名的 `interface` 或 `type` 定义组件属性\n* 显式地定义回调属性类型\n* 除非有特定原因，否则不要使用 `React.FC`"
+    },
+    {
+      "en-US": "```typescript\ninterface User {\n  id: string\n  email: string\n}\n\ninterface UserCardProps {\n  user: User\n  onSelect: (id: string) => void\n}\n\nfunction UserCard({ user, onSelect }: UserCardProps) {\n  return <button onClick={() => onSelect(user.id)}>{user.email}</button>\n}\n```",
+      "zh-Hans": "```typescript\ninterface User {\n  id: string\n  email: string\n}\n\ninterface UserCardProps {\n  user: User\n  onSelect: (id: string) => void\n}\n\nfunction UserCard({ user, onSelect }: UserCardProps) {\n  return <button onClick={() => onSelect(user.id)}>{user.email}</button>\n}\n```"
+    },
+    {
+      "en-US": "### JavaScript Files",
+      "zh-Hans": "### JavaScript 文件"
+    },
+    {
+      "en-US": "- In `.js` and `.jsx` files, use JSDoc when types improve clarity and a TypeScript migration is not practical\n- Keep JSDoc aligned with runtime behavior",
+      "zh-Hans": "* 在 `.js` 和 `.jsx` 文件中，当类型能提高清晰度且迁移到 TypeScript 不可行时，使用 JSDoc\n* 保持 JSDoc 与运行时行为一致"
+    },
+    {
+      "en-US": "```javascript\n/**\n * @param {{ firstName: string, lastName: string }} user\n * @returns {string}\n */\nexport function formatUser(user) {\n  return `${user.firstName} ${user.lastName}`\n}\n```",
+      "zh-Hans": "```javascript\n/**\n * @param {{ firstName: string, lastName: string }} user\n * @returns {string}\n */\nexport function formatUser(user) {\n  return `${user.firstName} ${user.lastName}`\n}\n```"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "Use spread operator for immutable updates:",
+      "zh-Hans": "使用展开运算符进行不可变更新："
+    },
+    {
+      "en-US": "```typescript\ninterface User {\n  id: string\n  name: string\n}\n\n// WRONG: Mutation\nfunction updateUser(user: User, name: string): User {\n  user.name = name // MUTATION!\n  return user\n}\n\n// CORRECT: Immutability\nfunction updateUser(user: Readonly<User>, name: string): User {\n  return {\n    ...user,\n    name\n  }\n}\n```",
+      "zh-Hans": "```typescript\ninterface User {\n  id: string\n  name: string\n}\n\n// WRONG: Mutation\nfunction updateUser(user: User, name: string): User {\n  user.name = name // MUTATION!\n  return user\n}\n\n// CORRECT: Immutability\nfunction updateUser(user: Readonly<User>, name: string): User {\n  return {\n    ...user,\n    name\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "Use async/await with try-catch and narrow unknown errors safely:",
+      "zh-Hans": "使用 async/await 配合 try-catch 并安全地缩小未知错误类型范围："
+    },
+    {
+      "en-US": "```typescript\ninterface User {\n  id: string\n  email: string\n}\n\ndeclare function riskyOperation(userId: string): Promise<User>\n\nfunction getErrorMessage(error: unknown): string {\n  if (error instanceof Error) {\n    return error.message\n  }\n\n  return 'Unexpected error'\n}\n\nconst logger = {\n  error: (message: string, error: unknown) => {\n    // Replace with your production logger (for example, pino or winston).\n  }\n}\n\nasync function loadUser(userId: string): Promise<User> {\n  try {\n    const result = await riskyOperation(userId)\n    return result\n  } catch (error: unknown) {\n    logger.error('Operation failed', error)\n    throw new Error(getErrorMessage(error))\n  }\n}\n```",
+      "zh-Hans": "```typescript\ninterface User {\n  id: string\n  email: string\n}\n\ndeclare function riskyOperation(userId: string): Promise<User>\n\nfunction getErrorMessage(error: unknown): string {\n  if (error instanceof Error) {\n    return error.message\n  }\n\n  return 'Unexpected error'\n}\n\nconst logger = {\n  error: (message: string, error: unknown) => {\n    // Replace with your production logger (for example, pino or winston).\n  }\n}\n\nasync function loadUser(userId: string): Promise<User> {\n  try {\n    const result = await riskyOperation(userId)\n    return result\n  } catch (error: unknown) {\n    logger.error('Operation failed', error)\n    throw new Error(getErrorMessage(error))\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "Use Zod for schema-based validation and infer types from the schema:",
+      "zh-Hans": "使用 Zod 进行基于模式的验证，并从模式推断类型："
+    },
+    {
+      "en-US": "```typescript\nimport { z } from 'zod'\n\nconst userSchema = z.object({\n  email: z.string().email(),\n  age: z.number().int().min(0).max(150)\n})\n\ntype UserInput = z.infer<typeof userSchema>\n\nconst validated: UserInput = userSchema.parse(input)\n```",
+      "zh-Hans": "```typescript\nimport { z } from 'zod'\n\nconst userSchema = z.object({\n  email: z.string().email(),\n  age: z.number().int().min(0).max(150)\n})\n\ntype UserInput = z.infer<typeof userSchema>\n\nconst validated: UserInput = userSchema.parse(input)\n```"
+    },
+    {
+      "en-US": "## Console.log",
+      "zh-Hans": "## Console.log"
+    },
+    {
+      "en-US": "- No `console.log` statements in production code\n- Use proper logging libraries instead\n- See hooks for automatic detection",
+      "zh-Hans": "* 生产代码中不允许出现 `console.log` 语句\n* 请使用适当的日志库替代\n* 查看钩子以进行自动检测"
+    }
+  ]
+}

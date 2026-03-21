@@ -1,0 +1,62 @@
+{
+  "sourceFile": "rules/cpp/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---"
+    },
+    {
+      "en-US": "# C++ Testing",
+      "zh-Hans": "# C++ 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with C++ specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/testing.md](../common/testing.md) 中关于 C++ 的特定内容。"
+    },
+    {
+      "en-US": "## Framework",
+      "zh-Hans": "## 框架"
+    },
+    {
+      "en-US": "Use **GoogleTest** (gtest/gmock) with **CMake/CTest**.",
+      "zh-Hans": "使用 **GoogleTest** (gtest/gmock) 配合 **CMake/CTest**。"
+    },
+    {
+      "en-US": "## Running Tests",
+      "zh-Hans": "## 运行测试"
+    },
+    {
+      "en-US": "```bash\ncmake --build build && ctest --test-dir build --output-on-failure\n```",
+      "zh-Hans": "```bash\ncmake --build build && ctest --test-dir build --output-on-failure\n```"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "```bash\ncmake -DCMAKE_CXX_FLAGS=\"--coverage\" -DCMAKE_EXE_LINKER_FLAGS=\"--coverage\" ..\ncmake --build .\nctest --output-on-failure\nlcov --capture --directory . --output-file coverage.info\n```",
+      "zh-Hans": "```bash\ncmake -DCMAKE_CXX_FLAGS=\"--coverage\" -DCMAKE_EXE_LINKER_FLAGS=\"--coverage\" ..\ncmake --build .\nctest --output-on-failure\nlcov --capture --directory . --output-file coverage.info\n```"
+    },
+    {
+      "en-US": "## Sanitizers",
+      "zh-Hans": "## 内存消毒工具"
+    },
+    {
+      "en-US": "Always run tests with sanitizers in CI:",
+      "zh-Hans": "在 CI 中应始终使用内存消毒工具运行测试："
+    },
+    {
+      "en-US": "```bash\ncmake -DCMAKE_CXX_FLAGS=\"-fsanitize=address,undefined\" ..\n```",
+      "zh-Hans": "```bash\ncmake -DCMAKE_CXX_FLAGS=\"-fsanitize=address,undefined\" ..\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `cpp-testing` for detailed C++ testing patterns, TDD workflow, and GoogleTest/GMock usage.",
+      "zh-Hans": "查看技能：`cpp-testing` 以获取详细的 C++ 测试模式、TDD 工作流以及 GoogleTest/GMock 使用指南。"
+    }
+  ]
+}

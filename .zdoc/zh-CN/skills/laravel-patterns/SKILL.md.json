@@ -1,0 +1,262 @@
+{
+  "sourceFile": "skills/laravel-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: laravel-patterns\ndescription: Laravel architecture patterns, routing/controllers, Eloquent ORM, service layers, queues, events, caching, and API resources for production apps.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: laravel-patterns\ndescription: Laravel架构模式、路由/控制器、Eloquent ORM、服务层、队列、事件、缓存以及用于生产应用的API资源。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Laravel Development Patterns",
+      "zh-Hans": "# Laravel 开发模式"
+    },
+    {
+      "en-US": "Production-grade Laravel architecture patterns for scalable, maintainable applications.",
+      "zh-Hans": "适用于可扩展、可维护应用的生产级 Laravel 架构模式。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 适用场景"
+    },
+    {
+      "en-US": "- Building Laravel web applications or APIs\n- Structuring controllers, services, and domain logic\n- Working with Eloquent models and relationships\n- Designing APIs with resources and pagination\n- Adding queues, events, caching, and background jobs",
+      "zh-Hans": "* 构建 Laravel Web 应用或 API\n* 构建控制器、服务和领域逻辑\n* 使用 Eloquent 模型和关系\n* 使用资源和分页设计 API\n* 添加队列、事件、缓存和后台任务"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "- Structure the app around clear boundaries (controllers -> services/actions -> models).\n- Use explicit bindings and scoped bindings to keep routing predictable; still enforce authorization for access control.\n- Favor typed models, casts, and scopes to keep domain logic consistent.\n- Keep IO-heavy work in queues and cache expensive reads.\n- Centralize config in `config/*` and keep environments explicit.",
+      "zh-Hans": "* 围绕清晰的边界（控制器 -> 服务/操作 -> 模型）构建应用。\n* 使用显式绑定和作用域绑定来保持路由可预测；同时仍强制执行授权以实现访问控制。\n* 倾向于使用类型化模型、转换器和作用域来保持领域逻辑一致。\n* 将 IO 密集型工作放在队列中，并缓存昂贵的读取操作。\n* 将配置集中在 `config/*` 中，并保持环境配置显式化。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Project Structure",
+      "zh-Hans": "### 项目结构"
+    },
+    {
+      "en-US": "Use a conventional Laravel layout with clear layer boundaries (HTTP, services/actions, models).",
+      "zh-Hans": "使用具有清晰层级边界（HTTP、服务/操作、模型）的常规 Laravel 布局。"
+    },
+    {
+      "en-US": "### Recommended Layout",
+      "zh-Hans": "### 推荐布局"
+    },
+    {
+      "en-US": "```\napp/\n├── Actions/            # Single-purpose use cases\n├── Console/\n├── Events/\n├── Exceptions/\n├── Http/\n│   ├── Controllers/\n│   ├── Middleware/\n│   ├── Requests/       # Form request validation\n│   └── Resources/      # API resources\n├── Jobs/\n├── Models/\n├── Policies/\n├── Providers/\n├── Services/           # Coordinating domain services\n└── Support/\nconfig/\ndatabase/\n├── factories/\n├── migrations/\n└── seeders/\nresources/\n├── views/\n└── lang/\nroutes/\n├── api.php\n├── web.php\n└── console.php\n```",
+      "zh-Hans": "```\napp/\n├── Actions/            # 单一用途的用例\n├── Console/\n├── Events/\n├── Exceptions/\n├── Http/\n│   ├── Controllers/\n│   ├── Middleware/\n│   ├── Requests/       # 表单请求验证\n│   └── Resources/      # API 资源\n├── Jobs/\n├── Models/\n├── Policies/\n├── Providers/\n├── Services/           # 协调领域服务\n└── Support/\nconfig/\ndatabase/\n├── factories/\n├── migrations/\n└── seeders/\nresources/\n├── views/\n└── lang/\nroutes/\n├── api.php\n├── web.php\n└── console.php\n```"
+    },
+    {
+      "en-US": "### Controllers -> Services -> Actions",
+      "zh-Hans": "### 控制器 -> 服务 -> 操作"
+    },
+    {
+      "en-US": "Keep controllers thin. Put orchestration in services and single-purpose logic in actions.",
+      "zh-Hans": "保持控制器精简。将编排逻辑放在服务中，将单一职责逻辑放在操作中。"
+    },
+    {
+      "en-US": "```php\nfinal class CreateOrderAction\n{\n    public function __construct(private OrderRepository $orders) {}\n\n    public function handle(CreateOrderData $data): Order\n    {\n        return $this->orders->create($data);\n    }\n}\n\nfinal class OrdersController extends Controller\n{\n    public function __construct(private CreateOrderAction $createOrder) {}\n\n    public function store(StoreOrderRequest $request): JsonResponse\n    {\n        $order = $this->createOrder->handle($request->toDto());\n\n        return response()->json([\n            'success' => true,\n            'data' => OrderResource::make($order),\n            'error' => null,\n            'meta' => null,\n        ], 201);\n    }\n}\n```",
+      "zh-Hans": "```php\nfinal class CreateOrderAction\n{\n    public function __construct(private OrderRepository $orders) {}\n\n    public function handle(CreateOrderData $data): Order\n    {\n        return $this->orders->create($data);\n    }\n}\n\nfinal class OrdersController extends Controller\n{\n    public function __construct(private CreateOrderAction $createOrder) {}\n\n    public function store(StoreOrderRequest $request): JsonResponse\n    {\n        $order = $this->createOrder->handle($request->toDto());\n\n        return response()->json([\n            'success' => true,\n            'data' => OrderResource::make($order),\n            'error' => null,\n            'meta' => null,\n        ], 201);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Routing and Controllers",
+      "zh-Hans": "### 路由与控制器"
+    },
+    {
+      "en-US": "Prefer route-model binding and resource controllers for clarity.",
+      "zh-Hans": "为了清晰起见，优先使用路由模型绑定和资源控制器。"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::middleware('auth:sanctum')->group(function () {\n    Route::apiResource('projects', ProjectController::class);\n});\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::middleware('auth:sanctum')->group(function () {\n    Route::apiResource('projects', ProjectController::class);\n});\n```"
+    },
+    {
+      "en-US": "### Route Model Binding (Scoped)",
+      "zh-Hans": "### 路由模型绑定（作用域）"
+    },
+    {
+      "en-US": "Use scoped bindings to prevent cross-tenant access.",
+      "zh-Hans": "使用作用域绑定来防止跨租户访问。"
+    },
+    {
+      "en-US": "```php\nRoute::scopeBindings()->group(function () {\n    Route::get('/accounts/{account}/projects/{project}', [ProjectController::class, 'show']);\n});\n```",
+      "zh-Hans": "```php\nRoute::scopeBindings()->group(function () {\n    Route::get('/accounts/{account}/projects/{project}', [ProjectController::class, 'show']);\n});\n```"
+    },
+    {
+      "en-US": "### Nested Routes and Binding Names",
+      "zh-Hans": "### 嵌套路由和绑定名称"
+    },
+    {
+      "en-US": "- Keep prefixes and paths consistent to avoid double nesting (e.g., `conversation` vs `conversations`).\n- Use a single parameter name that matches the bound model (e.g., `{conversation}` for `Conversation`).\n- Prefer scoped bindings when nesting to enforce parent-child relationships.",
+      "zh-Hans": "* 保持前缀和路径一致，避免双重嵌套（例如 `conversation` 与 `conversations`）。\n* 使用与绑定模型匹配的单一参数名（例如，`{conversation}` 对应 `Conversation`）。\n* 嵌套时优先使用作用域绑定以强制执行父子关系。"
+    },
+    {
+      "en-US": "```php\nuse App\\Http\\Controllers\\Api\\ConversationController;\nuse App\\Http\\Controllers\\Api\\MessageController;\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::middleware('auth:sanctum')->prefix('conversations')->group(function () {\n    Route::post('/', [ConversationController::class, 'store'])->name('conversations.store');\n\n    Route::scopeBindings()->group(function () {\n        Route::get('/{conversation}', [ConversationController::class, 'show'])\n            ->name('conversations.show');\n\n        Route::post('/{conversation}/messages', [MessageController::class, 'store'])\n            ->name('conversation-messages.store');\n\n        Route::get('/{conversation}/messages/{message}', [MessageController::class, 'show'])\n            ->name('conversation-messages.show');\n    });\n});\n```",
+      "zh-Hans": "```php\nuse App\\Http\\Controllers\\Api\\ConversationController;\nuse App\\Http\\Controllers\\Api\\MessageController;\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::middleware('auth:sanctum')->prefix('conversations')->group(function () {\n    Route::post('/', [ConversationController::class, 'store'])->name('conversations.store');\n\n    Route::scopeBindings()->group(function () {\n        Route::get('/{conversation}', [ConversationController::class, 'show'])\n            ->name('conversations.show');\n\n        Route::post('/{conversation}/messages', [MessageController::class, 'store'])\n            ->name('conversation-messages.store');\n\n        Route::get('/{conversation}/messages/{message}', [MessageController::class, 'show'])\n            ->name('conversation-messages.show');\n    });\n});\n```"
+    },
+    {
+      "en-US": "If you want a parameter to resolve to a different model class, define explicit binding. For custom binding logic, use `Route::bind()` or implement `resolveRouteBinding()` on the model.",
+      "zh-Hans": "如果希望参数解析为不同的模型类，请定义显式绑定。对于自定义绑定逻辑，请使用 `Route::bind()` 或在模型上实现 `resolveRouteBinding()`。"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\AiConversation;\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::model('conversation', AiConversation::class);\n```",
+      "zh-Hans": "```php\nuse App\\Models\\AiConversation;\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::model('conversation', AiConversation::class);\n```"
+    },
+    {
+      "en-US": "### Service Container Bindings",
+      "zh-Hans": "### 服务容器绑定"
+    },
+    {
+      "en-US": "Bind interfaces to implementations in a service provider for clear dependency wiring.",
+      "zh-Hans": "在服务提供者中将接口绑定到实现，以实现清晰的依赖关系连接。"
+    },
+    {
+      "en-US": "```php\nuse App\\Repositories\\EloquentOrderRepository;\nuse App\\Repositories\\OrderRepository;\nuse Illuminate\\Support\\ServiceProvider;\n\nfinal class AppServiceProvider extends ServiceProvider\n{\n    public function register(): void\n    {\n        $this->app->bind(OrderRepository::class, EloquentOrderRepository::class);\n    }\n}\n```",
+      "zh-Hans": "```php\nuse App\\Repositories\\EloquentOrderRepository;\nuse App\\Repositories\\OrderRepository;\nuse Illuminate\\Support\\ServiceProvider;\n\nfinal class AppServiceProvider extends ServiceProvider\n{\n    public function register(): void\n    {\n        $this->app->bind(OrderRepository::class, EloquentOrderRepository::class);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Eloquent Model Patterns",
+      "zh-Hans": "### Eloquent 模型模式"
+    },
+    {
+      "en-US": "### Model Configuration",
+      "zh-Hans": "### 模型配置"
+    },
+    {
+      "en-US": "```php\nfinal class Project extends Model\n{\n    use HasFactory;\n\n    protected $fillable = ['name', 'owner_id', 'status'];\n\n    protected $casts = [\n        'status' => ProjectStatus::class,\n        'archived_at' => 'datetime',\n    ];\n\n    public function owner(): BelongsTo\n    {\n        return $this->belongsTo(User::class, 'owner_id');\n    }\n\n    public function scopeActive(Builder $query): Builder\n    {\n        return $query->whereNull('archived_at');\n    }\n}\n```",
+      "zh-Hans": "```php\nfinal class Project extends Model\n{\n    use HasFactory;\n\n    protected $fillable = ['name', 'owner_id', 'status'];\n\n    protected $casts = [\n        'status' => ProjectStatus::class,\n        'archived_at' => 'datetime',\n    ];\n\n    public function owner(): BelongsTo\n    {\n        return $this->belongsTo(User::class, 'owner_id');\n    }\n\n    public function scopeActive(Builder $query): Builder\n    {\n        return $query->whereNull('archived_at');\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Custom Casts and Value Objects",
+      "zh-Hans": "### 自定义转换器与值对象"
+    },
+    {
+      "en-US": "Use enums or value objects for strict typing.",
+      "zh-Hans": "使用枚举或值对象进行严格类型化。"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Database\\Eloquent\\Casts\\Attribute;\n\nprotected $casts = [\n    'status' => ProjectStatus::class,\n];\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Database\\Eloquent\\Casts\\Attribute;\n\nprotected $casts = [\n    'status' => ProjectStatus::class,\n];\n```"
+    },
+    {
+      "en-US": "```php\nprotected function budgetCents(): Attribute\n{\n    return Attribute::make(\n        get: fn (int $value) => Money::fromCents($value),\n        set: fn (Money $money) => $money->toCents(),\n    );\n}\n```",
+      "zh-Hans": "```php\nprotected function budgetCents(): Attribute\n{\n    return Attribute::make(\n        get: fn (int $value) => Money::fromCents($value),\n        set: fn (Money $money) => $money->toCents(),\n    );\n}\n```"
+    },
+    {
+      "en-US": "### Eager Loading to Avoid N+1",
+      "zh-Hans": "### 预加载以避免 N+1 问题"
+    },
+    {
+      "en-US": "```php\n$orders = Order::query()\n    ->with(['customer', 'items.product'])\n    ->latest()\n    ->paginate(25);\n```",
+      "zh-Hans": "```php\n$orders = Order::query()\n    ->with(['customer', 'items.product'])\n    ->latest()\n    ->paginate(25);\n```"
+    },
+    {
+      "en-US": "### Query Objects for Complex Filters",
+      "zh-Hans": "### 用于复杂筛选的查询对象"
+    },
+    {
+      "en-US": "```php\nfinal class ProjectQuery\n{\n    public function __construct(private Builder $query) {}\n\n    public function ownedBy(int $userId): self\n    {\n        $query = clone $this->query;\n\n        return new self($query->where('owner_id', $userId));\n    }\n\n    public function active(): self\n    {\n        $query = clone $this->query;\n\n        return new self($query->whereNull('archived_at'));\n    }\n\n    public function builder(): Builder\n    {\n        return $this->query;\n    }\n}\n```",
+      "zh-Hans": "```php\nfinal class ProjectQuery\n{\n    public function __construct(private Builder $query) {}\n\n    public function ownedBy(int $userId): self\n    {\n        $query = clone $this->query;\n\n        return new self($query->where('owner_id', $userId));\n    }\n\n    public function active(): self\n    {\n        $query = clone $this->query;\n\n        return new self($query->whereNull('archived_at'));\n    }\n\n    public function builder(): Builder\n    {\n        return $this->query;\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Global Scopes and Soft Deletes",
+      "zh-Hans": "### 全局作用域与软删除"
+    },
+    {
+      "en-US": "Use global scopes for default filtering and `SoftDeletes` for recoverable records.\nUse either a global scope or a named scope for the same filter, not both, unless you intend layered behavior.",
+      "zh-Hans": "使用全局作用域进行默认筛选，并使用 `SoftDeletes` 处理可恢复的记录。\n对于同一筛选器，请使用全局作用域或命名作用域中的一种，除非你打算实现分层行为。"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Database\\Eloquent\\SoftDeletes;\nuse Illuminate\\Database\\Eloquent\\Builder;\n\nfinal class Project extends Model\n{\n    use SoftDeletes;\n\n    protected static function booted(): void\n    {\n        static::addGlobalScope('active', function (Builder $builder): void {\n            $builder->whereNull('archived_at');\n        });\n    }\n}\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Database\\Eloquent\\SoftDeletes;\nuse Illuminate\\Database\\Eloquent\\Builder;\n\nfinal class Project extends Model\n{\n    use SoftDeletes;\n\n    protected static function booted(): void\n    {\n        static::addGlobalScope('active', function (Builder $builder): void {\n            $builder->whereNull('archived_at');\n        });\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Query Scopes for Reusable Filters",
+      "zh-Hans": "### 用于可重用筛选器的查询作用域"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Database\\Eloquent\\Builder;\n\nfinal class Project extends Model\n{\n    public function scopeOwnedBy(Builder $query, int $userId): Builder\n    {\n        return $query->where('owner_id', $userId);\n    }\n}\n\n// In service, repository etc.\n$projects = Project::ownedBy($user->id)->get();\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Database\\Eloquent\\Builder;\n\nfinal class Project extends Model\n{\n    public function scopeOwnedBy(Builder $query, int $userId): Builder\n    {\n        return $query->where('owner_id', $userId);\n    }\n}\n\n// In service, repository etc.\n$projects = Project::ownedBy($user->id)->get();\n```"
+    },
+    {
+      "en-US": "### Transactions for Multi-Step Updates",
+      "zh-Hans": "### 用于多步更新的数据库事务"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\DB;\n\nDB::transaction(function (): void {\n    $order->update(['status' => 'paid']);\n    $order->items()->update(['paid_at' => now()]);\n});\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\DB;\n\nDB::transaction(function (): void {\n    $order->update(['status' => 'paid']);\n    $order->items()->update(['paid_at' => now()]);\n});\n```"
+    },
+    {
+      "en-US": "### Migrations",
+      "zh-Hans": "### 数据库迁移"
+    },
+    {
+      "en-US": "### Naming Convention",
+      "zh-Hans": "### 命名约定"
+    },
+    {
+      "en-US": "- File names use timestamps: `YYYY_MM_DD_HHMMSS_create_users_table.php`\n- Migrations use anonymous classes (no named class); the filename communicates intent\n- Table names are `snake_case` and plural by default",
+      "zh-Hans": "* 文件名使用时间戳：`YYYY_MM_DD_HHMMSS_create_users_table.php`\n* 迁移使用匿名类（无命名类）；文件名传达意图\n* 表名默认为 `snake_case` 且为复数形式"
+    },
+    {
+      "en-US": "### Example Migration",
+      "zh-Hans": "### 迁移示例"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Database\\Migrations\\Migration;\nuse Illuminate\\Database\\Schema\\Blueprint;\nuse Illuminate\\Support\\Facades\\Schema;\n\nreturn new class extends Migration\n{\n    public function up(): void\n    {\n        Schema::create('orders', function (Blueprint $table): void {\n            $table->id();\n            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();\n            $table->string('status', 32)->index();\n            $table->unsignedInteger('total_cents');\n            $table->timestamps();\n        });\n    }\n\n    public function down(): void\n    {\n        Schema::dropIfExists('orders');\n    }\n};\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Database\\Migrations\\Migration;\nuse Illuminate\\Database\\Schema\\Blueprint;\nuse Illuminate\\Support\\Facades\\Schema;\n\nreturn new class extends Migration\n{\n    public function up(): void\n    {\n        Schema::create('orders', function (Blueprint $table): void {\n            $table->id();\n            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();\n            $table->string('status', 32)->index();\n            $table->unsignedInteger('total_cents');\n            $table->timestamps();\n        });\n    }\n\n    public function down(): void\n    {\n        Schema::dropIfExists('orders');\n    }\n};\n```"
+    },
+    {
+      "en-US": "### Form Requests and Validation",
+      "zh-Hans": "### 表单请求与验证"
+    },
+    {
+      "en-US": "Keep validation in form requests and transform inputs to DTOs.",
+      "zh-Hans": "将验证逻辑放在表单请求中，并将输入转换为 DTO。"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\Order;\n\nfinal class StoreOrderRequest extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return $this->user()?->can('create', Order::class) ?? false;\n    }\n\n    public function rules(): array\n    {\n        return [\n            'customer_id' => ['required', 'integer', 'exists:customers,id'],\n            'items' => ['required', 'array', 'min:1'],\n            'items.*.sku' => ['required', 'string'],\n            'items.*.quantity' => ['required', 'integer', 'min:1'],\n        ];\n    }\n\n    public function toDto(): CreateOrderData\n    {\n        return new CreateOrderData(\n            customerId: (int) $this->validated('customer_id'),\n            items: $this->validated('items'),\n        );\n    }\n}\n```",
+      "zh-Hans": "```php\nuse App\\Models\\Order;\n\nfinal class StoreOrderRequest extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return $this->user()?->can('create', Order::class) ?? false;\n    }\n\n    public function rules(): array\n    {\n        return [\n            'customer_id' => ['required', 'integer', 'exists:customers,id'],\n            'items' => ['required', 'array', 'min:1'],\n            'items.*.sku' => ['required', 'string'],\n            'items.*.quantity' => ['required', 'integer', 'min:1'],\n        ];\n    }\n\n    public function toDto(): CreateOrderData\n    {\n        return new CreateOrderData(\n            customerId: (int) $this->validated('customer_id'),\n            items: $this->validated('items'),\n        );\n    }\n}\n```"
+    },
+    {
+      "en-US": "### API Resources",
+      "zh-Hans": "### API 资源"
+    },
+    {
+      "en-US": "Keep API responses consistent with resources and pagination.",
+      "zh-Hans": "使用资源和分页保持 API 响应一致。"
+    },
+    {
+      "en-US": "```php\n$projects = Project::query()->active()->paginate(25);\n\nreturn response()->json([\n    'success' => true,\n    'data' => ProjectResource::collection($projects->items()),\n    'error' => null,\n    'meta' => [\n        'page' => $projects->currentPage(),\n        'per_page' => $projects->perPage(),\n        'total' => $projects->total(),\n    ],\n]);\n```",
+      "zh-Hans": "```php\n$projects = Project::query()->active()->paginate(25);\n\nreturn response()->json([\n    'success' => true,\n    'data' => ProjectResource::collection($projects->items()),\n    'error' => null,\n    'meta' => [\n        'page' => $projects->currentPage(),\n        'per_page' => $projects->perPage(),\n        'total' => $projects->total(),\n    ],\n]);\n```"
+    },
+    {
+      "en-US": "### Events, Jobs, and Queues",
+      "zh-Hans": "### 事件、任务和队列"
+    },
+    {
+      "en-US": "- Emit domain events for side effects (emails, analytics)\n- Use queued jobs for slow work (reports, exports, webhooks)\n- Prefer idempotent handlers with retries and backoff",
+      "zh-Hans": "* 为副作用（邮件、分析）触发领域事件\n* 使用队列任务处理耗时工作（报告、导出、Webhook）\n* 优先使用具有重试和退避机制的幂等处理器"
+    },
+    {
+      "en-US": "### Caching",
+      "zh-Hans": "### 缓存"
+    },
+    {
+      "en-US": "- Cache read-heavy endpoints and expensive queries\n- Invalidate caches on model events (created/updated/deleted)\n- Use tags when caching related data for easy invalidation",
+      "zh-Hans": "* 缓存读密集型端点和昂贵查询\n* 在模型事件（创建/更新/删除）时使缓存失效\n* 缓存相关数据时使用标签以便于失效"
+    },
+    {
+      "en-US": "### Configuration and Environments",
+      "zh-Hans": "### 配置与环境"
+    },
+    {
+      "en-US": "- Keep secrets in `.env` and config in `config/*.php`\n- Use per-environment config overrides and `config:cache` in production",
+      "zh-Hans": "* 将机密信息保存在 `.env` 中，将配置保存在 `config/*.php` 中\n* 使用按环境配置覆盖，并在生产环境中使用 `config:cache`"
+    }
+  ]
+}

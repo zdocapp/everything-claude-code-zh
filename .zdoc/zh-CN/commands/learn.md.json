@@ -1,0 +1,62 @@
+{
+  "sourceFile": "commands/learn.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# /learn - Extract Reusable Patterns",
+      "zh-Hans": "# /learn - 提取可重用模式"
+    },
+    {
+      "en-US": "Analyze the current session and extract any patterns worth saving as skills.",
+      "zh-Hans": "分析当前会话，提取值得保存为技能的任何模式。"
+    },
+    {
+      "en-US": "## Trigger",
+      "zh-Hans": "## 触发时机"
+    },
+    {
+      "en-US": "Run `/learn` at any point during a session when you've solved a non-trivial problem.",
+      "zh-Hans": "在会话期间的任何时刻，当你解决了一个非平凡问题时，运行 `/learn`。"
+    },
+    {
+      "en-US": "## What to Extract",
+      "zh-Hans": "## 提取内容"
+    },
+    {
+      "en-US": "Look for:",
+      "zh-Hans": "寻找："
+    },
+    {
+      "en-US": "1. **Error Resolution Patterns**\n   - What error occurred?\n   - What was the root cause?\n   - What fixed it?\n   - Is this reusable for similar errors?\n\n2. **Debugging Techniques**\n   - Non-obvious debugging steps\n   - Tool combinations that worked\n   - Diagnostic patterns\n\n3. **Workarounds**\n   - Library quirks\n   - API limitations\n   - Version-specific fixes\n\n4. **Project-Specific Patterns**\n   - Codebase conventions discovered\n   - Architecture decisions made\n   - Integration patterns",
+      "zh-Hans": "1. **错误解决模式**\n   * 出现了什么错误？\n   * 根本原因是什么？\n   * 什么方法修复了它？\n   * 这对解决类似错误是否可重用？\n\n2. **调试技术**\n   * 不明显的调试步骤\n   * 有效的工具组合\n   * 诊断模式\n\n3. **变通方法**\n   * 库的怪癖\n   * API 限制\n   * 特定版本的修复\n\n4. **项目特定模式**\n   * 发现的代码库约定\n   * 做出的架构决策\n   * 集成模式"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Create a skill file at `~/.claude/skills/learned/[pattern-name].md`:",
+      "zh-Hans": "在 `~/.claude/skills/learned/[pattern-name].md` 创建一个技能文件："
+    },
+    {
+      "en-US": "```markdown\n# [Descriptive Pattern Name]\n\n**Extracted:** [Date]\n**Context:** [Brief description of when this applies]\n\n## Problem\n[What problem this solves - be specific]\n\n## Solution\n[The pattern/technique/workaround]\n\n## Example\n[Code example if applicable]\n\n## When to Use\n[Trigger conditions - what should activate this skill]\n```",
+      "zh-Hans": "```markdown\n# [Descriptive Pattern Name]\n\n**Extracted:** [Date]\n**Context:** [Brief description of when this applies]\n\n## Problem\n[What problem this solves - be specific]\n\n## Solution\n[The pattern/technique/workaround]\n\n## Example\n[Code example if applicable]\n\n## When to Use\n[Trigger conditions - what should activate this skill]\n```"
+    },
+    {
+      "en-US": "## Process",
+      "zh-Hans": "## 流程"
+    },
+    {
+      "en-US": "1. Review the session for extractable patterns\n2. Identify the most valuable/reusable insight\n3. Draft the skill file\n4. Ask user to confirm before saving\n5. Save to `~/.claude/skills/learned/`",
+      "zh-Hans": "1. 回顾会话，寻找可提取的模式\n2. 识别最有价值/可重用的见解\n3. 起草技能文件\n4. 在保存前请用户确认\n5. 保存到 `~/.claude/skills/learned/`"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 注意事项"
+    },
+    {
+      "en-US": "- Don't extract trivial fixes (typos, simple syntax errors)\n- Don't extract one-time issues (specific API outages, etc.)\n- Focus on patterns that will save time in future sessions\n- Keep skills focused - one pattern per skill",
+      "zh-Hans": "* 不要提取琐碎的修复（拼写错误、简单的语法错误）\n* 不要提取一次性问题（特定的 API 中断等）\n* 专注于那些将在未来会话中节省时间的模式\n* 保持技能的专注性 - 一个技能对应一个模式"
+    }
+  ]
+}

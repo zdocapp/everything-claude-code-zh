@@ -1,0 +1,94 @@
+{
+  "sourceFile": "skills/visa-doc-translate/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: visa-doc-translate\ndescription: Translate visa application documents (images) to English and create a bilingual PDF with original and translation\n---",
+      "zh-Hans": "---\nname: visa-doc-translate\ndescription: 将签证申请文件（图片）翻译成英文，并创建包含原文和译文的双语PDF\n---"
+    },
+    {
+      "en-US": "You are helping translate visa application documents for visa applications.",
+      "zh-Hans": "您正在协助翻译用于签证申请的签证申请文件。"
+    },
+    {
+      "en-US": "## Instructions",
+      "zh-Hans": "## 说明"
+    },
+    {
+      "en-US": "When the user provides an image file path, AUTOMATICALLY execute the following steps WITHOUT asking for confirmation:",
+      "zh-Hans": "当用户提供图像文件路径时，**自动**执行以下步骤，**无需**请求确认："
+    },
+    {
+      "en-US": "1. **Image Conversion**: If the file is HEIC, convert it to PNG using `sips -s format png <input> --out <output>`\n\n2. **Image Rotation**:\n   - Check EXIF orientation data\n   - Automatically rotate the image based on EXIF data\n   - If EXIF orientation is 6, rotate 90 degrees counterclockwise\n   - Apply additional rotation as needed (test 180 degrees if document appears upside down)\n\n3. **OCR Text Extraction**:\n   - Try multiple OCR methods automatically:\n     - macOS Vision framework (preferred for macOS)\n     - EasyOCR (cross-platform, no tesseract required)\n     - Tesseract OCR (if available)\n   - Extract all text information from the document\n   - Identify document type (deposit certificate, employment certificate, retirement certificate, etc.)\n\n4. **Translation**:\n   - Translate all text content to English professionally\n   - Maintain the original document structure and format\n   - Use professional terminology appropriate for visa applications\n   - Keep proper names in original language with English in parentheses\n   - For Chinese names, use pinyin format (e.g., WU Zhengye)\n   - Preserve all numbers, dates, and amounts accurately\n\n5. **PDF Generation**:\n   - Create a Python script using PIL and reportlab libraries\n   - Page 1: Display the rotated original image, centered and scaled to fit A4 page\n   - Page 2: Display the English translation with proper formatting:\n     - Title centered and bold\n     - Content left-aligned with appropriate spacing\n     - Professional layout suitable for official documents\n   - Add a note at the bottom: \"This is a certified English translation of the original document\"\n   - Execute the script to generate the PDF\n\n6. **Output**: Create a PDF file named `<original_filename>_Translated.pdf` in the same directory",
+      "zh-Hans": "1. **图像转换**：如果文件是 HEIC 格式，使用 `sips -s format png <input> --out <output>` 将其转换为 PNG\n\n2. **图像旋转**：\n   * 检查 EXIF 方向数据\n   * 根据 EXIF 数据自动旋转图像\n   * 如果 EXIF 方向是 6，则逆时针旋转 90 度\n   * 根据需要应用额外旋转（如果文档看起来上下颠倒，则测试 180 度）\n\n3. **OCR 文本提取**：\n   * 自动尝试多种 OCR 方法：\n     * macOS Vision 框架（macOS 首选）\n     * EasyOCR（跨平台，无需 tesseract）\n     * Tesseract OCR（如果可用）\n   * 从文档中提取所有文本信息\n   * 识别文档类型（存款证明、在职证明、退休证明等）\n\n4. **翻译**：\n   * 专业地将所有文本内容翻译成英文\n   * 保持原始文档的结构和格式\n   * 使用适合签证申请的专业术语\n   * 保留专有名词的原始语言，并在括号内附上英文\n   * 对于中文姓名，使用拼音格式（例如，WU Zhengye）\n   * 准确保留所有数字、日期和金额\n\n5. **PDF 生成**：\n   * 使用 PIL 和 reportlab 库创建 Python 脚本\n   * 第 1 页：显示旋转后的原始图像，居中并缩放到适合 A4 页面\n   * 第 2 页：以适当格式显示英文翻译：\n     * 标题居中并加粗\n     * 内容左对齐，间距适当\n     * 适合官方文件的专业布局\n   * 在底部添加注释：\"This is a certified English translation of the original document\"\n   * 执行脚本以生成 PDF\n\n6. **输出**：在同一目录中创建名为 `<original_filename>_Translated.pdf` 的 PDF 文件"
+    },
+    {
+      "en-US": "## Supported Documents",
+      "zh-Hans": "## 支持的文档"
+    },
+    {
+      "en-US": "- Bank deposit certificates (存款证明)\n- Income certificates (收入证明)\n- Employment certificates (在职证明)\n- Retirement certificates (退休证明)\n- Property certificates (房产证明)\n- Business licenses (营业执照)\n- ID cards and passports\n- Other official documents",
+      "zh-Hans": "* 银行存款证明 (存款证明)\n* 收入证明 (收入证明)\n* 在职证明 (在职证明)\n* 退休证明 (退休证明)\n* 房产证明 (房产证明)\n* 营业执照 (营业执照)\n* 身份证和护照\n* 其他官方文件"
+    },
+    {
+      "en-US": "## Technical Implementation",
+      "zh-Hans": "## 技术实现"
+    },
+    {
+      "en-US": "### OCR Methods (tried in order)",
+      "zh-Hans": "### OCR 方法（按顺序尝试）"
+    },
+    {
+      "en-US": "1. **macOS Vision Framework** (macOS only):\n   ```python\n   import Vision\n   from Foundation import NSURL\n   ```\n\n2. **EasyOCR** (cross-platform):\n   ```bash\n   pip install easyocr\n   ```\n\n3. **Tesseract OCR** (if available):\n   ```bash\n   brew install tesseract tesseract-lang\n   pip install pytesseract\n   ```",
+      "zh-Hans": "1. **macOS Vision 框架**（仅限 macOS）：\n   ```python\n   import Vision\n   from Foundation import NSURL\n   ```\n\n2. **EasyOCR**（跨平台）：\n   ```bash\n   pip install easyocr\n   ```\n\n3. **Tesseract OCR**（如果可用）：\n   ```bash\n   brew install tesseract tesseract-lang\n   pip install pytesseract\n   ```"
+    },
+    {
+      "en-US": "### Required Python Libraries",
+      "zh-Hans": "### 必需的 Python 库"
+    },
+    {
+      "en-US": "```bash\npip install pillow reportlab\n```",
+      "zh-Hans": "```bash\npip install pillow reportlab\n```"
+    },
+    {
+      "en-US": "For macOS Vision framework:",
+      "zh-Hans": "对于 macOS Vision 框架："
+    },
+    {
+      "en-US": "```bash\npip install pyobjc-framework-Vision pyobjc-framework-Quartz\n```",
+      "zh-Hans": "```bash\npip install pyobjc-framework-Vision pyobjc-framework-Quartz\n```"
+    },
+    {
+      "en-US": "## Important Guidelines",
+      "zh-Hans": "## 重要指南"
+    },
+    {
+      "en-US": "- DO NOT ask for user confirmation at each step\n- Automatically determine the best rotation angle\n- Try multiple OCR methods if one fails\n- Ensure all numbers, dates, and amounts are accurately translated\n- Use clean, professional formatting\n- Complete the entire process and report the final PDF location",
+      "zh-Hans": "* **请勿**在每个步骤都要求用户确认\n* 自动确定最佳旋转角度\n* 如果一种 OCR 方法失败，请尝试多种方法\n* 确保所有数字、日期和金额都准确翻译\n* 使用简洁、专业的格式\n* 完成整个流程并报告最终 PDF 的位置"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```bash\n/visa-doc-translate RetirementCertificate.PNG\n/visa-doc-translate BankStatement.HEIC\n/visa-doc-translate EmploymentLetter.jpg\n```",
+      "zh-Hans": "```bash\n/visa-doc-translate RetirementCertificate.PNG\n/visa-doc-translate BankStatement.HEIC\n/visa-doc-translate EmploymentLetter.jpg\n```"
+    },
+    {
+      "en-US": "## Output Example",
+      "zh-Hans": "## 输出示例"
+    },
+    {
+      "en-US": "The skill will:",
+      "zh-Hans": "该技能将："
+    },
+    {
+      "en-US": "1. Extract text using available OCR method\n2. Translate to professional English\n3. Generate `<filename>_Translated.pdf` with:\n   - Page 1: Original document image\n   - Page 2: Professional English translation",
+      "zh-Hans": "1. 使用可用的 OCR 方法提取文本\n2. 翻译成专业英文\n3. 生成 `<filename>_Translated.pdf`，其中包含：\n   * 第 1 页：原始文档图像\n   * 第 2 页：专业的英文翻译"
+    },
+    {
+      "en-US": "Perfect for visa applications to Australia, USA, Canada, UK, and other countries requiring translated documents.",
+      "zh-Hans": "非常适合需要翻译文件的澳大利亚、美国、加拿大、英国及其他国家的签证申请。"
+    }
+  ]
+}

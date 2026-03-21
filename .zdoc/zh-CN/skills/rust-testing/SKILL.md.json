@@ -1,0 +1,266 @@
+{
+  "sourceFile": "skills/rust-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: rust-testing\ndescription: Rust testing patterns including unit tests, integration tests, async testing, property-based testing, mocking, and coverage. Follows TDD methodology.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: rust-testing\ndescription: Rust测试模式，包括单元测试、集成测试、异步测试、基于属性的测试、模拟和覆盖率。遵循TDD方法学。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Rust Testing Patterns",
+      "zh-Hans": "# Rust 测试模式"
+    },
+    {
+      "en-US": "Comprehensive Rust testing patterns for writing reliable, maintainable tests following TDD methodology.",
+      "zh-Hans": "遵循 TDD 方法论编写可靠、可维护测试的全面 Rust 测试模式。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Writing new Rust functions, methods, or traits\n- Adding test coverage to existing code\n- Creating benchmarks for performance-critical code\n- Implementing property-based tests for input validation\n- Following TDD workflow in Rust projects",
+      "zh-Hans": "* 编写新的 Rust 函数、方法或特征\n* 为现有代码添加测试覆盖率\n* 为性能关键代码创建基准测试\n* 为输入验证实现基于属性的测试\n* 在 Rust 项目中遵循 TDD 工作流"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "1. **Identify target code** — Find the function, trait, or module to test\n2. **Write a test** — Use `#[test]` in a `#[cfg(test)]` module, rstest for parameterized tests, or proptest for property-based tests\n3. **Mock dependencies** — Use mockall to isolate the unit under test\n4. **Run tests (RED)** — Verify the test fails with the expected error\n5. **Implement (GREEN)** — Write minimal code to pass\n6. **Refactor** — Improve while keeping tests green\n7. **Check coverage** — Use cargo-llvm-cov, target 80%+",
+      "zh-Hans": "1. **识别目标代码** — 找到要测试的函数、特征或模块\n2. **编写测试** — 在 `#[cfg(test)]` 模块中使用 `#[test]`，使用 rstest 进行参数化测试，或使用 proptest 进行基于属性的测试\n3. **模拟依赖项** — 使用 mockall 来隔离被测单元\n4. **运行测试 (RED)** — 验证测试是否按预期失败\n5. **实现 (GREEN)** — 编写最少代码以通过测试\n6. **重构** — 改进代码同时保持测试通过\n7. **检查覆盖率** — 使用 cargo-llvm-cov，目标 80% 以上"
+    },
+    {
+      "en-US": "## TDD Workflow for Rust",
+      "zh-Hans": "## Rust 的 TDD 工作流"
+    },
+    {
+      "en-US": "### The RED-GREEN-REFACTOR Cycle",
+      "zh-Hans": "### RED-GREEN-REFACTOR 循环"
+    },
+    {
+      "en-US": "```\nRED     → Write a failing test first\nGREEN   → Write minimal code to pass the test\nREFACTOR → Improve code while keeping tests green\nREPEAT  → Continue with next requirement\n```",
+      "zh-Hans": "```\nRED     → 先写一个失败的测试\nGREEN   → 编写最少代码使测试通过\nREFACTOR → 重构代码，同时保持测试通过\nREPEAT  → 继续下一个需求\n```"
+    },
+    {
+      "en-US": "### Step-by-Step TDD in Rust",
+      "zh-Hans": "### Rust 中的分步 TDD"
+    },
+    {
+      "en-US": "```rust\n// RED: Write test first, use todo!() as placeholder\npub fn add(a: i32, b: i32) -> i32 { todo!() }\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn test_add() { assert_eq!(add(2, 3), 5); }\n}\n// cargo test → panics at 'not yet implemented'\n```",
+      "zh-Hans": "```rust\n// RED: Write test first, use todo!() as placeholder\npub fn add(a: i32, b: i32) -> i32 { todo!() }\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    #[test]\n    fn test_add() { assert_eq!(add(2, 3), 5); }\n}\n// cargo test → panics at 'not yet implemented'\n```"
+    },
+    {
+      "en-US": "```rust\n// GREEN: Replace todo!() with minimal implementation\npub fn add(a: i32, b: i32) -> i32 { a + b }\n// cargo test → PASS, then REFACTOR while keeping tests green\n```",
+      "zh-Hans": "```rust\n// GREEN: Replace todo!() with minimal implementation\npub fn add(a: i32, b: i32) -> i32 { a + b }\n// cargo test → PASS, then REFACTOR while keeping tests green\n```"
+    },
+    {
+      "en-US": "## Unit Tests",
+      "zh-Hans": "## 单元测试"
+    },
+    {
+      "en-US": "### Module-Level Test Organization",
+      "zh-Hans": "### 模块级测试组织"
+    },
+    {
+      "en-US": "```rust\n// src/user.rs\npub struct User {\n    pub name: String,\n    pub email: String,\n}\n\nimpl User {\n    pub fn new(name: impl Into<String>, email: impl Into<String>) -> Result<Self, String> {\n        let email = email.into();\n        if !email.contains('@') {\n            return Err(format!(\"invalid email: {email}\"));\n        }\n        Ok(Self { name: name.into(), email })\n    }\n\n    pub fn display_name(&self) -> &str {\n        &self.name\n    }\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    #[test]\n    fn creates_user_with_valid_email() {\n        let user = User::new(\"Alice\", \"alice@example.com\").unwrap();\n        assert_eq!(user.display_name(), \"Alice\");\n        assert_eq!(user.email, \"alice@example.com\");\n    }\n\n    #[test]\n    fn rejects_invalid_email() {\n        let result = User::new(\"Bob\", \"not-an-email\");\n        assert!(result.is_err());\n        assert!(result.unwrap_err().contains(\"invalid email\"));\n    }\n}\n```",
+      "zh-Hans": "```rust\n// src/user.rs\npub struct User {\n    pub name: String,\n    pub email: String,\n}\n\nimpl User {\n    pub fn new(name: impl Into<String>, email: impl Into<String>) -> Result<Self, String> {\n        let email = email.into();\n        if !email.contains('@') {\n            return Err(format!(\"invalid email: {email}\"));\n        }\n        Ok(Self { name: name.into(), email })\n    }\n\n    pub fn display_name(&self) -> &str {\n        &self.name\n    }\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    #[test]\n    fn creates_user_with_valid_email() {\n        let user = User::new(\"Alice\", \"alice@example.com\").unwrap();\n        assert_eq!(user.display_name(), \"Alice\");\n        assert_eq!(user.email, \"alice@example.com\");\n    }\n\n    #[test]\n    fn rejects_invalid_email() {\n        let result = User::new(\"Bob\", \"not-an-email\");\n        assert!(result.is_err());\n        assert!(result.unwrap_err().contains(\"invalid email\"));\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Assertion Macros",
+      "zh-Hans": "### 断言宏"
+    },
+    {
+      "en-US": "```rust\nassert_eq!(2 + 2, 4);                                    // Equality\nassert_ne!(2 + 2, 5);                                    // Inequality\nassert!(vec![1, 2, 3].contains(&2));                     // Boolean\nassert_eq!(value, 42, \"expected 42 but got {value}\");    // Custom message\nassert!((0.1_f64 + 0.2 - 0.3).abs() < f64::EPSILON);   // Float comparison\n```",
+      "zh-Hans": "```rust\nassert_eq!(2 + 2, 4);                                    // Equality\nassert_ne!(2 + 2, 5);                                    // Inequality\nassert!(vec![1, 2, 3].contains(&2));                     // Boolean\nassert_eq!(value, 42, \"expected 42 but got {value}\");    // Custom message\nassert!((0.1_f64 + 0.2 - 0.3).abs() < f64::EPSILON);   // Float comparison\n```"
+    },
+    {
+      "en-US": "## Error and Panic Testing",
+      "zh-Hans": "## 错误与 Panic 测试"
+    },
+    {
+      "en-US": "### Testing `Result` Returns",
+      "zh-Hans": "### 测试 `Result` 返回值"
+    },
+    {
+      "en-US": "```rust\n#[test]\nfn parse_returns_error_for_invalid_input() {\n    let result = parse_config(\"}{invalid\");\n    assert!(result.is_err());\n\n    // Assert specific error variant\n    let err = result.unwrap_err();\n    assert!(matches!(err, ConfigError::ParseError(_)));\n}\n\n#[test]\nfn parse_succeeds_for_valid_input() -> Result<(), Box<dyn std::error::Error>> {\n    let config = parse_config(r#\"{\"port\": 8080}\"#)?;\n    assert_eq!(config.port, 8080);\n    Ok(()) // Test fails if any ? returns Err\n}\n```",
+      "zh-Hans": "```rust\n#[test]\nfn parse_returns_error_for_invalid_input() {\n    let result = parse_config(\"}{invalid\");\n    assert!(result.is_err());\n\n    // Assert specific error variant\n    let err = result.unwrap_err();\n    assert!(matches!(err, ConfigError::ParseError(_)));\n}\n\n#[test]\nfn parse_succeeds_for_valid_input() -> Result<(), Box<dyn std::error::Error>> {\n    let config = parse_config(r#\"{\"port\": 8080}\"#)?;\n    assert_eq!(config.port, 8080);\n    Ok(()) // Test fails if any ? returns Err\n}\n```"
+    },
+    {
+      "en-US": "### Testing Panics",
+      "zh-Hans": "### 测试 Panic"
+    },
+    {
+      "en-US": "```rust\n#[test]\n#[should_panic]\nfn panics_on_empty_input() {\n    process(&[]);\n}\n\n#[test]\n#[should_panic(expected = \"index out of bounds\")]\nfn panics_with_specific_message() {\n    let v: Vec<i32> = vec![];\n    let _ = v[0];\n}\n```",
+      "zh-Hans": "```rust\n#[test]\n#[should_panic]\nfn panics_on_empty_input() {\n    process(&[]);\n}\n\n#[test]\n#[should_panic(expected = \"index out of bounds\")]\nfn panics_with_specific_message() {\n    let v: Vec<i32> = vec![];\n    let _ = v[0];\n}\n```"
+    },
+    {
+      "en-US": "## Integration Tests",
+      "zh-Hans": "## 集成测试"
+    },
+    {
+      "en-US": "### File Structure",
+      "zh-Hans": "### 文件结构"
+    },
+    {
+      "en-US": "```text\nmy_crate/\n├── src/\n│   └── lib.rs\n├── tests/              # Integration tests\n│   ├── api_test.rs     # Each file is a separate test binary\n│   ├── db_test.rs\n│   └── common/         # Shared test utilities\n│       └── mod.rs\n```",
+      "zh-Hans": "```text\nmy_crate/\n├── src/\n│   └── lib.rs\n├── tests/              # 集成测试\n│   ├── api_test.rs     # 每个文件都是一个独立的测试二进制文件\n│   ├── db_test.rs\n│   └── common/         # 共享测试工具\n│       └── mod.rs\n```"
+    },
+    {
+      "en-US": "### Writing Integration Tests",
+      "zh-Hans": "### 编写集成测试"
+    },
+    {
+      "en-US": "```rust\n// tests/api_test.rs\nuse my_crate::{App, Config};\n\n#[test]\nfn full_request_lifecycle() {\n    let config = Config::test_default();\n    let app = App::new(config);\n\n    let response = app.handle_request(\"/health\");\n    assert_eq!(response.status, 200);\n    assert_eq!(response.body, \"OK\");\n}\n```",
+      "zh-Hans": "```rust\n// tests/api_test.rs\nuse my_crate::{App, Config};\n\n#[test]\nfn full_request_lifecycle() {\n    let config = Config::test_default();\n    let app = App::new(config);\n\n    let response = app.handle_request(\"/health\");\n    assert_eq!(response.status, 200);\n    assert_eq!(response.body, \"OK\");\n}\n```"
+    },
+    {
+      "en-US": "## Async Tests",
+      "zh-Hans": "## 异步测试"
+    },
+    {
+      "en-US": "### With Tokio",
+      "zh-Hans": "### 使用 Tokio"
+    },
+    {
+      "en-US": "```rust\n#[tokio::test]\nasync fn fetches_data_successfully() {\n    let client = TestClient::new().await;\n    let result = client.get(\"/data\").await;\n    assert!(result.is_ok());\n    assert_eq!(result.unwrap().items.len(), 3);\n}\n\n#[tokio::test]\nasync fn handles_timeout() {\n    use std::time::Duration;\n    let result = tokio::time::timeout(\n        Duration::from_millis(100),\n        slow_operation(),\n    ).await;\n\n    assert!(result.is_err(), \"should have timed out\");\n}\n```",
+      "zh-Hans": "```rust\n#[tokio::test]\nasync fn fetches_data_successfully() {\n    let client = TestClient::new().await;\n    let result = client.get(\"/data\").await;\n    assert!(result.is_ok());\n    assert_eq!(result.unwrap().items.len(), 3);\n}\n\n#[tokio::test]\nasync fn handles_timeout() {\n    use std::time::Duration;\n    let result = tokio::time::timeout(\n        Duration::from_millis(100),\n        slow_operation(),\n    ).await;\n\n    assert!(result.is_err(), \"should have timed out\");\n}\n```"
+    },
+    {
+      "en-US": "## Test Organization Patterns",
+      "zh-Hans": "## 测试组织模式"
+    },
+    {
+      "en-US": "### Parameterized Tests with `rstest`",
+      "zh-Hans": "### 使用 `rstest` 进行参数化测试"
+    },
+    {
+      "en-US": "```rust\nuse rstest::{rstest, fixture};\n\n#[rstest]\n#[case(\"hello\", 5)]\n#[case(\"\", 0)]\n#[case(\"rust\", 4)]\nfn test_string_length(#[case] input: &str, #[case] expected: usize) {\n    assert_eq!(input.len(), expected);\n}\n\n// Fixtures\n#[fixture]\nfn test_db() -> TestDb {\n    TestDb::new_in_memory()\n}\n\n#[rstest]\nfn test_insert(test_db: TestDb) {\n    test_db.insert(\"key\", \"value\");\n    assert_eq!(test_db.get(\"key\"), Some(\"value\".into()));\n}\n```",
+      "zh-Hans": "```rust\nuse rstest::{rstest, fixture};\n\n#[rstest]\n#[case(\"hello\", 5)]\n#[case(\"\", 0)]\n#[case(\"rust\", 4)]\nfn test_string_length(#[case] input: &str, #[case] expected: usize) {\n    assert_eq!(input.len(), expected);\n}\n\n// Fixtures\n#[fixture]\nfn test_db() -> TestDb {\n    TestDb::new_in_memory()\n}\n\n#[rstest]\nfn test_insert(test_db: TestDb) {\n    test_db.insert(\"key\", \"value\");\n    assert_eq!(test_db.get(\"key\"), Some(\"value\".into()));\n}\n```"
+    },
+    {
+      "en-US": "### Test Helpers",
+      "zh-Hans": "### 测试辅助函数"
+    },
+    {
+      "en-US": "```rust\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    /// Creates a test user with sensible defaults.\n    fn make_user(name: &str) -> User {\n        User::new(name, &format!(\"{name}@test.com\")).unwrap()\n    }\n\n    #[test]\n    fn user_display() {\n        let user = make_user(\"alice\");\n        assert_eq!(user.display_name(), \"alice\");\n    }\n}\n```",
+      "zh-Hans": "```rust\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    /// Creates a test user with sensible defaults.\n    fn make_user(name: &str) -> User {\n        User::new(name, &format!(\"{name}@test.com\")).unwrap()\n    }\n\n    #[test]\n    fn user_display() {\n        let user = make_user(\"alice\");\n        assert_eq!(user.display_name(), \"alice\");\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Property-Based Testing with `proptest`",
+      "zh-Hans": "## 使用 `proptest` 进行基于属性的测试"
+    },
+    {
+      "en-US": "### Basic Property Tests",
+      "zh-Hans": "### 基本属性测试"
+    },
+    {
+      "en-US": "```rust\nuse proptest::prelude::*;\n\nproptest! {\n    #[test]\n    fn encode_decode_roundtrip(input in \".*\") {\n        let encoded = encode(&input);\n        let decoded = decode(&encoded).unwrap();\n        assert_eq!(input, decoded);\n    }\n\n    #[test]\n    fn sort_preserves_length(mut vec in prop::collection::vec(any::<i32>(), 0..100)) {\n        let original_len = vec.len();\n        vec.sort();\n        assert_eq!(vec.len(), original_len);\n    }\n\n    #[test]\n    fn sort_produces_ordered_output(mut vec in prop::collection::vec(any::<i32>(), 0..100)) {\n        vec.sort();\n        for window in vec.windows(2) {\n            assert!(window[0] <= window[1]);\n        }\n    }\n}\n```",
+      "zh-Hans": "```rust\nuse proptest::prelude::*;\n\nproptest! {\n    #[test]\n    fn encode_decode_roundtrip(input in \".*\") {\n        let encoded = encode(&input);\n        let decoded = decode(&encoded).unwrap();\n        assert_eq!(input, decoded);\n    }\n\n    #[test]\n    fn sort_preserves_length(mut vec in prop::collection::vec(any::<i32>(), 0..100)) {\n        let original_len = vec.len();\n        vec.sort();\n        assert_eq!(vec.len(), original_len);\n    }\n\n    #[test]\n    fn sort_produces_ordered_output(mut vec in prop::collection::vec(any::<i32>(), 0..100)) {\n        vec.sort();\n        for window in vec.windows(2) {\n            assert!(window[0] <= window[1]);\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Custom Strategies",
+      "zh-Hans": "### 自定义策略"
+    },
+    {
+      "en-US": "```rust\nuse proptest::prelude::*;\n\nfn valid_email() -> impl Strategy<Value = String> {\n    (\"[a-z]{1,10}\", \"[a-z]{1,5}\")\n        .prop_map(|(user, domain)| format!(\"{user}@{domain}.com\"))\n}\n\nproptest! {\n    #[test]\n    fn accepts_valid_emails(email in valid_email()) {\n        assert!(User::new(\"Test\", &email).is_ok());\n    }\n}\n```",
+      "zh-Hans": "```rust\nuse proptest::prelude::*;\n\nfn valid_email() -> impl Strategy<Value = String> {\n    (\"[a-z]{1,10}\", \"[a-z]{1,5}\")\n        .prop_map(|(user, domain)| format!(\"{user}@{domain}.com\"))\n}\n\nproptest! {\n    #[test]\n    fn accepts_valid_emails(email in valid_email()) {\n        assert!(User::new(\"Test\", &email).is_ok());\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Mocking with `mockall`",
+      "zh-Hans": "## 使用 `mockall` 进行模拟"
+    },
+    {
+      "en-US": "### Trait-Based Mocking",
+      "zh-Hans": "### 基于特征的模拟"
+    },
+    {
+      "en-US": "```rust\nuse mockall::{automock, predicate::eq};\n\n#[automock]\ntrait UserRepository {\n    fn find_by_id(&self, id: u64) -> Option<User>;\n    fn save(&self, user: &User) -> Result<(), StorageError>;\n}\n\n#[test]\nfn service_returns_user_when_found() {\n    let mut mock = MockUserRepository::new();\n    mock.expect_find_by_id()\n        .with(eq(42))\n        .times(1)\n        .returning(|_| Some(User { id: 42, name: \"Alice\".into() }));\n\n    let service = UserService::new(Box::new(mock));\n    let user = service.get_user(42).unwrap();\n    assert_eq!(user.name, \"Alice\");\n}\n\n#[test]\nfn service_returns_none_when_not_found() {\n    let mut mock = MockUserRepository::new();\n    mock.expect_find_by_id()\n        .returning(|_| None);\n\n    let service = UserService::new(Box::new(mock));\n    assert!(service.get_user(99).is_none());\n}\n```",
+      "zh-Hans": "```rust\nuse mockall::{automock, predicate::eq};\n\n#[automock]\ntrait UserRepository {\n    fn find_by_id(&self, id: u64) -> Option<User>;\n    fn save(&self, user: &User) -> Result<(), StorageError>;\n}\n\n#[test]\nfn service_returns_user_when_found() {\n    let mut mock = MockUserRepository::new();\n    mock.expect_find_by_id()\n        .with(eq(42))\n        .times(1)\n        .returning(|_| Some(User { id: 42, name: \"Alice\".into() }));\n\n    let service = UserService::new(Box::new(mock));\n    let user = service.get_user(42).unwrap();\n    assert_eq!(user.name, \"Alice\");\n}\n\n#[test]\nfn service_returns_none_when_not_found() {\n    let mut mock = MockUserRepository::new();\n    mock.expect_find_by_id()\n        .returning(|_| None);\n\n    let service = UserService::new(Box::new(mock));\n    assert!(service.get_user(99).is_none());\n}\n```"
+    },
+    {
+      "en-US": "## Doc Tests",
+      "zh-Hans": "## 文档测试"
+    },
+    {
+      "en-US": "### Executable Documentation",
+      "zh-Hans": "### 可执行的文档"
+    },
+    {
+      "en-US": "```rust\n/// Adds two numbers together.\n///\n/// # Examples\n///\n/// ```\n/// use my_crate::add;\n///\n/// assert_eq!(add(2, 3), 5);\n/// assert_eq!(add(-1, 1), 0);\n/// ```\npub fn add(a: i32, b: i32) -> i32 {\n    a + b\n}\n\n/// Parses a config string.\n///\n/// # Errors\n///\n/// Returns `Err` if the input is not valid TOML.\n///\n/// ```no_run\n/// use my_crate::parse_config;\n///\n/// let config = parse_config(r#\"port = 8080\"#).unwrap();\n/// assert_eq!(config.port, 8080);\n/// ```\n///\n/// ```no_run\n/// use my_crate::parse_config;\n///\n/// assert!(parse_config(\"}{invalid\").is_err());\n/// ```\npub fn parse_config(input: &str) -> Result<Config, ParseError> {\n    todo!()\n}\n```",
+      "zh-Hans": "````rust\n/// Adds two numbers together.\n///\n/// # Examples\n///\n/// ```\n/// use my_crate::add;\n///\n/// assert_eq!(add(2, 3), 5);\n/// assert_eq!(add(-1, 1), 0);\n/// ```\npub fn add(a: i32, b: i32) -> i32 {\n    a + b\n}\n\n/// Parses a config string.\n///\n/// # Errors\n///\n/// Returns `Err` if the input is not valid TOML.\n///\n/// ```no_run\n/// use my_crate::parse_config;\n///\n/// let config = parse_config(r#\"port = 8080\"#).unwrap();\n/// assert_eq!(config.port, 8080);\n/// ```\n///\n/// ```no_run\n/// use my_crate::parse_config;\n///\n/// assert!(parse_config(\"}{invalid\").is_err());\n/// ```\npub fn parse_config(input: &str) -> Result<Config, ParseError> {\n    todo!()\n}\n````"
+    },
+    {
+      "en-US": "## Benchmarking with Criterion",
+      "zh-Hans": "## 使用 Criterion 进行基准测试"
+    },
+    {
+      "en-US": "```toml\n# Cargo.toml\n[dev-dependencies]\ncriterion = { version = \"0.5\", features = [\"html_reports\"] }\n\n[[bench]]\nname = \"benchmark\"\nharness = false\n```",
+      "zh-Hans": "```toml\n# Cargo.toml\n[dev-dependencies]\ncriterion = { version = \"0.5\", features = [\"html_reports\"] }\n\n[[bench]]\nname = \"benchmark\"\nharness = false\n```"
+    },
+    {
+      "en-US": "```rust\n// benches/benchmark.rs\nuse criterion::{black_box, criterion_group, criterion_main, Criterion};\n\nfn fibonacci(n: u64) -> u64 {\n    match n {\n        0 | 1 => n,\n        _ => fibonacci(n - 1) + fibonacci(n - 2),\n    }\n}\n\nfn bench_fibonacci(c: &mut Criterion) {\n    c.bench_function(\"fib 20\", |b| b.iter(|| fibonacci(black_box(20))));\n}\n\ncriterion_group!(benches, bench_fibonacci);\ncriterion_main!(benches);\n```",
+      "zh-Hans": "```rust\n// benches/benchmark.rs\nuse criterion::{black_box, criterion_group, criterion_main, Criterion};\n\nfn fibonacci(n: u64) -> u64 {\n    match n {\n        0 | 1 => n,\n        _ => fibonacci(n - 1) + fibonacci(n - 2),\n    }\n}\n\nfn bench_fibonacci(c: &mut Criterion) {\n    c.bench_function(\"fib 20\", |b| b.iter(|| fibonacci(black_box(20))));\n}\n\ncriterion_group!(benches, bench_fibonacci);\ncriterion_main!(benches);\n```"
+    },
+    {
+      "en-US": "## Test Coverage",
+      "zh-Hans": "## 测试覆盖率"
+    },
+    {
+      "en-US": "### Running Coverage",
+      "zh-Hans": "### 运行覆盖率"
+    },
+    {
+      "en-US": "```bash\n# Install: cargo install cargo-llvm-cov (or use taiki-e/install-action in CI)\ncargo llvm-cov                    # Summary\ncargo llvm-cov --html             # HTML report\ncargo llvm-cov --lcov > lcov.info # LCOV format for CI\ncargo llvm-cov --fail-under-lines 80  # Fail if below threshold\n```",
+      "zh-Hans": "```bash\n# Install: cargo install cargo-llvm-cov (or use taiki-e/install-action in CI)\ncargo llvm-cov                    # Summary\ncargo llvm-cov --html             # HTML report\ncargo llvm-cov --lcov > lcov.info # LCOV format for CI\ncargo llvm-cov --fail-under-lines 80  # Fail if below threshold\n```"
+    },
+    {
+      "en-US": "### Coverage Targets",
+      "zh-Hans": "### 覆盖率目标"
+    },
+    {
+      "en-US": "| Code Type | Target |\n|-----------|--------|\n| Critical business logic | 100% |\n| Public API | 90%+ |\n| General code | 80%+ |\n| Generated / FFI bindings | Exclude |",
+      "zh-Hans": "| 代码类型 | 目标 |\n|-----------|--------|\n| 关键业务逻辑 | 100% |\n| 公共 API | 90%+ |\n| 通用代码 | 80%+ |\n| 生成的 / FFI 绑定 | 排除 |"
+    },
+    {
+      "en-US": "## Testing Commands",
+      "zh-Hans": "## 测试命令"
+    },
+    {
+      "en-US": "```bash\ncargo test                        # Run all tests\ncargo test -- --nocapture         # Show println output\ncargo test test_name              # Run tests matching pattern\ncargo test --lib                  # Unit tests only\ncargo test --test api_test        # Integration tests only\ncargo test --doc                  # Doc tests only\ncargo test --no-fail-fast         # Don't stop on first failure\ncargo test -- --ignored           # Run ignored tests\n```",
+      "zh-Hans": "```bash\ncargo test                        # Run all tests\ncargo test -- --nocapture         # Show println output\ncargo test test_name              # Run tests matching pattern\ncargo test --lib                  # Unit tests only\ncargo test --test api_test        # Integration tests only\ncargo test --doc                  # Doc tests only\ncargo test --no-fail-fast         # Don't stop on first failure\ncargo test -- --ignored           # Run ignored tests\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "**DO:**",
+      "zh-Hans": "**应该做：**"
+    },
+    {
+      "en-US": "- Write tests FIRST (TDD)\n- Use `#[cfg(test)]` modules for unit tests\n- Test behavior, not implementation\n- Use descriptive test names that explain the scenario\n- Prefer `assert_eq!` over `assert!` for better error messages\n- Use `?` in tests that return `Result` for cleaner error output\n- Keep tests independent — no shared mutable state",
+      "zh-Hans": "* 先写测试 (TDD)\n* 使用 `#[cfg(test)]` 模块进行单元测试\n* 测试行为，而非实现\n* 使用描述性测试名称来解释场景\n* 为了更好的错误信息，优先使用 `assert_eq!` 而非 `assert!`\n* 在返回 `Result` 的测试中使用 `?` 以获得更清晰的错误输出\n* 保持测试独立 — 没有共享的可变状态"
+    },
+    {
+      "en-US": "**DON'T:**",
+      "zh-Hans": "**不应该做：**"
+    },
+    {
+      "en-US": "- Use `#[should_panic]` when you can test `Result::is_err()` instead\n- Mock everything — prefer integration tests when feasible\n- Ignore flaky tests — fix or quarantine them\n- Use `sleep()` in tests — use channels, barriers, or `tokio::time::pause()`\n- Skip error path testing",
+      "zh-Hans": "* 在可以测试 `Result::is_err()` 时使用 `#[should_panic]`\n* 模拟所有内容 — 在可行时优先考虑集成测试\n* 忽略不稳定的测试 — 修复或隔离它们\n* 在测试中使用 `sleep()` — 使用通道、屏障或 `tokio::time::pause()`\n* 跳过错误路径测试"
+    },
+    {
+      "en-US": "## CI Integration",
+      "zh-Hans": "## CI 集成"
+    },
+    {
+      "en-US": "```yaml\n# GitHub Actions\ntest:\n  runs-on: ubuntu-latest\n  steps:\n    - uses: actions/checkout@v4\n    - uses: dtolnay/rust-toolchain@stable\n      with:\n        components: clippy, rustfmt\n\n    - name: Check formatting\n      run: cargo fmt --check\n\n    - name: Clippy\n      run: cargo clippy -- -D warnings\n\n    - name: Run tests\n      run: cargo test\n\n    - uses: taiki-e/install-action@cargo-llvm-cov\n\n    - name: Coverage\n      run: cargo llvm-cov --fail-under-lines 80\n```",
+      "zh-Hans": "```yaml\n# GitHub Actions\ntest:\n  runs-on: ubuntu-latest\n  steps:\n    - uses: actions/checkout@v4\n    - uses: dtolnay/rust-toolchain@stable\n      with:\n        components: clippy, rustfmt\n\n    - name: Check formatting\n      run: cargo fmt --check\n\n    - name: Clippy\n      run: cargo clippy -- -D warnings\n\n    - name: Run tests\n      run: cargo test\n\n    - uses: taiki-e/install-action@cargo-llvm-cov\n\n    - name: Coverage\n      run: cargo llvm-cov --fail-under-lines 80\n```"
+    },
+    {
+      "en-US": "**Remember**: Tests are documentation. They show how your code is meant to be used. Write them clearly and keep them up to date.",
+      "zh-Hans": "**记住**：测试就是文档。它们展示了你的代码应如何使用。清晰编写并保持更新。"
+    }
+  ]
+}

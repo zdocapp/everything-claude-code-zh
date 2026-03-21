@@ -1,0 +1,110 @@
+{
+  "sourceFile": "rules/java/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.java\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.java\"\n---"
+    },
+    {
+      "en-US": "# Java Patterns",
+      "zh-Hans": "# Java 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Java-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/patterns.md](../common/patterns.md) 中的内容，增加了 Java 特有的部分。"
+    },
+    {
+      "en-US": "## Repository Pattern",
+      "zh-Hans": "## 仓储模式"
+    },
+    {
+      "en-US": "Encapsulate data access behind an interface:",
+      "zh-Hans": "将数据访问封装在接口之后："
+    },
+    {
+      "en-US": "```java\npublic interface OrderRepository {\n    Optional<Order> findById(Long id);\n    List<Order> findAll();\n    Order save(Order order);\n    void deleteById(Long id);\n}\n```",
+      "zh-Hans": "```java\npublic interface OrderRepository {\n    Optional<Order> findById(Long id);\n    List<Order> findAll();\n    Order save(Order order);\n    void deleteById(Long id);\n}\n```"
+    },
+    {
+      "en-US": "Concrete implementations handle storage details (JPA, JDBC, in-memory for tests).",
+      "zh-Hans": "具体的实现类处理存储细节（JPA、JDBC、用于测试的内存存储等）。"
+    },
+    {
+      "en-US": "## Service Layer",
+      "zh-Hans": "## 服务层"
+    },
+    {
+      "en-US": "Business logic in service classes; keep controllers and repositories thin:",
+      "zh-Hans": "业务逻辑放在服务类中；保持控制器和仓储层的精简："
+    },
+    {
+      "en-US": "```java\npublic class OrderService {\n    private final OrderRepository orderRepository;\n    private final PaymentGateway paymentGateway;\n\n    public OrderService(OrderRepository orderRepository, PaymentGateway paymentGateway) {\n        this.orderRepository = orderRepository;\n        this.paymentGateway = paymentGateway;\n    }\n\n    public OrderSummary placeOrder(CreateOrderRequest request) {\n        var order = Order.from(request);\n        paymentGateway.charge(order.total());\n        var saved = orderRepository.save(order);\n        return OrderSummary.from(saved);\n    }\n}\n```",
+      "zh-Hans": "```java\npublic class OrderService {\n    private final OrderRepository orderRepository;\n    private final PaymentGateway paymentGateway;\n\n    public OrderService(OrderRepository orderRepository, PaymentGateway paymentGateway) {\n        this.orderRepository = orderRepository;\n        this.paymentGateway = paymentGateway;\n    }\n\n    public OrderSummary placeOrder(CreateOrderRequest request) {\n        var order = Order.from(request);\n        paymentGateway.charge(order.total());\n        var saved = orderRepository.save(order);\n        return OrderSummary.from(saved);\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Constructor Injection",
+      "zh-Hans": "## 构造函数注入"
+    },
+    {
+      "en-US": "Always use constructor injection — never field injection:",
+      "zh-Hans": "始终使用构造函数注入 —— 绝不使用字段注入："
+    },
+    {
+      "en-US": "```java\n// GOOD — constructor injection (testable, immutable)\npublic class NotificationService {\n    private final EmailSender emailSender;\n\n    public NotificationService(EmailSender emailSender) {\n        this.emailSender = emailSender;\n    }\n}\n\n// BAD — field injection (untestable without reflection, requires framework magic)\npublic class NotificationService {\n    @Inject // or @Autowired\n    private EmailSender emailSender;\n}\n```",
+      "zh-Hans": "```java\n// GOOD — constructor injection (testable, immutable)\npublic class NotificationService {\n    private final EmailSender emailSender;\n\n    public NotificationService(EmailSender emailSender) {\n        this.emailSender = emailSender;\n    }\n}\n\n// BAD — field injection (untestable without reflection, requires framework magic)\npublic class NotificationService {\n    @Inject // or @Autowired\n    private EmailSender emailSender;\n}\n```"
+    },
+    {
+      "en-US": "## DTO Mapping",
+      "zh-Hans": "## DTO 映射"
+    },
+    {
+      "en-US": "Use records for DTOs. Map at service/controller boundaries:",
+      "zh-Hans": "使用记录（record）作为 DTO。在服务层/控制器边界进行映射："
+    },
+    {
+      "en-US": "```java\npublic record OrderResponse(Long id, String customer, BigDecimal total) {\n    public static OrderResponse from(Order order) {\n        return new OrderResponse(order.getId(), order.getCustomerName(), order.getTotal());\n    }\n}\n```",
+      "zh-Hans": "```java\npublic record OrderResponse(Long id, String customer, BigDecimal total) {\n    public static OrderResponse from(Order order) {\n        return new OrderResponse(order.getId(), order.getCustomerName(), order.getTotal());\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Builder Pattern",
+      "zh-Hans": "## 建造者模式"
+    },
+    {
+      "en-US": "Use for objects with many optional parameters:",
+      "zh-Hans": "用于具有多个可选参数的对象："
+    },
+    {
+      "en-US": "```java\npublic class SearchCriteria {\n    private final String query;\n    private final int page;\n    private final int size;\n    private final String sortBy;\n\n    private SearchCriteria(Builder builder) {\n        this.query = builder.query;\n        this.page = builder.page;\n        this.size = builder.size;\n        this.sortBy = builder.sortBy;\n    }\n\n    public static class Builder {\n        private String query = \"\";\n        private int page = 0;\n        private int size = 20;\n        private String sortBy = \"id\";\n\n        public Builder query(String query) { this.query = query; return this; }\n        public Builder page(int page) { this.page = page; return this; }\n        public Builder size(int size) { this.size = size; return this; }\n        public Builder sortBy(String sortBy) { this.sortBy = sortBy; return this; }\n        public SearchCriteria build() { return new SearchCriteria(this); }\n    }\n}\n```",
+      "zh-Hans": "```java\npublic class SearchCriteria {\n    private final String query;\n    private final int page;\n    private final int size;\n    private final String sortBy;\n\n    private SearchCriteria(Builder builder) {\n        this.query = builder.query;\n        this.page = builder.page;\n        this.size = builder.size;\n        this.sortBy = builder.sortBy;\n    }\n\n    public static class Builder {\n        private String query = \"\";\n        private int page = 0;\n        private int size = 20;\n        private String sortBy = \"id\";\n\n        public Builder query(String query) { this.query = query; return this; }\n        public Builder page(int page) { this.page = page; return this; }\n        public Builder size(int size) { this.size = size; return this; }\n        public Builder sortBy(String sortBy) { this.sortBy = sortBy; return this; }\n        public SearchCriteria build() { return new SearchCriteria(this); }\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Sealed Types for Domain Models",
+      "zh-Hans": "## 使用密封类型构建领域模型"
+    },
+    {
+      "en-US": "```java\npublic sealed interface PaymentResult permits PaymentSuccess, PaymentFailure {\n    record PaymentSuccess(String transactionId, BigDecimal amount) implements PaymentResult {}\n    record PaymentFailure(String errorCode, String message) implements PaymentResult {}\n}\n\n// Exhaustive handling (Java 21+)\nString message = switch (result) {\n    case PaymentSuccess s -> \"Paid: \" + s.transactionId();\n    case PaymentFailure f -> \"Failed: \" + f.errorCode();\n};\n```",
+      "zh-Hans": "```java\npublic sealed interface PaymentResult permits PaymentSuccess, PaymentFailure {\n    record PaymentSuccess(String transactionId, BigDecimal amount) implements PaymentResult {}\n    record PaymentFailure(String errorCode, String message) implements PaymentResult {}\n}\n\n// Exhaustive handling (Java 21+)\nString message = switch (result) {\n    case PaymentSuccess s -> \"Paid: \" + s.transactionId();\n    case PaymentFailure f -> \"Failed: \" + f.errorCode();\n};\n```"
+    },
+    {
+      "en-US": "## API Response Envelope",
+      "zh-Hans": "## API 响应封装"
+    },
+    {
+      "en-US": "Consistent API responses:",
+      "zh-Hans": "统一的 API 响应格式："
+    },
+    {
+      "en-US": "```java\npublic record ApiResponse<T>(boolean success, T data, String error) {\n    public static <T> ApiResponse<T> ok(T data) {\n        return new ApiResponse<>(true, data, null);\n    }\n    public static <T> ApiResponse<T> error(String message) {\n        return new ApiResponse<>(false, null, message);\n    }\n}\n```",
+      "zh-Hans": "```java\npublic record ApiResponse<T>(boolean success, T data, String error) {\n    public static <T> ApiResponse<T> ok(T data) {\n        return new ApiResponse<>(true, data, null);\n    }\n    public static <T> ApiResponse<T> error(String message) {\n        return new ApiResponse<>(false, null, message);\n    }\n}\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `springboot-patterns` for Spring Boot architecture patterns.\nSee skill: `jpa-patterns` for entity design and query optimization.",
+      "zh-Hans": "有关 Spring Boot 架构模式，请参见技能：`springboot-patterns`。\n有关实体设计和查询优化，请参见技能：`jpa-patterns`。"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "sourceFile": "rules/common/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Hooks System",
+      "zh-Hans": "# Hooks 系统"
+    },
+    {
+      "en-US": "## Hook Types",
+      "zh-Hans": "## Hook 类型"
+    },
+    {
+      "en-US": "- **PreToolUse**: Before tool execution (validation, parameter modification)\n- **PostToolUse**: After tool execution (auto-format, checks)\n- **Stop**: When session ends (final verification)",
+      "zh-Hans": "* **PreToolUse**：工具执行前（验证、参数修改）\n* **PostToolUse**：工具执行后（自动格式化、检查）\n* **Stop**：会话结束时（最终验证）"
+    },
+    {
+      "en-US": "## Auto-Accept Permissions",
+      "zh-Hans": "## 自动接受权限"
+    },
+    {
+      "en-US": "Use with caution:",
+      "zh-Hans": "谨慎使用："
+    },
+    {
+      "en-US": "- Enable for trusted, well-defined plans\n- Disable for exploratory work\n- Never use dangerously-skip-permissions flag\n- Configure `allowedTools` in `~/.claude.json` instead",
+      "zh-Hans": "* 为受信任、定义明确的计划启用\n* 为探索性工作禁用\n* 切勿使用 dangerously-skip-permissions 标志\n* 改为在 `~/.claude.json` 中配置 `allowedTools`"
+    },
+    {
+      "en-US": "## TodoWrite Best Practices",
+      "zh-Hans": "## TodoWrite 最佳实践"
+    },
+    {
+      "en-US": "Use TodoWrite tool to:",
+      "zh-Hans": "使用 TodoWrite 工具来："
+    },
+    {
+      "en-US": "- Track progress on multi-step tasks\n- Verify understanding of instructions\n- Enable real-time steering\n- Show granular implementation steps",
+      "zh-Hans": "* 跟踪多步骤任务的进度\n* 验证对指令的理解\n* 实现实时指导\n* 展示详细的实现步骤"
+    },
+    {
+      "en-US": "Todo list reveals:",
+      "zh-Hans": "待办事项列表可揭示："
+    },
+    {
+      "en-US": "- Out of order steps\n- Missing items\n- Extra unnecessary items\n- Wrong granularity\n- Misinterpreted requirements",
+      "zh-Hans": "* 步骤顺序错误\n* 缺失的项目\n* 额外不必要的项目\n* 粒度错误\n* 对需求的理解有误"
+    }
+  ]
+}

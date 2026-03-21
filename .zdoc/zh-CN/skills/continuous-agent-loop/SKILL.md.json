@@ -1,0 +1,54 @@
+{
+  "sourceFile": "skills/continuous-agent-loop/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: continuous-agent-loop\ndescription: Patterns for continuous autonomous agent loops with quality gates, evals, and recovery controls.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: continuous-agent-loop\ndescription: 具有质量门、评估和恢复控制的连续自主代理循环模式。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Continuous Agent Loop",
+      "zh-Hans": "# 持续代理循环"
+    },
+    {
+      "en-US": "This is the v1.8+ canonical loop skill name. It supersedes `autonomous-loops` while keeping compatibility for one release.",
+      "zh-Hans": "这是 v1.8+ 的规范循环技能名称。它在保持一个发布版本的兼容性的同时，取代了 `autonomous-loops`。"
+    },
+    {
+      "en-US": "## Loop Selection Flow",
+      "zh-Hans": "## 循环选择流程"
+    },
+    {
+      "en-US": "```text\nStart\n  |\n  +-- Need strict CI/PR control? -- yes --> continuous-pr\n  |                                    \n  +-- Need RFC decomposition? -- yes --> rfc-dag\n  |\n  +-- Need exploratory parallel generation? -- yes --> infinite\n  |\n  +-- default --> sequential\n```",
+      "zh-Hans": "```text\nStart\n  |\n  +-- 需要严格的 CI/PR 控制？ -- yes --> continuous-pr\n  |                                    \n  +-- 需要 RFC 分解？ -- yes --> rfc-dag\n  |\n  +-- 需要探索性并行生成？ -- yes --> infinite\n  |\n  +-- default --> sequential\n```"
+    },
+    {
+      "en-US": "## Combined Pattern",
+      "zh-Hans": "## 组合模式"
+    },
+    {
+      "en-US": "Recommended production stack:",
+      "zh-Hans": "推荐的生产栈："
+    },
+    {
+      "en-US": "1. RFC decomposition (`ralphinho-rfc-pipeline`)\n2. quality gates (`plankton-code-quality` + `/quality-gate`)\n3. eval loop (`eval-harness`)\n4. session persistence (`nanoclaw-repl`)",
+      "zh-Hans": "1. RFC 分解 (`ralphinho-rfc-pipeline`)\n2. 质量门 (`plankton-code-quality` + `/quality-gate`)\n3. 评估循环 (`eval-harness`)\n4. 会话持久化 (`nanoclaw-repl`)"
+    },
+    {
+      "en-US": "## Failure Modes",
+      "zh-Hans": "## 故障模式"
+    },
+    {
+      "en-US": "- loop churn without measurable progress\n- repeated retries with same root cause\n- merge queue stalls\n- cost drift from unbounded escalation",
+      "zh-Hans": "* 循环空转，没有可衡量的进展\n* 因相同根本原因而重复重试\n* 合并队列停滞\n* 无限制升级导致的成本漂移"
+    },
+    {
+      "en-US": "## Recovery",
+      "zh-Hans": "## 恢复"
+    },
+    {
+      "en-US": "- freeze loop\n- run `/harness-audit`\n- reduce scope to failing unit\n- replay with explicit acceptance criteria",
+      "zh-Hans": "* 冻结循环\n* 运行 `/harness-audit`\n* 将范围缩小到失败单元\n* 使用明确的验收标准重放"
+    }
+  ]
+}

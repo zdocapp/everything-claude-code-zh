@@ -1,0 +1,58 @@
+{
+  "sourceFile": "rules/php/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.json\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.json\"\n---"
+    },
+    {
+      "en-US": "# PHP Patterns",
+      "zh-Hans": "# PHP 设计模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with PHP specific content.",
+      "zh-Hans": "> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上，补充了 PHP 相关的内容。"
+    },
+    {
+      "en-US": "## Thin Controllers, Explicit Services",
+      "zh-Hans": "## 精炼控制器，明确服务"
+    },
+    {
+      "en-US": "- Keep controllers focused on transport: auth, validation, serialization, status codes.\n- Move business rules into application/domain services that are easy to test without HTTP bootstrapping.",
+      "zh-Hans": "* 保持控制器专注于传输层：认证、验证、序列化、状态码。\n* 将业务规则移至应用/领域服务中，这些服务无需 HTTP 引导即可轻松测试。"
+    },
+    {
+      "en-US": "## DTOs and Value Objects",
+      "zh-Hans": "## DTO 与值对象"
+    },
+    {
+      "en-US": "- Replace shape-heavy associative arrays with DTOs for requests, commands, and external API payloads.\n- Use value objects for money, identifiers, date ranges, and other constrained concepts.",
+      "zh-Hans": "* 对于请求、命令和外部 API 负载，用 DTO 替代结构复杂的关联数组。\n* 对于货币、标识符、日期范围和其他受约束的概念，使用值对象。"
+    },
+    {
+      "en-US": "## Dependency Injection",
+      "zh-Hans": "## 依赖注入"
+    },
+    {
+      "en-US": "- Depend on interfaces or narrow service contracts, not framework globals.\n- Pass collaborators through constructors so services are testable without service-locator lookups.",
+      "zh-Hans": "* 依赖于接口或精简的服务契约，而非框架全局变量。\n* 通过构造函数传递协作者，这样服务就无需依赖服务定位器查找，易于测试。"
+    },
+    {
+      "en-US": "## Boundaries",
+      "zh-Hans": "## 边界"
+    },
+    {
+      "en-US": "- Isolate ORM models from domain decisions when the model layer is doing more than persistence.\n- Wrap third-party SDKs behind small adapters so the rest of the codebase depends on your contract, not theirs.",
+      "zh-Hans": "* 当模型层职责超出持久化时，应将 ORM 模型与领域决策隔离。\n* 将第三方 SDK 封装在小型的适配器之后，使代码库的其余部分依赖于你的契约，而非它们的。"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `api-design` for endpoint conventions and response-shape guidance.\nSee skill: `laravel-patterns` for Laravel-specific architecture guidance.",
+      "zh-Hans": "参见技能：`api-design` 了解端点约定和响应格式指导。\n参见技能：`laravel-patterns` 了解 Laravel 特定架构指导。"
+    }
+  ]
+}

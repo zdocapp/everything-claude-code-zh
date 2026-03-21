@@ -1,0 +1,138 @@
+{
+  "sourceFile": "commands/save-session.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Save current session state to a dated file in ~/.claude/sessions/ so work can be resumed in a future session with full context.\n---",
+      "zh-Hans": "---\ndescription: 将当前会话状态保存到 ~/.claude/sessions/ 目录下带日期的文件中，以便在未来的会话中恢复完整上下文并继续工作。\n---"
+    },
+    {
+      "en-US": "# Save Session Command",
+      "zh-Hans": "# 保存会话命令"
+    },
+    {
+      "en-US": "Capture everything that happened in this session — what was built, what worked, what failed, what's left — and write it to a dated file so the next session can pick up exactly where this one left off.",
+      "zh-Hans": "捕获本次会话中发生的一切——构建了什么、什么成功了、什么失败了、还有哪些遗留事项——并将其写入一个带日期的文件，以便下次会话能从此处继续。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- End of a work session before closing Claude Code\n- Before hitting context limits (run this first, then start a fresh session)\n- After solving a complex problem you want to remember\n- Any time you need to hand off context to a future session",
+      "zh-Hans": "* 在关闭 Claude Code 之前，工作会话结束时\n* 在达到上下文限制之前（先运行此命令，然后开始一个新会话）\n* 解决了一个想要记住的复杂问题之后\n* 任何需要将上下文移交给未来会话的时候"
+    },
+    {
+      "en-US": "## Process",
+      "zh-Hans": "## 流程"
+    },
+    {
+      "en-US": "### Step 1: Gather context",
+      "zh-Hans": "### 步骤 1：收集上下文"
+    },
+    {
+      "en-US": "Before writing the file, collect:",
+      "zh-Hans": "在写入文件之前，收集："
+    },
+    {
+      "en-US": "- Read all files modified during this session (use git diff or recall from conversation)\n- Review what was discussed, attempted, and decided\n- Note any errors encountered and how they were resolved (or not)\n- Check current test/build status if relevant",
+      "zh-Hans": "* 读取本次会话期间修改的所有文件（使用 git diff 或从对话中回忆）\n* 回顾讨论、尝试和决定的内容\n* 记录遇到的任何错误及其解决方法（或未解决的情况）\n* 如果相关，检查当前的测试/构建状态"
+    },
+    {
+      "en-US": "### Step 2: Create the sessions folder if it doesn't exist",
+      "zh-Hans": "### 步骤 2：如果不存在则创建会话文件夹"
+    },
+    {
+      "en-US": "Create the canonical sessions folder in the user's Claude home directory:",
+      "zh-Hans": "在用户的 Claude 主目录中创建规范的会话文件夹："
+    },
+    {
+      "en-US": "```bash\nmkdir -p ~/.claude/sessions\n```",
+      "zh-Hans": "```bash\nmkdir -p ~/.claude/sessions\n```"
+    },
+    {
+      "en-US": "### Step 3: Write the session file",
+      "zh-Hans": "### 步骤 3：写入会话文件"
+    },
+    {
+      "en-US": "Create `~/.claude/sessions/YYYY-MM-DD-<short-id>-session.tmp`, using today's actual date and a short-id that satisfies the rules enforced by `SESSION_FILENAME_REGEX` in `session-manager.js`:",
+      "zh-Hans": "创建 `~/.claude/sessions/YYYY-MM-DD-<short-id>-session.tmp`，使用今天的实际日期和一个满足 `session-manager.js` 中 `SESSION_FILENAME_REGEX` 强制规则的短 ID："
+    },
+    {
+      "en-US": "- Allowed characters: lowercase `a-z`, digits `0-9`, hyphens `-`\n- Minimum length: 8 characters\n- No uppercase letters, no underscores, no spaces",
+      "zh-Hans": "* 允许的字符：小写 `a-z`，数字 `0-9`，连字符 `-`\n* 最小长度：8 个字符\n* 不允许大写字母、下划线、空格"
+    },
+    {
+      "en-US": "Valid examples: `abc123de`, `a1b2c3d4`, `frontend-worktree-1`\nInvalid examples: `ABC123de` (uppercase), `short` (under 8 chars), `test_id1` (underscore)",
+      "zh-Hans": "有效示例：`abc123de`、`a1b2c3d4`、`frontend-worktree-1`\n无效示例：`ABC123de`（大写）、`short`（少于 8 个字符）、`test_id1`（下划线）"
+    },
+    {
+      "en-US": "Full valid filename example: `2024-01-15-abc123de-session.tmp`",
+      "zh-Hans": "完整有效文件名示例：`2024-01-15-abc123de-session.tmp`"
+    },
+    {
+      "en-US": "The legacy filename `YYYY-MM-DD-session.tmp` is still valid, but new session files should prefer the short-id form to avoid same-day collisions.",
+      "zh-Hans": "旧文件名 `YYYY-MM-DD-session.tmp` 仍然有效，但新的会话文件应首选短 ID 形式，以避免同一天的冲突。"
+    },
+    {
+      "en-US": "### Step 4: Populate the file with all sections below",
+      "zh-Hans": "### 步骤 4：用以下所有部分填充文件"
+    },
+    {
+      "en-US": "Write every section honestly. Do not skip sections — write \"Nothing yet\" or \"N/A\" if a section genuinely has no content. An incomplete file is worse than an honest empty section.",
+      "zh-Hans": "诚实地写入每个部分。不要跳过任何部分——如果某个部分确实没有内容，则写“Nothing yet”或“N/A”。一个不完整的文件比诚实的空部分更糟糕。"
+    },
+    {
+      "en-US": "### Step 5: Show the file to the user",
+      "zh-Hans": "### 步骤 5：向用户展示文件"
+    },
+    {
+      "en-US": "After writing, display the full contents and ask:",
+      "zh-Hans": "写入后，显示完整内容并询问："
+    },
+    {
+      "en-US": "```\nSession saved to [actual resolved path to the session file]\n\nDoes this look accurate? Anything to correct or add before we close?\n```",
+      "zh-Hans": "```\n会话已保存至 [实际解析的会话文件路径]\n\n这看起来准确吗？在关闭之前，还有什么需要纠正或补充的吗？\n```"
+    },
+    {
+      "en-US": "Wait for confirmation. Make edits if requested.",
+      "zh-Hans": "等待确认。如果用户要求，进行编辑。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Session File Format",
+      "zh-Hans": "## 会话文件格式"
+    },
+    {
+      "en-US": "```markdown\n# Session: YYYY-MM-DD\n\n**Started:** [approximate time if known]\n**Last Updated:** [current time]\n**Project:** [project name or path]\n**Topic:** [one-line summary of what this session was about]\n\n---\n\n## What We Are Building\n\n[1-3 paragraphs describing the feature, bug fix, or task. Include enough\ncontext that someone with zero memory of this session can understand the goal.\nInclude: what it does, why it's needed, how it fits into the larger system.]\n\n---\n\n## What WORKED (with evidence)\n\n[List only things that are confirmed working. For each item include WHY you\nknow it works — test passed, ran in browser, Postman returned 200, etc.\nWithout evidence, move it to \"Not Tried Yet\" instead.]\n\n- **[thing that works]** — confirmed by: [specific evidence]\n- **[thing that works]** — confirmed by: [specific evidence]\n\nIf nothing is confirmed working yet: \"Nothing confirmed working yet — all approaches still in progress or untested.\"\n\n---\n\n## What Did NOT Work (and why)\n\n[This is the most important section. List every approach tried that failed.\nFor each failure write the EXACT reason so the next session doesn't retry it.\nBe specific: \"threw X error because Y\" is useful. \"didn't work\" is not.]\n\n- **[approach tried]** — failed because: [exact reason / error message]\n- **[approach tried]** — failed because: [exact reason / error message]\n\nIf nothing failed: \"No failed approaches yet.\"\n\n---\n\n## What Has NOT Been Tried Yet\n\n[Approaches that seem promising but haven't been attempted. Ideas from the\nconversation. Alternative solutions worth exploring. Be specific enough that\nthe next session knows exactly what to try.]\n\n- [approach / idea]\n- [approach / idea]\n\nIf nothing is queued: \"No specific untried approaches identified.\"\n\n---\n\n## Current State of Files\n\n[Every file touched this session. Be precise about what state each file is in.]\n\n| File              | Status         | Notes                      |\n| ----------------- | -------------- | -------------------------- |\n| `path/to/file.ts` | ✅ Complete    | [what it does]             |\n| `path/to/file.ts` | 🔄 In Progress | [what's done, what's left] |\n| `path/to/file.ts` | ❌ Broken      | [what's wrong]             |\n| `path/to/file.ts` | 🗒️ Not Started | [planned but not touched]  |\n\nIf no files were touched: \"No files modified this session.\"\n\n---\n\n## Decisions Made\n\n[Architecture choices, tradeoffs accepted, approaches chosen and why.\nThese prevent the next session from relitigating settled decisions.]\n\n- **[decision]** — reason: [why this was chosen over alternatives]\n\nIf no significant decisions: \"No major decisions made this session.\"\n\n---\n\n## Blockers & Open Questions\n\n[Anything unresolved that the next session needs to address or investigate.\nQuestions that came up but weren't answered. External dependencies waiting on.]\n\n- [blocker / open question]\n\nIf none: \"No active blockers.\"\n\n---\n\n## Exact Next Step\n\n[If known: The single most important thing to do when resuming. Be precise\nenough that resuming requires zero thinking about where to start.]\n\n[If not known: \"Next step not determined — review 'What Has NOT Been Tried Yet'\nand 'Blockers' sections to decide on direction before starting.\"]\n\n---\n\n## Environment & Setup Notes\n\n[Only fill this if relevant — commands needed to run the project, env vars\nrequired, services that need to be running, etc. Skip if standard setup.]\n\n[If none: omit this section entirely.]\n```",
+      "zh-Hans": "```markdown\n# 会话：YYYY-MM-DD\n\n**开始时间：** [若已知大致时间]\n**最后更新：** [当前时间]\n**项目：** [项目名称或路径]\n**主题：** [关于本次会话的一行摘要]\n\n---\n\n## 正在构建的内容\n\n[1-3段文字，描述功能、错误修复或任务。包含足够的背景信息，让对此会话毫无记忆的人也能理解目标。包含：它做什么、为什么需要它、它如何融入更大的系统。]\n\n---\n\n## 已确认有效的工作（附证据）\n\n[仅列出已确认有效的事项。对于每个事项，说明你如何知道它有效——测试通过、在浏览器中运行、Postman 返回 200 等。没有证据的，请移至\"尚未尝试\"部分。]\n\n- **[有效的事项]** — 确认依据：[具体证据]\n- **[有效的事项]** — 确认依据：[具体证据]\n\n如果尚无任何事项确认有效：\"尚无确认有效的事项——所有方法仍在进行中或未测试。\"\n\n---\n\n## 无效的事项（及原因）\n\n[这是最重要的部分。列出所有尝试过但失败的方法。对于每个失败，写出确切原因，以便下次会话不再重试。要具体：\"因 Y 而抛出 X 错误\"是有用的。\"无效\"是无用的。]\n\n- **[尝试过的方法]** — 失败原因：[确切原因 / 错误信息]\n- **[尝试过的方法]** — 失败原因：[确切原因 / 错误信息]\n\n如果无失败事项：\"尚无失败的方法。\"\n\n---\n\n## 尚未尝试的事项\n\n[看起来有希望但尚未尝试的方法。对话中产生的想法。值得探索的替代方案。描述要足够具体，以便下次会话确切知道要尝试什么。]\n\n- [方法 / 想法]\n- [方法 / 想法]\n\n如果无待办事项：\"未确定具体的待尝试方法。\"\n\n---\n\n## 文件当前状态\n\n[本次会话中修改过的每个文件。准确说明每个文件的状态。]\n\n| 文件              | 状态           | 备注                         |\n| ----------------- | -------------- | ---------------------------- |\n| `path/to/file.ts` | ✅ 完成        | [其作用]                     |\n| `path/to/file.ts` | 🔄 进行中      | [已完成什么，剩余什么]       |\n| `path/to/file.ts` | ❌ 损坏        | [问题所在]                   |\n| `path/to/file.ts` | 🗒️ 未开始      | [计划但尚未接触]             |\n\n如果未修改任何文件：\"本次会话未修改任何文件。\"\n\n---\n\n## 已作出的决策\n\n[架构选择、接受的权衡、选择的方法及其原因。这些可防止下次会话重新讨论已确定的决策。]\n\n- **[决策]** — 原因：[选择此方案而非其他方案的原因]\n\n如果无重大决策：\"本次会话未作出重大决策。\"\n\n---\n\n## 阻碍与待解决问题\n\n[任何未解决、需要下次会话处理或调查的事项。出现但未解答的问题。等待中的外部依赖。]\n\n- [阻碍 / 待解决问题]\n\n如果无：\"无当前阻碍。\"\n\n---\n\n## 确切下一步\n\n[若已知：恢复工作时最重要的单件事项。描述要足够精确，使得恢复工作时无需思考从何处开始。]\n\n[若未知：\"下一步未确定——在开始前，请查看'尚未尝试的事项'和'阻碍'部分以决定方向。\"]\n\n---\n\n## 环境与设置说明\n\n[仅在相关时填写——运行项目所需的命令、所需的环境变量、需要运行的服务等。若为标准设置，请跳过。]\n\n[若无：请完全省略此部分。]\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Example Output",
+      "zh-Hans": "## 示例输出"
+    },
+    {
+      "en-US": "```markdown\n# Session: 2024-01-15\n\n**Started:** ~2pm\n**Last Updated:** 5:30pm\n**Project:** my-app\n**Topic:** Building JWT authentication with httpOnly cookies\n\n---\n\n## What We Are Building\n\nUser authentication system for the Next.js app. Users register with email/password,\nreceive a JWT stored in an httpOnly cookie (not localStorage), and protected routes\ncheck for a valid token via middleware. The goal is session persistence across browser\nrefreshes without exposing the token to JavaScript.\n\n---\n\n## What WORKED (with evidence)\n\n- **`/api/auth/register` endpoint** — confirmed by: Postman POST returns 200 with user\n  object, row visible in Supabase dashboard, bcrypt hash stored correctly\n- **JWT generation in `lib/auth.ts`** — confirmed by: unit test passes\n  (`npm test -- auth.test.ts`), decoded token at jwt.io shows correct payload\n- **Password hashing** — confirmed by: `bcrypt.compare()` returns true in test\n\n---\n\n## What Did NOT Work (and why)\n\n- **Next-Auth library** — failed because: conflicts with our custom Prisma adapter,\n  threw \"Cannot use adapter with credentials provider in this configuration\" on every\n  request. Not worth debugging — too opinionated for our setup.\n- **Storing JWT in localStorage** — failed because: SSR renders happen before\n  localStorage is available, caused React hydration mismatch error on every page load.\n  This approach is fundamentally incompatible with Next.js SSR.\n\n---\n\n## What Has NOT Been Tried Yet\n\n- Store JWT as httpOnly cookie in the login route response (most likely solution)\n- Use `cookies()` from `next/headers` to read token in server components\n- Write middleware.ts to protect routes by checking cookie existence\n\n---\n\n## Current State of Files\n\n| File                             | Status         | Notes                                           |\n| -------------------------------- | -------------- | ----------------------------------------------- |\n| `app/api/auth/register/route.ts` | ✅ Complete    | Works, tested                                   |\n| `app/api/auth/login/route.ts`    | 🔄 In Progress | Token generates but not setting cookie yet      |\n| `lib/auth.ts`                    | ✅ Complete    | JWT helpers, all tested                         |\n| `middleware.ts`                  | 🗒️ Not Started | Route protection, needs cookie read logic first |\n| `app/login/page.tsx`             | 🗒️ Not Started | UI not started                                  |\n\n---\n\n## Decisions Made\n\n- **httpOnly cookie over localStorage** — reason: prevents XSS token theft, works with SSR\n- **Custom auth over Next-Auth** — reason: Next-Auth conflicts with our Prisma setup, not worth the fight\n\n---\n\n## Blockers & Open Questions\n\n- Does `cookies().set()` work inside a Route Handler or only in Server Actions? Need to verify.\n\n---\n\n## Exact Next Step\n\nIn `app/api/auth/login/route.ts`, after generating the JWT, set it as an httpOnly\ncookie using `cookies().set('token', jwt, { httpOnly: true, secure: true, sameSite: 'strict' })`.\nThen test with Postman — the response should include a `Set-Cookie` header.\n```",
+      "zh-Hans": "```markdown\n# 会话：2024-01-15\n\n**开始时间：** ~下午2点\n**最后更新：** 下午5:30\n**项目：** my-app\n**主题：** 使用 httpOnly cookies 构建 JWT 认证\n\n---\n\n## 我们正在构建什么\n\n为 Next.js 应用构建用户认证系统。用户使用电子邮件/密码注册，收到存储在 httpOnly cookie（而非 localStorage）中的 JWT，受保护的路由通过中间件检查有效的令牌。目标是在浏览器刷新时保持会话持久性，同时不将令牌暴露给 JavaScript。\n\n---\n\n## 哪些工作有效（附证据）\n\n- **`/api/auth/register` 端点** — 确认依据：Postman POST 请求返回 200 并包含用户对象，Supabase 仪表板中可见行记录，bcrypt 哈希正确存储\n- **在 `lib/auth.ts` 中生成 JWT** — 确认依据：单元测试通过 (`npm test -- auth.test.ts`)，在 jwt.io 解码的令牌显示正确的负载\n- **密码哈希** — 确认依据：`bcrypt.compare()` 在测试中返回 true\n\n---\n\n## 哪些工作无效（及原因）\n\n- **Next-Auth 库** — 失败原因：与我们的自定义 Prisma 适配器冲突，每次请求都抛出“无法在此配置中将适配器与凭据提供程序一起使用”。不值得调试 — 对我们的设置来说过于固执己见。\n- **将 JWT 存储在 localStorage 中** — 失败原因：SSR 渲染发生在 localStorage 可用之前，导致每次页面加载都出现 React 水合不匹配错误。此方法从根本上与 Next.js SSR 不兼容。\n\n---\n\n## 尚未尝试的事项\n\n- 在登录路由响应中将 JWT 存储为 httpOnly cookie（最可能的解决方案）\n- 使用 `cookies()` 从 `next/headers` 中读取服务器组件中的令牌\n- 编写 middleware.ts 通过检查 cookie 是否存在来保护路由\n\n---\n\n## 文件当前状态\n\n| 文件                             | 状态           | 备注                                           |\n| -------------------------------- | -------------- | ----------------------------------------------- |\n| `app/api/auth/register/route.ts` | ✅ 已完成    | 工作正常，已测试                                   |\n| `app/api/auth/login/route.ts`    | 🔄 进行中 | 令牌已生成但尚未设置 cookie      |\n| `lib/auth.ts`                    | ✅ 已完成    | JWT 辅助函数，全部已测试                         |\n| `middleware.ts`                  | 🗒️ 未开始 | 路由保护，需要先实现 cookie 读取逻辑 |\n| `app/login/page.tsx`             | 🗒️ 未开始 | UI 尚未开始                                  |\n\n---\n\n## 已做出的决策\n\n- **选择 httpOnly cookie 而非 localStorage** — 原因：防止 XSS 令牌窃取，与 SSR 兼容\n- **选择自定义认证而非 Next-Auth** — 原因：Next-Auth 与我们的 Prisma 设置冲突，不值得折腾\n\n---\n\n## 阻碍与未决问题\n\n- `cookies().set()` 在路由处理器中有效，还是仅在服务器操作中有效？需要验证。\n\n---\n\n## 确切下一步\n\n在 `app/api/auth/login/route.ts` 中，生成 JWT 后，使用 `cookies().set('token', jwt, { httpOnly: true, secure: true, sameSite: 'strict' })` 将其设置为 httpOnly cookie。\n然后用 Postman 测试 — 响应应包含一个 `Set-Cookie` 头。\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 注意事项"
+    },
+    {
+      "en-US": "- Each session gets its own file — never append to a previous session's file\n- The \"What Did NOT Work\" section is the most critical — future sessions will blindly retry failed approaches without it\n- If the user asks to save mid-session (not just at the end), save what's known so far and mark in-progress items clearly\n- The file is meant to be read by Claude at the start of the next session via `/resume-session`\n- Use the canonical global session store: `~/.claude/sessions/`\n- Prefer the short-id filename form (`YYYY-MM-DD-<short-id>-session.tmp`) for any new session file",
+      "zh-Hans": "* 每个会话都有其自己的文件——切勿追加到先前会话的文件中\n* “什么没有成功”部分是最关键的——没有它，未来的会话将盲目地重试失败的方法\n* 如果用户要求中途保存会话（而不仅仅是在结束时），则保存目前已知的内容，并清楚地标记进行中的项目\n* 该文件旨在通过 `/resume-session` 在下次会话开始时由 Claude 读取\n* 使用规范的全局会话存储：`~/.claude/sessions/`\n* 对于任何新的会话文件，首选短 ID 文件名形式（`YYYY-MM-DD-<short-id>-session.tmp`）"
+    }
+  ]
+}

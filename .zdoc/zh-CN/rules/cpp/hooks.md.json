@@ -1,0 +1,38 @@
+{
+  "sourceFile": "rules/cpp/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---"
+    },
+    {
+      "en-US": "# C++ Hooks",
+      "zh-Hans": "# C++ 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with C++ specific content.",
+      "zh-Hans": "> 本文档基于 [common/hooks.md](../common/hooks.md) 扩展了 C++ 相关内容。"
+    },
+    {
+      "en-US": "## Build Hooks",
+      "zh-Hans": "## 构建钩子"
+    },
+    {
+      "en-US": "Run these checks before committing C++ changes:",
+      "zh-Hans": "在提交 C++ 更改前运行以下检查："
+    },
+    {
+      "en-US": "```bash\n# Format check\nclang-format --dry-run --Werror src/*.cpp src/*.hpp\n\n# Static analysis\nclang-tidy src/*.cpp -- -std=c++17\n\n# Build\ncmake --build build\n\n# Tests\nctest --test-dir build --output-on-failure\n```",
+      "zh-Hans": "```bash\n# Format check\nclang-format --dry-run --Werror src/*.cpp src/*.hpp\n\n# Static analysis\nclang-tidy src/*.cpp -- -std=c++17\n\n# Build\ncmake --build build\n\n# Tests\nctest --test-dir build --output-on-failure\n```"
+    },
+    {
+      "en-US": "## Recommended CI Pipeline",
+      "zh-Hans": "## 推荐的 CI 流水线"
+    },
+    {
+      "en-US": "1. **clang-format** — formatting check\n2. **clang-tidy** — static analysis\n3. **cppcheck** — additional analysis\n4. **cmake build** — compilation\n5. **ctest** — test execution with sanitizers",
+      "zh-Hans": "1. **clang-format** — 代码格式化检查\n2. **clang-tidy** — 静态分析\n3. **cppcheck** — 补充分析\n4. **cmake build** — 编译\n5. **ctest** — 使用清理器执行测试"
+    }
+  ]
+}

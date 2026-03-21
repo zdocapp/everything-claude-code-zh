@@ -1,0 +1,106 @@
+{
+  "sourceFile": "commands/kotlin-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Comprehensive Kotlin code review for idiomatic patterns, null safety, coroutine safety, and security. Invokes the kotlin-reviewer agent.\n---",
+      "zh-Hans": "---\ndescription: 全面的Kotlin代码审查，涵盖惯用模式、空安全、协程安全和安全性。调用kotlin-reviewer代理。\n---"
+    },
+    {
+      "en-US": "# Kotlin Code Review",
+      "zh-Hans": "# Kotlin 代码审查"
+    },
+    {
+      "en-US": "This command invokes the **kotlin-reviewer** agent for comprehensive Kotlin-specific code review.",
+      "zh-Hans": "此命令调用 **kotlin-reviewer** 代理进行全面的 Kotlin 专项代码审查。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的功能"
+    },
+    {
+      "en-US": "1. **Identify Kotlin Changes**: Find modified `.kt` and `.kts` files via `git diff`\n2. **Run Build & Static Analysis**: Execute `./gradlew build`, `detekt`, `ktlintCheck`\n3. **Security Scan**: Check for SQL injection, command injection, hardcoded secrets\n4. **Null Safety Review**: Analyze `!!` usage, platform type handling, unsafe casts\n5. **Coroutine Review**: Check structured concurrency, dispatcher usage, cancellation\n6. **Generate Report**: Categorize issues by severity",
+      "zh-Hans": "1. **识别 Kotlin 变更**：通过 `git diff` 查找修改过的 `.kt` 和 `.kts` 文件\n2. **运行构建与静态分析**：执行 `./gradlew build`、`detekt`、`ktlintCheck`\n3. **安全扫描**：检查 SQL 注入、命令注入、硬编码的密钥\n4. **空安全审查**：分析 `!!` 的使用、平台类型处理、不安全的转换\n5. **协程审查**：检查结构化并发、调度器使用、取消操作\n6. **生成报告**：按严重性对问题分类"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "Use `/kotlin-review` when:",
+      "zh-Hans": "在以下情况使用 `/kotlin-review`："
+    },
+    {
+      "en-US": "- After writing or modifying Kotlin code\n- Before committing Kotlin changes\n- Reviewing pull requests with Kotlin code\n- Onboarding to a new Kotlin codebase\n- Learning idiomatic Kotlin patterns",
+      "zh-Hans": "* 编写或修改 Kotlin 代码后\n* 提交 Kotlin 变更前\n* 审查包含 Kotlin 代码的拉取请求时\n* 接手新的 Kotlin 代码库时\n* 学习 Kotlin 惯用模式时"
+    },
+    {
+      "en-US": "## Review Categories",
+      "zh-Hans": "## 审查类别"
+    },
+    {
+      "en-US": "### CRITICAL (Must Fix)",
+      "zh-Hans": "### 严重（必须修复）"
+    },
+    {
+      "en-US": "- SQL/Command injection vulnerabilities\n- Force-unwrap `!!` without justification\n- Platform type null safety violations\n- GlobalScope usage (structured concurrency violation)\n- Hardcoded credentials\n- Unsafe deserialization",
+      "zh-Hans": "* SQL/命令注入漏洞\n* 无正当理由强制解包 `!!`\n* 平台类型空安全违规\n* 使用 GlobalScope（违反结构化并发）\n* 硬编码的凭证\n* 不安全的反序列化"
+    },
+    {
+      "en-US": "### HIGH (Should Fix)",
+      "zh-Hans": "### 高（应该修复）"
+    },
+    {
+      "en-US": "- Mutable state where immutable suffices\n- Blocking calls inside coroutine context\n- Missing cancellation checks in long loops\n- Non-exhaustive `when` on sealed types\n- Large functions (>50 lines)\n- Deep nesting (>4 levels)",
+      "zh-Hans": "* 可变状态，而不可变状态即可满足\n* 在协程上下文中进行阻塞调用\n* 长循环中缺少取消检查\n* 对密封类型使用非穷举的 `when`\n* 函数过大（>50 行）\n* 嵌套过深（>4 层）"
+    },
+    {
+      "en-US": "### MEDIUM (Consider)",
+      "zh-Hans": "### 中（考虑修复）"
+    },
+    {
+      "en-US": "- Non-idiomatic Kotlin (Java-style patterns)\n- Missing trailing commas\n- Scope function misuse or nesting\n- Missing sequence for large collection chains\n- Redundant explicit types",
+      "zh-Hans": "* 非 Kotlin 惯用写法（Java 风格模式）\n* 缺少尾随逗号\n* 误用或嵌套作用域函数\n* 大型集合链中缺少序列化\n* 冗余的显式类型声明"
+    },
+    {
+      "en-US": "## Automated Checks Run",
+      "zh-Hans": "## 运行的自动化检查"
+    },
+    {
+      "en-US": "```bash\n# Build check\n./gradlew build\n\n# Static analysis\n./gradlew detekt\n\n# Formatting check\n./gradlew ktlintCheck\n\n# Tests\n./gradlew test\n```",
+      "zh-Hans": "```bash\n# Build check\n./gradlew build\n\n# Static analysis\n./gradlew detekt\n\n# Formatting check\n./gradlew ktlintCheck\n\n# Tests\n./gradlew test\n```"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "````text\nUser: /kotlin-review\n\nAgent:\n# Kotlin Code Review Report\n\n## Files Reviewed\n- src/main/kotlin/com/example/service/UserService.kt (modified)\n- src/main/kotlin/com/example/routes/UserRoutes.kt (modified)\n\n## Static Analysis Results\n✓ Build: Successful\n✓ detekt: No issues\n⚠ ktlint: 2 formatting warnings\n\n## Issues Found\n\n[CRITICAL] Force-Unwrap Null Safety\nFile: src/main/kotlin/com/example/service/UserService.kt:28\nIssue: Using !! on nullable repository result\n```kotlin\nval user = repository.findById(id)!!  // NPE risk\n```\nFix: Use safe call with error handling\n```kotlin\nval user = repository.findById(id)\n    ?: throw UserNotFoundException(\"User $id not found\")\n```\n\n[HIGH] GlobalScope Usage\nFile: src/main/kotlin/com/example/routes/UserRoutes.kt:45\nIssue: Using GlobalScope breaks structured concurrency\n```kotlin\nGlobalScope.launch {\n    notificationService.sendWelcome(user)\n}\n```\nFix: Use the call's coroutine scope\n```kotlin\nlaunch {\n    notificationService.sendWelcome(user)\n}\n```\n\n## Summary\n- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 0\n\nRecommendation: ❌ Block merge until CRITICAL issue is fixed\n````",
+      "zh-Hans": "````text\nUser: /kotlin-review\n\nAgent:\n# Kotlin Code Review Report\n\n## Files Reviewed\n- src/main/kotlin/com/example/service/UserService.kt (modified)\n- src/main/kotlin/com/example/routes/UserRoutes.kt (modified)\n\n## Static Analysis Results\n✓ Build: Successful\n✓ detekt: No issues\n⚠ ktlint: 2 formatting warnings\n\n## Issues Found\n\n[CRITICAL] Force-Unwrap Null Safety\nFile: src/main/kotlin/com/example/service/UserService.kt:28\nIssue: Using !! on nullable repository result\n```kotlin\nval user = repository.findById(id)!!  // NPE risk\n```\nFix: Use safe call with error handling\n```kotlin\nval user = repository.findById(id)\n    ?: throw UserNotFoundException(\"User $id not found\")\n```\n\n[HIGH] GlobalScope Usage\nFile: src/main/kotlin/com/example/routes/UserRoutes.kt:45\nIssue: Using GlobalScope breaks structured concurrency\n```kotlin\nGlobalScope.launch {\n    notificationService.sendWelcome(user)\n}\n```\nFix: Use the call's coroutine scope\n```kotlin\nlaunch {\n    notificationService.sendWelcome(user)\n}\n```\n\n## Summary\n- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 0\n\nRecommendation: ❌ Block merge until CRITICAL issue is fixed\n````"
+    },
+    {
+      "en-US": "## Approval Criteria",
+      "zh-Hans": "## 批准标准"
+    },
+    {
+      "en-US": "| Status | Condition |\n|--------|-----------|\n| ✅ Approve | No CRITICAL or HIGH issues |\n| ⚠️ Warning | Only MEDIUM issues (merge with caution) |\n| ❌ Block | CRITICAL or HIGH issues found |",
+      "zh-Hans": "| 状态 | 条件 |\n|--------|-----------|\n| ✅ 批准 | 无严重或高优先级问题 |\n| ⚠️ 警告 | 仅存在中优先级问题（谨慎合并） |\n| ❌ 阻止 | 发现严重或高优先级问题 |"
+    },
+    {
+      "en-US": "## Integration with Other Commands",
+      "zh-Hans": "## 与其他命令的集成"
+    },
+    {
+      "en-US": "- Use `/kotlin-test` first to ensure tests pass\n- Use `/kotlin-build` if build errors occur\n- Use `/kotlin-review` before committing\n- Use `/code-review` for non-Kotlin-specific concerns",
+      "zh-Hans": "* 首先使用 `/kotlin-test` 确保测试通过\n* 如果构建出错，使用 `/kotlin-build`\n* 提交前使用 `/kotlin-review`\n* 对于非 Kotlin 专项问题，使用 `/code-review`"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- Agent: `agents/kotlin-reviewer.md`\n- Skills: `skills/kotlin-patterns/`, `skills/kotlin-testing/`",
+      "zh-Hans": "* 代理：`agents/kotlin-reviewer.md`\n* 技能：`skills/kotlin-patterns/`、`skills/kotlin-testing/`"
+    }
+  ]
+}

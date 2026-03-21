@@ -1,0 +1,166 @@
+{
+  "sourceFile": "examples/laravel-api-CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Laravel API — Project CLAUDE.md",
+      "zh-Hans": "# Laravel API — 项目 CLAUDE.md"
+    },
+    {
+      "en-US": "> Real-world example for a Laravel API with PostgreSQL, Redis, and queues.\n> Copy this to your project root and customize for your service.",
+      "zh-Hans": "> 使用 PostgreSQL、Redis 和队列的 Laravel API 真实案例。\n> 复制此文件到你的项目根目录，并根据你的服务进行自定义。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概述"
+    },
+    {
+      "en-US": "**Stack:** PHP 8.2+, Laravel 11.x, PostgreSQL, Redis, Horizon, PHPUnit/Pest, Docker Compose",
+      "zh-Hans": "**技术栈:** PHP 8.2+, Laravel 11.x, PostgreSQL, Redis, Horizon, PHPUnit/Pest, Docker Compose"
+    },
+    {
+      "en-US": "**Architecture:** Modular Laravel app with controllers -> services -> actions, Eloquent ORM, queues for async work, Form Requests for validation, and API Resources for consistent JSON responses.",
+      "zh-Hans": "**架构:** 采用控制器 -> 服务 -> 操作的模块化 Laravel 应用，使用 Eloquent ORM、异步工作队列、表单请求进行验证，以及 API 资源确保一致的 JSON 响应。"
+    },
+    {
+      "en-US": "## Critical Rules",
+      "zh-Hans": "## 关键规则"
+    },
+    {
+      "en-US": "### PHP Conventions",
+      "zh-Hans": "### PHP 约定"
+    },
+    {
+      "en-US": "- `declare(strict_types=1)` in all PHP files\n- Use typed properties and return types everywhere\n- Prefer `final` classes for services and actions\n- No `dd()` or `dump()` in committed code\n- Formatting via Laravel Pint (PSR-12)",
+      "zh-Hans": "* 所有 PHP 文件中使用 `declare(strict_types=1)`\n* 处处使用类型属性和返回类型\n* 服务和操作优先使用 `final` 类\n* 提交的代码中不允许出现 `dd()` 或 `dump()`\n* 通过 Laravel Pint 进行格式化 (PSR-12)"
+    },
+    {
+      "en-US": "### API Response Envelope",
+      "zh-Hans": "### API 响应封装"
+    },
+    {
+      "en-US": "All API responses use a consistent envelope:",
+      "zh-Hans": "所有 API 响应使用一致的封装格式："
+    },
+    {
+      "en-US": "```json\n{\n  \"success\": true,\n  \"data\": {\"...\": \"...\"},\n  \"error\": null,\n  \"meta\": {\"page\": 1, \"per_page\": 25, \"total\": 120}\n}\n```",
+      "zh-Hans": "```json\n{\n  \"success\": true,\n  \"data\": {\"...\": \"...\"},\n  \"error\": null,\n  \"meta\": {\"page\": 1, \"per_page\": 25, \"total\": 120}\n}\n```"
+    },
+    {
+      "en-US": "### Database",
+      "zh-Hans": "### 数据库"
+    },
+    {
+      "en-US": "- Migrations committed to git\n- Use Eloquent or query builder (no raw SQL unless parameterized)\n- Index any column used in `where` or `orderBy`\n- Avoid mutating model instances in services; prefer create/update through repositories or query builders",
+      "zh-Hans": "* 迁移文件提交到 git\n* 使用 Eloquent 或查询构造器（除非参数化，否则不使用原始 SQL）\n* 为 `where` 或 `orderBy` 中使用的任何列建立索引\n* 避免在服务中修改模型实例；优先通过存储库或查询构造器进行创建/更新"
+    },
+    {
+      "en-US": "### Authentication",
+      "zh-Hans": "### 认证"
+    },
+    {
+      "en-US": "- API auth via Sanctum\n- Use policies for model-level authorization\n- Enforce auth in controllers and services",
+      "zh-Hans": "* 通过 Sanctum 进行 API 认证\n* 使用策略进行模型级授权\n* 在控制器和服务中强制执行认证"
+    },
+    {
+      "en-US": "### Validation",
+      "zh-Hans": "### 验证"
+    },
+    {
+      "en-US": "- Use Form Requests for validation\n- Transform input to DTOs for business logic\n- Never trust request payloads for derived fields",
+      "zh-Hans": "* 使用表单请求进行验证\n* 将输入转换为 DTO 以供业务逻辑使用\n* 切勿信任请求负载中的派生字段"
+    },
+    {
+      "en-US": "### Error Handling",
+      "zh-Hans": "### 错误处理"
+    },
+    {
+      "en-US": "- Throw domain exceptions in services\n- Map exceptions to HTTP responses in `bootstrap/app.php` via `withExceptions`\n- Never expose internal errors to clients",
+      "zh-Hans": "* 在服务中抛出领域异常\n* 在 `bootstrap/app.php` 中通过 `withExceptions` 将异常映射到 HTTP 响应\n* 绝不向客户端暴露内部错误"
+    },
+    {
+      "en-US": "### Code Style",
+      "zh-Hans": "### 代码风格"
+    },
+    {
+      "en-US": "- No emojis in code or comments\n- Max line length: 120 characters\n- Controllers are thin; services and actions hold business logic",
+      "zh-Hans": "* 代码或注释中不使用表情符号\n* 最大行长度：120 个字符\n* 控制器保持精简；服务和操作承载业务逻辑"
+    },
+    {
+      "en-US": "## File Structure",
+      "zh-Hans": "## 文件结构"
+    },
+    {
+      "en-US": "```\napp/\n  Actions/\n  Console/\n  Events/\n  Exceptions/\n  Http/\n    Controllers/\n    Middleware/\n    Requests/\n    Resources/\n  Jobs/\n  Models/\n  Policies/\n  Providers/\n  Services/\n  Support/\nconfig/\ndatabase/\n  factories/\n  migrations/\n  seeders/\nroutes/\n  api.php\n  web.php\n```",
+      "zh-Hans": "```\napp/\n  Actions/\n  Console/\n  Events/\n  Exceptions/\n  Http/\n    Controllers/\n    Middleware/\n    Requests/\n    Resources/\n  Jobs/\n  Models/\n  Policies/\n  Providers/\n  Services/\n  Support/\nconfig/\ndatabase/\n  factories/\n  migrations/\n  seeders/\nroutes/\n  api.php\n  web.php\n```"
+    },
+    {
+      "en-US": "## Key Patterns",
+      "zh-Hans": "## 关键模式"
+    },
+    {
+      "en-US": "### Service Layer",
+      "zh-Hans": "### 服务层"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nfinal class CreateOrderAction\n{\n    public function __construct(private OrderRepository $orders) {}\n\n    public function handle(CreateOrderData $data): Order\n    {\n        return $this->orders->create($data);\n    }\n}\n\nfinal class OrderService\n{\n    public function __construct(private CreateOrderAction $createOrder) {}\n\n    public function placeOrder(CreateOrderData $data): Order\n    {\n        return $this->createOrder->handle($data);\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nfinal class CreateOrderAction\n{\n    public function __construct(private OrderRepository $orders) {}\n\n    public function handle(CreateOrderData $data): Order\n    {\n        return $this->orders->create($data);\n    }\n}\n\nfinal class OrderService\n{\n    public function __construct(private CreateOrderAction $createOrder) {}\n\n    public function placeOrder(CreateOrderData $data): Order\n    {\n        return $this->createOrder->handle($data);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Controller Pattern",
+      "zh-Hans": "### 控制器模式"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nfinal class OrdersController extends Controller\n{\n    public function __construct(private OrderService $service) {}\n\n    public function store(StoreOrderRequest $request): JsonResponse\n    {\n        $order = $this->service->placeOrder($request->toDto());\n\n        return response()->json([\n            'success' => true,\n            'data' => OrderResource::make($order),\n            'error' => null,\n            'meta' => null,\n        ], 201);\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nfinal class OrdersController extends Controller\n{\n    public function __construct(private OrderService $service) {}\n\n    public function store(StoreOrderRequest $request): JsonResponse\n    {\n        $order = $this->service->placeOrder($request->toDto());\n\n        return response()->json([\n            'success' => true,\n            'data' => OrderResource::make($order),\n            'error' => null,\n            'meta' => null,\n        ], 201);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Policy Pattern",
+      "zh-Hans": "### 策略模式"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse App\\Models\\Order;\nuse App\\Models\\User;\n\nfinal class OrderPolicy\n{\n    public function view(User $user, Order $order): bool\n    {\n        return $order->user_id === $user->id;\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse App\\Models\\Order;\nuse App\\Models\\User;\n\nfinal class OrderPolicy\n{\n    public function view(User $user, Order $order): bool\n    {\n        return $order->user_id === $user->id;\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Form Request + DTO",
+      "zh-Hans": "### 表单请求 + DTO"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nfinal class StoreOrderRequest extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return (bool) $this->user();\n    }\n\n    public function rules(): array\n    {\n        return [\n            'items' => ['required', 'array', 'min:1'],\n            'items.*.sku' => ['required', 'string'],\n            'items.*.quantity' => ['required', 'integer', 'min:1'],\n        ];\n    }\n\n    public function toDto(): CreateOrderData\n    {\n        return new CreateOrderData(\n            userId: (int) $this->user()->id,\n            items: $this->validated('items'),\n        );\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nfinal class StoreOrderRequest extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return (bool) $this->user();\n    }\n\n    public function rules(): array\n    {\n        return [\n            'items' => ['required', 'array', 'min:1'],\n            'items.*.sku' => ['required', 'string'],\n            'items.*.quantity' => ['required', 'integer', 'min:1'],\n        ];\n    }\n\n    public function toDto(): CreateOrderData\n    {\n        return new CreateOrderData(\n            userId: (int) $this->user()->id,\n            items: $this->validated('items'),\n        );\n    }\n}\n```"
+    },
+    {
+      "en-US": "### API Resource",
+      "zh-Hans": "### API 资源"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Http\\Resources\\Json\\JsonResource;\n\nfinal class OrderResource extends JsonResource\n{\n    public function toArray(Request $request): array\n    {\n        return [\n            'id' => $this->id,\n            'status' => $this->status,\n            'total' => $this->total,\n            'created_at' => $this->created_at?->toIso8601String(),\n        ];\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Http\\Resources\\Json\\JsonResource;\n\nfinal class OrderResource extends JsonResource\n{\n    public function toArray(Request $request): array\n    {\n        return [\n            'id' => $this->id,\n            'status' => $this->status,\n            'total' => $this->total,\n            'created_at' => $this->created_at?->toIso8601String(),\n        ];\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Queue Job",
+      "zh-Hans": "### 队列任务"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse Illuminate\\Bus\\Queueable;\nuse Illuminate\\Contracts\\Queue\\ShouldQueue;\nuse Illuminate\\Foundation\\Bus\\Dispatchable;\nuse Illuminate\\Queue\\InteractsWithQueue;\nuse Illuminate\\Queue\\SerializesModels;\nuse App\\Repositories\\OrderRepository;\nuse App\\Services\\OrderMailer;\n\nfinal class SendOrderConfirmation implements ShouldQueue\n{\n    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;\n\n    public function __construct(private int $orderId) {}\n\n    public function handle(OrderRepository $orders, OrderMailer $mailer): void\n    {\n        $order = $orders->findOrFail($this->orderId);\n        $mailer->sendOrderConfirmation($order);\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse Illuminate\\Bus\\Queueable;\nuse Illuminate\\Contracts\\Queue\\ShouldQueue;\nuse Illuminate\\Foundation\\Bus\\Dispatchable;\nuse Illuminate\\Queue\\InteractsWithQueue;\nuse Illuminate\\Queue\\SerializesModels;\nuse App\\Repositories\\OrderRepository;\nuse App\\Services\\OrderMailer;\n\nfinal class SendOrderConfirmation implements ShouldQueue\n{\n    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;\n\n    public function __construct(private int $orderId) {}\n\n    public function handle(OrderRepository $orders, OrderMailer $mailer): void\n    {\n        $order = $orders->findOrFail($this->orderId);\n        $mailer->sendOrderConfirmation($order);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Test Pattern (Pest)",
+      "zh-Hans": "### 测试模式 (Pest)"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse function Pest\\Laravel\\actingAs;\nuse function Pest\\Laravel\\assertDatabaseHas;\nuse function Pest\\Laravel\\postJson;\n\nuses(RefreshDatabase::class);\n\ntest('user can place order', function () {\n    $user = User::factory()->create();\n\n    actingAs($user);\n\n    $response = postJson('/api/orders', [\n        'items' => [['sku' => 'sku-1', 'quantity' => 2]],\n    ]);\n\n    $response->assertCreated();\n    assertDatabaseHas('orders', ['user_id' => $user->id]);\n});\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse function Pest\\Laravel\\actingAs;\nuse function Pest\\Laravel\\assertDatabaseHas;\nuse function Pest\\Laravel\\postJson;\n\nuses(RefreshDatabase::class);\n\ntest('user can place order', function () {\n    $user = User::factory()->create();\n\n    actingAs($user);\n\n    $response = postJson('/api/orders', [\n        'items' => [['sku' => 'sku-1', 'quantity' => 2]],\n    ]);\n\n    $response->assertCreated();\n    assertDatabaseHas('orders', ['user_id' => $user->id]);\n});\n```"
+    },
+    {
+      "en-US": "### Test Pattern (PHPUnit)",
+      "zh-Hans": "### 测试模式 (PHPUnit)"
+    },
+    {
+      "en-US": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class OrdersControllerTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_user_can_place_order(): void\n    {\n        $user = User::factory()->create();\n\n        $response = $this->actingAs($user)->postJson('/api/orders', [\n            'items' => [['sku' => 'sku-1', 'quantity' => 2]],\n        ]);\n\n        $response->assertCreated();\n        $this->assertDatabaseHas('orders', ['user_id' => $user->id]);\n    }\n}\n```",
+      "zh-Hans": "```php\n<?php\n\ndeclare(strict_types=1);\n\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class OrdersControllerTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_user_can_place_order(): void\n    {\n        $user = User::factory()->create();\n\n        $response = $this->actingAs($user)->postJson('/api/orders', [\n            'items' => [['sku' => 'sku-1', 'quantity' => 2]],\n        ]);\n\n        $response->assertCreated();\n        $this->assertDatabaseHas('orders', ['user_id' => $user->id]);\n    }\n}\n```"
+    }
+  ]
+}

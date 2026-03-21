@@ -1,0 +1,190 @@
+{
+  "sourceFile": "hooks/README.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Hooks",
+      "zh-Hans": "# 钩子"
+    },
+    {
+      "en-US": "Hooks are event-driven automations that fire before or after Claude Code tool executions. They enforce code quality, catch mistakes early, and automate repetitive checks.",
+      "zh-Hans": "钩子是事件驱动的自动化程序，在 Claude Code 工具执行前后触发。它们用于强制执行代码质量、及早发现错误以及自动化重复性检查。"
+    },
+    {
+      "en-US": "## How Hooks Work",
+      "zh-Hans": "## 钩子如何工作"
+    },
+    {
+      "en-US": "```\nUser request → Claude picks a tool → PreToolUse hook runs → Tool executes → PostToolUse hook runs\n```",
+      "zh-Hans": "```\n用户请求 → Claude 选择工具 → PreToolUse 钩子运行 → 工具执行 → PostToolUse 钩子运行\n```"
+    },
+    {
+      "en-US": "- **PreToolUse** hooks run before the tool executes. They can **block** (exit code 2) or **warn** (stderr without blocking).\n- **PostToolUse** hooks run after the tool completes. They can analyze output but cannot block.\n- **Stop** hooks run after each Claude response.\n- **SessionStart/SessionEnd** hooks run at session lifecycle boundaries.\n- **PreCompact** hooks run before context compaction, useful for saving state.",
+      "zh-Hans": "* **PreToolUse** 钩子在工具执行前运行。它们可以**阻止**（退出码 2）或**警告**（stderr 输出但不阻止）。\n* **PostToolUse** 钩子在工具完成后运行。它们可以分析输出但不能阻止执行。\n* **Stop** 钩子在每次 Claude 响应后运行。\n* **SessionStart/SessionEnd** 钩子在会话生命周期的边界处运行。\n* **PreCompact** 钩子在上下文压缩前运行，适用于保存状态。"
+    },
+    {
+      "en-US": "## Hooks in This Plugin",
+      "zh-Hans": "## 本插件中的钩子"
+    },
+    {
+      "en-US": "### PreToolUse Hooks",
+      "zh-Hans": "### PreToolUse 钩子"
+    },
+    {
+      "en-US": "| Hook | Matcher | Behavior | Exit Code |\n|------|---------|----------|-----------|\n| **Dev server blocker** | `Bash` | Blocks `npm run dev` etc. outside tmux — ensures log access | 2 (blocks) |\n| **Tmux reminder** | `Bash` | Suggests tmux for long-running commands (npm test, cargo build, docker) | 0 (warns) |\n| **Git push reminder** | `Bash` | Reminds to review changes before `git push` | 0 (warns) |\n| **Doc file warning** | `Write` | Warns about non-standard `.md`/`.txt` files (allows README, CLAUDE, CONTRIBUTING, CHANGELOG, LICENSE, SKILL, docs/, skills/); cross-platform path handling | 0 (warns) |\n| **Strategic compact** | `Edit\\|Write` | Suggests manual `/compact` at logical intervals (every ~50 tool calls) | 0 (warns) |\n| **InsAIts security monitor (opt-in)** | `Bash\\|Write\\|Edit\\|MultiEdit` | Optional security scan for high-signal tool inputs. Disabled unless `ECC_ENABLE_INSAITS=1`. Blocks on critical findings, warns on non-critical, and writes audit log to `.insaits_audit_session.jsonl`. Requires `pip install insa-its`. [Details](../scripts/hooks/insaits-security-monitor.py) | 2 (blocks critical) / 0 (warns) |",
+      "zh-Hans": "| 钩子 | 匹配器 | 行为 | 退出码 |\n|------|---------|----------|-----------|\n| **开发服务器拦截器** | `Bash` | 在 tmux 外阻止 `npm run dev` 等命令 — 确保日志可访问 | 2 (拦截) |\n| **Tmux 提醒器** | `Bash` | 对长时间运行命令（npm test、cargo build、docker）建议使用 tmux | 0 (警告) |\n| **Git 推送提醒器** | `Bash` | 在 `git push` 前提醒检查变更 | 0 (警告) |\n| **文档文件警告器** | `Write` | 对非标准 `.md`/`.txt` 文件发出警告（允许 README、CLAUDE、CONTRIBUTING、CHANGELOG、LICENSE、SKILL、docs/、skills/）；跨平台路径处理 | 0 (警告) |\n| **策略性压缩提醒器** | `Edit\\|Write` | 建议在逻辑间隔（约每 50 次工具调用）手动执行 `/compact` | 0 (警告) |\n| **InsAIts 安全监控器（可选加入）** | `Bash\\|Write\\|Edit\\|MultiEdit` | 对高信号工具输入的可选安全扫描。除非设置 `ECC_ENABLE_INSAITS=1`，否则禁用。对关键发现进行拦截，对非关键发现发出警告，并将审计日志写入 `.insaits_audit_session.jsonl`。需要 `pip install insa-its`。[详情](../scripts/hooks/insaits-security-monitor.py) | 2 (拦截关键) / 0 (警告) |"
+    },
+    {
+      "en-US": "### PostToolUse Hooks",
+      "zh-Hans": "### PostToolUse 钩子"
+    },
+    {
+      "en-US": "| Hook | Matcher | What It Does |\n|------|---------|-------------|\n| **PR logger** | `Bash` | Logs PR URL and review command after `gh pr create` |\n| **Build analysis** | `Bash` | Background analysis after build commands (async, non-blocking) |\n| **Quality gate** | `Edit\\|Write\\|MultiEdit` | Runs fast quality checks after edits |\n| **Prettier format** | `Edit` | Auto-formats JS/TS files with Prettier after edits |\n| **TypeScript check** | `Edit` | Runs `tsc --noEmit` after editing `.ts`/`.tsx` files |\n| **console.log warning** | `Edit` | Warns about `console.log` statements in edited files |",
+      "zh-Hans": "| 钩子 | 匹配器 | 功能 |\n|------|---------|-------------|\n| **PR 记录器** | `Bash` | 在 `gh pr create` 后记录 PR URL 和审查命令 |\n| **构建分析** | `Bash` | 构建命令后的后台分析（异步，非阻塞） |\n| **质量门** | `Edit\\|Write\\|MultiEdit` | 在编辑后运行快速质量检查 |\n| **Prettier 格式化** | `Edit` | 编辑后使用 Prettier 自动格式化 JS/TS 文件 |\n| **TypeScript 检查** | `Edit` | 在编辑 `.ts`/`.tsx` 文件后运行 `tsc --noEmit` |\n| **console.log 警告** | `Edit` | 警告编辑的文件中存在 `console.log` 语句 |"
+    },
+    {
+      "en-US": "### Lifecycle Hooks",
+      "zh-Hans": "### 生命周期钩子"
+    },
+    {
+      "en-US": "| Hook | Event | What It Does |\n|------|-------|-------------|\n| **Session start** | `SessionStart` | Loads previous context and detects package manager |\n| **Pre-compact** | `PreCompact` | Saves state before context compaction |\n| **Console.log audit** | `Stop` | Checks all modified files for `console.log` after each response |\n| **Session summary** | `Stop` | Persists session state when transcript path is available |\n| **Pattern extraction** | `Stop` | Evaluates session for extractable patterns (continuous learning) |\n| **Cost tracker** | `Stop` | Emits lightweight run-cost telemetry markers |\n| **Session end marker** | `SessionEnd` | Lifecycle marker and cleanup log |",
+      "zh-Hans": "| 钩子 | 事件 | 功能 |\n|------|-------|-------------|\n| **会话开始** | `SessionStart` | 加载先前上下文并检测包管理器 |\n| **预压缩** | `PreCompact` | 在上下文压缩前保存状态 |\n| **Console.log 审计** | `Stop` | 每次响应后检查所有修改的文件是否有 `console.log` |\n| **会话摘要** | `Stop` | 当转录路径可用时持久化会话状态 |\n| **模式提取** | `Stop` | 评估会话以提取可抽取的模式（持续学习） |\n| **成本追踪器** | `Stop` | 发出轻量级的运行成本遥测标记 |\n| **会话结束标记** | `SessionEnd` | 生命周期标记和清理日志 |"
+    },
+    {
+      "en-US": "## Customizing Hooks",
+      "zh-Hans": "## 自定义钩子"
+    },
+    {
+      "en-US": "### Disabling a Hook",
+      "zh-Hans": "### 禁用钩子"
+    },
+    {
+      "en-US": "Remove or comment out the hook entry in `hooks.json`. If installed as a plugin, override in your `~/.claude/settings.json`:",
+      "zh-Hans": "在 `hooks.json` 中移除或注释掉钩子条目。如果作为插件安装，请在您的 `~/.claude/settings.json` 中覆盖："
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write\",\n        \"hooks\": [],\n        \"description\": \"Override: allow all .md file creation\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write\",\n        \"hooks\": [],\n        \"description\": \"Override: allow all .md file creation\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Runtime Hook Controls (Recommended)",
+      "zh-Hans": "### 运行时钩子控制（推荐）"
+    },
+    {
+      "en-US": "Use environment variables to control hook behavior without editing `hooks.json`:",
+      "zh-Hans": "使用环境变量控制钩子行为，无需编辑 `hooks.json`："
+    },
+    {
+      "en-US": "```bash\n# minimal | standard | strict (default: standard)\nexport ECC_HOOK_PROFILE=standard\n\n# Disable specific hook IDs (comma-separated)\nexport ECC_DISABLED_HOOKS=\"pre:bash:tmux-reminder,post:edit:typecheck\"\n```",
+      "zh-Hans": "```bash\n# minimal | standard | strict (default: standard)\nexport ECC_HOOK_PROFILE=standard\n\n# Disable specific hook IDs (comma-separated)\nexport ECC_DISABLED_HOOKS=\"pre:bash:tmux-reminder,post:edit:typecheck\"\n```"
+    },
+    {
+      "en-US": "Profiles:",
+      "zh-Hans": "配置文件："
+    },
+    {
+      "en-US": "- `minimal` — keep essential lifecycle and safety hooks only.\n- `standard` — default; balanced quality + safety checks.\n- `strict` — enables additional reminders and stricter guardrails.",
+      "zh-Hans": "* `minimal` —— 仅保留必要的生命周期和安全钩子。\n* `standard` —— 默认；平衡的质量 + 安全检查。\n* `strict` —— 启用额外的提醒和更严格的防护措施。"
+    },
+    {
+      "en-US": "### Writing Your Own Hook",
+      "zh-Hans": "### 编写你自己的钩子"
+    },
+    {
+      "en-US": "Hooks are shell commands that receive tool input as JSON on stdin and must output JSON on stdout.",
+      "zh-Hans": "钩子是 shell 命令，通过 stdin 接收 JSON 格式的工具输入，并且必须在 stdout 上输出 JSON。"
+    },
+    {
+      "en-US": "**Basic structure:**",
+      "zh-Hans": "**基本结构：**"
+    },
+    {
+      "en-US": "```javascript\n// my-hook.js\nlet data = '';\nprocess.stdin.on('data', chunk => data += chunk);\nprocess.stdin.on('end', () => {\n  const input = JSON.parse(data);\n\n  // Access tool info\n  const toolName = input.tool_name;        // \"Edit\", \"Bash\", \"Write\", etc.\n  const toolInput = input.tool_input;      // Tool-specific parameters\n  const toolOutput = input.tool_output;    // Only available in PostToolUse\n\n  // Warn (non-blocking): write to stderr\n  console.error('[Hook] Warning message shown to Claude');\n\n  // Block (PreToolUse only): exit with code 2\n  // process.exit(2);\n\n  // Always output the original data to stdout\n  console.log(data);\n});\n```",
+      "zh-Hans": "```javascript\n// my-hook.js\nlet data = '';\nprocess.stdin.on('data', chunk => data += chunk);\nprocess.stdin.on('end', () => {\n  const input = JSON.parse(data);\n\n  // Access tool info\n  const toolName = input.tool_name;        // \"Edit\", \"Bash\", \"Write\", etc.\n  const toolInput = input.tool_input;      // Tool-specific parameters\n  const toolOutput = input.tool_output;    // Only available in PostToolUse\n\n  // Warn (non-blocking): write to stderr\n  console.error('[Hook] Warning message shown to Claude');\n\n  // Block (PreToolUse only): exit with code 2\n  // process.exit(2);\n\n  // Always output the original data to stdout\n  console.log(data);\n});\n```"
+    },
+    {
+      "en-US": "**Exit codes:**",
+      "zh-Hans": "**退出码：**"
+    },
+    {
+      "en-US": "- `0` — Success (continue execution)\n- `2` — Block the tool call (PreToolUse only)\n- Other non-zero — Error (logged but does not block)",
+      "zh-Hans": "* `0` —— 成功（继续执行）\n* `2` —— 阻止工具调用（仅限 PreToolUse）\n* 其他非零值 —— 错误（记录日志但不阻止）"
+    },
+    {
+      "en-US": "### Hook Input Schema",
+      "zh-Hans": "### 钩子输入模式"
+    },
+    {
+      "en-US": "```typescript\ninterface HookInput {\n  tool_name: string;          // \"Bash\", \"Edit\", \"Write\", \"Read\", etc.\n  tool_input: {\n    command?: string;         // Bash: the command being run\n    file_path?: string;       // Edit/Write/Read: target file\n    old_string?: string;      // Edit: text being replaced\n    new_string?: string;      // Edit: replacement text\n    content?: string;         // Write: file content\n  };\n  tool_output?: {             // PostToolUse only\n    output?: string;          // Command/tool output\n  };\n}\n```",
+      "zh-Hans": "```typescript\ninterface HookInput {\n  tool_name: string;          // \"Bash\", \"Edit\", \"Write\", \"Read\", etc.\n  tool_input: {\n    command?: string;         // Bash: the command being run\n    file_path?: string;       // Edit/Write/Read: target file\n    old_string?: string;      // Edit: text being replaced\n    new_string?: string;      // Edit: replacement text\n    content?: string;         // Write: file content\n  };\n  tool_output?: {             // PostToolUse only\n    output?: string;          // Command/tool output\n  };\n}\n```"
+    },
+    {
+      "en-US": "### Async Hooks",
+      "zh-Hans": "### 异步钩子"
+    },
+    {
+      "en-US": "For hooks that should not block the main flow (e.g., background analysis):",
+      "zh-Hans": "对于不应阻塞主流程的钩子（例如，后台分析）："
+    },
+    {
+      "en-US": "```json\n{\n  \"type\": \"command\",\n  \"command\": \"node my-slow-hook.js\",\n  \"async\": true,\n  \"timeout\": 30\n}\n```",
+      "zh-Hans": "```json\n{\n  \"type\": \"command\",\n  \"command\": \"node my-slow-hook.js\",\n  \"async\": true,\n  \"timeout\": 30\n}\n```"
+    },
+    {
+      "en-US": "Async hooks run in the background. They cannot block tool execution.",
+      "zh-Hans": "异步钩子在后台运行。它们不能阻止工具执行。"
+    },
+    {
+      "en-US": "## Common Hook Recipes",
+      "zh-Hans": "## 常用钩子配方"
+    },
+    {
+      "en-US": "### Warn about TODO comments",
+      "zh-Hans": "### 警告 TODO 注释"
+    },
+    {
+      "en-US": "```json\n{\n  \"matcher\": \"Edit\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const ns=i.tool_input?.new_string||'';if(/TODO|FIXME|HACK/.test(ns)){console.error('[Hook] New TODO/FIXME added - consider creating an issue')}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Warn when adding TODO/FIXME comments\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"matcher\": \"Edit\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const ns=i.tool_input?.new_string||'';if(/TODO|FIXME|HACK/.test(ns)){console.error('[Hook] New TODO/FIXME added - consider creating an issue')}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Warn when adding TODO/FIXME comments\"\n}\n```"
+    },
+    {
+      "en-US": "### Block large file creation",
+      "zh-Hans": "### 阻止创建大文件"
+    },
+    {
+      "en-US": "```json\n{\n  \"matcher\": \"Write\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller, focused modules');process.exit(2)}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Block creation of files larger than 800 lines\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"matcher\": \"Write\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller, focused modules');process.exit(2)}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Block creation of files larger than 800 lines\"\n}\n```"
+    },
+    {
+      "en-US": "### Auto-format Python files with ruff",
+      "zh-Hans": "### 使用 ruff 自动格式化 Python 文件"
+    },
+    {
+      "en-US": "```json\n{\n  \"matcher\": \"Edit\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\\\.py$/.test(p)){const{execFileSync}=require('child_process');try{execFileSync('ruff',['format',p],{stdio:'pipe'})}catch(e){}}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Auto-format Python files with ruff after edits\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"matcher\": \"Edit\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\\\.py$/.test(p)){const{execFileSync}=require('child_process');try{execFileSync('ruff',['format',p],{stdio:'pipe'})}catch(e){}}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Auto-format Python files with ruff after edits\"\n}\n```"
+    },
+    {
+      "en-US": "### Require test files alongside new source files",
+      "zh-Hans": "### 要求新源文件附带测试文件"
+    },
+    {
+      "en-US": "```json\n{\n  \"matcher\": \"Write\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"const fs=require('fs');let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/src\\\\/.*\\\\.(ts|js)$/.test(p)&&!/\\\\.test\\\\.|\\\\.spec\\\\./.test(p)){const testPath=p.replace(/\\\\.(ts|js)$/,'.test.$1');if(!fs.existsSync(testPath)){console.error('[Hook] No test file found for: '+p);console.error('[Hook] Expected: '+testPath);console.error('[Hook] Consider writing tests first (/tdd)')}}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Remind to create tests when adding new source files\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"matcher\": \"Write\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"node -e \\\"const fs=require('fs');let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/src\\\\/.*\\\\.(ts|js)$/.test(p)&&!/\\\\.test\\\\.|\\\\.spec\\\\./.test(p)){const testPath=p.replace(/\\\\.(ts|js)$/,'.test.$1');if(!fs.existsSync(testPath)){console.error('[Hook] No test file found for: '+p);console.error('[Hook] Expected: '+testPath);console.error('[Hook] Consider writing tests first (/tdd)')}}console.log(d)})\\\"\"\n  }],\n  \"description\": \"Remind to create tests when adding new source files\"\n}\n```"
+    },
+    {
+      "en-US": "## Cross-Platform Notes",
+      "zh-Hans": "## 跨平台注意事项"
+    },
+    {
+      "en-US": "Hook logic is implemented in Node.js scripts for cross-platform behavior on Windows, macOS, and Linux. A small number of shell wrappers are retained for continuous-learning observer hooks; those wrappers are profile-gated and have Windows-safe fallback behavior.",
+      "zh-Hans": "钩子逻辑在 Node.js 脚本中实现，以便在 Windows、macOS 和 Linux 上具有跨平台行为。保留了少量 shell 包装器用于持续学习的观察者钩子；这些包装器受配置文件控制，并具有 Windows 安全的回退行为。"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- [rules/common/hooks.md](../rules/common/hooks.md) — Hook architecture guidelines\n- [skills/strategic-compact/](../skills/strategic-compact/) — Strategic compaction skill\n- [scripts/hooks/](../scripts/hooks/) — Hook script implementations",
+      "zh-Hans": "* [rules/common/hooks.md](../rules/common/hooks.md) —— 钩子架构指南\n* [skills/strategic-compact/](../skills/strategic-compact/) —— 策略性压缩技能\n* [scripts/hooks/](../scripts/hooks/) —— 钩子脚本实现"
+    }
+  ]
+}

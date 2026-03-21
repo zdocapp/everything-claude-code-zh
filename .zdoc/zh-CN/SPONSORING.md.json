@@ -1,0 +1,70 @@
+{
+  "sourceFile": "SPONSORING.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Sponsoring ECC",
+      "zh-Hans": "# 赞助 ECC"
+    },
+    {
+      "en-US": "ECC is maintained as an open-source agent harness performance system across Claude Code, Cursor, OpenCode, and Codex app/CLI.",
+      "zh-Hans": "ECC 作为一个开源智能体性能测试系统，在 Claude Code、Cursor、OpenCode 和 Codex 应用程序/CLI 中得到维护。"
+    },
+    {
+      "en-US": "## Why Sponsor",
+      "zh-Hans": "## 为何赞助"
+    },
+    {
+      "en-US": "Sponsorship directly funds:",
+      "zh-Hans": "赞助直接资助以下方面："
+    },
+    {
+      "en-US": "- Faster bug-fix and release cycles\n- Cross-platform parity work across harnesses\n- Public docs, skills, and reliability tooling that remain free for the community",
+      "zh-Hans": "* 更快的错误修复和发布周期\n* 跨测试平台的平台一致性工作\n* 为社区免费提供的公共文档、技能和可靠性工具"
+    },
+    {
+      "en-US": "## Sponsorship Tiers",
+      "zh-Hans": "## 赞助层级"
+    },
+    {
+      "en-US": "These are practical starting points and can be adjusted for partnership scope.",
+      "zh-Hans": "这些是实用的起点，可以根据合作范围进行调整。"
+    },
+    {
+      "en-US": "| Tier | Price | Best For | Includes |\n|------|-------|----------|----------|\n| Pilot Partner | $200/mo | First sponsor engagement | Monthly metrics update, roadmap preview, prioritized maintainer feedback |\n| Growth Partner | $500/mo | Teams actively adopting ECC | Pilot benefits + monthly office-hours sync + workflow integration guidance |\n| Strategic Partner | $1,000+/mo | Platform/ecosystem partnerships | Growth benefits + coordinated launch support + deeper maintainer collaboration |",
+      "zh-Hans": "| 层级 | 价格 | 最适合 | 包含内容 |\n|------|-------|----------|----------|\n| 试点合作伙伴 | $200/月 | 首次赞助合作 | 月度指标更新、路线图预览、优先维护者反馈 |\n| 成长合作伙伴 | $500/月 | 积极采用 ECC 的团队 | 试点权益 + 月度办公时间同步 + 工作流集成指导 |\n| 战略合作伙伴 | $1,000+/月 | 平台/生态系统合作伙伴 | 成长权益 + 协调发布支持 + 更深入的维护者协作 |"
+    },
+    {
+      "en-US": "## Sponsor Reporting",
+      "zh-Hans": "## 赞助报告"
+    },
+    {
+      "en-US": "Metrics shared monthly can include:",
+      "zh-Hans": "每月分享的指标可能包括："
+    },
+    {
+      "en-US": "- npm downloads (`ecc-universal`, `ecc-agentshield`)\n- Repository adoption (stars, forks, contributors)\n- GitHub App install trend\n- Release cadence and reliability milestones",
+      "zh-Hans": "* npm 下载量（`ecc-universal`、`ecc-agentshield`）\n* 仓库采用情况（星标、分叉、贡献者）\n* GitHub 应用安装趋势\n* 发布节奏和可靠性里程碑"
+    },
+    {
+      "en-US": "For exact command snippets and a repeatable pull process, see [`docs/business/metrics-and-sponsorship.md`](docs/business/metrics-and-sponsorship.md).",
+      "zh-Hans": "有关确切的命令片段和可重复的拉取流程，请参阅 [`docs/business/metrics-and-sponsorship.md`](docs/business/metrics-and-sponsorship.md)。"
+    },
+    {
+      "en-US": "## Expectations and Scope",
+      "zh-Hans": "## 期望与范围"
+    },
+    {
+      "en-US": "- Sponsorship supports maintenance and acceleration; it does not transfer project ownership.\n- Feature requests are prioritized based on sponsor tier, ecosystem impact, and maintenance risk.\n- Security and reliability fixes take precedence over net-new features.",
+      "zh-Hans": "* 赞助支持维护和加速；不会转移项目所有权。\n* 功能请求根据赞助层级、生态系统影响和维护风险进行优先级排序。\n* 安全性和可靠性修复优先于全新功能。"
+    },
+    {
+      "en-US": "## Sponsor Here",
+      "zh-Hans": "## 在此赞助"
+    },
+    {
+      "en-US": "- GitHub Sponsors: [https://github.com/sponsors/affaan-m](https://github.com/sponsors/affaan-m)\n- Project site: [https://ecc.tools](https://ecc.tools)",
+      "zh-Hans": "* GitHub Sponsors: <https://github.com/sponsors/affaan-m>\n* 项目网站: <https://ecc.tools>"
+    }
+  ]
+}
