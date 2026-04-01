@@ -1,0 +1,98 @@
+{
+  "sourceFile": "commands/harness-audit.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Harness Audit Command",
+      "zh-Hans": "# 工具链审计命令"
+    },
+    {
+      "en-US": "Run a deterministic repository harness audit and return a prioritized scorecard.",
+      "zh-Hans": "运行确定性仓库框架审计并返回优先级评分卡。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方式"
+    },
+    {
+      "en-US": "`/harness-audit [scope] [--format text|json]`",
+      "zh-Hans": "`/harness-audit [scope] [--format text|json]`"
+    },
+    {
+      "en-US": "- `scope` (optional): `repo` (default), `hooks`, `skills`, `commands`, `agents`\n- `--format`: output style (`text` default, `json` for automation)",
+      "zh-Hans": "* `scope` (可选): `repo` (默认), `hooks`, `skills`, `commands`, `agents`\n* `--format`: 输出样式 (`text` 默认, `json` 用于自动化)"
+    },
+    {
+      "en-US": "## Deterministic Engine",
+      "zh-Hans": "## 确定性引擎"
+    },
+    {
+      "en-US": "Always run:",
+      "zh-Hans": "始终运行："
+    },
+    {
+      "en-US": "```bash\nnode scripts/harness-audit.js <scope> --format <text|json>\n```",
+      "zh-Hans": "```bash\nnode scripts/harness-audit.js <scope> --format <text|json>\n```"
+    },
+    {
+      "en-US": "This script is the source of truth for scoring and checks. Do not invent additional dimensions or ad-hoc points.",
+      "zh-Hans": "此脚本是评分和检查的单一事实来源。不要发明额外的维度或临时添加评分点。"
+    },
+    {
+      "en-US": "Rubric version: `2026-03-16`.",
+      "zh-Hans": "评分标准版本：`2026-03-16`。"
+    },
+    {
+      "en-US": "The script computes 7 fixed categories (`0-10` normalized each):",
+      "zh-Hans": "该脚本计算 7 个固定类别（每个类别标准化为 `0-10`）："
+    },
+    {
+      "en-US": "1. Tool Coverage\n2. Context Efficiency\n3. Quality Gates\n4. Memory Persistence\n5. Eval Coverage\n6. Security Guardrails\n7. Cost Efficiency",
+      "zh-Hans": "1. 工具覆盖度\n2. 上下文效率\n3. 质量门禁\n4. 记忆持久化\n5. 评估覆盖度\n6. 安全护栏\n7. 成本效率"
+    },
+    {
+      "en-US": "Scores are derived from explicit file/rule checks and are reproducible for the same commit.",
+      "zh-Hans": "分数源自显式的文件/规则检查，并且对于同一提交是可复现的。"
+    },
+    {
+      "en-US": "## Output Contract",
+      "zh-Hans": "## 输出约定"
+    },
+    {
+      "en-US": "Return:",
+      "zh-Hans": "返回："
+    },
+    {
+      "en-US": "1. `overall_score` out of `max_score` (70 for `repo`; smaller for scoped audits)\n2. Category scores and concrete findings\n3. Failed checks with exact file paths\n4. Top 3 actions from the deterministic output (`top_actions`)\n5. Suggested ECC skills to apply next",
+      "zh-Hans": "1. `overall_score` 分（满分 `max_score` 分；`repo` 为 70 分；范围限定审计则分数更小）\n2. 类别分数及具体发现项\n3. 失败的检查及其确切的文件路径\n4. 确定性输出的前 3 项行动（`top_actions`）\n5. 建议接下来应用的 ECC 技能"
+    },
+    {
+      "en-US": "## Checklist",
+      "zh-Hans": "## 检查清单"
+    },
+    {
+      "en-US": "- Use script output directly; do not rescore manually.\n- If `--format json` is requested, return the script JSON unchanged.\n- If text is requested, summarize failing checks and top actions.\n- Include exact file paths from `checks[]` and `top_actions[]`.",
+      "zh-Hans": "* 直接使用脚本输出；不要手动重新评分。\n* 如果请求 `--format json`，则原样返回脚本的 JSON 输出。\n* 如果请求文本输出，则总结失败的检查和首要行动。\n* 包含来自 `checks[]` 和 `top_actions[]` 的确切文件路径。"
+    },
+    {
+      "en-US": "## Example Result",
+      "zh-Hans": "## 结果示例"
+    },
+    {
+      "en-US": "```text\nHarness Audit (repo): 66/70\n- Tool Coverage: 10/10 (10/10 pts)\n- Context Efficiency: 9/10 (9/10 pts)\n- Quality Gates: 10/10 (10/10 pts)\n\nTop 3 Actions:\n1) [Security Guardrails] Add prompt/tool preflight security guards in hooks/hooks.json. (hooks/hooks.json)\n2) [Tool Coverage] Sync commands/harness-audit.md and .opencode/commands/harness-audit.md. (.opencode/commands/harness-audit.md)\n3) [Eval Coverage] Increase automated test coverage across scripts/hooks/lib. (tests/)\n```",
+      "zh-Hans": "```text\nHarness 审计 (代码库): 66/70\n- 工具覆盖率: 10/10 (10/10 分)\n- 上下文效率: 9/10 (9/10 分)\n- 质量门禁: 10/10 (10/10 分)\n\n首要三项行动:\n1) [安全防护] 在 hooks/hooks.json 中添加提示/工具预检安全防护。 (hooks/hooks.json)\n2) [工具覆盖率] 同步 commands/harness-audit.md 和 .opencode/commands/harness-audit.md。 (.opencode/commands/harness-audit.md)\n3) [评估覆盖率] 提升 scripts/hooks/lib 目录下的自动化测试覆盖率。 (tests/)\n```"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `repo|hooks|skills|commands|agents` (optional scope)\n- `--format text|json` (optional output format)",
+      "zh-Hans": "* `repo|hooks|skills|commands|agents` (可选范围)\n* `--format text|json` (可选输出格式)"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "sourceFile": "rules/php/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.json\"\n  - \"**/phpstan.neon\"\n  - \"**/phpstan.neon.dist\"\n  - \"**/psalm.xml\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.json\"\n  - \"**/phpstan.neon\"\n  - \"**/phpstan.neon.dist\"\n  - \"**/psalm.xml\"\n---"
+    },
+    {
+      "en-US": "# PHP Hooks",
+      "zh-Hans": "# PHP 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with PHP specific content.",
+      "zh-Hans": "> 此文件在 [common/hooks.md](../common/hooks.md) 的基础上扩展了 PHP 相关的内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse 钩子"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **Pint / PHP-CS-Fixer**: Auto-format edited `.php` files.\n- **PHPStan / Psalm**: Run static analysis after PHP edits in typed codebases.\n- **PHPUnit / Pest**: Run targeted tests for touched files or modules when edits affect behavior.",
+      "zh-Hans": "* **Pint / PHP-CS-Fixer**：自动格式化编辑过的 `.php` 文件。\n* **PHPStan / Psalm**：在类型化代码库中对编辑过的 PHP 文件运行静态分析。\n* **PHPUnit / Pest**：当编辑影响到行为时，为被修改的文件或模块运行针对性测试。"
+    },
+    {
+      "en-US": "## Warnings",
+      "zh-Hans": "## 警告"
+    },
+    {
+      "en-US": "- Warn on `var_dump`, `dd`, `dump`, or `die()` left in edited files.\n- Warn when edited PHP files add raw SQL or disable CSRF/session protections.",
+      "zh-Hans": "* 当编辑过的文件中存在 `var_dump`、`dd`、`dump` 或 `die()` 时发出警告。\n* 当编辑的 PHP 文件添加了原始 SQL 或禁用了 CSRF/会话保护时发出警告。"
+    }
+  ]
+}

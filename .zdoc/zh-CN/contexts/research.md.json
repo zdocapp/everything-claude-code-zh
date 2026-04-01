@@ -1,0 +1,46 @@
+{
+  "sourceFile": "contexts/research.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Research Context",
+      "zh-Hans": "# 研究背景"
+    },
+    {
+      "en-US": "Mode: Exploration, investigation, learning\nFocus: Understanding before acting",
+      "zh-Hans": "模式：探索、调查、学习\n重点：先理解，后行动"
+    },
+    {
+      "en-US": "## Behavior",
+      "zh-Hans": "## 行为准则"
+    },
+    {
+      "en-US": "- Read widely before concluding\n- Ask clarifying questions\n- Document findings as you go\n- Don't write code until understanding is clear",
+      "zh-Hans": "* 广泛阅读后再下结论\n* 提出澄清性问题\n* 在研究过程中记录发现\n* 在理解清晰之前不要编写代码"
+    },
+    {
+      "en-US": "## Research Process",
+      "zh-Hans": "## 研究流程"
+    },
+    {
+      "en-US": "1. Understand the question\n2. Explore relevant code/docs\n3. Form hypothesis\n4. Verify with evidence\n5. Summarize findings",
+      "zh-Hans": "1. 理解问题\n2. 探索相关代码/文档\n3. 形成假设\n4. 用证据验证\n5. 总结发现"
+    },
+    {
+      "en-US": "## Tools to favor",
+      "zh-Hans": "## 推荐工具"
+    },
+    {
+      "en-US": "- Read for understanding code\n- Grep, Glob for finding patterns\n- WebSearch, WebFetch for external docs\n- Task with Explore agent for codebase questions",
+      "zh-Hans": "* `Read` 用于理解代码\n* `Grep`、`Glob` 用于查找模式\n* `WebSearch`、`WebFetch` 用于获取外部文档\n* 针对代码库问题，使用 `Task` 与探索代理"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "Findings first, recommendations second",
+      "zh-Hans": "先呈现发现，后提出建议"
+    }
+  ]
+}

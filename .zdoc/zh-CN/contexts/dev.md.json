@@ -1,0 +1,38 @@
+{
+  "sourceFile": "contexts/dev.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Development Context",
+      "zh-Hans": "# 开发上下文"
+    },
+    {
+      "en-US": "Mode: Active development\nFocus: Implementation, coding, building features",
+      "zh-Hans": "模式：活跃开发中\n关注点：实现、编码、构建功能"
+    },
+    {
+      "en-US": "## Behavior",
+      "zh-Hans": "## 行为准则"
+    },
+    {
+      "en-US": "- Write code first, explain after\n- Prefer working solutions over perfect solutions\n- Run tests after changes\n- Keep commits atomic",
+      "zh-Hans": "* 先写代码，后做解释\n* 倾向于可用的解决方案，而非完美的解决方案\n* 变更后运行测试\n* 保持提交的原子性"
+    },
+    {
+      "en-US": "## Priorities",
+      "zh-Hans": "## 优先级"
+    },
+    {
+      "en-US": "1. Get it working\n2. Get it right\n3. Get it clean",
+      "zh-Hans": "1. 让它工作\n2. 让它正确\n3. 让它整洁"
+    },
+    {
+      "en-US": "## Tools to favor",
+      "zh-Hans": "## 推荐工具"
+    },
+    {
+      "en-US": "- Edit, Write for code changes\n- Bash for running tests/builds\n- Grep, Glob for finding code",
+      "zh-Hans": "* 使用 Edit、Write 进行代码变更\n* 使用 Bash 运行测试/构建\n* 使用 Grep、Glob 查找代码"
+    }
+  ]
+}

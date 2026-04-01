@@ -1,0 +1,30 @@
+{
+  "sourceFile": "rules/java/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.java\"\n  - \"**/pom.xml\"\n  - \"**/build.gradle\"\n  - \"**/build.gradle.kts\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.java\"\n  - \"**/pom.xml\"\n  - \"**/build.gradle\"\n  - \"**/build.gradle.kts\"\n---"
+    },
+    {
+      "en-US": "# Java Hooks",
+      "zh-Hans": "# Java 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Java-specific content.",
+      "zh-Hans": "> 本文件在[common/hooks.md](../common/hooks.md)的基础上扩展了Java相关的内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse 钩子"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **google-java-format**: Auto-format `.java` files after edit\n- **checkstyle**: Run style checks after editing Java files\n- **./mvnw compile** or **./gradlew compileJava**: Verify compilation after changes",
+      "zh-Hans": "* **google-java-format**：编辑后自动格式化 `.java` 文件\n* **checkstyle**：编辑Java文件后运行样式检查\n* **./mvnw compile** 或 **./gradlew compileJava**：变更后验证编译"
+    }
+  ]
+}

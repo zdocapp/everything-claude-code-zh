@@ -1,0 +1,410 @@
+{
+  "sourceFile": "TROUBLESHOOTING.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Troubleshooting Guide",
+      "zh-Hans": "# 故障排除指南"
+    },
+    {
+      "en-US": "Common issues and solutions for Everything Claude Code (ECC) plugin.",
+      "zh-Hans": "Everything Claude Code (ECC) 插件的常见问题与解决方案。"
+    },
+    {
+      "en-US": "## Table of Contents",
+      "zh-Hans": "## 目录"
+    },
+    {
+      "en-US": "- [Memory & Context Issues](#memory--context-issues)\n- [Agent Harness Failures](#agent-harness-failures)\n- [Hook & Workflow Errors](#hook--workflow-errors)\n- [Installation & Setup](#installation--setup)\n- [Performance Issues](#performance-issues)\n- [Common Error Messages](#common-error-messages)\n- [Getting Help](#getting-help)",
+      "zh-Hans": "* [内存与上下文问题](#内存与上下文问题)\n* [代理工具故障](#代理工具故障)\n* [钩子与工作流错误](#钩子与工作流错误)\n* [安装与设置](#安装与设置)\n* [性能问题](#性能问题)\n* [常见错误信息](#常见错误信息)\n* [获取帮助](#获取帮助)"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Memory & Context Issues",
+      "zh-Hans": "## 内存与上下文问题"
+    },
+    {
+      "en-US": "### Context Window Overflow",
+      "zh-Hans": "### 上下文窗口溢出"
+    },
+    {
+      "en-US": "**Symptom:** \"Context too long\" errors or incomplete responses",
+      "zh-Hans": "**症状：** 出现\"上下文过长\"错误或响应不完整"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Large file uploads exceeding token limits\n- Accumulated conversation history\n- Multiple large tool outputs in single session",
+      "zh-Hans": "* 上传的大文件超出令牌限制\n* 累积的对话历史记录\n* 单次会话中包含多个大型工具输出"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# 1. Clear conversation history and start fresh\n# Use Claude Code: \"New Chat\" or Cmd/Ctrl+Shift+N\n\n# 2. Reduce file size before analysis\nhead -n 100 large-file.log > sample.log\n\n# 3. Use streaming for large outputs\nhead -n 50 large-file.txt\n\n# 4. Split tasks into smaller chunks\n# Instead of: \"Analyze all 50 files\"\n# Use: \"Analyze files in src/components/ directory\"\n```",
+      "zh-Hans": "```bash\n# 1. Clear conversation history and start fresh\n# Use Claude Code: \"New Chat\" or Cmd/Ctrl+Shift+N\n\n# 2. Reduce file size before analysis\nhead -n 100 large-file.log > sample.log\n\n# 3. Use streaming for large outputs\nhead -n 50 large-file.txt\n\n# 4. Split tasks into smaller chunks\n# Instead of: \"Analyze all 50 files\"\n# Use: \"Analyze files in src/components/ directory\"\n```"
+    },
+    {
+      "en-US": "### Memory Persistence Failures",
+      "zh-Hans": "### 内存持久化失败"
+    },
+    {
+      "en-US": "**Symptom:** Agent doesn't remember previous context or observations",
+      "zh-Hans": "**症状：** 代理不记得先前的上下文或观察结果"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Disabled continuous-learning hooks\n- Corrupted observation files\n- Project detection failures",
+      "zh-Hans": "* 连续学习钩子被禁用\n* 观察文件损坏\n* 项目检测失败"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Check if observations are being recorded\nls ~/.claude/homunculus/projects/*/observations.jsonl\n\n# Find the current project's hash id\npython3 - <<'PY'\nimport json, os\nregistry_path = os.path.expanduser(\"~/.claude/homunculus/projects.json\")\nwith open(registry_path) as f:\n    registry = json.load(f)\nfor project_id, meta in registry.items():\n    if meta.get(\"root\") == os.getcwd():\n        print(project_id)\n        break\nelse:\n    raise SystemExit(\"Project hash not found in ~/.claude/homunculus/projects.json\")\nPY\n\n# View recent observations for that project\ntail -20 ~/.claude/homunculus/projects/<project-hash>/observations.jsonl\n\n# Back up a corrupted observations file before recreating it\nmv ~/.claude/homunculus/projects/<project-hash>/observations.jsonl \\\n  ~/.claude/homunculus/projects/<project-hash>/observations.jsonl.bak.$(date +%Y%m%d-%H%M%S)\n\n# Verify hooks are enabled\ngrep -r \"observe\" ~/.claude/settings.json\n```",
+      "zh-Hans": "```bash\n# Check if observations are being recorded\nls ~/.claude/homunculus/projects/*/observations.jsonl\n\n# Find the current project's hash id\npython3 - <<'PY'\nimport json, os\nregistry_path = os.path.expanduser(\"~/.claude/homunculus/projects.json\")\nwith open(registry_path) as f:\n    registry = json.load(f)\nfor project_id, meta in registry.items():\n    if meta.get(\"root\") == os.getcwd():\n        print(project_id)\n        break\nelse:\n    raise SystemExit(\"Project hash not found in ~/.claude/homunculus/projects.json\")\nPY\n\n# View recent observations for that project\ntail -20 ~/.claude/homunculus/projects/<project-hash>/observations.jsonl\n\n# Back up a corrupted observations file before recreating it\nmv ~/.claude/homunculus/projects/<project-hash>/observations.jsonl \\\n  ~/.claude/homunculus/projects/<project-hash>/observations.jsonl.bak.$(date +%Y%m%d-%H%M%S)\n\n# Verify hooks are enabled\ngrep -r \"observe\" ~/.claude/settings.json\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Agent Harness Failures",
+      "zh-Hans": "## 代理工具故障"
+    },
+    {
+      "en-US": "### Agent Not Found",
+      "zh-Hans": "### 未找到代理"
+    },
+    {
+      "en-US": "**Symptom:** \"Agent not loaded\" or \"Unknown agent\" errors",
+      "zh-Hans": "**症状：** 出现\"代理未加载\"或\"未知代理\"错误"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Plugin not installed correctly\n- Agent path misconfiguration\n- Marketplace vs manual install mismatch",
+      "zh-Hans": "* 插件未正确安装\n* 代理路径配置错误\n* 市场安装与手动安装不匹配"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Check plugin installation\nls ~/.claude/plugins/cache/\n\n# Verify agent exists (marketplace install)\nls ~/.claude/plugins/cache/*/agents/\n\n# For manual install, agents should be in:\nls ~/.claude/agents/  # Custom agents only\n\n# Reload plugin\n# Claude Code → Settings → Extensions → Reload\n```",
+      "zh-Hans": "```bash\n# Check plugin installation\nls ~/.claude/plugins/cache/\n\n# Verify agent exists (marketplace install)\nls ~/.claude/plugins/cache/*/agents/\n\n# For manual install, agents should be in:\nls ~/.claude/agents/  # Custom agents only\n\n# Reload plugin\n# Claude Code → Settings → Extensions → Reload\n```"
+    },
+    {
+      "en-US": "### Workflow Execution Hangs",
+      "zh-Hans": "### 工作流执行挂起"
+    },
+    {
+      "en-US": "**Symptom:** Agent starts but never completes",
+      "zh-Hans": "**症状：** 代理启动但从未完成"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Infinite loops in agent logic\n- Blocked on user input\n- Network timeout waiting for API",
+      "zh-Hans": "* 代理逻辑中存在无限循环\n* 等待用户输入时被阻塞\n* 等待 API 响应时网络超时"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# 1. Check for stuck processes\nps aux | grep claude\n\n# 2. Enable debug mode\nexport CLAUDE_DEBUG=1\n\n# 3. Set shorter timeouts\nexport CLAUDE_TIMEOUT=30\n\n# 4. Check network connectivity\ncurl -I https://api.anthropic.com\n```",
+      "zh-Hans": "```bash\n# 1. Check for stuck processes\nps aux | grep claude\n\n# 2. Enable debug mode\nexport CLAUDE_DEBUG=1\n\n# 3. Set shorter timeouts\nexport CLAUDE_TIMEOUT=30\n\n# 4. Check network connectivity\ncurl -I https://api.anthropic.com\n```"
+    },
+    {
+      "en-US": "### Tool Use Errors",
+      "zh-Hans": "### 工具使用错误"
+    },
+    {
+      "en-US": "**Symptom:** \"Tool execution failed\" or permission denied",
+      "zh-Hans": "**症状：** 出现\"工具执行失败\"或权限被拒绝"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Missing dependencies (npm, python, etc.)\n- Insufficient file permissions\n- Path not found",
+      "zh-Hans": "* 缺少依赖项（npm、python 等）\n* 文件权限不足\n* 路径未找到"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Verify required tools are installed\nwhich node python3 npm git\n\n# Fix permissions on hook scripts\nchmod +x ~/.claude/plugins/cache/*/hooks/*.sh\nchmod +x ~/.claude/plugins/cache/*/skills/*/hooks/*.sh\n\n# Check PATH includes necessary binaries\necho $PATH\n```",
+      "zh-Hans": "```bash\n# Verify required tools are installed\nwhich node python3 npm git\n\n# Fix permissions on hook scripts\nchmod +x ~/.claude/plugins/cache/*/hooks/*.sh\nchmod +x ~/.claude/plugins/cache/*/skills/*/hooks/*.sh\n\n# Check PATH includes necessary binaries\necho $PATH\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Hook & Workflow Errors",
+      "zh-Hans": "## 钩子与工作流错误"
+    },
+    {
+      "en-US": "### Hooks Not Firing",
+      "zh-Hans": "### 钩子未触发"
+    },
+    {
+      "en-US": "**Symptom:** Pre/post hooks don't execute",
+      "zh-Hans": "**症状：** 前置/后置钩子未执行"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Hooks not registered in settings.json\n- Invalid hook syntax\n- Hook script not executable",
+      "zh-Hans": "* 钩子未在 settings.json 中注册\n* 钩子语法无效\n* 钩子脚本不可执行"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Check hooks are registered\ngrep -A 10 '\"hooks\"' ~/.claude/settings.json\n\n# Verify hook files exist and are executable\nls -la ~/.claude/plugins/cache/*/hooks/\n\n# Test hook manually\nbash ~/.claude/plugins/cache/*/hooks/pre-bash.sh <<< '{\"command\":\"echo test\"}'\n\n# Re-register hooks (if using plugin)\n# Disable and re-enable plugin in Claude Code settings\n```",
+      "zh-Hans": "```bash\n# Check hooks are registered\ngrep -A 10 '\"hooks\"' ~/.claude/settings.json\n\n# Verify hook files exist and are executable\nls -la ~/.claude/plugins/cache/*/hooks/\n\n# Test hook manually\nbash ~/.claude/plugins/cache/*/hooks/pre-bash.sh <<< '{\"command\":\"echo test\"}'\n\n# Re-register hooks (if using plugin)\n# Disable and re-enable plugin in Claude Code settings\n```"
+    },
+    {
+      "en-US": "### Python/Node Version Mismatches",
+      "zh-Hans": "### Python/Node 版本不匹配"
+    },
+    {
+      "en-US": "**Symptom:** \"python3 not found\" or \"node: command not found\"",
+      "zh-Hans": "**症状：** 出现\"未找到 python3\"或\"node: 命令未找到\""
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Missing Python/Node installation\n- PATH not configured\n- Wrong Python version (Windows)",
+      "zh-Hans": "* 缺少 Python/Node 安装\n* PATH 未配置\n* Python 版本错误（Windows）"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Install Python 3 (if missing)\n# macOS: brew install python3\n# Ubuntu: sudo apt install python3\n# Windows: Download from python.org\n\n# Install Node.js (if missing)\n# macOS: brew install node\n# Ubuntu: sudo apt install nodejs npm\n# Windows: Download from nodejs.org\n\n# Verify installations\npython3 --version\nnode --version\nnpm --version\n\n# Windows: Ensure python (not python3) works\npython --version\n```",
+      "zh-Hans": "```bash\n# Install Python 3 (if missing)\n# macOS: brew install python3\n# Ubuntu: sudo apt install python3\n# Windows: Download from python.org\n\n# Install Node.js (if missing)\n# macOS: brew install node\n# Ubuntu: sudo apt install nodejs npm\n# Windows: Download from nodejs.org\n\n# Verify installations\npython3 --version\nnode --version\nnpm --version\n\n# Windows: Ensure python (not python3) works\npython --version\n```"
+    },
+    {
+      "en-US": "### Dev Server Blocker False Positives",
+      "zh-Hans": "### 开发服务器拦截器误报"
+    },
+    {
+      "en-US": "**Symptom:** Hook blocks legitimate commands mentioning \"dev\"",
+      "zh-Hans": "**症状：** 钩子拦截了提及\"dev\"的合法命令"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Heredoc content triggering pattern match\n- Non-dev commands with \"dev\" in arguments",
+      "zh-Hans": "* Heredoc 内容触发模式匹配\n* 参数中包含\"dev\"的非开发命令"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# This is fixed in v1.8.0+ (PR #371)\n# Upgrade plugin to latest version\n\n# Workaround: Wrap dev servers in tmux\ntmux new-session -d -s dev \"npm run dev\"\ntmux attach -t dev\n\n# Disable hook temporarily if needed\n# Edit ~/.claude/settings.json and remove pre-bash hook\n```",
+      "zh-Hans": "```bash\n# This is fixed in v1.8.0+ (PR #371)\n# Upgrade plugin to latest version\n\n# Workaround: Wrap dev servers in tmux\ntmux new-session -d -s dev \"npm run dev\"\ntmux attach -t dev\n\n# Disable hook temporarily if needed\n# Edit ~/.claude/settings.json and remove pre-bash hook\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Installation & Setup",
+      "zh-Hans": "## 安装与设置"
+    },
+    {
+      "en-US": "### Plugin Not Loading",
+      "zh-Hans": "### 插件未加载"
+    },
+    {
+      "en-US": "**Symptom:** Plugin features unavailable after install",
+      "zh-Hans": "**症状：** 安装后插件功能不可用"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Marketplace cache not updated\n- Claude Code version incompatibility\n- Corrupted plugin files",
+      "zh-Hans": "* 市场缓存未更新\n* Claude Code 版本不兼容\n* 插件文件损坏"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Inspect the plugin cache before changing it\nls -la ~/.claude/plugins/cache/\n\n# Back up the plugin cache instead of deleting it in place\nmv ~/.claude/plugins/cache ~/.claude/plugins/cache.backup.$(date +%Y%m%d-%H%M%S)\nmkdir -p ~/.claude/plugins/cache\n\n# Reinstall from marketplace\n# Claude Code → Extensions → Everything Claude Code → Uninstall\n# Then reinstall from marketplace\n\n# Check Claude Code version\nclaude --version\n# Requires Claude Code 2.0+\n\n# Manual install (if marketplace fails)\ngit clone https://github.com/affaan-m/everything-claude-code.git\ncp -r everything-claude-code ~/.claude/plugins/ecc\n```",
+      "zh-Hans": "```bash\n# Inspect the plugin cache before changing it\nls -la ~/.claude/plugins/cache/\n\n# Back up the plugin cache instead of deleting it in place\nmv ~/.claude/plugins/cache ~/.claude/plugins/cache.backup.$(date +%Y%m%d-%H%M%S)\nmkdir -p ~/.claude/plugins/cache\n\n# Reinstall from marketplace\n# Claude Code → Extensions → Everything Claude Code → Uninstall\n# Then reinstall from marketplace\n\n# Check Claude Code version\nclaude --version\n# Requires Claude Code 2.0+\n\n# Manual install (if marketplace fails)\ngit clone https://github.com/affaan-m/everything-claude-code.git\ncp -r everything-claude-code ~/.claude/plugins/ecc\n```"
+    },
+    {
+      "en-US": "### Package Manager Detection Fails",
+      "zh-Hans": "### 包管理器检测失败"
+    },
+    {
+      "en-US": "**Symptom:** Wrong package manager used (npm instead of pnpm)",
+      "zh-Hans": "**症状：** 使用了错误的包管理器（用 npm 而不是 pnpm）"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- No lock file present\n- CLAUDE_PACKAGE_MANAGER not set\n- Multiple lock files confusing detection",
+      "zh-Hans": "* 没有 lock 文件\n* 未设置 CLAUDE\\_PACKAGE\\_MANAGER\n* 多个 lock 文件导致检测混乱"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Set preferred package manager globally\nexport CLAUDE_PACKAGE_MANAGER=pnpm\n# Add to ~/.bashrc or ~/.zshrc\n\n# Or set per-project\necho '{\"packageManager\": \"pnpm\"}' > .claude/package-manager.json\n\n# Or use package.json field\nnpm pkg set packageManager=\"pnpm@8.15.0\"\n\n# Warning: removing lock files can change installed dependency versions.\n# Commit or back up the lock file first, then run a fresh install and re-run CI.\n# Only do this when intentionally switching package managers.\nrm package-lock.json  # If using pnpm/yarn/bun\n```",
+      "zh-Hans": "```bash\n# Set preferred package manager globally\nexport CLAUDE_PACKAGE_MANAGER=pnpm\n# Add to ~/.bashrc or ~/.zshrc\n\n# Or set per-project\necho '{\"packageManager\": \"pnpm\"}' > .claude/package-manager.json\n\n# Or use package.json field\nnpm pkg set packageManager=\"pnpm@8.15.0\"\n\n# Warning: removing lock files can change installed dependency versions.\n# Commit or back up the lock file first, then run a fresh install and re-run CI.\n# Only do this when intentionally switching package managers.\nrm package-lock.json  # If using pnpm/yarn/bun\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Performance Issues",
+      "zh-Hans": "## 性能问题"
+    },
+    {
+      "en-US": "### Slow Response Times",
+      "zh-Hans": "### 响应时间缓慢"
+    },
+    {
+      "en-US": "**Symptom:** Agent takes 30+ seconds to respond",
+      "zh-Hans": "**症状：** 代理需要 30 秒以上才能响应"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Large observation files\n- Too many active hooks\n- Network latency to API",
+      "zh-Hans": "* 大型观察文件\n* 活动钩子过多\n* 到 API 的网络延迟"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Archive large observations instead of deleting them\narchive_dir=\"$HOME/.claude/homunculus/archive/$(date +%Y%m%d)\"\nmkdir -p \"$archive_dir\"\nfind ~/.claude/homunculus/projects -name \"observations.jsonl\" -size +10M -exec sh -c '\n  for file do\n    base=$(basename \"$(dirname \"$file\")\")\n    gzip -c \"$file\" > \"'\"$archive_dir\"'/${base}-observations.jsonl.gz\"\n    : > \"$file\"\n  done\n' sh {} +\n\n# Disable unused hooks temporarily\n# Edit ~/.claude/settings.json\n\n# Keep active observation files small\n# Large archives should live under ~/.claude/homunculus/archive/\n```",
+      "zh-Hans": "```bash\n# Archive large observations instead of deleting them\narchive_dir=\"$HOME/.claude/homunculus/archive/$(date +%Y%m%d)\"\nmkdir -p \"$archive_dir\"\nfind ~/.claude/homunculus/projects -name \"observations.jsonl\" -size +10M -exec sh -c '\n  for file do\n    base=$(basename \"$(dirname \"$file\")\")\n    gzip -c \"$file\" > \"'\"$archive_dir\"'/${base}-observations.jsonl.gz\"\n    : > \"$file\"\n  done\n' sh {} +\n\n# Disable unused hooks temporarily\n# Edit ~/.claude/settings.json\n\n# Keep active observation files small\n# Large archives should live under ~/.claude/homunculus/archive/\n```"
+    },
+    {
+      "en-US": "### High CPU Usage",
+      "zh-Hans": "### CPU 使用率高"
+    },
+    {
+      "en-US": "**Symptom:** Claude Code consuming 100% CPU",
+      "zh-Hans": "**症状：** Claude Code 占用 100% CPU"
+    },
+    {
+      "en-US": "**Causes:**",
+      "zh-Hans": "**原因：**"
+    },
+    {
+      "en-US": "- Infinite observation loops\n- File watching on large directories\n- Memory leaks in hooks",
+      "zh-Hans": "* 无限观察循环\n* 对大型目录的文件监视\n* 钩子中的内存泄漏"
+    },
+    {
+      "en-US": "**Solutions:**",
+      "zh-Hans": "**解决方案：**"
+    },
+    {
+      "en-US": "```bash\n# Check for runaway processes\ntop -o cpu | grep claude\n\n# Disable continuous learning temporarily\ntouch ~/.claude/homunculus/disabled\n\n# Restart Claude Code\n# Cmd/Ctrl+Q then reopen\n\n# Check observation file size\ndu -sh ~/.claude/homunculus/*/\n```",
+      "zh-Hans": "```bash\n# Check for runaway processes\ntop -o cpu | grep claude\n\n# Disable continuous learning temporarily\ntouch ~/.claude/homunculus/disabled\n\n# Restart Claude Code\n# Cmd/Ctrl+Q then reopen\n\n# Check observation file size\ndu -sh ~/.claude/homunculus/*/\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Common Error Messages",
+      "zh-Hans": "## 常见错误信息"
+    },
+    {
+      "en-US": "### \"EACCES: permission denied\"",
+      "zh-Hans": "### \"EACCES: permission denied\""
+    },
+    {
+      "en-US": "```bash\n# Fix hook permissions\nfind ~/.claude/plugins -name \"*.sh\" -exec chmod +x {} \\;\n\n# Fix observation directory permissions\nchmod -R u+rwX,go+rX ~/.claude/homunculus\n```",
+      "zh-Hans": "```bash\n# Fix hook permissions\nfind ~/.claude/plugins -name \"*.sh\" -exec chmod +x {} \\;\n\n# Fix observation directory permissions\nchmod -R u+rwX,go+rX ~/.claude/homunculus\n```"
+    },
+    {
+      "en-US": "### \"MODULE_NOT_FOUND\"",
+      "zh-Hans": "### \"MODULE\\_NOT\\_FOUND\""
+    },
+    {
+      "en-US": "```bash\n# Install plugin dependencies\ncd ~/.claude/plugins/cache/everything-claude-code\nnpm install\n\n# Or for manual install\ncd ~/.claude/plugins/ecc\nnpm install\n```",
+      "zh-Hans": "```bash\n# Install plugin dependencies\ncd ~/.claude/plugins/cache/everything-claude-code\nnpm install\n\n# Or for manual install\ncd ~/.claude/plugins/ecc\nnpm install\n```"
+    },
+    {
+      "en-US": "### \"spawn UNKNOWN\"",
+      "zh-Hans": "### \"spawn UNKNOWN\""
+    },
+    {
+      "en-US": "```bash\n# Windows-specific: Ensure scripts use correct line endings\n# Convert CRLF to LF\nfind ~/.claude/plugins -name \"*.sh\" -exec dos2unix {} \\;\n\n# Or install dos2unix\n# macOS: brew install dos2unix\n# Ubuntu: sudo apt install dos2unix\n```",
+      "zh-Hans": "```bash\n# Windows-specific: Ensure scripts use correct line endings\n# Convert CRLF to LF\nfind ~/.claude/plugins -name \"*.sh\" -exec dos2unix {} \\;\n\n# Or install dos2unix\n# macOS: brew install dos2unix\n# Ubuntu: sudo apt install dos2unix\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Getting Help",
+      "zh-Hans": "## 获取帮助"
+    },
+    {
+      "en-US": "If you're still experiencing issues:",
+      "zh-Hans": "如果您仍然遇到问题："
+    },
+    {
+      "en-US": "1. **Check GitHub Issues**: [github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)\n2. **Enable Debug Logging**:\n   ```bash\n   export CLAUDE_DEBUG=1\n   export CLAUDE_LOG_LEVEL=debug\n   ```\n3. **Collect Diagnostic Info**:\n   ```bash\n   claude --version\n   node --version\n   python3 --version\n   echo $CLAUDE_PACKAGE_MANAGER\n   ls -la ~/.claude/plugins/cache/\n   ```\n4. **Open an Issue**: Include debug logs, error messages, and diagnostic info",
+      "zh-Hans": "1. **检查 GitHub Issues**：[github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)\n2. **启用调试日志记录**：\n   ```bash\n   export CLAUDE_DEBUG=1\n   export CLAUDE_LOG_LEVEL=debug\n   ```\n3. **收集诊断信息**：\n   ```bash\n   claude --version\n   node --version\n   python3 --version\n   echo $CLAUDE_PACKAGE_MANAGER\n   ls -la ~/.claude/plugins/cache/\n   ```\n4. **提交 Issue**：包括调试日志、错误信息和诊断信息"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Related Documentation",
+      "zh-Hans": "## 相关文档"
+    },
+    {
+      "en-US": "- [README.md](./README.md) - Installation and features\n- [CONTRIBUTING.md](./CONTRIBUTING.md) - Development guidelines\n- [docs/](./docs/) - Detailed documentation\n- [examples/](./examples/) - Usage examples",
+      "zh-Hans": "* [README.md](./README.md) - 安装与功能\n* [CONTRIBUTING.md](./CONTRIBUTING.md) - 开发指南\n* [docs/](./docs/) - 详细文档\n* [examples/](./examples/) - 使用示例"
+    }
+  ]
+}

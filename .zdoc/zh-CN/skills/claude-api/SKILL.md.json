@@ -1,0 +1,202 @@
+{
+  "sourceFile": "skills/claude-api/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: claude-api\ndescription: Anthropic Claude API patterns for Python and TypeScript. Covers Messages API, streaming, tool use, vision, extended thinking, batches, prompt caching, and Claude Agent SDK. Use when building applications with the Claude API or Anthropic SDKs.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: claude-api\ndescription: Anthropic Claude API 的 Python 和 TypeScript 使用模式。涵盖 Messages API、流式处理、工具使用、视觉功能、扩展思维、批量处理、提示缓存和 Claude Agent SDK。适用于使用 Claude API 或 Anthropic SDK 构建应用程序的场景。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Claude API",
+      "zh-Hans": "# Claude API"
+    },
+    {
+      "en-US": "Build applications with the Anthropic Claude API and SDKs.",
+      "zh-Hans": "使用 Anthropic Claude API 和 SDK 构建应用程序。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Building applications that call the Claude API\n- Code imports `anthropic` (Python) or `@anthropic-ai/sdk` (TypeScript)\n- User asks about Claude API patterns, tool use, streaming, or vision\n- Implementing agent workflows with Claude Agent SDK\n- Optimizing API costs, token usage, or latency",
+      "zh-Hans": "* 构建调用 Claude API 的应用程序\n* 代码导入 `anthropic` (Python) 或 `@anthropic-ai/sdk` (TypeScript)\n* 用户询问 Claude API 模式、工具使用、流式传输或视觉功能\n* 使用 Claude Agent SDK 实现智能体工作流\n* 优化 API 成本、令牌使用或延迟"
+    },
+    {
+      "en-US": "## Model Selection",
+      "zh-Hans": "## 模型选择"
+    },
+    {
+      "en-US": "| Model | ID | Best For |\n|-------|-----|----------|\n| Opus 4.1 | `claude-opus-4-1` | Complex reasoning, architecture, research |\n| Sonnet 4 | `claude-sonnet-4-0` | Balanced coding, most development tasks |\n| Haiku 3.5 | `claude-3-5-haiku-latest` | Fast responses, high-volume, cost-sensitive |",
+      "zh-Hans": "| 模型 | ID | 最适合 |\n|-------|-----|----------|\n| Opus 4.1 | `claude-opus-4-1` | 复杂推理、架构设计、研究 |\n| Sonnet 4 | `claude-sonnet-4-0` | 平衡的编码任务，大多数开发工作 |\n| Haiku 3.5 | `claude-3-5-haiku-latest` | 快速响应、高吞吐量、成本敏感型 |"
+    },
+    {
+      "en-US": "Default to Sonnet 4 unless the task requires deep reasoning (Opus) or speed/cost optimization (Haiku). For production, prefer pinned snapshot IDs over aliases.",
+      "zh-Hans": "默认使用 Sonnet 4，除非任务需要深度推理（Opus）或速度/成本优化（Haiku）。对于生产环境，优先使用固定的快照 ID 而非别名。"
+    },
+    {
+      "en-US": "## Python SDK",
+      "zh-Hans": "## Python SDK"
+    },
+    {
+      "en-US": "### Installation",
+      "zh-Hans": "### 安装"
+    },
+    {
+      "en-US": "```bash\npip install anthropic\n```",
+      "zh-Hans": "```bash\npip install anthropic\n```"
+    },
+    {
+      "en-US": "### Basic Message",
+      "zh-Hans": "### 基本消息"
+    },
+    {
+      "en-US": "```python\nimport anthropic\n\nclient = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env\n\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    messages=[\n        {\"role\": \"user\", \"content\": \"Explain async/await in Python\"}\n    ]\n)\nprint(message.content[0].text)\n```",
+      "zh-Hans": "```python\nimport anthropic\n\nclient = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env\n\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    messages=[\n        {\"role\": \"user\", \"content\": \"Explain async/await in Python\"}\n    ]\n)\nprint(message.content[0].text)\n```"
+    },
+    {
+      "en-US": "### Streaming",
+      "zh-Hans": "### 流式传输"
+    },
+    {
+      "en-US": "```python\nwith client.messages.stream(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    messages=[{\"role\": \"user\", \"content\": \"Write a haiku about coding\"}]\n) as stream:\n    for text in stream.text_stream:\n        print(text, end=\"\", flush=True)\n```",
+      "zh-Hans": "```python\nwith client.messages.stream(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    messages=[{\"role\": \"user\", \"content\": \"Write a haiku about coding\"}]\n) as stream:\n    for text in stream.text_stream:\n        print(text, end=\"\", flush=True)\n```"
+    },
+    {
+      "en-US": "### System Prompt",
+      "zh-Hans": "### 系统提示词"
+    },
+    {
+      "en-US": "```python\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    system=\"You are a senior Python developer. Be concise.\",\n    messages=[{\"role\": \"user\", \"content\": \"Review this function\"}]\n)\n```",
+      "zh-Hans": "```python\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    system=\"You are a senior Python developer. Be concise.\",\n    messages=[{\"role\": \"user\", \"content\": \"Review this function\"}]\n)\n```"
+    },
+    {
+      "en-US": "## TypeScript SDK",
+      "zh-Hans": "## TypeScript SDK"
+    },
+    {
+      "en-US": "### Installation",
+      "zh-Hans": "### 安装"
+    },
+    {
+      "en-US": "```bash\nnpm install @anthropic-ai/sdk\n```",
+      "zh-Hans": "```bash\nnpm install @anthropic-ai/sdk\n```"
+    },
+    {
+      "en-US": "### Basic Message",
+      "zh-Hans": "### 基本消息"
+    },
+    {
+      "en-US": "```typescript\nimport Anthropic from \"@anthropic-ai/sdk\";\n\nconst client = new Anthropic(); // reads ANTHROPIC_API_KEY from env\n\nconst message = await client.messages.create({\n  model: \"claude-sonnet-4-0\",\n  max_tokens: 1024,\n  messages: [\n    { role: \"user\", content: \"Explain async/await in TypeScript\" }\n  ],\n});\nconsole.log(message.content[0].text);\n```",
+      "zh-Hans": "```typescript\nimport Anthropic from \"@anthropic-ai/sdk\";\n\nconst client = new Anthropic(); // reads ANTHROPIC_API_KEY from env\n\nconst message = await client.messages.create({\n  model: \"claude-sonnet-4-0\",\n  max_tokens: 1024,\n  messages: [\n    { role: \"user\", content: \"Explain async/await in TypeScript\" }\n  ],\n});\nconsole.log(message.content[0].text);\n```"
+    },
+    {
+      "en-US": "### Streaming",
+      "zh-Hans": "### 流式传输"
+    },
+    {
+      "en-US": "```typescript\nconst stream = client.messages.stream({\n  model: \"claude-sonnet-4-0\",\n  max_tokens: 1024,\n  messages: [{ role: \"user\", content: \"Write a haiku\" }],\n});\n\nfor await (const event of stream) {\n  if (event.type === \"content_block_delta\" && event.delta.type === \"text_delta\") {\n    process.stdout.write(event.delta.text);\n  }\n}\n```",
+      "zh-Hans": "```typescript\nconst stream = client.messages.stream({\n  model: \"claude-sonnet-4-0\",\n  max_tokens: 1024,\n  messages: [{ role: \"user\", content: \"Write a haiku\" }],\n});\n\nfor await (const event of stream) {\n  if (event.type === \"content_block_delta\" && event.delta.type === \"text_delta\") {\n    process.stdout.write(event.delta.text);\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Tool Use",
+      "zh-Hans": "## 工具使用"
+    },
+    {
+      "en-US": "Define tools and let Claude call them:",
+      "zh-Hans": "定义工具并让 Claude 调用它们："
+    },
+    {
+      "en-US": "```python\ntools = [\n    {\n        \"name\": \"get_weather\",\n        \"description\": \"Get current weather for a location\",\n        \"input_schema\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"location\": {\"type\": \"string\", \"description\": \"City name\"},\n                \"unit\": {\"type\": \"string\", \"enum\": [\"celsius\", \"fahrenheit\"]}\n            },\n            \"required\": [\"location\"]\n        }\n    }\n]\n\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    tools=tools,\n    messages=[{\"role\": \"user\", \"content\": \"What's the weather in SF?\"}]\n)\n\n# Handle tool use response\nfor block in message.content:\n    if block.type == \"tool_use\":\n        # Execute the tool with block.input\n        result = get_weather(**block.input)\n        # Send result back\n        follow_up = client.messages.create(\n            model=\"claude-sonnet-4-0\",\n            max_tokens=1024,\n            tools=tools,\n            messages=[\n                {\"role\": \"user\", \"content\": \"What's the weather in SF?\"},\n                {\"role\": \"assistant\", \"content\": message.content},\n                {\"role\": \"user\", \"content\": [\n                    {\"type\": \"tool_result\", \"tool_use_id\": block.id, \"content\": str(result)}\n                ]}\n            ]\n        )\n```",
+      "zh-Hans": "```python\ntools = [\n    {\n        \"name\": \"get_weather\",\n        \"description\": \"Get current weather for a location\",\n        \"input_schema\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"location\": {\"type\": \"string\", \"description\": \"City name\"},\n                \"unit\": {\"type\": \"string\", \"enum\": [\"celsius\", \"fahrenheit\"]}\n            },\n            \"required\": [\"location\"]\n        }\n    }\n]\n\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    tools=tools,\n    messages=[{\"role\": \"user\", \"content\": \"What's the weather in SF?\"}]\n)\n\n# Handle tool use response\nfor block in message.content:\n    if block.type == \"tool_use\":\n        # Execute the tool with block.input\n        result = get_weather(**block.input)\n        # Send result back\n        follow_up = client.messages.create(\n            model=\"claude-sonnet-4-0\",\n            max_tokens=1024,\n            tools=tools,\n            messages=[\n                {\"role\": \"user\", \"content\": \"What's the weather in SF?\"},\n                {\"role\": \"assistant\", \"content\": message.content},\n                {\"role\": \"user\", \"content\": [\n                    {\"type\": \"tool_result\", \"tool_use_id\": block.id, \"content\": str(result)}\n                ]}\n            ]\n        )\n```"
+    },
+    {
+      "en-US": "## Vision",
+      "zh-Hans": "## 视觉功能"
+    },
+    {
+      "en-US": "Send images for analysis:",
+      "zh-Hans": "发送图像进行分析："
+    },
+    {
+      "en-US": "```python\nimport base64\n\nwith open(\"diagram.png\", \"rb\") as f:\n    image_data = base64.standard_b64encode(f.read()).decode(\"utf-8\")\n\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    messages=[{\n        \"role\": \"user\",\n        \"content\": [\n            {\"type\": \"image\", \"source\": {\"type\": \"base64\", \"media_type\": \"image/png\", \"data\": image_data}},\n            {\"type\": \"text\", \"text\": \"Describe this diagram\"}\n        ]\n    }]\n)\n```",
+      "zh-Hans": "```python\nimport base64\n\nwith open(\"diagram.png\", \"rb\") as f:\n    image_data = base64.standard_b64encode(f.read()).decode(\"utf-8\")\n\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    messages=[{\n        \"role\": \"user\",\n        \"content\": [\n            {\"type\": \"image\", \"source\": {\"type\": \"base64\", \"media_type\": \"image/png\", \"data\": image_data}},\n            {\"type\": \"text\", \"text\": \"Describe this diagram\"}\n        ]\n    }]\n)\n```"
+    },
+    {
+      "en-US": "## Extended Thinking",
+      "zh-Hans": "## 扩展思考"
+    },
+    {
+      "en-US": "For complex reasoning tasks:",
+      "zh-Hans": "针对复杂推理任务："
+    },
+    {
+      "en-US": "```python\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=16000,\n    thinking={\n        \"type\": \"enabled\",\n        \"budget_tokens\": 10000\n    },\n    messages=[{\"role\": \"user\", \"content\": \"Solve this math problem step by step...\"}]\n)\n\nfor block in message.content:\n    if block.type == \"thinking\":\n        print(f\"Thinking: {block.thinking}\")\n    elif block.type == \"text\":\n        print(f\"Answer: {block.text}\")\n```",
+      "zh-Hans": "```python\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=16000,\n    thinking={\n        \"type\": \"enabled\",\n        \"budget_tokens\": 10000\n    },\n    messages=[{\"role\": \"user\", \"content\": \"Solve this math problem step by step...\"}]\n)\n\nfor block in message.content:\n    if block.type == \"thinking\":\n        print(f\"Thinking: {block.thinking}\")\n    elif block.type == \"text\":\n        print(f\"Answer: {block.text}\")\n```"
+    },
+    {
+      "en-US": "## Prompt Caching",
+      "zh-Hans": "## 提示词缓存"
+    },
+    {
+      "en-US": "Cache large system prompts or context to reduce costs:",
+      "zh-Hans": "缓存大型系统提示词或上下文以降低成本："
+    },
+    {
+      "en-US": "```python\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    system=[\n        {\"type\": \"text\", \"text\": large_system_prompt, \"cache_control\": {\"type\": \"ephemeral\"}}\n    ],\n    messages=[{\"role\": \"user\", \"content\": \"Question about the cached context\"}]\n)\n# Check cache usage\nprint(f\"Cache read: {message.usage.cache_read_input_tokens}\")\nprint(f\"Cache creation: {message.usage.cache_creation_input_tokens}\")\n```",
+      "zh-Hans": "```python\nmessage = client.messages.create(\n    model=\"claude-sonnet-4-0\",\n    max_tokens=1024,\n    system=[\n        {\"type\": \"text\", \"text\": large_system_prompt, \"cache_control\": {\"type\": \"ephemeral\"}}\n    ],\n    messages=[{\"role\": \"user\", \"content\": \"Question about the cached context\"}]\n)\n# Check cache usage\nprint(f\"Cache read: {message.usage.cache_read_input_tokens}\")\nprint(f\"Cache creation: {message.usage.cache_creation_input_tokens}\")\n```"
+    },
+    {
+      "en-US": "## Batches API",
+      "zh-Hans": "## 批量 API"
+    },
+    {
+      "en-US": "Process large volumes asynchronously at 50% cost reduction:",
+      "zh-Hans": "以 50% 的成本降低异步处理大量数据："
+    },
+    {
+      "en-US": "```python\nimport time\n\nbatch = client.messages.batches.create(\n    requests=[\n        {\n            \"custom_id\": f\"request-{i}\",\n            \"params\": {\n                \"model\": \"claude-sonnet-4-0\",\n                \"max_tokens\": 1024,\n                \"messages\": [{\"role\": \"user\", \"content\": prompt}]\n            }\n        }\n        for i, prompt in enumerate(prompts)\n    ]\n)\n\n# Poll for completion\nwhile True:\n    status = client.messages.batches.retrieve(batch.id)\n    if status.processing_status == \"ended\":\n        break\n    time.sleep(30)\n\n# Get results\nfor result in client.messages.batches.results(batch.id):\n    print(result.result.message.content[0].text)\n```",
+      "zh-Hans": "```python\nimport time\n\nbatch = client.messages.batches.create(\n    requests=[\n        {\n            \"custom_id\": f\"request-{i}\",\n            \"params\": {\n                \"model\": \"claude-sonnet-4-0\",\n                \"max_tokens\": 1024,\n                \"messages\": [{\"role\": \"user\", \"content\": prompt}]\n            }\n        }\n        for i, prompt in enumerate(prompts)\n    ]\n)\n\n# Poll for completion\nwhile True:\n    status = client.messages.batches.retrieve(batch.id)\n    if status.processing_status == \"ended\":\n        break\n    time.sleep(30)\n\n# Get results\nfor result in client.messages.batches.results(batch.id):\n    print(result.result.message.content[0].text)\n```"
+    },
+    {
+      "en-US": "## Claude Agent SDK",
+      "zh-Hans": "## Claude Agent SDK"
+    },
+    {
+      "en-US": "Build multi-step agents:",
+      "zh-Hans": "构建多步骤智能体："
+    },
+    {
+      "en-US": "```python\n# Note: Agent SDK API surface may change — check official docs\nimport anthropic\n\n# Define tools as functions\ntools = [{\n    \"name\": \"search_codebase\",\n    \"description\": \"Search the codebase for relevant code\",\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\"query\": {\"type\": \"string\"}},\n        \"required\": [\"query\"]\n    }\n}]\n\n# Run an agentic loop with tool use\nclient = anthropic.Anthropic()\nmessages = [{\"role\": \"user\", \"content\": \"Review the auth module for security issues\"}]\n\nwhile True:\n    response = client.messages.create(\n        model=\"claude-sonnet-4-0\",\n        max_tokens=4096,\n        tools=tools,\n        messages=messages,\n    )\n    if response.stop_reason == \"end_turn\":\n        break\n    # Handle tool calls and continue the loop\n    messages.append({\"role\": \"assistant\", \"content\": response.content})\n    # ... execute tools and append tool_result messages\n```",
+      "zh-Hans": "```python\n# Note: Agent SDK API surface may change — check official docs\nimport anthropic\n\n# Define tools as functions\ntools = [{\n    \"name\": \"search_codebase\",\n    \"description\": \"Search the codebase for relevant code\",\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\"query\": {\"type\": \"string\"}},\n        \"required\": [\"query\"]\n    }\n}]\n\n# Run an agentic loop with tool use\nclient = anthropic.Anthropic()\nmessages = [{\"role\": \"user\", \"content\": \"Review the auth module for security issues\"}]\n\nwhile True:\n    response = client.messages.create(\n        model=\"claude-sonnet-4-0\",\n        max_tokens=4096,\n        tools=tools,\n        messages=messages,\n    )\n    if response.stop_reason == \"end_turn\":\n        break\n    # Handle tool calls and continue the loop\n    messages.append({\"role\": \"assistant\", \"content\": response.content})\n    # ... execute tools and append tool_result messages\n```"
+    },
+    {
+      "en-US": "## Cost Optimization",
+      "zh-Hans": "## 成本优化"
+    },
+    {
+      "en-US": "| Strategy | Savings | When to Use |\n|----------|---------|-------------|\n| Prompt caching | Up to 90% on cached tokens | Repeated system prompts or context |\n| Batches API | 50% | Non-time-sensitive bulk processing |\n| Haiku instead of Sonnet | ~75% | Simple tasks, classification, extraction |\n| Shorter max_tokens | Variable | When you know output will be short |\n| Streaming | None (same cost) | Better UX, same price |",
+      "zh-Hans": "| 策略 | 节省幅度 | 使用时机 |\n|----------|---------|-------------|\n| 提示词缓存 | 缓存令牌成本降低高达 90% | 重复的系统提示词或上下文 |\n| 批量 API | 50% | 非时间敏感的批量处理 |\n| 使用 Haiku 而非 Sonnet | ~75% | 简单任务、分类、提取 |\n| 缩短 max\\_tokens | 可变 | 已知输出较短时 |\n| 流式传输 | 无（成本相同） | 更好的用户体验，价格相同 |"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "```python\nimport time\n\nfrom anthropic import APIError, RateLimitError, APIConnectionError\n\ntry:\n    message = client.messages.create(...)\nexcept RateLimitError:\n    # Back off and retry\n    time.sleep(60)\nexcept APIConnectionError:\n    # Network issue, retry with backoff\n    pass\nexcept APIError as e:\n    print(f\"API error {e.status_code}: {e.message}\")\n```",
+      "zh-Hans": "```python\nimport time\n\nfrom anthropic import APIError, RateLimitError, APIConnectionError\n\ntry:\n    message = client.messages.create(...)\nexcept RateLimitError:\n    # Back off and retry\n    time.sleep(60)\nexcept APIConnectionError:\n    # Network issue, retry with backoff\n    pass\nexcept APIError as e:\n    print(f\"API error {e.status_code}: {e.message}\")\n```"
+    },
+    {
+      "en-US": "## Environment Setup",
+      "zh-Hans": "## 环境设置"
+    },
+    {
+      "en-US": "```bash\n# Required\nexport ANTHROPIC_API_KEY=\"your-api-key-here\"\n\n# Optional: set default model\nexport ANTHROPIC_MODEL=\"claude-sonnet-4-0\"\n```",
+      "zh-Hans": "```bash\n# Required\nexport ANTHROPIC_API_KEY=\"your-api-key-here\"\n\n# Optional: set default model\nexport ANTHROPIC_MODEL=\"claude-sonnet-4-0\"\n```"
+    },
+    {
+      "en-US": "Never hardcode API keys. Always use environment variables.",
+      "zh-Hans": "切勿硬编码 API 密钥。始终使用环境变量。"
+    }
+  ]
+}

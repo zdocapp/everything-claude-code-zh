@@ -1,0 +1,542 @@
+{
+  "sourceFile": "skills/flutter-dart-code-review/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: flutter-dart-code-review\ndescription: Library-agnostic Flutter/Dart code review checklist covering widget best practices, state management patterns (BLoC, Riverpod, Provider, GetX, MobX, Signals), Dart idioms, performance, accessibility, security, and clean architecture.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: flutter-dart-code-review\ndescription: 库无关的Flutter/Dart代码审查清单，涵盖Widget最佳实践、状态管理模式（BLoC、Riverpod、Provider、GetX、MobX、Signals）、Dart惯用法、性能、可访问性、安全性和整洁架构。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Flutter/Dart Code Review Best Practices",
+      "zh-Hans": "# Flutter/Dart 代码审查最佳实践"
+    },
+    {
+      "en-US": "Comprehensive, library-agnostic checklist for reviewing Flutter/Dart applications. These principles apply regardless of which state management solution, routing library, or DI framework is used.",
+      "zh-Hans": "适用于审查 Flutter/Dart 应用程序的全面、与库无关的清单。无论使用哪种状态管理方案、路由库或依赖注入框架，这些原则都适用。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 1. General Project Health",
+      "zh-Hans": "## 1. 通用项目健康度"
+    },
+    {
+      "en-US": "- [ ] Project follows consistent folder structure (feature-first or layer-first)\n- [ ] Proper separation of concerns: UI, business logic, data layers\n- [ ] No business logic in widgets; widgets are purely presentational\n- [ ] `pubspec.yaml` is clean — no unused dependencies, versions pinned appropriately\n- [ ] `analysis_options.yaml` includes a strict lint set with strict analyzer settings enabled\n- [ ] No `print()` statements in production code — use `dart:developer` `log()` or a logging package\n- [ ] Generated files (`.g.dart`, `.freezed.dart`, `.gr.dart`) are up-to-date or in `.gitignore`\n- [ ] Platform-specific code isolated behind abstractions",
+      "zh-Hans": "* \\[ ] 项目遵循一致的文件夹结构（功能优先或分层优先）\n* \\[ ] 关注点分离得当：UI、业务逻辑、数据层\n* \\[ ] 部件中无业务逻辑；部件纯粹是展示性的\n* \\[ ] `pubspec.yaml` 是干净的 —— 没有未使用的依赖项，版本已适当固定\n* \\[ ] `analysis_options.yaml` 包含严格的 lint 规则集，并启用了严格的分析器设置\n* \\[ ] 生产代码中没有 `print()` 语句 —— 使用 `dart:developer` `log()` 或日志包\n* \\[ ] 生成的文件 (`.g.dart`, `.freezed.dart`, `.gr.dart`) 是最新的或在 `.gitignore` 中\n* \\[ ] 平台特定代码通过抽象进行隔离"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 2. Dart Language Pitfalls",
+      "zh-Hans": "## 2. Dart 语言陷阱"
+    },
+    {
+      "en-US": "- [ ] **Implicit dynamic**: Missing type annotations leading to `dynamic` — enable `strict-casts`, `strict-inference`, `strict-raw-types`\n- [ ] **Null safety misuse**: Excessive `!` (bang operator) instead of proper null checks or Dart 3 pattern matching (`if (value case var v?)`)\n- [ ] **Type promotion failures**: Using `this.field` where local variable promotion would work\n- [ ] **Catching too broadly**: `catch (e)` without `on` clause; always specify exception types\n- [ ] **Catching `Error`**: `Error` subtypes indicate bugs and should not be caught\n- [ ] **Unused `async`**: Functions marked `async` that never `await` — unnecessary overhead\n- [ ] **`late` overuse**: `late` used where nullable or constructor initialization would be safer; defers errors to runtime\n- [ ] **String concatenation in loops**: Use `StringBuffer` instead of `+` for iterative string building\n- [ ] **Mutable state in `const` contexts**: Fields in `const` constructor classes should not be mutable\n- [ ] **Ignoring `Future` return values**: Use `await` or explicitly call `unawaited()` to signal intent\n- [ ] **`var` where `final` works**: Prefer `final` for locals and `const` for compile-time constants\n- [ ] **Relative imports**: Use `package:` imports for consistency\n- [ ] **Mutable collections exposed**: Public APIs should return unmodifiable views, not raw `List`/`Map`\n- [ ] **Missing Dart 3 pattern matching**: Prefer switch expressions and `if-case` over verbose `is` checks and manual casting\n- [ ] **Throwaway classes for multiple returns**: Use Dart 3 records `(String, int)` instead of single-use DTOs\n- [ ] **`print()` in production code**: Use `dart:developer` `log()` or the project's logging package; `print()` has no log levels and cannot be filtered",
+      "zh-Hans": "* \\[ ] **隐式动态类型**：缺少类型注解导致 `dynamic` —— 启用 `strict-casts`, `strict-inference`, `strict-raw-types`\n* \\[ ] **空安全误用**：过度使用 `!`（感叹号操作符）而不是适当的空检查或 Dart 3 模式匹配 (`if (value case var v?)`)\n* \\[ ] **类型提升失败**：在可以使用局部变量类型提升的地方使用了 `this.field`\n* \\[ ] **捕获范围过宽**：`catch (e)` 没有 `on` 子句；应始终指定异常类型\n* \\[ ] **捕获 `Error`**：`Error` 子类型表示错误，不应被捕获\n* \\[ ] **未使用的 `async`**：标记为 `async` 但从未 `await` 的函数 —— 不必要的开销\n* \\[ ] **`late` 过度使用**：在可使用可空类型或构造函数初始化更安全的地方使用了 `late`；将错误推迟到运行时\n* \\[ ] **循环中的字符串拼接**：使用 `StringBuffer` 而不是 `+` 进行迭代式字符串构建\n* \\[ ] **`const` 上下文中的可变状态**：`const` 构造器类中的字段不应是可变的\n* \\[ ] **忽略 `Future` 返回值**：使用 `await` 或显式调用 `unawaited()` 来表明意图\n* \\[ ] **在 `final` 可用时使用 `var`**：局部变量首选 `final`，编译时常量首选 `const`\n* \\[ ] **相对导入**：为保持一致性，使用 `package:` 导入\n* \\[ ] **暴露可变集合**：公共 API 应返回不可修改的视图，而不是原始的 `List`/`Map`\n* \\[ ] **缺少 Dart 3 模式匹配**：优先使用 switch 表达式和 `if-case`，而不是冗长的 `is` 检查和手动类型转换\n* \\[ ] **为多重返回值使用一次性类**：使用 Dart 3 记录 `(String, int)` 代替一次性 DTO\n* \\[ ] **生产代码中的 `print()`**：使用 `dart:developer` `log()` 或项目的日志包；`print()` 没有日志级别且无法过滤"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 3. Widget Best Practices",
+      "zh-Hans": "## 3. 部件最佳实践"
+    },
+    {
+      "en-US": "### Widget decomposition:",
+      "zh-Hans": "### 部件分解："
+    },
+    {
+      "en-US": "- [ ] No single widget with a `build()` method exceeding ~80-100 lines\n- [ ] Widgets split by encapsulation AND by how they change (rebuild boundaries)\n- [ ] Private `_build*()` helper methods that return widgets are extracted to separate widget classes (enables element reuse, const propagation, and framework optimizations)\n- [ ] Stateless widgets preferred over Stateful where no mutable local state is needed\n- [ ] Extracted widgets are in separate files when reusable",
+      "zh-Hans": "* \\[ ] 没有单个部件的 `build()` 方法超过约 80-100 行\n* \\[ ] 部件按封装方式以及按变化方式（重建边界）进行拆分\n* \\[ ] 返回部件的私有 `_build*()` 辅助方法被提取到单独的部件类中（支持元素重用、常量传播和框架优化）\n* \\[ ] 在不需要可变局部状态的地方，优先使用无状态部件而非有状态部件\n* \\[ ] 提取的部件在可复用时放在单独的文件中"
+    },
+    {
+      "en-US": "### Const usage:",
+      "zh-Hans": "### Const 使用："
+    },
+    {
+      "en-US": "- [ ] `const` constructors used wherever possible — prevents unnecessary rebuilds\n- [ ] `const` literals for collections that don't change (`const []`, `const {}`)\n- [ ] Constructor is declared `const` when all fields are final",
+      "zh-Hans": "* \\[ ] 尽可能使用 `const` 构造器 —— 防止不必要的重建\n* \\[ ] 对不变化的集合使用 `const` 字面量 (`const []`, `const {}`)\n* \\[ ] 当所有字段都是 final 时，构造函数声明为 `const`"
+    },
+    {
+      "en-US": "### Key usage:",
+      "zh-Hans": "### Key 使用："
+    },
+    {
+      "en-US": "- [ ] `ValueKey` used in lists/grids to preserve state across reorders\n- [ ] `GlobalKey` used sparingly — only when accessing state across the tree is truly needed\n- [ ] `UniqueKey` avoided in `build()` — it forces rebuild every frame\n- [ ] `ObjectKey` used when identity is based on a data object rather than a single value",
+      "zh-Hans": "* \\[ ] 在列表/网格中使用 `ValueKey` 以在重新排序时保持状态\n* \\[ ] 谨慎使用 `GlobalKey` —— 仅在确实需要跨树访问状态时使用\n* \\[ ] 避免在 `build()` 中使用 `UniqueKey` —— 它会强制每帧都重建\n* \\[ ] 当身份基于数据对象而非单个值时，使用 `ObjectKey`"
+    },
+    {
+      "en-US": "### Theming & design system:",
+      "zh-Hans": "### 主题与设计系统："
+    },
+    {
+      "en-US": "- [ ] Colors come from `Theme.of(context).colorScheme` — no hardcoded `Colors.red` or hex values\n- [ ] Text styles come from `Theme.of(context).textTheme` — no inline `TextStyle` with raw font sizes\n- [ ] Dark mode compatibility verified — no assumptions about light background\n- [ ] Spacing and sizing use consistent design tokens or constants, not magic numbers",
+      "zh-Hans": "* \\[ ] 颜色来自 `Theme.of(context).colorScheme` —— 没有硬编码的 `Colors.red` 或十六进制值\n* \\[ ] 文本样式来自 `Theme.of(context).textTheme` —— 没有内联的 `TextStyle` 和原始字体大小\n* \\[ ] 已验证深色模式兼容性 —— 不假设浅色背景\n* \\[ ] 间距和尺寸使用一致的设计令牌或常量，而不是魔法数字"
+    },
+    {
+      "en-US": "### Build method complexity:",
+      "zh-Hans": "### Build 方法复杂度："
+    },
+    {
+      "en-US": "- [ ] No network calls, file I/O, or heavy computation in `build()`\n- [ ] No `Future.then()` or `async` work in `build()`\n- [ ] No subscription creation (`.listen()`) in `build()`\n- [ ] `setState()` localized to smallest possible subtree",
+      "zh-Hans": "* \\[ ] `build()` 中没有网络调用、文件 I/O 或繁重计算\n* \\[ ] `build()` 中没有 `Future.then()` 或 `async` 工作\n* \\[ ] `build()` 中没有创建订阅 (`.listen()`)\n* \\[ ] `setState()` 局部化到尽可能小的子树"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 4. State Management (Library-Agnostic)",
+      "zh-Hans": "## 4. 状态管理（与库无关）"
+    },
+    {
+      "en-US": "These principles apply to all Flutter state management solutions (BLoC, Riverpod, Provider, GetX, MobX, Signals, ValueNotifier, etc.).",
+      "zh-Hans": "这些原则适用于所有 Flutter 状态管理方案（BLoC、Riverpod、Provider、GetX、MobX、Signals、ValueNotifier 等）。"
+    },
+    {
+      "en-US": "### Architecture:",
+      "zh-Hans": "### 架构："
+    },
+    {
+      "en-US": "- [ ] Business logic lives outside the widget layer — in a state management component (BLoC, Notifier, Controller, Store, ViewModel, etc.)\n- [ ] State managers receive dependencies via injection, not by constructing them internally\n- [ ] A service or repository layer abstracts data sources — widgets and state managers should not call APIs or databases directly\n- [ ] State managers have a single responsibility — no \"god\" managers handling unrelated concerns\n- [ ] Cross-component dependencies follow the solution's conventions:\n  - In **Riverpod**: providers depending on providers via `ref.watch` is expected — flag only circular or overly tangled chains\n  - In **BLoC**: blocs should not directly depend on other blocs — prefer shared repositories or presentation-layer coordination\n  - In other solutions: follow the documented conventions for inter-component communication",
+      "zh-Hans": "* \\[ ] 业务逻辑位于部件层之外 —— 在状态管理组件中（BLoC、Notifier、Controller、Store、ViewModel 等）\n* \\[ ] 状态管理器通过依赖注入接收依赖，而不是内部构造它们\n* \\[ ] 服务或仓库层抽象数据源 —— 部件和状态管理器不应直接调用 API 或数据库\n* \\[ ] 状态管理器职责单一 —— 没有处理不相关职责的“上帝”管理器\n* \\[ ] 跨组件依赖遵循解决方案的约定：\n  * 在 **Riverpod** 中：提供者通过 `ref.watch` 依赖其他提供者是预期的 —— 仅标记循环或过度复杂的链\n  * 在 **BLoC** 中：bloc 不应直接依赖其他 bloc —— 优先使用共享仓库或表示层协调\n  * 在其他解决方案中：遵循文档中关于组件间通信的约定"
+    },
+    {
+      "en-US": "### Immutability & value equality (for immutable-state solutions: BLoC, Riverpod, Redux):",
+      "zh-Hans": "### 不可变性与值相等性（适用于不可变状态解决方案：BLoC、Riverpod、Redux）："
+    },
+    {
+      "en-US": "- [ ] State objects are immutable — new instances created via `copyWith()` or constructors, never mutated in-place\n- [ ] State classes implement `==` and `hashCode` properly (all fields included in comparison)\n- [ ] Mechanism is consistent across the project — manual override, `Equatable`, `freezed`, Dart records, or other\n- [ ] Collections inside state objects are not exposed as raw mutable `List`/`Map`",
+      "zh-Hans": "* \\[ ] 状态对象是不可变的 —— 通过 `copyWith()` 或构造函数创建新实例，绝不就地修改\n* \\[ ] 状态类正确实现 `==` 和 `hashCode`（比较中包含所有字段）\n* \\[ ] 机制在整个项目中保持一致 —— 手动覆盖、`Equatable`、`freezed`、Dart 记录或其他方式\n* \\[ ] 状态对象内部的集合不作为原始可变的 `List`/`Map` 暴露"
+    },
+    {
+      "en-US": "### Reactivity discipline (for reactive-mutation solutions: MobX, GetX, Signals):",
+      "zh-Hans": "### 响应式纪律（适用于响应式突变解决方案：MobX、GetX、Signals）："
+    },
+    {
+      "en-US": "- [ ] State is only mutated through the solution's reactive API (`@action` in MobX, `.value` on signals, `.obs` in GetX) — direct field mutation bypasses change tracking\n- [ ] Derived values use the solution's computed mechanism rather than being stored redundantly\n- [ ] Reactions and disposers are properly cleaned up (`ReactionDisposer` in MobX, effect cleanup in Signals)",
+      "zh-Hans": "* \\[ ] 状态仅通过解决方案的响应式 API 进行修改（MobX 中的 `@action`，Signals 上的 `.value`，GetX 中的 `.obs`）—— 直接字段修改会绕过变更跟踪\n* \\[ ] 派生值使用解决方案的计算机制，而不是冗余存储\n* \\[ ] 反应和清理器被正确清理（MobX 中的 `ReactionDisposer`，Signals 中的 effect 清理）"
+    },
+    {
+      "en-US": "### State shape design:",
+      "zh-Hans": "### 状态形状设计："
+    },
+    {
+      "en-US": "- [ ] Mutually exclusive states use sealed types, union variants, or the solution's built-in async state type (e.g. Riverpod's `AsyncValue`) — not boolean flags (`isLoading`, `isError`, `hasData`)\n- [ ] Every async operation models loading, success, and error as distinct states\n- [ ] All state variants are handled exhaustively in UI — no silently ignored cases\n- [ ] Error states carry error information for display; loading states don't carry stale data\n- [ ] Nullable data is not used as a loading indicator — states are explicit",
+      "zh-Hans": "* \\[ ] 互斥状态使用密封类型、联合变体或解决方案内置的异步状态类型（例如 Riverpod 的 `AsyncValue`）—— 而不是布尔标志 (`isLoading`, `isError`, `hasData`)\n* \\[ ] 每个异步操作都将加载、成功和错误建模为不同的状态\n* \\[ ] UI 中详尽处理所有状态变体 —— 没有静默忽略的情况\n* \\[ ] 错误状态携带用于显示的错误信息；加载状态不携带陈旧数据\n* \\[ ] 可空数据不用于作为加载指示器 —— 状态是明确的"
+    },
+    {
+      "en-US": "```dart\n// BAD — boolean flag soup allows impossible states\nclass UserState {\n  bool isLoading = false;\n  bool hasError = false; // isLoading && hasError is representable!\n  User? user;\n}\n\n// GOOD (immutable approach) — sealed types make impossible states unrepresentable\nsealed class UserState {}\nclass UserInitial extends UserState {}\nclass UserLoading extends UserState {}\nclass UserLoaded extends UserState {\n  final User user;\n  const UserLoaded(this.user);\n}\nclass UserError extends UserState {\n  final String message;\n  const UserError(this.message);\n}\n\n// GOOD (reactive approach) — observable enum + data, mutations via reactivity API\n// enum UserStatus { initial, loading, loaded, error }\n// Use your solution's observable/signal to wrap status and data separately\n```",
+      "zh-Hans": "```dart\n// BAD — boolean flag soup allows impossible states\nclass UserState {\n  bool isLoading = false;\n  bool hasError = false; // isLoading && hasError is representable!\n  User? user;\n}\n\n// GOOD (immutable approach) — sealed types make impossible states unrepresentable\nsealed class UserState {}\nclass UserInitial extends UserState {}\nclass UserLoading extends UserState {}\nclass UserLoaded extends UserState {\n  final User user;\n  const UserLoaded(this.user);\n}\nclass UserError extends UserState {\n  final String message;\n  const UserError(this.message);\n}\n\n// GOOD (reactive approach) — observable enum + data, mutations via reactivity API\n// enum UserStatus { initial, loading, loaded, error }\n// Use your solution's observable/signal to wrap status and data separately\n```"
+    },
+    {
+      "en-US": "### Rebuild optimization:",
+      "zh-Hans": "### 重建优化："
+    },
+    {
+      "en-US": "- [ ] State consumer widgets (Builder, Consumer, Observer, Obx, Watch, etc.) scoped as narrow as possible\n- [ ] Selectors used to rebuild only when specific fields change — not on every state emission\n- [ ] `const` widgets used to stop rebuild propagation through the tree\n- [ ] Computed/derived state is calculated reactively, not stored redundantly",
+      "zh-Hans": "* \\[ ] 状态消费者部件（Builder、Consumer、Observer、Obx、Watch 等）的范围尽可能窄\n* \\[ ] 使用选择器仅在特定字段变化时重建 —— 而不是每次状态发射时\n* \\[ ] 使用 `const` 部件来阻止重建在树中传播\n* \\[ ] 计算/派生状态是响应式计算的，而不是冗余存储的"
+    },
+    {
+      "en-US": "### Subscriptions & disposal:",
+      "zh-Hans": "### 订阅与清理："
+    },
+    {
+      "en-US": "- [ ] All manual subscriptions (`.listen()`) are cancelled in `dispose()` / `close()`\n- [ ] Stream controllers are closed when no longer needed\n- [ ] Timers are cancelled in disposal lifecycle\n- [ ] Framework-managed lifecycle is preferred over manual subscription (declarative builders over `.listen()`)\n- [ ] `mounted` check before `setState` in async callbacks\n- [ ] `BuildContext` not used after `await` without checking `context.mounted` (Flutter 3.7+) — stale context causes crashes\n- [ ] No navigation, dialogs, or scaffold messages after async gaps without verifying the widget is still mounted\n- [ ] `BuildContext` never stored in singletons, state managers, or static fields",
+      "zh-Hans": "* \\[ ] 所有手动订阅 (`.listen()`) 在 `dispose()` / `close()` 中被取消\n* \\[ ] 流控制器在不再需要时关闭\n* \\[ ] 定时器在清理生命周期中被取消\n* \\[ ] 优先使用框架管理的生命周期，而不是手动订阅（声明式构建器优于 `.listen()`）\n* \\[ ] 异步回调中在 `setState` 之前检查 `mounted`\n* \\[ ] 在 `await` 之后使用 `BuildContext` 而不检查 `context.mounted`（Flutter 3.7+）—— 过时的上下文会导致崩溃\n* \\[ ] 在异步间隙后，没有在验证部件仍然挂载的情况下进行导航、显示对话框或脚手架消息\n* \\[ ] `BuildContext` 绝不存储在单例、状态管理器或静态字段中"
+    },
+    {
+      "en-US": "### Local vs global state:",
+      "zh-Hans": "### 本地状态与全局状态："
+    },
+    {
+      "en-US": "- [ ] Ephemeral UI state (checkbox, slider, animation) uses local state (`setState`, `ValueNotifier`)\n- [ ] Shared state is lifted only as high as needed — not over-globalized\n- [ ] Feature-scoped state is properly disposed when the feature is no longer active",
+      "zh-Hans": "* \\[ ] 临时 UI 状态（复选框、滑块、动画）使用本地状态 (`setState`, `ValueNotifier`)\n* \\[ ] 共享状态仅提升到所需的高度 —— 不过度全局化\n* \\[ ] 功能作用域的状态在功能不再活跃时被正确清理"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 5. Performance",
+      "zh-Hans": "## 5. 性能"
+    },
+    {
+      "en-US": "### Unnecessary rebuilds:",
+      "zh-Hans": "### 不必要的重建："
+    },
+    {
+      "en-US": "- [ ] `setState()` not called at root widget level — localize state changes\n- [ ] `const` widgets used to stop rebuild propagation\n- [ ] `RepaintBoundary` used around complex subtrees that repaint independently\n- [ ] `AnimatedBuilder` child parameter used for subtrees independent of animation",
+      "zh-Hans": "* \\[ ] 不在根部件级别调用 `setState()` —— 将状态变化局部化\n* \\[ ] 使用 `const` 部件来阻止重建传播\n* \\[ ] 在独立重绘的复杂子树周围使用 `RepaintBoundary`\n* \\[ ] 使用 `AnimatedBuilder` 的 child 参数处理独立于动画的子树"
+    },
+    {
+      "en-US": "### Expensive operations in build():",
+      "zh-Hans": "### build() 中的昂贵操作："
+    },
+    {
+      "en-US": "- [ ] No sorting, filtering, or mapping large collections in `build()` — compute in state management layer\n- [ ] No regex compilation in `build()`\n- [ ] `MediaQuery.of(context)` usage is specific (e.g., `MediaQuery.sizeOf(context)`)",
+      "zh-Hans": "* \\[ ] 不在 `build()` 中对大型集合进行排序、过滤或映射 —— 在状态管理层计算\n* \\[ ] 不在 `build()` 中编译正则表达式\n* \\[ ] `MediaQuery.of(context)` 的使用是具体的（例如，`MediaQuery.sizeOf(context)`）"
+    },
+    {
+      "en-US": "### Image optimization:",
+      "zh-Hans": "### 图像优化："
+    },
+    {
+      "en-US": "- [ ] Network images use caching (any caching solution appropriate for the project)\n- [ ] Appropriate image resolution for target device (no loading 4K images for thumbnails)\n- [ ] `Image.asset` with `cacheWidth`/`cacheHeight` to decode at display size\n- [ ] Placeholder and error widgets provided for network images",
+      "zh-Hans": "* \\[ ] 网络图像使用缓存（适用于项目的任何缓存解决方案）\n* \\[ ] 为目标设备使用适当的图像分辨率（不为缩略图加载 4K 图像）\n* \\[ ] 使用带有 `cacheWidth`/`cacheHeight` 的 `Image.asset` 以按显示尺寸解码\n* \\[ ] 为网络图像提供占位符和错误部件"
+    },
+    {
+      "en-US": "### Lazy loading:",
+      "zh-Hans": "### 懒加载："
+    },
+    {
+      "en-US": "- [ ] `ListView.builder` / `GridView.builder` used instead of `ListView(children: [...])` for large or dynamic lists (concrete constructors are fine for small, static lists)\n- [ ] Pagination implemented for large data sets\n- [ ] Deferred loading (`deferred as`) used for heavy libraries in web builds",
+      "zh-Hans": "* \\[ ] 对于大型或动态列表，使用 `ListView.builder` / `GridView.builder` 代替 `ListView(children: [...])`（对于小型、静态列表，具体构造器是可以的）\n* \\[ ] 为大型数据集实现分页\n* \\[ ] 在 Web 构建中对重量级库使用延迟加载 (`deferred as`)"
+    },
+    {
+      "en-US": "### Other:",
+      "zh-Hans": "### 其他："
+    },
+    {
+      "en-US": "- [ ] `Opacity` widget avoided in animations — use `AnimatedOpacity` or `FadeTransition`\n- [ ] Clipping avoided in animations — pre-clip images\n- [ ] `operator ==` not overridden on widgets — use `const` constructors instead\n- [ ] Intrinsic dimension widgets (`IntrinsicHeight`, `IntrinsicWidth`) used sparingly (extra layout pass)",
+      "zh-Hans": "* \\[ ] 在动画中避免使用 `Opacity` 部件 —— 使用 `AnimatedOpacity` 或 `FadeTransition`\n* \\[ ] 在动画中避免裁剪 —— 预裁剪图像\n* \\[ ] 不在部件上重写 `operator ==` —— 使用 `const` 构造器代替\n* \\[ ] 固有尺寸部件 (`IntrinsicHeight`, `IntrinsicWidth`) 谨慎使用（额外的布局传递）"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 6. Testing",
+      "zh-Hans": "## 6. 测试"
+    },
+    {
+      "en-US": "### Test types and expectations:",
+      "zh-Hans": "### 测试类型与期望："
+    },
+    {
+      "en-US": "- [ ] **Unit tests**: Cover all business logic (state managers, repositories, utility functions)\n- [ ] **Widget tests**: Cover individual widget behavior, interactions, and visual output\n- [ ] **Integration tests**: Cover critical user flows end-to-end\n- [ ] **Golden tests**: Pixel-perfect comparisons for design-critical UI components",
+      "zh-Hans": "* \\[ ] **单元测试**：覆盖所有业务逻辑（状态管理器、仓库、工具函数）\n* \\[ ] **部件测试**：覆盖单个部件的行为、交互和视觉输出\n* \\[ ] **集成测试**：端到端覆盖关键用户流程\n* \\[ ] **Golden 测试**：对设计关键的 UI 组件进行像素级精确比较"
+    },
+    {
+      "en-US": "### Coverage targets:",
+      "zh-Hans": "### 覆盖率目标："
+    },
+    {
+      "en-US": "- [ ] Aim for 80%+ line coverage on business logic\n- [ ] All state transitions have corresponding tests (loading → success, loading → error, retry, etc.)\n- [ ] Edge cases tested: empty states, error states, loading states, boundary values",
+      "zh-Hans": "* \\[ ] 业务逻辑的目标行覆盖率达到 80% 以上\n* \\[ ] 所有状态转换都有对应的测试（加载 → 成功，加载 → 错误，重试等）\n* \\[ ] 测试边缘情况：空状态、错误状态、加载状态、边界值"
+    },
+    {
+      "en-US": "### Test isolation:",
+      "zh-Hans": "### 测试隔离："
+    },
+    {
+      "en-US": "- [ ] External dependencies (API clients, databases, services) are mocked or faked\n- [ ] Each test file tests exactly one class/unit\n- [ ] Tests verify behavior, not implementation details\n- [ ] Stubs define only the behavior needed for each test (minimal stubbing)\n- [ ] No shared mutable state between test cases",
+      "zh-Hans": "* \\[ ] 外部依赖（API 客户端、数据库、服务）已被模拟或伪造\n* \\[ ] 每个测试文件仅测试一个类/单元\n* \\[ ] 测试验证行为，而非实现细节\n* \\[ ] 存根仅定义每个测试所需的行为（最小化存根）\n* \\[ ] 测试用例之间没有共享的可变状态"
+    },
+    {
+      "en-US": "### Widget test quality:",
+      "zh-Hans": "### 小部件测试质量："
+    },
+    {
+      "en-US": "- [ ] `pumpWidget` and `pump` used correctly for async operations\n- [ ] `find.byType`, `find.text`, `find.byKey` used appropriately\n- [ ] No flaky tests depending on timing — use `pumpAndSettle` or explicit `pump(Duration)`\n- [ ] Tests run in CI and failures block merges",
+      "zh-Hans": "* \\[ ] `pumpWidget` 和 `pump` 被正确用于异步操作\n* \\[ ] `find.byType`、`find.text`、`find.byKey` 使用得当\n* \\[ ] 没有依赖于时序的不可靠测试——使用 `pumpAndSettle` 或显式的 `pump(Duration)`\n* \\[ ] 测试在 CI 中运行，失败会阻止合并"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 7. Accessibility",
+      "zh-Hans": "## 7. 无障碍功能"
+    },
+    {
+      "en-US": "### Semantic widgets:",
+      "zh-Hans": "### 语义化小部件："
+    },
+    {
+      "en-US": "- [ ] `Semantics` widget used to provide screen reader labels where automatic labels are insufficient\n- [ ] `ExcludeSemantics` used for purely decorative elements\n- [ ] `MergeSemantics` used to combine related widgets into a single accessible element\n- [ ] Images have `semanticLabel` property set",
+      "zh-Hans": "* \\[ ] 使用 `Semantics` 小部件在自动标签不足时提供屏幕阅读器标签\n* \\[ ] 使用 `ExcludeSemantics` 处理纯装饰性元素\n* \\[ ] 使用 `MergeSemantics` 将相关小部件组合成单个可访问元素\n* \\[ ] 图像设置了 `semanticLabel` 属性"
+    },
+    {
+      "en-US": "### Screen reader support:",
+      "zh-Hans": "### 屏幕阅读器支持："
+    },
+    {
+      "en-US": "- [ ] All interactive elements are focusable and have meaningful descriptions\n- [ ] Focus order is logical (follows visual reading order)",
+      "zh-Hans": "* \\[ ] 所有交互元素均可聚焦并具有有意义的描述\n* \\[ ] 焦点顺序符合逻辑（遵循视觉阅读顺序）"
+    },
+    {
+      "en-US": "### Visual accessibility:",
+      "zh-Hans": "### 视觉无障碍："
+    },
+    {
+      "en-US": "- [ ] Contrast ratio >= 4.5:1 for text against background\n- [ ] Tappable targets are at least 48x48 pixels\n- [ ] Color is not the sole indicator of state (use icons/text alongside)\n- [ ] Text scales with system font size settings",
+      "zh-Hans": "* \\[ ] 文本与背景的对比度 >= 4.5:1\n* \\[ ] 可点击目标至少为 48x48 像素\n* \\[ ] 颜色不是状态的唯一指示器（同时使用图标/文本）\n* \\[ ] 文本随系统字体大小设置缩放"
+    },
+    {
+      "en-US": "### Interaction accessibility:",
+      "zh-Hans": "### 交互无障碍："
+    },
+    {
+      "en-US": "- [ ] No no-op `onPressed` callbacks — every button does something or is disabled\n- [ ] Error fields suggest corrections\n- [ ] Context does not change unexpectedly while user is inputting data",
+      "zh-Hans": "* \\[ ] 没有无操作的 `onPressed` 回调——每个按钮都有作用或处于禁用状态\n* \\[ ] 错误字段建议更正\n* \\[ ] 用户输入数据时，上下文不会意外改变"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 8. Platform-Specific Concerns",
+      "zh-Hans": "## 8. 平台特定考量"
+    },
+    {
+      "en-US": "### iOS/Android differences:",
+      "zh-Hans": "### iOS/Android 差异："
+    },
+    {
+      "en-US": "- [ ] Platform-adaptive widgets used where appropriate\n- [ ] Back navigation handled correctly (Android back button, iOS swipe-to-go-back)\n- [ ] Status bar and safe area handled via `SafeArea` widget\n- [ ] Platform-specific permissions declared in `AndroidManifest.xml` and `Info.plist`",
+      "zh-Hans": "* \\[ ] 在适当的地方使用平台自适应小部件\n* \\[ ] 返回导航处理正确（Android 返回按钮，iOS 滑动返回）\n* \\[ ] 通过 `SafeArea` 小部件处理状态栏和安全区域\n* \\[ ] 平台特定权限在 `AndroidManifest.xml` 和 `Info.plist` 中声明"
+    },
+    {
+      "en-US": "### Responsive design:",
+      "zh-Hans": "### 响应式设计："
+    },
+    {
+      "en-US": "- [ ] `LayoutBuilder` or `MediaQuery` used for responsive layouts\n- [ ] Breakpoints defined consistently (phone, tablet, desktop)\n- [ ] Text doesn't overflow on small screens — use `Flexible`, `Expanded`, `FittedBox`\n- [ ] Landscape orientation tested or explicitly locked\n- [ ] Web-specific: mouse/keyboard interactions supported, hover states present",
+      "zh-Hans": "* \\[ ] 使用 `LayoutBuilder` 或 `MediaQuery` 实现响应式布局\n* \\[ ] 断点定义一致（手机、平板、桌面）\n* \\[ ] 文本在小屏幕上不会溢出——使用 `Flexible`、`Expanded`、`FittedBox`\n* \\[ ] 测试了横屏方向或明确锁定\n* \\[ ] Web 特定：支持鼠标/键盘交互，存在悬停状态"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 9. Security",
+      "zh-Hans": "## 9. 安全性"
+    },
+    {
+      "en-US": "### Secure storage:",
+      "zh-Hans": "### 安全存储："
+    },
+    {
+      "en-US": "- [ ] Sensitive data (tokens, credentials) stored using platform-secure storage (Keychain on iOS, EncryptedSharedPreferences on Android)\n- [ ] Never store secrets in plaintext storage\n- [ ] Biometric authentication gating considered for sensitive operations",
+      "zh-Hans": "* \\[ ] 敏感数据（令牌、凭证）使用平台安全存储存储（iOS 上的 Keychain，Android 上的 EncryptedSharedPreferences）\n* \\[ ] 从不以明文存储机密信息\n* \\[ ] 对于敏感操作考虑使用生物识别认证门控"
+    },
+    {
+      "en-US": "### API key handling:",
+      "zh-Hans": "### API 密钥处理："
+    },
+    {
+      "en-US": "- [ ] API keys NOT hardcoded in Dart source — use `--dart-define`, `.env` files excluded from VCS, or compile-time configuration\n- [ ] Secrets not committed to git — check `.gitignore`\n- [ ] Backend proxy used for truly secret keys (client should never hold server secrets)",
+      "zh-Hans": "* \\[ ] API 密钥 NOT 硬编码在 Dart 源代码中——使用 `--dart-define`，`.env` 文件从 VCS 中排除，或使用编译时配置\n* \\[ ] 机密信息未提交到 git——检查 `.gitignore`\n* \\[ ] 对真正的秘密密钥使用后端代理（客户端不应持有服务器机密）"
+    },
+    {
+      "en-US": "### Input validation:",
+      "zh-Hans": "### 输入验证："
+    },
+    {
+      "en-US": "- [ ] All user input validated before sending to API\n- [ ] Form validation uses proper validation patterns\n- [ ] No raw SQL or string interpolation of user input\n- [ ] Deep link URLs validated and sanitized before navigation",
+      "zh-Hans": "* \\[ ] 所有用户输入在发送到 API 前都经过验证\n* \\[ ] 表单验证使用适当的验证模式\n* \\[ ] 没有原始 SQL 或用户输入的字符串插值\n* \\[ ] 深度链接 URL 在导航前经过验证和清理"
+    },
+    {
+      "en-US": "### Network security:",
+      "zh-Hans": "### 网络安全："
+    },
+    {
+      "en-US": "- [ ] HTTPS enforced for all API calls\n- [ ] Certificate pinning considered for high-security apps\n- [ ] Authentication tokens refreshed and expired properly\n- [ ] No sensitive data logged or printed",
+      "zh-Hans": "* \\[ ] 所有 API 调用强制使用 HTTPS\n* \\[ ] 对于高安全性应用考虑证书锁定\n* \\[ ] 认证令牌正确刷新和过期\n* \\[ ] 没有记录或打印敏感数据"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 10. Package/Dependency Review",
+      "zh-Hans": "## 10. 包/依赖项审查"
+    },
+    {
+      "en-US": "### Evaluating pub.dev packages:",
+      "zh-Hans": "### 评估 pub.dev 包："
+    },
+    {
+      "en-US": "- [ ] Check **pub points score** (aim for 130+/160)\n- [ ] Check **likes** and **popularity** as community signals\n- [ ] Verify the publisher is **verified** on pub.dev\n- [ ] Check last publish date — stale packages (>1 year) are a risk\n- [ ] Review open issues and response time from maintainers\n- [ ] Check license compatibility with your project\n- [ ] Verify platform support covers your targets",
+      "zh-Hans": "* \\[ ] 检查 **pub 分数**（目标 130+/160）\n* \\[ ] 检查 **点赞数**和**流行度**作为社区信号\n* \\[ ] 验证发布者在 pub.dev 上**已验证**\n* \\[ ] 检查最后发布日期——过时的包（>1 年）有风险\n* \\[ ] 审查维护者的未解决问题和响应时间\n* \\[ ] 检查许可证与项目的兼容性\n* \\[ ] 验证平台支持是否覆盖您的目标"
+    },
+    {
+      "en-US": "### Version constraints:",
+      "zh-Hans": "### 版本约束："
+    },
+    {
+      "en-US": "- [ ] Use caret syntax (`^1.2.3`) for dependencies — allows compatible updates\n- [ ] Pin exact versions only when absolutely necessary\n- [ ] Run `flutter pub outdated` regularly to track stale dependencies\n- [ ] No dependency overrides in production `pubspec.yaml` — only for temporary fixes with a comment/issue link\n- [ ] Minimize transitive dependency count — each dependency is an attack surface",
+      "zh-Hans": "* \\[ ] 对依赖项使用插入符语法（`^1.2.3`）——允许兼容性更新\n* \\[ ] 仅在绝对必要时固定确切版本\n* \\[ ] 定期运行 `flutter pub outdated` 以跟踪过时的依赖项\n* \\[ ] 生产 `pubspec.yaml` 中没有依赖项覆盖——仅用于带有注释/问题链接的临时修复\n* \\[ ] 最小化传递依赖项数量——每个依赖项都是一个攻击面"
+    },
+    {
+      "en-US": "### Monorepo-specific (melos/workspace):",
+      "zh-Hans": "### 单仓库特定（melos/workspace）："
+    },
+    {
+      "en-US": "- [ ] Internal packages import only from public API — no `package:other/src/internal.dart` (breaks Dart package encapsulation)\n- [ ] Internal package dependencies use workspace resolution, not hardcoded `path: ../../` relative strings\n- [ ] All sub-packages share or inherit root `analysis_options.yaml`",
+      "zh-Hans": "* \\[ ] 内部包仅从公共 API 导入——没有 `package:other/src/internal.dart`（破坏 Dart 包封装）\n* \\[ ] 内部包依赖项使用工作区解析，而不是硬编码的 `path: ../../` 相对字符串\n* \\[ ] 所有子包共享或继承根 `analysis_options.yaml`"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 11. Navigation and Routing",
+      "zh-Hans": "## 11. 导航和路由"
+    },
+    {
+      "en-US": "### General principles (apply to any routing solution):",
+      "zh-Hans": "### 通用原则（适用于任何路由解决方案）："
+    },
+    {
+      "en-US": "- [ ] One routing approach used consistently — no mixing imperative `Navigator.push` with a declarative router\n- [ ] Route arguments are typed — no `Map<String, dynamic>` or `Object?` casting\n- [ ] Route paths defined as constants, enums, or generated — no magic strings scattered in code\n- [ ] Auth guards/redirects centralized — not duplicated across individual screens\n- [ ] Deep links configured for both Android and iOS\n- [ ] Deep link URLs validated and sanitized before navigation\n- [ ] Navigation state is testable — route changes can be verified in tests\n- [ ] Back behavior is correct on all platforms",
+      "zh-Hans": "* \\[ ] 一致使用一种路由方法——不混合命令式 `Navigator.push` 和声明式路由器\n* \\[ ] 路由参数是类型化的——没有 `Map<String, dynamic>` 或 `Object?` 转换\n* \\[ ] 路由路径定义为常量、枚举或生成——没有散布在代码中的魔法字符串\n* \\[ ] 认证守卫/重定向集中化——不在各个屏幕中重复\n* \\[ ] 为 Android 和 iOS 配置深度链接\n* \\[ ] 深度链接 URL 在导航前经过验证和清理\n* \\[ ] 导航状态是可测试的——可以在测试中验证路由更改\n* \\[ ] 在所有平台上返回行为正确"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 12. Error Handling",
+      "zh-Hans": "## 12. 错误处理"
+    },
+    {
+      "en-US": "### Framework error handling:",
+      "zh-Hans": "### 框架错误处理："
+    },
+    {
+      "en-US": "- [ ] `FlutterError.onError` overridden to capture framework errors (build, layout, paint)\n- [ ] `PlatformDispatcher.instance.onError` set for async errors not caught by Flutter\n- [ ] `ErrorWidget.builder` customized for release mode (user-friendly instead of red screen)\n- [ ] Global error capture wrapper around `runApp` (e.g., `runZonedGuarded`, Sentry/Crashlytics wrapper)",
+      "zh-Hans": "* \\[ ] 重写 `FlutterError.onError` 以捕获框架错误（构建、布局、绘制）\n* \\[ ] 设置 `PlatformDispatcher.instance.onError` 处理 Flutter 未捕获的异步错误\n* \\[ ] 为发布模式自定义 `ErrorWidget.builder`（用户友好而非红屏）\n* \\[ ] 在 `runApp` 周围使用全局错误捕获包装器（例如 `runZonedGuarded`，Sentry/Crashlytics 包装器）"
+    },
+    {
+      "en-US": "### Error reporting:",
+      "zh-Hans": "### 错误报告："
+    },
+    {
+      "en-US": "- [ ] Error reporting service integrated (Firebase Crashlytics, Sentry, or equivalent)\n- [ ] Non-fatal errors reported with stack traces\n- [ ] State management error observer wired to error reporting (e.g., BlocObserver, ProviderObserver, or equivalent for your solution)\n- [ ] User-identifiable info (user ID) attached to error reports for debugging",
+      "zh-Hans": "* \\[ ] 集成了错误报告服务（Firebase Crashlytics、Sentry 或等效服务）\n* \\[ ] 报告非致命错误并附上堆栈跟踪\n* \\[ ] 状态管理错误观察器连接到错误报告（例如，BlocObserver、ProviderObserver 或适用于您解决方案的等效项）\n* \\[ ] 为调试目的，将用户可识别信息（用户 ID）附加到错误报告"
+    },
+    {
+      "en-US": "### Graceful degradation:",
+      "zh-Hans": "### 优雅降级："
+    },
+    {
+      "en-US": "- [ ] API errors result in user-friendly error UI, not crashes\n- [ ] Retry mechanisms for transient network failures\n- [ ] Offline state handled gracefully\n- [ ] Error states in state management carry error info for display\n- [ ] Raw exceptions (network, parsing) are mapped to user-friendly, localized messages before reaching the UI — never show raw exception strings to users",
+      "zh-Hans": "* \\[ ] API 错误导致用户友好的错误 UI，而非崩溃\n* \\[ ] 针对瞬时网络故障的重试机制\n* \\[ ] 优雅处理离线状态\n* \\[ ] 状态管理中的错误状态携带用于显示的错误信息\n* \\[ ] 原始异常（网络、解析）在到达 UI 之前被映射为用户友好的本地化消息——从不向用户显示原始异常字符串"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 13. Internationalization (l10n)",
+      "zh-Hans": "## 13. 国际化（l10n）"
+    },
+    {
+      "en-US": "### Setup:",
+      "zh-Hans": "### 设置："
+    },
+    {
+      "en-US": "- [ ] Localization solution configured (Flutter's built-in ARB/l10n, easy_localization, or equivalent)\n- [ ] Supported locales declared in app configuration",
+      "zh-Hans": "* \\[ ] 配置了本地化解决方案（Flutter 内置的 ARB/l10n、easy\\_localization 或等效方案）\n* \\[ ] 在应用配置中声明了支持的语言环境"
+    },
+    {
+      "en-US": "### Content:",
+      "zh-Hans": "### 内容："
+    },
+    {
+      "en-US": "- [ ] All user-visible strings use the localization system — no hardcoded strings in widgets\n- [ ] Template file includes descriptions/context for translators\n- [ ] ICU message syntax used for plurals, genders, selects\n- [ ] Placeholders defined with types\n- [ ] No missing keys across locales",
+      "zh-Hans": "* \\[ ] 所有用户可见字符串都使用本地化系统——小部件中没有硬编码字符串\n* \\[ ] 模板文件包含翻译人员的描述/上下文\n* \\[ ] 使用 ICU 消息语法处理复数、性别、选择\n* \\[ ] 使用类型定义占位符\n* \\[ ] 跨语言环境没有缺失的键"
+    },
+    {
+      "en-US": "### Code review:",
+      "zh-Hans": "### 代码审查："
+    },
+    {
+      "en-US": "- [ ] Localization accessor used consistently throughout the project\n- [ ] Date, time, number, and currency formatting is locale-aware\n- [ ] Text directionality (RTL) supported if targeting Arabic, Hebrew, etc.\n- [ ] No string concatenation for localized text — use parameterized messages",
+      "zh-Hans": "* \\[ ] 在整个项目中一致使用本地化访问器\n* \\[ ] 日期、时间、数字和货币格式化具有语言环境感知能力\n* \\[ ] 如果目标语言是阿拉伯语、希伯来语等，则支持文本方向性（RTL）\n* \\[ ] 本地化文本没有字符串拼接——使用参数化消息"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 14. Dependency Injection",
+      "zh-Hans": "## 14. 依赖注入"
+    },
+    {
+      "en-US": "### Principles (apply to any DI approach):",
+      "zh-Hans": "### 原则（适用于任何 DI 方法）："
+    },
+    {
+      "en-US": "- [ ] Classes depend on abstractions (interfaces), not concrete implementations at layer boundaries\n- [ ] Dependencies provided externally via constructor, DI framework, or provider graph — not created internally\n- [ ] Registration distinguishes lifetime: singleton vs factory vs lazy singleton\n- [ ] Environment-specific bindings (dev/staging/prod) use configuration, not runtime `if` checks\n- [ ] No circular dependencies in the DI graph\n- [ ] Service locator calls (if used) are not scattered throughout business logic",
+      "zh-Hans": "* \\[ ] 类在层边界上依赖于抽象（接口），而不是具体实现\n* \\[ ] 依赖项通过构造函数、DI 框架或提供者图从外部提供——而非内部创建\n* \\[ ] 注册区分生命周期：单例 vs 工厂 vs 惰性单例\n* \\[ ] 环境特定绑定（开发/暂存/生产）使用配置，而非运行时 `if` 检查\n* \\[ ] DI 图中没有循环依赖\n* \\[ ] 服务定位器调用（如果使用）没有散布在业务逻辑中"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## 15. Static Analysis",
+      "zh-Hans": "## 15. 静态分析"
+    },
+    {
+      "en-US": "### Configuration:",
+      "zh-Hans": "### 配置："
+    },
+    {
+      "en-US": "- [ ] `analysis_options.yaml` present with strict settings enabled\n- [ ] Strict analyzer settings: `strict-casts: true`, `strict-inference: true`, `strict-raw-types: true`\n- [ ] A comprehensive lint rule set is included (very_good_analysis, flutter_lints, or custom strict rules)\n- [ ] All sub-packages in monorepos inherit or share the root analysis options",
+      "zh-Hans": "* \\[ ] 存在 `analysis_options.yaml` 并启用了严格设置\n* \\[ ] 严格的分析器设置：`strict-casts: true`、`strict-inference: true`、`strict-raw-types: true`\n* \\[ ] 包含全面的 lint 规则集（very\\_good\\_analysis、flutter\\_lints 或自定义严格规则）\n* \\[ ] 单仓库中的所有子包继承或共享根分析选项"
+    },
+    {
+      "en-US": "### Enforcement:",
+      "zh-Hans": "### 执行："
+    },
+    {
+      "en-US": "- [ ] No unresolved analyzer warnings in committed code\n- [ ] Lint suppressions (`// ignore:`) are justified with comments explaining why\n- [ ] `flutter analyze` runs in CI and failures block merges",
+      "zh-Hans": "* \\[ ] 提交的代码中没有未解决的分析器警告\n* \\[ ] lint 抑制（`// ignore:`）有注释说明原因\n* \\[ ] `flutter analyze` 在 CI 中运行，失败会阻止合并"
+    },
+    {
+      "en-US": "### Key rules to verify regardless of lint package:",
+      "zh-Hans": "### 无论使用何种 lint 包都要验证的关键规则："
+    },
+    {
+      "en-US": "- [ ] `prefer_const_constructors` — performance in widget trees\n- [ ] `avoid_print` — use proper logging\n- [ ] `unawaited_futures` — prevent fire-and-forget async bugs\n- [ ] `prefer_final_locals` — immutability at variable level\n- [ ] `always_declare_return_types` — explicit contracts\n- [ ] `avoid_catches_without_on_clauses` — specific error handling\n- [ ] `always_use_package_imports` — consistent import style",
+      "zh-Hans": "* \\[ ] `prefer_const_constructors`——小部件树中的性能\n* \\[ ] `avoid_print`——使用适当的日志记录\n* \\[ ] `unawaited_futures`——防止即发即弃的异步错误\n* \\[ ] `prefer_final_locals`——变量级别的不可变性\n* \\[ ] `always_declare_return_types`——明确的契约\n* \\[ ] `avoid_catches_without_on_clauses`——具体的错误处理\n* \\[ ] `always_use_package_imports`——一致的导入风格"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## State Management Quick Reference",
+      "zh-Hans": "## 状态管理快速参考"
+    },
+    {
+      "en-US": "The table below maps universal principles to their implementation in popular solutions. Use this to adapt review rules to whichever solution the project uses.",
+      "zh-Hans": "下表将通用原则映射到流行解决方案中的实现。使用此表将审查规则调整为项目使用的任何解决方案。"
+    },
+    {
+      "en-US": "| Principle | BLoC/Cubit | Riverpod | Provider | GetX | MobX | Signals | Built-in |\n|-----------|-----------|----------|----------|------|------|---------|----------|\n| State container | `Bloc`/`Cubit` | `Notifier`/`AsyncNotifier` | `ChangeNotifier` | `GetxController` | `Store` | `signal()` | `StatefulWidget` |\n| UI consumer | `BlocBuilder` | `ConsumerWidget` | `Consumer` | `Obx`/`GetBuilder` | `Observer` | `Watch` | `setState` |\n| Selector | `BlocSelector`/`buildWhen` | `ref.watch(p.select(...))` | `Selector` | N/A | computed | `computed()` | N/A |\n| Side effects | `BlocListener` | `ref.listen` | `Consumer` callback | `ever()`/`once()` | `reaction` | `effect()` | callbacks |\n| Disposal | auto via `BlocProvider` | `.autoDispose` | auto via `Provider` | `onClose()` | `ReactionDisposer` | manual | `dispose()` |\n| Testing | `blocTest()` | `ProviderContainer` | `ChangeNotifier` directly | `Get.put` in test | store directly | signal directly | widget test |",
+      "zh-Hans": "| 原则 | BLoC/Cubit | Riverpod | Provider | GetX | MobX | Signals | 内置 |\n|-----------|-----------|----------|----------|------|------|---------|----------|\n| 状态容器 | `Bloc`/`Cubit` | `Notifier`/`AsyncNotifier` | `ChangeNotifier` | `GetxController` | `Store` | `signal()` | `StatefulWidget` |\n| UI 消费者 | `BlocBuilder` | `ConsumerWidget` | `Consumer` | `Obx`/`GetBuilder` | `Observer` | `Watch` | `setState` |\n| 选择器 | `BlocSelector`/`buildWhen` | `ref.watch(p.select(...))` | `Selector` | N/A | computed | `computed()` | N/A |\n| 副作用 | `BlocListener` | `ref.listen` | `Consumer` 回调 | `ever()`/`once()` | `reaction` | `effect()` | 回调 |\n| 处置 | 通过 `BlocProvider` 自动 | `.autoDispose` | 通过 `Provider` 自动 | `onClose()` | `ReactionDisposer` | 手动 | `dispose()` |\n| 测试 | `blocTest()` | `ProviderContainer` | 直接 `ChangeNotifier` | 在测试中 `Get.put` | 直接测试 store | 直接测试 signal | 小部件测试 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Sources",
+      "zh-Hans": "## 来源"
+    },
+    {
+      "en-US": "- [Effective Dart: Style](https://dart.dev/effective-dart/style)\n- [Effective Dart: Usage](https://dart.dev/effective-dart/usage)\n- [Effective Dart: Design](https://dart.dev/effective-dart/design)\n- [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-practices)\n- [Flutter Testing Overview](https://docs.flutter.dev/testing/overview)\n- [Flutter Accessibility](https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility)\n- [Flutter Internationalization](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization)\n- [Flutter Navigation and Routing](https://docs.flutter.dev/ui/navigation)\n- [Flutter Error Handling](https://docs.flutter.dev/testing/errors)\n- [Flutter State Management Options](https://docs.flutter.dev/data-and-backend/state-mgmt/options)",
+      "zh-Hans": "* [Effective Dart: 风格](https://dart.dev/effective-dart/style)\n* [Effective Dart: 用法](https://dart.dev/effective-dart/usage)\n* [Effective Dart: 设计](https://dart.dev/effective-dart/design)\n* [Flutter 性能最佳实践](https://docs.flutter.dev/perf/best-practices)\n* [Flutter 测试概述](https://docs.flutter.dev/testing/overview)\n* [Flutter 无障碍功能](https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility)\n* [Flutter 国际化](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization)\n* [Flutter 导航和路由](https://docs.flutter.dev/ui/navigation)\n* [Flutter 错误处理](https://docs.flutter.dev/testing/errors)\n* [Flutter 状态管理选项](https://docs.flutter.dev/data-and-backend/state-mgmt/options)"
+    }
+  ]
+}

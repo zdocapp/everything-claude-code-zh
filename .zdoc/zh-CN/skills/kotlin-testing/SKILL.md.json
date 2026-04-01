@@ -1,0 +1,318 @@
+{
+  "sourceFile": "skills/kotlin-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: kotlin-testing\ndescription: Kotlin testing patterns with Kotest, MockK, coroutine testing, property-based testing, and Kover coverage. Follows TDD methodology with idiomatic Kotlin practices.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: kotlin-testing\ndescription: 使用Kotest、MockK、协程测试、基于属性的测试和Kover覆盖率的Kotlin测试模式。遵循TDD方法论和地道的Kotlin实践。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Kotlin Testing Patterns",
+      "zh-Hans": "# Kotlin 测试模式"
+    },
+    {
+      "en-US": "Comprehensive Kotlin testing patterns for writing reliable, maintainable tests following TDD methodology with Kotest and MockK.",
+      "zh-Hans": "遵循 TDD 方法论，使用 Kotest 和 MockK 编写可靠、可维护测试的全面 Kotlin 测试模式。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Writing new Kotlin functions or classes\n- Adding test coverage to existing Kotlin code\n- Implementing property-based tests\n- Following TDD workflow in Kotlin projects\n- Configuring Kover for code coverage",
+      "zh-Hans": "* 编写新的 Kotlin 函数或类\n* 为现有 Kotlin 代码添加测试覆盖率\n* 实现基于属性的测试\n* 在 Kotlin 项目中遵循 TDD 工作流\n* 为代码覆盖率配置 Kover"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "1. **Identify target code** — Find the function, class, or module to test\n2. **Write a Kotest spec** — Choose a spec style (StringSpec, FunSpec, BehaviorSpec) matching the test scope\n3. **Mock dependencies** — Use MockK to isolate the unit under test\n4. **Run tests (RED)** — Verify the test fails with the expected error\n5. **Implement code (GREEN)** — Write minimal code to pass the test\n6. **Refactor** — Improve the implementation while keeping tests green\n7. **Check coverage** — Run `./gradlew koverHtmlReport` and verify 80%+ coverage",
+      "zh-Hans": "1. **确定目标代码** — 找到要测试的函数、类或模块\n2. **编写 Kotest 规范** — 选择与测试范围匹配的规范样式（StringSpec、FunSpec、BehaviorSpec）\n3. **模拟依赖项** — 使用 MockK 来隔离被测单元\n4. **运行测试（红色阶段）** — 验证测试是否按预期失败\n5. **实现代码（绿色阶段）** — 编写最少的代码以使测试通过\n6. **重构** — 改进实现，同时保持测试通过\n7. **检查覆盖率** — 运行 `./gradlew koverHtmlReport` 并验证 80%+ 的覆盖率"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "The following sections contain detailed, runnable examples for each testing pattern:",
+      "zh-Hans": "以下部分包含每个测试模式的详细、可运行示例："
+    },
+    {
+      "en-US": "### Quick Reference",
+      "zh-Hans": "### 快速参考"
+    },
+    {
+      "en-US": "- **Kotest specs** — StringSpec, FunSpec, BehaviorSpec, DescribeSpec examples in [Kotest Spec Styles](#kotest-spec-styles)\n- **Mocking** — MockK setup, coroutine mocking, argument capture in [MockK](#mockk)\n- **TDD walkthrough** — Full RED/GREEN/REFACTOR cycle with EmailValidator in [TDD Workflow for Kotlin](#tdd-workflow-for-kotlin)\n- **Coverage** — Kover configuration and commands in [Kover Coverage](#kover-coverage)\n- **Ktor testing** — testApplication setup in [Ktor testApplication Testing](#ktor-testapplication-testing)",
+      "zh-Hans": "* **Kotest 规范** — [Kotest 规范样式](#kotest-规范样式) 中的 StringSpec、FunSpec、BehaviorSpec、DescribeSpec 示例\n* **模拟** — [MockK](#mockk) 中的 MockK 设置、协程模拟、参数捕获\n* **TDD 演练** — [Kotlin 的 TDD 工作流](#kotlin-的-tdd-工作流) 中 EmailValidator 的完整 RED/GREEN/REFACTOR 周期\n* **覆盖率** — [Kover 覆盖率](#kover-覆盖率) 中的 Kover 配置和命令\n* **Ktor 测试** — [Ktor testApplication 测试](#ktor-testapplication-测试) 中的 testApplication 设置"
+    },
+    {
+      "en-US": "### TDD Workflow for Kotlin",
+      "zh-Hans": "### Kotlin 的 TDD 工作流"
+    },
+    {
+      "en-US": "#### The RED-GREEN-REFACTOR Cycle",
+      "zh-Hans": "#### RED-GREEN-REFACTOR 周期"
+    },
+    {
+      "en-US": "```\nRED     -> Write a failing test first\nGREEN   -> Write minimal code to pass the test\nREFACTOR -> Improve code while keeping tests green\nREPEAT  -> Continue with next requirement\n```",
+      "zh-Hans": "```\nRED     -> 首先编写一个失败的测试\nGREEN   -> 编写最少的代码使测试通过\nREFACTOR -> 改进代码同时保持测试通过\nREPEAT  -> 继续下一个需求\n```"
+    },
+    {
+      "en-US": "#### Step-by-Step TDD in Kotlin",
+      "zh-Hans": "#### Kotlin 中逐步进行 TDD"
+    },
+    {
+      "en-US": "```kotlin\n// Step 1: Define the interface/signature\n// EmailValidator.kt\npackage com.example.validator\n\nfun validateEmail(email: String): Result<String> {\n    TODO(\"not implemented\")\n}\n\n// Step 2: Write failing test (RED)\n// EmailValidatorTest.kt\npackage com.example.validator\n\nimport io.kotest.core.spec.style.StringSpec\nimport io.kotest.matchers.result.shouldBeFailure\nimport io.kotest.matchers.result.shouldBeSuccess\n\nclass EmailValidatorTest : StringSpec({\n    \"valid email returns success\" {\n        validateEmail(\"user@example.com\").shouldBeSuccess(\"user@example.com\")\n    }\n\n    \"empty email returns failure\" {\n        validateEmail(\"\").shouldBeFailure()\n    }\n\n    \"email without @ returns failure\" {\n        validateEmail(\"userexample.com\").shouldBeFailure()\n    }\n})\n\n// Step 3: Run tests - verify FAIL\n// $ ./gradlew test\n// EmailValidatorTest > valid email returns success FAILED\n//   kotlin.NotImplementedError: An operation is not implemented\n\n// Step 4: Implement minimal code (GREEN)\nfun validateEmail(email: String): Result<String> {\n    if (email.isBlank()) return Result.failure(IllegalArgumentException(\"Email cannot be blank\"))\n    if ('@' !in email) return Result.failure(IllegalArgumentException(\"Email must contain @\"))\n    val regex = Regex(\"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$\")\n    if (!regex.matches(email)) return Result.failure(IllegalArgumentException(\"Invalid email format\"))\n    return Result.success(email)\n}\n\n// Step 5: Run tests - verify PASS\n// $ ./gradlew test\n// EmailValidatorTest > valid email returns success PASSED\n// EmailValidatorTest > empty email returns failure PASSED\n// EmailValidatorTest > email without @ returns failure PASSED\n\n// Step 6: Refactor if needed, verify tests still pass\n```",
+      "zh-Hans": "```kotlin\n// Step 1: Define the interface/signature\n// EmailValidator.kt\npackage com.example.validator\n\nfun validateEmail(email: String): Result<String> {\n    TODO(\"not implemented\")\n}\n\n// Step 2: Write failing test (RED)\n// EmailValidatorTest.kt\npackage com.example.validator\n\nimport io.kotest.core.spec.style.StringSpec\nimport io.kotest.matchers.result.shouldBeFailure\nimport io.kotest.matchers.result.shouldBeSuccess\n\nclass EmailValidatorTest : StringSpec({\n    \"valid email returns success\" {\n        validateEmail(\"user@example.com\").shouldBeSuccess(\"user@example.com\")\n    }\n\n    \"empty email returns failure\" {\n        validateEmail(\"\").shouldBeFailure()\n    }\n\n    \"email without @ returns failure\" {\n        validateEmail(\"userexample.com\").shouldBeFailure()\n    }\n})\n\n// Step 3: Run tests - verify FAIL\n// $ ./gradlew test\n// EmailValidatorTest > valid email returns success FAILED\n//   kotlin.NotImplementedError: An operation is not implemented\n\n// Step 4: Implement minimal code (GREEN)\nfun validateEmail(email: String): Result<String> {\n    if (email.isBlank()) return Result.failure(IllegalArgumentException(\"Email cannot be blank\"))\n    if ('@' !in email) return Result.failure(IllegalArgumentException(\"Email must contain @\"))\n    val regex = Regex(\"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$\")\n    if (!regex.matches(email)) return Result.failure(IllegalArgumentException(\"Invalid email format\"))\n    return Result.success(email)\n}\n\n// Step 5: Run tests - verify PASS\n// $ ./gradlew test\n// EmailValidatorTest > valid email returns success PASSED\n// EmailValidatorTest > empty email returns failure PASSED\n// EmailValidatorTest > email without @ returns failure PASSED\n\n// Step 6: Refactor if needed, verify tests still pass\n```"
+    },
+    {
+      "en-US": "### Kotest Spec Styles",
+      "zh-Hans": "### Kotest 规范样式"
+    },
+    {
+      "en-US": "#### StringSpec (Simplest)",
+      "zh-Hans": "#### StringSpec（最简单）"
+    },
+    {
+      "en-US": "```kotlin\nclass CalculatorTest : StringSpec({\n    \"add two positive numbers\" {\n        Calculator.add(2, 3) shouldBe 5\n    }\n\n    \"add negative numbers\" {\n        Calculator.add(-1, -2) shouldBe -3\n    }\n\n    \"add zero\" {\n        Calculator.add(0, 5) shouldBe 5\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass CalculatorTest : StringSpec({\n    \"add two positive numbers\" {\n        Calculator.add(2, 3) shouldBe 5\n    }\n\n    \"add negative numbers\" {\n        Calculator.add(-1, -2) shouldBe -3\n    }\n\n    \"add zero\" {\n        Calculator.add(0, 5) shouldBe 5\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### FunSpec (JUnit-like)",
+      "zh-Hans": "#### FunSpec（类似 JUnit）"
+    },
+    {
+      "en-US": "```kotlin\nclass UserServiceTest : FunSpec({\n    val repository = mockk<UserRepository>()\n    val service = UserService(repository)\n\n    test(\"getUser returns user when found\") {\n        val expected = User(id = \"1\", name = \"Alice\")\n        coEvery { repository.findById(\"1\") } returns expected\n\n        val result = service.getUser(\"1\")\n\n        result shouldBe expected\n    }\n\n    test(\"getUser throws when not found\") {\n        coEvery { repository.findById(\"999\") } returns null\n\n        shouldThrow<UserNotFoundException> {\n            service.getUser(\"999\")\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass UserServiceTest : FunSpec({\n    val repository = mockk<UserRepository>()\n    val service = UserService(repository)\n\n    test(\"getUser returns user when found\") {\n        val expected = User(id = \"1\", name = \"Alice\")\n        coEvery { repository.findById(\"1\") } returns expected\n\n        val result = service.getUser(\"1\")\n\n        result shouldBe expected\n    }\n\n    test(\"getUser throws when not found\") {\n        coEvery { repository.findById(\"999\") } returns null\n\n        shouldThrow<UserNotFoundException> {\n            service.getUser(\"999\")\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### BehaviorSpec (BDD Style)",
+      "zh-Hans": "#### BehaviorSpec（BDD 风格）"
+    },
+    {
+      "en-US": "```kotlin\nclass OrderServiceTest : BehaviorSpec({\n    val repository = mockk<OrderRepository>()\n    val paymentService = mockk<PaymentService>()\n    val service = OrderService(repository, paymentService)\n\n    Given(\"a valid order request\") {\n        val request = CreateOrderRequest(\n            userId = \"user-1\",\n            items = listOf(OrderItem(\"product-1\", quantity = 2)),\n        )\n\n        When(\"the order is placed\") {\n            coEvery { paymentService.charge(any()) } returns PaymentResult.Success\n            coEvery { repository.save(any()) } answers { firstArg() }\n\n            val result = service.placeOrder(request)\n\n            Then(\"it should return a confirmed order\") {\n                result.status shouldBe OrderStatus.CONFIRMED\n            }\n\n            Then(\"it should charge payment\") {\n                coVerify(exactly = 1) { paymentService.charge(any()) }\n            }\n        }\n\n        When(\"payment fails\") {\n            coEvery { paymentService.charge(any()) } returns PaymentResult.Declined\n\n            Then(\"it should throw PaymentException\") {\n                shouldThrow<PaymentException> {\n                    service.placeOrder(request)\n                }\n            }\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass OrderServiceTest : BehaviorSpec({\n    val repository = mockk<OrderRepository>()\n    val paymentService = mockk<PaymentService>()\n    val service = OrderService(repository, paymentService)\n\n    Given(\"a valid order request\") {\n        val request = CreateOrderRequest(\n            userId = \"user-1\",\n            items = listOf(OrderItem(\"product-1\", quantity = 2)),\n        )\n\n        When(\"the order is placed\") {\n            coEvery { paymentService.charge(any()) } returns PaymentResult.Success\n            coEvery { repository.save(any()) } answers { firstArg() }\n\n            val result = service.placeOrder(request)\n\n            Then(\"it should return a confirmed order\") {\n                result.status shouldBe OrderStatus.CONFIRMED\n            }\n\n            Then(\"it should charge payment\") {\n                coVerify(exactly = 1) { paymentService.charge(any()) }\n            }\n        }\n\n        When(\"payment fails\") {\n            coEvery { paymentService.charge(any()) } returns PaymentResult.Declined\n\n            Then(\"it should throw PaymentException\") {\n                shouldThrow<PaymentException> {\n                    service.placeOrder(request)\n                }\n            }\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### DescribeSpec (RSpec Style)",
+      "zh-Hans": "#### DescribeSpec（RSpec 风格）"
+    },
+    {
+      "en-US": "```kotlin\nclass UserValidatorTest : DescribeSpec({\n    describe(\"validateUser\") {\n        val validator = UserValidator()\n\n        context(\"with valid input\") {\n            it(\"accepts a normal user\") {\n                val user = CreateUserRequest(\"Alice\", \"alice@example.com\")\n                validator.validate(user).shouldBeValid()\n            }\n        }\n\n        context(\"with invalid name\") {\n            it(\"rejects blank name\") {\n                val user = CreateUserRequest(\"\", \"alice@example.com\")\n                validator.validate(user).shouldBeInvalid()\n            }\n\n            it(\"rejects name exceeding max length\") {\n                val user = CreateUserRequest(\"A\".repeat(256), \"alice@example.com\")\n                validator.validate(user).shouldBeInvalid()\n            }\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass UserValidatorTest : DescribeSpec({\n    describe(\"validateUser\") {\n        val validator = UserValidator()\n\n        context(\"with valid input\") {\n            it(\"accepts a normal user\") {\n                val user = CreateUserRequest(\"Alice\", \"alice@example.com\")\n                validator.validate(user).shouldBeValid()\n            }\n        }\n\n        context(\"with invalid name\") {\n            it(\"rejects blank name\") {\n                val user = CreateUserRequest(\"\", \"alice@example.com\")\n                validator.validate(user).shouldBeInvalid()\n            }\n\n            it(\"rejects name exceeding max length\") {\n                val user = CreateUserRequest(\"A\".repeat(256), \"alice@example.com\")\n                validator.validate(user).shouldBeInvalid()\n            }\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "### Kotest Matchers",
+      "zh-Hans": "### Kotest 匹配器"
+    },
+    {
+      "en-US": "#### Core Matchers",
+      "zh-Hans": "#### 核心匹配器"
+    },
+    {
+      "en-US": "```kotlin\nimport io.kotest.matchers.shouldBe\nimport io.kotest.matchers.shouldNotBe\nimport io.kotest.matchers.string.*\nimport io.kotest.matchers.collections.*\nimport io.kotest.matchers.nulls.*\n\n// Equality\nresult shouldBe expected\nresult shouldNotBe unexpected\n\n// Strings\nname shouldStartWith \"Al\"\nname shouldEndWith \"ice\"\nname shouldContain \"lic\"\nname shouldMatch Regex(\"[A-Z][a-z]+\")\nname.shouldBeBlank()\n\n// Collections\nlist shouldContain \"item\"\nlist shouldHaveSize 3\nlist.shouldBeSorted()\nlist.shouldContainAll(\"a\", \"b\", \"c\")\nlist.shouldBeEmpty()\n\n// Nulls\nresult.shouldNotBeNull()\nresult.shouldBeNull()\n\n// Types\nresult.shouldBeInstanceOf<User>()\n\n// Numbers\ncount shouldBeGreaterThan 0\nprice shouldBeInRange 1.0..100.0\n\n// Exceptions\nshouldThrow<IllegalArgumentException> {\n    validateAge(-1)\n}.message shouldBe \"Age must be positive\"\n\nshouldNotThrow<Exception> {\n    validateAge(25)\n}\n```",
+      "zh-Hans": "```kotlin\nimport io.kotest.matchers.shouldBe\nimport io.kotest.matchers.shouldNotBe\nimport io.kotest.matchers.string.*\nimport io.kotest.matchers.collections.*\nimport io.kotest.matchers.nulls.*\n\n// Equality\nresult shouldBe expected\nresult shouldNotBe unexpected\n\n// Strings\nname shouldStartWith \"Al\"\nname shouldEndWith \"ice\"\nname shouldContain \"lic\"\nname shouldMatch Regex(\"[A-Z][a-z]+\")\nname.shouldBeBlank()\n\n// Collections\nlist shouldContain \"item\"\nlist shouldHaveSize 3\nlist.shouldBeSorted()\nlist.shouldContainAll(\"a\", \"b\", \"c\")\nlist.shouldBeEmpty()\n\n// Nulls\nresult.shouldNotBeNull()\nresult.shouldBeNull()\n\n// Types\nresult.shouldBeInstanceOf<User>()\n\n// Numbers\ncount shouldBeGreaterThan 0\nprice shouldBeInRange 1.0..100.0\n\n// Exceptions\nshouldThrow<IllegalArgumentException> {\n    validateAge(-1)\n}.message shouldBe \"Age must be positive\"\n\nshouldNotThrow<Exception> {\n    validateAge(25)\n}\n```"
+    },
+    {
+      "en-US": "#### Custom Matchers",
+      "zh-Hans": "#### 自定义匹配器"
+    },
+    {
+      "en-US": "```kotlin\nfun beActiveUser() = object : Matcher<User> {\n    override fun test(value: User) = MatcherResult(\n        value.isActive && value.lastLogin != null,\n        { \"User ${value.id} should be active with a last login\" },\n        { \"User ${value.id} should not be active\" },\n    )\n}\n\n// Usage\nuser should beActiveUser()\n```",
+      "zh-Hans": "```kotlin\nfun beActiveUser() = object : Matcher<User> {\n    override fun test(value: User) = MatcherResult(\n        value.isActive && value.lastLogin != null,\n        { \"User ${value.id} should be active with a last login\" },\n        { \"User ${value.id} should not be active\" },\n    )\n}\n\n// Usage\nuser should beActiveUser()\n```"
+    },
+    {
+      "en-US": "### MockK",
+      "zh-Hans": "### MockK"
+    },
+    {
+      "en-US": "#### Basic Mocking",
+      "zh-Hans": "#### 基本模拟"
+    },
+    {
+      "en-US": "```kotlin\nclass UserServiceTest : FunSpec({\n    val repository = mockk<UserRepository>()\n    val logger = mockk<Logger>(relaxed = true) // Relaxed: returns defaults\n    val service = UserService(repository, logger)\n\n    beforeTest {\n        clearMocks(repository, logger)\n    }\n\n    test(\"findUser delegates to repository\") {\n        val expected = User(id = \"1\", name = \"Alice\")\n        every { repository.findById(\"1\") } returns expected\n\n        val result = service.findUser(\"1\")\n\n        result shouldBe expected\n        verify(exactly = 1) { repository.findById(\"1\") }\n    }\n\n    test(\"findUser returns null for unknown id\") {\n        every { repository.findById(any()) } returns null\n\n        val result = service.findUser(\"unknown\")\n\n        result.shouldBeNull()\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass UserServiceTest : FunSpec({\n    val repository = mockk<UserRepository>()\n    val logger = mockk<Logger>(relaxed = true) // Relaxed: returns defaults\n    val service = UserService(repository, logger)\n\n    beforeTest {\n        clearMocks(repository, logger)\n    }\n\n    test(\"findUser delegates to repository\") {\n        val expected = User(id = \"1\", name = \"Alice\")\n        every { repository.findById(\"1\") } returns expected\n\n        val result = service.findUser(\"1\")\n\n        result shouldBe expected\n        verify(exactly = 1) { repository.findById(\"1\") }\n    }\n\n    test(\"findUser returns null for unknown id\") {\n        every { repository.findById(any()) } returns null\n\n        val result = service.findUser(\"unknown\")\n\n        result.shouldBeNull()\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### Coroutine Mocking",
+      "zh-Hans": "#### 协程模拟"
+    },
+    {
+      "en-US": "```kotlin\nclass AsyncUserServiceTest : FunSpec({\n    val repository = mockk<UserRepository>()\n    val service = UserService(repository)\n\n    test(\"getUser suspending function\") {\n        coEvery { repository.findById(\"1\") } returns User(id = \"1\", name = \"Alice\")\n\n        val result = service.getUser(\"1\")\n\n        result.name shouldBe \"Alice\"\n        coVerify { repository.findById(\"1\") }\n    }\n\n    test(\"getUser with delay\") {\n        coEvery { repository.findById(\"1\") } coAnswers {\n            delay(100) // Simulate async work\n            User(id = \"1\", name = \"Alice\")\n        }\n\n        val result = service.getUser(\"1\")\n        result.name shouldBe \"Alice\"\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass AsyncUserServiceTest : FunSpec({\n    val repository = mockk<UserRepository>()\n    val service = UserService(repository)\n\n    test(\"getUser suspending function\") {\n        coEvery { repository.findById(\"1\") } returns User(id = \"1\", name = \"Alice\")\n\n        val result = service.getUser(\"1\")\n\n        result.name shouldBe \"Alice\"\n        coVerify { repository.findById(\"1\") }\n    }\n\n    test(\"getUser with delay\") {\n        coEvery { repository.findById(\"1\") } coAnswers {\n            delay(100) // Simulate async work\n            User(id = \"1\", name = \"Alice\")\n        }\n\n        val result = service.getUser(\"1\")\n        result.name shouldBe \"Alice\"\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### Argument Capture",
+      "zh-Hans": "#### 参数捕获"
+    },
+    {
+      "en-US": "```kotlin\ntest(\"save captures the user argument\") {\n    val slot = slot<User>()\n    coEvery { repository.save(capture(slot)) } returns Unit\n\n    service.createUser(CreateUserRequest(\"Alice\", \"alice@example.com\"))\n\n    slot.captured.name shouldBe \"Alice\"\n    slot.captured.email shouldBe \"alice@example.com\"\n    slot.captured.id.shouldNotBeNull()\n}\n```",
+      "zh-Hans": "```kotlin\ntest(\"save captures the user argument\") {\n    val slot = slot<User>()\n    coEvery { repository.save(capture(slot)) } returns Unit\n\n    service.createUser(CreateUserRequest(\"Alice\", \"alice@example.com\"))\n\n    slot.captured.name shouldBe \"Alice\"\n    slot.captured.email shouldBe \"alice@example.com\"\n    slot.captured.id.shouldNotBeNull()\n}\n```"
+    },
+    {
+      "en-US": "#### Spy and Partial Mocking",
+      "zh-Hans": "#### 间谍和部分模拟"
+    },
+    {
+      "en-US": "```kotlin\ntest(\"spy on real object\") {\n    val realService = UserService(repository)\n    val spy = spyk(realService)\n\n    every { spy.generateId() } returns \"fixed-id\"\n\n    spy.createUser(request)\n\n    verify { spy.generateId() } // Overridden\n    // Other methods use real implementation\n}\n```",
+      "zh-Hans": "```kotlin\ntest(\"spy on real object\") {\n    val realService = UserService(repository)\n    val spy = spyk(realService)\n\n    every { spy.generateId() } returns \"fixed-id\"\n\n    spy.createUser(request)\n\n    verify { spy.generateId() } // Overridden\n    // Other methods use real implementation\n}\n```"
+    },
+    {
+      "en-US": "### Coroutine Testing",
+      "zh-Hans": "### 协程测试"
+    },
+    {
+      "en-US": "#### runTest for Suspend Functions",
+      "zh-Hans": "#### 用于挂起函数的 runTest"
+    },
+    {
+      "en-US": "```kotlin\nimport kotlinx.coroutines.test.runTest\n\nclass CoroutineServiceTest : FunSpec({\n    test(\"concurrent fetches complete together\") {\n        runTest {\n            val service = DataService(testScope = this)\n\n            val result = service.fetchAllData()\n\n            result.users.shouldNotBeEmpty()\n            result.products.shouldNotBeEmpty()\n        }\n    }\n\n    test(\"timeout after delay\") {\n        runTest {\n            val service = SlowService()\n\n            shouldThrow<TimeoutCancellationException> {\n                withTimeout(100) {\n                    service.slowOperation() // Takes > 100ms\n                }\n            }\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nimport kotlinx.coroutines.test.runTest\n\nclass CoroutineServiceTest : FunSpec({\n    test(\"concurrent fetches complete together\") {\n        runTest {\n            val service = DataService(testScope = this)\n\n            val result = service.fetchAllData()\n\n            result.users.shouldNotBeEmpty()\n            result.products.shouldNotBeEmpty()\n        }\n    }\n\n    test(\"timeout after delay\") {\n        runTest {\n            val service = SlowService()\n\n            shouldThrow<TimeoutCancellationException> {\n                withTimeout(100) {\n                    service.slowOperation() // Takes > 100ms\n                }\n            }\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### Testing Flows",
+      "zh-Hans": "#### 测试 Flow"
+    },
+    {
+      "en-US": "```kotlin\nimport io.kotest.matchers.collections.shouldContainInOrder\nimport kotlinx.coroutines.flow.MutableSharedFlow\nimport kotlinx.coroutines.flow.toList\nimport kotlinx.coroutines.launch\nimport kotlinx.coroutines.test.advanceTimeBy\nimport kotlinx.coroutines.test.runTest\n\nclass FlowServiceTest : FunSpec({\n    test(\"observeUsers emits updates\") {\n        runTest {\n            val service = UserFlowService()\n\n            val emissions = service.observeUsers()\n                .take(3)\n                .toList()\n\n            emissions shouldHaveSize 3\n            emissions.last().shouldNotBeEmpty()\n        }\n    }\n\n    test(\"searchUsers debounces input\") {\n        runTest {\n            val service = SearchService()\n            val queries = MutableSharedFlow<String>()\n\n            val results = mutableListOf<List<User>>()\n            val job = launch {\n                service.searchUsers(queries).collect { results.add(it) }\n            }\n\n            queries.emit(\"a\")\n            queries.emit(\"ab\")\n            queries.emit(\"abc\") // Only this should trigger search\n            advanceTimeBy(500)\n\n            results shouldHaveSize 1\n            job.cancel()\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nimport io.kotest.matchers.collections.shouldContainInOrder\nimport kotlinx.coroutines.flow.MutableSharedFlow\nimport kotlinx.coroutines.flow.toList\nimport kotlinx.coroutines.launch\nimport kotlinx.coroutines.test.advanceTimeBy\nimport kotlinx.coroutines.test.runTest\n\nclass FlowServiceTest : FunSpec({\n    test(\"observeUsers emits updates\") {\n        runTest {\n            val service = UserFlowService()\n\n            val emissions = service.observeUsers()\n                .take(3)\n                .toList()\n\n            emissions shouldHaveSize 3\n            emissions.last().shouldNotBeEmpty()\n        }\n    }\n\n    test(\"searchUsers debounces input\") {\n        runTest {\n            val service = SearchService()\n            val queries = MutableSharedFlow<String>()\n\n            val results = mutableListOf<List<User>>()\n            val job = launch {\n                service.searchUsers(queries).collect { results.add(it) }\n            }\n\n            queries.emit(\"a\")\n            queries.emit(\"ab\")\n            queries.emit(\"abc\") // Only this should trigger search\n            advanceTimeBy(500)\n\n            results shouldHaveSize 1\n            job.cancel()\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### TestDispatcher",
+      "zh-Hans": "#### TestDispatcher"
+    },
+    {
+      "en-US": "```kotlin\nimport kotlinx.coroutines.test.StandardTestDispatcher\nimport kotlinx.coroutines.test.advanceUntilIdle\n\nclass DispatcherTest : FunSpec({\n    test(\"uses test dispatcher for controlled execution\") {\n        val dispatcher = StandardTestDispatcher()\n\n        runTest(dispatcher) {\n            var completed = false\n\n            launch {\n                delay(1000)\n                completed = true\n            }\n\n            completed shouldBe false\n            advanceTimeBy(1000)\n            completed shouldBe true\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nimport kotlinx.coroutines.test.StandardTestDispatcher\nimport kotlinx.coroutines.test.advanceUntilIdle\n\nclass DispatcherTest : FunSpec({\n    test(\"uses test dispatcher for controlled execution\") {\n        val dispatcher = StandardTestDispatcher()\n\n        runTest(dispatcher) {\n            var completed = false\n\n            launch {\n                delay(1000)\n                completed = true\n            }\n\n            completed shouldBe false\n            advanceTimeBy(1000)\n            completed shouldBe true\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "### Property-Based Testing",
+      "zh-Hans": "### 基于属性的测试"
+    },
+    {
+      "en-US": "#### Kotest Property Testing",
+      "zh-Hans": "#### Kotest 属性测试"
+    },
+    {
+      "en-US": "```kotlin\nimport io.kotest.core.spec.style.FunSpec\nimport io.kotest.property.Arb\nimport io.kotest.property.arbitrary.*\nimport io.kotest.property.forAll\nimport io.kotest.property.checkAll\nimport kotlinx.serialization.json.Json\nimport kotlinx.serialization.encodeToString\nimport kotlinx.serialization.decodeFromString\n\n// Note: The serialization roundtrip test below requires the User data class\n// to be annotated with @Serializable (from kotlinx.serialization).\n\nclass PropertyTest : FunSpec({\n    test(\"string reverse is involutory\") {\n        forAll<String> { s ->\n            s.reversed().reversed() == s\n        }\n    }\n\n    test(\"list sort is idempotent\") {\n        forAll(Arb.list(Arb.int())) { list ->\n            list.sorted() == list.sorted().sorted()\n        }\n    }\n\n    test(\"serialization roundtrip preserves data\") {\n        checkAll(Arb.bind(Arb.string(1..50), Arb.string(5..100)) { name, email ->\n            User(name = name, email = \"$email@test.com\")\n        }) { user ->\n            val json = Json.encodeToString(user)\n            val decoded = Json.decodeFromString<User>(json)\n            decoded shouldBe user\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nimport io.kotest.core.spec.style.FunSpec\nimport io.kotest.property.Arb\nimport io.kotest.property.arbitrary.*\nimport io.kotest.property.forAll\nimport io.kotest.property.checkAll\nimport kotlinx.serialization.json.Json\nimport kotlinx.serialization.encodeToString\nimport kotlinx.serialization.decodeFromString\n\n// Note: The serialization roundtrip test below requires the User data class\n// to be annotated with @Serializable (from kotlinx.serialization).\n\nclass PropertyTest : FunSpec({\n    test(\"string reverse is involutory\") {\n        forAll<String> { s ->\n            s.reversed().reversed() == s\n        }\n    }\n\n    test(\"list sort is idempotent\") {\n        forAll(Arb.list(Arb.int())) { list ->\n            list.sorted() == list.sorted().sorted()\n        }\n    }\n\n    test(\"serialization roundtrip preserves data\") {\n        checkAll(Arb.bind(Arb.string(1..50), Arb.string(5..100)) { name, email ->\n            User(name = name, email = \"$email@test.com\")\n        }) { user ->\n            val json = Json.encodeToString(user)\n            val decoded = Json.decodeFromString<User>(json)\n            decoded shouldBe user\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### Custom Generators",
+      "zh-Hans": "#### 自定义生成器"
+    },
+    {
+      "en-US": "```kotlin\nval userArb: Arb<User> = Arb.bind(\n    Arb.string(minSize = 1, maxSize = 50),\n    Arb.email(),\n    Arb.enum<Role>(),\n) { name, email, role ->\n    User(\n        id = UserId(UUID.randomUUID().toString()),\n        name = name,\n        email = Email(email),\n        role = role,\n    )\n}\n\nval moneyArb: Arb<Money> = Arb.bind(\n    Arb.long(1L..1_000_000L),\n    Arb.enum<Currency>(),\n) { amount, currency ->\n    Money(amount, currency)\n}\n```",
+      "zh-Hans": "```kotlin\nval userArb: Arb<User> = Arb.bind(\n    Arb.string(minSize = 1, maxSize = 50),\n    Arb.email(),\n    Arb.enum<Role>(),\n) { name, email, role ->\n    User(\n        id = UserId(UUID.randomUUID().toString()),\n        name = name,\n        email = Email(email),\n        role = role,\n    )\n}\n\nval moneyArb: Arb<Money> = Arb.bind(\n    Arb.long(1L..1_000_000L),\n    Arb.enum<Currency>(),\n) { amount, currency ->\n    Money(amount, currency)\n}\n```"
+    },
+    {
+      "en-US": "### Data-Driven Testing",
+      "zh-Hans": "### 数据驱动测试"
+    },
+    {
+      "en-US": "#### withData in Kotest",
+      "zh-Hans": "#### Kotest 中的 withData"
+    },
+    {
+      "en-US": "```kotlin\nclass ParserTest : FunSpec({\n    context(\"parsing valid dates\") {\n        withData(\n            \"2026-01-15\" to LocalDate(2026, 1, 15),\n            \"2026-12-31\" to LocalDate(2026, 12, 31),\n            \"2000-01-01\" to LocalDate(2000, 1, 1),\n        ) { (input, expected) ->\n            parseDate(input) shouldBe expected\n        }\n    }\n\n    context(\"rejecting invalid dates\") {\n        withData(\n            nameFn = { \"rejects '$it'\" },\n            \"not-a-date\",\n            \"2026-13-01\",\n            \"2026-00-15\",\n            \"\",\n        ) { input ->\n            shouldThrow<DateParseException> {\n                parseDate(input)\n            }\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass ParserTest : FunSpec({\n    context(\"parsing valid dates\") {\n        withData(\n            \"2026-01-15\" to LocalDate(2026, 1, 15),\n            \"2026-12-31\" to LocalDate(2026, 12, 31),\n            \"2000-01-01\" to LocalDate(2000, 1, 1),\n        ) { (input, expected) ->\n            parseDate(input) shouldBe expected\n        }\n    }\n\n    context(\"rejecting invalid dates\") {\n        withData(\n            nameFn = { \"rejects '$it'\" },\n            \"not-a-date\",\n            \"2026-13-01\",\n            \"2026-00-15\",\n            \"\",\n        ) { input ->\n            shouldThrow<DateParseException> {\n                parseDate(input)\n            }\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "### Test Lifecycle and Fixtures",
+      "zh-Hans": "### 测试生命周期和固件"
+    },
+    {
+      "en-US": "#### BeforeTest / AfterTest",
+      "zh-Hans": "#### BeforeTest / AfterTest"
+    },
+    {
+      "en-US": "```kotlin\nclass DatabaseTest : FunSpec({\n    lateinit var db: Database\n\n    beforeSpec {\n        db = Database.connect(\"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1\")\n        transaction(db) {\n            SchemaUtils.create(UsersTable)\n        }\n    }\n\n    afterSpec {\n        transaction(db) {\n            SchemaUtils.drop(UsersTable)\n        }\n    }\n\n    beforeTest {\n        transaction(db) {\n            UsersTable.deleteAll()\n        }\n    }\n\n    test(\"insert and retrieve user\") {\n        transaction(db) {\n            UsersTable.insert {\n                it[name] = \"Alice\"\n                it[email] = \"alice@example.com\"\n            }\n        }\n\n        val users = transaction(db) {\n            UsersTable.selectAll().map { it[UsersTable.name] }\n        }\n\n        users shouldContain \"Alice\"\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass DatabaseTest : FunSpec({\n    lateinit var db: Database\n\n    beforeSpec {\n        db = Database.connect(\"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1\")\n        transaction(db) {\n            SchemaUtils.create(UsersTable)\n        }\n    }\n\n    afterSpec {\n        transaction(db) {\n            SchemaUtils.drop(UsersTable)\n        }\n    }\n\n    beforeTest {\n        transaction(db) {\n            UsersTable.deleteAll()\n        }\n    }\n\n    test(\"insert and retrieve user\") {\n        transaction(db) {\n            UsersTable.insert {\n                it[name] = \"Alice\"\n                it[email] = \"alice@example.com\"\n            }\n        }\n\n        val users = transaction(db) {\n            UsersTable.selectAll().map { it[UsersTable.name] }\n        }\n\n        users shouldContain \"Alice\"\n    }\n})\n```"
+    },
+    {
+      "en-US": "#### Kotest Extensions",
+      "zh-Hans": "#### Kotest 扩展"
+    },
+    {
+      "en-US": "```kotlin\n// Reusable test extension\nclass DatabaseExtension : BeforeSpecListener, AfterSpecListener {\n    lateinit var db: Database\n\n    override suspend fun beforeSpec(spec: Spec) {\n        db = Database.connect(\"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1\")\n    }\n\n    override suspend fun afterSpec(spec: Spec) {\n        // cleanup\n    }\n}\n\nclass UserRepositoryTest : FunSpec({\n    val dbExt = DatabaseExtension()\n    register(dbExt)\n\n    test(\"save and find user\") {\n        val repo = UserRepository(dbExt.db)\n        // ...\n    }\n})\n```",
+      "zh-Hans": "```kotlin\n// Reusable test extension\nclass DatabaseExtension : BeforeSpecListener, AfterSpecListener {\n    lateinit var db: Database\n\n    override suspend fun beforeSpec(spec: Spec) {\n        db = Database.connect(\"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1\")\n    }\n\n    override suspend fun afterSpec(spec: Spec) {\n        // cleanup\n    }\n}\n\nclass UserRepositoryTest : FunSpec({\n    val dbExt = DatabaseExtension()\n    register(dbExt)\n\n    test(\"save and find user\") {\n        val repo = UserRepository(dbExt.db)\n        // ...\n    }\n})\n```"
+    },
+    {
+      "en-US": "### Kover Coverage",
+      "zh-Hans": "### Kover 覆盖率"
+    },
+    {
+      "en-US": "#### Gradle Configuration",
+      "zh-Hans": "#### Gradle 配置"
+    },
+    {
+      "en-US": "```kotlin\n// build.gradle.kts\nplugins {\n    id(\"org.jetbrains.kotlinx.kover\") version \"0.9.7\"\n}\n\nkover {\n    reports {\n        total {\n            html { onCheck = true }\n            xml { onCheck = true }\n        }\n        filters {\n            excludes {\n                classes(\"*.generated.*\", \"*.config.*\")\n            }\n        }\n        verify {\n            rule {\n                minBound(80) // Fail build below 80% coverage\n            }\n        }\n    }\n}\n```",
+      "zh-Hans": "```kotlin\n// build.gradle.kts\nplugins {\n    id(\"org.jetbrains.kotlinx.kover\") version \"0.9.7\"\n}\n\nkover {\n    reports {\n        total {\n            html { onCheck = true }\n            xml { onCheck = true }\n        }\n        filters {\n            excludes {\n                classes(\"*.generated.*\", \"*.config.*\")\n            }\n        }\n        verify {\n            rule {\n                minBound(80) // Fail build below 80% coverage\n            }\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "#### Coverage Commands",
+      "zh-Hans": "#### 覆盖率命令"
+    },
+    {
+      "en-US": "```bash\n# Run tests with coverage\n./gradlew koverHtmlReport\n\n# Verify coverage thresholds\n./gradlew koverVerify\n\n# XML report for CI\n./gradlew koverXmlReport\n\n# View HTML report (use the command for your OS)\n# macOS:   open build/reports/kover/html/index.html\n# Linux:   xdg-open build/reports/kover/html/index.html\n# Windows: start build/reports/kover/html/index.html\n```",
+      "zh-Hans": "```bash\n# Run tests with coverage\n./gradlew koverHtmlReport\n\n# Verify coverage thresholds\n./gradlew koverVerify\n\n# XML report for CI\n./gradlew koverXmlReport\n\n# View HTML report (use the command for your OS)\n# macOS:   open build/reports/kover/html/index.html\n# Linux:   xdg-open build/reports/kover/html/index.html\n# Windows: start build/reports/kover/html/index.html\n```"
+    },
+    {
+      "en-US": "#### Coverage Targets",
+      "zh-Hans": "#### 覆盖率目标"
+    },
+    {
+      "en-US": "| Code Type | Target |\n|-----------|--------|\n| Critical business logic | 100% |\n| Public APIs | 90%+ |\n| General code | 80%+ |\n| Generated / config code | Exclude |",
+      "zh-Hans": "| 代码类型 | 目标 |\n|-----------|--------|\n| 关键业务逻辑 | 100% |\n| 公共 API | 90%+ |\n| 通用代码 | 80%+ |\n| 生成的 / 配置代码 | 排除 |"
+    },
+    {
+      "en-US": "### Ktor testApplication Testing",
+      "zh-Hans": "### Ktor testApplication 测试"
+    },
+    {
+      "en-US": "```kotlin\nclass ApiRoutesTest : FunSpec({\n    test(\"GET /users returns list\") {\n        testApplication {\n            application {\n                configureRouting()\n                configureSerialization()\n            }\n\n            val response = client.get(\"/users\")\n\n            response.status shouldBe HttpStatusCode.OK\n            val users = response.body<List<UserResponse>>()\n            users.shouldNotBeEmpty()\n        }\n    }\n\n    test(\"POST /users creates user\") {\n        testApplication {\n            application {\n                configureRouting()\n                configureSerialization()\n            }\n\n            val response = client.post(\"/users\") {\n                contentType(ContentType.Application.Json)\n                setBody(CreateUserRequest(\"Alice\", \"alice@example.com\"))\n            }\n\n            response.status shouldBe HttpStatusCode.Created\n        }\n    }\n})\n```",
+      "zh-Hans": "```kotlin\nclass ApiRoutesTest : FunSpec({\n    test(\"GET /users returns list\") {\n        testApplication {\n            application {\n                configureRouting()\n                configureSerialization()\n            }\n\n            val response = client.get(\"/users\")\n\n            response.status shouldBe HttpStatusCode.OK\n            val users = response.body<List<UserResponse>>()\n            users.shouldNotBeEmpty()\n        }\n    }\n\n    test(\"POST /users creates user\") {\n        testApplication {\n            application {\n                configureRouting()\n                configureSerialization()\n            }\n\n            val response = client.post(\"/users\") {\n                contentType(ContentType.Application.Json)\n                setBody(CreateUserRequest(\"Alice\", \"alice@example.com\"))\n            }\n\n            response.status shouldBe HttpStatusCode.Created\n        }\n    }\n})\n```"
+    },
+    {
+      "en-US": "### Testing Commands",
+      "zh-Hans": "### 测试命令"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\n./gradlew test\n\n# Run specific test class\n./gradlew test --tests \"com.example.UserServiceTest\"\n\n# Run specific test\n./gradlew test --tests \"com.example.UserServiceTest.getUser returns user when found\"\n\n# Run with verbose output\n./gradlew test --info\n\n# Run with coverage\n./gradlew koverHtmlReport\n\n# Run detekt (static analysis)\n./gradlew detekt\n\n# Run ktlint (formatting check)\n./gradlew ktlintCheck\n\n# Continuous testing\n./gradlew test --continuous\n```",
+      "zh-Hans": "```bash\n# Run all tests\n./gradlew test\n\n# Run specific test class\n./gradlew test --tests \"com.example.UserServiceTest\"\n\n# Run specific test\n./gradlew test --tests \"com.example.UserServiceTest.getUser returns user when found\"\n\n# Run with verbose output\n./gradlew test --info\n\n# Run with coverage\n./gradlew koverHtmlReport\n\n# Run detekt (static analysis)\n./gradlew detekt\n\n# Run ktlint (formatting check)\n./gradlew ktlintCheck\n\n# Continuous testing\n./gradlew test --continuous\n```"
+    },
+    {
+      "en-US": "### Best Practices",
+      "zh-Hans": "### 最佳实践"
+    },
+    {
+      "en-US": "**DO:**",
+      "zh-Hans": "**应做：**"
+    },
+    {
+      "en-US": "- Write tests FIRST (TDD)\n- Use Kotest's spec styles consistently across the project\n- Use MockK's `coEvery`/`coVerify` for suspend functions\n- Use `runTest` for coroutine testing\n- Test behavior, not implementation\n- Use property-based testing for pure functions\n- Use `data class` test fixtures for clarity",
+      "zh-Hans": "* 先写测试（TDD）\n* 在整个项目中一致地使用 Kotest 的规范样式\n* 对挂起函数使用 MockK 的 `coEvery`/`coVerify`\n* 对协程测试使用 `runTest`\n* 测试行为，而非实现\n* 对纯函数使用基于属性的测试\n* 为清晰起见使用 `data class` 测试固件"
+    },
+    {
+      "en-US": "**DON'T:**",
+      "zh-Hans": "**不应做：**"
+    },
+    {
+      "en-US": "- Mix testing frameworks (pick Kotest and stick with it)\n- Mock data classes (use real instances)\n- Use `Thread.sleep()` in coroutine tests (use `advanceTimeBy`)\n- Skip the RED phase in TDD\n- Test private functions directly\n- Ignore flaky tests",
+      "zh-Hans": "* 混合使用测试框架（选择 Kotest 并坚持使用）\n* 模拟数据类（使用真实实例）\n* 在协程测试中使用 `Thread.sleep()`（改用 `advanceTimeBy`）\n* 跳过 TDD 中的红色阶段\n* 直接测试私有函数\n* 忽略不稳定的测试"
+    },
+    {
+      "en-US": "### Integration with CI/CD",
+      "zh-Hans": "### 与 CI/CD 集成"
+    },
+    {
+      "en-US": "```yaml\n# GitHub Actions example\ntest:\n  runs-on: ubuntu-latest\n  steps:\n    - uses: actions/checkout@v4\n    - uses: actions/setup-java@v4\n      with:\n        distribution: 'temurin'\n        java-version: '21'\n\n    - name: Run tests with coverage\n      run: ./gradlew test koverXmlReport\n\n    - name: Verify coverage\n      run: ./gradlew koverVerify\n\n    - name: Upload coverage\n      uses: codecov/codecov-action@v5\n      with:\n        files: build/reports/kover/report.xml\n        token: ${{ secrets.CODECOV_TOKEN }}\n```",
+      "zh-Hans": "```yaml\n# GitHub Actions example\ntest:\n  runs-on: ubuntu-latest\n  steps:\n    - uses: actions/checkout@v4\n    - uses: actions/setup-java@v4\n      with:\n        distribution: 'temurin'\n        java-version: '21'\n\n    - name: Run tests with coverage\n      run: ./gradlew test koverXmlReport\n\n    - name: Verify coverage\n      run: ./gradlew koverVerify\n\n    - name: Upload coverage\n      uses: codecov/codecov-action@v5\n      with:\n        files: build/reports/kover/report.xml\n        token: ${{ secrets.CODECOV_TOKEN }}\n```"
+    },
+    {
+      "en-US": "**Remember**: Tests are documentation. They show how your Kotlin code is meant to be used. Use Kotest's expressive matchers to make tests readable and MockK for clean mocking of dependencies.",
+      "zh-Hans": "**记住**：测试就是文档。它们展示了你的 Kotlin 代码应如何使用。使用 Kotest 富有表现力的匹配器使测试可读，并使用 MockK 来清晰地模拟依赖项。"
+    }
+  ]
+}

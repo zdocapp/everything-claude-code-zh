@@ -1,0 +1,62 @@
+{
+  "sourceFile": "commands/instinct-status.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: instinct-status\ndescription: Show learned instincts (project + global) with confidence\ncommand: true\n---",
+      "zh-Hans": "---\nname: instinct-status\ndescription: 展示已学习的本能（项目+全局）并充满信心\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Instinct Status Command",
+      "zh-Hans": "# 本能状态命令"
+    },
+    {
+      "en-US": "Shows learned instincts for the current project plus global instincts, grouped by domain.",
+      "zh-Hans": "显示当前项目学习到的本能以及全局本能，按领域分组。"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行本能 CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" status\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" status\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation), use:",
+      "zh-Hans": "或者，如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装），则使用："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```\n/instinct-status\n```",
+      "zh-Hans": "```\n/instinct-status\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 操作步骤"
+    },
+    {
+      "en-US": "1. Detect current project context (git remote/path hash)\n2. Read project instincts from `~/.claude/homunculus/projects/<project-id>/instincts/`\n3. Read global instincts from `~/.claude/homunculus/instincts/`\n4. Merge with precedence rules (project overrides global when IDs collide)\n5. Display grouped by domain with confidence bars and observation stats",
+      "zh-Hans": "1. 检测当前项目上下文（git remote/路径哈希）\n2. 从 `~/.claude/homunculus/projects/<project-id>/instincts/` 读取项目本能\n3. 从 `~/.claude/homunculus/instincts/` 读取全局本能\n4. 合并并应用优先级规则（当ID冲突时，项目本能覆盖全局本能）\n5. 按领域分组显示，包含置信度条和观察统计数据"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```\n============================================================\n  INSTINCT STATUS - 12 total\n============================================================\n\n  Project: my-app (a1b2c3d4e5f6)\n  Project instincts: 8\n  Global instincts:  4\n\n## PROJECT-SCOPED (my-app)\n  ### WORKFLOW (3)\n    ███████░░░  70%  grep-before-edit [project]\n              trigger: when modifying code\n\n## GLOBAL (apply to all projects)\n  ### SECURITY (2)\n    █████████░  85%  validate-user-input [global]\n              trigger: when handling user input\n```",
+      "zh-Hans": "```\n============================================================\n  INSTINCT 状态 - 总计 12\n============================================================\n\n  项目: my-app (a1b2c3d4e5f6)\n  项目 instincts: 8\n  全局 instincts:  4\n\n## 项目范围内 (my-app)\n  ### 工作流 (3)\n    ███████░░░  70%  grep-before-edit [project]\n              触发条件: 当修改代码时\n\n## 全局 (适用于所有项目)\n  ### 安全 (2)\n    █████████░  85%  validate-user-input [global]\n              触发条件: 当处理用户输入时\n```"
+    }
+  ]
+}

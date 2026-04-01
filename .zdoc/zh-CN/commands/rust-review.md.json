@@ -1,0 +1,106 @@
+{
+  "sourceFile": "commands/rust-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Comprehensive Rust code review for ownership, lifetimes, error handling, unsafe usage, and idiomatic patterns. Invokes the rust-reviewer agent.\n---",
+      "zh-Hans": "---\ndescription: 全面的Rust代码审查，涵盖所有权、生命周期、错误处理、不安全代码使用以及惯用模式。调用rust-reviewer代理。\n---"
+    },
+    {
+      "en-US": "# Rust Code Review",
+      "zh-Hans": "# Rust 代码审查"
+    },
+    {
+      "en-US": "This command invokes the **rust-reviewer** agent for comprehensive Rust-specific code review.",
+      "zh-Hans": "此命令调用 **rust-reviewer** 代理进行全面的 Rust 专项代码审查。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的作用"
+    },
+    {
+      "en-US": "1. **Verify Automated Checks**: Run `cargo check`, `cargo clippy -- -D warnings`, `cargo fmt --check`, and `cargo test` — stop if any fail\n2. **Identify Rust Changes**: Find modified `.rs` files via `git diff HEAD~1` (or `git diff main...HEAD` for PRs)\n3. **Run Security Audit**: Execute `cargo audit` if available\n4. **Security Scan**: Check for unsafe usage, command injection, hardcoded secrets\n5. **Ownership Review**: Analyze unnecessary clones, lifetime issues, borrowing patterns\n6. **Generate Report**: Categorize issues by severity",
+      "zh-Hans": "1. **验证自动化检查**：运行 `cargo check`、`cargo clippy -- -D warnings`、`cargo fmt --check` 和 `cargo test` —— 任何一项失败则停止\n2. **识别 Rust 变更**：通过 `git diff HEAD~1`（或针对 PR 使用 `git diff main...HEAD`）查找修改过的 `.rs` 文件\n3. **运行安全审计**：如果可用，则执行 `cargo audit`\n4. **安全扫描**：检查不安全使用、命令注入、硬编码密钥\n5. **所有权审查**：分析不必要的克隆、生命周期问题、借用模式\n6. **生成报告**：按严重性对问题进行分类"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use `/rust-review` when:",
+      "zh-Hans": "在以下情况下使用 `/rust-review`："
+    },
+    {
+      "en-US": "- After writing or modifying Rust code\n- Before committing Rust changes\n- Reviewing pull requests with Rust code\n- Onboarding to a new Rust codebase\n- Learning idiomatic Rust patterns",
+      "zh-Hans": "* 编写或修改 Rust 代码之后\n* 提交 Rust 变更之前\n* 审查包含 Rust 代码的拉取请求时\n* 接手新的 Rust 代码库时\n* 学习惯用的 Rust 模式时"
+    },
+    {
+      "en-US": "## Review Categories",
+      "zh-Hans": "## 审查类别"
+    },
+    {
+      "en-US": "### CRITICAL (Must Fix)",
+      "zh-Hans": "### 关键（必须修复）"
+    },
+    {
+      "en-US": "- Unchecked `unwrap()`/`expect()` in production code paths\n- `unsafe` without `// SAFETY:` comment documenting invariants\n- SQL injection via string interpolation in queries\n- Command injection via unvalidated input in `std::process::Command`\n- Hardcoded credentials\n- Use-after-free via raw pointers",
+      "zh-Hans": "* 生产代码路径中未经检查的 `unwrap()`/`expect()`\n* 没有 `// SAFETY:` 注释记录不变量的 `unsafe`\n* 查询中通过字符串插值导致的 SQL 注入\n* 在 `std::process::Command` 中通过未经验证的输入导致的命令注入\n* 硬编码凭据\n* 通过原始指针导致的释放后使用"
+    },
+    {
+      "en-US": "### HIGH (Should Fix)",
+      "zh-Hans": "### 高（应该修复）"
+    },
+    {
+      "en-US": "- Unnecessary `.clone()` to satisfy borrow checker\n- `String` parameter where `&str` or `impl AsRef<str>` suffices\n- Blocking in async context (`std::thread::sleep`, `std::fs`)\n- Missing `Send`/`Sync` bounds on shared types\n- Wildcard `_ =>` match on business-critical enums\n- Large functions (>50 lines)",
+      "zh-Hans": "* 为满足借用检查器而进行的不必要的 `.clone()`\n* 参数为 `String`，而 `&str` 或 `impl AsRef<str>` 即可满足\n* 在异步上下文中的阻塞操作（`std::thread::sleep`、`std::fs`）\n* 共享类型上缺少 `Send`/`Sync` 约束\n* 对业务关键枚举使用通配符 `_ =>` 匹配\n* 大型函数（>50 行）"
+    },
+    {
+      "en-US": "### MEDIUM (Consider)",
+      "zh-Hans": "### 中（考虑）"
+    },
+    {
+      "en-US": "- Unnecessary allocation in hot paths\n- Missing `with_capacity` when size is known\n- Suppressed clippy warnings without justification\n- Public API without `///` documentation\n- Consider `#[must_use]` on non-`must_use` return types where ignoring values is likely a bug",
+      "zh-Hans": "* 在热点路径中不必要的分配\n* 已知大小时缺少 `with_capacity`\n* 未说明理由就抑制 clippy 警告\n* 公共 API 缺少 `///` 文档\n* 对于忽略返回值很可能是错误的非 `must_use` 返回类型，考虑使用 `#[must_use]`"
+    },
+    {
+      "en-US": "## Automated Checks Run",
+      "zh-Hans": "## 运行的自动化检查"
+    },
+    {
+      "en-US": "```bash\n# Build gate (must pass before review)\ncargo check\n\n# Lints and suggestions\ncargo clippy -- -D warnings\n\n# Formatting\ncargo fmt --check\n\n# Tests\ncargo test\n\n# Security audit (if available)\nif command -v cargo-audit >/dev/null; then cargo audit; else echo \"cargo-audit not installed\"; fi\n```",
+      "zh-Hans": "```bash\n# Build gate (must pass before review)\ncargo check\n\n# Lints and suggestions\ncargo clippy -- -D warnings\n\n# Formatting\ncargo fmt --check\n\n# Tests\ncargo test\n\n# Security audit (if available)\nif command -v cargo-audit >/dev/null; then cargo audit; else echo \"cargo-audit not installed\"; fi\n```"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "````text\nUser: /rust-review\n\nAgent:\n# Rust Code Review Report\n\n## Files Reviewed\n- src/service/user.rs (modified)\n- src/handler/api.rs (modified)\n\n## Static Analysis Results\n- Build: Successful\n- Clippy: No warnings\n- Formatting: Passed\n- Tests: All passing\n\n## Issues Found\n\n[CRITICAL] Unchecked unwrap in Production Path\nFile: src/service/user.rs:28\nIssue: Using `.unwrap()` on database query result\n```rust\nlet user = db.find_by_id(id).unwrap();  // Panics on missing user\n```\nFix: Propagate error with context\n```rust\nlet user = db.find_by_id(id)\n    .context(\"failed to fetch user\")?;\n```\n\n[HIGH] Unnecessary Clone\nFile: src/handler/api.rs:45\nIssue: Cloning String to satisfy borrow checker\n```rust\nlet name = user.name.clone();\nprocess(&user, &name);\n```\nFix: Restructure to avoid clone\n```rust\nlet result = process_name(&user.name);\nuse_user(&user, result);\n```\n\n## Summary\n- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 0\n\nRecommendation: Block merge until CRITICAL issue is fixed\n````",
+      "zh-Hans": "````text\nUser: /rust-review\n\nAgent:\n# Rust Code Review Report\n\n## Files Reviewed\n- src/service/user.rs (modified)\n- src/handler/api.rs (modified)\n\n## Static Analysis Results\n- Build: Successful\n- Clippy: No warnings\n- Formatting: Passed\n- Tests: All passing\n\n## Issues Found\n\n[CRITICAL] Unchecked unwrap in Production Path\nFile: src/service/user.rs:28\nIssue: Using `.unwrap()` on database query result\n```rust\nlet user = db.find_by_id(id).unwrap();  // Panics on missing user\n```\nFix: Propagate error with context\n```rust\nlet user = db.find_by_id(id)\n    .context(\"failed to fetch user\")?;\n```\n\n[HIGH] Unnecessary Clone\nFile: src/handler/api.rs:45\nIssue: Cloning String to satisfy borrow checker\n```rust\nlet name = user.name.clone();\nprocess(&user, &name);\n```\nFix: Restructure to avoid clone\n```rust\nlet result = process_name(&user.name);\nuse_user(&user, result);\n```\n\n## Summary\n- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 0\n\nRecommendation: Block merge until CRITICAL issue is fixed\n````"
+    },
+    {
+      "en-US": "## Approval Criteria",
+      "zh-Hans": "## 批准标准"
+    },
+    {
+      "en-US": "| Status | Condition |\n|--------|-----------|\n| Approve | No CRITICAL or HIGH issues |\n| Warning | Only MEDIUM issues (merge with caution) |\n| Block | CRITICAL or HIGH issues found |",
+      "zh-Hans": "| 状态 | 条件 |\n|--------|-----------|\n| 批准 | 无关键或高优先级问题 |\n| 警告 | 仅存在中优先级问题（谨慎合并） |\n| 阻止 | 发现关键或高优先级问题 |"
+    },
+    {
+      "en-US": "## Integration with Other Commands",
+      "zh-Hans": "## 与其他命令的集成"
+    },
+    {
+      "en-US": "- Use `/rust-test` first to ensure tests pass\n- Use `/rust-build` if build errors occur\n- Use `/rust-review` before committing\n- Use `/code-review` for non-Rust-specific concerns",
+      "zh-Hans": "* 首先使用 `/rust-test` 确保测试通过\n* 如果出现构建错误，使用 `/rust-build`\n* 提交前使用 `/rust-review`\n* 对于非 Rust 专项问题，使用 `/code-review`"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- Agent: `agents/rust-reviewer.md`\n- Skills: `skills/rust-patterns/`, `skills/rust-testing/`",
+      "zh-Hans": "* 代理：`agents/rust-reviewer.md`\n* 技能：`skills/rust-patterns/`、`skills/rust-testing/`"
+    }
+  ]
+}

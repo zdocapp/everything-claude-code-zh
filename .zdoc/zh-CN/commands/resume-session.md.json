@@ -1,0 +1,146 @@
+{
+  "sourceFile": "commands/resume-session.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Load the most recent session file from ~/.claude/sessions/ and resume work with full context from where the last session ended.\n---",
+      "zh-Hans": "---\ndescription: 从 ~/.claude/sessions/ 加载最新的会话文件，并从上次会话结束的地方恢复工作，保留完整上下文。\n---"
+    },
+    {
+      "en-US": "# Resume Session Command",
+      "zh-Hans": "# 恢复会话命令"
+    },
+    {
+      "en-US": "Load the last saved session state and orient fully before doing any work.\nThis command is the counterpart to `/save-session`.",
+      "zh-Hans": "加载最后保存的会话状态，并在开始任何工作前完全熟悉情况。\n此命令是 `/save-session` 的对应命令。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Starting a new session to continue work from a previous day\n- After starting a fresh session due to context limits\n- When handing off a session file from another source (just provide the file path)\n- Any time you have a session file and want Claude to fully absorb it before proceeding",
+      "zh-Hans": "* 开始新会话以继续前一天的工作时\n* 因上下文限制而开始全新会话后\n* 当从其他来源移交会话文件时（只需提供文件路径）\n* 任何拥有会话文件并希望 Claude 在继续前完全吸收其内容的时候"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```\n/resume-session                                                      # loads most recent file in ~/.claude/sessions/\n/resume-session 2024-01-15                                           # loads most recent session for that date\n/resume-session ~/.claude/sessions/2024-01-15-session.tmp           # loads a specific legacy-format file\n/resume-session ~/.claude/sessions/2024-01-15-abc123de-session.tmp  # loads a current short-id session file\n```",
+      "zh-Hans": "```\n/resume-session                                                      # 加载 ~/.claude/sessions/ 目录下最新的文件\n/resume-session 2024-01-15                                           # 加载该日期最新的会话\n/resume-session ~/.claude/sessions/2024-01-15-session.tmp           # 加载特定的旧格式文件\n/resume-session ~/.claude/sessions/2024-01-15-abc123de-session.tmp  # 加载当前短ID格式的会话文件\n```"
+    },
+    {
+      "en-US": "## Process",
+      "zh-Hans": "## 流程"
+    },
+    {
+      "en-US": "### Step 1: Find the session file",
+      "zh-Hans": "### 步骤 1：查找会话文件"
+    },
+    {
+      "en-US": "If no argument provided:",
+      "zh-Hans": "如果未提供参数："
+    },
+    {
+      "en-US": "1. Check `~/.claude/sessions/`\n2. Pick the most recently modified `*-session.tmp` file\n3. If the folder does not exist or has no matching files, tell the user:\n   ```\n   No session files found in ~/.claude/sessions/\n   Run /save-session at the end of a session to create one.\n   ```\n   Then stop.",
+      "zh-Hans": "1. 检查 `~/.claude/sessions/`\n2. 选择最近修改的 `*-session.tmp` 文件\n3. 如果文件夹不存在或没有匹配的文件，告知用户：\n   ```\n   在 ~/.claude/sessions/ 中未找到会话文件。\n   请在会话结束时运行 /save-session 来创建一个。\n   ```\n   然后停止。"
+    },
+    {
+      "en-US": "If an argument is provided:",
+      "zh-Hans": "如果提供了参数："
+    },
+    {
+      "en-US": "- If it looks like a date (`YYYY-MM-DD`), search `~/.claude/sessions/` for files matching\n  `YYYY-MM-DD-session.tmp` (legacy format) or `YYYY-MM-DD-<shortid>-session.tmp` (current format)\n  and load the most recently modified variant for that date\n- If it looks like a file path, read that file directly\n- If not found, report clearly and stop",
+      "zh-Hans": "* 如果看起来像日期 (`YYYY-MM-DD`)，则在 `~/.claude/sessions/` 中搜索匹配\n  `YYYY-MM-DD-session.tmp`（旧格式）或 `YYYY-MM-DD-<shortid>-session.tmp`（当前格式）的文件，\n  并加载该日期最近修改的版本\n* 如果看起来像文件路径，则直接读取该文件\n* 如果未找到，清晰报告并停止"
+    },
+    {
+      "en-US": "### Step 2: Read the entire session file",
+      "zh-Hans": "### 步骤 2：读取整个会话文件"
+    },
+    {
+      "en-US": "Read the complete file. Do not summarize yet.",
+      "zh-Hans": "读取完整的文件。暂时不要总结。"
+    },
+    {
+      "en-US": "### Step 3: Confirm understanding",
+      "zh-Hans": "### 步骤 3：确认理解"
+    },
+    {
+      "en-US": "Respond with a structured briefing in this exact format:",
+      "zh-Hans": "使用以下确切格式回复一份结构化简报："
+    },
+    {
+      "en-US": "```\nSESSION LOADED: [actual resolved path to the file]\n════════════════════════════════════════════════\n\nPROJECT: [project name / topic from file]\n\nWHAT WE'RE BUILDING:\n[2-3 sentence summary in your own words]\n\nCURRENT STATE:\n✅ Working: [count] items confirmed\n🔄 In Progress: [list files that are in progress]\n🗒️ Not Started: [list planned but untouched]\n\nWHAT NOT TO RETRY:\n[list every failed approach with its reason — this is critical]\n\nOPEN QUESTIONS / BLOCKERS:\n[list any blockers or unanswered questions]\n\nNEXT STEP:\n[exact next step if defined in the file]\n[if not defined: \"No next step defined — recommend reviewing 'What Has NOT Been Tried Yet' together before starting\"]\n\n════════════════════════════════════════════════\nReady to continue. What would you like to do?\n```",
+      "zh-Hans": "```\n会话已加载：[文件的实际解析路径]\n════════════════════════════════════════════════\n\n项目：[文件中的项目名称/主题]\n\n我们正在构建什么：\n[用你自己的话总结 2-3 句话]\n\n当前状态：\n✅ 已完成：[数量] 项已确认\n🔄 进行中：[列出进行中的文件]\n🗒️ 未开始：[列出计划但未开始的文件]\n\n不应重试的内容：\n[列出每个失败的方法及其原因——此部分至关重要]\n\n待解决问题/阻碍：\n[列出任何阻碍或未解答的问题]\n\n下一步：\n[如果文件中已定义，则列出确切下一步]\n[如果未定义：\"未定义下一步——建议在开始前共同回顾'尚未尝试的方法'\"]\n\n════════════════════════════════════════════════\n准备就绪。您希望做什么？\n```"
+    },
+    {
+      "en-US": "### Step 4: Wait for the user",
+      "zh-Hans": "### 步骤 4：等待用户"
+    },
+    {
+      "en-US": "Do NOT start working automatically. Do NOT touch any files. Wait for the user to say what to do next.",
+      "zh-Hans": "请**不要**自动开始工作。请**不要**触碰任何文件。等待用户指示下一步做什么。"
+    },
+    {
+      "en-US": "If the next step is clearly defined in the session file and the user says \"continue\" or \"yes\" or similar — proceed with that exact next step.",
+      "zh-Hans": "如果会话文件中明确定义了下一步，并且用户说\"继续\"或\"是\"或类似内容 — 则执行该确切步骤。"
+    },
+    {
+      "en-US": "If no next step is defined — ask the user where to start, and optionally suggest an approach from the \"What Has NOT Been Tried Yet\" section.",
+      "zh-Hans": "如果未定义下一步 — 询问用户从哪里开始，并可选择性地从\"尚未尝试的内容\"部分提出建议。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Edge Cases",
+      "zh-Hans": "## 边界情况"
+    },
+    {
+      "en-US": "**Multiple sessions for the same date** (`2024-01-15-session.tmp`, `2024-01-15-abc123de-session.tmp`):\nLoad the most recently modified matching file for that date, regardless of whether it uses the legacy no-id format or the current short-id format.",
+      "zh-Hans": "**同一日期有多个会话** (`2024-01-15-session.tmp`, `2024-01-15-abc123de-session.tmp`)：\n加载该日期最近修改的匹配文件，无论其使用的是旧的无ID格式还是当前的短ID格式。"
+    },
+    {
+      "en-US": "**Session file references files that no longer exist:**\nNote this during the briefing — \"⚠️ `path/to/file.ts` referenced in session but not found on disk.\"",
+      "zh-Hans": "**会话文件引用了已不存在的文件：**\n在简报中注明 — \"⚠️ 会话中引用了 `path/to/file.ts`，但在磁盘上未找到。\""
+    },
+    {
+      "en-US": "**Session file is from more than 7 days ago:**\nNote the gap — \"⚠️ This session is from N days ago (threshold: 7 days). Things may have changed.\" — then proceed normally.",
+      "zh-Hans": "**会话文件来自超过7天前：**\n注明时间间隔 — \"⚠️ 此会话来自 N 天前（阈值：7天）。情况可能已发生变化。\" — 然后正常继续。"
+    },
+    {
+      "en-US": "**User provides a file path directly (e.g., forwarded from a teammate):**\nRead it and follow the same briefing process — the format is the same regardless of source.",
+      "zh-Hans": "**用户直接提供了文件路径（例如，从队友处转发而来）：**\n读取它并遵循相同的简报流程 — 无论来源如何，格式都是相同的。"
+    },
+    {
+      "en-US": "**Session file is empty or malformed:**\nReport: \"Session file found but appears empty or unreadable. You may need to create a new one with /save-session.\"",
+      "zh-Hans": "**会话文件为空或格式错误：**\n报告：\"找到会话文件，但似乎为空或无法读取。您可能需要使用 /save-session 创建一个新的。\""
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Example Output",
+      "zh-Hans": "## 示例输出"
+    },
+    {
+      "en-US": "```\nSESSION LOADED: /Users/you/.claude/sessions/2024-01-15-abc123de-session.tmp\n════════════════════════════════════════════════\n\nPROJECT: my-app — JWT Authentication\n\nWHAT WE'RE BUILDING:\nUser authentication with JWT tokens stored in httpOnly cookies.\nRegister and login endpoints are partially done. Route protection\nvia middleware hasn't been started yet.\n\nCURRENT STATE:\n✅ Working: 3 items (register endpoint, JWT generation, password hashing)\n🔄 In Progress: app/api/auth/login/route.ts (token works, cookie not set yet)\n🗒️ Not Started: middleware.ts, app/login/page.tsx\n\nWHAT NOT TO RETRY:\n❌ Next-Auth — conflicts with custom Prisma adapter, threw adapter error on every request\n❌ localStorage for JWT — causes SSR hydration mismatch, incompatible with Next.js\n\nOPEN QUESTIONS / BLOCKERS:\n- Does cookies().set() work inside a Route Handler or only Server Actions?\n\nNEXT STEP:\nIn app/api/auth/login/route.ts — set the JWT as an httpOnly cookie using\ncookies().set('token', jwt, { httpOnly: true, secure: true, sameSite: 'strict' })\nthen test with Postman for a Set-Cookie header in the response.\n\n════════════════════════════════════════════════\nReady to continue. What would you like to do?\n```",
+      "zh-Hans": "```\nSESSION LOADED: /Users/you/.claude/sessions/2024-01-15-abc123de-session.tmp\n════════════════════════════════════════════════\n\n项目：my-app — JWT 认证\n\n构建目标：\n使用存储在 httpOnly cookie 中的 JWT 令牌实现用户认证。\n注册和登录端点已部分完成。通过中间件进行路由保护尚未开始。\n\n当前状态：\n✅ 已完成：3 项（注册端点、JWT 生成、密码哈希）\n🔄 进行中：app/api/auth/login/route.ts（令牌有效，但 cookie 尚未设置）\n🗒️ 未开始：middleware.ts、app/login/page.tsx\n\n需避免的事项：\n❌ Next-Auth — 与自定义 Prisma 适配器冲突，每次请求均抛出适配器错误\n❌ localStorage 存储 JWT — 导致 SSR 水合不匹配，与 Next.js 不兼容\n\n待解决问题 / 阻碍：\n- cookies().set() 在路由处理器中是否有效，还是仅适用于服务器操作？\n\n下一步：\n在 app/api/auth/login/route.ts 中 — 使用以下方式将 JWT 设置为 httpOnly cookie：\ncookies().set('token', jwt, { httpOnly: true, secure: true, sameSite: 'strict' })\n随后使用 Postman 测试响应中是否包含 Set-Cookie 标头。\n\n════════════════════════════════════════════════\n准备继续。您希望做什么？\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Notes",
+      "zh-Hans": "## 注意事项"
+    },
+    {
+      "en-US": "- Never modify the session file when loading it — it's a read-only historical record\n- The briefing format is fixed — do not skip sections even if they are empty\n- \"What Not To Retry\" must always be shown, even if it just says \"None\" — it's too important to miss\n- After resuming, the user may want to run `/save-session` again at the end of the new session to create a new dated file",
+      "zh-Hans": "* 加载时切勿修改会话文件 — 它是一个只读的历史记录\n* 简报格式是固定的 — 即使某些部分为空，也不要跳过\n* \"不应重试的内容\"必须始终显示，即使它只是说\"无\" — 这太重要了，不容遗漏\n* 恢复后，用户可能希望在新的会话结束时再次运行 `/save-session`，以创建一个新的带日期文件"
+    }
+  ]
+}

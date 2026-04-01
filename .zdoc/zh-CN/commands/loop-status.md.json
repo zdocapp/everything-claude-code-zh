@@ -1,0 +1,50 @@
+{
+  "sourceFile": "commands/loop-status.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Loop Status Command",
+      "zh-Hans": "# 循环状态命令"
+    },
+    {
+      "en-US": "Inspect active loop state, progress, and failure signals.",
+      "zh-Hans": "检查活动循环状态、进度和故障信号。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "`/loop-status [--watch]`",
+      "zh-Hans": "`/loop-status [--watch]`"
+    },
+    {
+      "en-US": "## What to Report",
+      "zh-Hans": "## 报告内容"
+    },
+    {
+      "en-US": "- active loop pattern\n- current phase and last successful checkpoint\n- failing checks (if any)\n- estimated time/cost drift\n- recommended intervention (continue/pause/stop)",
+      "zh-Hans": "* 活动循环模式\n* 当前阶段和最后一个成功的检查点\n* 失败的检查（如果有）\n* 预计的时间/成本偏差\n* 建议的干预措施（继续/暂停/停止）"
+    },
+    {
+      "en-US": "## Watch Mode",
+      "zh-Hans": "## 监视模式"
+    },
+    {
+      "en-US": "When `--watch` is present, refresh status periodically and surface state changes.",
+      "zh-Hans": "当 `--watch` 存在时，定期刷新状态并显示状态变化。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `--watch` optional",
+      "zh-Hans": "* `--watch` 可选"
+    }
+  ]
+}

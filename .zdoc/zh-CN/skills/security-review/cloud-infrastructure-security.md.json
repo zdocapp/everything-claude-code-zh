@@ -1,0 +1,246 @@
+{
+  "sourceFile": "skills/security-review/cloud-infrastructure-security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "| name | description |\n|------|-------------|\n| cloud-infrastructure-security | Use this skill when deploying to cloud platforms, configuring infrastructure, managing IAM policies, setting up logging/monitoring, or implementing CI/CD pipelines. Provides cloud security checklist aligned with best practices. |",
+      "zh-Hans": "| name | description |\n|------|-------------|\n| cloud-infrastructure-security | 在部署到云平台、配置基础设施、管理IAM策略、设置日志记录/监控或实现CI/CD流水线时使用此技能。提供符合最佳实践的云安全检查清单。 |"
+    },
+    {
+      "en-US": "# Cloud & Infrastructure Security Skill",
+      "zh-Hans": "# 云与基础设施安全技能"
+    },
+    {
+      "en-US": "This skill ensures cloud infrastructure, CI/CD pipelines, and deployment configurations follow security best practices and comply with industry standards.",
+      "zh-Hans": "此技能确保云基础设施、CI/CD流水线和部署配置遵循安全最佳实践并符合行业标准。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Deploying applications to cloud platforms (AWS, Vercel, Railway, Cloudflare)\n- Configuring IAM roles and permissions\n- Setting up CI/CD pipelines\n- Implementing infrastructure as code (Terraform, CloudFormation)\n- Configuring logging and monitoring\n- Managing secrets in cloud environments\n- Setting up CDN and edge security\n- Implementing disaster recovery and backup strategies",
+      "zh-Hans": "* 将应用程序部署到云平台（AWS、Vercel、Railway、Cloudflare）\n* 配置IAM角色和权限\n* 设置CI/CD流水线\n* 实施基础设施即代码（Terraform、CloudFormation）\n* 配置日志记录和监控\n* 在云环境中管理密钥\n* 设置CDN和边缘安全\n* 实施灾难恢复和备份策略"
+    },
+    {
+      "en-US": "## Cloud Security Checklist",
+      "zh-Hans": "## 云安全检查清单"
+    },
+    {
+      "en-US": "### 1. IAM & Access Control",
+      "zh-Hans": "### 1. IAM 与访问控制"
+    },
+    {
+      "en-US": "#### Principle of Least Privilege",
+      "zh-Hans": "#### 最小权限原则"
+    },
+    {
+      "en-US": "```yaml\n# ✅ CORRECT: Minimal permissions\niam_role:\n  permissions:\n    - s3:GetObject  # Only read access\n    - s3:ListBucket\n  resources:\n    - arn:aws:s3:::my-bucket/*  # Specific bucket only\n\n# ❌ WRONG: Overly broad permissions\niam_role:\n  permissions:\n    - s3:*  # All S3 actions\n  resources:\n    - \"*\"  # All resources\n```",
+      "zh-Hans": "```yaml\n# ✅ CORRECT: Minimal permissions\niam_role:\n  permissions:\n    - s3:GetObject  # Only read access\n    - s3:ListBucket\n  resources:\n    - arn:aws:s3:::my-bucket/*  # Specific bucket only\n\n# ❌ WRONG: Overly broad permissions\niam_role:\n  permissions:\n    - s3:*  # All S3 actions\n  resources:\n    - \"*\"  # All resources\n```"
+    },
+    {
+      "en-US": "#### Multi-Factor Authentication (MFA)",
+      "zh-Hans": "#### 多因素认证 (MFA)"
+    },
+    {
+      "en-US": "```bash\n# ALWAYS enable MFA for root/admin accounts\naws iam enable-mfa-device \\\n  --user-name admin \\\n  --serial-number arn:aws:iam::123456789:mfa/admin \\\n  --authentication-code1 123456 \\\n  --authentication-code2 789012\n```",
+      "zh-Hans": "```bash\n# ALWAYS enable MFA for root/admin accounts\naws iam enable-mfa-device \\\n  --user-name admin \\\n  --serial-number arn:aws:iam::123456789:mfa/admin \\\n  --authentication-code1 123456 \\\n  --authentication-code2 789012\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] No root account usage in production\n- [ ] MFA enabled for all privileged accounts\n- [ ] Service accounts use roles, not long-lived credentials\n- [ ] IAM policies follow least privilege\n- [ ] Regular access reviews conducted\n- [ ] Unused credentials rotated or removed",
+      "zh-Hans": "* \\[ ] 生产环境中未使用根账户\n* \\[ ] 所有特权账户已启用MFA\n* \\[ ] 服务账户使用角色，而非长期凭证\n* \\[ ] IAM策略遵循最小权限原则\n* \\[ ] 定期进行访问审查\n* \\[ ] 未使用的凭证已轮换或移除"
+    },
+    {
+      "en-US": "### 2. Secrets Management",
+      "zh-Hans": "### 2. 密钥管理"
+    },
+    {
+      "en-US": "#### Cloud Secrets Managers",
+      "zh-Hans": "#### 云密钥管理器"
+    },
+    {
+      "en-US": "```typescript\n// ✅ CORRECT: Use cloud secrets manager\nimport { SecretsManager } from '@aws-sdk/client-secrets-manager';\n\nconst client = new SecretsManager({ region: 'us-east-1' });\nconst secret = await client.getSecretValue({ SecretId: 'prod/api-key' });\nconst apiKey = JSON.parse(secret.SecretString).key;\n\n// ❌ WRONG: Hardcoded or in environment variables only\nconst apiKey = process.env.API_KEY; // Not rotated, not audited\n```",
+      "zh-Hans": "```typescript\n// ✅ CORRECT: Use cloud secrets manager\nimport { SecretsManager } from '@aws-sdk/client-secrets-manager';\n\nconst client = new SecretsManager({ region: 'us-east-1' });\nconst secret = await client.getSecretValue({ SecretId: 'prod/api-key' });\nconst apiKey = JSON.parse(secret.SecretString).key;\n\n// ❌ WRONG: Hardcoded or in environment variables only\nconst apiKey = process.env.API_KEY; // Not rotated, not audited\n```"
+    },
+    {
+      "en-US": "#### Secrets Rotation",
+      "zh-Hans": "#### 密钥轮换"
+    },
+    {
+      "en-US": "```bash\n# Set up automatic rotation for database credentials\naws secretsmanager rotate-secret \\\n  --secret-id prod/db-password \\\n  --rotation-lambda-arn arn:aws:lambda:region:account:function:rotate \\\n  --rotation-rules AutomaticallyAfterDays=30\n```",
+      "zh-Hans": "```bash\n# Set up automatic rotation for database credentials\naws secretsmanager rotate-secret \\\n  --secret-id prod/db-password \\\n  --rotation-lambda-arn arn:aws:lambda:region:account:function:rotate \\\n  --rotation-rules AutomaticallyAfterDays=30\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] All secrets stored in cloud secrets manager (AWS Secrets Manager, Vercel Secrets)\n- [ ] Automatic rotation enabled for database credentials\n- [ ] API keys rotated at least quarterly\n- [ ] No secrets in code, logs, or error messages\n- [ ] Audit logging enabled for secret access",
+      "zh-Hans": "* \\[ ] 所有密钥存储在云密钥管理器（AWS Secrets Manager、Vercel Secrets）中\n* \\[ ] 数据库凭证已启用自动轮换\n* \\[ ] API密钥至少每季度轮换一次\n* \\[ ] 代码、日志或错误消息中没有密钥\n* \\[ ] 密钥访问已启用审计日志记录"
+    },
+    {
+      "en-US": "### 3. Network Security",
+      "zh-Hans": "### 3. 网络安全"
+    },
+    {
+      "en-US": "#### VPC and Firewall Configuration",
+      "zh-Hans": "#### VPC 和防火墙配置"
+    },
+    {
+      "en-US": "```terraform\n# ✅ CORRECT: Restricted security group\nresource \"aws_security_group\" \"app\" {\n  name = \"app-sg\"\n  \n  ingress {\n    from_port   = 443\n    to_port     = 443\n    protocol    = \"tcp\"\n    cidr_blocks = [\"10.0.0.0/16\"]  # Internal VPC only\n  }\n  \n  egress {\n    from_port   = 443\n    to_port     = 443\n    protocol    = \"tcp\"\n    cidr_blocks = [\"0.0.0.0/0\"]  # Only HTTPS outbound\n  }\n}\n\n# ❌ WRONG: Open to the internet\nresource \"aws_security_group\" \"bad\" {\n  ingress {\n    from_port   = 0\n    to_port     = 65535\n    protocol    = \"tcp\"\n    cidr_blocks = [\"0.0.0.0/0\"]  # All ports, all IPs!\n  }\n}\n```",
+      "zh-Hans": "```terraform\n# ✅ CORRECT: Restricted security group\nresource \"aws_security_group\" \"app\" {\n  name = \"app-sg\"\n  \n  ingress {\n    from_port   = 443\n    to_port     = 443\n    protocol    = \"tcp\"\n    cidr_blocks = [\"10.0.0.0/16\"]  # Internal VPC only\n  }\n  \n  egress {\n    from_port   = 443\n    to_port     = 443\n    protocol    = \"tcp\"\n    cidr_blocks = [\"0.0.0.0/0\"]  # Only HTTPS outbound\n  }\n}\n\n# ❌ WRONG: Open to the internet\nresource \"aws_security_group\" \"bad\" {\n  ingress {\n    from_port   = 0\n    to_port     = 65535\n    protocol    = \"tcp\"\n    cidr_blocks = [\"0.0.0.0/0\"]  # All ports, all IPs!\n  }\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] Database not publicly accessible\n- [ ] SSH/RDP ports restricted to VPN/bastion only\n- [ ] Security groups follow least privilege\n- [ ] Network ACLs configured\n- [ ] VPC flow logs enabled",
+      "zh-Hans": "* \\[ ] 数据库未公开访问\n* \\[ ] SSH/RDP端口仅限VPN/堡垒机访问\n* \\[ ] 安全组遵循最小权限原则\n* \\[ ] 网络ACL已配置\n* \\[ ] VPC流日志已启用"
+    },
+    {
+      "en-US": "### 4. Logging & Monitoring",
+      "zh-Hans": "### 4. 日志记录与监控"
+    },
+    {
+      "en-US": "#### CloudWatch/Logging Configuration",
+      "zh-Hans": "#### CloudWatch/日志记录配置"
+    },
+    {
+      "en-US": "```typescript\n// ✅ CORRECT: Comprehensive logging\nimport { CloudWatchLogsClient, CreateLogStreamCommand } from '@aws-sdk/client-cloudwatch-logs';\n\nconst logSecurityEvent = async (event: SecurityEvent) => {\n  await cloudwatch.putLogEvents({\n    logGroupName: '/aws/security/events',\n    logStreamName: 'authentication',\n    logEvents: [{\n      timestamp: Date.now(),\n      message: JSON.stringify({\n        type: event.type,\n        userId: event.userId,\n        ip: event.ip,\n        result: event.result,\n        // Never log sensitive data\n      })\n    }]\n  });\n};\n```",
+      "zh-Hans": "```typescript\n// ✅ CORRECT: Comprehensive logging\nimport { CloudWatchLogsClient, CreateLogStreamCommand } from '@aws-sdk/client-cloudwatch-logs';\n\nconst logSecurityEvent = async (event: SecurityEvent) => {\n  await cloudwatch.putLogEvents({\n    logGroupName: '/aws/security/events',\n    logStreamName: 'authentication',\n    logEvents: [{\n      timestamp: Date.now(),\n      message: JSON.stringify({\n        type: event.type,\n        userId: event.userId,\n        ip: event.ip,\n        result: event.result,\n        // Never log sensitive data\n      })\n    }]\n  });\n};\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] CloudWatch/logging enabled for all services\n- [ ] Failed authentication attempts logged\n- [ ] Admin actions audited\n- [ ] Log retention configured (90+ days for compliance)\n- [ ] Alerts configured for suspicious activity\n- [ ] Logs centralized and tamper-proof",
+      "zh-Hans": "* \\[ ] 所有服务已启用CloudWatch/日志记录\n* \\[ ] 失败的身份验证尝试已记录\n* \\[ ] 管理员操作已审计\n* \\[ ] 日志保留期已配置（合规要求90天以上）\n* \\[ ] 为可疑活动配置了警报\n* \\[ ] 日志已集中存储且防篡改"
+    },
+    {
+      "en-US": "### 5. CI/CD Pipeline Security",
+      "zh-Hans": "### 5. CI/CD 流水线安全"
+    },
+    {
+      "en-US": "#### Secure Pipeline Configuration",
+      "zh-Hans": "#### 安全流水线配置"
+    },
+    {
+      "en-US": "```yaml\n# ✅ CORRECT: Secure GitHub Actions workflow\nname: Deploy\n\non:\n  push:\n    branches: [main]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: read  # Minimal permissions\n      \n    steps:\n      - uses: actions/checkout@v4\n      \n      # Scan for secrets\n      - name: Secret scanning\n        uses: trufflesecurity/trufflehog@main\n        \n      # Dependency audit\n      - name: Audit dependencies\n        run: npm audit --audit-level=high\n        \n      # Use OIDC, not long-lived tokens\n      - name: Configure AWS credentials\n        uses: aws-actions/configure-aws-credentials@v4\n        with:\n          role-to-assume: arn:aws:iam::123456789:role/GitHubActionsRole\n          aws-region: us-east-1\n```",
+      "zh-Hans": "```yaml\n# ✅ CORRECT: Secure GitHub Actions workflow\nname: Deploy\n\non:\n  push:\n    branches: [main]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: read  # Minimal permissions\n      \n    steps:\n      - uses: actions/checkout@v4\n      \n      # Scan for secrets\n      - name: Secret scanning\n        uses: trufflesecurity/trufflehog@main\n        \n      # Dependency audit\n      - name: Audit dependencies\n        run: npm audit --audit-level=high\n        \n      # Use OIDC, not long-lived tokens\n      - name: Configure AWS credentials\n        uses: aws-actions/configure-aws-credentials@v4\n        with:\n          role-to-assume: arn:aws:iam::123456789:role/GitHubActionsRole\n          aws-region: us-east-1\n```"
+    },
+    {
+      "en-US": "#### Supply Chain Security",
+      "zh-Hans": "#### 供应链安全"
+    },
+    {
+      "en-US": "```json\n// package.json - Use lock files and integrity checks\n{\n  \"scripts\": {\n    \"install\": \"npm ci\",  // Use ci for reproducible builds\n    \"audit\": \"npm audit --audit-level=moderate\",\n    \"check\": \"npm outdated\"\n  }\n}\n```",
+      "zh-Hans": "```json\n// package.json - Use lock files and integrity checks\n{\n  \"scripts\": {\n    \"install\": \"npm ci\",  // Use ci for reproducible builds\n    \"audit\": \"npm audit --audit-level=moderate\",\n    \"check\": \"npm outdated\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] OIDC used instead of long-lived credentials\n- [ ] Secrets scanning in pipeline\n- [ ] Dependency vulnerability scanning\n- [ ] Container image scanning (if applicable)\n- [ ] Branch protection rules enforced\n- [ ] Code review required before merge\n- [ ] Signed commits enforced",
+      "zh-Hans": "* \\[ ] 使用OIDC而非长期凭证\n* \\[ ] 流水线中进行密钥扫描\n* \\[ ] 依赖项漏洞扫描\n* \\[ ] 容器镜像扫描（如适用）\n* \\[ ] 分支保护规则已强制执行\n* \\[ ] 合并前需要代码审查\n* \\[ ] 已强制执行签名提交"
+    },
+    {
+      "en-US": "### 6. Cloudflare & CDN Security",
+      "zh-Hans": "### 6. Cloudflare 与 CDN 安全"
+    },
+    {
+      "en-US": "#### Cloudflare Security Configuration",
+      "zh-Hans": "#### Cloudflare 安全配置"
+    },
+    {
+      "en-US": "```typescript\n// ✅ CORRECT: Cloudflare Workers with security headers\nexport default {\n  async fetch(request: Request): Promise<Response> {\n    const response = await fetch(request);\n    \n    // Add security headers\n    const headers = new Headers(response.headers);\n    headers.set('X-Frame-Options', 'DENY');\n    headers.set('X-Content-Type-Options', 'nosniff');\n    headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');\n    headers.set('Permissions-Policy', 'geolocation=(), microphone=()');\n    \n    return new Response(response.body, {\n      status: response.status,\n      headers\n    });\n  }\n};\n```",
+      "zh-Hans": "```typescript\n// ✅ CORRECT: Cloudflare Workers with security headers\nexport default {\n  async fetch(request: Request): Promise<Response> {\n    const response = await fetch(request);\n    \n    // Add security headers\n    const headers = new Headers(response.headers);\n    headers.set('X-Frame-Options', 'DENY');\n    headers.set('X-Content-Type-Options', 'nosniff');\n    headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');\n    headers.set('Permissions-Policy', 'geolocation=(), microphone=()');\n    \n    return new Response(response.body, {\n      status: response.status,\n      headers\n    });\n  }\n};\n```"
+    },
+    {
+      "en-US": "#### WAF Rules",
+      "zh-Hans": "#### WAF 规则"
+    },
+    {
+      "en-US": "```bash\n# Enable Cloudflare WAF managed rules\n# - OWASP Core Ruleset\n# - Cloudflare Managed Ruleset\n# - Rate limiting rules\n# - Bot protection\n```",
+      "zh-Hans": "```bash\n# Enable Cloudflare WAF managed rules\n# - OWASP Core Ruleset\n# - Cloudflare Managed Ruleset\n# - Rate limiting rules\n# - Bot protection\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] WAF enabled with OWASP rules\n- [ ] Rate limiting configured\n- [ ] Bot protection active\n- [ ] DDoS protection enabled\n- [ ] Security headers configured\n- [ ] SSL/TLS strict mode enabled",
+      "zh-Hans": "* \\[ ] WAF已启用并配置OWASP规则\n* \\[ ] 已配置速率限制\n* \\[ ] 机器人防护已激活\n* \\[ ] DDoS防护已启用\n* \\[ ] 安全标头已配置\n* \\[ ] SSL/TLS严格模式已启用"
+    },
+    {
+      "en-US": "### 7. Backup & Disaster Recovery",
+      "zh-Hans": "### 7. 备份与灾难恢复"
+    },
+    {
+      "en-US": "#### Automated Backups",
+      "zh-Hans": "#### 自动化备份"
+    },
+    {
+      "en-US": "```terraform\n# ✅ CORRECT: Automated RDS backups\nresource \"aws_db_instance\" \"main\" {\n  allocated_storage     = 20\n  engine               = \"postgres\"\n  \n  backup_retention_period = 30  # 30 days retention\n  backup_window          = \"03:00-04:00\"\n  maintenance_window     = \"mon:04:00-mon:05:00\"\n  \n  enabled_cloudwatch_logs_exports = [\"postgresql\"]\n  \n  deletion_protection = true  # Prevent accidental deletion\n}\n```",
+      "zh-Hans": "```terraform\n# ✅ CORRECT: Automated RDS backups\nresource \"aws_db_instance\" \"main\" {\n  allocated_storage     = 20\n  engine               = \"postgres\"\n  \n  backup_retention_period = 30  # 30 days retention\n  backup_window          = \"03:00-04:00\"\n  maintenance_window     = \"mon:04:00-mon:05:00\"\n  \n  enabled_cloudwatch_logs_exports = [\"postgresql\"]\n  \n  deletion_protection = true  # Prevent accidental deletion\n}\n```"
+    },
+    {
+      "en-US": "#### Verification Steps",
+      "zh-Hans": "#### 验证步骤"
+    },
+    {
+      "en-US": "- [ ] Automated daily backups configured\n- [ ] Backup retention meets compliance requirements\n- [ ] Point-in-time recovery enabled\n- [ ] Backup testing performed quarterly\n- [ ] Disaster recovery plan documented\n- [ ] RPO and RTO defined and tested",
+      "zh-Hans": "* \\[ ] 已配置自动化每日备份\n* \\[ ] 备份保留期符合合规要求\n* \\[ ] 已启用时间点恢复\n* \\[ ] 每季度执行备份测试\n* \\[ ] 灾难恢复计划已记录\n* \\[ ] RPO和RTO已定义并经过测试"
+    },
+    {
+      "en-US": "## Pre-Deployment Cloud Security Checklist",
+      "zh-Hans": "## 部署前云安全检查清单"
+    },
+    {
+      "en-US": "Before ANY production cloud deployment:",
+      "zh-Hans": "在任何生产云部署之前："
+    },
+    {
+      "en-US": "- [ ] **IAM**: Root account not used, MFA enabled, least privilege policies\n- [ ] **Secrets**: All secrets in cloud secrets manager with rotation\n- [ ] **Network**: Security groups restricted, no public databases\n- [ ] **Logging**: CloudWatch/logging enabled with retention\n- [ ] **Monitoring**: Alerts configured for anomalies\n- [ ] **CI/CD**: OIDC auth, secrets scanning, dependency audits\n- [ ] **CDN/WAF**: Cloudflare WAF enabled with OWASP rules\n- [ ] **Encryption**: Data encrypted at rest and in transit\n- [ ] **Backups**: Automated backups with tested recovery\n- [ ] **Compliance**: GDPR/HIPAA requirements met (if applicable)\n- [ ] **Documentation**: Infrastructure documented, runbooks created\n- [ ] **Incident Response**: Security incident plan in place",
+      "zh-Hans": "* \\[ ] **IAM**：未使用根账户，已启用MFA，最小权限策略\n* \\[ ] **密钥**：所有密钥都在云密钥管理器中并已配置轮换\n* \\[ ] **网络**：安全组受限，无公开数据库\n* \\[ ] **日志记录**：已启用CloudWatch/日志记录并配置保留期\n* \\[ ] **监控**：为异常情况配置了警报\n* \\[ ] **CI/CD**：OIDC身份验证，密钥扫描，依赖项审计\n* \\[ ] **CDN/WAF**：Cloudflare WAF已启用并配置OWASP规则\n* \\[ ] **加密**：静态和传输中的数据均已加密\n* \\[ ] **备份**：自动化备份并已测试恢复\n* \\[ ] **合规性**：满足GDPR/HIPAA要求（如适用）\n* \\[ ] **文档**：基础设施已记录，已创建操作手册\n* \\[ ] **事件响应**：已制定安全事件计划"
+    },
+    {
+      "en-US": "## Common Cloud Security Misconfigurations",
+      "zh-Hans": "## 常见云安全配置错误"
+    },
+    {
+      "en-US": "### S3 Bucket Exposure",
+      "zh-Hans": "### S3 存储桶暴露"
+    },
+    {
+      "en-US": "```bash\n# ❌ WRONG: Public bucket\naws s3api put-bucket-acl --bucket my-bucket --acl public-read\n\n# ✅ CORRECT: Private bucket with specific access\naws s3api put-bucket-acl --bucket my-bucket --acl private\naws s3api put-bucket-policy --bucket my-bucket --policy file://policy.json\n```",
+      "zh-Hans": "```bash\n# ❌ WRONG: Public bucket\naws s3api put-bucket-acl --bucket my-bucket --acl public-read\n\n# ✅ CORRECT: Private bucket with specific access\naws s3api put-bucket-acl --bucket my-bucket --acl private\naws s3api put-bucket-policy --bucket my-bucket --policy file://policy.json\n```"
+    },
+    {
+      "en-US": "### RDS Public Access",
+      "zh-Hans": "### RDS 公开访问"
+    },
+    {
+      "en-US": "```terraform\n# ❌ WRONG\nresource \"aws_db_instance\" \"bad\" {\n  publicly_accessible = true  # NEVER do this!\n}\n\n# ✅ CORRECT\nresource \"aws_db_instance\" \"good\" {\n  publicly_accessible = false\n  vpc_security_group_ids = [aws_security_group.db.id]\n}\n```",
+      "zh-Hans": "```terraform\n# ❌ WRONG\nresource \"aws_db_instance\" \"bad\" {\n  publicly_accessible = true  # NEVER do this!\n}\n\n# ✅ CORRECT\nresource \"aws_db_instance\" \"good\" {\n  publicly_accessible = false\n  vpc_security_group_ids = [aws_security_group.db.id]\n}\n```"
+    },
+    {
+      "en-US": "## Resources",
+      "zh-Hans": "## 资源"
+    },
+    {
+      "en-US": "- [AWS Security Best Practices](https://aws.amazon.com/security/best-practices/)\n- [CIS AWS Foundations Benchmark](https://www.cisecurity.org/benchmark/amazon_web_services)\n- [Cloudflare Security Documentation](https://developers.cloudflare.com/security/)\n- [OWASP Cloud Security](https://owasp.org/www-project-cloud-security/)\n- [Terraform Security Best Practices](https://www.terraform.io/docs/cloud/guides/recommended-practices/)",
+      "zh-Hans": "* [AWS 安全最佳实践](https://aws.amazon.com/security/best-practices/)\n* [CIS AWS 基础基准](https://www.cisecurity.org/benchmark/amazon_web_services)\n* [Cloudflare 安全文档](https://developers.cloudflare.com/security/)\n* [OWASP 云安全](https://owasp.org/www-project-cloud-security/)\n* [Terraform 安全最佳实践](https://www.terraform.io/docs/cloud/guides/recommended-practices/)"
+    },
+    {
+      "en-US": "**Remember**: Cloud misconfigurations are the leading cause of data breaches. A single exposed S3 bucket or overly permissive IAM policy can compromise your entire infrastructure. Always follow the principle of least privilege and defense in depth.",
+      "zh-Hans": "**请记住**：云配置错误是数据泄露的主要原因。一个暴露的S3存储桶或一个权限过大的IAM策略就可能危及整个基础设施。始终遵循最小权限原则和深度防御策略。"
+    }
+  ]
+}
