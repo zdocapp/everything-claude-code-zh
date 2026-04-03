@@ -272,7 +272,7 @@
     },
     {
       "en-US": "```markdown\n---\ndescription: Brief description shown in /help\n---\n\n# Command Name\n\n## Purpose\n\nWhat this command does.\n\n## Usage\n\n\\`\\`\\`\n/your-command [args]\n\\`\\`\\`\n\n## Workflow\n\n1. First step\n2. Second step\n3. Final step\n\n## Output\n\nWhat the user receives.\n```",
-      "zh-Hans": "```markdown\n---\ndescription: 在 /help 中显示的简要描述\n---\n\n# 命令名称\n\n## 目的\n\n此命令的功能。\n\n## 用法\n\n`​`​`\n\n/your-command [args]\n`​`​`\n\n\n## 工作流程\n\n1.  第一步\n2.  第二步\n3.  最后一步\n\n## 输出\n\n用户将收到的内容。\n\n```"
+      "zh-Hans": "```markdown\n---\ndescription: 在 /help 中显示的简要描述\n---\n\n# 命令名称\n\n## 目的\n\n此命令的功能。\n\n## 用法\n\n\\`\\`\\`\n/your-command [args]\n\\`\\`\\`\n\n\n## 工作流程\n\n1.  第一步\n2.  第二步\n3.  最后一步\n\n## 输出\n\n用户将收到的内容。\n\n```"
     },
     {
       "en-US": "### Example Commands",
