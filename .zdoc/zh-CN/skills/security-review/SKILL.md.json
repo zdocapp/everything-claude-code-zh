@@ -31,16 +31,16 @@
       "zh-Hans": "### 1. 密钥管理"
     },
     {
-      "en-US": "#### ❌ NEVER Do This",
-      "zh-Hans": "#### ❌ 绝对不要这样做"
+      "en-US": "#### FAIL: NEVER Do This",
+      "zh-Hans": "#### 失败：切勿这样做"
     },
     {
       "en-US": "```typescript\nconst apiKey = \"sk-proj-xxxxx\"  // Hardcoded secret\nconst dbPassword = \"password123\" // In source code\n```",
       "zh-Hans": "```typescript\nconst apiKey = \"sk-proj-xxxxx\"  // Hardcoded secret\nconst dbPassword = \"password123\" // In source code\n```"
     },
     {
-      "en-US": "#### ✅ ALWAYS Do This",
-      "zh-Hans": "#### ✅ 始终这样做"
+      "en-US": "#### PASS: ALWAYS Do This",
+      "zh-Hans": "#### 通过：务必这样做"
     },
     {
       "en-US": "```typescript\nconst apiKey = process.env.OPENAI_API_KEY\nconst dbUrl = process.env.DATABASE_URL\n\n// Verify secrets exist\nif (!apiKey) {\n  throw new Error('OPENAI_API_KEY not configured')\n}\n```",
@@ -87,16 +87,16 @@
       "zh-Hans": "### 3. SQL 注入防护"
     },
     {
-      "en-US": "#### ❌ NEVER Concatenate SQL",
-      "zh-Hans": "#### ❌ 绝对不要拼接 SQL"
+      "en-US": "#### FAIL: NEVER Concatenate SQL",
+      "zh-Hans": "#### 失败：切勿拼接 SQL"
     },
     {
       "en-US": "```typescript\n// DANGEROUS - SQL Injection vulnerability\nconst query = `SELECT * FROM users WHERE email = '${userEmail}'`\nawait db.query(query)\n```",
       "zh-Hans": "```typescript\n// DANGEROUS - SQL Injection vulnerability\nconst query = `SELECT * FROM users WHERE email = '${userEmail}'`\nawait db.query(query)\n```"
     },
     {
-      "en-US": "#### ✅ ALWAYS Use Parameterized Queries",
-      "zh-Hans": "#### ✅ 始终使用参数化查询"
+      "en-US": "#### PASS: ALWAYS Use Parameterized Queries",
+      "zh-Hans": "#### 通过：务必使用参数化查询"
     },
     {
       "en-US": "```typescript\n// Safe - parameterized query\nconst { data } = await supabase\n  .from('users')\n  .select('*')\n  .eq('email', userEmail)\n\n// Or with raw SQL\nawait db.query(\n  'SELECT * FROM users WHERE email = $1',\n  [userEmail]\n)\n```",
@@ -119,8 +119,8 @@
       "zh-Hans": "#### JWT 令牌处理"
     },
     {
-      "en-US": "```typescript\n// ❌ WRONG: localStorage (vulnerable to XSS)\nlocalStorage.setItem('token', token)\n\n// ✅ CORRECT: httpOnly cookies\nres.setHeader('Set-Cookie',\n  `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`)\n```",
-      "zh-Hans": "```typescript\n// ❌ WRONG: localStorage (vulnerable to XSS)\nlocalStorage.setItem('token', token)\n\n// ✅ CORRECT: httpOnly cookies\nres.setHeader('Set-Cookie',\n  `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`)\n```"
+      "en-US": "```typescript\n// FAIL: WRONG: localStorage (vulnerable to XSS)\nlocalStorage.setItem('token', token)\n\n// PASS: CORRECT: httpOnly cookies\nres.setHeader('Set-Cookie',\n  `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`)\n```",
+      "zh-Hans": "```typescript\n// FAIL: WRONG: localStorage (vulnerable to XSS)\nlocalStorage.setItem('token', token)\n\n// PASS: CORRECT: httpOnly cookies\nres.setHeader('Set-Cookie',\n  `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`)\n```"
     },
     {
       "en-US": "#### Authorization Checks",
@@ -239,16 +239,16 @@
       "zh-Hans": "#### 日志记录"
     },
     {
-      "en-US": "```typescript\n// ❌ WRONG: Logging sensitive data\nconsole.log('User login:', { email, password })\nconsole.log('Payment:', { cardNumber, cvv })\n\n// ✅ CORRECT: Redact sensitive data\nconsole.log('User login:', { email, userId })\nconsole.log('Payment:', { last4: card.last4, userId })\n```",
-      "zh-Hans": "```typescript\n// ❌ WRONG: Logging sensitive data\nconsole.log('User login:', { email, password })\nconsole.log('Payment:', { cardNumber, cvv })\n\n// ✅ CORRECT: Redact sensitive data\nconsole.log('User login:', { email, userId })\nconsole.log('Payment:', { last4: card.last4, userId })\n```"
+      "en-US": "```typescript\n// FAIL: WRONG: Logging sensitive data\nconsole.log('User login:', { email, password })\nconsole.log('Payment:', { cardNumber, cvv })\n\n// PASS: CORRECT: Redact sensitive data\nconsole.log('User login:', { email, userId })\nconsole.log('Payment:', { last4: card.last4, userId })\n```",
+      "zh-Hans": "```typescript\n// FAIL: WRONG: Logging sensitive data\nconsole.log('User login:', { email, password })\nconsole.log('Payment:', { cardNumber, cvv })\n\n// PASS: CORRECT: Redact sensitive data\nconsole.log('User login:', { email, userId })\nconsole.log('Payment:', { last4: card.last4, userId })\n```"
     },
     {
       "en-US": "#### Error Messages",
       "zh-Hans": "#### 错误消息"
     },
     {
-      "en-US": "```typescript\n// ❌ WRONG: Exposing internal details\ncatch (error) {\n  return NextResponse.json(\n    { error: error.message, stack: error.stack },\n    { status: 500 }\n  )\n}\n\n// ✅ CORRECT: Generic error messages\ncatch (error) {\n  console.error('Internal error:', error)\n  return NextResponse.json(\n    { error: 'An error occurred. Please try again.' },\n    { status: 500 }\n  )\n}\n```",
-      "zh-Hans": "```typescript\n// ❌ WRONG: Exposing internal details\ncatch (error) {\n  return NextResponse.json(\n    { error: error.message, stack: error.stack },\n    { status: 500 }\n  )\n}\n\n// ✅ CORRECT: Generic error messages\ncatch (error) {\n  console.error('Internal error:', error)\n  return NextResponse.json(\n    { error: 'An error occurred. Please try again.' },\n    { status: 500 }\n  )\n}\n```"
+      "en-US": "```typescript\n// FAIL: WRONG: Exposing internal details\ncatch (error) {\n  return NextResponse.json(\n    { error: error.message, stack: error.stack },\n    { status: 500 }\n  )\n}\n\n// PASS: CORRECT: Generic error messages\ncatch (error) {\n  console.error('Internal error:', error)\n  return NextResponse.json(\n    { error: 'An error occurred. Please try again.' },\n    { status: 500 }\n  )\n}\n```",
+      "zh-Hans": "```typescript\n// FAIL: WRONG: Exposing internal details\ncatch (error) {\n  return NextResponse.json(\n    { error: error.message, stack: error.stack },\n    { status: 500 }\n  )\n}\n\n// PASS: CORRECT: Generic error messages\ncatch (error) {\n  console.error('Internal error:', error)\n  return NextResponse.json(\n    { error: 'An error occurred. Please try again.' },\n    { status: 500 }\n  )\n}\n```"
     },
     {
       "en-US": "#### Verification Steps",

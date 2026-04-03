@@ -1,0 +1,218 @@
+{
+  "sourceFile": "skills/hexagonal-architecture/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: hexagonal-architecture\ndescription: Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency inversion, and testable use-case orchestration across TypeScript, Java, Kotlin, and Go services.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: hexagonal-architecture\ndescription: 设计、实现和重构端口与适配器系统，具有清晰的领域边界、依赖反转和可测试的用例编排，涵盖TypeScript、Java、Kotlin和Go服务。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Hexagonal Architecture",
+      "zh-Hans": "# 六边形架构"
+    },
+    {
+      "en-US": "Hexagonal architecture (Ports and Adapters) keeps business logic independent from frameworks, transport, and persistence details. The core app depends on abstract ports, and adapters implement those ports at the edges.",
+      "zh-Hans": "六边形架构（端口与适配器）使业务逻辑独立于框架、传输和持久化细节。核心应用依赖于抽象端口，适配器在边缘实现这些端口。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Building new features where long-term maintainability and testability matter.\n- Refactoring layered or framework-heavy code where domain logic is mixed with I/O concerns.\n- Supporting multiple interfaces for the same use case (HTTP, CLI, queue workers, cron jobs).\n- Replacing infrastructure (database, external APIs, message bus) without rewriting business rules.",
+      "zh-Hans": "* 构建新功能时，长期可维护性和可测试性很重要。\n* 重构分层或框架繁重的代码，其中领域逻辑与 I/O 关注点混杂。\n* 支持同一用例的多个接口（HTTP、CLI、队列工作器、定时任务）。\n* 替换基础设施（数据库、外部 API、消息总线）而无需重写业务规则。"
+    },
+    {
+      "en-US": "Use this skill when the request involves boundaries, domain-centric design, refactoring tightly coupled services, or decoupling application logic from specific libraries.",
+      "zh-Hans": "当请求涉及边界、以领域为中心的设计、重构紧密耦合的服务，或将应用逻辑与特定库解耦时，使用此技能。"
+    },
+    {
+      "en-US": "## Core Concepts",
+      "zh-Hans": "## 核心概念"
+    },
+    {
+      "en-US": "- **Domain model**: Business rules and entities/value objects. No framework imports.\n- **Use cases (application layer)**: Orchestrate domain behavior and workflow steps.\n- **Inbound ports**: Contracts describing what the application can do (commands/queries/use-case interfaces).\n- **Outbound ports**: Contracts for dependencies the application needs (repositories, gateways, event publishers, clock, UUID, etc.).\n- **Adapters**: Infrastructure and delivery implementations of ports (HTTP controllers, DB repositories, queue consumers, SDK wrappers).\n- **Composition root**: Single wiring location where concrete adapters are bound to use cases.",
+      "zh-Hans": "* **领域模型**：业务规则和实体/值对象。无框架导入。\n* **用例（应用层）**：编排领域行为和工作流步骤。\n* **入站端口**：描述应用能做什么的契约（命令/查询/用例接口）。\n* **出站端口**：应用所需依赖项的契约（存储库、网关、事件发布器、时钟、UUID 等）。\n* **适配器**：端口的基础设施和交付实现（HTTP 控制器、数据库存储库、队列消费者、SDK 包装器）。\n* **组合根**：具体适配器绑定到用例的单一装配位置。"
+    },
+    {
+      "en-US": "Outbound port interfaces usually live in the application layer (or in domain only when the abstraction is truly domain-level), while infrastructure adapters implement them.",
+      "zh-Hans": "出站端口接口通常位于应用层（或仅在抽象真正是领域级别时位于领域层），而基础设施适配器实现它们。"
+    },
+    {
+      "en-US": "Dependency direction is always inward:",
+      "zh-Hans": "依赖方向始终向内："
+    },
+    {
+      "en-US": "- Adapters -> application/domain\n- Application -> port interfaces (inbound/outbound contracts)\n- Domain -> domain-only abstractions (no framework or infrastructure dependencies)\n- Domain -> nothing external",
+      "zh-Hans": "* 适配器 -> 应用/领域\n* 应用 -> 端口接口（入站/出站契约）\n* 领域 -> 仅领域抽象（无框架或基础设施依赖）\n* 领域 -> 无外部依赖"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Step 1: Model a use case boundary",
+      "zh-Hans": "### 步骤 1：建模用例边界"
+    },
+    {
+      "en-US": "Define a single use case with a clear input and output DTO. Keep transport details (Express `req`, GraphQL `context`, job payload wrappers) outside this boundary.",
+      "zh-Hans": "定义具有清晰输入和输出 DTO 的单一用例。将传输细节（Express `req`、GraphQL `context`、作业负载包装器）保持在此边界之外。"
+    },
+    {
+      "en-US": "### Step 2: Define outbound ports first",
+      "zh-Hans": "### 步骤 2：首先定义出站端口"
+    },
+    {
+      "en-US": "Identify every side effect as a port:",
+      "zh-Hans": "将每个副作用识别为端口："
+    },
+    {
+      "en-US": "- persistence (`UserRepositoryPort`)\n- external calls (`BillingGatewayPort`)\n- cross-cutting (`LoggerPort`, `ClockPort`)",
+      "zh-Hans": "* 持久化（`UserRepositoryPort`）\n* 外部调用（`BillingGatewayPort`）\n* 横切关注点（`LoggerPort`、`ClockPort`）"
+    },
+    {
+      "en-US": "Ports should model capabilities, not technologies.",
+      "zh-Hans": "端口应建模能力，而非技术。"
+    },
+    {
+      "en-US": "### Step 3: Implement the use case with pure orchestration",
+      "zh-Hans": "### 步骤 3：通过纯编排实现用例"
+    },
+    {
+      "en-US": "Use case class/function receives ports via constructor/arguments. It validates application-level invariants, coordinates domain rules, and returns plain data structures.",
+      "zh-Hans": "用例类/函数通过构造函数/参数接收端口。它验证应用级不变量，协调领域规则，并返回纯数据结构。"
+    },
+    {
+      "en-US": "### Step 4: Build adapters at the edge",
+      "zh-Hans": "### 步骤 4：在边缘构建适配器"
+    },
+    {
+      "en-US": "- Inbound adapter converts protocol input to use-case input.\n- Outbound adapter maps app contracts to concrete APIs/ORM/query builders.\n- Mapping stays in adapters, not inside use cases.",
+      "zh-Hans": "* 入站适配器将协议输入转换为用例输入。\n* 出站适配器将应用契约映射到具体 API/ORM/查询构建器。\n* 映射保持在适配器中，而非用例内部。"
+    },
+    {
+      "en-US": "### Step 5: Wire everything in a composition root",
+      "zh-Hans": "### 步骤 5：在组合根中装配所有内容"
+    },
+    {
+      "en-US": "Instantiate adapters, then inject them into use cases. Keep this wiring centralized to avoid hidden service-locator behavior.",
+      "zh-Hans": "实例化适配器，然后将其注入用例。保持此装配集中，以避免隐藏的服务定位器行为。"
+    },
+    {
+      "en-US": "### Step 6: Test per boundary",
+      "zh-Hans": "### 步骤 6：按边界测试"
+    },
+    {
+      "en-US": "- Unit test use cases with fake ports.\n- Integration test adapters with real infra dependencies.\n- E2E test user-facing flows through inbound adapters.",
+      "zh-Hans": "* 使用虚假端口对用例进行单元测试。\n* 使用真实基础设施依赖对适配器进行集成测试。\n* 通过入站适配器对面向用户的流程进行端到端测试。"
+    },
+    {
+      "en-US": "## Architecture Diagram",
+      "zh-Hans": "## 架构图"
+    },
+    {
+      "en-US": "```mermaid\nflowchart LR\n  Client[\"Client (HTTP/CLI/Worker)\"] --> InboundAdapter[\"Inbound Adapter\"]\n  InboundAdapter -->|\"calls\"| UseCase[\"UseCase (Application Layer)\"]\n  UseCase -->|\"uses\"| OutboundPort[\"OutboundPort (Interface)\"]\n  OutboundAdapter[\"Outbound Adapter\"] -->|\"implements\"| OutboundPort\n  OutboundAdapter --> ExternalSystem[\"DB/API/Queue\"]\n  UseCase --> DomainModel[\"DomainModel\"]\n```",
+      "zh-Hans": "```mermaid\nflowchart LR\n  Client[\"Client (HTTP/CLI/Worker)\"] --> InboundAdapter[\"Inbound Adapter\"]\n  InboundAdapter -->|\"calls\"| UseCase[\"UseCase (Application Layer)\"]\n  UseCase -->|\"uses\"| OutboundPort[\"OutboundPort (Interface)\"]\n  OutboundAdapter[\"Outbound Adapter\"] -->|\"implements\"| OutboundPort\n  OutboundAdapter --> ExternalSystem[\"DB/API/Queue\"]\n  UseCase --> DomainModel[\"DomainModel\"]\n```"
+    },
+    {
+      "en-US": "## Suggested Module Layout",
+      "zh-Hans": "## 建议的模块布局"
+    },
+    {
+      "en-US": "Use feature-first organization with explicit boundaries:",
+      "zh-Hans": "使用具有明确边界的特性优先组织："
+    },
+    {
+      "en-US": "```text\nsrc/\n  features/\n    orders/\n      domain/\n        Order.ts\n        OrderPolicy.ts\n      application/\n        ports/\n          inbound/\n            CreateOrder.ts\n          outbound/\n            OrderRepositoryPort.ts\n            PaymentGatewayPort.ts\n        use-cases/\n          CreateOrderUseCase.ts\n      adapters/\n        inbound/\n          http/\n            createOrderRoute.ts\n        outbound/\n          postgres/\n            PostgresOrderRepository.ts\n          stripe/\n            StripePaymentGateway.ts\n      composition/\n        ordersContainer.ts\n```",
+      "zh-Hans": "```text\nsrc/\n  features/\n    orders/\n      domain/\n        Order.ts\n        OrderPolicy.ts\n      application/\n        ports/\n          inbound/\n            CreateOrder.ts\n          outbound/\n            OrderRepositoryPort.ts\n            PaymentGatewayPort.ts\n        use-cases/\n          CreateOrderUseCase.ts\n      adapters/\n        inbound/\n          http/\n            createOrderRoute.ts\n        outbound/\n          postgres/\n            PostgresOrderRepository.ts\n          stripe/\n            StripePaymentGateway.ts\n      composition/\n        ordersContainer.ts\n```"
+    },
+    {
+      "en-US": "## TypeScript Example",
+      "zh-Hans": "## TypeScript 示例"
+    },
+    {
+      "en-US": "### Port definitions",
+      "zh-Hans": "### 端口定义"
+    },
+    {
+      "en-US": "```typescript\nexport interface OrderRepositoryPort {\n  save(order: Order): Promise<void>;\n  findById(orderId: string): Promise<Order | null>;\n}\n\nexport interface PaymentGatewayPort {\n  authorize(input: { orderId: string; amountCents: number }): Promise<{ authorizationId: string }>;\n}\n```",
+      "zh-Hans": "```typescript\nexport interface OrderRepositoryPort {\n  save(order: Order): Promise<void>;\n  findById(orderId: string): Promise<Order | null>;\n}\n\nexport interface PaymentGatewayPort {\n  authorize(input: { orderId: string; amountCents: number }): Promise<{ authorizationId: string }>;\n}\n```"
+    },
+    {
+      "en-US": "### Use case",
+      "zh-Hans": "### 用例"
+    },
+    {
+      "en-US": "```typescript\ntype CreateOrderInput = {\n  orderId: string;\n  amountCents: number;\n};\n\ntype CreateOrderOutput = {\n  orderId: string;\n  authorizationId: string;\n};\n\nexport class CreateOrderUseCase {\n  constructor(\n    private readonly orderRepository: OrderRepositoryPort,\n    private readonly paymentGateway: PaymentGatewayPort\n  ) {}\n\n  async execute(input: CreateOrderInput): Promise<CreateOrderOutput> {\n    const order = Order.create({ id: input.orderId, amountCents: input.amountCents });\n\n    const auth = await this.paymentGateway.authorize({\n      orderId: order.id,\n      amountCents: order.amountCents,\n    });\n\n    // markAuthorized returns a new Order instance; it does not mutate in place.\n    const authorizedOrder = order.markAuthorized(auth.authorizationId);\n    await this.orderRepository.save(authorizedOrder);\n\n    return {\n      orderId: order.id,\n      authorizationId: auth.authorizationId,\n    };\n  }\n}\n```",
+      "zh-Hans": "```typescript\ntype CreateOrderInput = {\n  orderId: string;\n  amountCents: number;\n};\n\ntype CreateOrderOutput = {\n  orderId: string;\n  authorizationId: string;\n};\n\nexport class CreateOrderUseCase {\n  constructor(\n    private readonly orderRepository: OrderRepositoryPort,\n    private readonly paymentGateway: PaymentGatewayPort\n  ) {}\n\n  async execute(input: CreateOrderInput): Promise<CreateOrderOutput> {\n    const order = Order.create({ id: input.orderId, amountCents: input.amountCents });\n\n    const auth = await this.paymentGateway.authorize({\n      orderId: order.id,\n      amountCents: order.amountCents,\n    });\n\n    // markAuthorized returns a new Order instance; it does not mutate in place.\n    const authorizedOrder = order.markAuthorized(auth.authorizationId);\n    await this.orderRepository.save(authorizedOrder);\n\n    return {\n      orderId: order.id,\n      authorizationId: auth.authorizationId,\n    };\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Outbound adapter",
+      "zh-Hans": "### 出站适配器"
+    },
+    {
+      "en-US": "```typescript\nexport class PostgresOrderRepository implements OrderRepositoryPort {\n  constructor(private readonly db: SqlClient) {}\n\n  async save(order: Order): Promise<void> {\n    await this.db.query(\n      \"insert into orders (id, amount_cents, status, authorization_id) values ($1, $2, $3, $4)\",\n      [order.id, order.amountCents, order.status, order.authorizationId]\n    );\n  }\n\n  async findById(orderId: string): Promise<Order | null> {\n    const row = await this.db.oneOrNone(\"select * from orders where id = $1\", [orderId]);\n    return row ? Order.rehydrate(row) : null;\n  }\n}\n```",
+      "zh-Hans": "```typescript\nexport class PostgresOrderRepository implements OrderRepositoryPort {\n  constructor(private readonly db: SqlClient) {}\n\n  async save(order: Order): Promise<void> {\n    await this.db.query(\n      \"insert into orders (id, amount_cents, status, authorization_id) values ($1, $2, $3, $4)\",\n      [order.id, order.amountCents, order.status, order.authorizationId]\n    );\n  }\n\n  async findById(orderId: string): Promise<Order | null> {\n    const row = await this.db.oneOrNone(\"select * from orders where id = $1\", [orderId]);\n    return row ? Order.rehydrate(row) : null;\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Composition root",
+      "zh-Hans": "### 组合根"
+    },
+    {
+      "en-US": "```typescript\nexport const buildCreateOrderUseCase = (deps: { db: SqlClient; stripe: StripeClient }) => {\n  const orderRepository = new PostgresOrderRepository(deps.db);\n  const paymentGateway = new StripePaymentGateway(deps.stripe);\n\n  return new CreateOrderUseCase(orderRepository, paymentGateway);\n};\n```",
+      "zh-Hans": "```typescript\nexport const buildCreateOrderUseCase = (deps: { db: SqlClient; stripe: StripeClient }) => {\n  const orderRepository = new PostgresOrderRepository(deps.db);\n  const paymentGateway = new StripePaymentGateway(deps.stripe);\n\n  return new CreateOrderUseCase(orderRepository, paymentGateway);\n};\n```"
+    },
+    {
+      "en-US": "## Multi-Language Mapping",
+      "zh-Hans": "## 多语言映射"
+    },
+    {
+      "en-US": "Use the same boundary rules across ecosystems; only syntax and wiring style change.",
+      "zh-Hans": "跨生态系统使用相同的边界规则；仅语法和装配风格改变。"
+    },
+    {
+      "en-US": "- **TypeScript/JavaScript**\n  - Ports: `application/ports/*` as interfaces/types.\n  - Use cases: classes/functions with constructor/argument injection.\n  - Adapters: `adapters/inbound/*`, `adapters/outbound/*`.\n  - Composition: explicit factory/container module (no hidden globals).\n- **Java**\n  - Packages: `domain`, `application.port.in`, `application.port.out`, `application.usecase`, `adapter.in`, `adapter.out`.\n  - Ports: interfaces in `application.port.*`.\n  - Use cases: plain classes (Spring `@Service` is optional, not required).\n  - Composition: Spring config or manual wiring class; keep wiring out of domain/use-case classes.\n- **Kotlin**\n  - Modules/packages mirror the Java split (`domain`, `application.port`, `application.usecase`, `adapter`).\n  - Ports: Kotlin interfaces.\n  - Use cases: classes with constructor injection (Koin/Dagger/Spring/manual).\n  - Composition: module definitions or dedicated composition functions; avoid service locator patterns.\n- **Go**\n  - Packages: `internal/<feature>/domain`, `application`, `ports`, `adapters/inbound`, `adapters/outbound`.\n  - Ports: small interfaces owned by the consuming application package.\n  - Use cases: structs with interface fields plus explicit `New...` constructors.\n  - Composition: wire in `cmd/<app>/main.go` (or dedicated wiring package), keep constructors explicit.",
+      "zh-Hans": "* **TypeScript/JavaScript**\n  * 端口：`application/ports/*` 作为接口/类型。\n  * 用例：具有构造函数/参数注入的类/函数。\n  * 适配器：`adapters/inbound/*`、`adapters/outbound/*`。\n  * 组合：显式工厂/容器模块（无隐藏全局变量）。\n* **Java**\n  * 包：`domain`、`application.port.in`、`application.port.out`、`application.usecase`、`adapter.in`、`adapter.out`。\n  * 端口：`application.port.*` 中的接口。\n  * 用例：普通类（Spring `@Service` 是可选的，非必需）。\n  * 组合：Spring 配置或手动装配类；保持装配远离领域/用例类。\n* **Kotlin**\n  * 模块/包镜像 Java 拆分（`domain`、`application.port`、`application.usecase`、`adapter`）。\n  * 端口：Kotlin 接口。\n  * 用例：具有构造函数注入的类（Koin/Dagger/Spring/手动）。\n  * 组合：模块定义或专用组合函数；避免服务定位器模式。\n* **Go**\n  * 包：`internal/<feature>/domain`、`application`、`ports`、`adapters/inbound`、`adapters/outbound`。\n  * 端口：由消费应用包拥有的小接口。\n  * 用例：具有接口字段和显式 `New...` 构造函数的结构体。\n  * 组合：在 `cmd/<app>/main.go`（或专用装配包）中装配，保持构造函数显式。"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 需避免的反模式"
+    },
+    {
+      "en-US": "- Domain entities importing ORM models, web framework types, or SDK clients.\n- Use cases reading directly from `req`, `res`, or queue metadata.\n- Returning database rows directly from use cases without domain/application mapping.\n- Letting adapters call each other directly instead of flowing through use-case ports.\n- Spreading dependency wiring across many files with hidden global singletons.",
+      "zh-Hans": "* 领域实体导入 ORM 模型、Web 框架类型或 SDK 客户端。\n* 用例直接从 `req`、`res` 或队列元数据读取。\n* 从用例直接返回数据库行而无领域/应用映射。\n* 让适配器直接相互调用，而非通过用例端口流转。\n* 依赖装配分散在许多文件中，带有隐藏的全局单例。"
+    },
+    {
+      "en-US": "## Migration Playbook",
+      "zh-Hans": "## 迁移指南"
+    },
+    {
+      "en-US": "1. Pick one vertical slice (single endpoint/job) with frequent change pain.\n2. Extract a use-case boundary with explicit input/output types.\n3. Introduce outbound ports around existing infrastructure calls.\n4. Move orchestration logic from controllers/services into the use case.\n5. Keep old adapters, but make them delegate to the new use case.\n6. Add tests around the new boundary (unit + adapter integration).\n7. Repeat slice-by-slice; avoid full rewrites.",
+      "zh-Hans": "1. 选择一个具有频繁变更痛点的垂直切片（单一端点/作业）。\n2. 提取具有明确输入/输出类型的用例边界。\n3. 围绕现有基础设施调用引入出站端口。\n4. 将编排逻辑从控制器/服务移至用例。\n5. 保留旧适配器，但使其委托给新用例。\n6. 围绕新边界添加测试（单元 + 适配器集成）。\n7. 逐一切片重复；避免完全重写。"
+    },
+    {
+      "en-US": "### Refactoring Existing Systems",
+      "zh-Hans": "### 重构现有系统"
+    },
+    {
+      "en-US": "- **Strangler approach**: keep current endpoints, route one use case at a time through new ports/adapters.\n- **No big-bang rewrites**: migrate per feature slice and preserve behavior with characterization tests.\n- **Facade first**: wrap legacy services behind outbound ports before replacing internals.\n- **Composition freeze**: centralize wiring early so new dependencies do not leak into domain/use-case layers.\n- **Slice selection rule**: prioritize high-churn, low-blast-radius flows first.\n- **Rollback path**: keep a reversible toggle or route switch per migrated slice until production behavior is verified.",
+      "zh-Hans": "* **绞杀者模式**：保留当前端点，每次通过新端口/适配器路由一个用例。\n* **无大爆炸式重写**：按特性切片迁移，并通过特征化测试保持行为。\n* **外观优先**：在替换内部实现之前，将遗留服务包装在出站端口之后。\n* **组合冻结**：尽早集中装配，以便新依赖不会泄漏到领域/用例层。\n* **切片选择规则**：优先处理高变更率、低影响范围的流程。\n* **回滚路径**：为每个迁移切片保留可逆开关或路由切换，直到生产行为得到验证。"
+    },
+    {
+      "en-US": "## Testing Guidance (Same Hexagonal Boundaries)",
+      "zh-Hans": "## 测试指导（相同的六边形边界）"
+    },
+    {
+      "en-US": "- **Domain tests**: test entities/value objects as pure business rules (no mocks, no framework setup).\n- **Use-case unit tests**: test orchestration with fakes/stubs for outbound ports; assert business outcomes and port interactions.\n- **Outbound adapter contract tests**: define shared contract suites at port level and run them against each adapter implementation.\n- **Inbound adapter tests**: verify protocol mapping (HTTP/CLI/queue payload to use-case input and output/error mapping back to protocol).\n- **Adapter integration tests**: run against real infrastructure (DB/API/queue) for serialization, schema/query behavior, retries, and timeouts.\n- **End-to-end tests**: cover critical user journeys through inbound adapter -> use case -> outbound adapter.\n- **Refactor safety**: add characterization tests before extraction; keep them until new boundary behavior is stable and equivalent.",
+      "zh-Hans": "* **领域测试**：将实体/值对象作为纯业务规则测试（无模拟，无框架设置）。\n* **用例单元测试**：使用出站端口的假对象/存根测试编排；断言业务结果和端口交互。\n* **出站适配器契约测试**：在端口级别定义共享契约套件，并针对每个适配器实现运行它们。\n* **入站适配器测试**：验证协议映射（HTTP/CLI/队列负载到用例输入，以及输出/错误映射回协议）。\n* **适配器集成测试**：针对真实基础设施（数据库/API/队列）运行，测试序列化、模式/查询行为、重试和超时。\n* **端到端测试**：覆盖通过入站适配器 -> 用例 -> 出站适配器的关键用户旅程。\n* **重构安全性**：在提取前添加特征化测试；保持它们直到新边界行为稳定且等效。"
+    },
+    {
+      "en-US": "## Best Practices Checklist",
+      "zh-Hans": "## 最佳实践清单"
+    },
+    {
+      "en-US": "- Domain and use-case layers import only internal types and ports.\n- Every external dependency is represented by an outbound port.\n- Validation occurs at boundaries (inbound adapter + use-case invariants).\n- Use immutable transformations (return new values/entities instead of mutating shared state).\n- Errors are translated across boundaries (infra errors -> application/domain errors).\n- Composition root is explicit and easy to audit.\n- Use cases are testable with simple in-memory fakes for ports.\n- Refactoring starts from one vertical slice with behavior-preserving tests.\n- Language/framework specifics stay in adapters, never in domain rules.",
+      "zh-Hans": "* 领域和用例层仅导入内部类型和端口。\n* 每个外部依赖都由出站端口表示。\n* 验证发生在边界（入站适配器 + 用例不变量）。\n* 使用不可变转换（返回新值/实体，而非修改共享状态）。\n* 错误跨边界转换（基础设施错误 -> 应用/领域错误）。\n* 组合根是显式且易于审计的。\n* 用例可使用端口的简单内存假对象进行测试。\n* 重构从具有行为保持测试的一个垂直切片开始。\n* 语言/框架特定内容保持在适配器中，绝不在领域规则中。"
+    }
+  ]
+}

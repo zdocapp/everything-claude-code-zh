@@ -111,12 +111,12 @@
       "zh-Hans": "* 严重：1\n* 高：1\n* 中：0"
     },
     {
-      "en-US": "Recommendation: ❌ Block merge until CRITICAL issue is fixed",
-      "zh-Hans": "建议：❌ 在严重问题修复前阻止合并"
+      "en-US": "Recommendation: FAIL: Block merge until CRITICAL issue is fixed",
+      "zh-Hans": "建议：失败：在关键问题解决前阻止合并"
     },
     {
-      "en-US": "```\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| ✅ Approve | No CRITICAL or HIGH issues |\n| ⚠️ Warning | Only MEDIUM issues (merge with caution) |\n| ❌ Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/go-test` first to ensure tests pass\n- Use `/go-build` if build errors occur\n- Use `/go-review` before committing\n- Use `/code-review` for non-Go specific concerns\n\n## Related\n\n- Agent: `agents/go-reviewer.md`\n- Skills: `skills/golang-patterns/`, `skills/golang-testing/`\n",
-      "zh-Hans": "```\n## 批准标准\n\n| 状态 | 条件 |\n|--------|-----------|\n| ✅ 批准 | 无 CRITICAL 或 HIGH 级别问题 |\n| ⚠️ 警告 | 仅有 MEDIUM 级别问题 (谨慎合并) |\n| ❌ 阻止 | 发现 CRITICAL 或 HIGH 级别问题 |\n\n## 与其他命令的集成\n\n- 首先使用 `/go-test` 确保测试通过\n- 如果出现构建错误，请使用 `/go-build`\n- 提交前使用 `/go-review`\n- 对于非 Go 语言特定问题，请使用 `/code-review`\n\n## 相关\n\n- Agent: `agents/go-reviewer.md`\n- Skills: `skills/golang-patterns/`, `skills/golang-testing/`\n```"
+      "en-US": "```\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| PASS: Approve | No CRITICAL or HIGH issues |\n| WARNING: Warning | Only MEDIUM issues (merge with caution) |\n| FAIL: Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/go-test` first to ensure tests pass\n- Use `/go-build` if build errors occur\n- Use `/go-review` before committing\n- Use `/code-review` for non-Go specific concerns\n\n## Related\n\n- Agent: `agents/go-reviewer.md`\n- Skills: `skills/golang-patterns/`, `skills/golang-testing/`\n",
+      "zh-Hans": "```\n\n## 批准标准\n\n| 状态 | 条件 |\n|--------|-----------|\n| PASS: 批准 | 无 CRITICAL 或 HIGH 级别问题 |\n| WARNING: 警告 | 仅存在 MEDIUM 级别问题（谨慎合并） |\n| FAIL: 阻止 | 发现 CRITICAL 或 HIGH 级别问题 |\n\n## 与其他命令的集成\n\n- 首先使用 `/go-test` 以确保测试通过\n- 如果出现构建错误，请使用 `/go-build`\n- 提交前使用 `/go-review`\n- 对于非 Go 特定问题，请使用 `/code-review`\n\n## 相关\n\n- Agent: `agents/go-reviewer.md`\n- Skills: `skills/golang-patterns/`, `skills/golang-testing/`\n```"
     }
   ]
 }

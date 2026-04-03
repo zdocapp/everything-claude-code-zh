@@ -1,0 +1,54 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/lottie.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: lottie\ndescription: Embedding Lottie animations in Remotion.\nmetadata:\n  category: Animation\n---",
+      "zh-Hans": "---\nname: lottie\ndescription: 在Remotion中嵌入Lottie动画。\nmetadata:\n  category: Animation\n---"
+    },
+    {
+      "en-US": "# Using Lottie Animations in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用 Lottie 动画"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "First, the @remotion/lottie package needs to be installed.\nIf it is not, use the following command:",
+      "zh-Hans": "首先，需要安装 @remotion/lottie 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/lottie # If project uses npm\nbunx remotion add @remotion/lottie # If project uses bun\nyarn remotion add @remotion/lottie # If project uses yarn\npnpm exec remotion add @remotion/lottie # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/lottie # If project uses npm\nbunx remotion add @remotion/lottie # If project uses bun\nyarn remotion add @remotion/lottie # If project uses yarn\npnpm exec remotion add @remotion/lottie # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "## Displaying a Lottie file",
+      "zh-Hans": "## 显示 Lottie 文件"
+    },
+    {
+      "en-US": "To import a Lottie animation:",
+      "zh-Hans": "要导入 Lottie 动画："
+    },
+    {
+      "en-US": "- Fetch the Lottie asset\n- Wrap the loading process in `delayRender()` and `continueRender()`\n- Save the animation data in a state\n- Render the Lottie animation using the `Lottie` component from the `@remotion/lottie` package",
+      "zh-Hans": "* 获取 Lottie 资源\n* 将加载过程包裹在 `delayRender()` 和 `continueRender()` 中\n* 将动画数据保存在状态中\n* 使用 `@remotion/lottie` 包中的 `Lottie` 组件渲染 Lottie 动画"
+    },
+    {
+      "en-US": "```tsx\nimport {Lottie, LottieAnimationData} from '@remotion/lottie';\nimport {useEffect, useState} from 'react';\nimport {cancelRender, continueRender, delayRender} from 'remotion';\n\nexport const MyAnimation = () => {\n  const [handle] = useState(() => delayRender('Loading Lottie animation'));\n\n  const [animationData, setAnimationData] = useState<LottieAnimationData | null>(null);\n\n  useEffect(() => {\n    fetch('https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json')\n      .then((data) => data.json())\n      .then((json) => {\n        setAnimationData(json);\n        continueRender(handle);\n      })\n      .catch((err) => {\n        cancelRender(err);\n      });\n  }, [handle]);\n\n  if (!animationData) {\n    return null;\n  }\n\n  return <Lottie animationData={animationData} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport {Lottie, LottieAnimationData} from '@remotion/lottie';\nimport {useEffect, useState} from 'react';\nimport {cancelRender, continueRender, delayRender} from 'remotion';\n\nexport const MyAnimation = () => {\n  const [handle] = useState(() => delayRender('Loading Lottie animation'));\n\n  const [animationData, setAnimationData] = useState<LottieAnimationData | null>(null);\n\n  useEffect(() => {\n    fetch('https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json')\n      .then((data) => data.json())\n      .then((json) => {\n        setAnimationData(json);\n        continueRender(handle);\n      })\n      .catch((err) => {\n        cancelRender(err);\n      });\n  }, [handle]);\n\n  if (!animationData) {\n    return null;\n  }\n\n  return <Lottie animationData={animationData} />;\n};\n```"
+    },
+    {
+      "en-US": "## Styling and animating",
+      "zh-Hans": "## 样式与动画"
+    },
+    {
+      "en-US": "Lottie supports the `style` prop to allow styles and animations:",
+      "zh-Hans": "Lottie 支持 `style` 属性以允许应用样式和动画："
+    },
+    {
+      "en-US": "```tsx\nreturn <Lottie animationData={animationData} style={{width: 400, height: 400}} />;\n```",
+      "zh-Hans": "```tsx\nreturn <Lottie animationData={animationData} style={{width: 400, height: 400}} />;\n```"
+    }
+  ]
+}

@@ -47,16 +47,20 @@
       "zh-Hans": "### OAuth 1.0a（用户上下文）"
     },
     {
-      "en-US": "Required for: posting tweets, managing account, DMs.",
-      "zh-Hans": "必需用于：发布推文、管理账户、私信。"
+      "en-US": "Required for: posting tweets, managing account, DMs, and any write flow.",
+      "zh-Hans": "适用于：发布推文、管理账户、私信以及任何写入流程。"
     },
     {
-      "en-US": "```bash\n# Environment setup — source before use\nexport X_API_KEY=\"your-api-key\"\nexport X_API_SECRET=\"your-api-secret\"\nexport X_ACCESS_TOKEN=\"your-access-token\"\nexport X_ACCESS_SECRET=\"your-access-secret\"\n```",
-      "zh-Hans": "```bash\n# Environment setup — source before use\nexport X_API_KEY=\"your-api-key\"\nexport X_API_SECRET=\"your-api-secret\"\nexport X_ACCESS_TOKEN=\"your-access-token\"\nexport X_ACCESS_SECRET=\"your-access-secret\"\n```"
+      "en-US": "```bash\n# Environment setup — source before use\nexport X_CONSUMER_KEY=\"your-consumer-key\"\nexport X_CONSUMER_SECRET=\"your-consumer-secret\"\nexport X_ACCESS_TOKEN=\"your-access-token\"\nexport X_ACCESS_TOKEN_SECRET=\"your-access-token-secret\"\n```",
+      "zh-Hans": "```bash\n# Environment setup — source before use\nexport X_CONSUMER_KEY=\"your-consumer-key\"\nexport X_CONSUMER_SECRET=\"your-consumer-secret\"\nexport X_ACCESS_TOKEN=\"your-access-token\"\nexport X_ACCESS_TOKEN_SECRET=\"your-access-token-secret\"\n```"
     },
     {
-      "en-US": "```python\nimport os\nfrom requests_oauthlib import OAuth1Session\n\noauth = OAuth1Session(\n    os.environ[\"X_API_KEY\"],\n    client_secret=os.environ[\"X_API_SECRET\"],\n    resource_owner_key=os.environ[\"X_ACCESS_TOKEN\"],\n    resource_owner_secret=os.environ[\"X_ACCESS_SECRET\"],\n)\n```",
-      "zh-Hans": "```python\nimport os\nfrom requests_oauthlib import OAuth1Session\n\noauth = OAuth1Session(\n    os.environ[\"X_API_KEY\"],\n    client_secret=os.environ[\"X_API_SECRET\"],\n    resource_owner_key=os.environ[\"X_ACCESS_TOKEN\"],\n    resource_owner_secret=os.environ[\"X_ACCESS_SECRET\"],\n)\n```"
+      "en-US": "Legacy aliases such as `X_API_KEY`, `X_API_SECRET`, and `X_ACCESS_SECRET` may exist in older setups. Prefer the `X_CONSUMER_*` and `X_ACCESS_TOKEN_SECRET` names when documenting or wiring new flows.",
+      "zh-Hans": "在较旧的设置中可能存在诸如 `X_API_KEY`、`X_API_SECRET` 和 `X_ACCESS_SECRET` 之类的遗留别名。在记录或连接新流程时，建议使用 `X_CONSUMER_*` 和 `X_ACCESS_TOKEN_SECRET` 名称。"
+    },
+    {
+      "en-US": "```python\nimport os\nfrom requests_oauthlib import OAuth1Session\n\noauth = OAuth1Session(\n    os.environ[\"X_CONSUMER_KEY\"],\n    client_secret=os.environ[\"X_CONSUMER_SECRET\"],\n    resource_owner_key=os.environ[\"X_ACCESS_TOKEN\"],\n    resource_owner_secret=os.environ[\"X_ACCESS_TOKEN_SECRET\"],\n)\n```",
+      "zh-Hans": "```python\nimport os\nfrom requests_oauthlib import OAuth1Session\n\noauth = OAuth1Session(\n    os.environ[\"X_CONSUMER_KEY\"],\n    client_secret=os.environ[\"X_CONSUMER_SECRET\"],\n    resource_owner_key=os.environ[\"X_ACCESS_TOKEN\"],\n    resource_owner_secret=os.environ[\"X_ACCESS_TOKEN_SECRET\"],\n)\n```"
     },
     {
       "en-US": "## Core Operations",
@@ -93,6 +97,14 @@
     {
       "en-US": "```python\nresp = requests.get(\n    \"https://api.x.com/2/tweets/search/recent\",\n    headers=headers,\n    params={\n        \"query\": \"from:affaanmustafa -is:retweet\",\n        \"max_results\": 10,\n        \"tweet.fields\": \"public_metrics,created_at\",\n    }\n)\n```",
       "zh-Hans": "```python\nresp = requests.get(\n    \"https://api.x.com/2/tweets/search/recent\",\n    headers=headers,\n    params={\n        \"query\": \"from:affaanmustafa -is:retweet\",\n        \"max_results\": 10,\n        \"tweet.fields\": \"public_metrics,created_at\",\n    }\n)\n```"
+    },
+    {
+      "en-US": "### Pull Recent Original Posts for Voice Modeling",
+      "zh-Hans": "### 拉取近期原创帖子用于语音建模"
+    },
+    {
+      "en-US": "```python\nresp = requests.get(\n    \"https://api.x.com/2/tweets/search/recent\",\n    headers=headers,\n    params={\n        \"query\": \"from:affaanmustafa -is:retweet -is:reply\",\n        \"max_results\": 25,\n        \"tweet.fields\": \"created_at,public_metrics\",\n    }\n)\nvoice_samples = resp.json()\n```",
+      "zh-Hans": "```python\nresp = requests.get(\n    \"https://api.x.com/2/tweets/search/recent\",\n    headers=headers,\n    params={\n        \"query\": \"from:affaanmustafa -is:retweet -is:reply\",\n        \"max_results\": 25,\n        \"tweet.fields\": \"created_at,public_metrics\",\n    }\n)\nvoice_samples = resp.json()\n```"
     },
     {
       "en-US": "### Get User by Username",
@@ -147,20 +159,20 @@
       "zh-Hans": "## 与内容引擎集成"
     },
     {
-      "en-US": "Use `content-engine` skill to generate platform-native content, then post via X API:",
-      "zh-Hans": "使用 `content-engine` 技能生成平台原生内容，然后通过 X API 发布："
+      "en-US": "Use `brand-voice` plus `content-engine` to generate platform-native content, then post via X API:",
+      "zh-Hans": "使用 `brand-voice` 加上 `content-engine` 来生成平台原生内容，然后通过 X API 发布："
     },
     {
-      "en-US": "1. Generate content with content-engine (X platform format)\n2. Validate length (280 chars for single tweet)\n3. Post via X API using patterns above\n4. Track engagement via public_metrics",
-      "zh-Hans": "1. 使用内容引擎生成内容（X 平台格式）\n2. 验证长度（单条推文 280 字符）\n3. 使用上述模式通过 X API 发布\n4. 通过 public\\_metrics 跟踪参与度"
+      "en-US": "1. Pull recent original posts when voice matching matters\n2. Build or reuse a `VOICE PROFILE`\n3. Generate content with `content-engine` in X-native format\n4. Validate length and thread structure\n5. Return the draft for approval unless the user explicitly asked to post now\n6. Post via X API only after approval\n7. Track engagement via public_metrics",
+      "zh-Hans": "1. 当语音匹配重要时，拉取近期的原创帖子\n2. 构建或复用 `VOICE PROFILE`\n3. 使用 `content-engine` 以 X 原生格式生成内容\n4. 验证长度和线程结构\n5. 除非用户明确要求立即发布，否则返回草稿以供批准\n6. 仅在批准后通过 X API 发布\n7. 通过 public\\_metrics 跟踪互动情况"
     },
     {
       "en-US": "## Related Skills",
       "zh-Hans": "## 相关技能"
     },
     {
-      "en-US": "- `content-engine` — Generate platform-native content for X\n- `crosspost` — Distribute content across X, LinkedIn, and other platforms",
-      "zh-Hans": "* `content-engine` — 为 X 生成平台原生内容\n* `crosspost` — 在 X、LinkedIn 和其他平台分发内容"
+      "en-US": "- `brand-voice` — Build a reusable voice profile from real X and site/source material\n- `content-engine` — Generate platform-native content for X\n- `crosspost` — Distribute content across X, LinkedIn, and other platforms\n- `connections-optimizer` — Reorganize the X graph before drafting network-driven outreach",
+      "zh-Hans": "* `brand-voice` — 根据真实的 X 和网站/来源材料构建可复用的语音配置文件\n* `content-engine` — 为 X 生成平台原生内容\n* `crosspost` — 跨 X、LinkedIn 和其他平台分发内容\n* `connections-optimizer` — 在起草网络驱动的推广活动前，重新组织 X 图谱"
     }
   ]
 }

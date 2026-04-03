@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/google-workspace-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: google-workspace-ops\ndescription: Operate across Google Drive, Docs, Sheets, and Slides as one workflow surface for plans, trackers, decks, and shared documents. Use when the user needs to find, summarize, edit, migrate, or clean up Google Workspace assets without dropping to raw tool calls.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: google-workspace-ops\ndescription: 在Google Drive、Docs、Sheets和Slides中作为统一的流程界面操作，用于处理计划、追踪器、演示文稿和共享文档。当用户需要查找、总结、编辑、迁移或清理Google Workspace资源，而无需直接调用原始工具时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Google Workspace Ops",
+      "zh-Hans": "# Google Workspace 运维"
+    },
+    {
+      "en-US": "This skill is for operating shared docs, spreadsheets, and decks as working systems, not just editing one file in isolation.",
+      "zh-Hans": "此技能用于将共享文档、电子表格和演示文稿作为工作系统进行操作，而不仅仅是孤立地编辑单个文件。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- User needs to find a doc, sheet, or deck and update it in place\n- Consolidating plans, trackers, notes, or customer lists stored in Google Drive\n- Cleaning or restructuring a shared spreadsheet\n- Importing, repairing, or reformatting a Google Slides deck\n- Producing summaries from Docs, Sheets, or Slides for decision-making",
+      "zh-Hans": "* 用户需要查找文档、表格或演示文稿并就地更新\n* 整合存储在 Google 云端硬盘中的计划、跟踪器、笔记或客户列表\n* 清理或重构共享电子表格\n* 导入、修复或重新格式化 Google 幻灯片演示文稿\n* 从文档、表格或幻灯片中生成摘要以辅助决策"
+    },
+    {
+      "en-US": "## Preferred Tool Surface",
+      "zh-Hans": "## 首选工具界面"
+    },
+    {
+      "en-US": "Use Google Drive as the entry point, then switch to the right specialist:",
+      "zh-Hans": "使用 Google 云端硬盘作为入口点，然后切换到合适的专业工具："
+    },
+    {
+      "en-US": "- Google Docs for text-heavy docs\n- Google Sheets for tabular work, formulas, and charts\n- Google Slides for decks, imports, template migration, and cleanup",
+      "zh-Hans": "* Google 文档用于文本密集型文档\n* Google 表格用于表格工作、公式和图表\n* Google 幻灯片用于演示文稿、导入、模板迁移和清理"
+    },
+    {
+      "en-US": "Do not guess structure from filenames alone. Inspect first.",
+      "zh-Hans": "不要仅凭文件名猜测结构。先进行检查。"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Find the asset",
+      "zh-Hans": "### 1. 查找资产"
+    },
+    {
+      "en-US": "Start with the Drive search surface to locate:",
+      "zh-Hans": "从云端硬盘搜索界面开始，定位："
+    },
+    {
+      "en-US": "- the exact file\n- sibling assets\n- likely duplicates\n- recently modified versions",
+      "zh-Hans": "* 确切的文件\n* 相关资产\n* 可能的重复项\n* 最近修改的版本"
+    },
+    {
+      "en-US": "If several documents look similar, confirm by title, owner, modified time, or folder.",
+      "zh-Hans": "如果有多个文档看起来相似，请通过标题、所有者、修改时间或文件夹进行确认。"
+    },
+    {
+      "en-US": "### 2. Inspect before editing",
+      "zh-Hans": "### 2. 编辑前检查"
+    },
+    {
+      "en-US": "Before making changes:",
+      "zh-Hans": "在进行更改之前："
+    },
+    {
+      "en-US": "- summarize current structure\n- identify tabs, headings, or slide count\n- detect whether the task is local cleanup or structural surgery",
+      "zh-Hans": "* 总结当前结构\n* 识别标签页、标题或幻灯片数量\n* 判断任务是局部清理还是结构大调整"
+    },
+    {
+      "en-US": "Pick the smallest tool that can safely perform the work.",
+      "zh-Hans": "选择能够安全完成工作的最小工具。"
+    },
+    {
+      "en-US": "### 3. Edit with precision",
+      "zh-Hans": "### 3. 精确编辑"
+    },
+    {
+      "en-US": "- For Docs: use index-aware edits, not vague rewrites\n- For Sheets: operate on explicit tabs and ranges\n- For Slides: distinguish content edits from visual cleanup or template migration",
+      "zh-Hans": "* 对于文档：使用基于索引的编辑，而非模糊重写\n* 对于表格：在明确的标签页和范围内操作\n* 对于幻灯片：区分内容编辑与视觉清理或模板迁移"
+    },
+    {
+      "en-US": "If the requested work is visual or layout-sensitive, iterate with inspection and verification instead of one giant blind update.",
+      "zh-Hans": "如果请求的工作涉及视觉或布局敏感部分，请通过检查和验证进行迭代，而不是一次性进行大规模盲目更新。"
+    },
+    {
+      "en-US": "### 4. Keep the working system clean",
+      "zh-Hans": "### 4. 保持工作系统整洁"
+    },
+    {
+      "en-US": "When the file is part of a larger workflow, also surface:",
+      "zh-Hans": "当文件是更大工作流程的一部分时，还需揭示："
+    },
+    {
+      "en-US": "- duplicate trackers\n- outdated decks\n- stale docs vs canonical docs\n- whether the asset should be archived, merged, or renamed",
+      "zh-Hans": "* 重复的跟踪器\n* 过时的演示文稿\n* 陈旧文档与规范文档\n* 资产是否应归档、合并或重命名"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Use:",
+      "zh-Hans": "使用："
+    },
+    {
+      "en-US": "```text\nASSET\n- file name\n- type\n- why this is the right file\n\nCURRENT STATE\n- structure summary\n- key problems or blockers\n\nACTION\n- edits made or recommended\n\nFOLLOW-UPS\n- archive / merge / duplicate cleanup / next file to update\n```",
+      "zh-Hans": "```text\n资产\n- 文件名\n- 类型\n- 为何这是正确的文件\n\n当前状态\n- 结构摘要\n- 关键问题或阻碍\n\n行动\n- 已进行的编辑或建议的编辑\n\n后续步骤\n- 归档 / 合并 / 重复项清理 / 下一个待更新的文件\n```"
+    },
+    {
+      "en-US": "## Good Use Cases",
+      "zh-Hans": "## 良好用例"
+    },
+    {
+      "en-US": "- \"Find the active planning doc and condense it\"\n- \"Clean up this customer spreadsheet and show me the churn-risk rows\"\n- \"Import this deck into Slides and make it presentable\"\n- \"Find the current tracker, not the stale duplicate\"",
+      "zh-Hans": "* “查找当前规划文档并对其进行精简”\n* “清理此客户电子表格并向我显示有流失风险的客户行”\n* “将此演示文稿导入幻灯片并使其具有可展示性”\n* “查找当前的跟踪器，而不是过时的重复项”"
+    }
+  ]
+}

@@ -83,6 +83,10 @@
       "zh-Hans": "* 使用 `/tdd` 通过测试驱动开发来实现\n* 如果出现构建错误，请使用 `/build-fix`\n* 使用 `/code-review` 来审查已完成的实现"
     },
     {
+      "en-US": "> **Need deeper planning?** Use `/prp-plan` for artifact-producing planning with PRD integration, codebase analysis, and pattern extraction. Use `/prp-implement` to execute those plans with rigorous validation loops.",
+      "zh-Hans": "> **需要更深入的规划？** 使用 `/prp-plan` 进行集成 PRD、代码库分析和模式提取的产物生成规划。使用 `/prp-implement` 通过严格的验证循环来执行这些计划。"
+    },
+    {
       "en-US": "## Related Agents",
       "zh-Hans": "## 相关代理"
     },

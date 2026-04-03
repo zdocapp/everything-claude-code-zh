@@ -3,8 +3,8 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: database-migrations\ndescription: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime deployments across PostgreSQL, MySQL, and common ORMs (Prisma, Drizzle, Django, TypeORM, golang-migrate).\norigin: ECC\n---",
-      "zh-Hans": "---\nname: database-migrations\ndescription: 数据库迁移最佳实践，涵盖模式变更、数据迁移、回滚以及零停机部署，适用于PostgreSQL、MySQL及常用ORM（Prisma、Drizzle、Django、TypeORM、golang-migrate）。\norigin: ECC\n---"
+      "en-US": "---\nname: database-migrations\ndescription: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime deployments across PostgreSQL, MySQL, and common ORMs (Prisma, Drizzle, Kysely, Django, TypeORM, golang-migrate).\norigin: ECC\n---",
+      "zh-Hans": "---\nname: database-migrations\ndescription: 数据库迁移最佳实践，涵盖模式变更、数据迁移、回滚以及零停机部署，适用于PostgreSQL、MySQL及常见ORM（Prisma、Drizzle、Kysely、Django、TypeORM、golang-migrate）。\norigin: ECC\n---"
     },
     {
       "en-US": "# Database Migration Patterns",
@@ -145,6 +145,34 @@
     {
       "en-US": "```typescript\nimport { pgTable, text, timestamp, uuid, boolean } from \"drizzle-orm/pg-core\";\n\nexport const users = pgTable(\"users\", {\n  id: uuid(\"id\").primaryKey().defaultRandom(),\n  email: text(\"email\").notNull().unique(),\n  name: text(\"name\"),\n  isActive: boolean(\"is_active\").notNull().default(true),\n  createdAt: timestamp(\"created_at\").notNull().defaultNow(),\n  updatedAt: timestamp(\"updated_at\").notNull().defaultNow(),\n});\n```",
       "zh-Hans": "```typescript\nimport { pgTable, text, timestamp, uuid, boolean } from \"drizzle-orm/pg-core\";\n\nexport const users = pgTable(\"users\", {\n  id: uuid(\"id\").primaryKey().defaultRandom(),\n  email: text(\"email\").notNull().unique(),\n  name: text(\"name\"),\n  isActive: boolean(\"is_active\").notNull().default(true),\n  createdAt: timestamp(\"created_at\").notNull().defaultNow(),\n  updatedAt: timestamp(\"updated_at\").notNull().defaultNow(),\n});\n```"
+    },
+    {
+      "en-US": "## Kysely (TypeScript/Node.js)",
+      "zh-Hans": "## Kysely (TypeScript/Node.js)"
+    },
+    {
+      "en-US": "### Workflow (kysely-ctl)",
+      "zh-Hans": "### 工作流 (kysely-ctl)"
+    },
+    {
+      "en-US": "```bash\n# Initialize config file (kysely.config.ts)\nkysely init\n\n# Create a new migration file\nkysely migrate make add_user_avatar\n\n# Apply all pending migrations\nkysely migrate latest\n\n# Rollback last migration\nkysely migrate down\n\n# Show migration status\nkysely migrate list\n```",
+      "zh-Hans": "```bash\n# Initialize config file (kysely.config.ts)\nkysely init\n\n# Create a new migration file\nkysely migrate make add_user_avatar\n\n# Apply all pending migrations\nkysely migrate latest\n\n# Rollback last migration\nkysely migrate down\n\n# Show migration status\nkysely migrate list\n```"
+    },
+    {
+      "en-US": "### Migration File",
+      "zh-Hans": "### 迁移文件"
+    },
+    {
+      "en-US": "```typescript\n// migrations/2024_01_15_001_create_user_profile.ts\nimport { type Kysely, sql } from 'kysely'\n\n// IMPORTANT: Always use Kysely<any>, not your typed DB interface.\n// Migrations are frozen in time and must not depend on current schema types.\nexport async function up(db: Kysely<any>): Promise<void> {\n  await db.schema\n    .createTable('user_profile')\n    .addColumn('id', 'serial', (col) => col.primaryKey())\n    .addColumn('email', 'varchar(255)', (col) => col.notNull().unique())\n    .addColumn('avatar_url', 'text')\n    .addColumn('created_at', 'timestamp', (col) =>\n      col.defaultTo(sql`now()`).notNull()\n    )\n    .execute()\n\n  await db.schema\n    .createIndex('idx_user_profile_avatar')\n    .on('user_profile')\n    .column('avatar_url')\n    .execute()\n}\n\nexport async function down(db: Kysely<any>): Promise<void> {\n  await db.schema.dropTable('user_profile').execute()\n}\n```",
+      "zh-Hans": "```typescript\n// migrations/2024_01_15_001_create_user_profile.ts\nimport { type Kysely, sql } from 'kysely'\n\n// IMPORTANT: Always use Kysely<any>, not your typed DB interface.\n// Migrations are frozen in time and must not depend on current schema types.\nexport async function up(db: Kysely<any>): Promise<void> {\n  await db.schema\n    .createTable('user_profile')\n    .addColumn('id', 'serial', (col) => col.primaryKey())\n    .addColumn('email', 'varchar(255)', (col) => col.notNull().unique())\n    .addColumn('avatar_url', 'text')\n    .addColumn('created_at', 'timestamp', (col) =>\n      col.defaultTo(sql`now()`).notNull()\n    )\n    .execute()\n\n  await db.schema\n    .createIndex('idx_user_profile_avatar')\n    .on('user_profile')\n    .column('avatar_url')\n    .execute()\n}\n\nexport async function down(db: Kysely<any>): Promise<void> {\n  await db.schema.dropTable('user_profile').execute()\n}\n```"
+    },
+    {
+      "en-US": "### Programmatic Migrator",
+      "zh-Hans": "### 编程式迁移器"
+    },
+    {
+      "en-US": "```typescript\nimport { Migrator, FileMigrationProvider } from 'kysely'\nimport { promises as fs } from 'fs'\nimport * as path from 'path'\n// ESM only — CJS can use __dirname directly\nimport { fileURLToPath } from 'url'\nconst migrationFolder = path.join(\n  path.dirname(fileURLToPath(import.meta.url)),\n  './migrations',\n)\n\n// `db` is your Kysely<any> database instance\nconst migrator = new Migrator({\n  db,\n  provider: new FileMigrationProvider({\n    fs,\n    path,\n    migrationFolder,\n  }),\n  // WARNING: Only enable in development. Disables timestamp-ordering\n  // validation, which can cause schema drift between environments.\n  // allowUnorderedMigrations: true,\n})\n\nconst { error, results } = await migrator.migrateToLatest()\n\nresults?.forEach((it) => {\n  if (it.status === 'Success') {\n    console.log(`migration \"${it.migrationName}\" executed successfully`)\n  } else if (it.status === 'Error') {\n    console.error(`failed to execute migration \"${it.migrationName}\"`)\n  }\n})\n\nif (error) {\n  console.error('migration failed', error)\n  process.exit(1)\n}\n```",
+      "zh-Hans": "```typescript\nimport { Migrator, FileMigrationProvider } from 'kysely'\nimport { promises as fs } from 'fs'\nimport * as path from 'path'\n// ESM only — CJS can use __dirname directly\nimport { fileURLToPath } from 'url'\nconst migrationFolder = path.join(\n  path.dirname(fileURLToPath(import.meta.url)),\n  './migrations',\n)\n\n// `db` is your Kysely<any> database instance\nconst migrator = new Migrator({\n  db,\n  provider: new FileMigrationProvider({\n    fs,\n    path,\n    migrationFolder,\n  }),\n  // WARNING: Only enable in development. Disables timestamp-ordering\n  // validation, which can cause schema drift between environments.\n  // allowUnorderedMigrations: true,\n})\n\nconst { error, results } = await migrator.migrateToLatest()\n\nresults?.forEach((it) => {\n  if (it.status === 'Success') {\n    console.log(`migration \"${it.migrationName}\" executed successfully`)\n  } else if (it.status === 'Error') {\n    console.error(`failed to execute migration \"${it.migrationName}\"`)\n  }\n})\n\nif (error) {\n  console.error('migration failed', error)\n  process.exit(1)\n}\n```"
     },
     {
       "en-US": "## Django (Python)",

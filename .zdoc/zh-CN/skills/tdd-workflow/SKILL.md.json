@@ -71,6 +71,14 @@
       "zh-Hans": "* 关键用户流程\n* 完整工作流\n* 浏览器自动化\n* UI交互"
     },
     {
+      "en-US": "### 4. Git Checkpoints",
+      "zh-Hans": "### 4. Git 检查点"
+    },
+    {
+      "en-US": "- If the repository is under Git, create a checkpoint commit after each TDD stage\n- Do not squash or rewrite these checkpoint commits until the workflow is complete\n- Each checkpoint commit message must describe the stage and the exact evidence captured\n- Count only commits created on the current active branch for the current task\n- Do not treat commits from other branches, earlier unrelated work, or distant branch history as valid checkpoint evidence\n- Before treating a checkpoint as satisfied, verify that the commit is reachable from the current `HEAD` on the active branch and belongs to the current task sequence\n- The preferred compact workflow is:\n  - one commit for failing test added and RED validated\n  - one commit for minimal fix applied and GREEN validated\n  - one optional commit for refactor complete\n- Separate evidence-only commits are not required if the test commit clearly corresponds to RED and the fix commit clearly corresponds to GREEN",
+      "zh-Hans": "* 如果仓库使用 Git，在每个 TDD 阶段后创建一个检查点提交\n* 在工作流完成前，不要压缩或重写这些检查点提交\n* 每个检查点提交信息必须描述阶段和捕获的确切证据\n* 仅统计在当前活动分支上为当前任务创建的提交\n* 不要将来自其他分支、早期无关工作或遥远分支历史的提交视为有效的检查点证据\n* 在将检查点视为满足条件之前，请验证该提交可从活动分支上的当前 `HEAD` 到达，并且属于当前任务序列\n* 首选的紧凑工作流是：\n  * 一个提交用于添加失败的测试并验证 RED 状态\n  * 一个提交用于应用最小修复并验证 GREEN 状态\n  * 一个可选的提交用于完成重构\n* 如果测试提交明确对应 RED 状态且修复提交明确对应 GREEN 状态，则不需要单独的仅证据提交"
+    },
+    {
       "en-US": "## TDD Workflow Steps",
       "zh-Hans": "## TDD 工作流步骤"
     },
@@ -103,6 +111,34 @@
       "zh-Hans": "```bash\nnpm test\n# Tests should fail - we haven't implemented yet\n```"
     },
     {
+      "en-US": "This step is mandatory and is the RED gate for all production changes.",
+      "zh-Hans": "此步骤是强制性的，是所有生产变更的 RED 关卡。"
+    },
+    {
+      "en-US": "Before modifying business logic or other production code, you must verify a valid RED state via one of these paths:",
+      "zh-Hans": "在修改业务逻辑或其他生产代码之前，您必须通过以下路径之一验证有效的 RED 状态："
+    },
+    {
+      "en-US": "- Runtime RED:\n  - The relevant test target compiles successfully\n  - The new or changed test is actually executed\n  - The result is RED\n- Compile-time RED:\n  - The new test newly instantiates, references, or exercises the buggy code path\n  - The compile failure is itself the intended RED signal\n- In either case, the failure is caused by the intended business-logic bug, undefined behavior, or missing implementation\n- The failure is not caused only by unrelated syntax errors, broken test setup, missing dependencies, or unrelated regressions",
+      "zh-Hans": "* 运行时 RED：\n  * 相关测试目标编译成功\n  * 新的或更改的测试实际被执行\n  * 结果是 RED\n* 编译时 RED：\n  * 新测试新实例化、引用或执行了有缺陷的代码路径\n  * 编译失败本身就是预期的 RED 信号\n* 在任何一种情况下，失败都是由预期的业务逻辑缺陷、未定义行为或缺失实现引起的\n* 失败不是仅由无关的语法错误、损坏的测试设置、缺失的依赖项或不相关的回归引起的"
+    },
+    {
+      "en-US": "A test that was only written but not compiled and executed does not count as RED.",
+      "zh-Hans": "仅编写但未编译和执行的测试不计为 RED。"
+    },
+    {
+      "en-US": "Do not edit production code until this RED state is confirmed.",
+      "zh-Hans": "在确认此 RED 状态之前，请勿编辑生产代码。"
+    },
+    {
+      "en-US": "If the repository is under Git, create a checkpoint commit immediately after this stage is validated.\nRecommended commit message format:",
+      "zh-Hans": "如果仓库使用 Git，请在此阶段验证后立即创建检查点提交。\n推荐的提交信息格式："
+    },
+    {
+      "en-US": "- `test: add reproducer for <feature or bug>`\n- This commit may also serve as the RED validation checkpoint if the reproducer was compiled and executed and failed for the intended reason\n- Verify that this checkpoint commit is on the current active branch before continuing",
+      "zh-Hans": "* `test: add reproducer for <feature or bug>`\n* 如果重现器已编译并执行，并且因预期原因失败，此提交也可作为 RED 验证检查点\n* 在继续之前，请验证此检查点提交位于当前活动分支上"
+    },
+    {
       "en-US": "### Step 4: Implement Code",
       "zh-Hans": "### 步骤 4: 实现代码"
     },
@@ -115,12 +151,32 @@
       "zh-Hans": "```typescript\n// Implementation guided by tests\nexport async function searchMarkets(query: string) {\n  // Implementation here\n}\n```"
     },
     {
+      "en-US": "If the repository is under Git, stage the minimal fix now but defer the checkpoint commit until GREEN is validated in Step 5.",
+      "zh-Hans": "如果仓库使用 Git，请现在暂存最小修复，但将检查点提交推迟到步骤 5 中验证 GREEN 状态后再进行。"
+    },
+    {
       "en-US": "### Step 5: Run Tests Again",
       "zh-Hans": "### 步骤 5: 再次运行测试"
     },
     {
       "en-US": "```bash\nnpm test\n# Tests should now pass\n```",
       "zh-Hans": "```bash\nnpm test\n# Tests should now pass\n```"
+    },
+    {
+      "en-US": "Rerun the same relevant test target after the fix and confirm the previously failing test is now GREEN.",
+      "zh-Hans": "修复后重新运行相同的相关测试目标，并确认先前失败的测试现在为 GREEN。"
+    },
+    {
+      "en-US": "Only after a valid GREEN result may you proceed to refactor.",
+      "zh-Hans": "只有在获得有效的 GREEN 结果后，您才能继续进行重构。"
+    },
+    {
+      "en-US": "If the repository is under Git, create a checkpoint commit immediately after GREEN is validated.\nRecommended commit message format:",
+      "zh-Hans": "如果仓库使用 Git，请在验证 GREEN 状态后立即创建检查点提交。\n推荐的提交信息格式："
+    },
+    {
+      "en-US": "- `fix: <feature or bug>`\n- The fix commit may also serve as the GREEN validation checkpoint if the same relevant test target was rerun and passed\n- Verify that this checkpoint commit is on the current active branch before continuing",
+      "zh-Hans": "* `fix: <feature or bug>`\n* 如果重新运行了相同的相关测试目标并通过，修复提交也可作为 GREEN 验证检查点\n* 在继续之前，请验证此检查点提交位于当前活动分支上"
     },
     {
       "en-US": "### Step 6: Refactor",
@@ -133,6 +189,14 @@
     {
       "en-US": "- Remove duplication\n- Improve naming\n- Optimize performance\n- Enhance readability",
       "zh-Hans": "* 消除重复\n* 改进命名\n* 优化性能\n* 增强可读性"
+    },
+    {
+      "en-US": "If the repository is under Git, create a checkpoint commit immediately after refactoring is complete and tests remain green.\nRecommended commit message format:",
+      "zh-Hans": "如果仓库使用 Git，请在重构完成且测试保持绿色后立即创建检查点提交。\n推荐的提交信息格式："
+    },
+    {
+      "en-US": "- `refactor: clean up after <feature or bug> implementation`\n- Verify that this checkpoint commit is on the current active branch before considering the TDD cycle complete",
+      "zh-Hans": "* `refactor: clean up after <feature or bug> implementation`\n* 在认为 TDD 循环完成之前，请验证此检查点提交位于当前活动分支上"
     },
     {
       "en-US": "### Step 7: Verify Coverage",
@@ -231,48 +295,48 @@
       "zh-Hans": "## 应避免的常见测试错误"
     },
     {
-      "en-US": "### ❌ WRONG: Testing Implementation Details",
-      "zh-Hans": "### ❌ 错误：测试实现细节"
+      "en-US": "### FAIL: WRONG: Testing Implementation Details",
+      "zh-Hans": "### 失败：错误：测试实现细节"
     },
     {
       "en-US": "```typescript\n// Don't test internal state\nexpect(component.state.count).toBe(5)\n```",
       "zh-Hans": "```typescript\n// Don't test internal state\nexpect(component.state.count).toBe(5)\n```"
     },
     {
-      "en-US": "### ✅ CORRECT: Test User-Visible Behavior",
-      "zh-Hans": "### ✅ 正确：测试用户可见的行为"
+      "en-US": "### PASS: CORRECT: Test User-Visible Behavior",
+      "zh-Hans": "### 通过：正确：测试用户可见行为"
     },
     {
       "en-US": "```typescript\n// Test what users see\nexpect(screen.getByText('Count: 5')).toBeInTheDocument()\n```",
       "zh-Hans": "```typescript\n// Test what users see\nexpect(screen.getByText('Count: 5')).toBeInTheDocument()\n```"
     },
     {
-      "en-US": "### ❌ WRONG: Brittle Selectors",
-      "zh-Hans": "### ❌ 错误：脆弱的定位器"
+      "en-US": "### FAIL: WRONG: Brittle Selectors",
+      "zh-Hans": "### 失败：错误：脆弱的定位器"
     },
     {
       "en-US": "```typescript\n// Breaks easily\nawait page.click('.css-class-xyz')\n```",
       "zh-Hans": "```typescript\n// Breaks easily\nawait page.click('.css-class-xyz')\n```"
     },
     {
-      "en-US": "### ✅ CORRECT: Semantic Selectors",
-      "zh-Hans": "### ✅ 正确：语义化定位器"
+      "en-US": "### PASS: CORRECT: Semantic Selectors",
+      "zh-Hans": "### 通过：正确：语义化定位器"
     },
     {
       "en-US": "```typescript\n// Resilient to changes\nawait page.click('button:has-text(\"Submit\")')\nawait page.click('[data-testid=\"submit-button\"]')\n```",
       "zh-Hans": "```typescript\n// Resilient to changes\nawait page.click('button:has-text(\"Submit\")')\nawait page.click('[data-testid=\"submit-button\"]')\n```"
     },
     {
-      "en-US": "### ❌ WRONG: No Test Isolation",
-      "zh-Hans": "### ❌ 错误：没有测试隔离"
+      "en-US": "### FAIL: WRONG: No Test Isolation",
+      "zh-Hans": "### 失败：错误：无测试隔离"
     },
     {
       "en-US": "```typescript\n// Tests depend on each other\ntest('creates user', () => { /* ... */ })\ntest('updates same user', () => { /* depends on previous test */ })\n```",
       "zh-Hans": "```typescript\n// Tests depend on each other\ntest('creates user', () => { /* ... */ })\ntest('updates same user', () => { /* depends on previous test */ })\n```"
     },
     {
-      "en-US": "### ✅ CORRECT: Independent Tests",
-      "zh-Hans": "### ✅ 正确：独立的测试"
+      "en-US": "### PASS: CORRECT: Independent Tests",
+      "zh-Hans": "### 通过：正确：独立测试"
     },
     {
       "en-US": "```typescript\n// Each test sets up its own data\ntest('creates user', () => {\n  const user = createTestUser()\n  // Test logic\n})\n\ntest('updates user', () => {\n  const user = createTestUser()\n  // Update logic\n})\n```",

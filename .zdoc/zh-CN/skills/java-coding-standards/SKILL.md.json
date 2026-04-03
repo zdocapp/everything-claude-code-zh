@@ -35,32 +35,32 @@
       "zh-Hans": "## 命名"
     },
     {
-      "en-US": "```java\n// ✅ Classes/Records: PascalCase\npublic class MarketService {}\npublic record Money(BigDecimal amount, Currency currency) {}\n\n// ✅ Methods/fields: camelCase\nprivate final MarketRepository marketRepository;\npublic Market findBySlug(String slug) {}\n\n// ✅ Constants: UPPER_SNAKE_CASE\nprivate static final int MAX_PAGE_SIZE = 100;\n```",
-      "zh-Hans": "```java\n// ✅ Classes/Records: PascalCase\npublic class MarketService {}\npublic record Money(BigDecimal amount, Currency currency) {}\n\n// ✅ Methods/fields: camelCase\nprivate final MarketRepository marketRepository;\npublic Market findBySlug(String slug) {}\n\n// ✅ Constants: UPPER_SNAKE_CASE\nprivate static final int MAX_PAGE_SIZE = 100;\n```"
+      "en-US": "```java\n// PASS: Classes/Records: PascalCase\npublic class MarketService {}\npublic record Money(BigDecimal amount, Currency currency) {}\n\n// PASS: Methods/fields: camelCase\nprivate final MarketRepository marketRepository;\npublic Market findBySlug(String slug) {}\n\n// PASS: Constants: UPPER_SNAKE_CASE\nprivate static final int MAX_PAGE_SIZE = 100;\n```",
+      "zh-Hans": "```java\n// PASS: Classes/Records: PascalCase\npublic class MarketService {}\npublic record Money(BigDecimal amount, Currency currency) {}\n\n// PASS: Methods/fields: camelCase\nprivate final MarketRepository marketRepository;\npublic Market findBySlug(String slug) {}\n\n// PASS: Constants: UPPER_SNAKE_CASE\nprivate static final int MAX_PAGE_SIZE = 100;\n```"
     },
     {
       "en-US": "## Immutability",
       "zh-Hans": "## 不可变性"
     },
     {
-      "en-US": "```java\n// ✅ Favor records and final fields\npublic record MarketDto(Long id, String name, MarketStatus status) {}\n\npublic class Market {\n  private final Long id;\n  private final String name;\n  // getters only, no setters\n}\n```",
-      "zh-Hans": "```java\n// ✅ Favor records and final fields\npublic record MarketDto(Long id, String name, MarketStatus status) {}\n\npublic class Market {\n  private final Long id;\n  private final String name;\n  // getters only, no setters\n}\n```"
+      "en-US": "```java\n// PASS: Favor records and final fields\npublic record MarketDto(Long id, String name, MarketStatus status) {}\n\npublic class Market {\n  private final Long id;\n  private final String name;\n  // getters only, no setters\n}\n```",
+      "zh-Hans": "```java\n// PASS: Favor records and final fields\npublic record MarketDto(Long id, String name, MarketStatus status) {}\n\npublic class Market {\n  private final Long id;\n  private final String name;\n  // getters only, no setters\n}\n```"
     },
     {
       "en-US": "## Optional Usage",
       "zh-Hans": "## Optional 使用"
     },
     {
-      "en-US": "```java\n// ✅ Return Optional from find* methods\nOptional<Market> market = marketRepository.findBySlug(slug);\n\n// ✅ Map/flatMap instead of get()\nreturn market\n    .map(MarketResponse::from)\n    .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n```",
-      "zh-Hans": "```java\n// ✅ Return Optional from find* methods\nOptional<Market> market = marketRepository.findBySlug(slug);\n\n// ✅ Map/flatMap instead of get()\nreturn market\n    .map(MarketResponse::from)\n    .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n```"
+      "en-US": "```java\n// PASS: Return Optional from find* methods\nOptional<Market> market = marketRepository.findBySlug(slug);\n\n// PASS: Map/flatMap instead of get()\nreturn market\n    .map(MarketResponse::from)\n    .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n```",
+      "zh-Hans": "```java\n// PASS: Return Optional from find* methods\nOptional<Market> market = marketRepository.findBySlug(slug);\n\n// PASS: Map/flatMap instead of get()\nreturn market\n    .map(MarketResponse::from)\n    .orElseThrow(() -> new EntityNotFoundException(\"Market not found\"));\n```"
     },
     {
       "en-US": "## Streams Best Practices",
       "zh-Hans": "## Streams 最佳实践"
     },
     {
-      "en-US": "```java\n// ✅ Use streams for transformations, keep pipelines short\nList<String> names = markets.stream()\n    .map(Market::name)\n    .filter(Objects::nonNull)\n    .toList();\n\n// ❌ Avoid complex nested streams; prefer loops for clarity\n```",
-      "zh-Hans": "```java\n// ✅ Use streams for transformations, keep pipelines short\nList<String> names = markets.stream()\n    .map(Market::name)\n    .filter(Objects::nonNull)\n    .toList();\n\n// ❌ Avoid complex nested streams; prefer loops for clarity\n```"
+      "en-US": "```java\n// PASS: Use streams for transformations, keep pipelines short\nList<String> names = markets.stream()\n    .map(Market::name)\n    .filter(Objects::nonNull)\n    .toList();\n\n// FAIL: Avoid complex nested streams; prefer loops for clarity\n```",
+      "zh-Hans": "```java\n// PASS: Use streams for transformations, keep pipelines short\nList<String> names = markets.stream()\n    .map(Market::name)\n    .filter(Objects::nonNull)\n    .toList();\n\n// FAIL: Avoid complex nested streams; prefer loops for clarity\n```"
     },
     {
       "en-US": "## Exceptions",

@@ -1,0 +1,150 @@
+{
+  "sourceFile": "skills/token-budget-advisor/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: token-budget-advisor\ndescription: >-\n  Offers the user an informed choice about how much response depth to\n  consume before answering. Use this skill when the user explicitly\n  wants to control response length, depth, or token budget.\n  TRIGGER when: \"token budget\", \"token count\", \"token usage\", \"token limit\",\n  \"response length\", \"answer depth\", \"short version\", \"brief answer\",\n  \"detailed answer\", \"exhaustive answer\", \"respuesta corta vs larga\",\n  \"cuántos tokens\", \"ahorrar tokens\", \"responde al 50%\", \"dame la versión\n  corta\", \"quiero controlar cuánto usas\", or clear variants where the\n  user is explicitly asking to control answer size or depth.\n  DO NOT TRIGGER when: user has already specified a level in the current\n  session (maintain it), the request is clearly a one-word answer, or\n  \"token\" refers to auth/session/payment tokens rather than response size.\norigin: community\n---",
+      "zh-Hans": "---\nname: token-budget-advisor\ndescription: 为用户提供关于在回答前消耗多少响应深度的知情选择。当用户明确希望控制响应长度、深度或令牌预算时，使用此技能。触发条件：当用户提及“令牌预算”、“令牌计数”、“令牌使用”、“令牌限制”、“响应长度”、“答案深度”、“简短版本”、“简要答案”、“详细答案”、“详尽答案”、“respuesta corta vs larga”、“cuántos tokens”、“ahorrar tokens”、“responde al 50%”、“dame la versión corta”、“quiero controlar cuánto usas”，或明确变体，其中用户明确要求控制答案大小或深度时。不触发条件：当用户在当前会话中已指定级别（保持该级别）、请求明显是单字答案，或“令牌”指代身份验证/会话/支付令牌而非响应大小时。origin: community\n---"
+    },
+    {
+      "en-US": "# Token Budget Advisor (TBA)",
+      "zh-Hans": "# Token 预算顾问 (TBA)"
+    },
+    {
+      "en-US": "Intercept the response flow to offer the user a choice about response depth **before** Claude answers.",
+      "zh-Hans": "在 Claude 回答**之前**拦截响应流程，为用户提供关于响应深度的选择。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- User wants to control how long or detailed a response is\n- User mentions tokens, budget, depth, or response length\n- User says \"short version\", \"tldr\", \"brief\", \"al 25%\", \"exhaustive\", etc.\n- Any time the user wants to choose depth/detail level upfront",
+      "zh-Hans": "* 用户想要控制响应的长度或详细程度\n* 用户提及 tokens、预算、深度或响应长度\n* 用户说\"简短版本\"、\"tldr\"、\"简要\"、\"al 25%\"、\"详尽\"等\n* 任何用户希望预先选择深度/详细程度的时候"
+    },
+    {
+      "en-US": "**Do not trigger** when: user already set a level this session (maintain it silently), or the answer is trivially one line.",
+      "zh-Hans": "**不要触发**当：用户已在本会话中设置了级别（静默保持），或者答案明显只有一行。"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Step 1 — Estimate input tokens",
+      "zh-Hans": "### 步骤 1 — 估算输入 tokens"
+    },
+    {
+      "en-US": "Use the repository's canonical context-budget heuristics to estimate the prompt's token count mentally.",
+      "zh-Hans": "使用仓库的规范上下文预算启发式方法，在脑中估算提示的 token 数量。"
+    },
+    {
+      "en-US": "Use the same calibration guidance as [context-budget](../context-budget/SKILL.md):",
+      "zh-Hans": "使用与 [context-budget](../context-budget/SKILL.md) 相同的校准指导："
+    },
+    {
+      "en-US": "- prose: `words × 1.3`\n- code-heavy or mixed/code blocks: `chars / 4`",
+      "zh-Hans": "* 散文：`words × 1.3`\n* 代码为主或混合/代码块：`chars / 4`"
+    },
+    {
+      "en-US": "For mixed content, use the dominant content type and keep the estimate heuristic.",
+      "zh-Hans": "对于混合内容，使用主要的内容类型并保持估算启发式方法。"
+    },
+    {
+      "en-US": "### Step 2 — Estimate response size by complexity",
+      "zh-Hans": "### 步骤 2 — 根据复杂度估算响应大小"
+    },
+    {
+      "en-US": "Classify the prompt, then apply the multiplier range to get the full response window:",
+      "zh-Hans": "对提示进行分类，然后应用乘数范围以获得完整的响应窗口："
+    },
+    {
+      "en-US": "| Complexity   | Multiplier range | Example prompts                                      |\n|--------------|------------------|------------------------------------------------------|\n| Simple       | 3× – 8×          | \"What is X?\", yes/no, single fact                   |\n| Medium       | 8× – 20×         | \"How does X work?\"                                  |\n| Medium-High  | 10× – 25×        | Code request with context                           |\n| Complex      | 15× – 40×        | Multi-part analysis, comparisons, architecture      |\n| Creative     | 10× – 30×        | Stories, essays, narrative writing                  |",
+      "zh-Hans": "| 复杂度       | 乘数范围         | 示例提示                                          |\n|--------------|------------------|---------------------------------------------------|\n| 简单         | 3× – 8×          | \"X 是什么？\"，是/否，单一事实                     |\n| 中等         | 8× – 20×         | \"X 如何工作？\"                                    |\n| 中高         | 10× – 25×        | 带有上下文的代码请求                               |\n| 复杂         | 15× – 40×        | 多部分分析、比较、架构                             |\n| 创意         | 10× – 30×        | 故事、文章、叙事写作                               |"
+    },
+    {
+      "en-US": "Response window = `input_tokens × mult_min` to `input_tokens × mult_max` (but don’t exceed your model’s configured output-token limit).",
+      "zh-Hans": "响应窗口 = `input_tokens × mult_min` 到 `input_tokens × mult_max`（但不要超过模型配置的输出 token 限制）。"
+    },
+    {
+      "en-US": "### Step 3 — Present depth options",
+      "zh-Hans": "### 步骤 3 — 呈现深度选项"
+    },
+    {
+      "en-US": "Present this block **before** answering, using the actual estimated numbers:",
+      "zh-Hans": "在回答**之前**呈现此块，使用实际估算的数字："
+    },
+    {
+      "en-US": "```\nAnalyzing your prompt...\n\nInput: ~[N] tokens  |  Type: [type]  |  Complexity: [level]  |  Language: [lang]\n\nChoose your depth level:\n\n[1] Essential   (25%)  ->  ~[tokens]   Direct answer only, no preamble\n[2] Moderate    (50%)  ->  ~[tokens]   Answer + context + 1 example\n[3] Detailed    (75%)  ->  ~[tokens]   Full answer with alternatives\n[4] Exhaustive (100%)  ->  ~[tokens]   Everything, no limits\n\nWhich level? (1-4 or say \"25% depth\", \"50% depth\", \"75% depth\", \"100% depth\")\n\nPrecision: heuristic estimate ~85-90% accuracy (±15%).\n```",
+      "zh-Hans": "```\n分析你的提示...\n\n输入: ~[N] 个词元  |  类型: [类型]  |  复杂度: [级别]  |  语言: [语言]\n\n选择你的深度级别:\n\n[1] 基础   (25%)  ->  ~[词元]   仅直接回答，无前言\n[2] 中等    (50%)  ->  ~[词元]   回答 + 上下文 + 1 个示例\n[3] 详细    (75%)  ->  ~[词元]   完整回答，包含替代方案\n[4] 详尽   (100%)  ->  ~[词元]   全部内容，无限制\n\n选择哪个级别？ (1-4 或说 \"25% 深度\", \"50% 深度\", \"75% 深度\", \"100% 深度\")\n\n精确度: 启发式估计 ~85-90% 准确率 (±15%)。\n```"
+    },
+    {
+      "en-US": "Level token estimates (within the response window):",
+      "zh-Hans": "级别 token 估算（在响应窗口内）："
+    },
+    {
+      "en-US": "- 25%  → `min + (max - min) × 0.25`\n- 50%  → `min + (max - min) × 0.50`\n- 75%  → `min + (max - min) × 0.75`\n- 100% → `max`",
+      "zh-Hans": "* 25%  → `min + (max - min) × 0.25`\n* 50%  → `min + (max - min) × 0.50`\n* 75%  → `min + (max - min) × 0.75`\n* 100% → `max`"
+    },
+    {
+      "en-US": "### Step 4 — Respond at the chosen level",
+      "zh-Hans": "### 步骤 4 — 按所选级别响应"
+    },
+    {
+      "en-US": "| Level            | Target length       | Include                                             | Omit                                              |\n|------------------|---------------------|-----------------------------------------------------|---------------------------------------------------|\n| 25% Essential    | 2-4 sentences max   | Direct answer, key conclusion                       | Context, examples, nuance, alternatives           |\n| 50% Moderate     | 1-3 paragraphs      | Answer + necessary context + 1 example              | Deep analysis, edge cases, references             |\n| 75% Detailed     | Structured response | Multiple examples, pros/cons, alternatives          | Extreme edge cases, exhaustive references         |\n| 100% Exhaustive  | No restriction      | Everything — full analysis, all code, all perspectives | Nothing                                        |",
+      "zh-Hans": "| 级别            | 目标长度          | 包含内容                                          | 省略内容                                          |\n|-----------------|-------------------|---------------------------------------------------|---------------------------------------------------|\n| 25% 核心        | 最多 2-4 句       | 直接答案，关键结论                                | 上下文、示例、细微差别、替代方案                  |\n| 50% 适中        | 1-3 段            | 答案 + 必要上下文 + 1 个示例                      | 深度分析、边缘情况、参考文献                      |\n| 75% 详细        | 结构化响应        | 多个示例、优缺点、替代方案                        | 极端边缘情况、详尽的参考文献                      |\n| 100% 详尽       | 无限制            | 一切 — 完整分析、所有代码、所有视角               | 无                                                |"
+    },
+    {
+      "en-US": "## Shortcuts — skip the question",
+      "zh-Hans": "## 快捷方式 — 跳过提问"
+    },
+    {
+      "en-US": "If the user already signals a level, respond at that level immediately without asking:",
+      "zh-Hans": "如果用户已经表明了级别，立即按该级别响应，无需询问："
+    },
+    {
+      "en-US": "| What they say                                      | Level |\n|----------------------------------------------------|-------|\n| \"1\" / \"25% depth\" / \"short version\" / \"brief answer\" / \"tldr\"  | 25%   |\n| \"2\" / \"50% depth\" / \"moderate depth\" / \"balanced answer\"        | 50%   |\n| \"3\" / \"75% depth\" / \"detailed answer\" / \"thorough answer\"       | 75%   |\n| \"4\" / \"100% depth\" / \"exhaustive answer\" / \"full deep dive\"     | 100%  |",
+      "zh-Hans": "| 用户所说内容                                    | 级别  |\n|-------------------------------------------------|-------|\n| \"1\" / \"25% 深度\" / \"简短版本\" / \"简要回答\" / \"tldr\"  | 25%   |\n| \"2\" / \"50% 深度\" / \"适中深度\" / \"平衡回答\"           | 50%   |\n| \"3\" / \"75% 深度\" / \"详细回答\" / \"彻底回答\"           | 75%   |\n| \"4\" / \"100% 深度\" / \"详尽回答\" / \"完整深度探讨\"       | 100%  |"
+    },
+    {
+      "en-US": "If the user set a level earlier in the session, **maintain it silently** for subsequent responses unless they change it.",
+      "zh-Hans": "如果用户在会话早期设置了级别，**静默保持**该级别用于后续响应，除非他们更改。"
+    },
+    {
+      "en-US": "## Precision note",
+      "zh-Hans": "## 精度说明"
+    },
+    {
+      "en-US": "This skill uses heuristic estimation — no real tokenizer. Accuracy ~85-90%, variance ±15%. Always show the disclaimer.",
+      "zh-Hans": "此技能使用启发式估算 — 非真实 tokenizer。准确率约 85-90%，方差 ±15%。始终显示免责声明。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Triggers",
+      "zh-Hans": "### 触发"
+    },
+    {
+      "en-US": "- \"Give me the short version first.\"\n- \"How many tokens will your answer use?\"\n- \"Respond at 50% depth.\"\n- \"I want the exhaustive answer, not the summary.\"\n- \"Dame la version corta y luego la detallada.\"",
+      "zh-Hans": "* \"先给我简短版本。\"\n* \"你的回答会使用多少 tokens？\"\n* \"以 50% 深度响应。\"\n* \"我想要详尽的答案，而不是摘要。\"\n* \"Dame la version corta y luego la detallada.\""
+    },
+    {
+      "en-US": "### Does Not Trigger",
+      "zh-Hans": "### 不触发"
+    },
+    {
+      "en-US": "- \"What is a JWT token?\"\n- \"The checkout flow uses a payment token.\"\n- \"Is this normal?\"\n- \"Complete the refactor.\"\n- Follow-up questions after the user already chose a depth for the session",
+      "zh-Hans": "* \"JWT token 是什么？\"\n* \"结账流程使用支付 token。\"\n* \"这正常吗？\"\n* \"完成重构。\"\n* 用户在会话中已选择深度后的后续问题"
+    },
+    {
+      "en-US": "## Source",
+      "zh-Hans": "## 来源"
+    },
+    {
+      "en-US": "Standalone skill from [TBA — Token Budget Advisor for Claude Code](https://github.com/Xabilimon1/Token-Budget-Advisor-Claude-Code-).\nOriginal project also ships a Python estimator script, but this repository keeps the skill self-contained and heuristic-only.",
+      "zh-Hans": "独立技能，来自 [TBA — Token Budget Advisor for Claude Code](https://github.com/Xabilimon1/Token-Budget-Advisor-Claude-Code-)。\n原始项目还附带一个 Python 估算脚本，但此仓库保持技能自包含且仅使用启发式方法。"
+    }
+  ]
+}

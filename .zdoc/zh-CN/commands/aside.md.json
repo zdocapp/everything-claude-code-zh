@@ -99,8 +99,8 @@
       "zh-Hans": "**问题揭示了当前任务的潜在问题：**\n在恢复之前清楚地标记出来："
     },
     {
-      "en-US": "```\nASIDE: [answer]\n\n⚠️ Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?\n```",
-      "zh-Hans": "```\nASIDE: [answer]\n\n⚠️ Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?\n```"
+      "en-US": "```\nASIDE: [answer]\n\nWARNING: Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?\n```",
+      "zh-Hans": "```\n旁注：[答案]\n\n警告：注意：此答案指出了当前方法存在的[问题]。您希望在继续之前解决此问题，还是按计划进行？\n```"
     },
     {
       "en-US": "Wait for the user's decision before resuming.",
@@ -147,8 +147,8 @@
       "zh-Hans": "**旁述回答暗示需要进行代码更改：**\n记下所需的更改，但不要在旁述期间进行更改："
     },
     {
-      "en-US": "```\nASIDE: [answer]\n\n📝 Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.\n```",
-      "zh-Hans": "```\nASIDE: [answer]\n\n📝 Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.\n```"
+      "en-US": "```\nASIDE: [answer]\n\n Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.\n```",
+      "zh-Hans": "```\n旁注：[答案]\n\n值得修复：[应更改的内容]。除非您想现在处理，否则我将在当前任务后标记此问题。\n```"
     },
     {
       "en-US": "**Question is ambiguous or too vague:**\nAsk one clarifying question — the shortest question that gets the information needed to answer. Do not ask multiple questions.",
@@ -167,8 +167,8 @@
       "zh-Hans": "```\nUser: /aside what does fetchWithRetry() actually do?\n\nASIDE: what does fetchWithRetry() do?\n\nfetchWithRetry() (src/api/retry.ts:12) attempts the request up to 3 times with\nexponential backoff (250ms → 500ms → 1s). It only retries on 5xx responses and\nnetwork errors — 4xx errors are treated as final and not retried.\n\n— Back to task: refactoring the auth middleware in src/middleware/auth.ts\n```"
     },
     {
-      "en-US": "```\nUser: /aside is the approach we're taking thread-safe?\n\nASIDE: is the current approach thread-safe?\n\nNo — the shared cache object in src/cache/store.ts:34 is mutated without locking.\nUnder concurrent requests this is a race condition. It's low risk in a single-process\nNode.js server but would be a real problem with worker threads or clustering.\n\n⚠️ Note: This could affect the feature we're building. Want to address this now or continue and fix it in a follow-up?\n```",
-      "zh-Hans": "```\nUser: /aside is the approach we're taking thread-safe?\n\nASIDE: is the current approach thread-safe?\n\nNo — the shared cache object in src/cache/store.ts:34 is mutated without locking.\nUnder concurrent requests this is a race condition. It's low risk in a single-process\nNode.js server but would be a real problem with worker threads or clustering.\n\n⚠️ Note: This could affect the feature we're building. Want to address this now or continue and fix it in a follow-up?\n```"
+      "en-US": "```\nUser: /aside is the approach we're taking thread-safe?\n\nASIDE: is the current approach thread-safe?\n\nNo — the shared cache object in src/cache/store.ts:34 is mutated without locking.\nUnder concurrent requests this is a race condition. It's low risk in a single-process\nNode.js server but would be a real problem with worker threads or clustering.\n\nWARNING: Note: This could affect the feature we're building. Want to address this now or continue and fix it in a follow-up?\n```",
+      "zh-Hans": "```\nUser: /aside 我们采用的方法是否是线程安全的？\n\nASIDE: 当前的方法是否是线程安全的？\n\n不是 — src/cache/store.ts:34 中的共享缓存对象在没有锁定的情况下被修改。\n在并发请求下，这是一个竞态条件。在单进程 Node.js 服务器中风险较低，但在使用工作线程或集群时，这将是一个真正的问题。\n\nWARNING: 注意：这可能会影响我们正在构建的功能。是现在解决这个问题，还是继续并在后续修复？\n```"
     },
     {
       "en-US": "---",

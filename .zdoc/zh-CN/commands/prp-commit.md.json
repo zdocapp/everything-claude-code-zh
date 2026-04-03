@@ -1,0 +1,142 @@
+{
+  "sourceFile": "commands/prp-commit.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Quick commit with natural language file targeting — describe what to commit in plain English\nargument-hint: [target description] (blank = all changes)\n---",
+      "zh-Hans": "---\ndescription: Quick commit with natural language file targeting — describe what to commit in plain English\nargument-hint: [target description] (blank = all changes)\n---"
+    },
+    {
+      "en-US": "# Smart Commit",
+      "zh-Hans": "# 智能提交"
+    },
+    {
+      "en-US": "> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.",
+      "zh-Hans": "> 改编自 Wirasm 的 PRPs-agentic-eng。PRP 工作流系列的一部分。"
+    },
+    {
+      "en-US": "**Input**: $ARGUMENTS",
+      "zh-Hans": "**输入**: $ARGUMENTS"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 1 — ASSESS",
+      "zh-Hans": "## 阶段 1 — 评估"
+    },
+    {
+      "en-US": "```bash\ngit status --short\n```",
+      "zh-Hans": "```bash\ngit status --short\n```"
+    },
+    {
+      "en-US": "If output is empty → stop: \"Nothing to commit.\"",
+      "zh-Hans": "如果输出为空 → 停止：\"没有内容可提交。\""
+    },
+    {
+      "en-US": "Show the user a summary of what's changed (added, modified, deleted, untracked).",
+      "zh-Hans": "向用户展示变更摘要（新增、修改、删除、未跟踪）。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 2 — INTERPRET & STAGE",
+      "zh-Hans": "## 阶段 2 — 解释与暂存"
+    },
+    {
+      "en-US": "Interpret `$ARGUMENTS` to determine what to stage:",
+      "zh-Hans": "解释 `$ARGUMENTS` 以确定要暂存的内容："
+    },
+    {
+      "en-US": "| Input | Interpretation | Git Command |\n|---|---|---|\n| *(blank / empty)* | Stage everything | `git add -A` |\n| `staged` | Use whatever is already staged | *(no git add)* |\n| `*.ts` or `*.py` etc. | Stage matching glob | `git add '*.ts'` |\n| `except tests` | Stage all, then unstage tests | `git add -A && git reset -- '**/*.test.*' '**/*.spec.*' '**/test_*' 2>/dev/null \\|\\| true` |\n| `only new files` | Stage untracked files only | `git ls-files --others --exclude-standard \\| grep . && git ls-files --others --exclude-standard \\| xargs git add` |\n| `the auth changes` | Interpret from status/diff — find auth-related files | `git add <matched files>` |\n| Specific filenames | Stage those files | `git add <files>` |",
+      "zh-Hans": "| 输入 | 解释 | Git 命令 |\n|---|---|---|\n| *(空白 / 空)* | 暂存所有内容 | `git add -A` |\n| `staged` | 使用已暂存的内容 | *(不执行 git add)* |\n| `*.ts` 或 `*.py` 等 | 暂存匹配的通配符模式 | `git add '*.ts'` |\n| `except tests` | 暂存所有，然后取消暂存测试文件 | `git add -A && git reset -- '**/*.test.*' '**/*.spec.*' '**/test_*' 2>/dev/null \\|\\| true` |\n| `only new files` | 仅暂存未跟踪文件 | `git ls-files --others --exclude-standard \\| grep . && git ls-files --others --exclude-standard \\| xargs git add` |\n| `the auth changes` | 根据状态/差异解释 — 查找与认证相关的文件 | `git add <matched files>` |\n| 特定文件名 | 暂存这些文件 | `git add <files>` |"
+    },
+    {
+      "en-US": "For natural language inputs (like \"the auth changes\"), cross-reference the `git status` output and `git diff` to identify relevant files. Show the user which files you're staging and why.",
+      "zh-Hans": "对于自然语言输入（如\"认证相关的更改\"），交叉参考 `git status` 的输出和 `git diff` 以识别相关文件。向用户展示你正在暂存哪些文件以及原因。"
+    },
+    {
+      "en-US": "```bash\ngit add <determined files>\n```",
+      "zh-Hans": "```bash\ngit add <determined files>\n```"
+    },
+    {
+      "en-US": "After staging, verify:",
+      "zh-Hans": "暂存后，验证："
+    },
+    {
+      "en-US": "```bash\ngit diff --cached --stat\n```",
+      "zh-Hans": "```bash\ngit diff --cached --stat\n```"
+    },
+    {
+      "en-US": "If nothing staged, stop: \"No files matched your description.\"",
+      "zh-Hans": "如果没有任何内容被暂存，停止：\"没有文件匹配您的描述。\""
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 3 — COMMIT",
+      "zh-Hans": "## 阶段 3 — 提交"
+    },
+    {
+      "en-US": "Craft a single-line commit message in imperative mood:",
+      "zh-Hans": "以祈使语气撰写单行提交信息："
+    },
+    {
+      "en-US": "```\n{type}: {description}\n```",
+      "zh-Hans": "```\n{type}: {description}\n```"
+    },
+    {
+      "en-US": "Types:",
+      "zh-Hans": "类型："
+    },
+    {
+      "en-US": "- `feat` — New feature or capability\n- `fix` — Bug fix\n- `refactor` — Code restructuring without behavior change\n- `docs` — Documentation changes\n- `test` — Adding or updating tests\n- `chore` — Build, config, dependencies\n- `perf` — Performance improvement\n- `ci` — CI/CD changes",
+      "zh-Hans": "* `feat` — 新功能或能力\n* `fix` — 错误修复\n* `refactor` — 不改变行为的代码重构\n* `docs` — 文档变更\n* `test` — 添加或更新测试\n* `chore` — 构建、配置、依赖项\n* `perf` — 性能改进\n* `ci` — CI/CD 变更"
+    },
+    {
+      "en-US": "Rules:",
+      "zh-Hans": "规则："
+    },
+    {
+      "en-US": "- Imperative mood (\"add feature\" not \"added feature\")\n- Lowercase after the type prefix\n- No period at the end\n- Under 72 characters\n- Describe WHAT changed, not HOW",
+      "zh-Hans": "* 祈使语气（\"添加功能\"而非\"已添加功能\"）\n* 类型前缀后小写\n* 结尾不加句号\n* 少于 72 个字符\n* 描述**什么**改变了，而不是**如何**改变的"
+    },
+    {
+      "en-US": "```bash\ngit commit -m \"{type}: {description}\"\n```",
+      "zh-Hans": "```bash\ngit commit -m \"{type}: {description}\"\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 4 — OUTPUT",
+      "zh-Hans": "## 阶段 4 — 输出"
+    },
+    {
+      "en-US": "Report to user:",
+      "zh-Hans": "向用户报告："
+    },
+    {
+      "en-US": "```\nCommitted: {hash_short}\nMessage:   {type}: {description}\nFiles:     {count} file(s) changed\n\nNext steps:\n  - git push           → push to remote\n  - /prp-pr            → create a pull request\n  - /code-review       → review before pushing\n```",
+      "zh-Hans": "```\nCommitted: {hash_short}\nMessage:   {type}: {description}\nFiles:     {count} file(s) changed\n\nNext steps:\n  - git push           → push to remote\n  - /prp-pr            → create a pull request\n  - /code-review       → review before pushing\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "| You say | What happens |\n|---|---|\n| `/prp-commit` | Stages all, auto-generates message |\n| `/prp-commit staged` | Commits only what's already staged |\n| `/prp-commit *.ts` | Stages all TypeScript files, commits |\n| `/prp-commit except tests` | Stages everything except test files |\n| `/prp-commit the database migration` | Finds DB migration files from status, stages them |\n| `/prp-commit only new files` | Stages untracked files only |",
+      "zh-Hans": "| 您输入 | 发生的情况 |\n|---|---|\n| `/prp-commit` | 暂存所有内容，自动生成信息 |\n| `/prp-commit staged` | 仅提交已暂存的内容 |\n| `/prp-commit *.ts` | 暂存所有 TypeScript 文件，提交 |\n| `/prp-commit except tests` | 暂存除测试文件外的所有内容 |\n| `/prp-commit the database migration` | 从状态中查找数据库迁移文件，暂存它们 |\n| `/prp-commit only new files` | 仅暂存未跟踪文件 |"
+    }
+  ]
+}

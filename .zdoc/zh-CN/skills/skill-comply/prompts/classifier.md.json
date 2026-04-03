@@ -1,0 +1,38 @@
+{
+  "sourceFile": "skills/skill-comply/prompts/classifier.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "You are classifying tool calls from a coding agent session against expected behavioral steps.",
+      "zh-Hans": "您正在对编码代理会话中的工具调用与预期行为步骤进行分类。"
+    },
+    {
+      "en-US": "For each tool call, determine which step (if any) it belongs to. A tool call can match at most one step.",
+      "zh-Hans": "对于每个工具调用，确定其属于哪个步骤（如果有）。一个工具调用最多匹配一个步骤。"
+    },
+    {
+      "en-US": "Steps:\n{steps_description}",
+      "zh-Hans": "步骤：\n{steps\\_description}"
+    },
+    {
+      "en-US": "Tool calls (numbered):\n{tool_calls}",
+      "zh-Hans": "工具调用（已编号）：\n{tool\\_calls}"
+    },
+    {
+      "en-US": "Respond with ONLY a JSON object mapping step_id to a list of matching tool call numbers.\nInclude only steps that have at least one match. If no tool calls match a step, omit it.",
+      "zh-Hans": "仅使用 JSON 对象进行响应，将 step\\_id 映射到匹配的工具调用编号列表。\n仅包含至少有一个匹配项的步骤。如果没有工具调用匹配某个步骤，则省略该步骤。"
+    },
+    {
+      "en-US": "Example response:\n{\"write_test\": [0, 1], \"run_test_red\": [2], \"write_impl\": [3, 4]}",
+      "zh-Hans": "示例响应：\n{\"write\\_test\": \\[0, 1], \"run\\_test\\_red\": \\[2], \"write\\_impl\": \\[3, 4]}"
+    },
+    {
+      "en-US": "Rules:",
+      "zh-Hans": "规则："
+    },
+    {
+      "en-US": "- Match based on the MEANING of the tool call, not just keywords\n- A Write to \"test_calculator.py\" is a test file write, even if the content is implementation-like\n- A Write to \"calculator.py\" is an implementation write, even if it contains test helpers\n- A Bash running \"pytest\" that outputs \"FAILED\" is a RED phase test run\n- A Bash running \"pytest\" that outputs \"passed\" is a GREEN phase test run\n- Each tool call should match at most one step (pick the best match)\n- If a tool call doesn't match any step, don't include it",
+      "zh-Hans": "* 根据工具调用的**含义**进行匹配，而不仅仅是关键词\n* 写入 \"test\\_calculator.py\" 是测试文件写入，即使内容类似实现\n* 写入 \"calculator.py\" 是实现写入，即使包含测试辅助代码\n* 运行 \"pytest\" 且输出 \"FAILED\" 的 Bash 命令是 RED 阶段测试运行\n* 运行 \"pytest\" 且输出 \"passed\" 的 Bash 命令是 GREEN 阶段测试运行\n* 每个工具调用最多匹配一个步骤（选择最佳匹配）\n* 如果一个工具调用不匹配任何步骤，则不包含它"
+    }
+  ]
+}

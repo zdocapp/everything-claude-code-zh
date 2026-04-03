@@ -35,8 +35,8 @@
       "zh-Hans": "* 按 `n` 创建一个带有提示的新窗格\n* 按 `m` 将窗格输出合并回主会话\n* 支持：Claude Code、Codex、OpenCode、Cline、Gemini、Qwen"
     },
     {
-      "en-US": "**Install:** `npm install -g dmux` or see [github.com/standardagents/dmux](https://github.com/standardagents/dmux)",
-      "zh-Hans": "**安装：** `npm install -g dmux` 或参见 [github.com/standardagents/dmux](https://github.com/standardagents/dmux)"
+      "en-US": "**Install:** Install dmux from its repository after reviewing the package. See [github.com/standardagents/dmux](https://github.com/standardagents/dmux)",
+      "zh-Hans": "**安装：** 在审查软件包后，从其仓库安装 dmux。参见 [github.com/standardagents/dmux](https://github.com/standardagents/dmux)"
     },
     {
       "en-US": "## Quick Start",

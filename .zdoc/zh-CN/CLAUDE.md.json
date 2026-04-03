@@ -51,8 +51,8 @@
       "zh-Hans": "## 开发说明"
     },
     {
-      "en-US": "- Package manager detection: npm, pnpm, yarn, bun (configurable via `CLAUDE_PACKAGE_MANAGER` env var or project config)\n- Cross-platform: Windows, macOS, Linux support via Node.js scripts\n- Agent format: Markdown with YAML frontmatter (name, description, tools, model)\n- Skill format: Markdown with clear sections for when to use, how it works, examples\n- Hook format: JSON with matcher conditions and command/notification hooks",
-      "zh-Hans": "* 包管理器检测：npm、pnpm、yarn、bun（可通过 `CLAUDE_PACKAGE_MANAGER` 环境变量或项目配置设置）\n* 跨平台：通过 Node.js 脚本支持 Windows、macOS、Linux\n* 代理格式：带有 YAML 前言的 Markdown（名称、描述、工具、模型）\n* 技能格式：带有清晰章节的 Markdown（何时使用、如何工作、示例）\n* 钩子格式：带有匹配器条件和命令/通知钩子的 JSON"
+      "en-US": "- Package manager detection: npm, pnpm, yarn, bun (configurable via `CLAUDE_PACKAGE_MANAGER` env var or project config)\n- Cross-platform: Windows, macOS, Linux support via Node.js scripts\n- Agent format: Markdown with YAML frontmatter (name, description, tools, model)\n- Skill format: Markdown with clear sections for when to use, how it works, examples\n- Skill placement: Curated in skills/; generated/imported under ~/.claude/skills/. See docs/SKILL-PLACEMENT-POLICY.md\n- Hook format: JSON with matcher conditions and command/notification hooks",
+      "zh-Hans": "* 包管理器检测：npm、pnpm、yarn、bun（可通过 `CLAUDE_PACKAGE_MANAGER` 环境变量或项目配置进行配置）\n* 跨平台支持：通过 Node.js 脚本支持 Windows、macOS、Linux\n* 智能体格式：采用带 YAML 前言的 Markdown（包含名称、描述、工具、模型）\n* 技能格式：采用带明确章节的 Markdown（包含使用时机、工作原理、示例）\n* 技能存放位置：精选技能存放于 skills/ 目录；生成/导入的技能存放于 ~/.claude/skills/ 目录。详见 docs/SKILL-PLACEMENT-POLICY.md\n* 钩子格式：采用带匹配器条件和命令/通知钩子的 JSON"
     },
     {
       "en-US": "## Contributing",
@@ -69,6 +69,22 @@
     {
       "en-US": "File naming: lowercase with hyphens (e.g., `python-reviewer.md`, `tdd-workflow.md`)",
       "zh-Hans": "文件命名：小写字母并用连字符连接（例如 `python-reviewer.md`, `tdd-workflow.md`）"
+    },
+    {
+      "en-US": "## Skills",
+      "zh-Hans": "## 技能"
+    },
+    {
+      "en-US": "Use the following skills when working on related files:",
+      "zh-Hans": "处理相关文件时请使用以下技能："
+    },
+    {
+      "en-US": "| File(s) | Skill |\n|---------|-------|\n| `README.md` | `/readme` |\n| `.github/workflows/*.yml` | `/ci-workflow` |",
+      "zh-Hans": "| 文件 | 技能 |\n|---------|-------|\n| `README.md` | `/readme` |\n| `.github/workflows/*.yml` | `/ci-workflow` |"
+    },
+    {
+      "en-US": "When spawning subagents, always pass conventions from the respective skill into the agent's prompt.",
+      "zh-Hans": "生成子智能体时，请务必将相应技能中的约定规则传入智能体提示词。"
     }
   ]
 }

@@ -39,8 +39,8 @@
       "zh-Hans": "**实际示例**（在生产环境中观察到）："
     },
     {
-      "en-US": "```\nFix 1: Added notification_settings to API response\n  → Forgot to add it to the SELECT query\n  → AI reviewed and missed it (same blind spot)\n\nFix 2: Added it to SELECT query\n  → TypeScript build error (column not in generated types)\n  → AI reviewed Fix 1 but didn't catch the SELECT issue\n\nFix 3: Changed to SELECT *\n  → Fixed production path, forgot sandbox path\n  → AI reviewed and missed it AGAIN (4th occurrence)\n\nFix 4: Test caught it instantly on first run ✅\n```",
-      "zh-Hans": "```\n修复 1：向 API 响应添加了 notification_settings\n  → 忘记将其添加到 SELECT 查询中\n  → AI 审核时遗漏了（相同的盲点）\n\n修复 2：将其添加到 SELECT 查询中\n  → TypeScript 构建错误（列不在生成的类型中）\n  → AI 审核了修复 1，但未发现 SELECT 问题\n\n修复 3：改为 SELECT *\n  → 修复了生产路径，忘记了沙箱路径\n  → AI 审核时再次遗漏（第 4 次出现）\n\n修复 4：测试在首次运行时立即捕获了问题 ✅\n```"
+      "en-US": "```\nFix 1: Added notification_settings to API response\n  → Forgot to add it to the SELECT query\n  → AI reviewed and missed it (same blind spot)\n\nFix 2: Added it to SELECT query\n  → TypeScript build error (column not in generated types)\n  → AI reviewed Fix 1 but didn't catch the SELECT issue\n\nFix 3: Changed to SELECT *\n  → Fixed production path, forgot sandbox path\n  → AI reviewed and missed it AGAIN (4th occurrence)\n\nFix 4: Test caught it instantly on first run PASS:\n```",
+      "zh-Hans": "```\n修复 1: 在 API 响应中添加了 notification_settings\n  → 忘记将其添加到 SELECT 查询中\n  → AI 审查并遗漏了它（相同的盲点）\n\n修复 2: 将其添加到 SELECT 查询中\n  → TypeScript 构建错误（列不在生成的类型中）\n  → AI 审查了修复 1 但未发现 SELECT 问题\n\n修复 3: 改为 SELECT *\n  → 修复了生产路径，忘记了沙箱路径\n  → AI 审查并再次遗漏了它（第 4 次出现）\n\n修复 4: 测试在首次运行中立即捕获了它 PASS:\n```"
     },
     {
       "en-US": "The pattern: **sandbox/production path inconsistency** is the #1 AI-introduced regression.",
@@ -131,8 +131,8 @@
       "zh-Hans": "**频率**：最常见（在 4 个回归问题中观察到 3 个）"
     },
     {
-      "en-US": "```typescript\n// ❌ AI adds field to production path only\nif (isSandboxMode()) {\n  return { data: { id, email, name } };  // Missing new field\n}\n// Production path\nreturn { data: { id, email, name, notification_settings } };\n\n// ✅ Both paths must return the same shape\nif (isSandboxMode()) {\n  return { data: { id, email, name, notification_settings: null } };\n}\nreturn { data: { id, email, name, notification_settings } };\n```",
-      "zh-Hans": "```typescript\n// ❌ AI adds field to production path only\nif (isSandboxMode()) {\n  return { data: { id, email, name } };  // Missing new field\n}\n// Production path\nreturn { data: { id, email, name, notification_settings } };\n\n// ✅ Both paths must return the same shape\nif (isSandboxMode()) {\n  return { data: { id, email, name, notification_settings: null } };\n}\nreturn { data: { id, email, name, notification_settings } };\n```"
+      "en-US": "```typescript\n// FAIL: AI adds field to production path only\nif (isSandboxMode()) {\n  return { data: { id, email, name } };  // Missing new field\n}\n// Production path\nreturn { data: { id, email, name, notification_settings } };\n\n// PASS: Both paths must return the same shape\nif (isSandboxMode()) {\n  return { data: { id, email, name, notification_settings: null } };\n}\nreturn { data: { id, email, name, notification_settings } };\n```",
+      "zh-Hans": "```typescript\n// FAIL: AI adds field to production path only\nif (isSandboxMode()) {\n  return { data: { id, email, name } };  // Missing new field\n}\n// Production path\nreturn { data: { id, email, name, notification_settings } };\n\n// PASS: Both paths must return the same shape\nif (isSandboxMode()) {\n  return { data: { id, email, name, notification_settings: null } };\n}\nreturn { data: { id, email, name, notification_settings } };\n```"
     },
     {
       "en-US": "**Test to catch it**:",
@@ -151,8 +151,8 @@
       "zh-Hans": "**频率**：在使用 Supabase/Prisma 添加新列时常见"
     },
     {
-      "en-US": "```typescript\n// ❌ New column added to response but not to SELECT\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"id, email, name\")  // notification_settings not here\n  .single();\n\nreturn { data: { ...data, notification_settings: data.notification_settings } };\n// → notification_settings is always undefined\n\n// ✅ Use SELECT * or explicitly include new columns\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"*\")\n  .single();\n```",
-      "zh-Hans": "```typescript\n// ❌ New column added to response but not to SELECT\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"id, email, name\")  // notification_settings not here\n  .single();\n\nreturn { data: { ...data, notification_settings: data.notification_settings } };\n// → notification_settings is always undefined\n\n// ✅ Use SELECT * or explicitly include new columns\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"*\")\n  .single();\n```"
+      "en-US": "```typescript\n// FAIL: New column added to response but not to SELECT\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"id, email, name\")  // notification_settings not here\n  .single();\n\nreturn { data: { ...data, notification_settings: data.notification_settings } };\n// → notification_settings is always undefined\n\n// PASS: Use SELECT * or explicitly include new columns\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"*\")\n  .single();\n```",
+      "zh-Hans": "```typescript\n// FAIL: New column added to response but not to SELECT\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"id, email, name\")  // notification_settings not here\n  .single();\n\nreturn { data: { ...data, notification_settings: data.notification_settings } };\n// → notification_settings is always undefined\n\n// PASS: Use SELECT * or explicitly include new columns\nconst { data } = await supabase\n  .from(\"users\")\n  .select(\"*\")\n  .single();\n```"
     },
     {
       "en-US": "### Pattern 3: Error State Leakage",
@@ -163,16 +163,16 @@
       "zh-Hans": "**频率**：中等——当向现有组件添加错误处理时"
     },
     {
-      "en-US": "```typescript\n// ❌ Error state set but old data not cleared\ncatch (err) {\n  setError(\"Failed to load\");\n  // reservations still shows data from previous tab!\n}\n\n// ✅ Clear related state on error\ncatch (err) {\n  setReservations([]);  // Clear stale data\n  setError(\"Failed to load\");\n}\n```",
-      "zh-Hans": "```typescript\n// ❌ Error state set but old data not cleared\ncatch (err) {\n  setError(\"Failed to load\");\n  // reservations still shows data from previous tab!\n}\n\n// ✅ Clear related state on error\ncatch (err) {\n  setReservations([]);  // Clear stale data\n  setError(\"Failed to load\");\n}\n```"
+      "en-US": "```typescript\n// FAIL: Error state set but old data not cleared\ncatch (err) {\n  setError(\"Failed to load\");\n  // reservations still shows data from previous tab!\n}\n\n// PASS: Clear related state on error\ncatch (err) {\n  setReservations([]);  // Clear stale data\n  setError(\"Failed to load\");\n}\n```",
+      "zh-Hans": "```typescript\n// FAIL: Error state set but old data not cleared\ncatch (err) {\n  setError(\"Failed to load\");\n  // reservations still shows data from previous tab!\n}\n\n// PASS: Clear related state on error\ncatch (err) {\n  setReservations([]);  // Clear stale data\n  setError(\"Failed to load\");\n}\n```"
     },
     {
       "en-US": "### Pattern 4: Optimistic Update Without Proper Rollback",
       "zh-Hans": "### 模式 4：乐观更新未正确回滚"
     },
     {
-      "en-US": "```typescript\n// ❌ No rollback on failure\nconst handleRemove = async (id: string) => {\n  setItems(prev => prev.filter(i => i.id !== id));\n  await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n  // If API fails, item is gone from UI but still in DB\n};\n\n// ✅ Capture previous state and rollback on failure\nconst handleRemove = async (id: string) => {\n  const prevItems = [...items];\n  setItems(prev => prev.filter(i => i.id !== id));\n  try {\n    const res = await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n    if (!res.ok) throw new Error(\"API error\");\n  } catch {\n    setItems(prevItems);  // Rollback\n    alert(\"削除に失敗しました\");\n  }\n};\n```",
-      "zh-Hans": "```typescript\n// ❌ No rollback on failure\nconst handleRemove = async (id: string) => {\n  setItems(prev => prev.filter(i => i.id !== id));\n  await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n  // If API fails, item is gone from UI but still in DB\n};\n\n// ✅ Capture previous state and rollback on failure\nconst handleRemove = async (id: string) => {\n  const prevItems = [...items];\n  setItems(prev => prev.filter(i => i.id !== id));\n  try {\n    const res = await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n    if (!res.ok) throw new Error(\"API error\");\n  } catch {\n    setItems(prevItems);  // Rollback\n    alert(\"削除に失敗しました\");\n  }\n};\n```"
+      "en-US": "```typescript\n// FAIL: No rollback on failure\nconst handleRemove = async (id: string) => {\n  setItems(prev => prev.filter(i => i.id !== id));\n  await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n  // If API fails, item is gone from UI but still in DB\n};\n\n// PASS: Capture previous state and rollback on failure\nconst handleRemove = async (id: string) => {\n  const prevItems = [...items];\n  setItems(prev => prev.filter(i => i.id !== id));\n  try {\n    const res = await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n    if (!res.ok) throw new Error(\"API error\");\n  } catch {\n    setItems(prevItems);  // Rollback\n    alert(\"削除に失敗しました\");\n  }\n};\n```",
+      "zh-Hans": "```typescript\n// FAIL: No rollback on failure\nconst handleRemove = async (id: string) => {\n  setItems(prev => prev.filter(i => i.id !== id));\n  await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n  // If API fails, item is gone from UI but still in DB\n};\n\n// PASS: Capture previous state and rollback on failure\nconst handleRemove = async (id: string) => {\n  const prevItems = [...items];\n  setItems(prev => prev.filter(i => i.id !== id));\n  try {\n    const res = await fetch(`/api/items/${id}`, { method: \"DELETE\" });\n    if (!res.ok) throw new Error(\"API error\");\n  } catch {\n    setItems(prevItems);  // Rollback\n    alert(\"削除に失敗しました\");\n  }\n};\n```"
     },
     {
       "en-US": "## Strategy: Test Where Bugs Were Found",
@@ -199,8 +199,8 @@
       "zh-Hans": "## 快速参考"
     },
     {
-      "en-US": "| AI Regression Pattern | Test Strategy | Priority |\n|---|---|---|\n| Sandbox/production mismatch | Assert same response shape in sandbox mode | 🔴 High |\n| SELECT clause omission | Assert all required fields in response | 🔴 High |\n| Error state leakage | Assert state cleanup on error | 🟡 Medium |\n| Missing rollback | Assert state restored on API failure | 🟡 Medium |\n| Type cast masking null | Assert field is not undefined | 🟡 Medium |",
-      "zh-Hans": "| AI 回归模式 | 测试策略 | 优先级 |\n|---|---|---|\n| 沙盒/生产环境不匹配 | 断言沙盒模式下响应结构相同 | 🔴 高 |\n| SELECT 子句遗漏 | 断言响应中包含所有必需字段 | 🔴 高 |\n| 错误状态泄漏 | 断言出错时状态已清理 | 🟡 中 |\n| 缺少回滚 | 断言 API 失败时状态已恢复 | 🟡 中 |\n| 类型转换掩盖 null | 断言字段不为 undefined | 🟡 中 |"
+      "en-US": "| AI Regression Pattern | Test Strategy | Priority |\n|---|---|---|\n| Sandbox/production mismatch | Assert same response shape in sandbox mode |  High |\n| SELECT clause omission | Assert all required fields in response |  High |\n| Error state leakage | Assert state cleanup on error |  Medium |\n| Missing rollback | Assert state restored on API failure |  Medium |\n| Type cast masking null | Assert field is not undefined |  Medium |",
+      "zh-Hans": "| AI 回归模式 | 测试策略 | 优先级 |\n|---|---|---|\n| 沙盒/生产环境不匹配 | 断言沙盒模式下响应结构相同 |  高 |\n| SELECT 子句遗漏 | 断言响应中包含所有必需字段 |  高 |\n| 错误状态泄漏 | 断言出错时状态已清理 |  中 |\n| 缺少回滚 | 断言 API 失败时状态已恢复 |  中 |\n| 类型转换掩盖空值 | 断言字段不为未定义 |  中 |"
     },
     {
       "en-US": "## DO / DON'T",

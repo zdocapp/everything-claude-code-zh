@@ -3,23 +3,75 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
+      "en-US": "---\ndescription: Code review — local uncommitted changes or GitHub PR (pass PR number/URL for PR mode)\nargument-hint: [pr-number | pr-url | blank for local review]\n---",
+      "zh-Hans": "---\ndescription: 代码审查 — 本地未提交的更改或 GitHub PR（传递 PR 编号/URL 以进入 PR 模式）\nargument-hint: [pr-number | pr-url | blank for local review]\n---"
+    },
+    {
       "en-US": "# Code Review",
       "zh-Hans": "# 代码审查"
     },
     {
-      "en-US": "Comprehensive security and quality review of uncommitted changes:",
-      "zh-Hans": "对未提交的更改进行全面的安全性和质量审查："
+      "en-US": "> PR review mode adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.",
+      "zh-Hans": "> PR 审查模式改编自 Wirasm 的 PRPs-agentic-eng。属于 PRP 工作流系列的一部分。"
     },
     {
-      "en-US": "1. Get changed files: git diff --name-only HEAD\n\n2. For each changed file, check for:",
-      "zh-Hans": "1. 获取更改的文件：`git diff --name-only HEAD`\n\n2. 对每个更改的文件，检查："
+      "en-US": "**Input**: $ARGUMENTS",
+      "zh-Hans": "**输入**: $ARGUMENTS"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Mode Selection",
+      "zh-Hans": "## 模式选择"
+    },
+    {
+      "en-US": "If `$ARGUMENTS` contains a PR number, PR URL, or `--pr`:\n→ Jump to **PR Review Mode** below.",
+      "zh-Hans": "如果 `$ARGUMENTS` 包含 PR 编号、PR URL 或 `--pr`：\n→ 跳转到下面的 **PR 审查模式**。"
+    },
+    {
+      "en-US": "Otherwise:\n→ Use **Local Review Mode**.",
+      "zh-Hans": "否则：\n→ 使用 **本地审查模式**。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Local Review Mode",
+      "zh-Hans": "## 本地审查模式"
+    },
+    {
+      "en-US": "Comprehensive security and quality review of uncommitted changes.",
+      "zh-Hans": "对未提交的更改进行全面的安全性和质量审查。"
+    },
+    {
+      "en-US": "### Phase 1 — GATHER",
+      "zh-Hans": "### 阶段 1 — 收集"
+    },
+    {
+      "en-US": "```bash\ngit diff --name-only HEAD\n```",
+      "zh-Hans": "```bash\ngit diff --name-only HEAD\n```"
+    },
+    {
+      "en-US": "If no changed files, stop: \"Nothing to review.\"",
+      "zh-Hans": "如果没有更改的文件，停止：\"Nothing to review.\""
+    },
+    {
+      "en-US": "### Phase 2 — REVIEW",
+      "zh-Hans": "### 阶段 2 — 审查"
+    },
+    {
+      "en-US": "Read each changed file in full. Check for:",
+      "zh-Hans": "完整读取每个更改的文件。检查："
     },
     {
       "en-US": "**Security Issues (CRITICAL):**",
       "zh-Hans": "**安全问题（严重）：**"
     },
     {
-      "en-US": "- Hardcoded credentials, API keys, tokens\n- SQL injection vulnerabilities\n- XSS vulnerabilities  \n- Missing input validation\n- Insecure dependencies\n- Path traversal risks",
+      "en-US": "- Hardcoded credentials, API keys, tokens\n- SQL injection vulnerabilities\n- XSS vulnerabilities\n- Missing input validation\n- Insecure dependencies\n- Path traversal risks",
       "zh-Hans": "* 硬编码的凭据、API 密钥、令牌\n* SQL 注入漏洞\n* XSS 漏洞\n* 缺少输入验证\n* 不安全的依赖项\n* 路径遍历风险"
     },
     {
@@ -39,12 +91,228 @@
       "zh-Hans": "* 可变模式（应使用不可变模式）\n* 代码/注释中使用表情符号\n* 新代码缺少测试\n* 无障碍性问题（a11y）"
     },
     {
-      "en-US": "3. Generate report with:\n   - Severity: CRITICAL, HIGH, MEDIUM, LOW\n   - File location and line numbers\n   - Issue description\n   - Suggested fix\n\n4. Block commit if CRITICAL or HIGH issues found",
-      "zh-Hans": "3. 生成报告，包含：\n   * 严重性：严重、高、中、低\n   * 文件位置和行号\n   * 问题描述\n   * 建议的修复方法\n\n4. 如果发现严重或高优先级问题，则阻止提交"
+      "en-US": "### Phase 3 — REPORT",
+      "zh-Hans": "### 阶段 3 — 报告"
     },
     {
-      "en-US": "Never approve code with security vulnerabilities!",
-      "zh-Hans": "绝不允许包含安全漏洞的代码！"
+      "en-US": "Generate report with:",
+      "zh-Hans": "生成报告，包含："
+    },
+    {
+      "en-US": "- Severity: CRITICAL, HIGH, MEDIUM, LOW\n- File location and line numbers\n- Issue description\n- Suggested fix",
+      "zh-Hans": "* 严重性：CRITICAL, HIGH, MEDIUM, LOW\n* 文件位置和行号\n* 问题描述\n* 建议的修复方法"
+    },
+    {
+      "en-US": "Block commit if CRITICAL or HIGH issues found.\nNever approve code with security vulnerabilities.",
+      "zh-Hans": "如果发现 CRITICAL 或 HIGH 问题，则阻止提交。\n绝不批准存在安全漏洞的代码。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## PR Review Mode",
+      "zh-Hans": "## PR 审查模式"
+    },
+    {
+      "en-US": "Comprehensive GitHub PR review — fetches diff, reads full files, runs validation, posts review.",
+      "zh-Hans": "全面的 GitHub PR 审查 — 获取差异、读取完整文件、运行验证、发布审查。"
+    },
+    {
+      "en-US": "### Phase 1 — FETCH",
+      "zh-Hans": "### 阶段 1 — 获取"
+    },
+    {
+      "en-US": "Parse input to determine PR:",
+      "zh-Hans": "解析输入以确定 PR："
+    },
+    {
+      "en-US": "| Input | Action |\n|---|---|\n| Number (e.g. `42`) | Use as PR number |\n| URL (`github.com/.../pull/42`) | Extract PR number |\n| Branch name | Find PR via `gh pr list --head <branch>` |",
+      "zh-Hans": "| 输入 | 操作 |\n|---|---|\n| 编号 (例如 `42`) | 用作 PR 编号 |\n| URL (`github.com/.../pull/42`) | 提取 PR 编号 |\n| 分支名称 | 通过 `gh pr list --head <branch>` 查找 PR |"
+    },
+    {
+      "en-US": "```bash\ngh pr view <NUMBER> --json number,title,body,author,baseRefName,headRefName,changedFiles,additions,deletions\ngh pr diff <NUMBER>\n```",
+      "zh-Hans": "```bash\ngh pr view <NUMBER> --json number,title,body,author,baseRefName,headRefName,changedFiles,additions,deletions\ngh pr diff <NUMBER>\n```"
+    },
+    {
+      "en-US": "If PR not found, stop with error. Store PR metadata for later phases.",
+      "zh-Hans": "如果未找到 PR，则停止并报错。存储 PR 元数据供后续阶段使用。"
+    },
+    {
+      "en-US": "### Phase 2 — CONTEXT",
+      "zh-Hans": "### 阶段 2 — 上下文"
+    },
+    {
+      "en-US": "Build review context:",
+      "zh-Hans": "构建审查上下文："
+    },
+    {
+      "en-US": "1. **Project rules** — Read `CLAUDE.md`, `.claude/docs/`, and any contributing guidelines\n2. **PRP artifacts** — Check `.claude/PRPs/reports/` and `.claude/PRPs/plans/` for implementation context related to this PR\n3. **PR intent** — Parse PR description for goals, linked issues, test plans\n4. **Changed files** — List all modified files and categorize by type (source, test, config, docs)",
+      "zh-Hans": "1. **项目规则** — 读取 `CLAUDE.md`、`.claude/docs/` 以及任何贡献指南\n2. **PRP 工件** — 检查 `.claude/PRPs/reports/` 和 `.claude/PRPs/plans/` 以获取与此 PR 相关的实现上下文\n3. **PR 意图** — 解析 PR 描述以了解目标、关联的问题、测试计划\n4. **更改的文件** — 列出所有修改的文件并按类型分类（源代码、测试、配置、文档）"
+    },
+    {
+      "en-US": "### Phase 3 — REVIEW",
+      "zh-Hans": "### 阶段 3 — 审查"
+    },
+    {
+      "en-US": "Read each changed file **in full** (not just the diff hunks — you need surrounding context).",
+      "zh-Hans": "**完整**读取每个更改的文件（不仅仅是差异块 — 需要周围的上下文）。"
+    },
+    {
+      "en-US": "For PR reviews, fetch the full file contents at the PR head revision:",
+      "zh-Hans": "对于 PR 审查，获取 PR 头部修订版本下的完整文件内容："
+    },
+    {
+      "en-US": "```bash\ngh pr diff <NUMBER> --name-only | while IFS= read -r file; do\n  gh api \"repos/{owner}/{repo}/contents/$file?ref=<head-branch>\" --jq '.content' | base64 -d\ndone\n```",
+      "zh-Hans": "```bash\ngh pr diff <NUMBER> --name-only | while IFS= read -r file; do\n  gh api \"repos/{owner}/{repo}/contents/$file?ref=<head-branch>\" --jq '.content' | base64 -d\ndone\n```"
+    },
+    {
+      "en-US": "Apply the review checklist across 7 categories:",
+      "zh-Hans": "在 7 个类别中应用审查清单："
+    },
+    {
+      "en-US": "| Category | What to Check |\n|---|---|\n| **Correctness** | Logic errors, off-by-ones, null handling, edge cases, race conditions |\n| **Type Safety** | Type mismatches, unsafe casts, `any` usage, missing generics |\n| **Pattern Compliance** | Matches project conventions (naming, file structure, error handling, imports) |\n| **Security** | Injection, auth gaps, secret exposure, SSRF, path traversal, XSS |\n| **Performance** | N+1 queries, missing indexes, unbounded loops, memory leaks, large payloads |\n| **Completeness** | Missing tests, missing error handling, incomplete migrations, missing docs |\n| **Maintainability** | Dead code, magic numbers, deep nesting, unclear naming, missing types |",
+      "zh-Hans": "| 类别 | 检查内容 |\n|---|---|\n| **正确性** | 逻辑错误、差一错误、空值处理、边界情况、竞态条件 |\n| **类型安全** | 类型不匹配、不安全的类型转换、`any` 的使用、缺少泛型 |\n| **模式合规性** | 符合项目约定（命名、文件结构、错误处理、导入） |\n| **安全性** | 注入、身份验证漏洞、密钥暴露、SSRF、路径遍历、XSS |\n| **性能** | N+1 查询、缺少索引、无限循环、内存泄漏、大负载 |\n| **完整性** | 缺少测试、缺少错误处理、不完整的迁移、缺少文档 |\n| **可维护性** | 死代码、魔法数字、深层嵌套、不清晰的命名、缺少类型 |"
+    },
+    {
+      "en-US": "Assign severity to each finding:",
+      "zh-Hans": "为每个发现分配严重性："
+    },
+    {
+      "en-US": "| Severity | Meaning | Action |\n|---|---|---|\n| **CRITICAL** | Security vulnerability or data loss risk | Must fix before merge |\n| **HIGH** | Bug or logic error likely to cause issues | Should fix before merge |\n| **MEDIUM** | Code quality issue or missing best practice | Fix recommended |\n| **LOW** | Style nit or minor suggestion | Optional |",
+      "zh-Hans": "| 严重性 | 含义 | 操作 |\n|---|---|---|\n| **CRITICAL** | 安全漏洞或数据丢失风险 | 合并前必须修复 |\n| **HIGH** | 可能导致问题的错误或逻辑错误 | 合并前应修复 |\n| **MEDIUM** | 代码质量问题或缺少最佳实践 | 建议修复 |\n| **LOW** | 风格细节或次要建议 | 可选 |"
+    },
+    {
+      "en-US": "### Phase 4 — VALIDATE",
+      "zh-Hans": "### 阶段 4 — 验证"
+    },
+    {
+      "en-US": "Run available validation commands:",
+      "zh-Hans": "运行可用的验证命令："
+    },
+    {
+      "en-US": "Detect the project type from config files (`package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.), then run the appropriate commands:",
+      "zh-Hans": "根据配置文件（`package.json`、`Cargo.toml`、`go.mod`、`pyproject.toml` 等）检测项目类型，然后运行相应的命令："
+    },
+    {
+      "en-US": "**Node.js / TypeScript** (has `package.json`):",
+      "zh-Hans": "**Node.js / TypeScript** (有 `package.json`)："
+    },
+    {
+      "en-US": "```bash\nnpm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # Type check\nnpm run lint                                                    # Lint\nnpm test                                                        # Tests\nnpm run build                                                   # Build\n```",
+      "zh-Hans": "```bash\nnpm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # Type check\nnpm run lint                                                    # Lint\nnpm test                                                        # Tests\nnpm run build                                                   # Build\n```"
+    },
+    {
+      "en-US": "**Rust** (has `Cargo.toml`):",
+      "zh-Hans": "**Rust** (有 `Cargo.toml`)："
+    },
+    {
+      "en-US": "```bash\ncargo clippy -- -D warnings  # Lint\ncargo test                   # Tests\ncargo build                  # Build\n```",
+      "zh-Hans": "```bash\ncargo clippy -- -D warnings  # Lint\ncargo test                   # Tests\ncargo build                  # Build\n```"
+    },
+    {
+      "en-US": "**Go** (has `go.mod`):",
+      "zh-Hans": "**Go** (有 `go.mod`)："
+    },
+    {
+      "en-US": "```bash\ngo vet ./...    # Lint\ngo test ./...   # Tests\ngo build ./...  # Build\n```",
+      "zh-Hans": "```bash\ngo vet ./...    # Lint\ngo test ./...   # Tests\ngo build ./...  # Build\n```"
+    },
+    {
+      "en-US": "**Python** (has `pyproject.toml` / `setup.py`):",
+      "zh-Hans": "**Python** (有 `pyproject.toml` / `setup.py`)："
+    },
+    {
+      "en-US": "```bash\npytest  # Tests\n```",
+      "zh-Hans": "```bash\npytest  # Tests\n```"
+    },
+    {
+      "en-US": "Run only the commands that apply to the detected project type. Record pass/fail for each.",
+      "zh-Hans": "仅运行适用于检测到的项目类型的命令。记录每个命令的通过/失败情况。"
+    },
+    {
+      "en-US": "### Phase 5 — DECIDE",
+      "zh-Hans": "### 阶段 5 — 决定"
+    },
+    {
+      "en-US": "Form recommendation based on findings:",
+      "zh-Hans": "根据发现形成建议："
+    },
+    {
+      "en-US": "| Condition | Decision |\n|---|---|\n| Zero CRITICAL/HIGH issues, validation passes | **APPROVE** |\n| Only MEDIUM/LOW issues, validation passes | **APPROVE** with comments |\n| Any HIGH issues or validation failures | **REQUEST CHANGES** |\n| Any CRITICAL issues | **BLOCK** — must fix before merge |",
+      "zh-Hans": "| 条件 | 决定 |\n|---|---|\n| 零个 CRITICAL/HIGH 问题，验证通过 | **APPROVE** |\n| 仅有 MEDIUM/LOW 问题，验证通过 | **APPROVE** 并附带评论 |\n| 有任何 HIGH 问题或验证失败 | **REQUEST CHANGES** |\n| 有任何 CRITICAL 问题 | **BLOCK** — 合并前必须修复 |"
+    },
+    {
+      "en-US": "Special cases:",
+      "zh-Hans": "特殊情况："
+    },
+    {
+      "en-US": "- Draft PR → Always use **COMMENT** (not approve/block)\n- Only docs/config changes → Lighter review, focus on correctness\n- Explicit `--approve` or `--request-changes` flag → Override decision (but still report all findings)",
+      "zh-Hans": "* 草稿 PR → 始终使用 **COMMENT**（不批准/阻止）\n* 仅文档/配置更改 → 更轻量的审查，专注于正确性\n* 显式的 `--approve` 或 `--request-changes` 标志 → 覆盖决定（但仍报告所有发现）"
+    },
+    {
+      "en-US": "### Phase 6 — REPORT",
+      "zh-Hans": "### 阶段 6 — 报告"
+    },
+    {
+      "en-US": "Create review artifact at `.claude/PRPs/reviews/pr-<NUMBER>-review.md`:",
+      "zh-Hans": "在 `.claude/PRPs/reviews/pr-<NUMBER>-review.md` 处创建审查工件："
+    },
+    {
+      "en-US": "```markdown\n# PR Review: #<NUMBER> — <TITLE>\n\n**Reviewed**: <date>\n**Author**: <author>\n**Branch**: <head> → <base>\n**Decision**: APPROVE | REQUEST CHANGES | BLOCK\n\n## Summary\n<1-2 sentence overall assessment>\n\n## Findings\n\n### CRITICAL\n<findings or \"None\">\n\n### HIGH\n<findings or \"None\">\n\n### MEDIUM\n<findings or \"None\">\n\n### LOW\n<findings or \"None\">\n\n## Validation Results\n\n| Check | Result |\n|---|---|\n| Type check | Pass / Fail / Skipped |\n| Lint | Pass / Fail / Skipped |\n| Tests | Pass / Fail / Skipped |\n| Build | Pass / Fail / Skipped |\n\n## Files Reviewed\n<list of files with change type: Added/Modified/Deleted>\n```",
+      "zh-Hans": "```markdown\n# PR 审查： #<NUMBER> — <TITLE>\n\n**审查人**： <date>\n**作者**： <author>\n**分支**： <head> → <base>\n**决定**： 批准 | 请求修改 | 阻止\n\n## 摘要\n<1-2 句总体评估>\n\n## 发现\n\n### 严重\n<发现项或\"无\">\n\n### 高\n<发现项或\"无\">\n\n### 中\n<发现项或\"无\">\n\n### 低\n<发现项或\"无\">\n\n## 验证结果\n\n| 检查项 | 结果 |\n|---|---|\n| 类型检查 | 通过 / 失败 / 已跳过 |\n| 代码规范检查 | 通过 / 失败 / 已跳过 |\n| 测试 | 通过 / 失败 / 已跳过 |\n| 构建 | 通过 / 失败 / 已跳过 |\n\n## 已审查文件\n<文件列表，附带变更类型：新增/修改/删除>\n```"
+    },
+    {
+      "en-US": "### Phase 7 — PUBLISH",
+      "zh-Hans": "### 阶段 7 — 发布"
+    },
+    {
+      "en-US": "Post the review to GitHub:",
+      "zh-Hans": "将审查发布到 GitHub："
+    },
+    {
+      "en-US": "```bash\n# If APPROVE\ngh pr review <NUMBER> --approve --body \"<summary of review>\"\n\n# If REQUEST CHANGES\ngh pr review <NUMBER> --request-changes --body \"<summary with required fixes>\"\n\n# If COMMENT only (draft PR or informational)\ngh pr review <NUMBER> --comment --body \"<summary>\"\n```",
+      "zh-Hans": "```bash\n# If APPROVE\ngh pr review <NUMBER> --approve --body \"<summary of review>\"\n\n# If REQUEST CHANGES\ngh pr review <NUMBER> --request-changes --body \"<summary with required fixes>\"\n\n# If COMMENT only (draft PR or informational)\ngh pr review <NUMBER> --comment --body \"<summary>\"\n```"
+    },
+    {
+      "en-US": "For inline comments on specific lines, use the GitHub review comments API:",
+      "zh-Hans": "对于特定行的内联评论，使用 GitHub 审查评论 API："
+    },
+    {
+      "en-US": "```bash\ngh api \"repos/{owner}/{repo}/pulls/<NUMBER>/comments\" \\\n  -f body=\"<comment>\" \\\n  -f path=\"<file>\" \\\n  -F line=<line-number> \\\n  -f side=\"RIGHT\" \\\n  -f commit_id=\"$(gh pr view <NUMBER> --json headRefOid --jq .headRefOid)\"\n```",
+      "zh-Hans": "```bash\ngh api \"repos/{owner}/{repo}/pulls/<NUMBER>/comments\" \\\n  -f body=\"<comment>\" \\\n  -f path=\"<file>\" \\\n  -F line=<line-number> \\\n  -f side=\"RIGHT\" \\\n  -f commit_id=\"$(gh pr view <NUMBER> --json headRefOid --jq .headRefOid)\"\n```"
+    },
+    {
+      "en-US": "Alternatively, post a single review with multiple inline comments at once:",
+      "zh-Hans": "或者，一次性发布包含多个内联评论的单个审查："
+    },
+    {
+      "en-US": "```bash\ngh api \"repos/{owner}/{repo}/pulls/<NUMBER>/reviews\" \\\n  -f event=\"COMMENT\" \\\n  -f body=\"<overall summary>\" \\\n  --input comments.json  # [{\"path\": \"file\", \"line\": N, \"body\": \"comment\"}, ...]\n```",
+      "zh-Hans": "```bash\ngh api \"repos/{owner}/{repo}/pulls/<NUMBER>/reviews\" \\\n  -f event=\"COMMENT\" \\\n  -f body=\"<overall summary>\" \\\n  --input comments.json  # [{\"path\": \"file\", \"line\": N, \"body\": \"comment\"}, ...]\n```"
+    },
+    {
+      "en-US": "### Phase 8 — OUTPUT",
+      "zh-Hans": "### 阶段 8 — 输出"
+    },
+    {
+      "en-US": "Report to user:",
+      "zh-Hans": "向用户报告："
+    },
+    {
+      "en-US": "```\nPR #<NUMBER>: <TITLE>\nDecision: <APPROVE|REQUEST_CHANGES|BLOCK>\n\nIssues: <critical_count> critical, <high_count> high, <medium_count> medium, <low_count> low\nValidation: <pass_count>/<total_count> checks passed\n\nArtifacts:\n  Review: .claude/PRPs/reviews/pr-<NUMBER>-review.md\n  GitHub: <PR URL>\n\nNext steps:\n  - <contextual suggestions based on decision>\n```",
+      "zh-Hans": "```\nPR #<编号>: <标题>\n决策: <批准|请求修改|阻止>\n\n问题: <critical_count> 个严重，<high_count> 个高，<medium_count> 个中，<low_count> 个低\n验证: <pass_count>/<total_count> 项检查通过\n\n产物:\n  审查: .claude/PRPs/reviews/pr-<编号>-review.md\n  GitHub: <PR URL>\n\n后续步骤:\n  - <基于决策的情境建议>\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Edge Cases",
+      "zh-Hans": "## 边缘情况"
+    },
+    {
+      "en-US": "- **No `gh` CLI**: Fall back to local-only review (read the diff, skip GitHub publish). Warn user.\n- **Diverged branches**: Suggest `git fetch origin && git rebase origin/<base>` before review.\n- **Large PRs (>50 files)**: Warn about review scope. Focus on source changes first, then tests, then config/docs.",
+      "zh-Hans": "* **没有 `gh` CLI**：回退到仅本地审查（读取差异，跳过 GitHub 发布）。警告用户。\n* **分支偏离**：建议在审查前进行 `git fetch origin && git rebase origin/<base>`。\n* **大型 PR (>50 个文件)**：警告审查范围。首先关注源代码更改，然后是测试，最后是配置/文档。"
     }
   ]
 }

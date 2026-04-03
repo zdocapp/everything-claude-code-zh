@@ -227,8 +227,8 @@
       "zh-Hans": "### 安装"
     },
     {
-      "en-US": "```bash\ncurl -fsSL https://raw.githubusercontent.com/AnandChowdhary/continuous-claude/HEAD/install.sh | bash\n```",
-      "zh-Hans": "```bash\ncurl -fsSL https://raw.githubusercontent.com/AnandChowdhary/continuous-claude/HEAD/install.sh | bash\n```"
+      "en-US": "> **Warning:** Install continuous-claude from its repository after reviewing the code. Do not pipe external scripts directly to bash.",
+      "zh-Hans": "> **警告：** 在审查代码后从其仓库安装 continuous-claude。不要直接将外部脚本通过管道传输到 bash。"
     },
     {
       "en-US": "### Usage",

@@ -1,0 +1,130 @@
+{
+  "sourceFile": "skills/project-flow-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: project-flow-ops\ndescription: Operate execution flow across GitHub and Linear by triaging issues and pull requests, linking active work, and keeping GitHub public-facing while Linear remains the internal execution layer. Use when the user wants backlog control, PR triage, or GitHub-to-Linear coordination.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: project-flow-ops\ndescription: 通过在GitHub和Linear之间操作执行流程，包括问题与拉取请求的分类、链接活跃工作，保持GitHub面向公众，而Linear作为内部执行层。适用于用户需要积压控制、PR分类或GitHub与Linear协调的场景。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Project Flow Ops",
+      "zh-Hans": "# 项目流程操作"
+    },
+    {
+      "en-US": "This skill turns disconnected GitHub issues, PRs, and Linear tasks into one execution flow.",
+      "zh-Hans": "此技能将分散的 GitHub 议题、PR 和 Linear 任务转化为一个执行流程。"
+    },
+    {
+      "en-US": "Use it when the problem is coordination, not coding.",
+      "zh-Hans": "当问题在于协调而非编码时使用它。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Triage open PR or issue backlogs\n- Decide what belongs in Linear vs what should remain GitHub-only\n- Link active GitHub work to internal execution lanes\n- Classify PRs into merge, port/rebuild, close, or park\n- Audit whether review comments, CI failures, or stale issues are blocking execution",
+      "zh-Hans": "* 处理积压的未处理 PR 或议题\n* 决定哪些应归属 Linear，哪些应仅保留在 GitHub\n* 将活跃的 GitHub 工作链接到内部执行通道\n* 将 PR 分类为合并、移植/重构、关闭或搁置\n* 审核审查评论、CI 失败或陈旧议题是否阻碍执行"
+    },
+    {
+      "en-US": "## Operating Model",
+      "zh-Hans": "## 操作模式"
+    },
+    {
+      "en-US": "- **GitHub** is the public and community truth\n- **Linear** is the internal execution truth for active scheduled work\n- Not every GitHub issue needs a Linear issue\n- Create or update Linear only when the work is:\n  - active\n  - delegated\n  - scheduled\n  - cross-functional\n  - important enough to track internally",
+      "zh-Hans": "* **GitHub** 是公开和社区的真相来源\n* **Linear** 是内部活跃计划工作的执行真相来源\n* 并非每个 GitHub 议题都需要一个 Linear 议题\n* 仅当工作符合以下条件时创建或更新 Linear：\n  * 活跃\n  * 已委派\n  * 已计划\n  * 跨职能\n  * 足够重要以在内部跟踪"
+    },
+    {
+      "en-US": "## Core Workflow",
+      "zh-Hans": "## 核心工作流"
+    },
+    {
+      "en-US": "### 1. Read the public surface first",
+      "zh-Hans": "### 1. 首先阅读公开表面"
+    },
+    {
+      "en-US": "Gather:",
+      "zh-Hans": "收集："
+    },
+    {
+      "en-US": "- GitHub issue or PR state\n- author and branch status\n- review comments\n- CI status\n- linked issues",
+      "zh-Hans": "* GitHub 议题或 PR 状态\n* 作者和分支状态\n* 审查评论\n* CI 状态\n* 关联议题"
+    },
+    {
+      "en-US": "### 2. Classify the work",
+      "zh-Hans": "### 2. 对工作进行分类"
+    },
+    {
+      "en-US": "Every item should end up in one of these states:",
+      "zh-Hans": "每个项目应最终处于以下状态之一："
+    },
+    {
+      "en-US": "| State | Meaning |\n|-------|---------|\n| Merge | self-contained, policy-compliant, ready |\n| Port/Rebuild | useful idea, but should be manually re-landed inside ECC |\n| Close | wrong direction, stale, unsafe, or duplicated |\n| Park | potentially useful, but not scheduled now |",
+      "zh-Hans": "| 状态 | 含义 |\n|-------|---------|\n| 合并 | 自包含、符合政策、就绪 |\n| 移植/重构 | 有用的想法，但应在 ECC 内手动重新落地 |\n| 关闭 | 方向错误、陈旧、不安全或重复 |\n| 搁置 | 可能有用，但当前未计划 |"
+    },
+    {
+      "en-US": "### 3. Decide whether Linear is warranted",
+      "zh-Hans": "### 3. 决定是否需要 Linear"
+    },
+    {
+      "en-US": "Create or update Linear only if:",
+      "zh-Hans": "仅在以下情况下创建或更新 Linear："
+    },
+    {
+      "en-US": "- execution is actively planned\n- multiple repos or workstreams are involved\n- the work needs internal ownership or sequencing\n- the issue is part of a larger program lane",
+      "zh-Hans": "* 执行已积极计划\n* 涉及多个仓库或工作流\n* 工作需要内部所有权或排序\n* 议题是更大项目通道的一部分"
+    },
+    {
+      "en-US": "Do not mirror everything mechanically.",
+      "zh-Hans": "不要机械地镜像所有内容。"
+    },
+    {
+      "en-US": "### 4. Keep the two systems consistent",
+      "zh-Hans": "### 4. 保持两个系统一致"
+    },
+    {
+      "en-US": "When work is active:",
+      "zh-Hans": "当工作活跃时："
+    },
+    {
+      "en-US": "- GitHub issue/PR should say what is happening publicly\n- Linear should track owner, priority, and execution lane internally",
+      "zh-Hans": "* GitHub 议题/PR 应公开说明正在发生什么\n* Linear 应在内部跟踪负责人、优先级和执行通道"
+    },
+    {
+      "en-US": "When work ships or is rejected:",
+      "zh-Hans": "当工作发布或被拒绝时："
+    },
+    {
+      "en-US": "- post the public resolution back to GitHub\n- mark the Linear task accordingly",
+      "zh-Hans": "* 将公开决议发布回 GitHub\n* 相应标记 Linear 任务"
+    },
+    {
+      "en-US": "## Review Rules",
+      "zh-Hans": "## 审查规则"
+    },
+    {
+      "en-US": "- Never merge from title, summary, or trust alone; use the full diff\n- External-source features should be rebuilt inside ECC when they are valuable but not self-contained\n- CI red means classify and fix or block; do not pretend it is merge-ready\n- If the real blocker is product direction, say so instead of hiding behind tooling",
+      "zh-Hans": "* 切勿仅凭标题、摘要或信任进行合并；使用完整差异\n* 外部来源的功能，当它们有价值但不自包含时，应在 ECC 内重构\n* CI 红色意味着分类并修复或阻止；不要假装它已准备好合并\n* 如果真正的阻碍是产品方向，请明确指出，而不是隐藏在工具背后"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Return:",
+      "zh-Hans": "返回："
+    },
+    {
+      "en-US": "```text\nPUBLIC STATUS\n- issue / PR state\n- CI / review state\n\nCLASSIFICATION\n- merge / port-rebuild / close / park\n- one-paragraph rationale\n\nLINEAR ACTION\n- create / update / no Linear item needed\n- project / lane if applicable\n\nNEXT OPERATOR ACTION\n- exact next move\n```",
+      "zh-Hans": "```text\n公开状态\n- issue / PR 状态\n- CI / 审查状态\n\n分类\n- 合并 / 移植重建 / 关闭 / 搁置\n- 一段理由说明\n\n线性操作\n- 创建 / 更新 / 无需 Linear 事项\n- 项目 / 泳道（如适用）\n\n下一步操作\n- 确切的下一步行动\n```"
+    },
+    {
+      "en-US": "## Good Use Cases",
+      "zh-Hans": "## 良好用例"
+    },
+    {
+      "en-US": "- \"Audit the open PR backlog and tell me what to merge vs rebuild\"\n- \"Map GitHub issues into our ECC 1.x and ECC 2.0 program lanes\"\n- \"Check whether this needs a Linear issue or should stay GitHub-only\"",
+      "zh-Hans": "* \"审核未处理的 PR 积压，并告诉我哪些应合并 vs 重构\"\n* \"将 GitHub 议题映射到我们的 ECC 1.x 和 ECC 2.0 项目通道\"\n* \"检查这是否需要 Linear 议题，还是应仅保留在 GitHub\""
+    }
+  ]
+}

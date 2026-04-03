@@ -119,8 +119,8 @@
       "zh-Hans": "| 指标 | 数量 |\n|--------|-------|\n| 已修复的构建错误 | 3 |\n| 已修复的链接器错误 | 0 |\n| 已修改的文件 | 2 |\n| 剩余问题 | 0 |"
     },
     {
-      "en-US": "Build Status: ✅ SUCCESS",
-      "zh-Hans": "构建状态：✅ 成功"
+      "en-US": "Build Status: PASS: SUCCESS",
+      "zh-Hans": "构建状态：通过：成功"
     },
     {
       "en-US": "```\n\n## Common Errors Fixed\n\n| Error | Typical Fix |\n|-------|-------------|\n| `undeclared identifier` | Add `#include` or fix typo |\n| `no matching function` | Fix argument types or add overload |\n| `undefined reference` | Link library or add implementation |\n| `multiple definition` | Use `inline` or move to .cpp |\n| `incomplete type` | Replace forward decl with `#include` |\n| `no member named X` | Fix member name or include |\n| `cannot convert X to Y` | Add appropriate cast |\n| `CMake Error` | Fix CMakeLists.txt configuration |\n\n## Fix Strategy\n\n1. **Compilation errors first** - Code must compile\n2. **Linker errors second** - Resolve undefined references\n3. **Warnings third** - Fix with `-Wall -Wextra`\n4. **One fix at a time** - Verify each change\n5. **Minimal changes** - Don't refactor, just fix\n\n## Stop Conditions\n\nThe agent will stop and report if:\n- Same error persists after 3 attempts\n- Fix introduces more errors\n- Requires architectural changes\n- Missing external dependencies\n\n## Related Commands\n\n- `/cpp-test` - Run tests after build succeeds\n- `/cpp-review` - Review code quality\n- `/verify` - Full verification loop\n\n## Related\n\n- Agent: `agents/cpp-build-resolver.md`\n- Skill: `skills/cpp-coding-standards/`\n",

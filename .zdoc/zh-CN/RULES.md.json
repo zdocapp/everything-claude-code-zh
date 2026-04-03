@@ -1,0 +1,58 @@
+{
+  "sourceFile": "RULES.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Rules",
+      "zh-Hans": "# 规则"
+    },
+    {
+      "en-US": "## Must Always",
+      "zh-Hans": "## 必须始终"
+    },
+    {
+      "en-US": "- Delegate to specialized agents for domain tasks.\n- Write tests before implementation and verify critical paths.\n- Validate inputs and keep security checks intact.\n- Prefer immutable updates over mutating shared state.\n- Follow established repository patterns before inventing new ones.\n- Keep contributions focused, reviewable, and well-described.",
+      "zh-Hans": "* 将领域任务委托给专门的智能体。\n* 在实现前编写测试并验证关键路径。\n* 验证输入并保持安全检查完整。\n* 优先使用不可变更新，而非修改共享状态。\n* 遵循既定的仓库模式，而非发明新方法。\n* 保持贡献内容聚焦、可审查且描述清晰。"
+    },
+    {
+      "en-US": "## Must Never",
+      "zh-Hans": "## 严禁"
+    },
+    {
+      "en-US": "- Include sensitive data such as API keys, tokens, secrets, or absolute/system file paths in output.\n- Submit untested changes.\n- Bypass security checks or validation hooks.\n- Duplicate existing functionality without a clear reason.\n- Ship code without checking the relevant test suite.",
+      "zh-Hans": "* 在输出中包含敏感数据，如 API 密钥、令牌、密钥或绝对/系统文件路径。\n* 提交未经测试的更改。\n* 绕过安全检查或验证钩子。\n* 在没有明确理由的情况下重复现有功能。\n* 未检查相关测试套件就发布代码。"
+    },
+    {
+      "en-US": "## Agent Format",
+      "zh-Hans": "## 智能体格式"
+    },
+    {
+      "en-US": "- Agents live in `agents/*.md`.\n- Each file includes YAML frontmatter with `name`, `description`, `tools`, and `model`.\n- File names are lowercase with hyphens and must match the agent name.\n- Descriptions must clearly communicate when the agent should be invoked.",
+      "zh-Hans": "* 智能体位于 `agents/*.md`。\n* 每个文件包含 YAML 前置元数据，其中包含 `name`、`description`、`tools` 和 `model`。\n* 文件名为小写字母并使用连字符，且必须与智能体名称匹配。\n* 描述必须清晰说明何时应调用该智能体。"
+    },
+    {
+      "en-US": "## Skill Format",
+      "zh-Hans": "## 技能格式"
+    },
+    {
+      "en-US": "- Skills live in `skills/<name>/SKILL.md`.\n- Each skill includes YAML frontmatter with `name`, `description`, and `origin`.\n- Use `origin: ECC` for first-party skills and `origin: community` for imported/community skills.\n- Skill bodies should include practical guidance, tested examples, and clear \"When to Use\" sections.",
+      "zh-Hans": "* 技能位于 `skills/<name>/SKILL.md`。\n* 每个技能包含 YAML 前置元数据，其中包含 `name`、`description` 和 `origin`。\n* 使用 `origin: ECC` 表示第一方技能，使用 `origin: community` 表示导入/社区技能。\n* 技能正文应包含实用指南、经过测试的示例和清晰的“何时使用”部分。"
+    },
+    {
+      "en-US": "## Hook Format",
+      "zh-Hans": "## 钩子格式"
+    },
+    {
+      "en-US": "- Hooks use matcher-driven JSON registration and shell or Node entrypoints.\n- Matchers should be specific instead of broad catch-alls.\n- Exit `1` only when blocking behavior is intentional; otherwise exit `0`.\n- Error and info messages should be actionable.",
+      "zh-Hans": "* 钩子使用基于匹配器的 JSON 注册方式以及 Shell 或 Node 入口点。\n* 匹配器应具体明确，而非宽泛的通用匹配。\n* 仅当有意阻止行为时才退出 `1`；否则退出 `0`。\n* 错误和信息消息应具有可操作性。"
+    },
+    {
+      "en-US": "## Commit Style",
+      "zh-Hans": "## 提交风格"
+    },
+    {
+      "en-US": "- Use conventional commits such as `feat(skills):`, `fix(hooks):`, or `docs:`.\n- Keep changes modular and explain user-facing impact in the PR summary.",
+      "zh-Hans": "* 使用约定式提交，例如 `feat(skills):`、`fix(hooks):` 或 `docs:`。\n* 保持更改模块化，并在 PR 摘要中说明面向用户的影响。"
+    }
+  ]
+}

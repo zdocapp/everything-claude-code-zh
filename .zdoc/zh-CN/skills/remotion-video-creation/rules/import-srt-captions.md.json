@@ -1,0 +1,54 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/import-srt-captions.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: import-srt-captions\ndescription: Importing .srt subtitle files into Remotion using @remotion/captions\nmetadata:\n  tags: captions, subtitles, srt, import, parse\n---",
+      "zh-Hans": "---\nname: import-srt-captions\ndescription: 使用 @remotion/captions 将 .srt 字幕文件导入 Remotion\nmetadata:\n  tags: captions, subtitles, srt, import, parse\n---"
+    },
+    {
+      "en-US": "# Importing .srt subtitles into Remotion",
+      "zh-Hans": "# 将 .srt 字幕导入 Remotion"
+    },
+    {
+      "en-US": "If you have an existing `.srt` subtitle file, you can import it into Remotion using `parseSrt()` from `@remotion/captions`.",
+      "zh-Hans": "如果你有一个现有的 `.srt` 字幕文件，你可以使用 `parseSrt()` 从 `@remotion/captions` 将其导入 Remotion。"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "First, the @remotion/captions package needs to be installed.\nIf it is not installed, use the following command:",
+      "zh-Hans": "首先，需要安装 @remotion/captions 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/captions # If project uses npm\nbunx remotion add @remotion/captions # If project uses bun\nyarn remotion add @remotion/captions # If project uses yarn\npnpm exec remotion add @remotion/captions # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/captions # If project uses npm\nbunx remotion add @remotion/captions # If project uses bun\nyarn remotion add @remotion/captions # If project uses yarn\npnpm exec remotion add @remotion/captions # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "## Reading an .srt file",
+      "zh-Hans": "## 读取 .srt 文件"
+    },
+    {
+      "en-US": "Use `staticFile()` to reference an `.srt` file in your `public` folder, then fetch and parse it:",
+      "zh-Hans": "使用 `staticFile()` 来引用 `.srt` 文件夹中的 `public` 文件，然后获取并解析它："
+    },
+    {
+      "en-US": "```tsx\nimport {useState, useEffect, useCallback} from 'react';\nimport {AbsoluteFill, staticFile, useDelayRender} from 'remotion';\nimport {parseSrt} from '@remotion/captions';\nimport type {Caption} from '@remotion/captions';\n\nexport const MyComponent: React.FC = () => {\n  const [captions, setCaptions] = useState<Caption[] | null>(null);\n  const {delayRender, continueRender, cancelRender} = useDelayRender();\n  const [handle] = useState(() => delayRender());\n\n  const fetchCaptions = useCallback(async () => {\n    try {\n      const response = await fetch(staticFile('subtitles.srt'));\n      const text = await response.text();\n      const {captions: parsed} = parseSrt({input: text});\n      setCaptions(parsed);\n      continueRender(handle);\n    } catch (e) {\n      cancelRender(e);\n    }\n  }, [continueRender, cancelRender, handle]);\n\n  useEffect(() => {\n    fetchCaptions();\n  }, [fetchCaptions]);\n\n  if (!captions) {\n    return null;\n  }\n\n  return <AbsoluteFill>{/* Use captions here */}</AbsoluteFill>;\n};\n```",
+      "zh-Hans": "```tsx\nimport {useState, useEffect, useCallback} from 'react';\nimport {AbsoluteFill, staticFile, useDelayRender} from 'remotion';\nimport {parseSrt} from '@remotion/captions';\nimport type {Caption} from '@remotion/captions';\n\nexport const MyComponent: React.FC = () => {\n  const [captions, setCaptions] = useState<Caption[] | null>(null);\n  const {delayRender, continueRender, cancelRender} = useDelayRender();\n  const [handle] = useState(() => delayRender());\n\n  const fetchCaptions = useCallback(async () => {\n    try {\n      const response = await fetch(staticFile('subtitles.srt'));\n      const text = await response.text();\n      const {captions: parsed} = parseSrt({input: text});\n      setCaptions(parsed);\n      continueRender(handle);\n    } catch (e) {\n      cancelRender(e);\n    }\n  }, [continueRender, cancelRender, handle]);\n\n  useEffect(() => {\n    fetchCaptions();\n  }, [fetchCaptions]);\n\n  if (!captions) {\n    return null;\n  }\n\n  return <AbsoluteFill>{/* Use captions here */}</AbsoluteFill>;\n};\n```"
+    },
+    {
+      "en-US": "Remote URLs are also supported - you can `fetch()` a remote file via URL instead of using `staticFile()`.",
+      "zh-Hans": "也支持远程 URL - 你可以通过 URL `fetch()` 一个远程文件，而不是使用 `staticFile()`。"
+    },
+    {
+      "en-US": "## Using imported captions",
+      "zh-Hans": "## 使用导入的字幕"
+    },
+    {
+      "en-US": "Once parsed, the captions are in the `Caption` format and can be used with all `@remotion/captions` utilities.",
+      "zh-Hans": "解析后，字幕将采用 `Caption` 格式，并且可以与所有 `@remotion/captions` 工具一起使用。"
+    }
+  ]
+}

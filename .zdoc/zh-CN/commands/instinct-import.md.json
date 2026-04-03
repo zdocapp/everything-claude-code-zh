@@ -55,8 +55,8 @@
       "zh-Hans": "## 导入过程"
     },
     {
-      "en-US": "```\n📥 Importing instincts from: team-instincts.yaml\n================================================\n\nFound 12 instincts to import.\n\nAnalyzing conflicts...\n\n## New Instincts (8)\nThese will be added:\n  ✓ use-zod-validation (confidence: 0.7)\n  ✓ prefer-named-exports (confidence: 0.65)\n  ✓ test-async-functions (confidence: 0.8)\n  ...\n\n## Duplicate Instincts (3)\nAlready have similar instincts:\n  ⚠️ prefer-functional-style\n     Local: 0.8 confidence, 12 observations\n     Import: 0.7 confidence\n     → Keep local (higher confidence)\n\n  ⚠️ test-first-workflow\n     Local: 0.75 confidence\n     Import: 0.9 confidence\n     → Update to import (higher confidence)\n\nImport 8 new, update 1?\n```",
-      "zh-Hans": "```\n📥 从 team-instincts.yaml 导入本能\n================================================\n\n发现 12 个待导入的本能。\n\n正在分析冲突...\n\n## 新本能 (8)\n这些将被添加：\n  ✓ use-zod-validation (置信度: 0.7)\n  ✓ prefer-named-exports (置信度: 0.65)\n  ✓ test-async-functions (置信度: 0.8)\n  ...\n\n## 重复本能 (3)\n已存在类似本能：\n  ⚠️ prefer-functional-style\n     本地: 0.8 置信度, 12 次观察\n     导入: 0.7 置信度\n     → 保留本地 (置信度更高)\n\n  ⚠️ test-first-workflow\n     本地: 0.75 置信度\n     导入: 0.9 置信度\n     → 更新为导入 (置信度更高)\n\n导入 8 个新的，更新 1 个？\n```"
+      "en-US": "```\n Importing instincts from: team-instincts.yaml\n================================================\n\nFound 12 instincts to import.\n\nAnalyzing conflicts...\n\n## New Instincts (8)\nThese will be added:\n  ✓ use-zod-validation (confidence: 0.7)\n  ✓ prefer-named-exports (confidence: 0.65)\n  ✓ test-async-functions (confidence: 0.8)\n  ...\n\n## Duplicate Instincts (3)\nAlready have similar instincts:\n  WARNING: prefer-functional-style\n     Local: 0.8 confidence, 12 observations\n     Import: 0.7 confidence\n     → Keep local (higher confidence)\n\n  WARNING: test-first-workflow\n     Local: 0.75 confidence\n     Import: 0.9 confidence\n     → Update to import (higher confidence)\n\nImport 8 new, update 1?\n```",
+      "zh-Hans": "```\n Importing instincts from: team-instincts.yaml\n================================================\n\nFound 12 instincts to import.\n\nAnalyzing conflicts...\n\n## New Instincts (8)\nThese will be added:\n  ✓ use-zod-validation (confidence: 0.7)\n  ✓ prefer-named-exports (confidence: 0.65)\n  ✓ test-async-functions (confidence: 0.8)\n  ...\n\n## Duplicate Instincts (3)\nAlready have similar instincts:\n  WARNING: prefer-functional-style\n     Local: 0.8 confidence, 12 observations\n     Import: 0.7 confidence\n     → Keep local (higher confidence)\n\n  WARNING: test-first-workflow\n     Local: 0.75 confidence\n     Import: 0.9 confidence\n     → Update to import (higher confidence)\n\nImport 8 new, update 1?\n```"
     },
     {
       "en-US": "## Merge Behavior",
@@ -99,8 +99,8 @@
       "zh-Hans": "导入后："
     },
     {
-      "en-US": "```\n✅ Import complete!\n\nAdded: 8 instincts\nUpdated: 1 instinct\nSkipped: 3 instincts (equal/higher confidence already exists)\n\nNew instincts saved to: ~/.claude/homunculus/instincts/inherited/\n\nRun /instinct-status to see all instincts.\n```",
-      "zh-Hans": "```\n✅ 导入完成！\n\n新增：8 项本能  \n更新：1 项本能  \n跳过：3 项本能（已存在同等或更高置信度的版本）\n\n新本能已保存至：~/.claude/homunculus/instincts/inherited/\n\n运行 /instinct-status 以查看所有本能。\n```"
+      "en-US": "```\nPASS: Import complete!\n\nAdded: 8 instincts\nUpdated: 1 instinct\nSkipped: 3 instincts (equal/higher confidence already exists)\n\nNew instincts saved to: ~/.claude/homunculus/instincts/inherited/\n\nRun /instinct-status to see all instincts.\n```",
+      "zh-Hans": "```\nPASS: 导入完成！\n\n新增：8 个本能\n更新：1 个本能\n跳过：3 个本能（已存在同等或更高置信度的版本）\n\n新本能已保存至：~/.claude/homunculus/instincts/inherited/\n\n运行 /instinct-status 以查看所有本能。\n```"
     }
   ]
 }

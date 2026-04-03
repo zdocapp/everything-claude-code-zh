@@ -11,92 +11,124 @@
       "zh-Hans": "# 内容引擎"
     },
     {
-      "en-US": "Turn one idea into strong, platform-native content instead of posting the same thing everywhere.",
-      "zh-Hans": "将一个想法转化为强大的、平台原生的内容，而不是到处发布相同的东西。"
+      "en-US": "Build platform-native content without flattening the author's real voice into platform slop.",
+      "zh-Hans": "构建平台原生内容，而不将作者的真实声音扁平化为平台化的陈词滥调。"
     },
     {
       "en-US": "## When to Activate",
       "zh-Hans": "## 何时激活"
     },
     {
-      "en-US": "- writing X posts or threads\n- drafting LinkedIn posts or launch updates\n- scripting short-form video or YouTube explainers\n- repurposing articles, podcasts, demos, or docs into social content\n- building a lightweight content plan around a launch, milestone, or theme",
-      "zh-Hans": "* 撰写 X 帖子或主题串时\n* 起草 LinkedIn 帖子或发布更新时\n* 编写短视频或 YouTube 解说稿时\n* 将文章、播客、演示或文档改写成社交内容时\n* 围绕发布、里程碑或主题制定轻量级内容计划时"
+      "en-US": "- writing X posts or threads\n- drafting LinkedIn posts or launch updates\n- scripting short-form video or YouTube explainers\n- repurposing articles, podcasts, demos, docs, or internal notes into public content\n- building a launch sequence or ongoing content system around a product, insight, or narrative",
+      "zh-Hans": "* 撰写 X 帖子或主题串\n* 起草 LinkedIn 帖子或发布更新\n* 为短视频或 YouTube 解说撰写脚本\n* 将文章、播客、演示、文档或内部笔记转化为公开内容\n* 围绕产品、见解或叙事构建发布序列或持续的内容系统"
     },
     {
-      "en-US": "## First Questions",
-      "zh-Hans": "## 首要问题"
+      "en-US": "## Non-Negotiables",
+      "zh-Hans": "## 不可妥协的原则"
     },
     {
-      "en-US": "Clarify:",
-      "zh-Hans": "明确："
+      "en-US": "1. Start from source material, not generic post formulas.\n2. Adapt the format for the platform, not the persona.\n3. One post should carry one actual claim.\n4. Specificity beats adjectives.\n5. No engagement bait unless the user explicitly asks for it.",
+      "zh-Hans": "1. 从源材料开始，而非通用的帖子公式。\n2. 为平台调整格式，而非人物形象。\n3. 一个帖子应承载一个实质性的主张。\n4. 具体性胜过形容词。\n5. 除非用户明确要求，否则不使用互动诱饵。"
     },
     {
-      "en-US": "- source asset: what are we adapting from\n- audience: builders, investors, customers, operators, or general audience\n- platform: X, LinkedIn, TikTok, YouTube, newsletter, or multi-platform\n- goal: awareness, conversion, recruiting, authority, launch support, or engagement",
-      "zh-Hans": "* 来源素材：我们从什么内容改编\n* 受众：构建者、投资者、客户、运营者，还是普通受众\n* 平台：X、LinkedIn、TikTok、YouTube、新闻简报，还是多平台\n* 目标：品牌认知、转化、招聘、建立权威、支持发布，还是互动参与"
+      "en-US": "## Source-First Workflow",
+      "zh-Hans": "## 源材料优先的工作流程"
     },
     {
-      "en-US": "## Core Rules",
-      "zh-Hans": "## 核心规则"
+      "en-US": "Before drafting, identify the source set:",
+      "zh-Hans": "起草前，先确定源材料集："
     },
     {
-      "en-US": "1. Adapt for the platform. Do not cross-post the same copy.\n2. Hooks matter more than summaries.\n3. Every post should carry one clear idea.\n4. Use specifics over slogans.\n5. Keep the ask small and clear.",
-      "zh-Hans": "1. 为平台进行适配。不要交叉发布相同的文案。\n2. 开篇钩子比总结更重要。\n3. 每篇帖子应承载一个清晰的想法。\n4. 使用具体细节而非口号。\n5. 保持呼吁行动小而清晰。"
+      "en-US": "- published articles\n- notes or internal memos\n- product demos\n- docs or changelogs\n- transcripts\n- screenshots\n- prior posts from the same author",
+      "zh-Hans": "* 已发表的文章\n* 笔记或内部备忘录\n* 产品演示\n* 文档或更新日志\n* 文字记录\n* 截图\n* 同一作者之前的帖子"
     },
     {
-      "en-US": "## Platform Guidance",
-      "zh-Hans": "## 平台指南"
+      "en-US": "If the user wants a specific voice, build a voice profile from real examples before writing.\nUse `brand-voice` as the canonical workflow when voice consistency matters across more than one output.",
+      "zh-Hans": "如果用户想要特定的声音，在写作前根据真实示例构建声音档案。\n当声音一致性对多个输出很重要时，使用 `brand-voice` 作为规范工作流程。"
+    },
+    {
+      "en-US": "## Voice Handling",
+      "zh-Hans": "## 声音处理"
+    },
+    {
+      "en-US": "`brand-voice` is the canonical voice layer.",
+      "zh-Hans": "`brand-voice` 是规范的声音层。"
+    },
+    {
+      "en-US": "Run it first when:",
+      "zh-Hans": "在以下情况下首先运行它："
+    },
+    {
+      "en-US": "- there are multiple downstream outputs\n- the user explicitly cares about writing style\n- the content is launch, outreach, or reputation-sensitive",
+      "zh-Hans": "* 有多个下游输出\n* 用户明确关心写作风格\n* 内容是发布、推广或声誉敏感型的"
+    },
+    {
+      "en-US": "Reuse the resulting `VOICE PROFILE` here instead of rebuilding a second voice model.\nIf the user wants Affaan / ECC voice specifically, still treat `brand-voice` as the source of truth and feed it the best live or source-derived material available.",
+      "zh-Hans": "在此处重用生成的 `VOICE PROFILE`，而不是重建第二个声音模型。\n如果用户特别想要 Affaan / ECC 声音，仍应将 `brand-voice` 视为事实来源，并向其提供可用的最佳实时或源自源材料的素材。"
+    },
+    {
+      "en-US": "## Hard Bans",
+      "zh-Hans": "## 严格禁止"
+    },
+    {
+      "en-US": "Delete and rewrite any of these:",
+      "zh-Hans": "删除并重写以下任何内容："
+    },
+    {
+      "en-US": "- \"In today's rapidly evolving landscape\"\n- \"game-changer\", \"revolutionary\", \"cutting-edge\"\n- \"here's why this matters\" unless it is followed immediately by something concrete\n- ending with a LinkedIn-style question just to farm replies\n- forced casualness on LinkedIn\n- fake engagement padding that was not present in the source material",
+      "zh-Hans": "* \"在当今快速发展的格局中\"\n* \"颠覆者\"、\"革命性的\"、\"前沿的\"\n* \"这为什么重要\"，除非后面立即跟有具体内容\n* 以 LinkedIn 风格的问题结尾，仅仅是为了获取回复\n* 在 LinkedIn 上强装随意\n* 源材料中不存在的虚假互动填充内容"
+    },
+    {
+      "en-US": "## Platform Adaptation Rules",
+      "zh-Hans": "## 平台适配规则"
     },
     {
       "en-US": "### X",
       "zh-Hans": "### X"
     },
     {
-      "en-US": "- open fast\n- one idea per post or per tweet in a thread\n- keep links out of the main body unless necessary\n- avoid hashtag spam",
-      "zh-Hans": "* 开场要快\n* 每个帖子或主题串中的每条推文只讲一个想法\n* 除非必要，避免在主文中放置链接\n* 避免滥用话题标签"
+      "en-US": "- open with the strongest claim, artifact, or tension\n- keep the compression if the source voice is compressed\n- if writing a thread, each post must advance the argument\n- do not pad with context the audience does not need",
+      "zh-Hans": "* 以最有力的主张、实例或矛盾点开头\n* 如果源声音是压缩的，保持其压缩性\n* 如果撰写主题串，每个帖子都必须推进论点\n* 不要填充受众不需要的背景信息"
     },
     {
       "en-US": "### LinkedIn",
       "zh-Hans": "### LinkedIn"
     },
     {
-      "en-US": "- strong first line\n- short paragraphs\n- more explicit framing around lessons, results, and takeaways",
-      "zh-Hans": "* 第一行要强有力\n* 使用短段落\n* 围绕经验教训、结果和要点进行更明确的框架构建"
+      "en-US": "- expand only enough for people outside the immediate niche to follow\n- do not turn it into a fake lesson post unless the source material actually is reflective\n- no corporate inspiration cadence\n- no praise-stacking, no \"journey\" filler",
+      "zh-Hans": "* 仅扩展至足以让利基市场外的人理解的程度\n* 除非源材料本身具有反思性，否则不要将其变成虚假的教训式帖子\n* 没有企业式的鼓舞节奏\n* 没有赞美堆砌，没有\"旅程\"填充物"
     },
     {
-      "en-US": "### TikTok / Short Video",
-      "zh-Hans": "### TikTok / 短视频"
+      "en-US": "### Short Video",
+      "zh-Hans": "### 短视频"
     },
     {
-      "en-US": "- first 3 seconds must interrupt attention\n- script around visuals, not just narration\n- one demo, one claim, one CTA",
-      "zh-Hans": "* 前 3 秒必须抓住注意力\n* 围绕视觉内容编写脚本，而不仅仅是旁白\n* 一个演示、一个主张、一个行动号召"
+      "en-US": "- script around the visual sequence and proof points\n- first seconds should show the result, problem, or punch\n- do not write narration that sounds better on paper than on screen",
+      "zh-Hans": "* 围绕视觉序列和证明点撰写脚本\n* 前几秒应展示结果、问题或亮点\n* 不要撰写在纸上听起来比在屏幕上更好的旁白"
     },
     {
       "en-US": "### YouTube",
       "zh-Hans": "### YouTube"
     },
     {
-      "en-US": "- show the result early\n- structure by chapter\n- refresh the visual every 20-30 seconds",
-      "zh-Hans": "* 尽早展示结果\n* 按章节构建内容\n* 每 20-30 秒刷新一次视觉内容"
+      "en-US": "- show the result or tension early\n- organize by argument or progression, not filler sections\n- use chaptering only when it helps clarity",
+      "zh-Hans": "* 尽早展示结果或矛盾点\n* 按论点或进展组织，而非填充性章节\n* 仅在有助于清晰度时使用章节划分"
     },
     {
       "en-US": "### Newsletter",
       "zh-Hans": "### 新闻简报"
     },
     {
-      "en-US": "- deliver one clear lens, not a bundle of unrelated items\n- make section titles skimmable\n- keep the opening paragraph doing real work",
-      "zh-Hans": "* 提供一个清晰的视角，而不是一堆不相关的内容\n* 使章节标题易于浏览\n* 让开篇段落真正发挥作用"
+      "en-US": "- open with the point, conflict, or artifact\n- do not spend the first paragraph warming up\n- every section needs to add something new",
+      "zh-Hans": "* 以要点、冲突或实例开头\n* 不要在第一个段落进行预热\n* 每个部分都需要增加新内容"
     },
     {
       "en-US": "## Repurposing Flow",
       "zh-Hans": "## 内容再利用流程"
     },
     {
-      "en-US": "Default cascade:",
-      "zh-Hans": "默认级联："
-    },
-    {
-      "en-US": "1. anchor asset: article, video, demo, memo, or launch doc\n2. extract 3-7 atomic ideas\n3. write platform-native variants\n4. trim repetition across outputs\n5. align CTAs with platform intent",
-      "zh-Hans": "1. 锚定素材：文章、视频、演示、备忘录或发布文档\n2. 提取 3-7 个原子化想法\n3. 撰写平台原生的变体内容\n4. 修剪不同输出内容中的重复部分\n5. 使行动号召与平台意图保持一致"
+      "en-US": "1. Pick the anchor asset.\n2. Extract 3 to 7 atomic claims or scenes.\n3. Rank them by sharpness, novelty, and proof.\n4. Assign one strong idea per output.\n5. Adapt structure for each platform.\n6. Strip platform-shaped filler.\n7. Run the quality gate.",
+      "zh-Hans": "1. 选择核心素材。\n2. 提取 3 到 7 个原子化的主张或场景。\n3. 根据尖锐性、新颖性和证明力进行排序。\n4. 为每个输出分配一个强有力的想法。\n5. 为每个平台调整结构。\n6. 剥离平台化的填充内容。\n7. 运行质量检查。"
     },
     {
       "en-US": "## Deliverables",
@@ -107,8 +139,8 @@
       "zh-Hans": "当被要求进行一项宣传活动时，请返回："
     },
     {
-      "en-US": "- the core angle\n- platform-specific drafts\n- optional posting order\n- optional CTA variants\n- any missing inputs needed before publishing",
-      "zh-Hans": "* 核心角度\n* 针对特定平台的草稿\n* 可选的发布顺序\n* 可选的行动号召变体\n* 发布前所需的任何缺失信息"
+      "en-US": "- a short voice profile if voice matching matters\n- the core angle\n- platform-native drafts\n- posting order only if it helps execution\n- gaps that must be filled before publishing",
+      "zh-Hans": "* 如果声音匹配很重要，则提供简短的声音档案\n* 核心角度\n* 平台原生的草稿\n* 仅在有助于执行时提供发布顺序\n* 发布前必须填补的空白"
     },
     {
       "en-US": "## Quality Gate",
@@ -119,8 +151,16 @@
       "zh-Hans": "在交付前检查："
     },
     {
-      "en-US": "- each draft reads natively for its platform\n- hooks are strong and specific\n- no generic hype language\n- no duplicated copy across platforms unless requested\n- the CTA matches the content and audience",
-      "zh-Hans": "* 每份草稿读起来都符合其平台原生风格\n* 开篇钩子强大且具体\n* 没有通用的炒作语言\n* 除非特别要求，否则各平台间没有重复文案\n* 行动号召与内容和受众相匹配"
+      "en-US": "- every draft sounds like the intended author, not the platform stereotype\n- every draft contains a real claim, proof point, or concrete observation\n- no generic hype language remains\n- no fake engagement bait remains\n- no duplicated copy across platforms unless requested\n- any CTA is earned and user-approved",
+      "zh-Hans": "* 每个草稿听起来都像目标作者，而非平台刻板印象\n* 每个草稿都包含一个真实的主张、证明点或具体观察\n* 没有留下通用的炒作语言\n* 没有留下虚假的互动诱饵\n* 除非要求，否则没有跨平台的重复文案\n* 任何行动号召都是应得的且经过用户批准的"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `brand-voice` for source-derived voice profiles\n- `crosspost` for platform-specific distribution\n- `x-api` for sourcing recent posts and publishing approved X output",
+      "zh-Hans": "* `brand-voice` 用于源自源材料的声音档案\n* `crosspost` 用于平台特定的分发\n* `x-api` 用于获取近期帖子和发布已批准的 X 输出"
     }
   ]
 }

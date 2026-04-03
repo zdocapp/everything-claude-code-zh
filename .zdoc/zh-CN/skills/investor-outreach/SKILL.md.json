@@ -11,8 +11,8 @@
       "zh-Hans": "# 投资者接洽"
     },
     {
-      "en-US": "Write investor communication that is short, personalized, and easy to act on.",
-      "zh-Hans": "撰写简短、个性化且易于采取行动的投资者沟通内容。"
+      "en-US": "Write investor communication that is short, concrete, and easy to act on.",
+      "zh-Hans": "撰写简短、具体且易于执行的投资者沟通内容。"
     },
     {
       "en-US": "## When to Activate",
@@ -27,16 +27,36 @@
       "zh-Hans": "## 核心规则"
     },
     {
-      "en-US": "1. Personalize every outbound message.\n2. Keep the ask low-friction.\n3. Use proof, not adjectives.\n4. Stay concise.\n5. Never send generic copy that could go to any investor.",
-      "zh-Hans": "1. 个性化每一条外发信息。\n2. 保持请求低门槛。\n3. 使用证据，而非形容词。\n4. 保持简洁。\n5. 绝不发送可发给任何投资者的通用文案。"
+      "en-US": "1. Personalize every outbound message.\n2. Keep the ask low-friction.\n3. Use proof instead of adjectives.\n4. Stay concise.\n5. Never send copy that could go to any investor.",
+      "zh-Hans": "1. 个性化每一条外发信息。\n2. 保持请求低门槛。\n3. 使用证据而非形容词。\n4. 保持简洁。\n5. 绝不发送可以发给任何投资者的通用文案。"
+    },
+    {
+      "en-US": "## Voice Handling",
+      "zh-Hans": "## 语气处理"
+    },
+    {
+      "en-US": "If the user's voice matters, run `brand-voice` first and reuse its `VOICE PROFILE`.\nThis skill should keep the investor-specific structure and ask discipline, not recreate its own parallel voice system.",
+      "zh-Hans": "如果用户的语气很重要，先运行 `brand-voice` 并复用其 `VOICE PROFILE`。\n此技能应保持投资者特定的结构和请求规范，而非创建自己独立的平行语气系统。"
+    },
+    {
+      "en-US": "## Hard Bans",
+      "zh-Hans": "## 严格禁止"
+    },
+    {
+      "en-US": "Delete and rewrite any of these:",
+      "zh-Hans": "删除并重写以下任何内容："
+    },
+    {
+      "en-US": "- \"I'd love to connect\"\n- \"excited to share\"\n- generic thesis praise without a real tie-in\n- vague founder adjectives\n- begging language\n- soft closing questions when a direct ask is clearer",
+      "zh-Hans": "* \"我很乐意联系\"\n* \"很高兴分享\"\n* 没有实际关联的通用投资理念赞美\n* 模糊的创始人形容词\n* 乞求式语言\n* 当直接请求更清晰时使用软性结束问题"
     },
     {
       "en-US": "## Cold Email Structure",
       "zh-Hans": "## 冷邮件结构"
     },
     {
-      "en-US": "1. subject line: short and specific\n2. opener: why this investor specifically\n3. pitch: what the company does, why now, what proof matters\n4. ask: one concrete next step\n5. sign-off: name, role, one credibility anchor if needed",
-      "zh-Hans": "1. 主题行：简短且具体\n2. 开头：说明为何选择这位特定投资者\n3. 推介：公司做什么，为何是现在，什么证据重要\n4. 请求：一个具体的下一步行动\n5. 签名：姓名、职位，如需可加上一个可信度锚点"
+      "en-US": "1. subject line: short and specific\n2. opener: why this investor specifically\n3. pitch: what the company does, why now, and what proof matters\n4. ask: one concrete next step\n5. sign-off: name, role, and one credibility anchor if needed",
+      "zh-Hans": "1. 主题行：简短且具体\n2. 开场白：为什么是这位特定投资者\n3. 推介：公司做什么、为什么是现在、以及哪些证据重要\n4. 请求：一个具体的下一步行动\n5. 结尾：姓名、职位，以及一个可信度锚点（如果需要）"
     },
     {
       "en-US": "## Personalization Sources",
@@ -51,8 +71,8 @@
       "zh-Hans": "* 相关的投资组合公司\n* 公开的投资主题、演讲、帖子或文章\n* 共同的联系人\n* 与投资者关注点明确匹配的市场或产品契合度"
     },
     {
-      "en-US": "If that context is missing, ask for it or state that the draft is a template awaiting personalization.",
-      "zh-Hans": "如果缺少相关背景信息，请询问或说明草稿是等待个性化的模板。"
+      "en-US": "If that context is missing, state that the draft still needs personalization instead of pretending it is finished.",
+      "zh-Hans": "如果缺少该上下文，请说明草稿仍需个性化，而不是假装已完成。"
     },
     {
       "en-US": "## Follow-Up Cadence",
@@ -63,8 +83,8 @@
       "zh-Hans": "默认节奏："
     },
     {
-      "en-US": "- day 0: initial outbound\n- day 4-5: short follow-up with one new data point\n- day 10-12: final follow-up with a clean close",
-      "zh-Hans": "* 第 0 天：初次外发\n* 第 4-5 天：简短跟进，附带一个新数据点\n* 第 10-12 天：最终跟进，干净利落地收尾"
+      "en-US": "- day 0: initial outbound\n- day 4 or 5: short follow-up with one new data point\n- day 10 to 12: final follow-up with a clean close",
+      "zh-Hans": "* 第 0 天：初次外发\n* 第 4 或 5 天：简短跟进，附带一个新数据点\n* 第 10 至 12 天：最终跟进，干净收尾"
     },
     {
       "en-US": "Do not keep nudging after that unless the user wants a longer sequence.",
@@ -103,8 +123,8 @@
       "zh-Hans": "在交付前检查："
     },
     {
-      "en-US": "- message is personalized\n- the ask is explicit\n- there is no fluff or begging language\n- the proof point is concrete\n- word count stays tight",
-      "zh-Hans": "* 信息已个性化\n* 请求明确\n* 没有废话或乞求性语言\n* 证据点具体\n* 字数保持紧凑"
+      "en-US": "- the message is genuinely personalized\n- the ask is explicit\n- the proof point is concrete\n- filler praise and softener language are gone\n- word count stays tight",
+      "zh-Hans": "* 信息是真正个性化的\n* 请求是明确的\n* 证据点是具体的\n* 填充性赞美和软化性语言已去除\n* 字数保持紧凑"
     }
   ]
 }

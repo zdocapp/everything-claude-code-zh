@@ -235,8 +235,40 @@
       "zh-Hans": "**`/ccg:plan` 的职责到此结束，必须执行以下操作**："
     },
     {
-      "en-US": "1. Present complete implementation plan to user (including pseudo-code)\n2. Save plan to `.claude/plan/<feature-name>.md` (extract feature name from requirement, e.g., `user-auth`, `payment-module`)\n3. Output prompt in **bold text** (MUST use actual saved file path):\n\n   ---\n   **Plan generated and saved to `.claude/plan/actual-feature-name.md`**\n\n   **Please review the plan above. You can:**\n   - **Modify plan**: Tell me what needs adjustment, I'll update the plan\n   - **Execute plan**: Copy the following command to a new session\n\n   ```\n   /ccg:execute .claude/plan/actual-feature-name.md\n   ```\n   ---\n\n   **NOTE**: The `actual-feature-name.md` above MUST be replaced with the actual saved filename!\n\n4. **Immediately terminate current response** (Stop here. No more tool calls.)",
-      "zh-Hans": "1. 向用户呈现完整的实施计划（包括伪代码）\n\n2. 将计划保存到 `.claude/plan/<feature-name>.md`（从需求中提取功能名称，例如 `user-auth`，`payment-module`）\n\n3. 以 **粗体文本** 输出提示（必须使用实际保存的文件路径）：\n\n   ***\n\n   **计划已生成并保存至 `.claude/plan/actual-feature-name.md`**\n\n   **请审阅以上计划。您可以：**\n\n   * **修改计划**：告诉我需要调整的内容，我会更新计划\n   * **执行计划**：复制以下命令到新会话\n\n   ```\n   /ccg:execute .claude/plan/actual-feature-name.md\n   ```\n\n   ***\n\n   **注意**：上面的 `actual-feature-name.md` 必须替换为实际保存的文件名！\n\n4. **立即终止当前响应**（在此停止。不再进行工具调用。）"
+      "en-US": "1. Present complete implementation plan to user (including pseudo-code)\n2. Save plan to `.claude/plan/<feature-name>.md` (extract feature name from requirement, e.g., `user-auth`, `payment-module`)\n3. Output prompt in **bold text** (MUST use actual saved file path):",
+      "zh-Hans": "1. 向用户呈现完整的实施计划（包括伪代码）\n2. 将计划保存到 `.claude/plan/<feature-name>.md`（从需求中提取功能名称，例如 `user-auth`，`payment-module`）\n3. 用**粗体文本**输出提示（必须使用实际保存的文件路径）："
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Plan generated and saved to `.claude/plan/actual-feature-name.md`**",
+      "zh-Hans": "**计划已生成并保存到 `.claude/plan/actual-feature-name.md`**"
+    },
+    {
+      "en-US": "**Please review the plan above. You can:**",
+      "zh-Hans": "**请审阅以上计划。您可以：**"
+    },
+    {
+      "en-US": "- **Modify plan**: Tell me what needs adjustment, I'll update the plan\n- **Execute plan**: Copy the following command to a new session",
+      "zh-Hans": "* **修改计划**：告诉我需要调整的内容，我将更新计划\n* **执行计划**：将以下命令复制到新会话中"
+    },
+    {
+      "en-US": "```\n/ccg:execute .claude/plan/actual-feature-name.md\n```",
+      "zh-Hans": "```\n/ccg:execute .claude/plan/actual-feature-name.md\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**NOTE**: The `actual-feature-name.md` above MUST be replaced with the actual saved filename!",
+      "zh-Hans": "**注意**：上面的 `actual-feature-name.md` 必须替换为实际保存的文件名！"
+    },
+    {
+      "en-US": "4. **Immediately terminate current response** (Stop here. No more tool calls.)",
+      "zh-Hans": "4. **立即终止当前响应**（在此停止。不再进行工具调用。）"
     },
     {
       "en-US": "**ABSOLUTELY FORBIDDEN**:",

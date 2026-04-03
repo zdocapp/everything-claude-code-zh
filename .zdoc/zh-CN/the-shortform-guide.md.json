@@ -31,28 +31,28 @@
       "zh-Hans": "## 技能和命令"
     },
     {
-      "en-US": "Skills operate like rules, constricted to certain scopes and workflows. They're shorthand to prompts when you need to execute a particular workflow.",
-      "zh-Hans": "技能就像规则，受限于特定的范围和流程。当你需要执行特定工作流时，它们是提示词的简写。"
+      "en-US": "Skills are the primary workflow surface. They act like scoped workflow bundles: reusable prompts, structure, supporting files, and codemaps when you need a particular execution pattern.",
+      "zh-Hans": "技能是主要的工作流界面。它们就像是作用域内的工作流包：可复用的提示、结构、支持文件，以及当你需要特定执行模式时的代码地图。"
     },
     {
-      "en-US": "After a long session of coding with Opus 4.5, you want to clean out dead code and loose .md files? Run `/refactor-clean`. Need testing? `/tdd`, `/e2e`, `/test-coverage`. Skills can also include codemaps - a way for Claude to quickly navigate your codebase without burning context on exploration.",
-      "zh-Hans": "在使用 Opus 4.5 长时间编码后，你想清理死代码和松散的 .md 文件吗？运行 `/refactor-clean`。需要测试吗？`/tdd`、`/e2e`、`/test-coverage`。技能也可以包含代码地图——一种让 Claude 快速浏览你的代码库而无需消耗上下文进行探索的方式。"
+      "en-US": "After a long session of coding with Opus 4.5, you want to clean out dead code and loose .md files? Run `/refactor-clean`. Need testing? `/tdd`, `/e2e`, `/test-coverage`. Those slash entries are convenient, but the real durable unit is the underlying skill. Skills can also include codemaps - a way for Claude to quickly navigate your codebase without burning context on exploration.",
+      "zh-Hans": "经过长时间使用 Opus 4.5 进行编码后，你想清理掉死代码和松散的 .md 文件吗？运行 `/refactor-clean`。需要测试？`/tdd`、`/e2e`、`/test-coverage`。这些斜杠命令条目很方便，但真正持久的单元是底层的技能。技能还可以包含代码地图——一种让 Claude 快速浏览你的代码库而无需在探索上消耗上下文的方式。"
     },
     {
       "en-US": "![Terminal showing chained commands](./assets/images/shortform/02-chaining-commands.jpeg)\n*Chaining commands together*",
       "zh-Hans": "![显示链式命令的终端](./assets/images/shortform/02-chaining-commands.jpeg)\n*将命令链接在一起*"
     },
     {
-      "en-US": "Commands are skills executed via slash commands. They overlap but are stored differently:",
-      "zh-Hans": "命令是通过斜杠命令执行的技能。它们有重叠但存储方式不同："
+      "en-US": "ECC still ships a `commands/` layer, but it is best thought of as legacy slash-entry compatibility during migration. The durable logic should live in skills.",
+      "zh-Hans": "ECC 仍然附带一个 `commands/` 层，但最好将其视为迁移期间的遗留斜杠命令兼容性。持久的逻辑应该存在于技能中。"
     },
     {
-      "en-US": "- **Skills**: `~/.claude/skills/` - broader workflow definitions\n- **Commands**: `~/.claude/commands/` - quick executable prompts",
-      "zh-Hans": "* **技能**: `~/.claude/skills/` - 更广泛的工作流定义\n* **命令**: `~/.claude/commands/` - 快速可执行的提示词"
+      "en-US": "- **Skills**: `~/.claude/skills/` - canonical workflow definitions\n- **Commands**: `~/.claude/commands/` - legacy slash-entry shims when you still need them",
+      "zh-Hans": "* **技能**：`~/.claude/skills/` - 规范的工作流定义\n* **命令**：`~/.claude/commands/` - 当你仍然需要它们时的遗留斜杠命令适配层"
     },
     {
-      "en-US": "```bash\n# Example skill structure\n~/.claude/skills/\n  pmx-guidelines.md      # Project-specific patterns\n  coding-standards.md    # Language best practices\n  tdd-workflow/          # Multi-file skill with README.md\n  security-review/       # Checklist-based skill\n```",
-      "zh-Hans": "```bash\n# Example skill structure\n~/.claude/skills/\n  pmx-guidelines.md      # Project-specific patterns\n  coding-standards.md    # Language best practices\n  tdd-workflow/          # Multi-file skill with README.md\n  security-review/       # Checklist-based skill\n```"
+      "en-US": "```bash\n# Example skill structure\n~/.claude/skills/\n  pmx-guidelines.md      # Project-specific patterns\n  coding-standards.md    # Language best practices\n  tdd-workflow/          # Multi-file skill with SKILL.md\n  security-review/       # Checklist-based skill\n```",
+      "zh-Hans": "```bash\n# Example skill structure\n~/.claude/skills/\n  pmx-guidelines.md      # Project-specific patterns\n  coding-standards.md    # Language best practices\n  tdd-workflow/          # Multi-file skill with SKILL.md\n  security-review/       # Checklist-based skill\n```"
     },
     {
       "en-US": "---",
@@ -187,8 +187,8 @@
       "zh-Hans": "**经验法则：** 在配置中保留 20-30 个 MCP，但保持启用状态少于 10 个 / 活动工具少于 80 个。"
     },
     {
-      "en-US": "```bash\n# Check enabled MCPs\n/mcp\n\n# Disable unused ones in ~/.claude.json under projects.disabledMcpServers\n```",
-      "zh-Hans": "```bash\n# Check enabled MCPs\n/mcp\n\n# Disable unused ones in ~/.claude.json under projects.disabledMcpServers\n```"
+      "en-US": "```bash\n# Check enabled MCPs\n/mcp\n\n# Disable unused ones in ~/.claude/settings.json or in the current repo's .mcp.json\n```",
+      "zh-Hans": "```bash\n# Check enabled MCPs\n/mcp\n\n# Disable unused ones in ~/.claude/settings.json or in the current repo's .mcp.json\n```"
     },
     {
       "en-US": "---",

@@ -119,8 +119,8 @@
       "zh-Hans": "| 指标 | 数量 |\n|--------|-------|\n| 已修复的构建错误 | 3 |\n| 已修复的 Vet 警告 | 0 |\n| 已修改的文件 | 2 |\n| 剩余问题 | 0 |"
     },
     {
-      "en-US": "Build Status: ✅ SUCCESS",
-      "zh-Hans": "构建状态：✅ 成功"
+      "en-US": "Build Status: PASS: SUCCESS",
+      "zh-Hans": "构建状态：通过：成功"
     },
     {
       "en-US": "```\n\n## Common Errors Fixed\n\n| Error | Typical Fix |\n|-------|-------------|\n| `undefined: X` | Add import or fix typo |\n| `cannot use X as Y` | Type conversion or fix assignment |\n| `missing return` | Add return statement |\n| `X does not implement Y` | Add missing method |\n| `import cycle` | Restructure packages |\n| `declared but not used` | Remove or use variable |\n| `cannot find package` | `go get` or `go mod tidy` |\n\n## Fix Strategy\n\n1. **Build errors first** - Code must compile\n2. **Vet warnings second** - Fix suspicious constructs\n3. **Lint warnings third** - Style and best practices\n4. **One fix at a time** - Verify each change\n5. **Minimal changes** - Don't refactor, just fix\n\n## Stop Conditions\n\nThe agent will stop and report if:\n- Same error persists after 3 attempts\n- Fix introduces more errors\n- Requires architectural changes\n- Missing external dependencies\n\n## Related Commands\n\n- `/go-test` - Run tests after build succeeds\n- `/go-review` - Review code quality\n- `/verify` - Full verification loop\n\n## Related\n\n- Agent: `agents/go-build-resolver.md`\n- Skill: `skills/golang-patterns/`\n",

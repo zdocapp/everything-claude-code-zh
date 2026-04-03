@@ -55,16 +55,16 @@
       "zh-Hans": "## 配置"
     },
     {
-      "en-US": "Agent directories are probed in order and results are merged:",
-      "zh-Hans": "智能体目录按顺序探测，结果会被合并："
+      "en-US": "Agents are discovered via two methods, merged and deduplicated by agent name:",
+      "zh-Hans": "代理通过两种方法被发现，按代理名称合并并去重："
     },
     {
-      "en-US": "1. `./agents/**/*.md` + `./agents/*.md` — project-local agents (both depths)\n2. `~/.claude/agents/**/*.md` + `~/.claude/agents/*.md` — global agents (both depths)",
-      "zh-Hans": "1. `./agents/**/*.md` + `./agents/*.md` — 项目本地智能体（两种深度）\n2. `~/.claude/agents/**/*.md` + `~/.claude/agents/*.md` — 全局智能体（两种深度）"
+      "en-US": "1. **`claude agents` command** (primary) — run `claude agents` to get all agents known to the CLI, including user agents, plugin agents (e.g. `everything-claude-code:architect`), and built-in agents. This automatically covers ECC marketplace installs without any path configuration.\n2. **File glob** (fallback, for reading agent content) — agent markdown files are read from:\n   - `./agents/**/*.md` + `./agents/*.md` — project-local agents\n   - `~/.claude/agents/**/*.md` + `~/.claude/agents/*.md` — global user agents",
+      "zh-Hans": "1. **`claude agents` 命令**（主要方式）—— 运行 `claude agents` 以获取 CLI 已知的所有代理，包括用户代理、插件代理（例如 `everything-claude-code:architect`）和内置代理。这会自动涵盖 ECC 市场安装，无需任何路径配置。\n2. **文件通配符**（备用方式，用于读取代理内容）—— 代理 Markdown 文件从以下位置读取：\n   * `./agents/**/*.md` + `./agents/*.md` —— 项目本地代理\n   * `~/.claude/agents/**/*.md` + `~/.claude/agents/*.md` —— 全局用户代理"
     },
     {
-      "en-US": "Results from all locations are merged and deduplicated by agent name. Project-local agents take precedence over global agents with the same name. A custom path can be used instead if the user specifies one.",
-      "zh-Hans": "所有位置的结果会合并，并按智能体名称去重。同名情况下，项目本地智能体优先于全局智能体。如果用户指定了自定义路径，则使用该路径代替。"
+      "en-US": "Earlier sources take precedence when names collide: user agents > plugin agents > built-in agents. A custom path can be used instead if the user specifies one.",
+      "zh-Hans": "当名称冲突时，较早的来源具有优先权：用户代理 > 插件代理 > 内置代理。如果用户指定了自定义路径，则可以使用自定义路径代替。"
     },
     {
       "en-US": "## How It Works",
@@ -75,16 +75,24 @@
       "zh-Hans": "### 步骤 1：发现可用智能体"
     },
     {
-      "en-US": "Glob agent directories using the probe order above. Exclude README files. For each file found:",
-      "zh-Hans": "使用上述探测顺序在智能体目录中进行全局搜索。排除 README 文件。对于找到的每个文件："
+      "en-US": "Run `claude agents` to get the full agent list. Parse each line:",
+      "zh-Hans": "运行 `claude agents` 以获取完整的代理列表。解析每一行："
+    },
+    {
+      "en-US": "- **Plugin agents** are prefixed with `plugin-name:` (e.g., `everything-claude-code:security-reviewer`). Use the part after `:` as the agent name and the plugin name as the domain.\n- **User agents** have no prefix. Read the corresponding markdown file from `~/.claude/agents/` or `./agents/` to extract the name and description.\n- **Built-in agents** (e.g., `Explore`, `Plan`) are skipped unless the user explicitly asks to include them.",
+      "zh-Hans": "* **插件代理** 以 `plugin-name:` 为前缀（例如，`everything-claude-code:security-reviewer`）。使用 `:` 之后的部分作为代理名称，并将插件名称作为域。\n* **用户代理** 没有前缀。从 `~/.claude/agents/` 或 `./agents/` 读取相应的 Markdown 文件以提取名称和描述。\n* **内置代理**（例如，`Explore`、`Plan`）会被跳过，除非用户明确要求包含它们。"
+    },
+    {
+      "en-US": "For user agents loaded from markdown files:",
+      "zh-Hans": "对于从 Markdown 文件加载的用户代理："
     },
     {
       "en-US": "- **Subdirectory layout:** extract the domain from the parent folder name\n- **Flat layout:** collect all filename prefixes (text before the first `-`). A prefix qualifies as a domain only if it appears in 2 or more filenames (e.g., `engineering-security-engineer.md` and `engineering-software-architect.md` both start with `engineering` → Engineering domain). Files with unique prefixes (e.g., `code-reviewer.md`, `tdd-guide.md`) are grouped under \"General\"\n- Extract the agent name from the first `# Heading`. If no heading is found, derive the name from the filename (strip `.md`, replace hyphens with spaces, title-case)\n- Extract a one-line summary from the first paragraph after the heading",
       "zh-Hans": "* **子目录布局：** 从父文件夹名称提取领域\n* **扁平化布局：** 收集所有文件名前缀（第一个 `-` 之前的文本）。一个前缀只有在出现在 2 个或更多文件名中时才符合领域资格（例如，`engineering-security-engineer.md` 和 `engineering-software-architect.md` 都以 `engineering` 开头 → Engineering 领域）。具有唯一前缀的文件（例如 `code-reviewer.md`, `tdd-guide.md`）归入 \"General\" 类别\n* 从第一个 `# Heading` 提取智能体名称。如果未找到标题，则从文件名派生名称（去除 `.md`，用空格替换连字符，并转换为标题大小写）\n* 从标题后的第一段提取一行摘要"
     },
     {
-      "en-US": "If no agent files are found after probing all locations, inform the user: \"No agent files found. Checked: [list paths probed]. Expected: markdown files in one of those directories.\" Then stop.",
-      "zh-Hans": "如果在探测完所有位置后未找到任何智能体文件，则通知用户：\"未找到智能体文件。已检查：\\[探测的路径列表]。期望：这些目录中的 markdown 文件。\" 然后停止。"
+      "en-US": "If no agents are found after running `claude agents` and probing file locations, inform the user: \"No agents found. Run `claude agents` to verify your setup.\" Then stop.",
+      "zh-Hans": "如果在运行 `claude agents` 并探测文件位置后未找到任何代理，请通知用户：“未找到代理。运行 `claude agents` 以验证您的设置。”然后停止。"
     },
     {
       "en-US": "### Step 2: Present Domain Menu",

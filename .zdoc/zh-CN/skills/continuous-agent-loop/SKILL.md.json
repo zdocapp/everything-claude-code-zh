@@ -19,8 +19,8 @@
       "zh-Hans": "## 循环选择流程"
     },
     {
-      "en-US": "```text\nStart\n  |\n  +-- Need strict CI/PR control? -- yes --> continuous-pr\n  |                                    \n  +-- Need RFC decomposition? -- yes --> rfc-dag\n  |\n  +-- Need exploratory parallel generation? -- yes --> infinite\n  |\n  +-- default --> sequential\n```",
-      "zh-Hans": "```text\nStart\n  |\n  +-- 需要严格的 CI/PR 控制？ -- yes --> continuous-pr\n  |                                    \n  +-- 需要 RFC 分解？ -- yes --> rfc-dag\n  |\n  +-- 需要探索性并行生成？ -- yes --> infinite\n  |\n  +-- default --> sequential\n```"
+      "en-US": "```text\nStart\n  |\n  +-- Need strict CI/PR control? -- yes --> continuous-pr\n  |\n  +-- Need RFC decomposition? -- yes --> rfc-dag\n  |\n  +-- Need exploratory parallel generation? -- yes --> infinite\n  |\n  +-- default --> sequential\n```",
+      "zh-Hans": "```text\n开始\n  |\n  +-- 需要严格的 CI/PR 控制？ -- 是 --> continuous-pr\n  |\n  +-- 需要 RFC 分解？ -- 是 --> rfc-dag\n  |\n  +-- 需要探索性并行生成？ -- 是 --> infinite\n  |\n  +-- 默认 --> sequential\n```"
     },
     {
       "en-US": "## Combined Pattern",

@@ -1,0 +1,158 @@
+{
+  "sourceFile": "skills/healthcare-eval-harness/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: healthcare-eval-harness\ndescription: Patient safety evaluation harness for healthcare application deployments. Automated test suites for CDSS accuracy, PHI exposure, clinical workflow integrity, and integration compliance. Blocks deployments on safety failures.\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: healthcare-eval-harness\ndescription: 医疗应用部署的患者安全评估工具。自动化测试套件，用于临床决策支持系统准确性、受保护健康信息暴露、临床工作流程完整性及集成合规性。在安全失败时阻止部署。\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Healthcare Eval Harness — Patient Safety Verification",
+      "zh-Hans": "# 医疗评估工具链 — 患者安全验证"
+    },
+    {
+      "en-US": "Automated verification system for healthcare application deployments. A single CRITICAL failure blocks deployment. Patient safety is non-negotiable.",
+      "zh-Hans": "用于医疗应用部署的自动化验证系统。单个 CRITICAL 级别失败将阻止部署。患者安全不容妥协。"
+    },
+    {
+      "en-US": "> **Note:** Examples use Jest as the reference test runner. Adapt commands for your framework (Vitest, pytest, PHPUnit, etc.) — the test categories and pass thresholds are framework-agnostic.",
+      "zh-Hans": "> **注意：** 示例使用 Jest 作为参考测试运行器。请根据您的框架（Vitest、pytest、PHPUnit 等）调整命令 — 测试类别和通过阈值与框架无关。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Before any deployment of EMR/EHR applications\n- After modifying CDSS logic (drug interactions, dose validation, scoring)\n- After changing database schemas that touch patient data\n- After modifying authentication or access control\n- During CI/CD pipeline configuration for healthcare apps\n- After resolving merge conflicts in clinical modules",
+      "zh-Hans": "* 在任何 EMR/EHR 应用部署之前\n* 修改 CDSS 逻辑（药物相互作用、剂量验证、评分）之后\n* 更改涉及患者数据的数据库模式之后\n* 修改身份验证或访问控制之后\n* 为医疗应用配置 CI/CD 流水线期间\n* 解决临床模块中的合并冲突之后"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "The eval harness runs five test categories in order. The first three (CDSS Accuracy, PHI Exposure, Data Integrity) are CRITICAL gates requiring 100% pass rate — a single failure blocks deployment. The remaining two (Clinical Workflow, Integration) are HIGH gates requiring 95%+ pass rate.",
+      "zh-Hans": "评估工具链按顺序运行五个测试类别。前三个（CDSS 准确性、PHI 暴露、数据完整性）是 CRITICAL 关卡，要求 100% 通过率 — 单个失败即阻止部署。剩余两个（临床工作流、集成）是 HIGH 关卡，要求 95%+ 通过率。"
+    },
+    {
+      "en-US": "Each category maps to a Jest test path pattern. The CI pipeline runs CRITICAL gates with `--bail` (stop on first failure) and enforces coverage thresholds with `--coverage --coverageThreshold`.",
+      "zh-Hans": "每个类别映射到一个 Jest 测试路径模式。CI 流水线使用 `--bail`（在首次失败时停止）运行 CRITICAL 关卡，并使用 `--coverage --coverageThreshold` 强制执行覆盖率阈值。"
+    },
+    {
+      "en-US": "### Eval Categories",
+      "zh-Hans": "### 评估类别"
+    },
+    {
+      "en-US": "**1. CDSS Accuracy (CRITICAL — 100% required)**",
+      "zh-Hans": "**1. CDSS 准确性 (CRITICAL — 要求 100%)**"
+    },
+    {
+      "en-US": "Tests all clinical decision support logic: drug interaction pairs (both directions), dose validation rules, clinical scoring vs published specs, no false negatives, no silent failures.",
+      "zh-Hans": "测试所有临床决策支持逻辑：药物相互作用对（双向）、剂量验证规则、临床评分与发布规范的对比、无假阴性、无静默失败。"
+    },
+    {
+      "en-US": "```bash\nnpx jest --testPathPattern='tests/cdss' --bail --ci --coverage\n```",
+      "zh-Hans": "```bash\nnpx jest --testPathPattern='tests/cdss' --bail --ci --coverage\n```"
+    },
+    {
+      "en-US": "**2. PHI Exposure (CRITICAL — 100% required)**",
+      "zh-Hans": "**2. PHI 暴露 (CRITICAL — 要求 100%)**"
+    },
+    {
+      "en-US": "Tests for protected health information leaks: API error responses, console output, URL parameters, browser storage, cross-facility isolation, unauthenticated access, service role key absence.",
+      "zh-Hans": "测试受保护健康信息泄露：API 错误响应、控制台输出、URL 参数、浏览器存储、跨机构隔离、未经身份验证的访问、服务角色密钥缺失。"
+    },
+    {
+      "en-US": "```bash\nnpx jest --testPathPattern='tests/security/phi' --bail --ci\n```",
+      "zh-Hans": "```bash\nnpx jest --testPathPattern='tests/security/phi' --bail --ci\n```"
+    },
+    {
+      "en-US": "**3. Data Integrity (CRITICAL — 100% required)**",
+      "zh-Hans": "**3. 数据完整性 (CRITICAL — 要求 100%)**"
+    },
+    {
+      "en-US": "Tests clinical data safety: locked encounters, audit trail entries, cascade delete protection, concurrent edit handling, no orphaned records.",
+      "zh-Hans": "测试临床数据安全性：锁定的就诊记录、审计追踪条目、级联删除保护、并发编辑处理、无孤立记录。"
+    },
+    {
+      "en-US": "```bash\nnpx jest --testPathPattern='tests/data-integrity' --bail --ci\n```",
+      "zh-Hans": "```bash\nnpx jest --testPathPattern='tests/data-integrity' --bail --ci\n```"
+    },
+    {
+      "en-US": "**4. Clinical Workflow (HIGH — 95%+ required)**",
+      "zh-Hans": "**4. 临床工作流 (HIGH — 要求 95%+)**"
+    },
+    {
+      "en-US": "Tests end-to-end flows: encounter lifecycle, template rendering, medication sets, drug/diagnosis search, prescription PDF, red flag alerts.",
+      "zh-Hans": "测试端到端流程：就诊生命周期、模板渲染、药物集、药物/诊断搜索、处方 PDF、红色警报。"
+    },
+    {
+      "en-US": "```bash\ntmp_json=$(mktemp)\nnpx jest --testPathPattern='tests/clinical' --ci --json --outputFile=\"$tmp_json\" || true\ntotal=$(jq '.numTotalTests // 0' \"$tmp_json\")\npassed=$(jq '.numPassedTests // 0' \"$tmp_json\")\nif [ \"$total\" -eq 0 ]; then\n  echo \"No clinical tests found\" >&2\n  exit 1\nfi\nrate=$(echo \"scale=2; $passed * 100 / $total\" | bc)\necho \"Clinical pass rate: ${rate}% ($passed/$total)\"\n```",
+      "zh-Hans": "```bash\ntmp_json=$(mktemp)\nnpx jest --testPathPattern='tests/clinical' --ci --json --outputFile=\"$tmp_json\" || true\ntotal=$(jq '.numTotalTests // 0' \"$tmp_json\")\npassed=$(jq '.numPassedTests // 0' \"$tmp_json\")\nif [ \"$total\" -eq 0 ]; then\n  echo \"No clinical tests found\" >&2\n  exit 1\nfi\nrate=$(echo \"scale=2; $passed * 100 / $total\" | bc)\necho \"Clinical pass rate: ${rate}% ($passed/$total)\"\n```"
+    },
+    {
+      "en-US": "**5. Integration Compliance (HIGH — 95%+ required)**",
+      "zh-Hans": "**5. 集成合规性 (HIGH — 要求 95%+)**"
+    },
+    {
+      "en-US": "Tests external systems: HL7 message parsing (v2.x), FHIR validation, lab result mapping, malformed message handling.",
+      "zh-Hans": "测试外部系统：HL7 消息解析（v2.x）、FHIR 验证、实验室结果映射、畸形消息处理。"
+    },
+    {
+      "en-US": "```bash\ntmp_json=$(mktemp)\nnpx jest --testPathPattern='tests/integration' --ci --json --outputFile=\"$tmp_json\" || true\ntotal=$(jq '.numTotalTests // 0' \"$tmp_json\")\npassed=$(jq '.numPassedTests // 0' \"$tmp_json\")\nif [ \"$total\" -eq 0 ]; then\n  echo \"No integration tests found\" >&2\n  exit 1\nfi\nrate=$(echo \"scale=2; $passed * 100 / $total\" | bc)\necho \"Integration pass rate: ${rate}% ($passed/$total)\"\n```",
+      "zh-Hans": "```bash\ntmp_json=$(mktemp)\nnpx jest --testPathPattern='tests/integration' --ci --json --outputFile=\"$tmp_json\" || true\ntotal=$(jq '.numTotalTests // 0' \"$tmp_json\")\npassed=$(jq '.numPassedTests // 0' \"$tmp_json\")\nif [ \"$total\" -eq 0 ]; then\n  echo \"No integration tests found\" >&2\n  exit 1\nfi\nrate=$(echo \"scale=2; $passed * 100 / $total\" | bc)\necho \"Integration pass rate: ${rate}% ($passed/$total)\"\n```"
+    },
+    {
+      "en-US": "### Pass/Fail Matrix",
+      "zh-Hans": "### 通过/失败矩阵"
+    },
+    {
+      "en-US": "| Category | Threshold | On Failure |\n|----------|-----------|------------|\n| CDSS Accuracy | 100% | **BLOCK deployment** |\n| PHI Exposure | 100% | **BLOCK deployment** |\n| Data Integrity | 100% | **BLOCK deployment** |\n| Clinical Workflow | 95%+ | WARN, allow with review |\n| Integration | 95%+ | WARN, allow with review |",
+      "zh-Hans": "| 类别 | 阈值 | 失败时处理 |\n|----------|-----------|------------|\n| CDSS 准确性 | 100% | **阻止部署** |\n| PHI 暴露 | 100% | **阻止部署** |\n| 数据完整性 | 100% | **阻止部署** |\n| 临床工作流 | 95%+ | 警告，允许但需审查 |\n| 集成 | 95%+ | 警告，允许但需审查 |"
+    },
+    {
+      "en-US": "### CI/CD Integration",
+      "zh-Hans": "### CI/CD 集成"
+    },
+    {
+      "en-US": "```yaml\nname: Healthcare Safety Gate\non: [push, pull_request]\n\njobs:\n  safety-gate:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n      - run: npm ci\n\n      # CRITICAL gates — 100% required, bail on first failure\n      - name: CDSS Accuracy\n        run: npx jest --testPathPattern='tests/cdss' --bail --ci --coverage --coverageThreshold='{\"global\":{\"branches\":80,\"functions\":80,\"lines\":80}}'\n\n      - name: PHI Exposure Check\n        run: npx jest --testPathPattern='tests/security/phi' --bail --ci\n\n      - name: Data Integrity\n        run: npx jest --testPathPattern='tests/data-integrity' --bail --ci\n\n      # HIGH gates — 95%+ required, custom threshold check\n      # HIGH gates — 95%+ required\n      - name: Clinical Workflows\n        run: |\n          TMP_JSON=$(mktemp)\n          npx jest --testPathPattern='tests/clinical' --ci --json --outputFile=\"$TMP_JSON\" || true\n          TOTAL=$(jq '.numTotalTests // 0' \"$TMP_JSON\")\n          PASSED=$(jq '.numPassedTests // 0' \"$TMP_JSON\")\n          if [ \"$TOTAL\" -eq 0 ]; then\n            echo \"::error::No clinical tests found\"; exit 1\n          fi\n          RATE=$(echo \"scale=2; $PASSED * 100 / $TOTAL\" | bc)\n          echo \"Pass rate: ${RATE}% ($PASSED/$TOTAL)\"\n          if (( $(echo \"$RATE < 95\" | bc -l) )); then\n            echo \"::warning::Clinical pass rate ${RATE}% below 95%\"\n          fi\n\n      - name: Integration Compliance\n        run: |\n          TMP_JSON=$(mktemp)\n          npx jest --testPathPattern='tests/integration' --ci --json --outputFile=\"$TMP_JSON\" || true\n          TOTAL=$(jq '.numTotalTests // 0' \"$TMP_JSON\")\n          PASSED=$(jq '.numPassedTests // 0' \"$TMP_JSON\")\n          if [ \"$TOTAL\" -eq 0 ]; then\n            echo \"::error::No integration tests found\"; exit 1\n          fi\n          RATE=$(echo \"scale=2; $PASSED * 100 / $TOTAL\" | bc)\n          echo \"Pass rate: ${RATE}% ($PASSED/$TOTAL)\"\n          if (( $(echo \"$RATE < 95\" | bc -l) )); then\n            echo \"::warning::Integration pass rate ${RATE}% below 95%\"\n          fi\n```",
+      "zh-Hans": "```yaml\nname: Healthcare Safety Gate\non: [push, pull_request]\n\njobs:\n  safety-gate:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n      - run: npm ci\n\n      # CRITICAL gates — 100% required, bail on first failure\n      - name: CDSS Accuracy\n        run: npx jest --testPathPattern='tests/cdss' --bail --ci --coverage --coverageThreshold='{\"global\":{\"branches\":80,\"functions\":80,\"lines\":80}}'\n\n      - name: PHI Exposure Check\n        run: npx jest --testPathPattern='tests/security/phi' --bail --ci\n\n      - name: Data Integrity\n        run: npx jest --testPathPattern='tests/data-integrity' --bail --ci\n\n      # HIGH gates — 95%+ required, custom threshold check\n      # HIGH gates — 95%+ required\n      - name: Clinical Workflows\n        run: |\n          TMP_JSON=$(mktemp)\n          npx jest --testPathPattern='tests/clinical' --ci --json --outputFile=\"$TMP_JSON\" || true\n          TOTAL=$(jq '.numTotalTests // 0' \"$TMP_JSON\")\n          PASSED=$(jq '.numPassedTests // 0' \"$TMP_JSON\")\n          if [ \"$TOTAL\" -eq 0 ]; then\n            echo \"::error::No clinical tests found\"; exit 1\n          fi\n          RATE=$(echo \"scale=2; $PASSED * 100 / $TOTAL\" | bc)\n          echo \"Pass rate: ${RATE}% ($PASSED/$TOTAL)\"\n          if (( $(echo \"$RATE < 95\" | bc -l) )); then\n            echo \"::warning::Clinical pass rate ${RATE}% below 95%\"\n          fi\n\n      - name: Integration Compliance\n        run: |\n          TMP_JSON=$(mktemp)\n          npx jest --testPathPattern='tests/integration' --ci --json --outputFile=\"$TMP_JSON\" || true\n          TOTAL=$(jq '.numTotalTests // 0' \"$TMP_JSON\")\n          PASSED=$(jq '.numPassedTests // 0' \"$TMP_JSON\")\n          if [ \"$TOTAL\" -eq 0 ]; then\n            echo \"::error::No integration tests found\"; exit 1\n          fi\n          RATE=$(echo \"scale=2; $PASSED * 100 / $TOTAL\" | bc)\n          echo \"Pass rate: ${RATE}% ($PASSED/$TOTAL)\"\n          if (( $(echo \"$RATE < 95\" | bc -l) )); then\n            echo \"::warning::Integration pass rate ${RATE}% below 95%\"\n          fi\n```"
+    },
+    {
+      "en-US": "### Anti-Patterns",
+      "zh-Hans": "### 反面模式"
+    },
+    {
+      "en-US": "- Skipping CDSS tests \"because they passed last time\"\n- Setting CRITICAL thresholds below 100%\n- Using `--no-bail` on CRITICAL test suites\n- Mocking the CDSS engine in integration tests (must test real logic)\n- Allowing deployments when safety gate is red\n- Running tests without `--coverage` on CDSS suites",
+      "zh-Hans": "* 跳过 CDSS 测试“因为它们上次通过了”\n* 将 CRITICAL 阈值设置为低于 100%\n* 在 CRITICAL 测试套件上使用 `--no-bail`\n* 在集成测试中模拟 CDSS 引擎（必须测试真实逻辑）\n* 在安全关卡为红色时允许部署\n* 在 CDSS 套件上运行测试时不使用 `--coverage`"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Example 1: Run All Critical Gates Locally",
+      "zh-Hans": "### 示例 1：本地运行所有关键关卡"
+    },
+    {
+      "en-US": "```bash\nnpx jest --testPathPattern='tests/cdss' --bail --ci --coverage && \\\nnpx jest --testPathPattern='tests/security/phi' --bail --ci && \\\nnpx jest --testPathPattern='tests/data-integrity' --bail --ci\n```",
+      "zh-Hans": "```bash\nnpx jest --testPathPattern='tests/cdss' --bail --ci --coverage && \\\nnpx jest --testPathPattern='tests/security/phi' --bail --ci && \\\nnpx jest --testPathPattern='tests/data-integrity' --bail --ci\n```"
+    },
+    {
+      "en-US": "### Example 2: Check HIGH Gate Pass Rate",
+      "zh-Hans": "### 示例 2：检查 HIGH 关卡通过率"
+    },
+    {
+      "en-US": "```bash\ntmp_json=$(mktemp)\nnpx jest --testPathPattern='tests/clinical' --ci --json --outputFile=\"$tmp_json\" || true\njq '{\n  passed: (.numPassedTests // 0),\n  total: (.numTotalTests // 0),\n  rate: (if (.numTotalTests // 0) == 0 then 0 else ((.numPassedTests // 0) / (.numTotalTests // 1) * 100) end)\n}' \"$tmp_json\"\n# Expected: { \"passed\": 21, \"total\": 22, \"rate\": 95.45 }\n```",
+      "zh-Hans": "```bash\ntmp_json=$(mktemp)\nnpx jest --testPathPattern='tests/clinical' --ci --json --outputFile=\"$tmp_json\" || true\njq '{\n  passed: (.numPassedTests // 0),\n  total: (.numTotalTests // 0),\n  rate: (if (.numTotalTests // 0) == 0 then 0 else ((.numPassedTests // 0) / (.numTotalTests // 1) * 100) end)\n}' \"$tmp_json\"\n# Expected: { \"passed\": 21, \"total\": 22, \"rate\": 95.45 }\n```"
+    },
+    {
+      "en-US": "### Example 3: Eval Report",
+      "zh-Hans": "### 示例 3：评估报告"
+    },
+    {
+      "en-US": "```\n## Healthcare Eval: 2026-03-27 [commit abc1234]\n\n### Patient Safety: PASS\n\n| Category | Tests | Pass | Fail | Status |\n|----------|-------|------|------|--------|\n| CDSS Accuracy | 39 | 39 | 0 | PASS |\n| PHI Exposure | 8 | 8 | 0 | PASS |\n| Data Integrity | 12 | 12 | 0 | PASS |\n| Clinical Workflow | 22 | 21 | 1 | 95.5% PASS |\n| Integration | 6 | 6 | 0 | PASS |\n\n### Coverage: 84% (target: 80%+)\n### Verdict: SAFE TO DEPLOY\n```",
+      "zh-Hans": "```\n## Healthcare Eval: 2026-03-27 [commit abc1234]\n\n### Patient Safety: PASS\n\n| Category | Tests | Pass | Fail | Status |\n|----------|-------|------|------|--------|\n| CDSS Accuracy | 39 | 39 | 0 | PASS |\n| PHI Exposure | 8 | 8 | 0 | PASS |\n| Data Integrity | 12 | 12 | 0 | PASS |\n| Clinical Workflow | 22 | 21 | 1 | 95.5% PASS |\n| Integration | 6 | 6 | 0 | PASS |\n\n### Coverage: 84% (target: 80%+)\n### Verdict: SAFE TO DEPLOY\n```"
+    }
+  ]
+}

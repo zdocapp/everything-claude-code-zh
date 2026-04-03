@@ -3,136 +3,80 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\ndescription: Sequential and tmux/worktree orchestration guidance for multi-agent workflows.\n---",
-      "zh-Hans": "---\ndescription: 针对多智能体工作流程的顺序和tmux/worktree编排指南。\n---"
+      "en-US": "---\ndescription: Legacy slash-entry shim for dmux-workflows and autonomous-agent-harness. Prefer the skills directly.\n---",
+      "zh-Hans": "---\ndescription: dmux-workflows 和 autonomous-agent-harness 的旧版斜杠入口垫片。建议直接使用技能。\n---"
     },
     {
-      "en-US": "# Orchestrate Command",
-      "zh-Hans": "# 编排命令"
+      "en-US": "# Orchestrate Command (Legacy Shim)",
+      "zh-Hans": "# 编排命令（旧版兼容层）"
     },
     {
-      "en-US": "Sequential agent workflow for complex tasks.",
-      "zh-Hans": "用于复杂任务的顺序代理工作流。"
+      "en-US": "Use this only if you still invoke `/orchestrate`. The maintained orchestration guidance lives in `skills/dmux-workflows/SKILL.md` and `skills/autonomous-agent-harness/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/orchestrate` 时使用此命令。维护中的编排指南位于 `skills/dmux-workflows/SKILL.md` 和 `skills/autonomous-agent-harness/SKILL.md`。"
     },
     {
-      "en-US": "## Usage",
-      "zh-Hans": "## 使用"
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范用法"
     },
     {
-      "en-US": "`/orchestrate [workflow-type] [task-description]`",
-      "zh-Hans": "`/orchestrate [workflow-type] [task-description]`"
+      "en-US": "- Prefer `dmux-workflows` for parallel panes, worktrees, and multi-agent splits.\n- Prefer `autonomous-agent-harness` for longer-running loops, governance, scheduling, and control-plane style execution.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 对于并行窗格、工作树和多代理拆分，优先使用 `dmux-workflows`。\n* 对于长时间运行的循环、治理、调度和控制平面风格的执行，优先使用 `autonomous-agent-harness`。\n* 仅将此文件保留为兼容性入口点。"
     },
     {
-      "en-US": "## Workflow Types",
-      "zh-Hans": "## 工作流类型"
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
     },
     {
-      "en-US": "### feature",
-      "zh-Hans": "### feature"
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
     },
     {
-      "en-US": "Full feature implementation workflow:",
-      "zh-Hans": "完整功能实现工作流："
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
     },
     {
-      "en-US": "```\nplanner -> tdd-guide -> code-reviewer -> security-reviewer\n```",
-      "zh-Hans": "```\n规划者 -> 测试驱动开发指南 -> 代码审查员 -> 安全审查员\n```"
+      "en-US": "Apply the orchestration skills instead of maintaining a second workflow spec here.",
+      "zh-Hans": "应用编排技能，而不是在此处维护第二个工作流规范。"
     },
     {
-      "en-US": "### bugfix",
-      "zh-Hans": "### bugfix"
+      "en-US": "- Start with `dmux-workflows` for split/parallel execution.\n- Pull in `autonomous-agent-harness` when the user is really asking for persistent loops, governance, or operator-layer behavior.\n- Keep handoffs structured, but let the skills define the maintained sequencing rules.\nSecurity Reviewer: [summary]",
+      "zh-Hans": "* 对于拆分/并行执行，从 `dmux-workflows` 开始。\n* 当用户真正需要的是持久循环、治理或操作员层行为时，引入 `autonomous-agent-harness`。\n* 保持交接的结构化，但让技能定义维护中的排序规则。\n  安全审查员：\\[摘要]"
     },
     {
-      "en-US": "Bug investigation and fix workflow:",
-      "zh-Hans": "错误调查与修复工作流："
+      "en-US": "### FILES CHANGED",
+      "zh-Hans": "### 已更改的文件"
     },
     {
-      "en-US": "```\nplanner -> tdd-guide -> code-reviewer\n```",
-      "zh-Hans": "```\nplanner -> tdd-guide -> code-reviewer\n```"
+      "en-US": "[List all files modified]",
+      "zh-Hans": "\\[列出所有修改的文件]"
     },
     {
-      "en-US": "### refactor",
-      "zh-Hans": "### refactor"
+      "en-US": "### TEST RESULTS",
+      "zh-Hans": "### 测试结果"
     },
     {
-      "en-US": "Safe refactoring workflow:",
-      "zh-Hans": "安全重构工作流："
+      "en-US": "[Test pass/fail summary]",
+      "zh-Hans": "\\[测试通过/失败摘要]"
     },
     {
-      "en-US": "```\narchitect -> code-reviewer -> tdd-guide\n```",
-      "zh-Hans": "```\n架构师 -> 代码审查员 -> 测试驱动开发指南\n```"
+      "en-US": "### SECURITY STATUS",
+      "zh-Hans": "### 安全状态"
     },
     {
-      "en-US": "### security",
-      "zh-Hans": "### security"
+      "en-US": "[Security findings]",
+      "zh-Hans": "\\[安全发现]"
     },
     {
-      "en-US": "Security-focused review:",
-      "zh-Hans": "安全审查工作流："
+      "en-US": "### RECOMMENDATION",
+      "zh-Hans": "### 建议"
     },
     {
-      "en-US": "```\nsecurity-reviewer -> code-reviewer -> architect\n```",
-      "zh-Hans": "```\nsecurity-reviewer -> code-reviewer -> architect\n```"
+      "en-US": "[SHIP / NEEDS WORK / BLOCKED]",
+      "zh-Hans": "\\[批准 / 需要改进 / 已阻止]"
     },
     {
-      "en-US": "## Execution Pattern",
-      "zh-Hans": "## 执行模式"
-    },
-    {
-      "en-US": "For each agent in the workflow:",
-      "zh-Hans": "针对工作流中的每个代理："
-    },
-    {
-      "en-US": "1. **Invoke agent** with context from previous agent\n2. **Collect output** as structured handoff document\n3. **Pass to next agent** in chain\n4. **Aggregate results** into final report",
-      "zh-Hans": "1. 使用来自上一个代理的上下文**调用代理**\n2. 将输出收集为结构化的交接文档\n3. 将文档**传递给链中的下一个代理**\n4. 将结果**汇总**到最终报告中"
-    },
-    {
-      "en-US": "## Handoff Document Format",
-      "zh-Hans": "## 交接文档格式"
-    },
-    {
-      "en-US": "Between agents, create handoff document:",
-      "zh-Hans": "在代理之间，创建交接文档："
-    },
-    {
-      "en-US": "```markdown\n## HANDOFF: [previous-agent] -> [next-agent]\n\n### Context\n[Summary of what was done]\n\n### Findings\n[Key discoveries or decisions]\n\n### Files Modified\n[List of files touched]\n\n### Open Questions\n[Unresolved items for next agent]\n\n### Recommendations\n[Suggested next steps]\n```",
-      "zh-Hans": "```markdown\n## 交接：[前一位代理人] -> [下一位代理人]\n\n### 背景\n[已完成工作的总结]\n\n### 发现\n[关键发现或决定]\n\n### 已修改的文件\n[已触及的文件列表]\n\n### 待解决的问题\n[留给下一位代理人的未决事项]\n\n### 建议\n[建议的后续步骤]\n\n```"
-    },
-    {
-      "en-US": "## Example: Feature Workflow",
-      "zh-Hans": "## 示例：功能工作流"
-    },
-    {
-      "en-US": "```\n/orchestrate feature \"Add user authentication\"\n```",
-      "zh-Hans": "```\n/orchestrate feature \"Add user authentication\"\n```"
-    },
-    {
-      "en-US": "Executes:",
-      "zh-Hans": "执行："
-    },
-    {
-      "en-US": "1. **Planner Agent**\n   - Analyzes requirements\n   - Creates implementation plan\n   - Identifies dependencies\n   - Output: `HANDOFF: planner -> tdd-guide`\n\n2. **TDD Guide Agent**\n   - Reads planner handoff\n   - Writes tests first\n   - Implements to pass tests\n   - Output: `HANDOFF: tdd-guide -> code-reviewer`\n\n3. **Code Reviewer Agent**\n   - Reviews implementation\n   - Checks for issues\n   - Suggests improvements\n   - Output: `HANDOFF: code-reviewer -> security-reviewer`\n\n4. **Security Reviewer Agent**\n   - Security audit\n   - Vulnerability check\n   - Final approval\n   - Output: Final Report",
-      "zh-Hans": "1. **规划代理**\n   * 分析需求\n   * 创建实施计划\n   * 识别依赖项\n   * 输出：`HANDOFF: planner -> tdd-guide`\n\n2. **TDD 指导代理**\n   * 读取规划交接文档\n   * 先编写测试\n   * 实施代码以通过测试\n   * 输出：`HANDOFF: tdd-guide -> code-reviewer`\n\n3. **代码审查代理**\n   * 审查实现\n   * 检查问题\n   * 提出改进建议\n   * 输出：`HANDOFF: code-reviewer -> security-reviewer`\n\n4. **安全审查代理**\n   * 安全审计\n   * 漏洞检查\n   * 最终批准\n   * 输出：最终报告"
-    },
-    {
-      "en-US": "## Final Report Format",
-      "zh-Hans": "## 最终报告格式"
-    },
-    {
-      "en-US": "```\nORCHESTRATION REPORT\n====================\nWorkflow: feature\nTask: Add user authentication\nAgents: planner -> tdd-guide -> code-reviewer -> security-reviewer\n\nSUMMARY\n-------\n[One paragraph summary]\n\nAGENT OUTPUTS\n-------------\nPlanner: [summary]\nTDD Guide: [summary]\nCode Reviewer: [summary]\nSecurity Reviewer: [summary]\n\nFILES CHANGED\n-------------\n[List all files modified]\n\nTEST RESULTS\n------------\n[Test pass/fail summary]\n\nSECURITY STATUS\n---------------\n[Security findings]\n\nRECOMMENDATION\n--------------\n[SHIP / NEEDS WORK / BLOCKED]\n```",
-      "zh-Hans": "```\n编排报告\n====================\n工作流：功能\n任务：添加用户认证\n智能体：规划者 -> TDD指南 -> 代码审查员 -> 安全审查员\n\n概要\n-------\n[一段总结]\n\n智能体输出\n-------------\n规划者：[总结]\nTDD指南：[总结]\n代码审查员：[总结]\n安全审查员：[总结]\n\n已更改文件\n-------------\n[列出所有修改的文件]\n\n测试结果\n------------\n[测试通过/失败总结]\n\n安全状态\n---------------\n[安全发现]\n\n建议\n--------------\n[可发布 / 需要改进 / 已阻止]\n```"
-    },
-    {
-      "en-US": "## Parallel Execution",
-      "zh-Hans": "## 并行执行"
-    },
-    {
-      "en-US": "For independent checks, run agents in parallel:",
-      "zh-Hans": "对于独立的检查，并行运行代理："
-    },
-    {
-      "en-US": "```markdown\n### Parallel Phase\nRun simultaneously:\n- code-reviewer (quality)\n- security-reviewer (security)\n- architect (design)\n\n### Merge Results\nCombine outputs into single report\n```",
-      "zh-Hans": "```markdown\n### 并行阶段\n同时运行：\n- code-reviewer（质量）\n- security-reviewer（安全）\n- architect（设计）\n\n### 合并结果\n将输出合并为单一报告\n\n```"
+      "en-US": "```\n\n## Parallel Execution\n\nFor independent checks, run agents in parallel:\n\n```markdown\n### Parallel Phase\nRun simultaneously:\n- code-reviewer (quality)\n- security-reviewer (security)\n- architect (design)\n\n### Merge Results\nCombine outputs into single report\n```",
+      "zh-Hans": "````\n\n## 并行执行\n\n对于独立的检查，并行运行代理：\n\n```markdown\n### 并行阶段\n同时运行：\n- code-reviewer（质量）\n- security-reviewer（安全）\n- architect（设计）\n\n### 合并结果\n将输出合并为单一报告\n````"
     },
     {
       "en-US": "For external tmux-pane workers with separate git worktrees, use `node scripts/orchestrate-worktrees.js plan.json --execute`. The built-in orchestration pattern stays in-process; the helper is for long-running or cross-harness sessions.",
@@ -175,8 +119,8 @@
       "zh-Hans": "这使得规划者、实施者、审查者和循环工作器在操作员界面上保持清晰可辨。"
     },
     {
-      "en-US": "## Arguments",
-      "zh-Hans": "## 参数"
+      "en-US": "## Workflow Arguments",
+      "zh-Hans": "## 工作流参数"
     },
     {
       "en-US": "$ARGUMENTS:",

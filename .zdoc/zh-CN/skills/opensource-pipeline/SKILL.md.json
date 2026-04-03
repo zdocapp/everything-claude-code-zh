@@ -1,0 +1,242 @@
+{
+  "sourceFile": "skills/opensource-pipeline/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: opensource-pipeline\ndescription: \"Open-source pipeline: fork, sanitize, and package private projects for safe public release. Chains 3 agents (forker, sanitizer, packager). Triggers: '/opensource', 'open source this', 'make this public', 'prepare for open source'.\"\norigin: ECC\n---",
+      "zh-Hans": "---\nname: opensource-pipeline\ndescription: \"开源流水线：分叉、清理并打包私有项目，以便安全公开发布。链接3个代理（分叉器、清理器、打包器）。触发词：'/opensource'、'open source this'、'make this public'、'prepare for open source'。\"\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Open-Source Pipeline Skill",
+      "zh-Hans": "# 开源流水线技能"
+    },
+    {
+      "en-US": "Safely open-source any project through a 3-stage pipeline: **Fork** (strip secrets) → **Sanitize** (verify clean) → **Package** (CLAUDE.md + setup.sh + README).",
+      "zh-Hans": "通过一个三阶段流水线安全地开源任何项目：**复刻**（剥离密钥）→ **清理**（验证洁净）→ **打包**（CLAUDE.md + setup.sh + README）。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- User says \"open source this project\" or \"make this public\"\n- User wants to prepare a private repo for public release\n- User needs to strip secrets before pushing to GitHub\n- User invokes `/opensource fork`, `/opensource verify`, or `/opensource package`",
+      "zh-Hans": "* 用户说“开源这个项目”或“将其公开”\n* 用户希望将私有仓库准备公开发布\n* 用户需要在推送到 GitHub 前剥离密钥\n* 用户调用 `/opensource fork`、`/opensource verify` 或 `/opensource package`"
+    },
+    {
+      "en-US": "## Commands",
+      "zh-Hans": "## 命令"
+    },
+    {
+      "en-US": "| Command | Action |\n|---------|--------|\n| `/opensource fork PROJECT` | Full pipeline: fork + sanitize + package |\n| `/opensource verify PROJECT` | Run sanitizer on existing repo |\n| `/opensource package PROJECT` | Generate CLAUDE.md + setup.sh + README |\n| `/opensource list` | Show all staged projects |\n| `/opensource status PROJECT` | Show reports for a staged project |",
+      "zh-Hans": "| 命令 | 操作 |\n|---------|--------|\n| `/opensource fork PROJECT` | 完整流水线：复刻 + 清理 + 打包 |\n| `/opensource verify PROJECT` | 在现有仓库上运行清理器 |\n| `/opensource package PROJECT` | 生成 CLAUDE.md + setup.sh + README |\n| `/opensource list` | 显示所有暂存项目 |\n| `/opensource status PROJECT` | 显示暂存项目的报告 |"
+    },
+    {
+      "en-US": "## Protocol",
+      "zh-Hans": "## 协议"
+    },
+    {
+      "en-US": "### /opensource fork PROJECT",
+      "zh-Hans": "### /opensource fork PROJECT"
+    },
+    {
+      "en-US": "**Full pipeline — the main workflow.**",
+      "zh-Hans": "**完整流水线 — 主要工作流。**"
+    },
+    {
+      "en-US": "#### Step 1: Gather Parameters",
+      "zh-Hans": "#### 步骤 1：收集参数"
+    },
+    {
+      "en-US": "Resolve the project path. If PROJECT contains `/`, treat as a path (absolute or relative). Otherwise check: current working directory, `$HOME/PROJECT`, then ask the user.",
+      "zh-Hans": "解析项目路径。如果 PROJECT 包含 `/`，则将其视为路径（绝对或相对）。否则检查：当前工作目录、`$HOME/PROJECT`，然后询问用户。"
+    },
+    {
+      "en-US": "```\nSOURCE_PATH=\"<resolved absolute path>\"\nSTAGING_PATH=\"$HOME/opensource-staging/${PROJECT_NAME}\"\n```",
+      "zh-Hans": "```\nSOURCE_PATH=\"<resolved absolute path>\"\nSTAGING_PATH=\"$HOME/opensource-staging/${PROJECT_NAME}\"\n```"
+    },
+    {
+      "en-US": "Ask the user:",
+      "zh-Hans": "询问用户："
+    },
+    {
+      "en-US": "1. \"Which project?\" (if not found)\n2. \"License? (MIT / Apache-2.0 / GPL-3.0 / BSD-3-Clause)\"\n3. \"GitHub org or username?\" (default: detect via `gh api user -q .login`)\n4. \"GitHub repo name?\" (default: project name)\n5. \"Description for README?\" (analyze project for suggestion)",
+      "zh-Hans": "1. “哪个项目？”（如果未找到）\n2. “许可证？（MIT / Apache-2.0 / GPL-3.0 / BSD-3-Clause）”\n3. “GitHub 组织或用户名？”（默认：通过 `gh api user -q .login` 检测）\n4. “GitHub 仓库名称？”（默认：项目名称）\n5. “README 的描述？”（分析项目以提供建议）"
+    },
+    {
+      "en-US": "#### Step 2: Create Staging Directory",
+      "zh-Hans": "#### 步骤 2：创建暂存目录"
+    },
+    {
+      "en-US": "```bash\nmkdir -p $HOME/opensource-staging/\n```",
+      "zh-Hans": "```bash\nmkdir -p $HOME/opensource-staging/\n```"
+    },
+    {
+      "en-US": "#### Step 3: Run Forker Agent",
+      "zh-Hans": "#### 步骤 3：运行复刻器代理"
+    },
+    {
+      "en-US": "Spawn the `opensource-forker` agent:",
+      "zh-Hans": "启动 `opensource-forker` 代理："
+    },
+    {
+      "en-US": "```\nAgent(\n  description=\"Fork {PROJECT} for open-source\",\n  subagent_type=\"opensource-forker\",\n  prompt=\"\"\"\nFork project for open-source release.\n\nSource: {SOURCE_PATH}\nTarget: {STAGING_PATH}\nLicense: {chosen_license}\n\nFollow the full forking protocol:\n1. Copy files (exclude .git, node_modules, __pycache__, .venv)\n2. Strip all secrets and credentials\n3. Replace internal references with placeholders\n4. Generate .env.example\n5. Clean git history\n6. Generate FORK_REPORT.md in {STAGING_PATH}/FORK_REPORT.md\n\"\"\"\n)\n```",
+      "zh-Hans": "```\nAgent(\n  description=\"Fork {PROJECT} for open-source\",\n  subagent_type=\"opensource-forker\",\n  prompt=\"\"\"\n为开源发布 Fork 项目。\n\n源路径: {SOURCE_PATH}\n目标路径: {STAGING_PATH}\n许可证: {chosen_license}\n\n遵循完整的 forking 协议：\n1. 复制文件（排除 .git, node_modules, __pycache__, .venv）\n2. 移除所有密钥和凭据\n3. 将内部引用替换为占位符\n4. 生成 .env.example\n5. 清理 git 历史记录\n6. 在 {STAGING_PATH}/FORK_REPORT.md 生成 FORK_REPORT.md\n\"\"\"\n)\n```"
+    },
+    {
+      "en-US": "Wait for completion. Read `{STAGING_PATH}/FORK_REPORT.md`.",
+      "zh-Hans": "等待完成。读取 `{STAGING_PATH}/FORK_REPORT.md`。"
+    },
+    {
+      "en-US": "#### Step 4: Run Sanitizer Agent",
+      "zh-Hans": "#### 步骤 4：运行清理器代理"
+    },
+    {
+      "en-US": "Spawn the `opensource-sanitizer` agent:",
+      "zh-Hans": "启动 `opensource-sanitizer` 代理："
+    },
+    {
+      "en-US": "```\nAgent(\n  description=\"Verify {PROJECT} sanitization\",\n  subagent_type=\"opensource-sanitizer\",\n  prompt=\"\"\"\nVerify sanitization of open-source fork.\n\nProject: {STAGING_PATH}\nSource (for reference): {SOURCE_PATH}\n\nRun ALL scan categories:\n1. Secrets scan (CRITICAL)\n2. PII scan (CRITICAL)\n3. Internal references scan (CRITICAL)\n4. Dangerous files check (CRITICAL)\n5. Configuration completeness (WARNING)\n6. Git history audit\n\nGenerate SANITIZATION_REPORT.md inside {STAGING_PATH}/ with PASS/FAIL verdict.\n\"\"\"\n)\n```",
+      "zh-Hans": "```\nAgent(\n  description=\"验证 {PROJECT} 的清理情况\",\n  subagent_type=\"opensource-sanitizer\",\n  prompt=\"\"\"\n验证开源分支的清理情况。\n\n项目：{STAGING_PATH}\n源项目（供参考）：{SOURCE_PATH}\n\n运行所有扫描类别：\n1. 密钥扫描（关键）\n2. 个人身份信息扫描（关键）\n3. 内部引用扫描（关键）\n4. 危险文件检查（关键）\n5. 配置完整性检查（警告）\n6. Git 历史审计\n\n在 {STAGING_PATH}/ 内生成 SANITIZATION_REPORT.md 文件，并给出通过/失败的判定。\n\"\"\"\n)\n```"
+    },
+    {
+      "en-US": "Wait for completion. Read `{STAGING_PATH}/SANITIZATION_REPORT.md`.",
+      "zh-Hans": "等待完成。读取 `{STAGING_PATH}/SANITIZATION_REPORT.md`。"
+    },
+    {
+      "en-US": "**If FAIL:** Show findings to user. Ask: \"Fix these and re-scan, or abort?\"",
+      "zh-Hans": "**如果 FAIL：** 向用户展示发现的问题。询问：“修复这些问题并重新扫描，还是中止？”"
+    },
+    {
+      "en-US": "- If fix: Apply fixes, re-run sanitizer (maximum 3 retry attempts — after 3 FAILs, present all findings and ask user to fix manually)\n- If abort: Clean up staging directory",
+      "zh-Hans": "* 如果修复：应用修复，重新运行清理器（最多重试 3 次 — 3 次 FAIL 后，展示所有发现的问题并要求用户手动修复）\n* 如果中止：清理暂存目录"
+    },
+    {
+      "en-US": "**If PASS or PASS WITH WARNINGS:** Continue to Step 5.",
+      "zh-Hans": "**如果 PASS 或 PASS WITH WARNINGS：** 继续步骤 5。"
+    },
+    {
+      "en-US": "#### Step 5: Run Packager Agent",
+      "zh-Hans": "#### 步骤 5：运行打包器代理"
+    },
+    {
+      "en-US": "Spawn the `opensource-packager` agent:",
+      "zh-Hans": "启动 `opensource-packager` 代理："
+    },
+    {
+      "en-US": "```\nAgent(\n  description=\"Package {PROJECT} for open-source\",\n  subagent_type=\"opensource-packager\",\n  prompt=\"\"\"\nGenerate open-source packaging for project.\n\nProject: {STAGING_PATH}\nLicense: {chosen_license}\nProject name: {PROJECT_NAME}\nDescription: {description}\nGitHub repo: {github_repo}\n\nGenerate:\n1. CLAUDE.md (commands, architecture, key files)\n2. setup.sh (one-command bootstrap, make executable)\n3. README.md (or enhance existing)\n4. LICENSE\n5. CONTRIBUTING.md\n6. .github/ISSUE_TEMPLATE/ (bug_report.md, feature_request.md)\n\"\"\"\n)\n```",
+      "zh-Hans": "```\nAgent(\n  description=\"为开源项目 {PROJECT} 打包\",\n  subagent_type=\"opensource-packager\",\n  prompt=\"\"\"\n为项目生成开源打包文件。\n\n项目: {STAGING_PATH}\n许可证: {chosen_license}\n项目名称: {PROJECT_NAME}\n描述: {description}\nGitHub 仓库: {github_repo}\n\n生成:\n1. CLAUDE.md (命令、架构、关键文件)\n2. setup.sh (一键引导脚本，设为可执行)\n3. README.md (或增强现有文件)\n4. LICENSE\n5. CONTRIBUTING.md\n6. .github/ISSUE_TEMPLATE/ (bug_report.md, feature_request.md)\n\"\"\"\n)\n```"
+    },
+    {
+      "en-US": "#### Step 6: Final Review",
+      "zh-Hans": "#### 步骤 6：最终审查"
+    },
+    {
+      "en-US": "Present to user:",
+      "zh-Hans": "向用户展示："
+    },
+    {
+      "en-US": "```\nOpen-Source Fork Ready: {PROJECT_NAME}\n\nLocation: {STAGING_PATH}\nLicense: {license}\nFiles generated:\n  - CLAUDE.md\n  - setup.sh (executable)\n  - README.md\n  - LICENSE\n  - CONTRIBUTING.md\n  - .env.example ({N} variables)\n\nSanitization: {sanitization_verdict}\n\nNext steps:\n  1. Review: cd {STAGING_PATH}\n  2. Create repo: gh repo create {github_org}/{github_repo} --public\n  3. Push: git remote add origin ... && git push -u origin main\n\nProceed with GitHub creation? (yes/no/review first)\n```",
+      "zh-Hans": "```\n开源分支就绪：{PROJECT_NAME}\n\n位置：{STAGING_PATH}\n许可证：{license}\n生成的文件：\n  - CLAUDE.md\n  - setup.sh（可执行文件）\n  - README.md\n  - LICENSE\n  - CONTRIBUTING.md\n  - .env.example（{N} 个变量）\n\n清理情况：{sanitization_verdict}\n\n后续步骤：\n  1. 审查：cd {STAGING_PATH}\n  2. 创建仓库：gh repo create {github_org}/{github_repo} --public\n  3. 推送：git remote add origin ... && git push -u origin main\n\n是否继续创建 GitHub 仓库？（是/否/先审查）\n```"
+    },
+    {
+      "en-US": "#### Step 7: GitHub Publish (on user approval)",
+      "zh-Hans": "#### 步骤 7：GitHub 发布（经用户批准后）"
+    },
+    {
+      "en-US": "```bash\ncd \"{STAGING_PATH}\"\ngh repo create \"{github_org}/{github_repo}\" --public --source=. --push --description \"{description}\"\n```",
+      "zh-Hans": "```bash\ncd \"{STAGING_PATH}\"\ngh repo create \"{github_org}/{github_repo}\" --public --source=. --push --description \"{description}\"\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### /opensource verify PROJECT",
+      "zh-Hans": "### /opensource verify PROJECT"
+    },
+    {
+      "en-US": "Run sanitizer independently. Resolve path: if PROJECT contains `/`, treat as a path. Otherwise check `$HOME/opensource-staging/PROJECT`, then `$HOME/PROJECT`, then current directory.",
+      "zh-Hans": "独立运行清理器。解析路径：如果 PROJECT 包含 `/`，则将其视为路径。否则检查 `$HOME/opensource-staging/PROJECT`，然后 `$HOME/PROJECT`，最后是当前目录。"
+    },
+    {
+      "en-US": "```\nAgent(\n  subagent_type=\"opensource-sanitizer\",\n  prompt=\"Verify sanitization of: {resolved_path}. Run all 6 scan categories and generate SANITIZATION_REPORT.md.\"\n)\n```",
+      "zh-Hans": "```\nAgent(\n  subagent_type=\"opensource-sanitizer\",\n  prompt=\"验证以下内容的清理情况：{resolved_path}。运行全部6个扫描类别并生成SANITIZATION_REPORT.md。\"\n)\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### /opensource package PROJECT",
+      "zh-Hans": "### /opensource package PROJECT"
+    },
+    {
+      "en-US": "Run packager independently. Ask for \"License?\" and \"Description?\", then:",
+      "zh-Hans": "独立运行打包器。询问“许可证？”和“描述？”，然后："
+    },
+    {
+      "en-US": "```\nAgent(\n  subagent_type=\"opensource-packager\",\n  prompt=\"Package: {resolved_path} ...\"\n)\n```",
+      "zh-Hans": "```\nAgent(\n  subagent_type=\"opensource-packager\",\n  prompt=\"打包：{resolved_path} ...\"\n)\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### /opensource list",
+      "zh-Hans": "### /opensource list"
+    },
+    {
+      "en-US": "```bash\nls -d $HOME/opensource-staging/*/\n```",
+      "zh-Hans": "```bash\nls -d $HOME/opensource-staging/*/\n```"
+    },
+    {
+      "en-US": "Show each project with pipeline progress (FORK_REPORT.md, SANITIZATION_REPORT.md, CLAUDE.md presence).",
+      "zh-Hans": "显示每个项目及其流水线进度（FORK\\_REPORT.md、SANITIZATION\\_REPORT.md、CLAUDE.md 的存在情况）。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### /opensource status PROJECT",
+      "zh-Hans": "### /opensource status PROJECT"
+    },
+    {
+      "en-US": "```bash\ncat $HOME/opensource-staging/${PROJECT}/SANITIZATION_REPORT.md\ncat $HOME/opensource-staging/${PROJECT}/FORK_REPORT.md\n```",
+      "zh-Hans": "```bash\ncat $HOME/opensource-staging/${PROJECT}/SANITIZATION_REPORT.md\ncat $HOME/opensource-staging/${PROJECT}/FORK_REPORT.md\n```"
+    },
+    {
+      "en-US": "## Staging Layout",
+      "zh-Hans": "## 暂存布局"
+    },
+    {
+      "en-US": "```\n$HOME/opensource-staging/\n  my-project/\n    FORK_REPORT.md           # From forker agent\n    SANITIZATION_REPORT.md   # From sanitizer agent\n    CLAUDE.md                # From packager agent\n    setup.sh                 # From packager agent\n    README.md                # From packager agent\n    .env.example             # From forker agent\n    ...                      # Sanitized project files\n```",
+      "zh-Hans": "```\n$HOME/opensource-staging/\n  my-project/\n    FORK_REPORT.md           # 来自 forker agent\n    SANITIZATION_REPORT.md   # 来自 sanitizer agent\n    CLAUDE.md                # 来自 packager agent\n    setup.sh                 # 来自 packager agent\n    README.md                # 来自 packager agent\n    .env.example             # 来自 forker agent\n    ...                      # 已清理的项目文件\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "- **Never** push to GitHub without user approval\n- **Never** skip the sanitizer — it is the safety gate\n- **Never** proceed after a sanitizer FAIL without fixing all critical findings\n- **Never** leave `.env`, `*.pem`, or `credentials.json` in the staging directory",
+      "zh-Hans": "* **绝不**在未经用户批准的情况下推送到 GitHub\n* **绝不**跳过清理器 — 它是安全门\n* **绝不**在清理器 FAIL 后未修复所有关键问题的情况下继续\n* **绝不**在暂存目录中留下 `.env`、`*.pem` 或 `credentials.json`"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- Always run the full pipeline (fork → sanitize → package) for new releases\n- The staging directory persists until explicitly cleaned up — use it for review\n- Re-run the sanitizer after any manual fixes before publishing\n- Parameterize secrets rather than deleting them — preserve project functionality",
+      "zh-Hans": "* 对于新版本，始终运行完整流水线（复刻 → 清理 → 打包）\n* 暂存目录会一直保留，直到显式清理 — 用它进行审查\n* 在发布前，任何手动修复后重新运行清理器\n* 将密钥参数化而非删除 — 保持项目功能"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "See `security-review` for secret detection patterns used by the sanitizer.",
+      "zh-Hans": "有关清理器使用的密钥检测模式，请参阅 `security-review`。"
+    }
+  ]
+}

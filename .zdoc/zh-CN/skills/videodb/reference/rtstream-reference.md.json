@@ -255,8 +255,8 @@
       "zh-Hans": "示例："
     },
     {
-      "en-US": "```python\n# Audio: every 50 words\n{\"type\": \"word\", \"value\": 50}\n\n# Audio: every 30 seconds  \n{\"type\": \"time\", \"value\": 30}\n\n# Visual: 5 frames every 2 seconds\n{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}\n```",
-      "zh-Hans": "```python\n# Audio: every 50 words\n{\"type\": \"word\", \"value\": 50}\n\n# Audio: every 30 seconds  \n{\"type\": \"time\", \"value\": 30}\n\n# Visual: 5 frames every 2 seconds\n{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}\n```"
+      "en-US": "```python\n# Audio: every 50 words\n{\"type\": \"word\", \"value\": 50}\n\n# Audio: every 30 seconds\n{\"type\": \"time\", \"value\": 30}\n\n# Visual: 5 frames every 2 seconds\n{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}\n```",
+      "zh-Hans": "```python\n# Audio: every 50 words\n{\"type\": \"word\", \"value\": 50}\n\n# Audio: every 30 seconds\n{\"type\": \"time\", \"value\": 30}\n\n# Visual: 5 frames every 2 seconds\n{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}\n```"
     },
     {
       "en-US": "---",

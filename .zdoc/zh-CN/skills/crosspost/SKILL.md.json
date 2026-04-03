@@ -11,224 +11,152 @@
       "zh-Hans": "# 跨平台发布"
     },
     {
-      "en-US": "Distribute content across multiple social platforms with platform-native adaptation.",
-      "zh-Hans": "将内容分发到多个社交平台，并适配各平台原生风格。"
+      "en-US": "Distribute content across platforms without turning it into the same fake post in four costumes.",
+      "zh-Hans": "在不同平台分发内容时，不要把它变成同一篇虚假帖子换上四套不同的装扮。"
     },
     {
       "en-US": "## When to Activate",
       "zh-Hans": "## 何时激活"
     },
     {
-      "en-US": "- User wants to post content to multiple platforms\n- Publishing announcements, launches, or updates across social media\n- Repurposing a post from one platform to others\n- User says \"crosspost\", \"post everywhere\", \"share on all platforms\", or \"distribute this\"",
-      "zh-Hans": "* 用户希望将内容发布到多个平台\n* 在社交媒体上发布公告、产品发布或更新\n* 将某个平台的内容改编后发布到其他平台\n* 用户提及“跨平台发布”、“到处发帖”、“分享到所有平台”或“分发这个”"
+      "en-US": "- the user wants to publish the same underlying idea across multiple platforms\n- a launch, update, release, or essay needs platform-specific versions\n- the user says \"crosspost\", \"post this everywhere\", or \"adapt this for X and LinkedIn\"",
+      "zh-Hans": "* 用户希望将同一个核心想法发布在多个平台上\n* 一次发布、更新、版本发布或文章需要针对不同平台的版本\n* 用户提到“交叉发布”、“把这个发到各处”或“为 X 和 LinkedIn 平台调整一下”"
     },
     {
       "en-US": "## Core Rules",
       "zh-Hans": "## 核心规则"
     },
     {
-      "en-US": "1. **Never post identical content cross-platform.** Each platform gets a native adaptation.\n2. **Primary platform first.** Post to the main platform, then adapt for others.\n3. **Respect platform conventions.** Length limits, formatting, link handling all differ.\n4. **One idea per post.** If the source content has multiple ideas, split across posts.\n5. **Attribution matters.** If crossposting someone else's content, credit the source.",
-      "zh-Hans": "1. **切勿在不同平台发布相同内容。** 每个平台都应获得原生适配版本。\n2. **主平台优先。** 先发布到主平台，再为其他平台适配。\n3. **遵循平台惯例。** 各平台的字符限制、格式、链接处理方式均不同。\n4. **每条帖子一个核心思想。** 如果源内容包含多个想法，请拆分成多条帖子。\n5. **注明出处很重要。** 如果转发他人的内容，请注明来源。"
-    },
-    {
-      "en-US": "## Platform Specifications",
-      "zh-Hans": "## 平台规范"
-    },
-    {
-      "en-US": "| Platform | Max Length | Link Handling | Hashtags | Media |\n|----------|-----------|---------------|----------|-------|\n| X | 280 chars (4000 for Premium) | Counted in length | Minimal (1-2 max) | Images, video, GIFs |\n| LinkedIn | 3000 chars | Not counted in length | 3-5 relevant | Images, video, docs, carousels |\n| Threads | 500 chars | Separate link attachment | None typical | Images, video |\n| Bluesky | 300 chars | Via facets (rich text) | None (use feeds) | Images |",
-      "zh-Hans": "| 平台 | 最大长度 | 链接处理 | 话题标签 | 媒体 |\n|----------|-----------|---------------|----------|-------|\n| X | 280 字符 (Premium 用户为 4000) | 计入长度 | 少量 (最多 1-2 个) | 图片、视频、GIF |\n| LinkedIn | 3000 字符 | 不计入长度 | 3-5 个相关标签 | 图片、视频、文档、轮播 |\n| Threads | 500 字符 | 独立的链接附件 | 通常不使用 | 图片、视频 |\n| Bluesky | 300 字符 | 通过 Facets (富文本) | 无 (使用 Feeds) | 图片 |"
+      "en-US": "1. Do not publish identical copy across platforms.\n2. Preserve the author's voice across platforms.\n3. Adapt for constraints, not stereotypes.\n4. One post should still be about one thing.\n5. Do not invent a CTA, question, or moral if the source did not earn one.",
+      "zh-Hans": "1. 不要在多个平台发布完全相同的文案。\n2. 在不同平台保持作者的声音风格。\n3. 根据平台限制进行调整，而非刻板印象。\n4. 一篇帖子仍应专注于一件事。\n5. 如果原文没有，不要凭空添加行动号召、问题或寓意。"
     },
     {
       "en-US": "## Workflow",
       "zh-Hans": "## 工作流程"
     },
     {
-      "en-US": "### Step 1: Create Source Content",
-      "zh-Hans": "### 步骤 1：创建源内容"
+      "en-US": "### Step 1: Start with the Primary Version",
+      "zh-Hans": "### 步骤 1：从主要版本开始"
     },
     {
-      "en-US": "Start with the core idea. Use `content-engine` skill for high-quality drafts:",
-      "zh-Hans": "从核心想法开始。使用 `content-engine` 技能来生成高质量草稿："
+      "en-US": "Pick the strongest source version first:",
+      "zh-Hans": "首先选择最强的源版本："
     },
     {
-      "en-US": "- Identify the single core message\n- Determine the primary platform (where the audience is biggest)\n- Draft the primary platform version first",
-      "zh-Hans": "* 识别单一核心信息\n* 确定主平台 (受众最大的平台)\n* 首先为主平台撰写草稿"
+      "en-US": "- the original X post\n- the original article\n- the launch note\n- the thread\n- the memo or changelog",
+      "zh-Hans": "* 原始的 X 帖子\n* 原始文章\n* 发布说明\n* 主题帖\n* 备忘录或更新日志"
     },
     {
-      "en-US": "### Step 2: Identify Target Platforms",
-      "zh-Hans": "### 步骤 2：确定目标平台"
+      "en-US": "Use `content-engine` first if the source still needs voice shaping.",
+      "zh-Hans": "如果源内容仍需进行声音风格塑造，首先使用 `content-engine`。"
     },
     {
-      "en-US": "Ask the user or determine from context:",
-      "zh-Hans": "询问用户或根据上下文确定："
+      "en-US": "### Step 2: Capture the Voice Fingerprint",
+      "zh-Hans": "### 步骤 2：捕捉声音指纹"
     },
     {
-      "en-US": "- Which platforms to target\n- Priority order (primary gets the best version)\n- Any platform-specific requirements (e.g., LinkedIn needs professional tone)",
-      "zh-Hans": "* 要发布到哪些平台\n* 优先级顺序 (主平台获得最佳版本)\n* 任何平台特定要求 (例如，LinkedIn 需要专业语气)"
+      "en-US": "Run `brand-voice` first if the source voice is not already captured in the current session.",
+      "zh-Hans": "如果当前会话中尚未捕捉到源内容的声音风格，首先运行 `brand-voice`。"
     },
     {
-      "en-US": "### Step 3: Adapt Per Platform",
-      "zh-Hans": "### 步骤 3：按平台适配"
+      "en-US": "Reuse the resulting `VOICE PROFILE` directly.\nDo not build a second ad hoc voice checklist here unless the user explicitly wants a fresh override for this campaign.",
+      "zh-Hans": "直接复用生成的 `VOICE PROFILE`。\n除非用户明确希望为本次宣传活动进行全新的覆盖，否则不要在此处构建第二个临时声音检查清单。"
     },
     {
-      "en-US": "For each target platform, transform the content:",
-      "zh-Hans": "针对每个目标平台，转换内容："
+      "en-US": "### Step 3: Adapt by Platform Constraint",
+      "zh-Hans": "### 步骤 3：根据平台限制进行调整"
     },
     {
-      "en-US": "**X adaptation:**",
-      "zh-Hans": "**X 平台适配：**"
+      "en-US": "### X",
+      "zh-Hans": "### X"
     },
     {
-      "en-US": "- Open with a hook, not a summary\n- Cut to the core insight fast\n- Keep links out of main body when possible\n- Use thread format for longer content",
-      "zh-Hans": "* 用吸引人的开头，而非总结\n* 快速切入核心见解\n* 尽可能将链接放在正文之外\n* 对于较长内容，使用 Thread 格式"
+      "en-US": "- keep it compressed\n- lead with the sharpest claim or artifact\n- use a thread only when a single post would collapse the argument\n- avoid hashtags and generic filler",
+      "zh-Hans": "* 保持简洁\n* 以最犀利的观点或成果开头\n* 仅当单条帖子会削弱论点时才使用主题帖\n* 避免使用话题标签和通用填充内容"
     },
     {
-      "en-US": "**LinkedIn adaptation:**",
-      "zh-Hans": "**LinkedIn 平台适配：**"
+      "en-US": "### LinkedIn",
+      "zh-Hans": "### LinkedIn"
     },
     {
-      "en-US": "- Strong first line (visible before \"see more\")\n- Short paragraphs with line breaks\n- Frame around lessons, results, or professional takeaways\n- More explicit context than X (LinkedIn audience needs framing)",
-      "zh-Hans": "* 强有力的首行 (在“查看更多”前可见)\n* 使用换行符的短段落\n* 围绕经验教训、结果或专业收获来构建内容\n* 比 X 提供更明确的背景信息 (LinkedIn 受众需要背景框架)"
+      "en-US": "- add only the context needed for people outside the niche\n- do not turn it into a fake founder-reflection post\n- do not add a closing question just because it is LinkedIn\n- do not force a polished \"professional tone\" if the author is naturally sharper",
+      "zh-Hans": "* 仅添加圈子外人士所需的背景信息\n* 不要把它变成虚假的创始人反思帖\n* 不要仅仅因为是在 LinkedIn 就添加一个结尾提问\n* 如果作者风格本就更为犀利，不要强行使用“专业腔调”"
     },
     {
-      "en-US": "**Threads adaptation:**",
-      "zh-Hans": "**Threads 平台适配：**"
+      "en-US": "### Threads",
+      "zh-Hans": "### Threads"
     },
     {
-      "en-US": "- Conversational, casual tone\n- Shorter than LinkedIn, less compressed than X\n- Visual-first if possible",
-      "zh-Hans": "* 对话式、随意的语气\n* 比 LinkedIn 短，但比 X 压缩感弱\n* 如果可能，优先考虑视觉效果"
+      "en-US": "- keep it readable and direct\n- do not write fake hyper-casual creator copy\n- do not paste the LinkedIn version and shorten it",
+      "zh-Hans": "* 保持可读性和直接性\n* 不要编写虚假的超随意创作者文案\n* 不要粘贴 LinkedIn 版本然后缩短它"
     },
     {
-      "en-US": "**Bluesky adaptation:**",
-      "zh-Hans": "**Bluesky 平台适配：**"
+      "en-US": "### Bluesky",
+      "zh-Hans": "### Bluesky"
     },
     {
-      "en-US": "- Direct and concise (300 char limit)\n- Community-oriented tone\n- Use feeds/lists for topic targeting instead of hashtags",
-      "zh-Hans": "* 直接简洁 (300 字符限制)\n* 社区导向的语气\n* 使用 Feeds/列表进行主题定位，而非话题标签"
+      "en-US": "- keep it concise\n- preserve the author's cadence\n- do not rely on hashtags or feed-gaming language",
+      "zh-Hans": "* 保持简洁\n* 保留作者的节奏感\n* 不要依赖话题标签或迎合算法推荐的语言"
     },
     {
-      "en-US": "### Step 4: Post Primary Platform",
-      "zh-Hans": "### 步骤 4：发布到主平台"
+      "en-US": "## Posting Order",
+      "zh-Hans": "## 发布顺序"
     },
     {
-      "en-US": "Post to the primary platform first:",
-      "zh-Hans": "首先发布到主平台："
+      "en-US": "Default:",
+      "zh-Hans": "默认情况："
     },
     {
-      "en-US": "- Use `x-api` skill for X\n- Use platform-specific APIs or tools for others\n- Capture the post URL for cross-referencing",
-      "zh-Hans": "* 使用 `x-api` 技能处理 X\n* 使用平台特定的 API 或工具处理其他平台\n* 捕获帖子 URL 以便交叉引用"
+      "en-US": "1. post the strongest native version first\n2. adapt for the secondary platforms\n3. stagger timing only if the user wants sequencing help",
+      "zh-Hans": "1. 首先发布最强的原生平台版本\n2. 为次要平台进行调整\n3. 仅在用户需要安排发布时间时才错开发布"
     },
     {
-      "en-US": "### Step 5: Post to Secondary Platforms",
-      "zh-Hans": "### 步骤 5：发布到次级平台"
+      "en-US": "Do not add cross-platform references unless useful. Most of the time, the post should stand on its own.",
+      "zh-Hans": "除非有用，否则不要添加跨平台引用。大多数情况下，帖子应能独立成立。"
     },
     {
-      "en-US": "Post adapted versions to remaining platforms:",
-      "zh-Hans": "将适配后的版本发布到其余平台："
+      "en-US": "## Banned Patterns",
+      "zh-Hans": "## 禁止模式"
     },
     {
-      "en-US": "- Stagger timing (not all at once — 30-60 min gaps)\n- Include cross-platform references where appropriate (\"longer thread on X\" etc.)",
-      "zh-Hans": "* 错开发布时间 (不要同时发布 — 间隔 30-60 分钟)\n* 在适当的地方包含跨平台引用 (例如，“在 X 上有更长的 Thread”等)"
+      "en-US": "Delete and rewrite any of these:",
+      "zh-Hans": "删除并重写以下任何内容："
     },
     {
-      "en-US": "## Content Adaptation Examples",
-      "zh-Hans": "## 内容适配示例"
+      "en-US": "- \"Excited to share\"\n- \"Here's what I learned\"\n- \"What do you think?\"\n- \"link in bio\" unless that is literally true\n- generic \"professional takeaway\" paragraphs that were not in the source",
+      "zh-Hans": "* “很高兴分享”\n* “以下是我的心得”\n* “你怎么看？”\n* “链接在简介中”（除非事实确实如此）\n* 源内容中没有的通用“专业要点”段落"
     },
     {
-      "en-US": "### Source: Product Launch",
-      "zh-Hans": "### 源内容：产品发布"
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
     },
     {
-      "en-US": "**X version:**",
-      "zh-Hans": "**X 版本：**"
+      "en-US": "Return:",
+      "zh-Hans": "返回："
     },
     {
-      "en-US": "```\nWe just shipped [feature].\n\n[One specific thing it does that's impressive]\n\n[Link]\n```",
-      "zh-Hans": "```\n我们刚刚发布了 [feature]。\n\n[它所实现的某个具体且令人印象深刻的功能]\n\n[链接]\n```"
-    },
-    {
-      "en-US": "**LinkedIn version:**",
-      "zh-Hans": "**LinkedIn 版本：**"
-    },
-    {
-      "en-US": "```\nExcited to share: we just launched [feature] at [Company].\n\nHere's why it matters:\n\n[2-3 short paragraphs with context]\n\n[Takeaway for the audience]\n\n[Link]\n```",
-      "zh-Hans": "```\n激动地宣布：我们刚刚在[Company]推出了[feature]。\n\n以下是其重要意义：\n\n[2-3段简短背景说明]\n\n[对受众的核心启示]\n\n[链接]\n```"
-    },
-    {
-      "en-US": "**Threads version:**",
-      "zh-Hans": "**Threads 版本：**"
-    },
-    {
-      "en-US": "```\njust shipped something cool — [feature]\n\n[casual explanation of what it does]\n\nlink in bio\n```",
-      "zh-Hans": "```\n刚发布了一个很酷的东西 —— [feature]\n\n[对这个功能是什么的随意解释]\n\n链接在简介里\n```"
-    },
-    {
-      "en-US": "### Source: Technical Insight",
-      "zh-Hans": "### 源内容：技术见解"
-    },
-    {
-      "en-US": "**X version:**",
-      "zh-Hans": "**X 版本：**"
-    },
-    {
-      "en-US": "```\nTIL: [specific technical insight]\n\n[Why it matters in one sentence]\n```",
-      "zh-Hans": "```\n今天学到：[具体技术见解]\n\n[一句话说明其重要性]\n```"
-    },
-    {
-      "en-US": "**LinkedIn version:**",
-      "zh-Hans": "**LinkedIn 版本：**"
-    },
-    {
-      "en-US": "```\nA pattern I've been using that's made a real difference:\n\n[Technical insight with professional framing]\n\n[How it applies to teams/orgs]\n\n#relevantHashtag\n```",
-      "zh-Hans": "```\n我一直在使用的一种模式，它带来了真正的改变：\n\n[技术见解与专业框架]\n\n[它如何适用于团队/组织]\n\n#相关标签\n```"
-    },
-    {
-      "en-US": "## API Integration",
-      "zh-Hans": "## API 集成"
-    },
-    {
-      "en-US": "### Batch Crossposting Service (Example Pattern)",
-      "zh-Hans": "### 批量跨平台发布服务 (示例模式)"
-    },
-    {
-      "en-US": "If using a crossposting service (e.g., Postbridge, Buffer, or a custom API), the pattern looks like:",
-      "zh-Hans": "如果使用跨平台发布服务 (例如 Postbridge、Buffer 或自定义 API)，模式如下："
-    },
-    {
-      "en-US": "```python\nimport os\nimport requests\n\nresp = requests.post(\n    \"https://your-crosspost-service.example/api/posts\",\n    headers={\"Authorization\": f\"Bearer {os.environ['POSTBRIDGE_API_KEY']}\"},\n    json={\n        \"platforms\": [\"twitter\", \"linkedin\", \"threads\"],\n        \"content\": {\n            \"twitter\": {\"text\": x_version},\n            \"linkedin\": {\"text\": linkedin_version},\n            \"threads\": {\"text\": threads_version}\n        }\n    },\n    timeout=30,\n)\nresp.raise_for_status()\n```",
-      "zh-Hans": "```python\nimport os\nimport requests\n\nresp = requests.post(\n    \"https://your-crosspost-service.example/api/posts\",\n    headers={\"Authorization\": f\"Bearer {os.environ['POSTBRIDGE_API_KEY']}\"},\n    json={\n        \"platforms\": [\"twitter\", \"linkedin\", \"threads\"],\n        \"content\": {\n            \"twitter\": {\"text\": x_version},\n            \"linkedin\": {\"text\": linkedin_version},\n            \"threads\": {\"text\": threads_version}\n        }\n    },\n    timeout=30,\n)\nresp.raise_for_status()\n```"
-    },
-    {
-      "en-US": "### Manual Posting",
-      "zh-Hans": "### 手动发布"
-    },
-    {
-      "en-US": "Without Postbridge, post to each platform using its native API:",
-      "zh-Hans": "没有 Postbridge 时，使用各平台原生 API 发布："
-    },
-    {
-      "en-US": "- X: Use `x-api` skill patterns\n- LinkedIn: LinkedIn API v2 with OAuth 2.0\n- Threads: Threads API (Meta)\n- Bluesky: AT Protocol API",
-      "zh-Hans": "* X: 使用 `x-api` 技能模式\n* LinkedIn: 使用 OAuth 2.0 的 LinkedIn API v2\n* Threads: Threads API (Meta)\n* Bluesky: AT Protocol API"
+      "en-US": "- the primary platform version\n- adapted variants for each requested platform\n- a short note on what changed and why\n- any publishing constraint the user still needs to resolve",
+      "zh-Hans": "* 主要平台版本\n* 每个请求平台的调整版本\n* 关于更改内容及原因的简短说明\n* 用户仍需解决的任何发布限制"
     },
     {
       "en-US": "## Quality Gate",
       "zh-Hans": "## 质量检查"
     },
     {
-      "en-US": "Before posting:",
-      "zh-Hans": "发布前："
+      "en-US": "Before delivering:",
+      "zh-Hans": "交付前检查："
     },
     {
-      "en-US": "- [ ] Each platform version reads naturally for that platform\n- [ ] No identical content across platforms\n- [ ] Length limits respected\n- [ ] Links work and are placed appropriately\n- [ ] Tone matches platform conventions\n- [ ] Media is sized correctly for each platform",
-      "zh-Hans": "* \\[ ] 每个平台的版本读起来都符合该平台的自然风格\n* \\[ ] 各平台内容不完全相同\n* \\[ ] 遵守字符限制\n* \\[ ] 链接有效且放置位置恰当\n* \\[ ] 语气符合平台惯例\n* \\[ ] 媒体文件尺寸适合各平台"
+      "en-US": "- each version reads like the same author under different constraints\n- no platform version feels padded or sanitized\n- no copy is duplicated verbatim across platforms\n- any extra context added for LinkedIn or newsletter use is actually necessary",
+      "zh-Hans": "* 每个版本读起来都像是同一作者在不同限制下的表达\n* 没有哪个平台版本感觉是填充内容或经过消毒处理的\n* 没有文案在不同平台间逐字重复\n* 为 LinkedIn 或新闻通讯添加的任何额外背景信息确实是必要的"
     },
     {
       "en-US": "## Related Skills",
       "zh-Hans": "## 相关技能"
     },
     {
-      "en-US": "- `content-engine` — Generate platform-native content\n- `x-api` — X/Twitter API integration",
-      "zh-Hans": "* `content-engine` — 生成平台原生内容\n* `x-api` — X/Twitter API 集成"
+      "en-US": "- `brand-voice` for reusable source-derived voice capture\n- `content-engine` for voice capture and source shaping\n- `x-api` for X publishing workflows",
+      "zh-Hans": "* `brand-voice` 用于可复用的、源自内容的声音捕捉\n* `content-engine` 用于声音捕捉和内容塑造\n* `x-api` 用于 X 发布工作流"
     }
   ]
 }

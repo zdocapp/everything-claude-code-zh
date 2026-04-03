@@ -83,8 +83,12 @@
       "zh-Hans": "### 快速开始"
     },
     {
-      "en-US": "```bash\n# Clone Plankton into your project (or a shared location)\n# Note: Plankton is by @alxfazio\ngit clone https://github.com/alexfazio/plankton.git\ncd plankton\n\n# Install core dependencies\nbrew install jaq ruff uv\n\n# Install Python linters\nuv sync --all-extras\n\n# Start Claude Code — hooks activate automatically\nclaude\n```",
-      "zh-Hans": "```bash\n# Clone Plankton into your project (or a shared location)\n# Note: Plankton is by @alxfazio\ngit clone https://github.com/alexfazio/plankton.git\ncd plankton\n\n# Install core dependencies\nbrew install jaq ruff uv\n\n# Install Python linters\nuv sync --all-extras\n\n# Start Claude Code — hooks activate automatically\nclaude\n```"
+      "en-US": "> **Note:** Plankton requires manual installation from its repository. Review the code before installing.",
+      "zh-Hans": "> **注意：** Plankton 需要从其代码仓库手动安装。安装前请先审查代码。"
+    },
+    {
+      "en-US": "```bash\n# Install core dependencies\nbrew install jaq ruff uv\n\n# Install Python linters\nuv sync --all-extras\n\n# Start Claude Code — hooks activate automatically\nclaude\n```",
+      "zh-Hans": "```bash\n# Install core dependencies\nbrew install jaq ruff uv\n\n# Install Python linters\nuv sync --all-extras\n\n# Start Claude Code — hooks activate automatically\nclaude\n```"
     },
     {
       "en-US": "No install command, no plugin config. The hooks in `.claude/settings.json` are picked up automatically when you run Claude Code in the Plankton directory.",

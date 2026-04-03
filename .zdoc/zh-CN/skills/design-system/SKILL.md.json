@@ -1,0 +1,98 @@
+{
+  "sourceFile": "skills/design-system/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: design-system\ndescription: Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: design-system\ndescription: 使用此技能来生成或审核设计系统，检查视觉一致性，并审查涉及样式的PR。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Design System — Generate & Audit Visual Systems",
+      "zh-Hans": "# 设计系统 — 生成与审计视觉系统"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用场景"
+    },
+    {
+      "en-US": "- Starting a new project that needs a design system\n- Auditing an existing codebase for visual consistency\n- Before a redesign — understand what you have\n- When the UI looks \"off\" but you can't pinpoint why\n- Reviewing PRs that touch styling",
+      "zh-Hans": "* 启动需要设计系统的新项目\n* 审计现有代码库的视觉一致性\n* 重新设计前 — 了解现有状况\n* 当界面看起来“不对劲”但无法确定原因时\n* 审查涉及样式的拉取请求"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Mode 1: Generate Design System",
+      "zh-Hans": "### 模式 1：生成设计系统"
+    },
+    {
+      "en-US": "Analyzes your codebase and generates a cohesive design system:",
+      "zh-Hans": "分析您的代码库并生成一个连贯的设计系统："
+    },
+    {
+      "en-US": "```\n1. Scan CSS/Tailwind/styled-components for existing patterns\n2. Extract: colors, typography, spacing, border-radius, shadows, breakpoints\n3. Research 3 competitor sites for inspiration (via browser MCP)\n4. Propose a design token set (JSON + CSS custom properties)\n5. Generate DESIGN.md with rationale for each decision\n6. Create an interactive HTML preview page (self-contained, no deps)\n```",
+      "zh-Hans": "```\n1. 扫描 CSS/Tailwind/styled-components 以查找现有模式\n2. 提取：颜色、排版、间距、边框圆角、阴影、断点\n3. 研究 3 个竞争对手网站以获取灵感（通过浏览器 MCP）\n4. 提出一套设计令牌集（JSON + CSS 自定义属性）\n5. 生成 DESIGN.md 文件，阐述每个决策的理由\n6. 创建一个交互式 HTML 预览页面（自包含，无依赖）\n```"
+    },
+    {
+      "en-US": "Output: `DESIGN.md` + `design-tokens.json` + `design-preview.html`",
+      "zh-Hans": "输出：`DESIGN.md` + `design-tokens.json` + `design-preview.html`"
+    },
+    {
+      "en-US": "### Mode 2: Visual Audit",
+      "zh-Hans": "### 模式 2：视觉审计"
+    },
+    {
+      "en-US": "Scores your UI across 10 dimensions (0-10 each):",
+      "zh-Hans": "在 10 个维度上为您的 UI 评分（每个维度 0-10 分）："
+    },
+    {
+      "en-US": "```\n1. Color consistency — are you using your palette or random hex values?\n2. Typography hierarchy — clear h1 > h2 > h3 > body > caption?\n3. Spacing rhythm — consistent scale (4px/8px/16px) or arbitrary?\n4. Component consistency — do similar elements look similar?\n5. Responsive behavior — fluid or broken at breakpoints?\n6. Dark mode — complete or half-done?\n7. Animation — purposeful or gratuitous?\n8. Accessibility — contrast ratios, focus states, touch targets\n9. Information density — cluttered or clean?\n10. Polish — hover states, transitions, loading states, empty states\n```",
+      "zh-Hans": "```\n1. 色彩一致性 —— 你是在使用你的调色板还是随机的十六进制值？\n2. 排版层级 —— 清晰的 h1 > h2 > h3 > 正文 > 说明文字？\n3. 间距节奏 —— 一致的尺度（4px/8px/16px）还是随意的？\n4. 组件一致性 —— 相似的元素看起来相似吗？\n5. 响应式行为 —— 流畅的还是在断点处断裂的？\n6. 深色模式 —— 完整的还是半成品？\n7. 动画 —— 有目的的还是多余的？\n8. 可访问性 —— 对比度、焦点状态、触摸目标\n9. 信息密度 —— 杂乱还是简洁？\n10. 细节打磨 —— 悬停状态、过渡效果、加载状态、空状态\n```"
+    },
+    {
+      "en-US": "Each dimension gets a score, specific examples, and a fix with exact file:line.",
+      "zh-Hans": "每个维度都会获得一个分数、具体示例以及包含确切文件:行号的修复建议。"
+    },
+    {
+      "en-US": "### Mode 3: AI Slop Detection",
+      "zh-Hans": "### 模式 3：AI 粗制滥造检测"
+    },
+    {
+      "en-US": "Identifies generic AI-generated design patterns:",
+      "zh-Hans": "识别通用的 AI 生成设计模式："
+    },
+    {
+      "en-US": "```\n- Gratuitous gradients on everything\n- Purple-to-blue defaults\n- \"Glass morphism\" cards with no purpose\n- Rounded corners on things that shouldn't be rounded\n- Excessive animations on scroll\n- Generic hero with centered text over stock gradient\n- Sans-serif font stack with no personality\n```",
+      "zh-Hans": "```\n- 无处不在的过度渐变\n- 默认的紫蓝配色\n- 无意义的“玻璃拟态”卡片\n- 不该圆角的元素被圆角化\n- 滚动时过多的动画效果\n- 使用通用渐变背景、居中文字的平庸首屏\n- 毫无个性的无衬线字体组合\n```"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "**Generate for a SaaS app:**",
+      "zh-Hans": "**为 SaaS 应用生成：**"
+    },
+    {
+      "en-US": "```\n/design-system generate --style minimal --palette earth-tones\n```",
+      "zh-Hans": "```\n/design-system generate --style minimal --palette earth-tones\n```"
+    },
+    {
+      "en-US": "**Audit existing UI:**",
+      "zh-Hans": "**审计现有 UI：**"
+    },
+    {
+      "en-US": "```\n/design-system audit --url http://localhost:3000 --pages / /pricing /docs\n```",
+      "zh-Hans": "```\n/design-system audit --url http://localhost:3000 --pages / /pricing /docs\n```"
+    },
+    {
+      "en-US": "**Check for AI slop:**",
+      "zh-Hans": "**检查 AI 粗制滥造：**"
+    },
+    {
+      "en-US": "```\n/design-system slop-check\n```",
+      "zh-Hans": "```\n/design-system slop-check\n```"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "sourceFile": "skills/healthcare-phi-compliance/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: healthcare-phi-compliance\ndescription: Protected Health Information (PHI) and Personally Identifiable Information (PII) compliance patterns for healthcare applications. Covers data classification, access control, audit trails, encryption, and common leak vectors.\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: healthcare-phi-compliance\ndescription: 医疗应用中的受保护健康信息（PHI）和个人可识别信息（PII）合规模式。涵盖数据分类、访问控制、审计追踪、加密以及常见泄露途径。\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Healthcare PHI/PII Compliance Patterns",
+      "zh-Hans": "# 医疗健康 PHI/PII 合规模式"
+    },
+    {
+      "en-US": "Patterns for protecting patient data, clinician data, and financial data in healthcare applications. Applicable to HIPAA (US), DISHA (India), GDPR (EU), and general healthcare data protection.",
+      "zh-Hans": "用于保护医疗应用中的患者数据、临床医生数据和财务数据的模式。适用于 HIPAA（美国）、DISHA（印度）、GDPR（欧盟）以及通用的医疗健康数据保护。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Building any feature that touches patient records\n- Implementing access control or authentication for clinical systems\n- Designing database schemas for healthcare data\n- Building APIs that return patient or clinician data\n- Implementing audit trails or logging\n- Reviewing code for data exposure vulnerabilities\n- Setting up Row-Level Security (RLS) for multi-tenant healthcare systems",
+      "zh-Hans": "* 构建任何涉及患者记录的功能时\n* 为临床系统实施访问控制或身份验证时\n* 设计医疗健康数据的数据库模式时\n* 构建返回患者或临床医生数据的 API 时\n* 实施审计追踪或日志记录时\n* 审查代码是否存在数据暴露漏洞时\n* 为多租户医疗系统设置行级安全（RLS）时"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "Healthcare data protection operates on three layers: **classification** (what is sensitive), **access control** (who can see it), and **audit** (who did see it).",
+      "zh-Hans": "医疗健康数据保护在三个层面运作：**分类**（什么是敏感数据）、**访问控制**（谁可以查看）和**审计**（谁查看了数据）。"
+    },
+    {
+      "en-US": "### Data Classification",
+      "zh-Hans": "### 数据分类"
+    },
+    {
+      "en-US": "**PHI (Protected Health Information)** — any data that can identify a patient AND relates to their health: patient name, date of birth, address, phone, email, national ID numbers (SSN, Aadhaar, NHS number), medical record numbers, diagnoses, medications, lab results, imaging, insurance policy and claim details, appointment and admission records, or any combination of the above.",
+      "zh-Hans": "**PHI（受保护的健康信息）** — 任何可以识别患者身份且与其健康相关的数据：患者姓名、出生日期、地址、电话、电子邮件、国民身份证号（SSN、Aadhaar、NHS 号码）、病历号、诊断、药物、化验结果、影像、保险单和理赔详情、预约和入院记录，或上述任何组合。"
+    },
+    {
+      "en-US": "**PII (Non-patient-sensitive data)** in healthcare systems: clinician/staff personal details, doctor fee structures and payout amounts, employee salary and bank details, vendor payment information.",
+      "zh-Hans": "**PII（非患者敏感数据）** 在医疗系统中：临床医生/员工个人信息、医生费用结构和支付金额、员工薪资和银行信息、供应商付款信息。"
+    },
+    {
+      "en-US": "### Access Control: Row-Level Security",
+      "zh-Hans": "### 访问控制：行级安全"
+    },
+    {
+      "en-US": "```sql\nALTER TABLE patients ENABLE ROW LEVEL SECURITY;\n\n-- Scope access by facility\nCREATE POLICY \"staff_read_own_facility\"\n  ON patients FOR SELECT TO authenticated\n  USING (facility_id IN (\n    SELECT facility_id FROM staff_assignments\n    WHERE user_id = auth.uid() AND role IN ('doctor','nurse','lab_tech','admin')\n  ));\n\n-- Audit log: insert-only (tamper-proof)\nCREATE POLICY \"audit_insert_only\" ON audit_log FOR INSERT\n  TO authenticated WITH CHECK (user_id = auth.uid());\nCREATE POLICY \"audit_no_modify\" ON audit_log FOR UPDATE USING (false);\nCREATE POLICY \"audit_no_delete\" ON audit_log FOR DELETE USING (false);\n```",
+      "zh-Hans": "```sql\nALTER TABLE patients ENABLE ROW LEVEL SECURITY;\n\n-- Scope access by facility\nCREATE POLICY \"staff_read_own_facility\"\n  ON patients FOR SELECT TO authenticated\n  USING (facility_id IN (\n    SELECT facility_id FROM staff_assignments\n    WHERE user_id = auth.uid() AND role IN ('doctor','nurse','lab_tech','admin')\n  ));\n\n-- Audit log: insert-only (tamper-proof)\nCREATE POLICY \"audit_insert_only\" ON audit_log FOR INSERT\n  TO authenticated WITH CHECK (user_id = auth.uid());\nCREATE POLICY \"audit_no_modify\" ON audit_log FOR UPDATE USING (false);\nCREATE POLICY \"audit_no_delete\" ON audit_log FOR DELETE USING (false);\n```"
+    },
+    {
+      "en-US": "### Audit Trail",
+      "zh-Hans": "### 审计追踪"
+    },
+    {
+      "en-US": "Every PHI access or modification must be logged:",
+      "zh-Hans": "每次 PHI 访问或修改都必须记录："
+    },
+    {
+      "en-US": "```typescript\ninterface AuditEntry {\n  timestamp: string;\n  user_id: string;\n  patient_id: string;\n  action: 'create' | 'read' | 'update' | 'delete' | 'print' | 'export';\n  resource_type: string;\n  resource_id: string;\n  changes?: { before: object; after: object };\n  ip_address: string;\n  session_id: string;\n}\n```",
+      "zh-Hans": "```typescript\ninterface AuditEntry {\n  timestamp: string;\n  user_id: string;\n  patient_id: string;\n  action: 'create' | 'read' | 'update' | 'delete' | 'print' | 'export';\n  resource_type: string;\n  resource_id: string;\n  changes?: { before: object; after: object };\n  ip_address: string;\n  session_id: string;\n}\n```"
+    },
+    {
+      "en-US": "### Common Leak Vectors",
+      "zh-Hans": "### 常见泄露途径"
+    },
+    {
+      "en-US": "**Error messages:** Never include patient-identifying data in error messages thrown to the client. Log details server-side only.",
+      "zh-Hans": "**错误消息：** 切勿在抛给客户端的错误消息中包含患者识别数据。仅在服务器端记录详细信息。"
+    },
+    {
+      "en-US": "**Console output:** Never log full patient objects. Use opaque internal record IDs (UUIDs) — not medical record numbers, national IDs, or names.",
+      "zh-Hans": "**控制台输出：** 切勿记录完整的患者对象。使用不透明的内部记录 ID（UUID）—— 而非病历号、国民身份证号或姓名。"
+    },
+    {
+      "en-US": "**URL parameters:** Never put patient-identifying data in query strings or path segments that could appear in logs or browser history. Use opaque UUIDs only.",
+      "zh-Hans": "**URL 参数：** 切勿将患者识别数据放在可能出现在日志或浏览器历史记录中的查询字符串或路径段中。仅使用不透明的 UUID。"
+    },
+    {
+      "en-US": "**Browser storage:** Never store PHI in localStorage or sessionStorage. Keep PHI in memory only, fetch on demand.",
+      "zh-Hans": "**浏览器存储：** 切勿将 PHI 存储在 localStorage 或 sessionStorage 中。仅将 PHI 保存在内存中，按需获取。"
+    },
+    {
+      "en-US": "**Service role keys:** Never use the service_role key in client-side code. Always use the anon/publishable key and let RLS enforce access.",
+      "zh-Hans": "**服务角色密钥：** 切勿在客户端代码中使用 service\\_role 密钥。始终使用 anon/publishable 密钥，并让 RLS 强制执行访问控制。"
+    },
+    {
+      "en-US": "**Logs and monitoring:** Never log full patient records. Use opaque record IDs only (not medical record numbers). Sanitize stack traces before sending to error tracking services.",
+      "zh-Hans": "**日志和监控：** 切勿记录完整的患者记录。仅使用不透明的记录 ID（而非病历号）。在发送到错误跟踪服务之前，清理堆栈跟踪。"
+    },
+    {
+      "en-US": "### Database Schema Tagging",
+      "zh-Hans": "### 数据库模式标记"
+    },
+    {
+      "en-US": "Mark PHI/PII columns at the schema level:",
+      "zh-Hans": "在模式层面标记 PHI/PII 列："
+    },
+    {
+      "en-US": "```sql\nCOMMENT ON COLUMN patients.name IS 'PHI: patient_name';\nCOMMENT ON COLUMN patients.dob IS 'PHI: date_of_birth';\nCOMMENT ON COLUMN patients.aadhaar IS 'PHI: national_id';\nCOMMENT ON COLUMN doctor_payouts.amount IS 'PII: financial';\n```",
+      "zh-Hans": "```sql\nCOMMENT ON COLUMN patients.name IS 'PHI: patient_name';\nCOMMENT ON COLUMN patients.dob IS 'PHI: date_of_birth';\nCOMMENT ON COLUMN patients.aadhaar IS 'PHI: national_id';\nCOMMENT ON COLUMN doctor_payouts.amount IS 'PII: financial';\n```"
+    },
+    {
+      "en-US": "### Deployment Checklist",
+      "zh-Hans": "### 部署清单"
+    },
+    {
+      "en-US": "Before every deployment:",
+      "zh-Hans": "每次部署前检查："
+    },
+    {
+      "en-US": "- No PHI in error messages or stack traces\n- No PHI in console.log/console.error\n- No PHI in URL parameters\n- No PHI in browser storage\n- No service_role key in client code\n- RLS enabled on all PHI/PII tables\n- Audit trail for all data modifications\n- Session timeout configured\n- API authentication on all PHI endpoints\n- Cross-facility data isolation verified",
+      "zh-Hans": "* 错误消息或堆栈跟踪中无 PHI\n* console.log/console.error 中无 PHI\n* URL 参数中无 PHI\n* 浏览器存储中无 PHI\n* 客户端代码中无 service\\_role 密钥\n* 所有 PHI/PII 表已启用 RLS\n* 所有数据修改均有审计追踪\n* 会话超时已配置\n* 所有 PHI 端点均已配置 API 身份验证\n* 跨机构数据隔离已验证"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Example 1: Safe vs Unsafe Error Handling",
+      "zh-Hans": "### 示例 1：安全与不安全的错误处理"
+    },
+    {
+      "en-US": "```typescript\n// BAD — leaks PHI in error\nthrow new Error(`Patient ${patient.name} not found in ${patient.facility}`);\n\n// GOOD — generic error, details logged server-side with opaque IDs only\nlogger.error('Patient lookup failed', { recordId: patient.id, facilityId });\nthrow new Error('Record not found');\n```",
+      "zh-Hans": "```typescript\n// BAD — leaks PHI in error\nthrow new Error(`Patient ${patient.name} not found in ${patient.facility}`);\n\n// GOOD — generic error, details logged server-side with opaque IDs only\nlogger.error('Patient lookup failed', { recordId: patient.id, facilityId });\nthrow new Error('Record not found');\n```"
+    },
+    {
+      "en-US": "### Example 2: RLS Policy for Multi-Facility Isolation",
+      "zh-Hans": "### 示例 2：多机构隔离的 RLS 策略"
+    },
+    {
+      "en-US": "```sql\n-- Doctor at Facility A cannot see Facility B patients\nCREATE POLICY \"facility_isolation\"\n  ON patients FOR SELECT TO authenticated\n  USING (facility_id IN (\n    SELECT facility_id FROM staff_assignments WHERE user_id = auth.uid()\n  ));\n\n-- Test: login as doctor-facility-a, query facility-b patients\n-- Expected: 0 rows returned\n```",
+      "zh-Hans": "```sql\n-- Doctor at Facility A cannot see Facility B patients\nCREATE POLICY \"facility_isolation\"\n  ON patients FOR SELECT TO authenticated\n  USING (facility_id IN (\n    SELECT facility_id FROM staff_assignments WHERE user_id = auth.uid()\n  ));\n\n-- Test: login as doctor-facility-a, query facility-b patients\n-- Expected: 0 rows returned\n```"
+    },
+    {
+      "en-US": "### Example 3: Safe Logging",
+      "zh-Hans": "### 示例 3：安全日志记录"
+    },
+    {
+      "en-US": "```typescript\n// BAD — logs identifiable patient data\nconsole.log('Processing patient:', patient);\n\n// GOOD — logs only opaque internal record ID\nconsole.log('Processing record:', patient.id);\n// Note: even patient.id should be an opaque UUID, not a medical record number\n```",
+      "zh-Hans": "```typescript\n// BAD — logs identifiable patient data\nconsole.log('Processing patient:', patient);\n\n// GOOD — logs only opaque internal record ID\nconsole.log('Processing record:', patient.id);\n// Note: even patient.id should be an opaque UUID, not a medical record number\n```"
+    }
+  ]
+}

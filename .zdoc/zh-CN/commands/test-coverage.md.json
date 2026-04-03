@@ -63,8 +63,8 @@
       "zh-Hans": "显示前后对比："
     },
     {
-      "en-US": "```\nCoverage Report\n──────────────────────────────\nFile                   Before  After\nsrc/services/auth.ts   45%     88%\nsrc/utils/validation.ts 32%    82%\n──────────────────────────────\nOverall:               67%     84%  ✅\n```",
-      "zh-Hans": "```\n覆盖率报告\n──────────────────────────────\n文件                   变更前  变更后\nsrc/services/auth.ts   45%     88%\nsrc/utils/validation.ts 32%    82%\n──────────────────────────────\n总计：               67%     84%  ✅\n```"
+      "en-US": "```\nCoverage Report\n──────────────────────────────\nFile                   Before  After\nsrc/services/auth.ts   45%     88%\nsrc/utils/validation.ts 32%    82%\n──────────────────────────────\nOverall:               67%     84%  PASS:\n```",
+      "zh-Hans": "```\nCoverage Report\n──────────────────────────────\nFile                   Before  After\nsrc/services/auth.ts   45%     88%\nsrc/utils/validation.ts 32%    82%\n──────────────────────────────\nOverall:               67%     84%  PASS:\n```"
     },
     {
       "en-US": "## Focus Areas",

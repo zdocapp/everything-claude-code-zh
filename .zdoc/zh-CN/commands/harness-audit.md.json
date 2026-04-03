@@ -15,12 +15,12 @@
       "zh-Hans": "## 使用方式"
     },
     {
-      "en-US": "`/harness-audit [scope] [--format text|json]`",
-      "zh-Hans": "`/harness-audit [scope] [--format text|json]`"
+      "en-US": "`/harness-audit [scope] [--format text|json] [--root path]`",
+      "zh-Hans": "`/harness-audit [scope] [--format text|json] [--root path]`"
     },
     {
-      "en-US": "- `scope` (optional): `repo` (default), `hooks`, `skills`, `commands`, `agents`\n- `--format`: output style (`text` default, `json` for automation)",
-      "zh-Hans": "* `scope` (可选): `repo` (默认), `hooks`, `skills`, `commands`, `agents`\n* `--format`: 输出样式 (`text` 默认, `json` 用于自动化)"
+      "en-US": "- `scope` (optional): `repo` (default), `hooks`, `skills`, `commands`, `agents`\n- `--format`: output style (`text` default, `json` for automation)\n- `--root`: audit a specific path instead of the current working directory",
+      "zh-Hans": "* `scope`（可选）：`repo`（默认）、`hooks`、`skills`、`commands`、`agents`\n* `--format`：输出样式（默认为 `text`，`json` 用于自动化）\n* `--root`：审计特定路径而非当前工作目录"
     },
     {
       "en-US": "## Deterministic Engine",
@@ -31,16 +31,16 @@
       "zh-Hans": "始终运行："
     },
     {
-      "en-US": "```bash\nnode scripts/harness-audit.js <scope> --format <text|json>\n```",
-      "zh-Hans": "```bash\nnode scripts/harness-audit.js <scope> --format <text|json>\n```"
+      "en-US": "```bash\nnode scripts/harness-audit.js <scope> --format <text|json> [--root <path>]\n```",
+      "zh-Hans": "```bash\nnode scripts/harness-audit.js <scope> --format <text|json> [--root <path>]\n```"
     },
     {
       "en-US": "This script is the source of truth for scoring and checks. Do not invent additional dimensions or ad-hoc points.",
       "zh-Hans": "此脚本是评分和检查的单一事实来源。不要发明额外的维度或临时添加评分点。"
     },
     {
-      "en-US": "Rubric version: `2026-03-16`.",
-      "zh-Hans": "评分标准版本：`2026-03-16`。"
+      "en-US": "Rubric version: `2026-03-30`.",
+      "zh-Hans": "评分标准版本：`2026-03-30`。"
     },
     {
       "en-US": "The script computes 7 fixed categories (`0-10` normalized each):",
@@ -51,8 +51,8 @@
       "zh-Hans": "1. 工具覆盖度\n2. 上下文效率\n3. 质量门禁\n4. 记忆持久化\n5. 评估覆盖度\n6. 安全护栏\n7. 成本效率"
     },
     {
-      "en-US": "Scores are derived from explicit file/rule checks and are reproducible for the same commit.",
-      "zh-Hans": "分数源自显式的文件/规则检查，并且对于同一提交是可复现的。"
+      "en-US": "Scores are derived from explicit file/rule checks and are reproducible for the same commit.\nThe script audits the current working directory by default and auto-detects whether the target is the ECC repo itself or a consumer project using ECC.",
+      "zh-Hans": "分数源自显式的文件/规则检查，对于同一提交是可重现的。\n脚本默认审计当前工作目录，并自动检测目标是 ECC 仓库本身还是使用 ECC 的消费者项目。"
     },
     {
       "en-US": "## Output Contract",

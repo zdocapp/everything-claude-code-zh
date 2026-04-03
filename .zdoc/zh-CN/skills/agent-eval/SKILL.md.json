@@ -27,8 +27,8 @@
       "zh-Hans": "## 安装"
     },
     {
-      "en-US": "```bash\n# pinned to v0.1.0 — latest stable commit\npip install git+https://github.com/joaquinhuigomez/agent-eval.git@6d062a2f5cda6ea443bf5d458d361892c04e749b\n```",
-      "zh-Hans": "```bash\n# pinned to v0.1.0 — latest stable commit\npip install git+https://github.com/joaquinhuigomez/agent-eval.git@6d062a2f5cda6ea443bf5d458d361892c04e749b\n```"
+      "en-US": "> **Note:** Install agent-eval from its repository after reviewing the source.",
+      "zh-Hans": "> **注意：** 在审查源代码后，从其仓库安装 agent-eval。"
     },
     {
       "en-US": "## Core Concepts",
