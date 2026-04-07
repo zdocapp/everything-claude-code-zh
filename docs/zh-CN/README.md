@@ -1,4 +1,4 @@
-**语言：** 简体中文 | [Português (Brasil)](../../../pt-BR/README.md) | [English](../../../../README.md) | [繁體中文](../../../zh-TW/README.md) | [日本語](../../../ja-JP/README.md) | [한국어](../../../ko-KR/README.md) | [Türkçe](../../../tr/README.md)
+**语言：** 英语 | [葡萄牙语（巴西）](../pt-BR/README.md) | [简体中文](../../README.zh-CN.md) | [繁体中文](../zh-TW/README.md) | [日语](../ja-JP/README.md) | [韩语](../ko-KR/README.md) | [土耳其语](../tr/README.md)
 
 # Everything Claude Code
 
@@ -25,7 +25,8 @@
 
 **语言 / 语言 / 語言 / Dil**
 
-[**English**](../../../../README.md) | [Português (Brasil)](../../../pt-BR/README.md) | [简体中文](../../../../README.zh-CN.md) | [繁體中文](../../../zh-TW/README.md) | [日本語](../../../ja-JP/README.md) | [한국어](../../../ko-KR/README.md) | [Türkçe](../../../tr/README.md)
+[**English**](../../README.md) | [Português (Brasil)](../pt-BR/README.md) | [简体中文](../../README.zh-CN.md) | [繁體中文](../zh-TW/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md)
+| [Türkçe](../tr/README.md)
 
 </div>
 

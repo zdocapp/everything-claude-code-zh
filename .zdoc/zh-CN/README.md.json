@@ -4,7 +4,7 @@
   "entries": [
     {
       "en-US": "**Language:** English | [Português (Brasil)](docs/pt-BR/README.md) | [简体中文](README.zh-CN.md) | [繁體中文](docs/zh-TW/README.md) | [日本語](docs/ja-JP/README.md) | [한국어](docs/ko-KR/README.md) | [Türkçe](docs/tr/README.md)",
-      "zh-Hans": "**语言：** 简体中文 | [Português (Brasil)](../pt-BR/README.md) | [English](../../README.md) | [繁體中文](../zh-TW/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Türkçe](../tr/README.md)"
+      "zh-Hans": "**语言：** 英语 | [葡萄牙语（巴西）](docs/pt-BR/README.md) | [简体中文](README.zh-CN.md) | [繁体中文](docs/zh-TW/README.md) | [日语](docs/ja-JP/README.md) | [韩语](docs/ko-KR/README.md) | [土耳其语](docs/tr/README.md)"
     },
     {
       "en-US": "# Everything Claude Code",
@@ -32,7 +32,7 @@
     },
     {
       "en-US": "[**English**](README.md) | [Português (Brasil)](docs/pt-BR/README.md) | [简体中文](README.zh-CN.md) | [繁體中文](docs/zh-TW/README.md) | [日本語](docs/ja-JP/README.md) | [한국어](docs/ko-KR/README.md)\n | [Türkçe](docs/tr/README.md)",
-      "zh-Hans": "[**English**](../../README.md) | [Português (Brasil)](../pt-BR/README.md) | [简体中文](../../README.zh-CN.md) | [繁體中文](../zh-TW/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Türkçe](../tr/README.md)"
+      "zh-Hans": "[**English**](README.md) | [Português (Brasil)](docs/pt-BR/README.md) | [简体中文](README.zh-CN.md) | [繁體中文](docs/zh-TW/README.md) | [日本語](docs/ja-JP/README.md) | [한국어](docs/ko-KR/README.md)\n| [Türkçe](docs/tr/README.md)"
     },
     {
       "en-US": "</div>",
