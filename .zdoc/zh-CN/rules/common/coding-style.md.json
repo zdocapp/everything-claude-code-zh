@@ -23,6 +23,34 @@
       "zh-Hans": "理由：不可变数据可以防止隐藏的副作用，使调试更容易，并支持安全的并发。"
     },
     {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "### KISS (Keep It Simple)",
+      "zh-Hans": "### KISS（保持简单）"
+    },
+    {
+      "en-US": "- Prefer the simplest solution that actually works\n- Avoid premature optimization\n- Optimize for clarity over cleverness",
+      "zh-Hans": "* 优先选择实际可行的最简单方案\n* 避免过早优化\n* 为清晰度而非巧妙性而优化"
+    },
+    {
+      "en-US": "### DRY (Don't Repeat Yourself)",
+      "zh-Hans": "### DRY（不要重复自己）"
+    },
+    {
+      "en-US": "- Extract repeated logic into shared functions or utilities\n- Avoid copy-paste implementation drift\n- Introduce abstractions when repetition is real, not speculative",
+      "zh-Hans": "* 将重复逻辑提取到共享函数或工具中\n* 避免复制粘贴导致的实现偏差\n* 在重复确实存在而非推测时引入抽象"
+    },
+    {
+      "en-US": "### YAGNI (You Aren't Gonna Need It)",
+      "zh-Hans": "### YAGNI（你不需要它）"
+    },
+    {
+      "en-US": "- Do not build features or abstractions before they are needed\n- Avoid speculative generality\n- Start simple, then refactor when the pressure is real",
+      "zh-Hans": "* 不要构建尚未需要的功能或抽象\n* 避免推测性的通用性\n* 从简单开始，在需求真实出现时再重构"
+    },
+    {
       "en-US": "## File Organization",
       "zh-Hans": "## 文件组织"
     },
@@ -57,6 +85,42 @@
     {
       "en-US": "- Validate all user input before processing\n- Use schema-based validation where available\n- Fail fast with clear error messages\n- Never trust external data (API responses, user input, file content)",
       "zh-Hans": "* 在处理前验证所有用户输入\n* 在可用时使用基于模式的验证\n* 快速失败并提供清晰的错误消息\n* 绝不信任外部数据（API 响应、用户输入、文件内容）"
+    },
+    {
+      "en-US": "## Naming Conventions",
+      "zh-Hans": "## 命名约定"
+    },
+    {
+      "en-US": "- Variables and functions: `camelCase` with descriptive names\n- Booleans: prefer `is`, `has`, `should`, or `can` prefixes\n- Interfaces, types, and components: `PascalCase`\n- Constants: `UPPER_SNAKE_CASE`\n- Custom hooks: `camelCase` with a `use` prefix",
+      "zh-Hans": "* 变量和函数：`camelCase` 并使用描述性名称\n* 布尔值：优先使用 `is`、`has`、`should` 或 `can` 前缀\n* 接口、类型和组件：`PascalCase`\n* 常量：`UPPER_SNAKE_CASE`\n* 自定义钩子：`camelCase` 并带有 `use` 前缀"
+    },
+    {
+      "en-US": "## Code Smells to Avoid",
+      "zh-Hans": "## 应避免的代码异味"
+    },
+    {
+      "en-US": "### Deep Nesting",
+      "zh-Hans": "### 深层嵌套"
+    },
+    {
+      "en-US": "Prefer early returns over nested conditionals once the logic starts stacking.",
+      "zh-Hans": "一旦逻辑开始堆叠，优先使用提前返回而非嵌套的条件语句。"
+    },
+    {
+      "en-US": "### Magic Numbers",
+      "zh-Hans": "### 魔法数字"
+    },
+    {
+      "en-US": "Use named constants for meaningful thresholds, delays, and limits.",
+      "zh-Hans": "对于有意义的阈值、延迟和限制，请使用命名常量。"
+    },
+    {
+      "en-US": "### Long Functions",
+      "zh-Hans": "### 过长函数"
+    },
+    {
+      "en-US": "Split large functions into focused pieces with clear responsibilities.",
+      "zh-Hans": "将大型函数拆分为职责清晰、重点明确的片段。"
     },
     {
       "en-US": "## Code Quality Checklist",

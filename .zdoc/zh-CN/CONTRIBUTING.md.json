@@ -15,8 +15,8 @@
       "zh-Hans": "## 目录"
     },
     {
-      "en-US": "- [What We're Looking For](#what-were-looking-for)\n- [Quick Start](#quick-start)\n- [Contributing Skills](#contributing-skills)\n- [Contributing Agents](#contributing-agents)\n- [Contributing Hooks](#contributing-hooks)\n- [Contributing Commands](#contributing-commands)\n- [MCP and documentation (e.g. Context7)](#mcp-and-documentation-eg-context7)\n- [Cross-Harness and Translations](#cross-harness-and-translations)\n- [Pull Request Process](#pull-request-process)",
-      "zh-Hans": "* [我们寻找的内容](#我们寻找什么)\n* [快速开始](#快速开始)\n* [贡献技能](#贡献技能)\n* [贡献智能体](#贡献智能体)\n* [贡献钩子](#贡献钩子)\n* [贡献命令](#贡献命令)\n* [MCP 和文档（例如 Context7）](#mcp-和文档例如-context7)\n* [跨工具链和翻译](#跨平台与翻译)\n* [拉取请求流程](#拉取请求流程)"
+      "en-US": "- [What We're Looking For](#what-were-looking-for)\n- [Quick Start](#quick-start)\n- [Contributing Skills](#contributing-skills)\n- [Skill Adaptation Policy](#skill-adaptation-policy)\n- [Contributing Agents](#contributing-agents)\n- [Contributing Hooks](#contributing-hooks)\n- [Contributing Commands](#contributing-commands)\n- [MCP and documentation (e.g. Context7)](#mcp-and-documentation-eg-context7)\n- [Cross-Harness and Translations](#cross-harness-and-translations)\n- [Pull Request Process](#pull-request-process)",
+      "zh-Hans": "* [我们寻找什么](#我们寻找什么)\n* [快速开始](#快速开始)\n* [贡献技能](#贡献技能)\n* [技能适配政策](#技能适配政策)\n* [贡献智能体](#贡献智能体)\n* [贡献钩子](#贡献钩子)\n* [贡献命令](#贡献命令)\n* [MCP 与文档（例如 Context7）](#mcp-和文档例如-context7)\n* [跨工具链与翻译](#跨平台与翻译)\n* [拉取请求流程](#拉取请求流程)"
     },
     {
       "en-US": "---",
@@ -99,8 +99,8 @@
       "zh-Hans": "技能是 Claude Code 根据上下文加载的知识模块。"
     },
     {
-      "en-US": "> ** Comprehensive Guide:** For detailed guidance on creating effective skills, see [Skill Development Guide](docs/SKILL-DEVELOPMENT-GUIDE.md). It covers:\n> - Skill architecture and categories\n> - Writing effective content with examples\n> - Best practices and common patterns\n> - Testing and validation\n> - Complete examples gallery",
-      "zh-Hans": "> \\*\\* 综合指南：\\*\\* 关于创建高效技能的详细指导，请参阅 [技能开发指南](docs/SKILL-DEVELOPMENT-GUIDE.md)。其内容包括：\n>\n> * 技能架构与类别\n> * 编写有效内容及示例\n> * 最佳实践与常见模式\n> * 测试与验证\n> * 完整示例库"
+      "en-US": "> **Comprehensive Guide:** For detailed guidance on creating effective skills, see [Skill Development Guide](docs/SKILL-DEVELOPMENT-GUIDE.md). It covers:\n> - Skill architecture and categories\n> - Writing effective content with examples\n> - Best practices and common patterns\n> - Testing and validation\n> - Complete examples gallery",
+      "zh-Hans": "> **综合指南：** 关于创建有效技能的详细指导，请参阅[技能开发指南](docs/SKILL-DEVELOPMENT-GUIDE.md)。它涵盖：\n>\n> * 技能架构与分类\n> * 编写有效内容及示例\n> * 最佳实践与常见模式\n> * 测试与验证\n> * 完整示例库"
     },
     {
       "en-US": "### Directory Structure",
@@ -123,8 +123,24 @@
       "zh-Hans": "### 技能类别"
     },
     {
-      "en-US": "| Category | Purpose | Examples |\n|----------|---------|----------|\n| **Language Standards** | Idioms, conventions, best practices | `python-patterns`, `golang-patterns` |\n| **Framework Patterns** | Framework-specific guidance | `django-patterns`, `nextjs-patterns` |\n| **Workflow** | Step-by-step processes | `tdd-workflow`, `refactoring-workflow` |\n| **Domain Knowledge** | Specialized domains | `security-review`, `api-design` |\n| **Tool Integration** | Tool/library usage | `docker-patterns`, `supabase-patterns` |\n| **Template** | Project-specific skill templates | `project-guidelines-example` |",
-      "zh-Hans": "| 类别 | 用途 | 示例 |\n|----------|---------|----------|\n| **语言标准** | 惯用法、约定、最佳实践 | `python-patterns`, `golang-patterns` |\n| **框架模式** | 特定框架指导 | `django-patterns`, `nextjs-patterns` |\n| **工作流程** | 分步流程 | `tdd-workflow`, `refactoring-workflow` |\n| **领域知识** | 专业领域 | `security-review`, `api-design` |\n| **工具集成** | 工具/库使用 | `docker-patterns`, `supabase-patterns` |\n| **模板** | 项目特定技能模板 | `project-guidelines-example` |"
+      "en-US": "| Category | Purpose | Examples |\n|----------|---------|----------|\n| **Language Standards** | Idioms, conventions, best practices | `python-patterns`, `golang-patterns` |\n| **Framework Patterns** | Framework-specific guidance | `django-patterns`, `nextjs-patterns` |\n| **Workflow** | Step-by-step processes | `tdd-workflow`, `refactoring-workflow` |\n| **Domain Knowledge** | Specialized domains | `security-review`, `api-design` |\n| **Tool Integration** | Tool/library usage | `docker-patterns`, `supabase-patterns` |\n| **Template** | Project-specific skill templates | `docs/examples/project-guidelines-template.md` |",
+      "zh-Hans": "| 类别 | 目的 | 示例 |\n|----------|---------|----------|\n| **语言标准** | 惯用语、约定、最佳实践 | `python-patterns`, `golang-patterns` |\n| **框架模式** | 框架特定指导 | `django-patterns`, `nextjs-patterns` |\n| **工作流程** | 分步流程 | `tdd-workflow`, `refactoring-workflow` |\n| **领域知识** | 专业领域 | `security-review`, `api-design` |\n| **工具集成** | 工具/库使用 | `docker-patterns`, `supabase-patterns` |\n| **模板** | 项目特定技能模板 | `docs/examples/project-guidelines-template.md` |"
+    },
+    {
+      "en-US": "### Skill Adaptation Policy",
+      "zh-Hans": "### 技能适配政策"
+    },
+    {
+      "en-US": "If you are porting an idea from another repo, plugin, harness, or personal prompt pack, read [Skill Adaptation Policy](docs/skill-adaptation-policy.md) before opening the PR.",
+      "zh-Hans": "如果你正在从其他仓库、插件、工具链或个人提示包移植一个想法，请在开启 PR 前阅读[技能适配政策](docs/skill-adaptation-policy.md)。"
+    },
+    {
+      "en-US": "Short version:",
+      "zh-Hans": "简短版本："
+    },
+    {
+      "en-US": "- copy the underlying idea, not the external product identity\n- rename the skill when ECC materially changes or expands the surface\n- prefer ECC-native rules, skills, scripts, and MCPs over new default third-party dependencies\n- do not ship a skill whose main value is telling users to install an unvetted package",
+      "zh-Hans": "* 复制底层想法，而非外部产品标识\n* 当 ECC 实质性改变或扩展范围时，重命名技能\n* 优先使用 ECC 原生规则、技能、脚本和 MCP，而非新的默认第三方依赖\n* 不要发布其主要价值是告诉用户安装未经审查的包的技能"
     },
     {
       "en-US": "### Skill Checklist",
@@ -139,8 +155,8 @@
       "zh-Hans": "### 技能示例"
     },
     {
-      "en-US": "| Skill | Category | Purpose |\n|-------|----------|---------|\n| `coding-standards/` | Language Standards | TypeScript/JavaScript patterns |\n| `frontend-patterns/` | Framework Patterns | React and Next.js best practices |\n| `backend-patterns/` | Framework Patterns | API and database patterns |\n| `security-review/` | Domain Knowledge | Security checklist |\n| `tdd-workflow/` | Workflow | Test-driven development process |\n| `project-guidelines-example/` | Template | Project-specific skill template |",
-      "zh-Hans": "| 技能 | 类别 | 用途 |\n|-------|----------|---------|\n| `coding-standards/` | 语言标准 | TypeScript/JavaScript 模式 |\n| `frontend-patterns/` | 框架模式 | React 和 Next.js 最佳实践 |\n| `backend-patterns/` | 框架模式 | API 和数据库模式 |\n| `security-review/` | 领域知识 | 安全检查清单 |\n| `tdd-workflow/` | 工作流程 | 测试驱动开发流程 |\n| `project-guidelines-example/` | 模板 | 项目特定技能模板 |"
+      "en-US": "| Skill | Category | Purpose |\n|-------|----------|---------|\n| `coding-standards/` | Language Standards | TypeScript/JavaScript patterns |\n| `frontend-patterns/` | Framework Patterns | React and Next.js best practices |\n| `backend-patterns/` | Framework Patterns | API and database patterns |\n| `security-review/` | Domain Knowledge | Security checklist |\n| `tdd-workflow/` | Workflow | Test-driven development process |\n| `docs/examples/project-guidelines-template.md` | Template | Project-specific skill template |",
+      "zh-Hans": "| 技能 | 类别 | 目的 |\n|-------|----------|---------|\n| `coding-standards/` | 语言标准 | TypeScript/JavaScript 模式 |\n| `frontend-patterns/` | 框架模式 | React 和 Next.js 最佳实践 |\n| `backend-patterns/` | 框架模式 | API 和数据库模式 |\n| `security-review/` | 领域知识 | 安全检查清单 |\n| `tdd-workflow/` | 工作流程 | 测试驱动开发流程 |\n| `docs/examples/project-guidelines-template.md` | 模板 | 项目特定技能模板 |"
     },
     {
       "en-US": "---",
@@ -272,7 +288,7 @@
     },
     {
       "en-US": "```markdown\n---\ndescription: Brief description shown in /help\n---\n\n# Command Name\n\n## Purpose\n\nWhat this command does.\n\n## Usage\n\n\\`\\`\\`\n/your-command [args]\n\\`\\`\\`\n\n## Workflow\n\n1. First step\n2. Second step\n3. Final step\n\n## Output\n\nWhat the user receives.\n```",
-      "zh-Hans": "```markdown\n---\ndescription: 在 /help 中显示的简要描述\n---\n\n# 命令名称\n\n## 目的\n\n此命令的功能。\n\n## 用法\n\n`​`​`\n\n/your-command [args]\n`​`​`\n\n\n## 工作流程\n\n1.  第一步\n2.  第二步\n3.  最后一步\n\n## 输出\n\n用户将收到的内容。\n\n```"
+      "zh-Hans": "```markdown\n---\ndescription: 在 /help 中显示的简要描述\n---\n\n# 命令名称\n\n## 目的\n\n此命令的功能。\n\n## 用法\n\n\\`\\`\\`\n\n/your-command [args]\n\\`\\`\\`\n\n\n## 工作流程\n\n1.  第一步\n2.  第二步\n3.  最后一步\n\n## 输出\n\n用户将收到的内容。\n\n```"
     },
     {
       "en-US": "### Example Commands",

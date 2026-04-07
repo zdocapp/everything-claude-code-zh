@@ -619,12 +619,8 @@
       "zh-Hans": "如果您尚未阅读之前的指南，请从这里开始："
     },
     {
-      "en-US": "> [The Shorthand Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2012378465664745795)",
-      "zh-Hans": "> [Claude Code 万事简明指南](https://x.com/affaanmustafa/status/2012378465664745795)"
-    },
-    {
-      "en-US": "> [The Longform Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2014040193557471352)",
-      "zh-Hans": "> [Claude Code 万事详尽指南](https://x.com/affaanmustafa/status/2014040193557471352)"
+      "en-US": "> [The Shorthand Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2012378465664745795)\n>\n> [The Longform Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2014040193557471352)",
+      "zh-Hans": "> [Claude 代码速查指南](https://x.com/affaanmustafa/status/2012378465664745795)\n>\n> [Claude 代码详解指南](https://x.com/affaanmustafa/status/2014040193557471352)"
     },
     {
       "en-US": "go do that and also save these repos:",

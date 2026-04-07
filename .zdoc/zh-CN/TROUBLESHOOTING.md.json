@@ -367,8 +367,8 @@
       "zh-Hans": "### \"MODULE\\_NOT\\_FOUND\""
     },
     {
-      "en-US": "```bash\n# Install plugin dependencies\ncd ~/.claude/plugins/cache/everything-claude-code\nnpm install\n\n# Or for manual install\ncd ~/.claude/plugins/ecc\nnpm install\n```",
-      "zh-Hans": "```bash\n# Install plugin dependencies\ncd ~/.claude/plugins/cache/everything-claude-code\nnpm install\n\n# Or for manual install\ncd ~/.claude/plugins/ecc\nnpm install\n```"
+      "en-US": "```bash\n# Install plugin dependencies\ncd ~/.claude/plugins/cache/ecc\nnpm install\n\n# Or for manual install\ncd ~/.claude/plugins/ecc\nnpm install\n```",
+      "zh-Hans": "```bash\n# Install plugin dependencies\ncd ~/.claude/plugins/cache/ecc\nnpm install\n\n# Or for manual install\ncd ~/.claude/plugins/ecc\nnpm install\n```"
     },
     {
       "en-US": "### \"spawn UNKNOWN\"",

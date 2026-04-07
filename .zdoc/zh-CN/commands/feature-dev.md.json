@@ -1,0 +1,74 @@
+{
+  "sourceFile": "commands/feature-dev.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Guided feature development with codebase understanding and architecture focus\n---",
+      "zh-Hans": "---\ndescription: 基于代码库理解和架构重点的引导式功能开发\n---"
+    },
+    {
+      "en-US": "A structured feature-development workflow that emphasizes understanding existing code before writing new code.",
+      "zh-Hans": "一种结构化的功能开发工作流程，强调在编写新代码之前先理解现有代码。"
+    },
+    {
+      "en-US": "## Phases",
+      "zh-Hans": "## 阶段"
+    },
+    {
+      "en-US": "### 1. Discovery",
+      "zh-Hans": "### 1. 探索"
+    },
+    {
+      "en-US": "- read the feature request carefully\n- identify requirements, constraints, and acceptance criteria\n- ask clarifying questions if the request is ambiguous",
+      "zh-Hans": "* 仔细阅读功能需求\n* 识别需求、约束条件和验收标准\n* 如果需求不明确，提出澄清性问题"
+    },
+    {
+      "en-US": "### 2. Codebase Exploration",
+      "zh-Hans": "### 2. 代码库探索"
+    },
+    {
+      "en-US": "- use `code-explorer` to analyze the relevant existing code\n- trace execution paths and architecture layers\n- understand integration points and conventions",
+      "zh-Hans": "* 使用 `code-explorer` 分析相关的现有代码\n* 追踪执行路径和架构层次\n* 理解集成点和约定"
+    },
+    {
+      "en-US": "### 3. Clarifying Questions",
+      "zh-Hans": "### 3. 澄清问题"
+    },
+    {
+      "en-US": "- present findings from exploration\n- ask targeted design and edge-case questions\n- wait for user response before proceeding",
+      "zh-Hans": "* 呈现探索阶段的发现\n* 提出有针对性的设计和边界情况问题\n* 在继续之前等待用户回应"
+    },
+    {
+      "en-US": "### 4. Architecture Design",
+      "zh-Hans": "### 4. 架构设计"
+    },
+    {
+      "en-US": "- use `code-architect` to design the feature\n- provide the implementation blueprint\n- wait for approval before implementing",
+      "zh-Hans": "* 使用 `code-architect` 设计功能\n* 提供实现蓝图\n* 在实施前等待批准"
+    },
+    {
+      "en-US": "### 5. Implementation",
+      "zh-Hans": "### 5. 实施"
+    },
+    {
+      "en-US": "- implement the feature following the approved design\n- prefer TDD where appropriate\n- keep commits small and focused",
+      "zh-Hans": "* 按照批准的设计实施功能\n* 在适当的情况下优先采用测试驱动开发\n* 保持提交小而专注"
+    },
+    {
+      "en-US": "### 6. Quality Review",
+      "zh-Hans": "### 6. 质量审查"
+    },
+    {
+      "en-US": "- use `code-reviewer` to review the implementation\n- address critical and important issues\n- verify test coverage",
+      "zh-Hans": "* 使用 `code-reviewer` 审查实施情况\n* 处理关键和重要问题\n* 验证测试覆盖率"
+    },
+    {
+      "en-US": "### 7. Summary",
+      "zh-Hans": "### 7. 总结"
+    },
+    {
+      "en-US": "- summarize what was built\n- list follow-up items or limitations\n- provide testing instructions",
+      "zh-Hans": "* 总结构建的内容\n* 列出后续事项或限制\n* 提供测试说明"
+    }
+  ]
+}

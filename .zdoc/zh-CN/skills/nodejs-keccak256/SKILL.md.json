@@ -1,0 +1,98 @@
+{
+  "sourceFile": "skills/nodejs-keccak256/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: nodejs-keccak256\ndescription: Prevent Ethereum hashing bugs in JavaScript and TypeScript. Node's sha3-256 is NIST SHA3, not Ethereum Keccak-256, and silently breaks selectors, signatures, storage slots, and address derivation.\norigin: ECC direct-port adaptation\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: nodejs-keccak256\ndescription: 防止JavaScript和TypeScript中的以太坊哈希错误。Node的sha3-256是NIST SHA3，而非以太坊Keccak-256，这会静默破坏选择器、签名、存储槽和地址派生。\norigin: ECC direct-port adaptation\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Node.js Keccak-256",
+      "zh-Hans": "# Node.js Keccak-256"
+    },
+    {
+      "en-US": "Ethereum uses Keccak-256, not the NIST-standardized SHA3 variant exposed by Node's `crypto.createHash('sha3-256')`.",
+      "zh-Hans": "以太坊使用的是 Keccak-256，而非 Node.js `crypto.createHash('sha3-256')` 所暴露的 NIST 标准化 SHA3 变体。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Computing Ethereum function selectors or event topics\n- Building EIP-712, signature, Merkle, or storage-slot helpers in JS/TS\n- Reviewing any code that hashes Ethereum data with Node crypto directly",
+      "zh-Hans": "* 计算以太坊函数选择器或事件主题\n* 在 JS/TS 中构建 EIP-712、签名、默克尔树或存储槽辅助工具\n* 审查任何直接使用 Node crypto 对以太坊数据进行哈希处理的代码"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "The two algorithms produce different outputs for the same input, and Node will not warn you.",
+      "zh-Hans": "这两种算法对相同的输入会产生不同的输出，而 Node.js 不会发出警告。"
+    },
+    {
+      "en-US": "```javascript\nimport crypto from 'crypto';\nimport { keccak256, toUtf8Bytes } from 'ethers';\n\nconst data = 'hello';\nconst nistSha3 = crypto.createHash('sha3-256').update(data).digest('hex');\nconst keccak = keccak256(toUtf8Bytes(data)).slice(2);\n\nconsole.log(nistSha3 === keccak); // false\n```",
+      "zh-Hans": "```javascript\nimport crypto from 'crypto';\nimport { keccak256, toUtf8Bytes } from 'ethers';\n\nconst data = 'hello';\nconst nistSha3 = crypto.createHash('sha3-256').update(data).digest('hex');\nconst keccak = keccak256(toUtf8Bytes(data)).slice(2);\n\nconsole.log(nistSha3 === keccak); // false\n```"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### ethers v6",
+      "zh-Hans": "### ethers v6"
+    },
+    {
+      "en-US": "```typescript\nimport { keccak256, toUtf8Bytes, solidityPackedKeccak256, id } from 'ethers';\n\nconst hash = keccak256(new Uint8Array([0x01, 0x02]));\nconst hash2 = keccak256(toUtf8Bytes('hello'));\nconst topic = id('Transfer(address,address,uint256)');\nconst packed = solidityPackedKeccak256(\n  ['address', 'uint256'],\n  ['0x742d35Cc6634C0532925a3b8D4C9B569890FaC1c', 100n],\n);\n```",
+      "zh-Hans": "```typescript\nimport { keccak256, toUtf8Bytes, solidityPackedKeccak256, id } from 'ethers';\n\nconst hash = keccak256(new Uint8Array([0x01, 0x02]));\nconst hash2 = keccak256(toUtf8Bytes('hello'));\nconst topic = id('Transfer(address,address,uint256)');\nconst packed = solidityPackedKeccak256(\n  ['address', 'uint256'],\n  ['0x742d35Cc6634C0532925a3b8D4C9B569890FaC1c', 100n],\n);\n```"
+    },
+    {
+      "en-US": "### viem",
+      "zh-Hans": "### viem"
+    },
+    {
+      "en-US": "```typescript\nimport { keccak256, toBytes } from 'viem';\n\nconst hash = keccak256(toBytes('hello'));\n```",
+      "zh-Hans": "```typescript\nimport { keccak256, toBytes } from 'viem';\n\nconst hash = keccak256(toBytes('hello'));\n```"
+    },
+    {
+      "en-US": "### web3.js",
+      "zh-Hans": "### web3.js"
+    },
+    {
+      "en-US": "```javascript\nconst hash = web3.utils.keccak256('hello');\nconst packed = web3.utils.soliditySha3(\n  { type: 'address', value: '0x742d35Cc6634C0532925a3b8D4C9B569890FaC1c' },\n  { type: 'uint256', value: '100' },\n);\n```",
+      "zh-Hans": "```javascript\nconst hash = web3.utils.keccak256('hello');\nconst packed = web3.utils.soliditySha3(\n  { type: 'address', value: '0x742d35Cc6634C0532925a3b8D4C9B569890FaC1c' },\n  { type: 'uint256', value: '100' },\n);\n```"
+    },
+    {
+      "en-US": "### Common patterns",
+      "zh-Hans": "### 常见模式"
+    },
+    {
+      "en-US": "```typescript\nimport { id, keccak256, AbiCoder } from 'ethers';\n\nconst selector = id('transfer(address,uint256)').slice(0, 10);\nconst typeHash = keccak256(toUtf8Bytes('Transfer(address from,address to,uint256 value)'));\n\nfunction getMappingSlot(key: string, mappingSlot: number): string {\n  return keccak256(\n    AbiCoder.defaultAbiCoder().encode(['address', 'uint256'], [key, mappingSlot]),\n  );\n}\n```",
+      "zh-Hans": "```typescript\nimport { id, keccak256, AbiCoder } from 'ethers';\n\nconst selector = id('transfer(address,uint256)').slice(0, 10);\nconst typeHash = keccak256(toUtf8Bytes('Transfer(address from,address to,uint256 value)'));\n\nfunction getMappingSlot(key: string, mappingSlot: number): string {\n  return keccak256(\n    AbiCoder.defaultAbiCoder().encode(['address', 'uint256'], [key, mappingSlot]),\n  );\n}\n```"
+    },
+    {
+      "en-US": "### Address from public key",
+      "zh-Hans": "### 从公钥生成地址"
+    },
+    {
+      "en-US": "```typescript\nimport { keccak256 } from 'ethers';\n\nfunction pubkeyToAddress(pubkeyBytes: Uint8Array): string {\n  const hash = keccak256(pubkeyBytes.slice(1));\n  return '0x' + hash.slice(-40);\n}\n```",
+      "zh-Hans": "```typescript\nimport { keccak256 } from 'ethers';\n\nfunction pubkeyToAddress(pubkeyBytes: Uint8Array): string {\n  const hash = keccak256(pubkeyBytes.slice(1));\n  return '0x' + hash.slice(-40);\n}\n```"
+    },
+    {
+      "en-US": "### Audit your codebase",
+      "zh-Hans": "### 审计你的代码库"
+    },
+    {
+      "en-US": "```bash\ngrep -rn \"createHash.*sha3\" --include=\"*.ts\" --include=\"*.js\" --exclude-dir=node_modules .\ngrep -rn \"keccak256\" --include=\"*.ts\" --include=\"*.js\" . | grep -v node_modules\n```",
+      "zh-Hans": "```bash\ngrep -rn \"createHash.*sha3\" --include=\"*.ts\" --include=\"*.js\" --exclude-dir=node_modules .\ngrep -rn \"keccak256\" --include=\"*.ts\" --include=\"*.js\" . | grep -v node_modules\n```"
+    },
+    {
+      "en-US": "## Rule",
+      "zh-Hans": "## 规则"
+    },
+    {
+      "en-US": "For Ethereum contexts, never use `crypto.createHash('sha3-256')`. Use Keccak-aware helpers from `ethers`, `viem`, `web3`, or another explicit Keccak implementation.",
+      "zh-Hans": "在以太坊上下文中，切勿使用 `crypto.createHash('sha3-256')`。应使用来自 `ethers`、`viem`、`web3` 或其他明确 Keccak 实现的、支持 Keccak 的辅助工具。"
+    }
+  ]
+}

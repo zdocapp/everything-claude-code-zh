@@ -7,12 +7,12 @@
       "zh-Hans": "# Everything Claude Code (ECC) — 智能体指令"
     },
     {
-      "en-US": "This is a **production-ready AI coding plugin** providing 38 specialized agents, 156 skills, 72 commands, and automated hook workflows for software development.",
-      "zh-Hans": "这是一个**生产就绪的 AI 编码插件**，提供 38 个专业代理、156 项技能、72 条命令以及自动化钩子工作流，用于软件开发。"
+      "en-US": "This is a **production-ready AI coding plugin** providing 47 specialized agents, 181 skills, 79 commands, and automated hook workflows for software development.",
+      "zh-Hans": "这是一个**生产就绪的 AI 编码插件**，提供 47 个专业代理、181 项技能、79 条命令以及用于软件开发的自动化钩子工作流。"
     },
     {
-      "en-US": "**Version:** 1.9.0",
-      "zh-Hans": "**版本:** 1.9.0"
+      "en-US": "**Version:** 1.10.0",
+      "zh-Hans": "**版本：** 1.10.0"
     },
     {
       "en-US": "## Core Principles",
@@ -183,8 +183,8 @@
       "zh-Hans": "## 项目结构"
     },
     {
-      "en-US": "```\nagents/          — 38 specialized subagents\nskills/          — 156 workflow skills and domain knowledge\ncommands/        — 72 slash commands\nhooks/           — Trigger-based automations\nrules/           — Always-follow guidelines (common + per-language)\nscripts/         — Cross-platform Node.js utilities\nmcp-configs/     — 14 MCP server configurations\ntests/           — Test suite\n```",
-      "zh-Hans": "```\nagents/          — 38 个专业子代理\nskills/          — 156 个工作流技能和领域知识\ncommands/        — 72 个斜杠命令\nhooks/           — 基于触发的自动化\nrules/           — 始终遵循的指南（通用 + 按语言）\nscripts/         — 跨平台 Node.js 实用工具\nmcp-configs/     — 14 个 MCP 服务器配置\ntests/           — 测试套件\n```"
+      "en-US": "```\nagents/          — 47 specialized subagents\nskills/          — 181 workflow skills and domain knowledge\ncommands/        — 79 slash commands\nhooks/           — Trigger-based automations\nrules/           — Always-follow guidelines (common + per-language)\nscripts/         — Cross-platform Node.js utilities\nmcp-configs/     — 14 MCP server configurations\ntests/           — Test suite\n```",
+      "zh-Hans": "```\nagents/          — 47 个专业子代理\nskills/          — 181 个工作流技能和领域知识\ncommands/        — 79 个斜杠命令\nhooks/           — 基于触发的自动化\nrules/           — 始终遵循的指南（通用 + 按语言）\nscripts/         — 跨平台 Node.js 实用工具\nmcp-configs/     — 14 个 MCP 服务器配置\ntests/           — 测试套件\n```"
     },
     {
       "en-US": "`commands/` remains in the repo for compatibility, but the long-term direction is skills-first.",

@@ -1,0 +1,58 @@
+{
+  "sourceFile": "commands/hookify-help.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Get help with the hookify system\n---",
+      "zh-Hans": "---\ndescription: 获取有关hookify系统的帮助\n---"
+    },
+    {
+      "en-US": "Display comprehensive hookify documentation.",
+      "zh-Hans": "显示全面的 Hookify 文档。"
+    },
+    {
+      "en-US": "## Hook System Overview",
+      "zh-Hans": "## 钩子系统概述"
+    },
+    {
+      "en-US": "Hookify creates rule files that integrate with Claude Code's hook system to prevent unwanted behaviors.",
+      "zh-Hans": "Hookify 创建规则文件，与 Claude Code 的钩子系统集成，以防止不需要的行为。"
+    },
+    {
+      "en-US": "### Event Types",
+      "zh-Hans": "### 事件类型"
+    },
+    {
+      "en-US": "- `bash`: triggers on Bash tool use and matches command patterns\n- `file`: triggers on Write/Edit tool use and matches file paths\n- `stop`: triggers when a session ends\n- `prompt`: triggers on user message submission and matches input patterns\n- `all`: triggers on all events",
+      "zh-Hans": "* `bash`：在 Bash 工具使用时触发，并匹配命令模式\n* `file`：在 Write/Edit 工具使用时触发，并匹配文件路径\n* `stop`：在会话结束时触发\n* `prompt`：在用户消息提交时触发，并匹配输入模式\n* `all`：在所有事件上触发"
+    },
+    {
+      "en-US": "### Rule File Format",
+      "zh-Hans": "### 规则文件格式"
+    },
+    {
+      "en-US": "Files are stored as `.claude/hookify.{name}.local.md`:",
+      "zh-Hans": "文件存储为 `.claude/hookify.{name}.local.md`："
+    },
+    {
+      "en-US": "```yaml\n---\nname: descriptive-name\nenabled: true\nevent: bash|file|stop|prompt|all\naction: block|warn\npattern: \"regex pattern to match\"\n---\nMessage to display when rule triggers.\nSupports multiple lines.\n```",
+      "zh-Hans": "```yaml\n---\nname: descriptive-name\nenabled: true\nevent: bash|file|stop|prompt|all\naction: block|warn\npattern: \"regex pattern to match\"\n---\nMessage to display when rule triggers.\nSupports multiple lines.\n```"
+    },
+    {
+      "en-US": "### Commands",
+      "zh-Hans": "### 命令"
+    },
+    {
+      "en-US": "- `/hookify [description]` creates new rules and auto-analyzes the conversation when no description is given\n- `/hookify-list` lists configured rules\n- `/hookify-configure` toggles rules on or off",
+      "zh-Hans": "* `/hookify [description]` 创建新规则，并在未给出描述时自动分析对话\n* `/hookify-list` 列出已配置的规则\n* `/hookify-configure` 切换规则的开启或关闭状态"
+    },
+    {
+      "en-US": "### Pattern Tips",
+      "zh-Hans": "### 模式提示"
+    },
+    {
+      "en-US": "- use regex syntax\n- for `bash`, match against the full command string\n- for `file`, match against the file path\n- test patterns before deploying",
+      "zh-Hans": "* 使用正则表达式语法\n* 对于 `bash`，匹配完整的命令字符串\n* 对于 `file`，匹配文件路径\n* 在部署前测试模式"
+    }
+  ]
+}

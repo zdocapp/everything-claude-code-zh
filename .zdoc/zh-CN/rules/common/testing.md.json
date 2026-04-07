@@ -45,6 +45,30 @@
     {
       "en-US": "- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first",
       "zh-Hans": "* **tdd-guide** - 主动用于新功能，强制执行测试优先"
+    },
+    {
+      "en-US": "## Test Structure (AAA Pattern)",
+      "zh-Hans": "## 测试结构（AAA 模式）"
+    },
+    {
+      "en-US": "Prefer Arrange-Act-Assert structure for tests:",
+      "zh-Hans": "测试应优先采用 Arrange-Act-Assert 结构："
+    },
+    {
+      "en-US": "```typescript\ntest('calculates similarity correctly', () => {\n  // Arrange\n  const vector1 = [1, 0, 0]\n  const vector2 = [0, 1, 0]\n\n  // Act\n  const similarity = calculateCosineSimilarity(vector1, vector2)\n\n  // Assert\n  expect(similarity).toBe(0)\n})\n```",
+      "zh-Hans": "```typescript\ntest('calculates similarity correctly', () => {\n  // Arrange\n  const vector1 = [1, 0, 0]\n  const vector2 = [0, 1, 0]\n\n  // Act\n  const similarity = calculateCosineSimilarity(vector1, vector2)\n\n  // Assert\n  expect(similarity).toBe(0)\n})\n```"
+    },
+    {
+      "en-US": "### Test Naming",
+      "zh-Hans": "### 测试命名"
+    },
+    {
+      "en-US": "Use descriptive names that explain the behavior under test:",
+      "zh-Hans": "使用描述性名称，说明被测试的行为："
+    },
+    {
+      "en-US": "```typescript\ntest('returns empty array when no markets match query', () => {})\ntest('throws error when API key is missing', () => {})\ntest('falls back to substring search when Redis is unavailable', () => {})\n```",
+      "zh-Hans": "```typescript\ntest('returns empty array when no markets match query', () => {})\ntest('throws error when API key is missing', () => {})\ntest('falls back to substring search when Redis is unavailable', () => {})\n```"
     }
   ]
 }

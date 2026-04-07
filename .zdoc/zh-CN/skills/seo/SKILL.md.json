@@ -1,0 +1,174 @@
+{
+  "sourceFile": "skills/seo/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: seo\ndescription: Audit, plan, and implement SEO improvements across technical SEO, on-page optimization, structured data, Core Web Vitals, and content strategy. Use when the user wants better search visibility, SEO remediation, schema markup, sitemap/robots work, or keyword mapping.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: seo\ndescription: 审核、规划并实施SEO改进，涵盖技术SEO、页面优化、结构化数据、核心网页指标和内容策略。适用于用户希望提升搜索可见性、进行SEO修复、添加模式标记、处理站点地图/robots文件或关键词映射的情况。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# SEO",
+      "zh-Hans": "# SEO"
+    },
+    {
+      "en-US": "Improve search visibility through technical correctness, performance, and content relevance, not gimmicks.",
+      "zh-Hans": "通过技术正确性、性能和内容相关性来提升搜索可见性，而非使用噱头。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use this skill when:",
+      "zh-Hans": "在以下情况使用此技能："
+    },
+    {
+      "en-US": "- auditing crawlability, indexability, canonicals, or redirects\n- improving title tags, meta descriptions, and heading structure\n- adding or validating structured data\n- improving Core Web Vitals\n- doing keyword research and mapping keywords to URLs\n- planning internal linking or sitemap / robots changes",
+      "zh-Hans": "* 审核可抓取性、可索引性、规范链接或重定向\n* 改进标题标签、元描述和标题结构\n* 添加或验证结构化数据\n* 改进核心网页指标\n* 进行关键词研究并将关键词映射到URL\n* 规划内部链接或站点地图/robots文件的更改"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Principles",
+      "zh-Hans": "### 原则"
+    },
+    {
+      "en-US": "1. Fix technical blockers before content optimization.\n2. One page should have one clear primary search intent.\n3. Prefer long-term quality signals over manipulative patterns.\n4. Mobile-first assumptions matter because indexing is mobile-first.\n5. Recommendations should be page-specific and implementable.",
+      "zh-Hans": "1. 在内容优化之前先解决技术障碍。\n2. 一个页面应有一个明确的主要搜索意图。\n3. 优先考虑长期质量信号，而非操纵性模式。\n4. 移动优先的假设很重要，因为索引是移动优先的。\n5. 建议应针对具体页面且可实施。"
+    },
+    {
+      "en-US": "### Technical SEO checklist",
+      "zh-Hans": "### 技术SEO检查清单"
+    },
+    {
+      "en-US": "#### Crawlability",
+      "zh-Hans": "#### 可抓取性"
+    },
+    {
+      "en-US": "- `robots.txt` should allow important pages and block low-value surfaces\n- no important page should be unintentionally `noindex`\n- important pages should be reachable within a shallow click depth\n- avoid redirect chains longer than two hops\n- canonical tags should be self-consistent and non-looping",
+      "zh-Hans": "* `robots.txt` 应允许重要页面并阻止低价值页面\n* 不应有任何重要页面被无意中 `noindex`\n* 重要页面应在较浅的点击深度内可达\n* 避免超过两次跳转的重定向链\n* 规范标签应自洽且无循环"
+    },
+    {
+      "en-US": "#### Indexability",
+      "zh-Hans": "#### 可索引性"
+    },
+    {
+      "en-US": "- preferred URL format should be consistent\n- multilingual pages need correct hreflang if used\n- sitemaps should reflect the intended public surface\n- no duplicate URLs should compete without canonical control",
+      "zh-Hans": "* 首选URL格式应保持一致\n* 多语言页面如需使用，应具备正确的hreflang\n* 站点地图应反映预期的公开页面\n* 没有重复URL在缺乏规范控制的情况下相互竞争"
+    },
+    {
+      "en-US": "#### Performance",
+      "zh-Hans": "#### 性能"
+    },
+    {
+      "en-US": "- LCP < 2.5s\n- INP < 200ms\n- CLS < 0.1\n- common fixes: preload hero assets, reduce render-blocking work, reserve layout space, trim heavy JS",
+      "zh-Hans": "* LCP < 2.5秒\n* INP < 200毫秒\n* CLS < 0.1\n* 常见修复方法：预加载关键资源、减少渲染阻塞工作、预留布局空间、精简繁重的JS"
+    },
+    {
+      "en-US": "#### Structured data",
+      "zh-Hans": "#### 结构化数据"
+    },
+    {
+      "en-US": "- homepage: organization or business schema where appropriate\n- editorial pages: `Article` / `BlogPosting`\n- product pages: `Product` and `Offer`\n- interior pages: `BreadcrumbList`\n- Q&A sections: `FAQPage` only when the content truly matches",
+      "zh-Hans": "* 主页：酌情使用组织或企业架构\n* 编辑页面：`Article` / `BlogPosting`\n* 产品页面：`Product` 和 `Offer`\n* 内容页面：`BreadcrumbList`\n* 问答部分：仅当内容完全匹配时使用 `FAQPage`"
+    },
+    {
+      "en-US": "### On-page rules",
+      "zh-Hans": "### 页面规则"
+    },
+    {
+      "en-US": "#### Title tags",
+      "zh-Hans": "#### 标题标签"
+    },
+    {
+      "en-US": "- aim for roughly 50-60 characters\n- put the primary keyword or concept near the front\n- make the title legible to humans, not stuffed for bots",
+      "zh-Hans": "* 目标长度约为50-60个字符\n* 将主要关键词或概念放在靠前位置\n* 使标题对人类可读，而非为机器人堆砌"
+    },
+    {
+      "en-US": "#### Meta descriptions",
+      "zh-Hans": "#### 元描述"
+    },
+    {
+      "en-US": "- aim for roughly 120-160 characters\n- describe the page honestly\n- include the main topic naturally",
+      "zh-Hans": "* 目标长度约为120-160个字符\n* 如实描述页面\n* 自然地包含主要主题"
+    },
+    {
+      "en-US": "#### Heading structure",
+      "zh-Hans": "#### 标题结构"
+    },
+    {
+      "en-US": "- one clear `H1`\n- `H2` and `H3` should reflect actual content hierarchy\n- do not skip structure just for visual styling",
+      "zh-Hans": "* 一个清晰的 `H1`\n* `H2` 和 `H3` 应反映实际的内容层次结构\n* 不要仅为了视觉样式而跳过结构"
+    },
+    {
+      "en-US": "### Keyword mapping",
+      "zh-Hans": "### 关键词映射"
+    },
+    {
+      "en-US": "1. define the search intent\n2. gather realistic keyword variants\n3. prioritize by intent match, likely value, and competition\n4. map one primary keyword/theme to one URL\n5. detect and avoid cannibalization",
+      "zh-Hans": "1. 定义搜索意图\n2. 收集现实的关键词变体\n3. 根据意图匹配度、潜在价值和竞争度进行优先级排序\n4. 将一个主要关键词/主题映射到一个URL\n5. 检测并避免内部竞争"
+    },
+    {
+      "en-US": "### Internal linking",
+      "zh-Hans": "### 内部链接"
+    },
+    {
+      "en-US": "- link from strong pages to pages you want to rank\n- use descriptive anchor text\n- avoid generic anchors when a more specific one is possible\n- backfill links from new pages to relevant existing ones",
+      "zh-Hans": "* 从强页面链接到你希望排名的页面\n* 使用描述性锚文本\n* 在可能的情况下，避免使用通用锚文本，而选择更具体的\n* 从新页面回填链接到相关的现有页面"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Title formula",
+      "zh-Hans": "### 标题公式"
+    },
+    {
+      "en-US": "```text\nPrimary Topic - Specific Modifier | Brand\n```",
+      "zh-Hans": "```text\nPrimary Topic - Specific Modifier | Brand\n```"
+    },
+    {
+      "en-US": "### Meta description formula",
+      "zh-Hans": "### 元描述公式"
+    },
+    {
+      "en-US": "```text\nAction + topic + value proposition + one supporting detail\n```",
+      "zh-Hans": "```text\n行动 + 主题 + 价值主张 + 一个支持性细节\n```"
+    },
+    {
+      "en-US": "### JSON-LD example",
+      "zh-Hans": "### JSON-LD示例"
+    },
+    {
+      "en-US": "```json\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"Article\",\n  \"headline\": \"Page Title Here\",\n  \"author\": {\n    \"@type\": \"Person\",\n    \"name\": \"Author Name\"\n  },\n  \"publisher\": {\n    \"@type\": \"Organization\",\n    \"name\": \"Brand Name\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"Article\",\n  \"headline\": \"Page Title Here\",\n  \"author\": {\n    \"@type\": \"Person\",\n    \"name\": \"Author Name\"\n  },\n  \"publisher\": {\n    \"@type\": \"Organization\",\n    \"name\": \"Brand Name\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Audit output shape",
+      "zh-Hans": "### 审计输出格式"
+    },
+    {
+      "en-US": "```text\n[HIGH] Duplicate title tags on product pages\nLocation: src/routes/products/[slug].tsx\nIssue: Dynamic titles collapse to the same default string, which weakens relevance and creates duplicate signals.\nFix: Generate a unique title per product using the product name and primary category.\n```",
+      "zh-Hans": "```text\n[HIGH] 产品页面上存在重复的标题标签\n位置：src/routes/products/[slug].tsx\n问题：动态标题会回退到相同的默认字符串，这削弱了相关性并产生了重复信号。\n修复：使用产品名称和主要类别为每个产品生成唯一的标题。\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反面模式"
+    },
+    {
+      "en-US": "| Anti-pattern | Fix |\n| --- | --- |\n| keyword stuffing | write for users first |\n| thin near-duplicate pages | consolidate or differentiate them |\n| schema for content that is not actually present | match schema to reality |\n| content advice without checking the actual page | read the real page first |\n| generic “improve SEO” outputs | tie every recommendation to a page or asset |",
+      "zh-Hans": "| 反面模式 | 修复方法 |\n| --- | --- |\n| 关键词堆砌 | 首先为用户写作 |\n| 内容单薄的近似重复页面 | 合并或区分它们 |\n| 为实际不存在的内容添加架构 | 使架构与现实匹配 |\n| 未检查实际页面就给出内容建议 | 先阅读真实页面 |\n| 泛泛的“改进SEO”输出 | 将每条建议与具体页面或资源关联 |"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `seo-specialist`\n- `frontend-patterns`\n- `brand-voice`\n- `market-research`",
+      "zh-Hans": "* `seo-specialist`\n* `frontend-patterns`\n* `brand-voice`\n* `market-research`"
+    }
+  ]
+}

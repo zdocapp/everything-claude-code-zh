@@ -1,0 +1,46 @@
+{
+  "sourceFile": "commands/review-pr.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Comprehensive PR review using specialized agents\n---",
+      "zh-Hans": "---\ndescription: 使用专业代理进行全面的PR审查\n---"
+    },
+    {
+      "en-US": "Run a comprehensive multi-perspective review of a pull request.",
+      "zh-Hans": "对拉取请求进行全面的多视角审查。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "`/review-pr [PR-number-or-URL] [--focus=comments|tests|errors|types|code|simplify]`",
+      "zh-Hans": "`/review-pr [PR-number-or-URL] [--focus=comments|tests|errors|types|code|simplify]`"
+    },
+    {
+      "en-US": "If no PR is specified, review the current branch's PR. If no focus is specified, run the full review stack.",
+      "zh-Hans": "如果未指定 PR，则审查当前分支的 PR。如果未指定审查重点，则运行完整的审查流程。"
+    },
+    {
+      "en-US": "## Steps",
+      "zh-Hans": "## 步骤"
+    },
+    {
+      "en-US": "1. Identify the PR:\n   - use `gh pr view` to get PR details, changed files, and diff\n2. Find project guidance:\n   - look for `CLAUDE.md`, lint config, TypeScript config, repo conventions\n3. Run specialized review agents:\n   - `code-reviewer`\n   - `comment-analyzer`\n   - `pr-test-analyzer`\n   - `silent-failure-hunter`\n   - `type-design-analyzer`\n   - `code-simplifier`\n4. Aggregate results:\n   - dedupe overlapping findings\n   - rank by severity\n5. Report findings grouped by severity",
+      "zh-Hans": "1. 识别 PR：\n   * 使用 `gh pr view` 获取 PR 详情、更改的文件和差异\n2. 查找项目指导：\n   * 查找 `CLAUDE.md`、lint 配置、TypeScript 配置、仓库约定\n3. 运行专项审查代理：\n   * `code-reviewer`\n   * `comment-analyzer`\n   * `pr-test-analyzer`\n   * `silent-failure-hunter`\n   * `type-design-analyzer`\n   * `code-simplifier`\n4. 汇总结果：\n   * 对重叠的发现进行去重\n   * 按严重性排序\n5. 按严重性分组报告发现的问题"
+    },
+    {
+      "en-US": "## Confidence Rule",
+      "zh-Hans": "## 置信度规则"
+    },
+    {
+      "en-US": "Only report issues with confidence >= 80:",
+      "zh-Hans": "仅报告置信度 >= 80 的问题："
+    },
+    {
+      "en-US": "- Critical: bugs, security, data loss\n- Important: missing tests, quality problems, style violations\n- Advisory: suggestions only when explicitly requested",
+      "zh-Hans": "* 严重：错误、安全、数据丢失\n* 重要：缺少测试、质量问题、风格违规\n* 建议：仅在明确要求时提供建议"
+    }
+  ]
+}

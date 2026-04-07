@@ -1,0 +1,22 @@
+{
+  "sourceFile": "commands/hookify-configure.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Enable or disable hookify rules interactively\n---",
+      "zh-Hans": "---\ndescription: 启用或禁用hookify规则交互式\n---"
+    },
+    {
+      "en-US": "Interactively enable or disable existing hookify rules.",
+      "zh-Hans": "交互式启用或禁用现有的 hookify 规则。"
+    },
+    {
+      "en-US": "## Steps",
+      "zh-Hans": "## 步骤"
+    },
+    {
+      "en-US": "1. Find all `.claude/hookify.*.local.md` files\n2. Read the current state of each rule\n3. Present the list with current enabled / disabled status\n4. Ask which rules to toggle\n5. Update the `enabled:` field in the selected rule files\n6. Confirm the changes",
+      "zh-Hans": "1. 查找所有 `.claude/hookify.*.local.md` 文件\n2. 读取每条规则的当前状态\n3. 显示列表及当前启用/禁用状态\n4. 询问要切换哪些规则\n5. 更新所选规则文件中的 `enabled:` 字段\n6. 确认更改"
+    }
+  ]
+}

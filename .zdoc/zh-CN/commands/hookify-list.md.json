@@ -1,0 +1,30 @@
+{
+  "sourceFile": "commands/hookify-list.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: List all configured hookify rules\n---",
+      "zh-Hans": "---\ndescription: 列出所有已配置的hookify规则\n---"
+    },
+    {
+      "en-US": "Find and display all hookify rules in a formatted table.",
+      "zh-Hans": "查找并展示所有 hookify 规则，以格式化表格呈现。"
+    },
+    {
+      "en-US": "## Steps",
+      "zh-Hans": "## 步骤"
+    },
+    {
+      "en-US": "1. Find all `.claude/hookify.*.local.md` files\n2. Read each file's frontmatter:\n   - `name`\n   - `enabled`\n   - `event`\n   - `action`\n   - `pattern`\n3. Display them as a table:",
+      "zh-Hans": "1. 查找所有 `.claude/hookify.*.local.md` 文件\n2. 读取每个文件的前置元数据：\n   * `name`\n   * `enabled`\n   * `event`\n   * `action`\n   * `pattern`\n3. 将它们展示为表格："
+    },
+    {
+      "en-US": "| Rule | Enabled | Event | Pattern | File |\n|------|---------|-------|---------|------|",
+      "zh-Hans": "| 规则 | 启用状态 | 事件 | 模式 | 文件 |\n|------|---------|-------|---------|------|"
+    },
+    {
+      "en-US": "4. Show the rule count and remind the user that `/hookify-configure` can change state later.",
+      "zh-Hans": "4. 显示规则数量，并提醒用户 `/hookify-configure` 可以稍后更改状态。"
+    }
+  ]
+}

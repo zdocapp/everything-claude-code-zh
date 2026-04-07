@@ -23,6 +23,14 @@
       "zh-Hans": "* 设置从 Claude Code 会话中自动提取模式\n* 为会话评估配置停止钩子\n* 在 `~/.claude/skills/learned/` 中审查或整理已学习的技能\n* 调整提取阈值或模式类别\n* 比较 v1（本方法）与 v2（基于本能的方法）"
     },
     {
+      "en-US": "## Status",
+      "zh-Hans": "## 状态"
+    },
+    {
+      "en-US": "This v1 skill is still supported, but `continuous-learning-v2` is the preferred path for new installs. Keep v1 when you explicitly want the simpler Stop-hook extraction flow or need compatibility with older learned-skill workflows.",
+      "zh-Hans": "此 v1 技能仍受支持，但 `continuous-learning-v2` 是新安装的首选路径。仅当你明确需要更简单的 Stop-hook 提取流程，或需要兼容旧版 learned-skill 工作流时，才保留 v1。"
+    },
+    {
       "en-US": "## How It Works",
       "zh-Hans": "## 工作原理"
     },

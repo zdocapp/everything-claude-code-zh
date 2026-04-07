@@ -1,0 +1,70 @@
+{
+  "sourceFile": "commands/hookify.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Create hooks to prevent unwanted behaviors from conversation analysis or explicit instructions\n---",
+      "zh-Hans": "---\ndescription: 创建钩子以防止对话分析或明确指令中的不良行为\n---"
+    },
+    {
+      "en-US": "Create hook rules to prevent unwanted Claude Code behaviors by analyzing conversation patterns or explicit user instructions.",
+      "zh-Hans": "通过分析对话模式或明确的用户指令，创建钩子规则以防止不需要的 Claude Code 行为。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "`/hookify [description of behavior to prevent]`",
+      "zh-Hans": "`/hookify [description of behavior to prevent]`"
+    },
+    {
+      "en-US": "If no arguments are provided, analyze the current conversation to find behaviors worth preventing.",
+      "zh-Hans": "如果未提供参数，则分析当前对话以找出值得防止的行为。"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### Step 1: Gather Behavior Info",
+      "zh-Hans": "### 步骤 1：收集行为信息"
+    },
+    {
+      "en-US": "- With arguments: parse the user's description of the unwanted behavior\n- Without arguments: use the `conversation-analyzer` agent to find:\n  - explicit corrections\n  - frustrated reactions to repeated mistakes\n  - reverted changes\n  - repeated similar issues",
+      "zh-Hans": "* 有参数时：解析用户对不需要行为的描述\n* 无参数时：使用 `conversation-analyzer` 代理来查找：\n  * 明确的纠正\n  * 对重复错误的沮丧反应\n  * 被还原的更改\n  * 重复出现的类似问题"
+    },
+    {
+      "en-US": "### Step 2: Present Findings",
+      "zh-Hans": "### 步骤 2：展示发现"
+    },
+    {
+      "en-US": "Show the user:",
+      "zh-Hans": "向用户展示："
+    },
+    {
+      "en-US": "- behavior description\n- proposed event type\n- proposed pattern or matcher\n- proposed action",
+      "zh-Hans": "* 行为描述\n* 建议的事件类型\n* 建议的模式或匹配器\n* 建议的操作"
+    },
+    {
+      "en-US": "### Step 3: Generate Rule Files",
+      "zh-Hans": "### 步骤 3：生成规则文件"
+    },
+    {
+      "en-US": "For each approved rule, create a file at `.claude/hookify.{name}.local.md`:",
+      "zh-Hans": "对于每条批准的规则，在 `.claude/hookify.{name}.local.md` 处创建一个文件："
+    },
+    {
+      "en-US": "```yaml\n---\nname: rule-name\nenabled: true\nevent: bash|file|stop|prompt|all\naction: block|warn\npattern: \"regex pattern\"\n---\nMessage shown when rule triggers.\n```",
+      "zh-Hans": "```yaml\n---\nname: rule-name\nenabled: true\nevent: bash|file|stop|prompt|all\naction: block|warn\npattern: \"regex pattern\"\n---\nMessage shown when rule triggers.\n```"
+    },
+    {
+      "en-US": "### Step 4: Confirm",
+      "zh-Hans": "### 步骤 4：确认"
+    },
+    {
+      "en-US": "Report created rules and how to manage them with `/hookify-list` and `/hookify-configure`.",
+      "zh-Hans": "报告已创建的规则，以及如何使用 `/hookify-list` 和 `/hookify-configure` 来管理它们。"
+    }
+  ]
+}

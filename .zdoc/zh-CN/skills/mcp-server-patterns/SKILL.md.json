@@ -15,6 +15,10 @@
       "zh-Hans": "模型上下文协议（MCP）允许 AI 助手调用工具、读取资源和使用来自服务器的提示。在构建或维护 MCP 服务器时使用此技能。SDK API 会演进；请查阅 Context7（查询文档 \"MCP\"）或官方 MCP 文档以获取当前的方法名称和签名。"
     },
     {
+      "en-US": "For the broader routing decision of when a capability should be a rule, a skill, MCP, or a plain CLI/API workflow, see [docs/capability-surface-selection.md](../../docs/capability-surface-selection.md).",
+      "zh-Hans": "关于何时应将能力设计为规则、技能、MCP 或普通 CLI/API 工作流的更广泛路由决策，请参阅 [docs/capability-surface-selection.md](../../docs/capability-surface-selection.md)。"
+    },
+    {
       "en-US": "## When to Use",
       "zh-Hans": "## 何时使用"
     },

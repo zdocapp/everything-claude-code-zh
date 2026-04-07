@@ -1,0 +1,190 @@
+{
+  "sourceFile": "skills/agent-introspection-debugging/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: agent-introspection-debugging\ndescription: Structured self-debugging workflow for AI agent failures using capture, diagnosis, contained recovery, and introspection reports.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: agent-introspection-debugging\ndescription: 针对AI代理故障的结构化自调试工作流程，采用捕获、诊断、受控恢复和内省报告。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Agent Introspection Debugging",
+      "zh-Hans": "# 智能体自省调试"
+    },
+    {
+      "en-US": "Use this skill when an agent run is failing repeatedly, consuming tokens without progress, looping on the same tools, or drifting away from the intended task.",
+      "zh-Hans": "当智能体运行反复失败、消耗令牌却无进展、在同一工具上循环、或偏离预期任务时，使用此技能。"
+    },
+    {
+      "en-US": "This is a workflow skill, not a hidden runtime. It teaches the agent to debug itself systematically before escalating to a human.",
+      "zh-Hans": "这是一个工作流技能，而非隐藏运行时。它教导智能体在升级到人工处理之前，系统地调试自身。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Maximum tool call / loop-limit failures\n- Repeated retries with no forward progress\n- Context growth or prompt drift that starts degrading output quality\n- File-system or environment state mismatch between expectation and reality\n- Tool failures that are likely recoverable with diagnosis and a smaller corrective action",
+      "zh-Hans": "* 达到最大工具调用/循环限制失败\n* 重复重试但无进展\n* 上下文增长或提示漂移开始导致输出质量下降\n* 文件系统或环境状态与预期和现实不匹配\n* 工具失败，但很可能通过诊断和较小的纠正措施恢复"
+    },
+    {
+      "en-US": "## Scope Boundaries",
+      "zh-Hans": "## 范围边界"
+    },
+    {
+      "en-US": "Activate this skill for:",
+      "zh-Hans": "在以下情况下激活此技能："
+    },
+    {
+      "en-US": "- capturing failure state before retrying blindly\n- diagnosing common agent-specific failure patterns\n- applying contained recovery actions\n- producing a structured human-readable debug report",
+      "zh-Hans": "* 在盲目重试前捕获失败状态\n* 诊断常见的智能体特定故障模式\n* 应用受控的恢复操作\n* 生成结构化、人类可读的调试报告"
+    },
+    {
+      "en-US": "Do not use this skill as the primary source for:",
+      "zh-Hans": "不要将此技能作为以下情况的主要来源："
+    },
+    {
+      "en-US": "- feature verification after code changes; use `verification-loop`\n- framework-specific debugging when a narrower ECC skill already exists\n- runtime promises the current harness cannot enforce automatically",
+      "zh-Hans": "* 代码变更后的功能验证；使用 `verification-loop`\n* 当已存在更窄的 ECC 技能时，进行框架特定的调试\n* 当前工具链无法自动执行的运行时承诺"
+    },
+    {
+      "en-US": "## Four-Phase Loop",
+      "zh-Hans": "## 四阶段循环"
+    },
+    {
+      "en-US": "### Phase 1: Failure Capture",
+      "zh-Hans": "### 阶段 1：故障捕获"
+    },
+    {
+      "en-US": "Before trying to recover, record the failure precisely.",
+      "zh-Hans": "在尝试恢复之前，精确记录故障。"
+    },
+    {
+      "en-US": "Capture:",
+      "zh-Hans": "捕获："
+    },
+    {
+      "en-US": "- error type, message, and stack trace when available\n- last meaningful tool call sequence\n- what the agent was trying to do\n- current context pressure: repeated prompts, oversized pasted logs, duplicated plans, or runaway notes\n- current environment assumptions: cwd, branch, relevant service state, expected files",
+      "zh-Hans": "* 错误类型、消息和可用的堆栈跟踪\n* 最后有意义的工具调用序列\n* 智能体试图做什么\n* 当前上下文压力：重复的提示、过大的粘贴日志、重复的计划或失控的笔记\n* 当前环境假设：当前工作目录、分支、相关服务状态、预期文件"
+    },
+    {
+      "en-US": "Minimum capture template:",
+      "zh-Hans": "最小捕获模板："
+    },
+    {
+      "en-US": "```markdown\n## Failure Capture\n- Session / task:\n- Goal in progress:\n- Error:\n- Last successful step:\n- Last failed tool / command:\n- Repeated pattern seen:\n- Environment assumptions to verify:\n```",
+      "zh-Hans": "```markdown\n## 失败捕获\n- 会话 / 任务：\n- 进行中的目标：\n- 错误：\n- 最后成功的步骤：\n- 最后失败的工具 / 命令：\n- 观察到的重复模式：\n- 需验证的环境假设：\n```"
+    },
+    {
+      "en-US": "### Phase 2: Root-Cause Diagnosis",
+      "zh-Hans": "### 阶段 2：根本原因诊断"
+    },
+    {
+      "en-US": "Match the failure to a known pattern before changing anything.",
+      "zh-Hans": "在更改任何内容之前，将故障与已知模式匹配。"
+    },
+    {
+      "en-US": "| Pattern | Likely Cause | Check |\n| --- | --- | --- |\n| Maximum tool calls / repeated same command | loop or no-exit observer path | inspect the last N tool calls for repetition |\n| Context overflow / degraded reasoning | unbounded notes, repeated plans, oversized logs | inspect recent context for duplication and low-signal bulk |\n| `ECONNREFUSED` / timeout | service unavailable or wrong port | verify service health, URL, and port assumptions |\n| `429` / quota exhaustion | retry storm or missing backoff | count repeated calls and inspect retry spacing |\n| file missing after write / stale diff | race, wrong cwd, or branch drift | re-check path, cwd, git status, and actual file existence |\n| tests still failing after “fix” | wrong hypothesis | isolate the exact failing test and re-derive the bug |",
+      "zh-Hans": "| 模式 | 可能原因 | 检查项 |\n| --- | --- | --- |\n| 最大工具调用数 / 重复相同命令 | 循环或无退出观察路径 | 检查最后 N 个工具调用是否重复 |\n| 上下文溢出 / 推理能力下降 | 无限制的笔记、重复的计划、过大的日志 | 检查最近上下文中的重复和低信号批量内容 |\n| `ECONNREFUSED` / 超时 | 服务不可用或端口错误 | 验证服务健康状态、URL 和端口假设 |\n| `429` / 配额耗尽 | 重试风暴或缺少退避机制 | 统计重复调用次数并检查重试间隔 |\n| 写入后文件丢失 / 差异陈旧 | 竞争条件、错误的工作目录或分支漂移 | 重新检查路径、工作目录、git 状态和实际文件是否存在 |\n| 测试在“修复”后仍然失败 | 错误的假设 | 隔离确切的失败测试并重新推导错误 |"
+    },
+    {
+      "en-US": "Diagnosis questions:",
+      "zh-Hans": "诊断问题："
+    },
+    {
+      "en-US": "- is this a logic failure, state failure, environment failure, or policy failure?\n- did the agent lose the real objective and start optimizing the wrong subtask?\n- is the failure deterministic or transient?\n- what is the smallest reversible action that would validate the diagnosis?",
+      "zh-Hans": "* 这是逻辑故障、状态故障、环境故障还是策略故障？\n* 智能体是否丢失了真实目标并开始优化错误的子任务？\n* 故障是确定性的还是暂时性的？\n* 验证诊断所需的最小可逆操作是什么？"
+    },
+    {
+      "en-US": "### Phase 3: Contained Recovery",
+      "zh-Hans": "### 阶段 3：受控恢复"
+    },
+    {
+      "en-US": "Recover with the smallest action that changes the diagnosis surface.",
+      "zh-Hans": "使用能改变诊断表面的最小操作进行恢复。"
+    },
+    {
+      "en-US": "Safe recovery actions:",
+      "zh-Hans": "安全的恢复操作："
+    },
+    {
+      "en-US": "- stop repeated retries and restate the hypothesis\n- trim low-signal context and keep only the active goal, blockers, and evidence\n- re-check the actual filesystem / branch / process state\n- narrow the task to one failing command, one file, or one test\n- switch from speculative reasoning to direct observation\n- escalate to a human when the failure is high-risk or externally blocked",
+      "zh-Hans": "* 停止重复重试并重新陈述假设\n* 修剪低信号上下文，仅保留活动目标、障碍和证据\n* 重新检查实际的文件系统 / 分支 / 进程状态\n* 将任务范围缩小到一个失败的命令、一个文件或一个测试\n* 从推测性推理切换到直接观察\n* 当故障风险高或受外部阻塞时，升级到人工处理"
+    },
+    {
+      "en-US": "Do not claim unsupported auto-healing actions like “reset agent state” or “update harness config” unless you are actually doing them through real tools in the current environment.",
+      "zh-Hans": "不要声称执行不受支持的自动修复操作，例如“重置智能体状态”或“更新工具链配置”，除非你确实通过当前环境中的真实工具执行了这些操作。"
+    },
+    {
+      "en-US": "Contained recovery checklist:",
+      "zh-Hans": "受控恢复检查清单："
+    },
+    {
+      "en-US": "```markdown\n## Recovery Action\n- Diagnosis chosen:\n- Smallest action taken:\n- Why this is safe:\n- What evidence would prove the fix worked:\n```",
+      "zh-Hans": "```markdown\n## 恢复操作\n- 选择的诊断方案：\n- 采取的最小化操作：\n- 为何此操作是安全的：\n- 证明修复有效的证据：\n```"
+    },
+    {
+      "en-US": "### Phase 4: Introspection Report",
+      "zh-Hans": "### 阶段 4：自省报告"
+    },
+    {
+      "en-US": "End with a report that makes the recovery legible to the next agent or human.",
+      "zh-Hans": "以一份报告结束，使恢复过程对下一个智能体或人类可读。"
+    },
+    {
+      "en-US": "```markdown\n## Agent Self-Debug Report\n- Session / task:\n- Failure:\n- Root cause:\n- Recovery action:\n- Result: success | partial | blocked\n- Token / time burn risk:\n- Follow-up needed:\n- Preventive change to encode later:\n```",
+      "zh-Hans": "```markdown\n## 智能体自检报告\n- 会话 / 任务：\n- 故障：\n- 根本原因：\n- 恢复操作：\n- 结果：成功 | 部分 | 受阻\n- 令牌 / 时间消耗风险：\n- 需跟进事项：\n- 后续需编码的预防性变更：\n```"
+    },
+    {
+      "en-US": "## Recovery Heuristics",
+      "zh-Hans": "## 恢复启发式方法"
+    },
+    {
+      "en-US": "Prefer these interventions in order:",
+      "zh-Hans": "按顺序优先采用以下干预措施："
+    },
+    {
+      "en-US": "1. Restate the real objective in one sentence.\n2. Verify the world state instead of trusting memory.\n3. Shrink the failing scope.\n4. Run one discriminating check.\n5. Only then retry.",
+      "zh-Hans": "1. 用一句话重述真实目标。\n2. 验证世界状态，而不是依赖记忆。\n3. 缩小失败范围。\n4. 运行一个区分性检查。\n5. 然后才重试。"
+    },
+    {
+      "en-US": "Bad pattern:",
+      "zh-Hans": "不良模式："
+    },
+    {
+      "en-US": "- retrying the same action three times with slightly different wording",
+      "zh-Hans": "* 用略微不同的措辞重复相同操作三次"
+    },
+    {
+      "en-US": "Good pattern:",
+      "zh-Hans": "良好模式："
+    },
+    {
+      "en-US": "- capture failure\n- classify the pattern\n- run one direct check\n- change the plan only if the check supports it",
+      "zh-Hans": "* 捕获故障\n* 对模式进行分类\n* 运行一个直接检查\n* 仅在检查支持的情况下更改计划"
+    },
+    {
+      "en-US": "## Integration with ECC",
+      "zh-Hans": "## 与 ECC 集成"
+    },
+    {
+      "en-US": "- Use `verification-loop` after recovery if code was changed.\n- Use `continuous-learning-v2` when the failure pattern is worth turning into an instinct or later skill.\n- Use `council` when the issue is not technical failure but decision ambiguity.\n- Use `workspace-surface-audit` if the failure came from conflicting local state or repo drift.",
+      "zh-Hans": "* 如果代码已更改，在恢复后使用 `verification-loop`。\n* 当故障模式值得转化为直觉或后续技能时，使用 `continuous-learning-v2`。\n* 当问题不是技术故障而是决策模糊时，使用 `council`。\n* 如果故障源于冲突的本地状态或仓库漂移，使用 `workspace-surface-audit`。"
+    },
+    {
+      "en-US": "## Output Standard",
+      "zh-Hans": "## 输出标准"
+    },
+    {
+      "en-US": "When this skill is active, do not end with “I fixed it” alone.",
+      "zh-Hans": "当此技能激活时，不要仅以“我已修复”结束。"
+    },
+    {
+      "en-US": "Always provide:",
+      "zh-Hans": "始终提供："
+    },
+    {
+      "en-US": "- the failure pattern\n- the root-cause hypothesis\n- the recovery action\n- the evidence that the situation is now better or still blocked",
+      "zh-Hans": "* 故障模式\n* 根本原因假设\n* 恢复操作\n* 证明情况现已改善或仍然受阻的证据"
+    }
+  ]
+}

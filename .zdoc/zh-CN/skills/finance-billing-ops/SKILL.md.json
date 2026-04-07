@@ -1,0 +1,138 @@
+{
+  "sourceFile": "skills/finance-billing-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: finance-billing-ops\ndescription: Evidence-first revenue, pricing, refunds, team-billing, and billing-model truth workflow for ECC. Use when the user wants a sales snapshot, pricing comparison, duplicate-charge diagnosis, or code-backed billing reality instead of generic payments advice.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: finance-billing-ops\ndescription: 面向ECC的以证据为先的收入、定价、退款、团队计费和计费模型真实工作流。适用于用户需要销售快照、定价比较、重复收费诊断或基于代码的计费现实，而非通用支付建议的场景。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Finance Billing Ops",
+      "zh-Hans": "# 财务账单运营"
+    },
+    {
+      "en-US": "Use this when the user wants to understand money, pricing, refunds, team-seat logic, or whether the product actually behaves the way the website and sales copy imply.",
+      "zh-Hans": "当用户想要了解资金、定价、退款、团队席位逻辑，或者产品实际行为是否与网站和销售文案所暗示的一致时，请使用此技能。"
+    },
+    {
+      "en-US": "This is broader than `customer-billing-ops`. That skill is for customer remediation. This skill is for operator truth: revenue state, pricing decisions, team billing, and code-backed billing behavior.",
+      "zh-Hans": "这比 `customer-billing-ops` 更广泛。该技能用于客户补救。此技能用于运营真相：收入状态、定价决策、团队账单以及代码支持的账单行为。"
+    },
+    {
+      "en-US": "## Skill Stack",
+      "zh-Hans": "## 技能栈"
+    },
+    {
+      "en-US": "Pull these ECC-native skills into the workflow when relevant:",
+      "zh-Hans": "在相关时，将这些 ECC 原生技能纳入工作流程："
+    },
+    {
+      "en-US": "- `customer-billing-ops` for customer-specific remediation and follow-up\n- `research-ops` when competitor pricing or current market evidence matters\n- `market-research` when the answer should end in a pricing recommendation\n- `github-ops` when the billing truth depends on code, backlog, or release state in sibling repos\n- `verification-loop` when the answer depends on proving checkout, seat handling, or entitlement behavior",
+      "zh-Hans": "* `customer-billing-ops` 用于特定客户的补救和跟进\n* `research-ops` 当竞争对手定价或当前市场证据重要时\n* `market-research` 当答案应以定价建议结束时\n* `github-ops` 当账单真相取决于兄弟仓库中的代码、待办事项或发布状态时\n* `verification-loop` 当答案取决于证明结账、席位处理或授权行为时"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- user asks for Stripe sales, refunds, MRR, or recent customer activity\n- user asks whether team billing, per-seat billing, or quota stacking is real in code\n- user wants competitor pricing comparisons or pricing-model benchmarks\n- the question mixes revenue facts with product implementation truth",
+      "zh-Hans": "* 用户询问 Stripe 销售额、退款、月度经常性收入或近期客户活动\n* 用户询问团队账单、按席位计费或配额叠加在代码中是否真实存在\n* 用户需要竞争对手定价比较或定价模型基准\n* 问题混合了收入事实与产品实现真相"
+    },
+    {
+      "en-US": "## Guardrails",
+      "zh-Hans": "## 防护栏"
+    },
+    {
+      "en-US": "- distinguish live data from saved snapshots\n- separate:\n  - revenue fact\n  - customer impact\n  - code-backed product truth\n  - recommendation\n- do not say \"per seat\" unless the actual entitlement path enforces it\n- do not assume duplicate subscriptions imply duplicate value",
+      "zh-Hans": "* 区分实时数据与保存的快照\n* 分开：\n  * 收入事实\n  * 客户影响\n  * 代码支持的产品真相\n  * 建议\n* 除非实际的授权路径强制执行，否则不要说\"按席位\"\n* 不要假设重复订阅意味着重复价值"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Start from the freshest billing evidence",
+      "zh-Hans": "### 1. 从最新的账单证据开始"
+    },
+    {
+      "en-US": "Prefer live billing data. If the data is not live, state the snapshot timestamp explicitly.",
+      "zh-Hans": "优先使用实时账单数据。如果数据不是实时的，请明确说明快照时间戳。"
+    },
+    {
+      "en-US": "Normalize the picture:",
+      "zh-Hans": "规范化视图："
+    },
+    {
+      "en-US": "- paid sales\n- active subscriptions\n- failed or incomplete checkouts\n- refunds\n- disputes\n- duplicate subscriptions",
+      "zh-Hans": "* 付费销售额\n* 有效订阅\n* 失败或未完成的结账\n* 退款\n* 争议\n* 重复订阅"
+    },
+    {
+      "en-US": "### 2. Separate customer incidents from product truth",
+      "zh-Hans": "### 2. 将客户事件与产品真相分开"
+    },
+    {
+      "en-US": "If the question is customer-specific, classify first:",
+      "zh-Hans": "如果问题是针对特定客户的，请先分类："
+    },
+    {
+      "en-US": "- duplicate checkout\n- real team intent\n- broken self-serve controls\n- unmet product value\n- failed payment or incomplete setup",
+      "zh-Hans": "* 重复结账\n* 真实的团队意图\n* 自助服务控制功能损坏\n* 未满足的产品价值\n* 支付失败或设置未完成"
+    },
+    {
+      "en-US": "Then separate that from the broader product question:",
+      "zh-Hans": "然后将其与更广泛的产品问题分开："
+    },
+    {
+      "en-US": "- does team billing really exist?\n- are seats actually counted?\n- does checkout quantity change entitlement?\n- does the site overstate current behavior?",
+      "zh-Hans": "* 团队账单是否真的存在？\n* 席位是否实际被计数？\n* 结账数量是否改变授权？\n* 网站是否夸大了当前行为？"
+    },
+    {
+      "en-US": "### 3. Inspect code-backed billing behavior",
+      "zh-Hans": "### 3. 检查代码支持的账单行为"
+    },
+    {
+      "en-US": "If the answer depends on implementation truth, inspect the code path:",
+      "zh-Hans": "如果答案取决于实现真相，请检查代码路径："
+    },
+    {
+      "en-US": "- checkout\n- pricing page\n- entitlement calculation\n- seat or quota handling\n- installation vs user usage logic\n- billing portal or self-serve management support",
+      "zh-Hans": "* 结账\n* 定价页面\n* 授权计算\n* 席位或配额处理\n* 安装与用户使用逻辑\n* 账单门户或自助服务管理支持"
+    },
+    {
+      "en-US": "### 4. End with a decision and product gap",
+      "zh-Hans": "### 4. 以决策和产品差距结束"
+    },
+    {
+      "en-US": "Report:",
+      "zh-Hans": "报告："
+    },
+    {
+      "en-US": "- sales snapshot\n- issue diagnosis\n- product truth\n- recommended operator action\n- product or backlog gap",
+      "zh-Hans": "* 销售快照\n* 问题诊断\n* 产品真相\n* 建议的运营操作\n* 产品或待办事项差距"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```text\nSNAPSHOT\n- timestamp\n- revenue / subscriptions / anomalies\n\nCUSTOMER IMPACT\n- who is affected\n- what happened\n\nPRODUCT TRUTH\n- what the code actually does\n- what the website or sales copy claims\n\nDECISION\n- refund / preserve / convert / no-op\n\nPRODUCT GAP\n- exact follow-up item to build or fix\n```",
+      "zh-Hans": "```text\n快照\n- 时间戳\n- 收入 / 订阅数 / 异常情况\n\n客户影响\n- 受影响对象\n- 事件详情\n\n产品实情\n- 代码实际功能\n- 网站或销售文案宣传内容\n\n决策\n- 退款 / 保留 / 转化 / 无操作\n\n产品差距\n- 待构建或修复的具体跟进事项\n```"
+    },
+    {
+      "en-US": "## Pitfalls",
+      "zh-Hans": "## 陷阱"
+    },
+    {
+      "en-US": "- do not conflate failed attempts with net revenue\n- do not infer team billing from marketing language alone\n- do not compare competitor pricing from memory when current evidence is available\n- do not jump from diagnosis straight to refund without classifying the issue",
+      "zh-Hans": "* 不要将失败的尝试与净收入混为一谈\n* 不要仅从营销语言推断团队账单\n* 当有当前证据可用时，不要凭记忆比较竞争对手定价\n* 不要从诊断直接跳到退款，而不对问题进行分类"
+    },
+    {
+      "en-US": "## Verification",
+      "zh-Hans": "## 验证"
+    },
+    {
+      "en-US": "- the answer includes a live-data statement or snapshot timestamp\n- product-truth claims are code-backed\n- customer-impact and broader pricing/product conclusions are separated cleanly",
+      "zh-Hans": "* 答案包含实时数据声明或快照时间戳\n* 产品真相声明有代码支持\n* 客户影响和更广泛的定价/产品结论被清晰地分开"
+    }
+  ]
+}

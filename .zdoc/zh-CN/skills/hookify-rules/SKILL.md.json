@@ -1,0 +1,166 @@
+{
+  "sourceFile": "skills/hookify-rules/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: hookify-rules\ndescription: This skill should be used when the user asks to create a hookify rule, write a hook rule, configure hookify, add a hookify rule, or needs guidance on hookify rule syntax and patterns.\n---",
+      "zh-Hans": "---\nname: hookify-rules\ndescription: 当用户要求创建钩子化规则、编写钩子规则、配置钩子化、添加钩子化规则，或需要关于钩子化规则语法和模式的指导时，应使用此技能。\n---"
+    },
+    {
+      "en-US": "# Writing Hookify Rules",
+      "zh-Hans": "# 编写 Hookify 规则"
+    },
+    {
+      "en-US": "## Overview",
+      "zh-Hans": "## 概述"
+    },
+    {
+      "en-US": "Hookify rules are markdown files with YAML frontmatter that define patterns to watch for and messages to show when those patterns match. Rules are stored in `.claude/hookify.{rule-name}.local.md` files.",
+      "zh-Hans": "Hookify 规则是带有 YAML 前言的 Markdown 文件，用于定义要监视的模式以及匹配这些模式时显示的消息。规则存储在 `.claude/hookify.{rule-name}.local.md` 文件中。"
+    },
+    {
+      "en-US": "## Rule File Format",
+      "zh-Hans": "## 规则文件格式"
+    },
+    {
+      "en-US": "### Basic Structure",
+      "zh-Hans": "### 基本结构"
+    },
+    {
+      "en-US": "```markdown\n---\nname: rule-identifier\nenabled: true\nevent: bash|file|stop|prompt|all\npattern: regex-pattern-here\n---\n\nMessage to show Claude when this rule triggers.\nCan include markdown formatting, warnings, suggestions, etc.\n```",
+      "zh-Hans": "```markdown\n---\nname: rule-identifier\nenabled: true\nevent: bash|file|stop|prompt|all\npattern: regex-pattern-here\n---\n\n当此规则触发时向 Claude 显示的消息。\n可包含 Markdown 格式、警告、建议等。\n```"
+    },
+    {
+      "en-US": "### Frontmatter Fields",
+      "zh-Hans": "### 前言字段"
+    },
+    {
+      "en-US": "| Field | Required | Values | Description |\n|-------|----------|--------|-------------|\n| name | Yes | kebab-case string | Unique identifier (verb-first: warn-*, block-*, require-*) |\n| enabled | Yes | true/false | Toggle without deleting |\n| event | Yes | bash/file/stop/prompt/all | Which hook event triggers this |\n| action | No | warn/block | warn (default) shows message; block prevents operation |\n| pattern | Yes* | regex string | Pattern to match (*or use conditions for complex rules) |",
+      "zh-Hans": "| 字段 | 必需 | 值 | 描述 |\n|-------|----------|--------|-------------|\n| name | 是 | kebab-case 字符串 | 唯一标识符（动词开头：warn-*, block-*, require-*） |\n| enabled | 是 | true/false | 无需删除即可切换 |\n| event | 是 | bash/file/stop/prompt/all | 触发此规则的钩子事件 |\n| action | 否 | warn/block | warn（默认）显示消息；block 阻止操作 |\n| pattern | 是* | 正则表达式字符串 | 要匹配的模式（\\*或使用 conditions 处理复杂规则） |"
+    },
+    {
+      "en-US": "### Advanced Format (Multiple Conditions)",
+      "zh-Hans": "### 高级格式（多条件）"
+    },
+    {
+      "en-US": "```markdown\n---\nname: warn-env-api-keys\nenabled: true\nevent: file\nconditions:\n  - field: file_path\n    operator: regex_match\n    pattern: \\.env$\n  - field: new_text\n    operator: contains\n    pattern: API_KEY\n---\n\nYou're adding an API key to a .env file. Ensure this file is in .gitignore!\n```",
+      "zh-Hans": "```markdown\n---\nname: warn-env-api-keys\nenabled: true\nevent: file\nconditions:\n  - field: file_path\n    operator: regex_match\n    pattern: \\.env$\n  - field: new_text\n    operator: contains\n    pattern: API_KEY\n---\n\n你正在向 .env 文件中添加一个 API 密钥。请确保该文件已包含在 .gitignore 中！\n```"
+    },
+    {
+      "en-US": "**Condition fields by event:**",
+      "zh-Hans": "**按事件划分的条件字段：**"
+    },
+    {
+      "en-US": "- bash: `command`\n- file: `file_path`, `new_text`, `old_text`, `content`\n- prompt: `user_prompt`",
+      "zh-Hans": "* bash: `command`\n* file: `file_path`, `new_text`, `old_text`, `content`\n* prompt: `user_prompt`"
+    },
+    {
+      "en-US": "**Operators:** `regex_match`, `contains`, `equals`, `not_contains`, `starts_with`, `ends_with`",
+      "zh-Hans": "**运算符：** `regex_match`, `contains`, `equals`, `not_contains`, `starts_with`, `ends_with`"
+    },
+    {
+      "en-US": "All conditions must match for rule to trigger.",
+      "zh-Hans": "所有条件必须匹配，规则才会触发。"
+    },
+    {
+      "en-US": "## Event Type Guide",
+      "zh-Hans": "## 事件类型指南"
+    },
+    {
+      "en-US": "### bash Events",
+      "zh-Hans": "### bash 事件"
+    },
+    {
+      "en-US": "Match Bash command patterns:",
+      "zh-Hans": "匹配 Bash 命令模式："
+    },
+    {
+      "en-US": "- Dangerous commands: `rm\\s+-rf`, `dd\\s+if=`, `mkfs`\n- Privilege escalation: `sudo\\s+`, `su\\s+`\n- Permission issues: `chmod\\s+777`",
+      "zh-Hans": "* 危险命令：`rm\\s+-rf`, `dd\\s+if=`, `mkfs`\n* 权限提升：`sudo\\s+`, `su\\s+`\n* 权限问题：`chmod\\s+777`"
+    },
+    {
+      "en-US": "### file Events",
+      "zh-Hans": "### file 事件"
+    },
+    {
+      "en-US": "Match Edit/Write/MultiEdit operations:",
+      "zh-Hans": "匹配编辑/写入/多编辑操作："
+    },
+    {
+      "en-US": "- Debug code: `console\\.log\\(`, `debugger`\n- Security risks: `eval\\(`, `innerHTML\\s*=`\n- Sensitive files: `\\.env$`, `credentials`, `\\.pem$`",
+      "zh-Hans": "* 调试代码：`console\\.log\\(`, `debugger`\n* 安全风险：`eval\\(`, `innerHTML\\s*=`\n* 敏感文件：`\\.env$`, `credentials`, `\\.pem$`"
+    },
+    {
+      "en-US": "### stop Events",
+      "zh-Hans": "### stop 事件"
+    },
+    {
+      "en-US": "Completion checks and reminders. Pattern `.*` matches always.",
+      "zh-Hans": "完成检查和提醒。模式 `.*` 始终匹配。"
+    },
+    {
+      "en-US": "### prompt Events",
+      "zh-Hans": "### prompt 事件"
+    },
+    {
+      "en-US": "Match user prompt content for workflow enforcement.",
+      "zh-Hans": "匹配用户提示内容以强制执行工作流程。"
+    },
+    {
+      "en-US": "## Pattern Writing Tips",
+      "zh-Hans": "## 模式编写技巧"
+    },
+    {
+      "en-US": "### Regex Basics",
+      "zh-Hans": "### 正则表达式基础"
+    },
+    {
+      "en-US": "- Escape special chars: `.` to `\\.`, `(` to `\\(`\n- `\\s` whitespace, `\\d` digit, `\\w` word char\n- `+` one or more, `*` zero or more, `?` optional\n- `|` OR operator",
+      "zh-Hans": "* 转义特殊字符：`.` 转 `\\.`, `(` 转 `\\(`\n* `\\s` 空白字符, `\\d` 数字, `\\w` 单词字符\n* `+` 一个或多个, `*` 零个或多个, `?` 可选\n* `|` 或运算符"
+    },
+    {
+      "en-US": "### Common Pitfalls",
+      "zh-Hans": "### 常见陷阱"
+    },
+    {
+      "en-US": "- **Too broad**: `log` matches \"login\", \"dialog\" — use `console\\.log\\(`\n- **Too specific**: `rm -rf /tmp` — use `rm\\s+-rf`\n- **YAML escaping**: Use unquoted patterns; quoted strings need `\\\\s`",
+      "zh-Hans": "* **过于宽泛**：`log` 匹配 \"login\", \"dialog\" — 使用 `console\\.log\\(`\n* **过于具体**：`rm -rf /tmp` — 使用 `rm\\s+-rf`\n* **YAML 转义**：使用未加引号的模式；带引号的字符串需要 `\\\\s`"
+    },
+    {
+      "en-US": "### Testing",
+      "zh-Hans": "### 测试"
+    },
+    {
+      "en-US": "```bash\npython3 -c \"import re; print(re.search(r'your_pattern', 'test text'))\"\n```",
+      "zh-Hans": "```bash\npython3 -c \"import re; print(re.search(r'your_pattern', 'test text'))\"\n```"
+    },
+    {
+      "en-US": "## File Organization",
+      "zh-Hans": "## 文件组织"
+    },
+    {
+      "en-US": "- **Location**: `.claude/` directory in project root\n- **Naming**: `.claude/hookify.{descriptive-name}.local.md`\n- **Gitignore**: Add `.claude/*.local.md` to `.gitignore`",
+      "zh-Hans": "* **位置**：项目根目录下的 `.claude/` 目录\n* **命名**：`.claude/hookify.{descriptive-name}.local.md`\n* **Gitignore**：将 `.claude/*.local.md` 添加到 `.gitignore`"
+    },
+    {
+      "en-US": "## Commands",
+      "zh-Hans": "## 命令"
+    },
+    {
+      "en-US": "- `/hookify [description]` - Create new rules (auto-analyzes conversation if no args)\n- `/hookify-list` - View all rules in table format\n- `/hookify-configure` - Toggle rules on/off interactively\n- `/hookify-help` - Full documentation",
+      "zh-Hans": "* `/hookify [description]` - 创建新规则（如果无参数，则自动分析对话）\n* `/hookify-list` - 以表格格式查看所有规则\n* `/hookify-configure` - 交互式切换规则的启用/禁用状态\n* `/hookify-help` - 完整文档"
+    },
+    {
+      "en-US": "## Quick Reference",
+      "zh-Hans": "## 快速参考"
+    },
+    {
+      "en-US": "Minimum viable rule:",
+      "zh-Hans": "最小可行规则："
+    },
+    {
+      "en-US": "```markdown\n---\nname: my-rule\nenabled: true\nevent: bash\npattern: dangerous_command\n---\nWarning message here\n```",
+      "zh-Hans": "```markdown\n---\nname: my-rule\nenabled: true\nevent: bash\npattern: dangerous_command\n---\n警告信息在此处\n```"
+    }
+  ]
+}

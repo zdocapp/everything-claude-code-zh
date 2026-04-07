@@ -3,16 +3,24 @@
   "sourceLanguage": "en-US",
   "entries": [
     {
-      "en-US": "---\nname: coding-standards\ndescription: Universal coding standards, best practices, and patterns for TypeScript, JavaScript, React, and Node.js development.\norigin: ECC\n---",
-      "zh-Hans": "---\nname: coding-standards\ndescription: 适用于TypeScript、JavaScript、React和Node.js开发的通用编码标准、最佳实践和模式。\norigin: ECC\n---"
+      "en-US": "---\nname: coding-standards\ndescription: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: coding-standards\ndescription: 跨项目编码规范的基线，涵盖命名、可读性、不可变性及代码质量审查。运用详细的前端或后端技能，实现框架特定的模式。\norigin: ECC\n---"
     },
     {
       "en-US": "# Coding Standards & Best Practices",
       "zh-Hans": "# 编码标准与最佳实践"
     },
     {
-      "en-US": "Universal coding standards applicable across all projects.",
-      "zh-Hans": "适用于所有项目的通用编码标准。"
+      "en-US": "Baseline coding conventions applicable across projects.",
+      "zh-Hans": "适用于各项目的基线编码规范。"
+    },
+    {
+      "en-US": "This skill is the shared floor, not the detailed framework playbook.",
+      "zh-Hans": "此技能是共享的基础，而非详细的框架操作手册。"
+    },
+    {
+      "en-US": "- Use `frontend-patterns` for React, state, forms, rendering, and UI architecture.\n- Use `backend-patterns` or `api-design` for repository/service layers, endpoint design, validation, and server-specific concerns.\n- Use `rules/common/coding-style.md` when you need the shortest reusable rule layer instead of a full skill walkthrough.",
+      "zh-Hans": "* 对于 React、状态、表单、渲染和 UI 架构，使用 `frontend-patterns`。\n* 对于仓库/服务层、端点设计、验证和服务器特定关注点，使用 `backend-patterns` 或 `api-design`。\n* 当你需要最短的可复用规则层而非完整的技能演练时，使用 `rules/common/coding-style.md`。"
     },
     {
       "en-US": "## When to Activate",
@@ -21,6 +29,26 @@
     {
       "en-US": "- Starting a new project or module\n- Reviewing code for quality and maintainability\n- Refactoring existing code to follow conventions\n- Enforcing naming, formatting, or structural consistency\n- Setting up linting, formatting, or type-checking rules\n- Onboarding new contributors to coding conventions",
       "zh-Hans": "* 开始新项目或新模块时\n* 审查代码质量和可维护性时\n* 重构现有代码以遵循约定时\n* 强制执行命名、格式或结构一致性时\n* 设置代码检查、格式化或类型检查规则时\n* 引导新贡献者熟悉编码规范时"
+    },
+    {
+      "en-US": "## Scope Boundaries",
+      "zh-Hans": "## 范围边界"
+    },
+    {
+      "en-US": "Activate this skill for:",
+      "zh-Hans": "在以下情况下激活此技能："
+    },
+    {
+      "en-US": "- descriptive naming\n- immutability defaults\n- readability, KISS, DRY, and YAGNI enforcement\n- error-handling expectations and code-smell review",
+      "zh-Hans": "* 描述性命名\n* 默认不可变性\n* 可读性、KISS、DRY 和 YAGNI 原则的强制执行\n* 错误处理预期和代码异味审查"
+    },
+    {
+      "en-US": "Do not use this skill as the primary source for:",
+      "zh-Hans": "不要将此技能作为以下内容的主要来源："
+    },
+    {
+      "en-US": "- React composition, hooks, or rendering patterns\n- backend architecture, API design, or database layering\n- domain-specific framework guidance when a narrower ECC skill already exists",
+      "zh-Hans": "* React 组合、钩子或渲染模式\n* 后端架构、API 设计或数据库分层\n* 当已存在更具体的 ECC 技能时，用于领域特定框架指导"
     },
     {
       "en-US": "## Code Quality Principles",

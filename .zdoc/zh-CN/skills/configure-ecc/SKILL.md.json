@@ -31,8 +31,8 @@
       "zh-Hans": "此技能必须在激活前对 Claude Code 可访问。有两种引导方式："
     },
     {
-      "en-US": "1. **Via Plugin**: `/plugin install everything-claude-code` — the plugin loads this skill automatically\n2. **Manual**: Copy only this skill to `~/.claude/skills/configure-ecc/SKILL.md`, then activate by saying \"configure ecc\"",
-      "zh-Hans": "1. **通过插件**: `/plugin install everything-claude-code` — 插件会自动加载此技能\n2. **手动**: 仅将此技能复制到 `~/.claude/skills/configure-ecc/SKILL.md`，然后通过说 \"configure ecc\" 激活"
+      "en-US": "1. **Via Plugin**: `/plugin install ecc@ecc` — the plugin loads this skill automatically\n2. **Manual**: Copy only this skill to `~/.claude/skills/configure-ecc/SKILL.md`, then activate by saying \"configure ecc\"",
+      "zh-Hans": "1. **通过插件**：`/plugin install ecc@ecc` — 插件会自动加载此技能\n2. **手动**：仅将此技能复制到 `~/.claude/skills/configure-ecc/SKILL.md`，然后通过说“configure ecc”来激活"
     },
     {
       "en-US": "---",
@@ -207,8 +207,8 @@
       "zh-Hans": "**独立技能**"
     },
     {
-      "en-US": "| Skill | Description |\n|-------|-------------|\n| `project-guidelines-example` | Template for creating project-specific skills |",
-      "zh-Hans": "| 技能 | 描述 |\n|-------|-------------|\n| `project-guidelines-example` | 用于创建项目特定技能的模板 |"
+      "en-US": "| Skill | Description |\n|-------|-------------|\n| `docs/examples/project-guidelines-template.md` | Template for creating project-specific skills |",
+      "zh-Hans": "| 技能 | 描述 |\n|-------|-------------|\n| `docs/examples/project-guidelines-template.md` | 用于创建项目特定技能的模板 |"
     },
     {
       "en-US": "### 2d: Execute Installation",
