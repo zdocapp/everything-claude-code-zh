@@ -1,0 +1,26 @@
+{
+  "sourceFile": "skills/brand-voice/references/voice-profile-schema.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Voice Profile Schema",
+      "zh-Hans": "# 语音角色设定规范"
+    },
+    {
+      "en-US": "Use this exact structure when building a reusable voice profile:",
+      "zh-Hans": "构建可复用的语音角色时，请严格遵循以下结构："
+    },
+    {
+      "en-US": "```text\nVOICE PROFILE\n=============\nAuthor:\nGoal:\nConfidence:\n\nSource Set\n- source 1\n- source 2\n- source 3\n\nRhythm\n- short note on sentence length, pacing, and fragmentation\n\nCompression\n- how dense or explanatory the writing is\n\nCapitalization\n- conventional, mixed, or situational\n\nParentheticals\n- how they are used and how they are not used\n\nQuestion Use\n- rare, frequent, rhetorical, direct, or mostly absent\n\nClaim Style\n- how claims are framed, supported, and sharpened\n\nPreferred Moves\n- concrete moves the author does use\n\nBanned Moves\n- specific patterns the author does not use\n\nCTA Rules\n- how, when, or whether to close with asks\n\nChannel Notes\n- X:\n- LinkedIn:\n- Email:\n```",
+      "zh-Hans": "```text\nVOICE PROFILE\n=============\n作者：\n目标：\n信心：\n\n来源集\n- 来源 1\n- 来源 2\n- 来源 3\n\n节奏\n- 关于句子长度、语速和碎片化的简短说明\n\n压缩度\n- 写作的密度或解释性如何\n\n大写使用\n- 常规、混合或情境性\n\n括号使用\n- 如何使用以及不如何使用\n\n提问使用\n- 罕见、频繁、修辞性、直接或基本不用\n\n主张风格\n- 主张如何构建、支持和强化\n\n偏好手法\n- 作者实际使用的具体手法\n\n禁用手法\n- 作者不使用的特定模式\n\n行动号召规则\n- 如何、何时或是否以请求结尾\n\n渠道备注\n- X：\n- LinkedIn：\n- Email：\n```"
+    },
+    {
+      "en-US": "Guidelines:",
+      "zh-Hans": "指导原则："
+    },
+    {
+      "en-US": "- Keep the profile concrete and source-backed.\n- Use short bullets, not essay paragraphs.\n- Every banned move should be observable in the source set or explicitly requested by the user.\n- If the source set conflicts, call out the split instead of averaging it into mush.",
+      "zh-Hans": "* 保持角色设定具体且有来源依据。\n* 使用简短的要点，而非论述段落。\n* 每项禁止行为都应在来源集中可观察到，或由用户明确要求。\n* 若来源集存在冲突，请明确指出分歧点，而非将其模糊地平均化。"
+    }
+  ]
+}

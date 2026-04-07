@@ -1,0 +1,138 @@
+{
+  "sourceFile": "CHANGELOG.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Changelog",
+      "zh-Hans": "# 更新日志"
+    },
+    {
+      "en-US": "## 1.9.0 - 2026-03-20",
+      "zh-Hans": "## 1.9.0 - 2026-03-20"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Selective install architecture with manifest-driven pipeline and SQLite state store.\n- Language coverage expanded to 10+ ecosystems with 6 new agents and language-specific rules.\n- Observer reliability hardened with memory throttling, sandbox fixes, and 5-layer loop guard.\n- Self-improving skills foundation with skill evolution and session adapters.",
+      "zh-Hans": "* 选择性安装架构，采用清单驱动流水线和 SQLite 状态存储。\n* 语言覆盖范围扩展至 10 多个生态，新增 6 个代理和语言特定规则。\n* 观察器可靠性增强，包括内存限制、沙箱修复和 5 层循环防护。\n* 自我改进的技能基础，支持技能演进和会话适配器。"
+    },
+    {
+      "en-US": "### New Agents",
+      "zh-Hans": "### 新代理"
+    },
+    {
+      "en-US": "- `typescript-reviewer` — TypeScript/JavaScript code review specialist (#647)\n- `pytorch-build-resolver` — PyTorch runtime, CUDA, and training error resolution (#549)\n- `java-build-resolver` — Maven/Gradle build error resolution (#538)\n- `java-reviewer` — Java and Spring Boot code review (#528)\n- `kotlin-reviewer` — Kotlin/Android/KMP code review (#309)\n- `kotlin-build-resolver` — Kotlin/Gradle build errors (#309)\n- `rust-reviewer` — Rust code review (#523)\n- `rust-build-resolver` — Rust build error resolution (#523)\n- `docs-lookup` — Documentation and API reference research (#529)",
+      "zh-Hans": "* `typescript-reviewer` — TypeScript/JavaScript 代码审查专家 (#647)\n* `pytorch-build-resolver` — PyTorch 运行时、CUDA 及训练错误解决 (#549)\n* `java-build-resolver` — Maven/Gradle 构建错误解决 (#538)\n* `java-reviewer` — Java 和 Spring Boot 代码审查 (#528)\n* `kotlin-reviewer` — Kotlin/Android/KMP 代码审查 (#309)\n* `kotlin-build-resolver` — Kotlin/Gradle 构建错误 (#309)\n* `rust-reviewer` — Rust 代码审查 (#523)\n* `rust-build-resolver` — Rust 构建错误解决 (#523)\n* `docs-lookup` — 文档和 API 参考研究 (#529)"
+    },
+    {
+      "en-US": "### New Skills",
+      "zh-Hans": "### 新技能"
+    },
+    {
+      "en-US": "- `pytorch-patterns` — PyTorch deep learning workflows (#550)\n- `documentation-lookup` — API reference and library doc research (#529)\n- `bun-runtime` — Bun runtime patterns (#529)\n- `nextjs-turbopack` — Next.js Turbopack workflows (#529)\n- `mcp-server-patterns` — MCP server design patterns (#531)\n- `data-scraper-agent` — AI-powered public data collection (#503)\n- `team-builder` — Team composition skill (#501)\n- `ai-regression-testing` — AI regression test workflows (#433)\n- `claude-devfleet` — Multi-agent orchestration (#505)\n- `blueprint` — Multi-session construction planning\n- `everything-claude-code` — Self-referential ECC skill (#335)\n- `prompt-optimizer` — Prompt optimization skill (#418)\n- 8 Evos operational domain skills (#290)\n- 3 Laravel skills (#420)\n- VideoDB skills (#301)",
+      "zh-Hans": "* `pytorch-patterns` — PyTorch 深度学习工作流 (#550)\n* `documentation-lookup` — API 参考和库文档研究 (#529)\n* `bun-runtime` — Bun 运行时模式 (#529)\n* `nextjs-turbopack` — Next.js Turbopack 工作流 (#529)\n* `mcp-server-patterns` — MCP 服务器设计模式 (#531)\n* `data-scraper-agent` — AI 驱动的公共数据收集 (#503)\n* `team-builder` — 团队构成技能 (#501)\n* `ai-regression-testing` — AI 回归测试工作流 (#433)\n* `claude-devfleet` — 多代理编排 (#505)\n* `blueprint` — 多会话构建规划\n* `everything-claude-code` — 自引用 ECC 技能 (#335)\n* `prompt-optimizer` — 提示优化技能 (#418)\n* 8 个 Evos 操作领域技能 (#290)\n* 3 个 Laravel 技能 (#420)\n* VideoDB 技能 (#301)"
+    },
+    {
+      "en-US": "### New Commands",
+      "zh-Hans": "### 新命令"
+    },
+    {
+      "en-US": "- `/docs` — Documentation lookup (#530)\n- `/aside` — Side conversation (#407)\n- `/prompt-optimize` — Prompt optimization (#418)\n- `/resume-session`, `/save-session` — Session management\n- `learn-eval` improvements with checklist-based holistic verdict",
+      "zh-Hans": "* `/docs` — 文档查找 (#530)\n* `/aside` — 侧边对话 (#407)\n* `/prompt-optimize` — 提示优化 (#418)\n* `/resume-session`, `/save-session` — 会话管理\n* `learn-eval` 改进，支持基于清单的整体裁决"
+    },
+    {
+      "en-US": "### New Rules",
+      "zh-Hans": "### 新规则"
+    },
+    {
+      "en-US": "- Java language rules (#645)\n- PHP rule pack (#389)\n- Perl language rules and skills (patterns, security, testing)\n- Kotlin/Android/KMP rules (#309)\n- C++ language support (#539)\n- Rust language support (#523)",
+      "zh-Hans": "* Java 语言规则 (#645)\n* PHP 规则包 (#389)\n* Perl 语言规则和技能（模式、安全、测试）\n* Kotlin/Android/KMP 规则 (#309)\n* C++ 语言支持 (#539)\n* Rust 语言支持 (#523)"
+    },
+    {
+      "en-US": "### Infrastructure",
+      "zh-Hans": "### 基础设施"
+    },
+    {
+      "en-US": "- Selective install architecture with manifest resolution (`install-plan.js`, `install-apply.js`) (#509, #512)\n- SQLite state store with query CLI for tracking installed components (#510)\n- Session adapters for structured session recording (#511)\n- Skill evolution foundation for self-improving skills (#514)\n- Orchestration harness with deterministic scoring (#524)\n- Catalog count enforcement in CI (#525)\n- Install manifest validation for all 109 skills (#537)\n- PowerShell installer wrapper (#532)\n- Antigravity IDE support via `--target antigravity` flag (#332)\n- Codex CLI customization scripts (#336)",
+      "zh-Hans": "* 选择性安装架构，支持清单解析 (`install-plan.js`, `install-apply.js`) (#509, #512)\n* SQLite 状态存储，提供查询 CLI 以跟踪已安装组件 (#510)\n* 会话适配器，用于结构化会话记录 (#511)\n* 技能演进基础，支持自我改进的技能 (#514)\n* 编排框架，支持确定性评分 (#524)\n* CI 中的目录计数强制执行 (#525)\n* 对所有 109 项技能的安装清单验证 (#537)\n* PowerShell 安装器包装器 (#532)\n* 通过 `--target antigravity` 标志支持 Antigravity IDE (#332)\n* Codex CLI 自定义脚本 (#336)"
+    },
+    {
+      "en-US": "### Bug Fixes",
+      "zh-Hans": "### 错误修复"
+    },
+    {
+      "en-US": "- Resolved 19 CI test failures across 6 files (#519)\n- Fixed 8 test failures in install pipeline, orchestrator, and repair (#564)\n- Observer memory explosion with throttling, re-entrancy guard, and tail sampling (#536)\n- Observer sandbox access fix for Haiku invocation (#661)\n- Worktree project ID mismatch fix (#665)\n- Observer lazy-start logic (#508)\n- Observer 5-layer loop prevention guard (#399)\n- Hook portability and Windows .cmd support\n- Biome hook optimization — eliminated npx overhead (#359)\n- InsAIts security hook made opt-in (#370)\n- Windows spawnSync export fix (#431)\n- UTF-8 encoding fix for instinct CLI (#353)\n- Secret scrubbing in hooks (#348)",
+      "zh-Hans": "* 解决了 6 个文件中的 19 个 CI 测试失败 (#519)\n* 修复了安装流水线、编排器和修复工具中的 8 个测试失败 (#564)\n* 观察器内存爆炸问题，通过限制、重入防护和尾部采样解决 (#536)\n* 观察器沙箱访问修复，用于 Haiku 调用 (#661)\n* 工作树项目 ID 不匹配修复 (#665)\n* 观察器延迟启动逻辑 (#508)\n* 观察器 5 层循环预防防护 (#399)\n* 钩子可移植性和 Windows .cmd 支持\n* Biome 钩子优化 — 消除了 npx 开销 (#359)\n* InsAIts 安全钩子改为可选启用 (#370)\n* Windows spawnSync 导出修复 (#431)\n* instinct CLI 的 UTF-8 编码修复 (#353)\n* 钩子中的密钥擦除 (#348)"
+    },
+    {
+      "en-US": "### Translations",
+      "zh-Hans": "### 翻译"
+    },
+    {
+      "en-US": "- Korean (ko-KR) translation — README, agents, commands, skills, rules (#392)\n- Chinese (zh-CN) documentation sync (#428)",
+      "zh-Hans": "* 韩语 (ko-KR) 翻译 — README、代理、命令、技能、规则 (#392)\n* 中文 (zh-CN) 文档同步 (#428)"
+    },
+    {
+      "en-US": "### Credits",
+      "zh-Hans": "### 鸣谢"
+    },
+    {
+      "en-US": "- @ymdvsymd — observer sandbox and worktree fixes\n- @pythonstrup — biome hook optimization\n- @Nomadu27 — InsAIts security hook\n- @hahmee — Korean translation\n- @zdocapp — Chinese translation sync\n- @cookiee339 — Kotlin ecosystem\n- @pangerlkr — CI workflow fixes\n- @0xrohitgarg — VideoDB skills\n- @nocodemf — Evos operational skills\n- @swarnika-cmd — community contributions",
+      "zh-Hans": "* @ymdvsymd — 观察器沙箱和工作树修复\n* @pythonstrup — biome 钩子优化\n* @Nomadu27 — InsAIts 安全钩子\n* @hahmee — 韩语翻译\n* @zdocapp — 中文翻译同步\n* @cookiee339 — Kotlin 生态\n* @pangerlkr — CI 工作流修复\n* @0xrohitgarg — VideoDB 技能\n* @nocodemf — Evos 操作技能\n* @swarnika-cmd — 社区贡献"
+    },
+    {
+      "en-US": "## 1.8.0 - 2026-03-04",
+      "zh-Hans": "## 1.8.0 - 2026-03-04"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Harness-first release focused on reliability, eval discipline, and autonomous loop operations.\n- Hook runtime now supports profile-based control and targeted hook disabling.\n- NanoClaw v2 adds model routing, skill hot-load, branching, search, compaction, export, and metrics.",
+      "zh-Hans": "* 首次发布以可靠性、评估规程和自主循环操作为核心的版本。\n* Hook 运行时现在支持基于配置文件的控制和针对性的 Hook 禁用。\n* NanoClaw v2 增加了模型路由、技能热加载、分支、搜索、压缩、导出和指标功能。"
+    },
+    {
+      "en-US": "### Core",
+      "zh-Hans": "### 核心"
+    },
+    {
+      "en-US": "- Added new commands: `/harness-audit`, `/loop-start`, `/loop-status`, `/quality-gate`, `/model-route`.\n- Added new skills:\n  - `agent-harness-construction`\n  - `agentic-engineering`\n  - `ralphinho-rfc-pipeline`\n  - `ai-first-engineering`\n  - `enterprise-agent-ops`\n  - `nanoclaw-repl`\n  - `continuous-agent-loop`\n- Added new agents:\n  - `harness-optimizer`\n  - `loop-operator`",
+      "zh-Hans": "* 新增命令：`/harness-audit`, `/loop-start`, `/loop-status`, `/quality-gate`, `/model-route`。\n* 新增技能：\n  * `agent-harness-construction`\n  * `agentic-engineering`\n  * `ralphinho-rfc-pipeline`\n  * `ai-first-engineering`\n  * `enterprise-agent-ops`\n  * `nanoclaw-repl`\n  * `continuous-agent-loop`\n* 新增代理：\n  * `harness-optimizer`\n  * `loop-operator`"
+    },
+    {
+      "en-US": "### Hook Reliability",
+      "zh-Hans": "### Hook 可靠性"
+    },
+    {
+      "en-US": "- Fixed SessionStart root resolution with robust fallback search.\n- Moved session summary persistence to `Stop` where transcript payload is available.\n- Added quality-gate and cost-tracker hooks.\n- Replaced fragile inline hook one-liners with dedicated script files.\n- Added `ECC_HOOK_PROFILE` and `ECC_DISABLED_HOOKS` controls.",
+      "zh-Hans": "* 修复了 SessionStart 的根路径解析，增加了健壮的回退搜索。\n* 将会话摘要持久化移至 `Stop`，此处可获得转录负载。\n* 增加了质量门和成本追踪钩子。\n* 用专门的脚本文件替换了脆弱的单行内联钩子。\n* 增加了 `ECC_HOOK_PROFILE` 和 `ECC_DISABLED_HOOKS` 控制。"
+    },
+    {
+      "en-US": "### Cross-Platform",
+      "zh-Hans": "### 跨平台"
+    },
+    {
+      "en-US": "- Improved Windows-safe path handling in doc warning logic.\n- Hardened observer loop behavior to avoid non-interactive hangs.",
+      "zh-Hans": "* 改进了文档警告逻辑中 Windows 安全路径的处理。\n* 强化了观察者循环行为，以避免非交互式挂起。"
+    },
+    {
+      "en-US": "### Notes",
+      "zh-Hans": "### 备注"
+    },
+    {
+      "en-US": "- `autonomous-loops` is kept as a compatibility alias for one release; `continuous-agent-loop` is the canonical name.",
+      "zh-Hans": "* `autonomous-loops` 作为一个兼容性别名保留一个版本；`continuous-agent-loop` 是规范名称。"
+    },
+    {
+      "en-US": "### Credits",
+      "zh-Hans": "### 鸣谢"
+    },
+    {
+      "en-US": "- inspired by [zarazhangrui](https://github.com/zarazhangrui)\n- homunculus-inspired by [humanplane](https://github.com/humanplane)",
+      "zh-Hans": "* 灵感来自 [zarazhangrui](https://github.com/zarazhangrui)\n* homunculus 灵感来自 [humanplane](https://github.com/humanplane)"
+    }
+  ]
+}

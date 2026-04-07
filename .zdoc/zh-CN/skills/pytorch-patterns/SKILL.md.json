@@ -1,0 +1,194 @@
+{
+  "sourceFile": "skills/pytorch-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: pytorch-patterns\ndescription: PyTorch deep learning patterns and best practices for building robust, efficient, and reproducible training pipelines, model architectures, and data loading.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: pytorch-patterns\ndescription: PyTorch深度学习模式与最佳实践，用于构建稳健、高效且可复现的训练流程、模型架构和数据加载。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# PyTorch Development Patterns",
+      "zh-Hans": "# PyTorch 开发模式"
+    },
+    {
+      "en-US": "Idiomatic PyTorch patterns and best practices for building robust, efficient, and reproducible deep learning applications.",
+      "zh-Hans": "构建稳健、高效和可复现深度学习应用的 PyTorch 惯用模式与最佳实践。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Writing new PyTorch models or training scripts\n- Reviewing deep learning code\n- Debugging training loops or data pipelines\n- Optimizing GPU memory usage or training speed\n- Setting up reproducible experiments",
+      "zh-Hans": "* 编写新的 PyTorch 模型或训练脚本时\n* 评审深度学习代码时\n* 调试训练循环或数据管道时\n* 优化 GPU 内存使用或训练速度时\n* 设置可复现实验时"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "### 1. Device-Agnostic Code",
+      "zh-Hans": "### 1. 设备无关代码"
+    },
+    {
+      "en-US": "Always write code that works on both CPU and GPU without hardcoding devices.",
+      "zh-Hans": "始终编写能在 CPU 和 GPU 上运行且不硬编码设备的代码。"
+    },
+    {
+      "en-US": "```python\n# Good: Device-agnostic\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\nmodel = MyModel().to(device)\ndata = data.to(device)\n\n# Bad: Hardcoded device\nmodel = MyModel().cuda()  # Crashes if no GPU\ndata = data.cuda()\n```",
+      "zh-Hans": "```python\n# Good: Device-agnostic\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\nmodel = MyModel().to(device)\ndata = data.to(device)\n\n# Bad: Hardcoded device\nmodel = MyModel().cuda()  # Crashes if no GPU\ndata = data.cuda()\n```"
+    },
+    {
+      "en-US": "### 2. Reproducibility First",
+      "zh-Hans": "### 2. 可复现性优先"
+    },
+    {
+      "en-US": "Set all random seeds for reproducible results.",
+      "zh-Hans": "设置所有随机种子以获得可复现的结果。"
+    },
+    {
+      "en-US": "```python\n# Good: Full reproducibility setup\ndef set_seed(seed: int = 42) -> None:\n    torch.manual_seed(seed)\n    torch.cuda.manual_seed_all(seed)\n    np.random.seed(seed)\n    random.seed(seed)\n    torch.backends.cudnn.deterministic = True\n    torch.backends.cudnn.benchmark = False\n\n# Bad: No seed control\nmodel = MyModel()  # Different weights every run\n```",
+      "zh-Hans": "```python\n# Good: Full reproducibility setup\ndef set_seed(seed: int = 42) -> None:\n    torch.manual_seed(seed)\n    torch.cuda.manual_seed_all(seed)\n    np.random.seed(seed)\n    random.seed(seed)\n    torch.backends.cudnn.deterministic = True\n    torch.backends.cudnn.benchmark = False\n\n# Bad: No seed control\nmodel = MyModel()  # Different weights every run\n```"
+    },
+    {
+      "en-US": "### 3. Explicit Shape Management",
+      "zh-Hans": "### 3. 显式形状管理"
+    },
+    {
+      "en-US": "Always document and verify tensor shapes.",
+      "zh-Hans": "始终记录并验证张量形状。"
+    },
+    {
+      "en-US": "```python\n# Good: Shape-annotated forward pass\ndef forward(self, x: torch.Tensor) -> torch.Tensor:\n    # x: (batch_size, channels, height, width)\n    x = self.conv1(x)    # -> (batch_size, 32, H, W)\n    x = self.pool(x)     # -> (batch_size, 32, H//2, W//2)\n    x = x.view(x.size(0), -1)  # -> (batch_size, 32*H//2*W//2)\n    return self.fc(x)    # -> (batch_size, num_classes)\n\n# Bad: No shape tracking\ndef forward(self, x):\n    x = self.conv1(x)\n    x = self.pool(x)\n    x = x.view(x.size(0), -1)  # What size is this?\n    return self.fc(x)           # Will this even work?\n```",
+      "zh-Hans": "```python\n# Good: Shape-annotated forward pass\ndef forward(self, x: torch.Tensor) -> torch.Tensor:\n    # x: (batch_size, channels, height, width)\n    x = self.conv1(x)    # -> (batch_size, 32, H, W)\n    x = self.pool(x)     # -> (batch_size, 32, H//2, W//2)\n    x = x.view(x.size(0), -1)  # -> (batch_size, 32*H//2*W//2)\n    return self.fc(x)    # -> (batch_size, num_classes)\n\n# Bad: No shape tracking\ndef forward(self, x):\n    x = self.conv1(x)\n    x = self.pool(x)\n    x = x.view(x.size(0), -1)  # What size is this?\n    return self.fc(x)           # Will this even work?\n```"
+    },
+    {
+      "en-US": "## Model Architecture Patterns",
+      "zh-Hans": "## 模型架构模式"
+    },
+    {
+      "en-US": "### Clean nn.Module Structure",
+      "zh-Hans": "### 清晰的 nn.Module 结构"
+    },
+    {
+      "en-US": "```python\n# Good: Well-organized module\nclass ImageClassifier(nn.Module):\n    def __init__(self, num_classes: int, dropout: float = 0.5) -> None:\n        super().__init__()\n        self.features = nn.Sequential(\n            nn.Conv2d(3, 64, kernel_size=3, padding=1),\n            nn.BatchNorm2d(64),\n            nn.ReLU(inplace=True),\n            nn.MaxPool2d(2),\n        )\n        self.classifier = nn.Sequential(\n            nn.Dropout(dropout),\n            nn.Linear(64 * 16 * 16, num_classes),\n        )\n\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        x = self.features(x)\n        x = x.view(x.size(0), -1)\n        return self.classifier(x)\n\n# Bad: Everything in forward\nclass ImageClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n\n    def forward(self, x):\n        x = F.conv2d(x, weight=self.make_weight())  # Creates weight each call!\n        return x\n```",
+      "zh-Hans": "```python\n# Good: Well-organized module\nclass ImageClassifier(nn.Module):\n    def __init__(self, num_classes: int, dropout: float = 0.5) -> None:\n        super().__init__()\n        self.features = nn.Sequential(\n            nn.Conv2d(3, 64, kernel_size=3, padding=1),\n            nn.BatchNorm2d(64),\n            nn.ReLU(inplace=True),\n            nn.MaxPool2d(2),\n        )\n        self.classifier = nn.Sequential(\n            nn.Dropout(dropout),\n            nn.Linear(64 * 16 * 16, num_classes),\n        )\n\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        x = self.features(x)\n        x = x.view(x.size(0), -1)\n        return self.classifier(x)\n\n# Bad: Everything in forward\nclass ImageClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n\n    def forward(self, x):\n        x = F.conv2d(x, weight=self.make_weight())  # Creates weight each call!\n        return x\n```"
+    },
+    {
+      "en-US": "### Proper Weight Initialization",
+      "zh-Hans": "### 正确的权重初始化"
+    },
+    {
+      "en-US": "```python\n# Good: Explicit initialization\ndef _init_weights(self, module: nn.Module) -> None:\n    if isinstance(module, nn.Linear):\n        nn.init.kaiming_normal_(module.weight, mode=\"fan_out\", nonlinearity=\"relu\")\n        if module.bias is not None:\n            nn.init.zeros_(module.bias)\n    elif isinstance(module, nn.Conv2d):\n        nn.init.kaiming_normal_(module.weight, mode=\"fan_out\", nonlinearity=\"relu\")\n    elif isinstance(module, nn.BatchNorm2d):\n        nn.init.ones_(module.weight)\n        nn.init.zeros_(module.bias)\n\nmodel = MyModel()\nmodel.apply(model._init_weights)\n```",
+      "zh-Hans": "```python\n# Good: Explicit initialization\ndef _init_weights(self, module: nn.Module) -> None:\n    if isinstance(module, nn.Linear):\n        nn.init.kaiming_normal_(module.weight, mode=\"fan_out\", nonlinearity=\"relu\")\n        if module.bias is not None:\n            nn.init.zeros_(module.bias)\n    elif isinstance(module, nn.Conv2d):\n        nn.init.kaiming_normal_(module.weight, mode=\"fan_out\", nonlinearity=\"relu\")\n    elif isinstance(module, nn.BatchNorm2d):\n        nn.init.ones_(module.weight)\n        nn.init.zeros_(module.bias)\n\nmodel = MyModel()\nmodel.apply(model._init_weights)\n```"
+    },
+    {
+      "en-US": "## Training Loop Patterns",
+      "zh-Hans": "## 训练循环模式"
+    },
+    {
+      "en-US": "### Standard Training Loop",
+      "zh-Hans": "### 标准训练循环"
+    },
+    {
+      "en-US": "```python\n# Good: Complete training loop with best practices\ndef train_one_epoch(\n    model: nn.Module,\n    dataloader: DataLoader,\n    optimizer: torch.optim.Optimizer,\n    criterion: nn.Module,\n    device: torch.device,\n    scaler: torch.amp.GradScaler | None = None,\n) -> float:\n    model.train()  # Always set train mode\n    total_loss = 0.0\n\n    for batch_idx, (data, target) in enumerate(dataloader):\n        data, target = data.to(device), target.to(device)\n\n        optimizer.zero_grad(set_to_none=True)  # More efficient than zero_grad()\n\n        # Mixed precision training\n        with torch.amp.autocast(\"cuda\", enabled=scaler is not None):\n            output = model(data)\n            loss = criterion(output, target)\n\n        if scaler is not None:\n            scaler.scale(loss).backward()\n            scaler.unscale_(optimizer)\n            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)\n            scaler.step(optimizer)\n            scaler.update()\n        else:\n            loss.backward()\n            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)\n            optimizer.step()\n\n        total_loss += loss.item()\n\n    return total_loss / len(dataloader)\n```",
+      "zh-Hans": "```python\n# Good: Complete training loop with best practices\ndef train_one_epoch(\n    model: nn.Module,\n    dataloader: DataLoader,\n    optimizer: torch.optim.Optimizer,\n    criterion: nn.Module,\n    device: torch.device,\n    scaler: torch.amp.GradScaler | None = None,\n) -> float:\n    model.train()  # Always set train mode\n    total_loss = 0.0\n\n    for batch_idx, (data, target) in enumerate(dataloader):\n        data, target = data.to(device), target.to(device)\n\n        optimizer.zero_grad(set_to_none=True)  # More efficient than zero_grad()\n\n        # Mixed precision training\n        with torch.amp.autocast(\"cuda\", enabled=scaler is not None):\n            output = model(data)\n            loss = criterion(output, target)\n\n        if scaler is not None:\n            scaler.scale(loss).backward()\n            scaler.unscale_(optimizer)\n            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)\n            scaler.step(optimizer)\n            scaler.update()\n        else:\n            loss.backward()\n            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)\n            optimizer.step()\n\n        total_loss += loss.item()\n\n    return total_loss / len(dataloader)\n```"
+    },
+    {
+      "en-US": "### Validation Loop",
+      "zh-Hans": "### 验证循环"
+    },
+    {
+      "en-US": "```python\n# Good: Proper evaluation\n@torch.no_grad()  # More efficient than wrapping in torch.no_grad() block\ndef evaluate(\n    model: nn.Module,\n    dataloader: DataLoader,\n    criterion: nn.Module,\n    device: torch.device,\n) -> tuple[float, float]:\n    model.eval()  # Always set eval mode — disables dropout, uses running BN stats\n    total_loss = 0.0\n    correct = 0\n    total = 0\n\n    for data, target in dataloader:\n        data, target = data.to(device), target.to(device)\n        output = model(data)\n        total_loss += criterion(output, target).item()\n        correct += (output.argmax(1) == target).sum().item()\n        total += target.size(0)\n\n    return total_loss / len(dataloader), correct / total\n```",
+      "zh-Hans": "```python\n# Good: Proper evaluation\n@torch.no_grad()  # More efficient than wrapping in torch.no_grad() block\ndef evaluate(\n    model: nn.Module,\n    dataloader: DataLoader,\n    criterion: nn.Module,\n    device: torch.device,\n) -> tuple[float, float]:\n    model.eval()  # Always set eval mode — disables dropout, uses running BN stats\n    total_loss = 0.0\n    correct = 0\n    total = 0\n\n    for data, target in dataloader:\n        data, target = data.to(device), target.to(device)\n        output = model(data)\n        total_loss += criterion(output, target).item()\n        correct += (output.argmax(1) == target).sum().item()\n        total += target.size(0)\n\n    return total_loss / len(dataloader), correct / total\n```"
+    },
+    {
+      "en-US": "## Data Pipeline Patterns",
+      "zh-Hans": "## 数据管道模式"
+    },
+    {
+      "en-US": "### Custom Dataset",
+      "zh-Hans": "### 自定义数据集"
+    },
+    {
+      "en-US": "```python\n# Good: Clean Dataset with type hints\nclass ImageDataset(Dataset):\n    def __init__(\n        self,\n        image_dir: str,\n        labels: dict[str, int],\n        transform: transforms.Compose | None = None,\n    ) -> None:\n        self.image_paths = list(Path(image_dir).glob(\"*.jpg\"))\n        self.labels = labels\n        self.transform = transform\n\n    def __len__(self) -> int:\n        return len(self.image_paths)\n\n    def __getitem__(self, idx: int) -> tuple[torch.Tensor, int]:\n        img = Image.open(self.image_paths[idx]).convert(\"RGB\")\n        label = self.labels[self.image_paths[idx].stem]\n\n        if self.transform:\n            img = self.transform(img)\n\n        return img, label\n```",
+      "zh-Hans": "```python\n# Good: Clean Dataset with type hints\nclass ImageDataset(Dataset):\n    def __init__(\n        self,\n        image_dir: str,\n        labels: dict[str, int],\n        transform: transforms.Compose | None = None,\n    ) -> None:\n        self.image_paths = list(Path(image_dir).glob(\"*.jpg\"))\n        self.labels = labels\n        self.transform = transform\n\n    def __len__(self) -> int:\n        return len(self.image_paths)\n\n    def __getitem__(self, idx: int) -> tuple[torch.Tensor, int]:\n        img = Image.open(self.image_paths[idx]).convert(\"RGB\")\n        label = self.labels[self.image_paths[idx].stem]\n\n        if self.transform:\n            img = self.transform(img)\n\n        return img, label\n```"
+    },
+    {
+      "en-US": "### Efficient DataLoader Configuration",
+      "zh-Hans": "### 高效的数据加载器配置"
+    },
+    {
+      "en-US": "```python\n# Good: Optimized DataLoader\ndataloader = DataLoader(\n    dataset,\n    batch_size=32,\n    shuffle=True,            # Shuffle for training\n    num_workers=4,           # Parallel data loading\n    pin_memory=True,         # Faster CPU->GPU transfer\n    persistent_workers=True, # Keep workers alive between epochs\n    drop_last=True,          # Consistent batch sizes for BatchNorm\n)\n\n# Bad: Slow defaults\ndataloader = DataLoader(dataset, batch_size=32)  # num_workers=0, no pin_memory\n```",
+      "zh-Hans": "```python\n# Good: Optimized DataLoader\ndataloader = DataLoader(\n    dataset,\n    batch_size=32,\n    shuffle=True,            # Shuffle for training\n    num_workers=4,           # Parallel data loading\n    pin_memory=True,         # Faster CPU->GPU transfer\n    persistent_workers=True, # Keep workers alive between epochs\n    drop_last=True,          # Consistent batch sizes for BatchNorm\n)\n\n# Bad: Slow defaults\ndataloader = DataLoader(dataset, batch_size=32)  # num_workers=0, no pin_memory\n```"
+    },
+    {
+      "en-US": "### Custom Collate for Variable-Length Data",
+      "zh-Hans": "### 针对变长数据的自定义整理函数"
+    },
+    {
+      "en-US": "```python\n# Good: Pad sequences in collate_fn\ndef collate_fn(batch: list[tuple[torch.Tensor, int]]) -> tuple[torch.Tensor, torch.Tensor]:\n    sequences, labels = zip(*batch)\n    # Pad to max length in batch\n    padded = nn.utils.rnn.pad_sequence(sequences, batch_first=True, padding_value=0)\n    return padded, torch.tensor(labels)\n\ndataloader = DataLoader(dataset, batch_size=32, collate_fn=collate_fn)\n```",
+      "zh-Hans": "```python\n# Good: Pad sequences in collate_fn\ndef collate_fn(batch: list[tuple[torch.Tensor, int]]) -> tuple[torch.Tensor, torch.Tensor]:\n    sequences, labels = zip(*batch)\n    # Pad to max length in batch\n    padded = nn.utils.rnn.pad_sequence(sequences, batch_first=True, padding_value=0)\n    return padded, torch.tensor(labels)\n\ndataloader = DataLoader(dataset, batch_size=32, collate_fn=collate_fn)\n```"
+    },
+    {
+      "en-US": "## Checkpointing Patterns",
+      "zh-Hans": "## 检查点模式"
+    },
+    {
+      "en-US": "### Save and Load Checkpoints",
+      "zh-Hans": "### 保存和加载检查点"
+    },
+    {
+      "en-US": "```python\n# Good: Complete checkpoint with all training state\ndef save_checkpoint(\n    model: nn.Module,\n    optimizer: torch.optim.Optimizer,\n    epoch: int,\n    loss: float,\n    path: str,\n) -> None:\n    torch.save({\n        \"epoch\": epoch,\n        \"model_state_dict\": model.state_dict(),\n        \"optimizer_state_dict\": optimizer.state_dict(),\n        \"loss\": loss,\n    }, path)\n\ndef load_checkpoint(\n    path: str,\n    model: nn.Module,\n    optimizer: torch.optim.Optimizer | None = None,\n) -> dict:\n    checkpoint = torch.load(path, map_location=\"cpu\", weights_only=True)\n    model.load_state_dict(checkpoint[\"model_state_dict\"])\n    if optimizer:\n        optimizer.load_state_dict(checkpoint[\"optimizer_state_dict\"])\n    return checkpoint\n\n# Bad: Only saving model weights (can't resume training)\ntorch.save(model.state_dict(), \"model.pt\")\n```",
+      "zh-Hans": "```python\n# Good: Complete checkpoint with all training state\ndef save_checkpoint(\n    model: nn.Module,\n    optimizer: torch.optim.Optimizer,\n    epoch: int,\n    loss: float,\n    path: str,\n) -> None:\n    torch.save({\n        \"epoch\": epoch,\n        \"model_state_dict\": model.state_dict(),\n        \"optimizer_state_dict\": optimizer.state_dict(),\n        \"loss\": loss,\n    }, path)\n\ndef load_checkpoint(\n    path: str,\n    model: nn.Module,\n    optimizer: torch.optim.Optimizer | None = None,\n) -> dict:\n    checkpoint = torch.load(path, map_location=\"cpu\", weights_only=True)\n    model.load_state_dict(checkpoint[\"model_state_dict\"])\n    if optimizer:\n        optimizer.load_state_dict(checkpoint[\"optimizer_state_dict\"])\n    return checkpoint\n\n# Bad: Only saving model weights (can't resume training)\ntorch.save(model.state_dict(), \"model.pt\")\n```"
+    },
+    {
+      "en-US": "## Performance Optimization",
+      "zh-Hans": "## 性能优化"
+    },
+    {
+      "en-US": "### Mixed Precision Training",
+      "zh-Hans": "### 混合精度训练"
+    },
+    {
+      "en-US": "```python\n# Good: AMP with GradScaler\nscaler = torch.amp.GradScaler(\"cuda\")\nfor data, target in dataloader:\n    with torch.amp.autocast(\"cuda\"):\n        output = model(data)\n        loss = criterion(output, target)\n    scaler.scale(loss).backward()\n    scaler.step(optimizer)\n    scaler.update()\n    optimizer.zero_grad(set_to_none=True)\n```",
+      "zh-Hans": "```python\n# Good: AMP with GradScaler\nscaler = torch.amp.GradScaler(\"cuda\")\nfor data, target in dataloader:\n    with torch.amp.autocast(\"cuda\"):\n        output = model(data)\n        loss = criterion(output, target)\n    scaler.scale(loss).backward()\n    scaler.step(optimizer)\n    scaler.update()\n    optimizer.zero_grad(set_to_none=True)\n```"
+    },
+    {
+      "en-US": "### Gradient Checkpointing for Large Models",
+      "zh-Hans": "### 大模型的梯度检查点"
+    },
+    {
+      "en-US": "```python\n# Good: Trade compute for memory\nfrom torch.utils.checkpoint import checkpoint\n\nclass LargeModel(nn.Module):\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        # Recompute activations during backward to save memory\n        x = checkpoint(self.block1, x, use_reentrant=False)\n        x = checkpoint(self.block2, x, use_reentrant=False)\n        return self.head(x)\n```",
+      "zh-Hans": "```python\n# Good: Trade compute for memory\nfrom torch.utils.checkpoint import checkpoint\n\nclass LargeModel(nn.Module):\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        # Recompute activations during backward to save memory\n        x = checkpoint(self.block1, x, use_reentrant=False)\n        x = checkpoint(self.block2, x, use_reentrant=False)\n        return self.head(x)\n```"
+    },
+    {
+      "en-US": "### torch.compile for Speed",
+      "zh-Hans": "### 使用 torch.compile 加速"
+    },
+    {
+      "en-US": "```python\n# Good: Compile the model for faster execution (PyTorch 2.0+)\nmodel = MyModel().to(device)\nmodel = torch.compile(model, mode=\"reduce-overhead\")\n\n# Modes: \"default\" (safe), \"reduce-overhead\" (faster), \"max-autotune\" (fastest)\n```",
+      "zh-Hans": "```python\n# Good: Compile the model for faster execution (PyTorch 2.0+)\nmodel = MyModel().to(device)\nmodel = torch.compile(model, mode=\"reduce-overhead\")\n\n# Modes: \"default\" (safe), \"reduce-overhead\" (faster), \"max-autotune\" (fastest)\n```"
+    },
+    {
+      "en-US": "## Quick Reference: PyTorch Idioms",
+      "zh-Hans": "## 快速参考：PyTorch 惯用法"
+    },
+    {
+      "en-US": "| Idiom | Description |\n|-------|-------------|\n| `model.train()` / `model.eval()` | Always set mode before train/eval |\n| `torch.no_grad()` | Disable gradients for inference |\n| `optimizer.zero_grad(set_to_none=True)` | More efficient gradient clearing |\n| `.to(device)` | Device-agnostic tensor/model placement |\n| `torch.amp.autocast` | Mixed precision for 2x speed |\n| `pin_memory=True` | Faster CPU→GPU data transfer |\n| `torch.compile` | JIT compilation for speed (2.0+) |\n| `weights_only=True` | Secure model loading |\n| `torch.manual_seed` | Reproducible experiments |\n| `gradient_checkpointing` | Trade compute for memory |",
+      "zh-Hans": "| 惯用法 | 描述 |\n|-------|-------------|\n| `model.train()` / `model.eval()` | 训练/评估前始终设置模式 |\n| `torch.no_grad()` | 推理时禁用梯度 |\n| `optimizer.zero_grad(set_to_none=True)` | 更高效的梯度清零 |\n| `.to(device)` | 设备无关的张量/模型放置 |\n| `torch.amp.autocast` | 混合精度以获得 2 倍速度 |\n| `pin_memory=True` | 更快的 CPU→GPU 数据传输 |\n| `torch.compile` | JIT 编译加速 (2.0+) |\n| `weights_only=True` | 安全的模型加载 |\n| `torch.manual_seed` | 可复现的实验 |\n| `gradient_checkpointing` | 以计算换取内存 |"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "```python\n# Bad: Forgetting model.eval() during validation\nmodel.train()\nwith torch.no_grad():\n    output = model(val_data)  # Dropout still active! BatchNorm uses batch stats!\n\n# Good: Always set eval mode\nmodel.eval()\nwith torch.no_grad():\n    output = model(val_data)\n\n# Bad: In-place operations breaking autograd\nx = F.relu(x, inplace=True)  # Can break gradient computation\nx += residual                  # In-place add breaks autograd graph\n\n# Good: Out-of-place operations\nx = F.relu(x)\nx = x + residual\n\n# Bad: Moving data to GPU inside the training loop repeatedly\nfor data, target in dataloader:\n    model = model.cuda()  # Moves model EVERY iteration!\n\n# Good: Move model once before the loop\nmodel = model.to(device)\nfor data, target in dataloader:\n    data, target = data.to(device), target.to(device)\n\n# Bad: Using .item() before backward\nloss = criterion(output, target).item()  # Detaches from graph!\nloss.backward()  # Error: can't backprop through .item()\n\n# Good: Call .item() only for logging\nloss = criterion(output, target)\nloss.backward()\nprint(f\"Loss: {loss.item():.4f}\")  # .item() after backward is fine\n\n# Bad: Not using torch.save properly\ntorch.save(model, \"model.pt\")  # Saves entire model (fragile, not portable)\n\n# Good: Save state_dict\ntorch.save(model.state_dict(), \"model.pt\")\n```",
+      "zh-Hans": "```python\n# Bad: Forgetting model.eval() during validation\nmodel.train()\nwith torch.no_grad():\n    output = model(val_data)  # Dropout still active! BatchNorm uses batch stats!\n\n# Good: Always set eval mode\nmodel.eval()\nwith torch.no_grad():\n    output = model(val_data)\n\n# Bad: In-place operations breaking autograd\nx = F.relu(x, inplace=True)  # Can break gradient computation\nx += residual                  # In-place add breaks autograd graph\n\n# Good: Out-of-place operations\nx = F.relu(x)\nx = x + residual\n\n# Bad: Moving data to GPU inside the training loop repeatedly\nfor data, target in dataloader:\n    model = model.cuda()  # Moves model EVERY iteration!\n\n# Good: Move model once before the loop\nmodel = model.to(device)\nfor data, target in dataloader:\n    data, target = data.to(device), target.to(device)\n\n# Bad: Using .item() before backward\nloss = criterion(output, target).item()  # Detaches from graph!\nloss.backward()  # Error: can't backprop through .item()\n\n# Good: Call .item() only for logging\nloss = criterion(output, target)\nloss.backward()\nprint(f\"Loss: {loss.item():.4f}\")  # .item() after backward is fine\n\n# Bad: Not using torch.save properly\ntorch.save(model, \"model.pt\")  # Saves entire model (fragile, not portable)\n\n# Good: Save state_dict\ntorch.save(model.state_dict(), \"model.pt\")\n```"
+    },
+    {
+      "en-US": "__Remember__: PyTorch code should be device-agnostic, reproducible, and memory-conscious. When in doubt, profile with `torch.profiler` and check GPU memory with `torch.cuda.memory_summary()`.",
+      "zh-Hans": "**请记住**：PyTorch 代码应做到设备无关、可复现且内存意识强。如有疑问，请使用 `torch.profiler` 进行分析，并使用 `torch.cuda.memory_summary()` 检查 GPU 内存。"
+    }
+  ]
+}

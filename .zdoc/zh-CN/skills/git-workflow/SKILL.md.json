@@ -1,0 +1,418 @@
+{
+  "sourceFile": "skills/git-workflow/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: git-workflow\ndescription: Git workflow patterns including branching strategies, commit conventions, merge vs rebase, conflict resolution, and collaborative development best practices for teams of all sizes.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: git-workflow\ndescription: Git工作流模式，包括分支策略、提交规范、合并与变基、冲突解决，以及适用于各种规模团队的协作开发最佳实践。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Git Workflow Patterns",
+      "zh-Hans": "# Git 工作流模式"
+    },
+    {
+      "en-US": "Best practices for Git version control, branching strategies, and collaborative development.",
+      "zh-Hans": "Git 版本控制、分支策略和协作开发的最佳实践。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Setting up Git workflow for a new project\n- Deciding on branching strategy (GitFlow, trunk-based, GitHub flow)\n- Writing commit messages and PR descriptions\n- Resolving merge conflicts\n- Managing releases and version tags\n- Onboarding new team members to Git practices",
+      "zh-Hans": "* 为新项目设置 Git 工作流\n* 决定分支策略（GitFlow、主干开发、GitHub 流）\n* 编写提交信息和 PR 描述\n* 解决合并冲突\n* 管理发布和版本标签\n* 向新团队成员介绍 Git 实践"
+    },
+    {
+      "en-US": "## Branching Strategies",
+      "zh-Hans": "## 分支策略"
+    },
+    {
+      "en-US": "### GitHub Flow (Simple, Recommended for Most)",
+      "zh-Hans": "### GitHub 流（简单，推荐给大多数项目）"
+    },
+    {
+      "en-US": "Best for continuous deployment and small-to-medium teams.",
+      "zh-Hans": "最适合持续部署和中小型团队。"
+    },
+    {
+      "en-US": "```\nmain (protected, always deployable)\n  │\n  ├── feature/user-auth      → PR → merge to main\n  ├── feature/payment-flow   → PR → merge to main\n  └── fix/login-bug          → PR → merge to main\n```",
+      "zh-Hans": "```\nmain (受保护，始终可部署)\n  │\n  ├── feature/user-auth      → PR → 合并到 main\n  ├── feature/payment-flow   → PR → 合并到 main\n  └── fix/login-bug          → PR → 合并到 main\n```"
+    },
+    {
+      "en-US": "**Rules:**",
+      "zh-Hans": "**规则：**"
+    },
+    {
+      "en-US": "- `main` is always deployable\n- Create feature branches from `main`\n- Open Pull Request when ready for review\n- After approval and CI passes, merge to `main`\n- Deploy immediately after merge",
+      "zh-Hans": "* `main` 始终可部署\n* 从 `main` 创建功能分支\n* 准备就绪后开启 Pull Request 进行审查\n* 批准且 CI 通过后，合并到 `main`\n* 合并后立即部署"
+    },
+    {
+      "en-US": "### Trunk-Based Development (High-Velocity Teams)",
+      "zh-Hans": "### 主干开发（高速度团队）"
+    },
+    {
+      "en-US": "Best for teams with strong CI/CD and feature flags.",
+      "zh-Hans": "最适合拥有强大 CI/CD 和功能标志的团队。"
+    },
+    {
+      "en-US": "```\nmain (trunk)\n  │\n  ├── short-lived feature (1-2 days max)\n  ├── short-lived feature\n  └── short-lived feature\n```",
+      "zh-Hans": "```\nmain (主干)\n  │\n  ├── 短期功能 (最多1-2天)\n  ├── 短期功能\n  └── 短期功能\n```"
+    },
+    {
+      "en-US": "**Rules:**",
+      "zh-Hans": "**规则：**"
+    },
+    {
+      "en-US": "- Everyone commits to `main` or very short-lived branches\n- Feature flags hide incomplete work\n- CI must pass before merge\n- Deploy multiple times per day",
+      "zh-Hans": "* 每个人都提交到 `main` 或非常短命的分支\n* 功能标志隐藏未完成的工作\n* 合并前 CI 必须通过\n* 每天部署多次"
+    },
+    {
+      "en-US": "### GitFlow (Complex, Release-Cycle Driven)",
+      "zh-Hans": "### GitFlow（复杂，发布周期驱动）"
+    },
+    {
+      "en-US": "Best for scheduled releases and enterprise projects.",
+      "zh-Hans": "最适合计划发布和企业项目。"
+    },
+    {
+      "en-US": "```\nmain (production releases)\n  │\n  └── develop (integration branch)\n        │\n        ├── feature/user-auth\n        ├── feature/payment\n        │\n        ├── release/1.0.0    → merge to main and develop\n        │\n        └── hotfix/critical  → merge to main and develop\n```",
+      "zh-Hans": "```\nmain (production releases)\n  │\n  └── develop (integration branch)\n        │\n        ├── feature/user-auth\n        ├── feature/payment\n        │\n        ├── release/1.0.0    → merge to main and develop\n        │\n        └── hotfix/critical  → merge to main and develop\n```"
+    },
+    {
+      "en-US": "**Rules:**",
+      "zh-Hans": "**规则：**"
+    },
+    {
+      "en-US": "- `main` contains production-ready code only\n- `develop` is the integration branch\n- Feature branches from `develop`, merge back to `develop`\n- Release branches from `develop`, merge to `main` and `develop`\n- Hotfix branches from `main`, merge to both `main` and `develop`",
+      "zh-Hans": "* `main` 仅包含生产就绪代码\n* `develop` 是集成分支\n* 功能分支从 `develop` 创建，合并回 `develop`\n* 发布分支从 `develop` 创建，合并到 `main` 和 `develop`\n* 热修复分支从 `main` 创建，合并到 `main` 和 `develop`"
+    },
+    {
+      "en-US": "### When to Use Which",
+      "zh-Hans": "### 何时使用哪种策略"
+    },
+    {
+      "en-US": "| Strategy | Team Size | Release Cadence | Best For |\n|----------|-----------|-----------------|----------|\n| GitHub Flow | Any | Continuous | SaaS, web apps, startups |\n| Trunk-Based | 5+ experienced | Multiple/day | High-velocity teams, feature flags |\n| GitFlow | 10+ | Scheduled | Enterprise, regulated industries |",
+      "zh-Hans": "| 策略 | 团队规模 | 发布节奏 | 最适合 |\n|----------|-----------|-----------------|----------|\n| GitHub 流 | 任意 | 持续 | SaaS、Web 应用、初创公司 |\n| 主干开发 | 5 人以上且有经验 | 每天多次 | 高速度团队、功能标志 |\n| GitFlow | 10 人以上 | 计划发布 | 企业、受监管行业 |"
+    },
+    {
+      "en-US": "## Commit Messages",
+      "zh-Hans": "## 提交信息"
+    },
+    {
+      "en-US": "### Conventional Commits Format",
+      "zh-Hans": "### 约定式提交格式"
+    },
+    {
+      "en-US": "```\n<type>(<scope>): <subject>\n\n[optional body]\n\n[optional footer(s)]\n```",
+      "zh-Hans": "```\n<类型>(<范围>): <主题>\n\n[可选的正文]\n\n[可选的页脚]\n```"
+    },
+    {
+      "en-US": "### Types",
+      "zh-Hans": "### 类型"
+    },
+    {
+      "en-US": "| Type | Use For | Example |\n|------|---------|---------|\n| `feat` | New feature | `feat(auth): add OAuth2 login` |\n| `fix` | Bug fix | `fix(api): handle null response in user endpoint` |\n| `docs` | Documentation | `docs(readme): update installation instructions` |\n| `style` | Formatting, no code change | `style: fix indentation in login component` |\n| `refactor` | Code refactoring | `refactor(db): extract connection pool to module` |\n| `test` | Adding/updating tests | `test(auth): add unit tests for token validation` |\n| `chore` | Maintenance tasks | `chore(deps): update dependencies` |\n| `perf` | Performance improvement | `perf(query): add index to users table` |\n| `ci` | CI/CD changes | `ci: add PostgreSQL service to test workflow` |\n| `revert` | Revert previous commit | `revert: revert \"feat(auth): add OAuth2 login\"` |",
+      "zh-Hans": "| 类型 | 用于 | 示例 |\n|------|---------|---------|\n| `feat` | 新功能 | `feat(auth): add OAuth2 login` |\n| `fix` | 错误修复 | `fix(api): handle null response in user endpoint` |\n| `docs` | 文档 | `docs(readme): update installation instructions` |\n| `style` | 格式化，无代码变更 | `style: fix indentation in login component` |\n| `refactor` | 代码重构 | `refactor(db): extract connection pool to module` |\n| `test` | 添加/更新测试 | `test(auth): add unit tests for token validation` |\n| `chore` | 维护任务 | `chore(deps): update dependencies` |\n| `perf` | 性能改进 | `perf(query): add index to users table` |\n| `ci` | CI/CD 变更 | `ci: add PostgreSQL service to test workflow` |\n| `revert` | 还原之前的提交 | `revert: revert \"feat(auth): add OAuth2 login\"` |"
+    },
+    {
+      "en-US": "### Good vs Bad Examples",
+      "zh-Hans": "### 好与坏的示例"
+    },
+    {
+      "en-US": "```\n# BAD: Vague, no context\ngit commit -m \"fixed stuff\"\ngit commit -m \"updates\"\ngit commit -m \"WIP\"\n\n# GOOD: Clear, specific, explains why\ngit commit -m \"fix(api): retry requests on 503 Service Unavailable\n\nThe external API occasionally returns 503 errors during peak hours.\nAdded exponential backoff retry logic with max 3 attempts.\n\nCloses #123\"\n```",
+      "zh-Hans": "```\n# 不佳：模糊，缺乏上下文\ngit commit -m \"fixed stuff\"\ngit commit -m \"updates\"\ngit commit -m \"WIP\"\n\n# 良好：清晰，具体，解释原因\ngit commit -m \"fix(api): 在 503 Service Unavailable 时重试请求\n\n外部 API 在高峰时段偶尔会返回 503 错误。\n添加了指数退避重试逻辑，最多尝试 3 次。\n\nCloses #123\"\n```"
+    },
+    {
+      "en-US": "### Commit Message Template",
+      "zh-Hans": "### 提交信息模板"
+    },
+    {
+      "en-US": "Create `.gitmessage` in repo root:",
+      "zh-Hans": "在仓库根目录创建 `.gitmessage`："
+    },
+    {
+      "en-US": "```\n# <type>(<scope>): <subject>\n# # Types: feat, fix, docs, style, refactor, test, chore, perf, ci, revert\n# Scope: api, ui, db, auth, etc.\n# Subject: imperative mood, no period, max 50 chars\n#\n# [optional body] - explain why, not what\n# [optional footer] - Breaking changes, closes #issue\n```",
+      "zh-Hans": "```\n# <type>(<scope>): <subject>\n# # 类型：feat, fix, docs, style, refactor, test, chore, perf, ci, revert\n# 作用域：api, ui, db, auth, 等\n# 主题：使用祈使语气，不加句号，最多50个字符\n#\n# [可选正文] - 解释原因，而非内容\n# [可选页脚] - 重大变更，关闭 #issue\n```"
+    },
+    {
+      "en-US": "Enable with: `git config commit.template .gitmessage`",
+      "zh-Hans": "通过以下命令启用：`git config commit.template .gitmessage`"
+    },
+    {
+      "en-US": "## Merge vs Rebase",
+      "zh-Hans": "## 合并与变基"
+    },
+    {
+      "en-US": "### Merge (Preserves History)",
+      "zh-Hans": "### 合并（保留历史）"
+    },
+    {
+      "en-US": "```bash\n# Creates a merge commit\ngit checkout main\ngit merge feature/user-auth\n\n# Result:\n# *   merge commit\n# |\\\n# | * feature commits\n# |/\n# * main commits\n```",
+      "zh-Hans": "```bash\n# Creates a merge commit\ngit checkout main\ngit merge feature/user-auth\n\n# Result:\n# *   merge commit\n# |\\\n# | * feature commits\n# |/\n# * main commits\n```"
+    },
+    {
+      "en-US": "**Use when:**",
+      "zh-Hans": "**在以下情况使用：**"
+    },
+    {
+      "en-US": "- Merging feature branches into `main`\n- You want to preserve exact history\n- Multiple people worked on the branch\n- The branch has been pushed and others may have based work on it",
+      "zh-Hans": "* 将功能分支合并到 `main`\n* 你想保留确切的历史记录\n* 有多人在该分支上工作\n* 该分支已被推送，其他人可能基于它进行了工作"
+    },
+    {
+      "en-US": "### Rebase (Linear History)",
+      "zh-Hans": "### 变基（线性历史）"
+    },
+    {
+      "en-US": "```bash\n# Rewrites feature commits onto target branch\ngit checkout feature/user-auth\ngit rebase main\n\n# Result:\n# * feature commits (rewritten)\n# * main commits\n```",
+      "zh-Hans": "```bash\n# Rewrites feature commits onto target branch\ngit checkout feature/user-auth\ngit rebase main\n\n# Result:\n# * feature commits (rewritten)\n# * main commits\n```"
+    },
+    {
+      "en-US": "**Use when:**",
+      "zh-Hans": "**在以下情况使用：**"
+    },
+    {
+      "en-US": "- Updating your local feature branch with latest `main`\n- You want a linear, clean history\n- The branch is local-only (not pushed)\n- You're the only one working on the branch",
+      "zh-Hans": "* 用最新的 `main` 更新你的本地功能分支\n* 你想要线性、整洁的历史记录\n* 该分支仅为本地分支（未推送）\n* 你是唯一在该分支上工作的人"
+    },
+    {
+      "en-US": "### Rebase Workflow",
+      "zh-Hans": "### 变基工作流"
+    },
+    {
+      "en-US": "```bash\n# Update feature branch with latest main (before PR)\ngit checkout feature/user-auth\ngit fetch origin\ngit rebase origin/main\n\n# Fix any conflicts\n# Tests should still pass\n\n# Force push (only if you're the only contributor)\ngit push --force-with-lease origin feature/user-auth\n```",
+      "zh-Hans": "```bash\n# Update feature branch with latest main (before PR)\ngit checkout feature/user-auth\ngit fetch origin\ngit rebase origin/main\n\n# Fix any conflicts\n# Tests should still pass\n\n# Force push (only if you're the only contributor)\ngit push --force-with-lease origin feature/user-auth\n```"
+    },
+    {
+      "en-US": "### When NOT to Rebase",
+      "zh-Hans": "### 何时不应变基"
+    },
+    {
+      "en-US": "```\n# NEVER rebase branches that:\n- Have been pushed to a shared repository\n- Other people have based work on\n- Are protected branches (main, develop)\n- Are already merged\n\n# Why: Rebase rewrites history, breaking others' work\n```",
+      "zh-Hans": "```\n# 绝对不要对以下分支进行 rebase：\n- 已推送到共享仓库的分支\n- 其他人已基于其进行工作的分支\n- 受保护的分支（main、develop）\n- 已合并的分支\n\n# 原因：Rebase 会重写历史，破坏他人的工作\n```"
+    },
+    {
+      "en-US": "## Pull Request Workflow",
+      "zh-Hans": "## Pull Request 工作流"
+    },
+    {
+      "en-US": "### PR Title Format",
+      "zh-Hans": "### PR 标题格式"
+    },
+    {
+      "en-US": "```\n<type>(<scope>): <description>\n\nExamples:\nfeat(auth): add SSO support for enterprise users\nfix(api): resolve race condition in order processing\ndocs(api): add OpenAPI specification for v2 endpoints\n```",
+      "zh-Hans": "```\n<type>(<scope>): <description>\n\n示例：\nfeat(auth): 为企业用户添加单点登录支持\nfix(api): 解决订单处理中的竞态条件问题\ndocs(api): 为 v2 端点添加 OpenAPI 规范\n```"
+    },
+    {
+      "en-US": "### PR Description Template",
+      "zh-Hans": "### PR 描述模板"
+    },
+    {
+      "en-US": "```markdown\n## What\n\nBrief description of what this PR does.\n\n## Why\n\nExplain the motivation and context.\n\n## How\n\nKey implementation details worth highlighting.\n\n## Testing\n\n- [ ] Unit tests added/updated\n- [ ] Integration tests added/updated\n- [ ] Manual testing performed\n\n## Screenshots (if applicable)\n\nBefore/after screenshots for UI changes.\n\n## Checklist\n\n- [ ] Code follows project style guidelines\n- [ ] Self-review completed\n- [ ] Comments added for complex logic\n- [ ] Documentation updated\n- [ ] No new warnings introduced\n- [ ] Tests pass locally\n- [ ] Related issues linked\n\nCloses #123\n```",
+      "zh-Hans": "```markdown\n## 内容\n\n简要描述本次 PR 所做的事情。\n\n## 原因\n\n解释动机和背景。\n\n## 方式\n\n值得强调的关键实现细节。\n\n## 测试\n\n- [ ] 已添加/更新单元测试\n- [ ] 已添加/更新集成测试\n- [ ] 已执行手动测试\n\n## 截图（如适用）\n\nUI 变更前后的截图。\n\n## 检查清单\n\n- [ ] 代码遵循项目风格指南\n- [ ] 已完成自我审查\n- [ ] 为复杂逻辑添加了注释\n- [ ] 已更新文档\n- [ ] 未引入新的警告\n- [ ] 本地测试通过\n- [ ] 已关联相关 issue\n\n关闭 #123\n```"
+    },
+    {
+      "en-US": "### Code Review Checklist",
+      "zh-Hans": "### 代码审查清单"
+    },
+    {
+      "en-US": "**For Reviewers:**",
+      "zh-Hans": "**审查者：**"
+    },
+    {
+      "en-US": "- [ ] Does the code solve the stated problem?\n- [ ] Are there any edge cases not handled?\n- [ ] Is the code readable and maintainable?\n- [ ] Are there sufficient tests?\n- [ ] Are there security concerns?\n- [ ] Is the commit history clean (squashed if needed)?",
+      "zh-Hans": "* \\[ ] 代码是否解决了所述问题？\n* \\[ ] 是否有未处理的边缘情况？\n* \\[ ] 代码是否可读且可维护？\n* \\[ ] 是否有足够的测试？\n* \\[ ] 是否存在安全问题？\n* \\[ ] 提交历史是否整洁（如有需要是否已压缩）？"
+    },
+    {
+      "en-US": "**For Authors:**",
+      "zh-Hans": "**作者：**"
+    },
+    {
+      "en-US": "- [ ] Self-review completed before requesting review\n- [ ] CI passes (tests, lint, typecheck)\n- [ ] PR size is reasonable (<500 lines ideal)\n- [ ] Related to a single feature/fix\n- [ ] Description clearly explains the change",
+      "zh-Hans": "* \\[ ] 在请求审查前已完成自我审查\n* \\[ ] CI 通过（测试、代码检查、类型检查）\n* \\[ ] PR 大小合理（理想情况 <500 行）\n* \\[ ] 与单一功能/修复相关\n* \\[ ] 描述清晰地解释了变更"
+    },
+    {
+      "en-US": "## Conflict Resolution",
+      "zh-Hans": "## 冲突解决"
+    },
+    {
+      "en-US": "### Identify Conflicts",
+      "zh-Hans": "### 识别冲突"
+    },
+    {
+      "en-US": "```bash\n# Check for conflicts before merge\ngit checkout main\ngit merge feature/user-auth --no-commit --no-ff\n\n# If conflicts, Git will show:\n# CONFLICT (content): Merge conflict in src/auth/login.ts\n# Automatic merge failed; fix conflicts and then commit the result.\n```",
+      "zh-Hans": "```bash\n# Check for conflicts before merge\ngit checkout main\ngit merge feature/user-auth --no-commit --no-ff\n\n# If conflicts, Git will show:\n# CONFLICT (content): Merge conflict in src/auth/login.ts\n# Automatic merge failed; fix conflicts and then commit the result.\n```"
+    },
+    {
+      "en-US": "### Resolve Conflicts",
+      "zh-Hans": "### 解决冲突"
+    },
+    {
+      "en-US": "```bash\n# See conflicted files\ngit status\n\n# View conflict markers in file\n# <<<<<<< HEAD\n# content from main\n# =======\n# content from feature branch\n# >>>>>>> feature/user-auth\n\n# Option 1: Manual resolution\n# Edit file, remove markers, keep correct content\n\n# Option 2: Use merge tool\ngit mergetool\n\n# Option 3: Accept one side\ngit checkout --ours src/auth/login.ts    # Keep main version\ngit checkout --theirs src/auth/login.ts  # Keep feature version\n\n# After resolving, stage and commit\ngit add src/auth/login.ts\ngit commit\n```",
+      "zh-Hans": "```bash\n# See conflicted files\ngit status\n\n# View conflict markers in file\n# <<<<<<< HEAD\n# content from main\n# =======\n# content from feature branch\n# >>>>>>> feature/user-auth\n\n# Option 1: Manual resolution\n# Edit file, remove markers, keep correct content\n\n# Option 2: Use merge tool\ngit mergetool\n\n# Option 3: Accept one side\ngit checkout --ours src/auth/login.ts    # Keep main version\ngit checkout --theirs src/auth/login.ts  # Keep feature version\n\n# After resolving, stage and commit\ngit add src/auth/login.ts\ngit commit\n```"
+    },
+    {
+      "en-US": "### Conflict Prevention Strategies",
+      "zh-Hans": "### 冲突预防策略"
+    },
+    {
+      "en-US": "```bash\n# 1. Keep feature branches small and short-lived\n# 2. Rebase frequently onto main\ngit checkout feature/user-auth\ngit fetch origin\ngit rebase origin/main\n\n# 3. Communicate with team about touching shared files\n# 4. Use feature flags instead of long-lived branches\n# 5. Review and merge PRs promptly\n```",
+      "zh-Hans": "```bash\n# 1. Keep feature branches small and short-lived\n# 2. Rebase frequently onto main\ngit checkout feature/user-auth\ngit fetch origin\ngit rebase origin/main\n\n# 3. Communicate with team about touching shared files\n# 4. Use feature flags instead of long-lived branches\n# 5. Review and merge PRs promptly\n```"
+    },
+    {
+      "en-US": "## Branch Management",
+      "zh-Hans": "## 分支管理"
+    },
+    {
+      "en-US": "### Naming Conventions",
+      "zh-Hans": "### 命名约定"
+    },
+    {
+      "en-US": "```\n# Feature branches\nfeature/user-authentication\nfeature/JIRA-123-payment-integration\n\n# Bug fixes\nfix/login-redirect-loop\nfix/456-null-pointer-exception\n\n# Hotfixes (production issues)\nhotfix/critical-security-patch\nhotfix/database-connection-leak\n\n# Releases\nrelease/1.2.0\nrelease/2024-01-hotfix\n\n# Experiments/POCs\nexperiment/new-caching-strategy\npoc/graphql-migration\n```",
+      "zh-Hans": "```\n# 功能分支\nfeature/user-authentication\nfeature/JIRA-123-payment-integration\n\n# 错误修复\nfix/login-redirect-loop\nfix/456-null-pointer-exception\n\n# 热修复（生产环境问题）\nhotfix/critical-security-patch\nhotfix/database-connection-leak\n\n# 发布版本\nrelease/1.2.0\nrelease/2024-01-hotfix\n\n# 实验/概念验证\nexperiment/new-caching-strategy\npoc/graphql-migration\n```"
+    },
+    {
+      "en-US": "### Branch Cleanup",
+      "zh-Hans": "### 分支清理"
+    },
+    {
+      "en-US": "```bash\n# Delete local branches that are merged\ngit branch --merged main | grep -v \"^\\*\\|main\" | xargs -n 1 git branch -d\n\n# Delete remote-tracking references for deleted remote branches\ngit fetch -p\n\n# Delete local branch\ngit branch -d feature/user-auth  # Safe delete (only if merged)\ngit branch -D feature/user-auth  # Force delete\n\n# Delete remote branch\ngit push origin --delete feature/user-auth\n```",
+      "zh-Hans": "```bash\n# Delete local branches that are merged\ngit branch --merged main | grep -v \"^\\*\\|main\" | xargs -n 1 git branch -d\n\n# Delete remote-tracking references for deleted remote branches\ngit fetch -p\n\n# Delete local branch\ngit branch -d feature/user-auth  # Safe delete (only if merged)\ngit branch -D feature/user-auth  # Force delete\n\n# Delete remote branch\ngit push origin --delete feature/user-auth\n```"
+    },
+    {
+      "en-US": "### Stash Workflow",
+      "zh-Hans": "### 储藏工作流"
+    },
+    {
+      "en-US": "```bash\n# Save work in progress\ngit stash push -m \"WIP: user authentication\"\n\n# List stashes\ngit stash list\n\n# Apply most recent stash\ngit stash pop\n\n# Apply specific stash\ngit stash apply stash@{2}\n\n# Drop stash\ngit stash drop stash@{0}\n```",
+      "zh-Hans": "```bash\n# Save work in progress\ngit stash push -m \"WIP: user authentication\"\n\n# List stashes\ngit stash list\n\n# Apply most recent stash\ngit stash pop\n\n# Apply specific stash\ngit stash apply stash@{2}\n\n# Drop stash\ngit stash drop stash@{0}\n```"
+    },
+    {
+      "en-US": "## Release Management",
+      "zh-Hans": "## 发布管理"
+    },
+    {
+      "en-US": "### Semantic Versioning",
+      "zh-Hans": "### 语义化版本控制"
+    },
+    {
+      "en-US": "```\nMAJOR.MINOR.PATCH\n\nMAJOR: Breaking changes\nMINOR: New features, backward compatible\nPATCH: Bug fixes, backward compatible\n\nExamples:\n1.0.0 → 1.0.1 (patch: bug fix)\n1.0.1 → 1.1.0 (minor: new feature)\n1.1.0 → 2.0.0 (major: breaking change)\n```",
+      "zh-Hans": "```\nMAJOR.MINOR.PATCH\n\nMAJOR: 重大变更\nMINOR: 新功能，向后兼容\nPATCH: 错误修复，向后兼容\n\n示例：\n1.0.0 → 1.0.1 (补丁：错误修复)\n1.0.1 → 1.1.0 (次要：新功能)\n1.1.0 → 2.0.0 (主要：重大变更)\n```"
+    },
+    {
+      "en-US": "### Creating Releases",
+      "zh-Hans": "### 创建发布"
+    },
+    {
+      "en-US": "```bash\n# Create annotated tag\ngit tag -a v1.2.0 -m \"Release v1.2.0\n\nFeatures:\n- Add user authentication\n- Implement password reset\n\nFixes:\n- Resolve login redirect issue\n\nBreaking Changes:\n- None\"\n\n# Push tag to remote\ngit push origin v1.2.0\n\n# List tags\ngit tag -l\n\n# Delete tag\ngit tag -d v1.2.0\ngit push origin --delete v1.2.0\n```",
+      "zh-Hans": "```bash\n# Create annotated tag\ngit tag -a v1.2.0 -m \"Release v1.2.0\n\nFeatures:\n- Add user authentication\n- Implement password reset\n\nFixes:\n- Resolve login redirect issue\n\nBreaking Changes:\n- None\"\n\n# Push tag to remote\ngit push origin v1.2.0\n\n# List tags\ngit tag -l\n\n# Delete tag\ngit tag -d v1.2.0\ngit push origin --delete v1.2.0\n```"
+    },
+    {
+      "en-US": "### Changelog Generation",
+      "zh-Hans": "### 变更日志生成"
+    },
+    {
+      "en-US": "```bash\n# Generate changelog from commits\ngit log v1.1.0..v1.2.0 --oneline --no-merges\n\n# Or use conventional-changelog\nnpx conventional-changelog -i CHANGELOG.md -s\n```",
+      "zh-Hans": "```bash\n# Generate changelog from commits\ngit log v1.1.0..v1.2.0 --oneline --no-merges\n\n# Or use conventional-changelog\nnpx conventional-changelog -i CHANGELOG.md -s\n```"
+    },
+    {
+      "en-US": "## Git Configuration",
+      "zh-Hans": "## Git 配置"
+    },
+    {
+      "en-US": "### Essential Configs",
+      "zh-Hans": "### 基本配置"
+    },
+    {
+      "en-US": "```bash\n# User identity\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"your@email.com\"\n\n# Default branch name\ngit config --global init.defaultBranch main\n\n# Pull behavior (rebase instead of merge)\ngit config --global pull.rebase true\n\n# Push behavior (push current branch only)\ngit config --global push.default current\n\n# Auto-correct typos\ngit config --global help.autocorrect 1\n\n# Better diff algorithm\ngit config --global diff.algorithm histogram\n\n# Color output\ngit config --global color.ui auto\n```",
+      "zh-Hans": "```bash\n# User identity\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"your@email.com\"\n\n# Default branch name\ngit config --global init.defaultBranch main\n\n# Pull behavior (rebase instead of merge)\ngit config --global pull.rebase true\n\n# Push behavior (push current branch only)\ngit config --global push.default current\n\n# Auto-correct typos\ngit config --global help.autocorrect 1\n\n# Better diff algorithm\ngit config --global diff.algorithm histogram\n\n# Color output\ngit config --global color.ui auto\n```"
+    },
+    {
+      "en-US": "### Useful Aliases",
+      "zh-Hans": "### 有用的别名"
+    },
+    {
+      "en-US": "```bash\n# Add to ~/.gitconfig\n[alias]\n    co = checkout\n    br = branch\n    ci = commit\n    st = status\n    unstage = reset HEAD --\n    last = log -1 HEAD\n    visual = log --oneline --graph --all\n    amend = commit --amend --no-edit\n    wip = commit -m \"WIP\"\n    undo = reset --soft HEAD~1\n    contributors = shortlog -sn\n```",
+      "zh-Hans": "```bash\n# Add to ~/.gitconfig\n[alias]\n    co = checkout\n    br = branch\n    ci = commit\n    st = status\n    unstage = reset HEAD --\n    last = log -1 HEAD\n    visual = log --oneline --graph --all\n    amend = commit --amend --no-edit\n    wip = commit -m \"WIP\"\n    undo = reset --soft HEAD~1\n    contributors = shortlog -sn\n```"
+    },
+    {
+      "en-US": "### Gitignore Patterns",
+      "zh-Hans": "### Gitignore 模式"
+    },
+    {
+      "en-US": "```gitignore\n# Dependencies\nnode_modules/\nvendor/\n\n# Build outputs\ndist/\nbuild/\n*.o\n*.exe\n\n# Environment files\n.env\n.env.local\n.env.*.local\n\n# IDE\n.idea/\n.vscode/\n*.swp\n*.swo\n\n# OS files\n.DS_Store\nThumbs.db\n\n# Logs\n*.log\nlogs/\n\n# Test coverage\ncoverage/\n\n# Cache\n.cache/\n*.tsbuildinfo\n```",
+      "zh-Hans": "```gitignore\n# Dependencies\nnode_modules/\nvendor/\n\n# Build outputs\ndist/\nbuild/\n*.o\n*.exe\n\n# Environment files\n.env\n.env.local\n.env.*.local\n\n# IDE\n.idea/\n.vscode/\n*.swp\n*.swo\n\n# OS files\n.DS_Store\nThumbs.db\n\n# Logs\n*.log\nlogs/\n\n# Test coverage\ncoverage/\n\n# Cache\n.cache/\n*.tsbuildinfo\n```"
+    },
+    {
+      "en-US": "## Common Workflows",
+      "zh-Hans": "## 常见工作流"
+    },
+    {
+      "en-US": "### Starting a New Feature",
+      "zh-Hans": "### 开始新功能"
+    },
+    {
+      "en-US": "```bash\n# 1. Update main branch\ngit checkout main\ngit pull origin main\n\n# 2. Create feature branch\ngit checkout -b feature/user-auth\n\n# 3. Make changes and commit\ngit add .\ngit commit -m \"feat(auth): implement OAuth2 login\"\n\n# 4. Push to remote\ngit push -u origin feature/user-auth\n\n# 5. Create Pull Request on GitHub/GitLab\n```",
+      "zh-Hans": "```bash\n# 1. Update main branch\ngit checkout main\ngit pull origin main\n\n# 2. Create feature branch\ngit checkout -b feature/user-auth\n\n# 3. Make changes and commit\ngit add .\ngit commit -m \"feat(auth): implement OAuth2 login\"\n\n# 4. Push to remote\ngit push -u origin feature/user-auth\n\n# 5. Create Pull Request on GitHub/GitLab\n```"
+    },
+    {
+      "en-US": "### Updating a PR with New Changes",
+      "zh-Hans": "### 用新变更更新 PR"
+    },
+    {
+      "en-US": "```bash\n# 1. Make additional changes\ngit add .\ngit commit -m \"feat(auth): add error handling\"\n\n# 2. Push updates\ngit push origin feature/user-auth\n```",
+      "zh-Hans": "```bash\n# 1. Make additional changes\ngit add .\ngit commit -m \"feat(auth): add error handling\"\n\n# 2. Push updates\ngit push origin feature/user-auth\n```"
+    },
+    {
+      "en-US": "### Syncing Fork with Upstream",
+      "zh-Hans": "### 同步 Fork 与上游仓库"
+    },
+    {
+      "en-US": "```bash\n# 1. Add upstream remote (once)\ngit remote add upstream https://github.com/original/repo.git\n\n# 2. Fetch upstream\ngit fetch upstream\n\n# 3. Merge upstream/main into your main\ngit checkout main\ngit merge upstream/main\n\n# 4. Push to your fork\ngit push origin main\n```",
+      "zh-Hans": "```bash\n# 1. Add upstream remote (once)\ngit remote add upstream https://github.com/original/repo.git\n\n# 2. Fetch upstream\ngit fetch upstream\n\n# 3. Merge upstream/main into your main\ngit checkout main\ngit merge upstream/main\n\n# 4. Push to your fork\ngit push origin main\n```"
+    },
+    {
+      "en-US": "### Undoing Mistakes",
+      "zh-Hans": "### 撤销错误"
+    },
+    {
+      "en-US": "```bash\n# Undo last commit (keep changes)\ngit reset --soft HEAD~1\n\n# Undo last commit (discard changes)\ngit reset --hard HEAD~1\n\n# Undo last commit pushed to remote\ngit revert HEAD\ngit push origin main\n\n# Undo specific file changes\ngit checkout HEAD -- path/to/file\n\n# Fix last commit message\ngit commit --amend -m \"New message\"\n\n# Add forgotten file to last commit\ngit add forgotten-file\ngit commit --amend --no-edit\n```",
+      "zh-Hans": "```bash\n# Undo last commit (keep changes)\ngit reset --soft HEAD~1\n\n# Undo last commit (discard changes)\ngit reset --hard HEAD~1\n\n# Undo last commit pushed to remote\ngit revert HEAD\ngit push origin main\n\n# Undo specific file changes\ngit checkout HEAD -- path/to/file\n\n# Fix last commit message\ngit commit --amend -m \"New message\"\n\n# Add forgotten file to last commit\ngit add forgotten-file\ngit commit --amend --no-edit\n```"
+    },
+    {
+      "en-US": "## Git Hooks",
+      "zh-Hans": "## Git 钩子"
+    },
+    {
+      "en-US": "### Pre-Commit Hook",
+      "zh-Hans": "### 预提交钩子"
+    },
+    {
+      "en-US": "```bash\n#!/bin/bash\n# .git/hooks/pre-commit\n\n# Run linting\nnpm run lint || exit 1\n\n# Run tests\nnpm test || exit 1\n\n# Check for secrets\nif git diff --cached | grep -E '(password|api_key|secret)'; then\n    echo \"Possible secret detected. Commit aborted.\"\n    exit 1\nfi\n```",
+      "zh-Hans": "```bash\n#!/bin/bash\n# .git/hooks/pre-commit\n\n# Run linting\nnpm run lint || exit 1\n\n# Run tests\nnpm test || exit 1\n\n# Check for secrets\nif git diff --cached | grep -E '(password|api_key|secret)'; then\n    echo \"Possible secret detected. Commit aborted.\"\n    exit 1\nfi\n```"
+    },
+    {
+      "en-US": "### Pre-Push Hook",
+      "zh-Hans": "### 预推送钩子"
+    },
+    {
+      "en-US": "```bash\n#!/bin/bash\n# .git/hooks/pre-push\n\n# Run full test suite\nnpm run test:all || exit 1\n\n# Check for console.log statements\nif git diff origin/main | grep -E 'console\\.log'; then\n    echo \"Remove console.log statements before pushing.\"\n    exit 1\nfi\n```",
+      "zh-Hans": "```bash\n#!/bin/bash\n# .git/hooks/pre-push\n\n# Run full test suite\nnpm run test:all || exit 1\n\n# Check for console.log statements\nif git diff origin/main | grep -E 'console\\.log'; then\n    echo \"Remove console.log statements before pushing.\"\n    exit 1\nfi\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "```\n# BAD: Committing directly to main\ngit checkout main\ngit commit -m \"fix bug\"\n\n# GOOD: Use feature branches and PRs\n\n# BAD: Committing secrets\ngit add .env  # Contains API keys\n\n# GOOD: Add to .gitignore, use environment variables\n\n# BAD: Giant PRs (1000+ lines)\n# GOOD: Break into smaller, focused PRs\n\n# BAD: \"Update\" commit messages\ngit commit -m \"update\"\ngit commit -m \"fix\"\n\n# GOOD: Descriptive messages\ngit commit -m \"fix(auth): resolve redirect loop after login\"\n\n# BAD: Rewriting public history\ngit push --force origin main\n\n# GOOD: Use revert for public branches\ngit revert HEAD\n\n# BAD: Long-lived feature branches (weeks/months)\n# GOOD: Keep branches short (days), rebase frequently\n\n# BAD: Committing generated files\ngit add dist/\ngit add node_modules/\n\n# GOOD: Add to .gitignore\n```",
+      "zh-Hans": "```\n# BAD: 直接提交到 main 分支\ngit checkout main\ngit commit -m \"fix bug\"\n\n# GOOD: 使用功能分支和 PR\n\n# BAD: 提交密钥\ngit add .env  # 包含 API 密钥\n\n# GOOD: 添加到 .gitignore，使用环境变量\n\n# BAD: 巨型 PR（1000+ 行）\n# GOOD: 拆分为更小、专注的 PR\n\n# BAD: \"更新\" 类提交信息\ngit commit -m \"update\"\ngit commit -m \"fix\"\n\n# GOOD: 描述性信息\ngit commit -m \"fix(auth): 修复登录后的重定向循环\"\n\n# BAD: 重写公共历史\ngit push --force origin main\n\n# GOOD: 对公共分支使用 revert\ngit revert HEAD\n\n# BAD: 长期存在的功能分支（数周/数月）\n# GOOD: 保持分支短期（数天），频繁变基\n\n# BAD: 提交生成的文件\ngit add dist/\ngit add node_modules/\n\n# GOOD: 添加到 .gitignore\n```"
+    },
+    {
+      "en-US": "## Quick Reference",
+      "zh-Hans": "## 快速参考"
+    },
+    {
+      "en-US": "| Task | Command |\n|------|---------|\n| Create branch | `git checkout -b feature/name` |\n| Switch branch | `git checkout branch-name` |\n| Delete branch | `git branch -d branch-name` |\n| Merge branch | `git merge branch-name` |\n| Rebase branch | `git rebase main` |\n| View history | `git log --oneline --graph` |\n| View changes | `git diff` |\n| Stage changes | `git add .` or `git add -p` |\n| Commit | `git commit -m \"message\"` |\n| Push | `git push origin branch-name` |\n| Pull | `git pull origin branch-name` |\n| Stash | `git stash push -m \"message\"` |\n| Undo last commit | `git reset --soft HEAD~1` |\n| Revert commit | `git revert HEAD` |",
+      "zh-Hans": "| 任务 | 命令 |\n|------|---------|\n| 创建分支 | `git checkout -b feature/name` |\n| 切换分支 | `git checkout branch-name` |\n| 删除分支 | `git branch -d branch-name` |\n| 合并分支 | `git merge branch-name` |\n| 变基分支 | `git rebase main` |\n| 查看历史 | `git log --oneline --graph` |\n| 查看变更 | `git diff` |\n| 暂存变更 | `git add .` 或 `git add -p` |\n| 提交 | `git commit -m \"message\"` |\n| 推送 | `git push origin branch-name` |\n| 拉取 | `git pull origin branch-name` |\n| 储藏 | `git stash push -m \"message\"` |\n| 撤销上次提交 | `git reset --soft HEAD~1` |\n| 还原提交 | `git revert HEAD` |"
+    }
+  ]
+}

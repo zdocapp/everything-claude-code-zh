@@ -1,0 +1,166 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/videos.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: videos\ndescription: Embedding videos in Remotion - trimming, volume, speed, looping, pitch\nmetadata:\n  tags: video, media, trim, volume, speed, loop, pitch\n---",
+      "zh-Hans": "---\nname: videos\ndescription: 在Remotion中嵌入视频 - 修剪、音量、速度、循环、音高\nmetadata:\n  tags: video, media, trim, volume, speed, loop, pitch\n---"
+    },
+    {
+      "en-US": "# Using videos in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用视频"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "First, the @remotion/media package needs to be installed.\nIf it is not, use the following command:",
+      "zh-Hans": "首先，需要安装 @remotion/media 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/media # If project uses npm\nbunx remotion add @remotion/media # If project uses bun\nyarn remotion add @remotion/media # If project uses yarn\npnpm exec remotion add @remotion/media # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/media # If project uses npm\nbunx remotion add @remotion/media # If project uses bun\nyarn remotion add @remotion/media # If project uses yarn\npnpm exec remotion add @remotion/media # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "Use `<Video>` from `@remotion/media` to embed videos into your composition.",
+      "zh-Hans": "使用来自 `@remotion/media` 的 `<Video>` 将视频嵌入到你的合成中。"
+    },
+    {
+      "en-US": "```tsx\nimport { Video } from \"@remotion/media\";\nimport { staticFile } from \"remotion\";\n\nexport const MyComposition = () => {\n  return <Video src={staticFile(\"video.mp4\")} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport { Video } from \"@remotion/media\";\nimport { staticFile } from \"remotion\";\n\nexport const MyComposition = () => {\n  return <Video src={staticFile(\"video.mp4\")} />;\n};\n```"
+    },
+    {
+      "en-US": "Remote URLs are also supported:",
+      "zh-Hans": "也支持远程 URL："
+    },
+    {
+      "en-US": "```tsx\n<Video src=\"https://remotion.media/video.mp4\" />\n```",
+      "zh-Hans": "```tsx\n<Video src=\"https://remotion.media/video.mp4\" />\n```"
+    },
+    {
+      "en-US": "## Trimming",
+      "zh-Hans": "## 修剪"
+    },
+    {
+      "en-US": "Use `trimBefore` and `trimAfter` to remove portions of the video. Values are in seconds.",
+      "zh-Hans": "使用 `trimBefore` 和 `trimAfter` 来移除视频的部分片段。值以秒为单位。"
+    },
+    {
+      "en-US": "```tsx\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Video\n    src={staticFile(\"video.mp4\")}\n    trimBefore={2 * fps} // Skip the first 2 seconds\n    trimAfter={10 * fps} // End at the 10 second mark\n  />\n);\n```",
+      "zh-Hans": "```tsx\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Video\n    src={staticFile(\"video.mp4\")}\n    trimBefore={2 * fps} // Skip the first 2 seconds\n    trimAfter={10 * fps} // End at the 10 second mark\n  />\n);\n```"
+    },
+    {
+      "en-US": "## Delaying",
+      "zh-Hans": "## 延迟"
+    },
+    {
+      "en-US": "Wrap the video in a `<Sequence>` to delay when it appears:",
+      "zh-Hans": "将视频包裹在 `<Sequence>` 中以延迟其出现时间："
+    },
+    {
+      "en-US": "```tsx\nimport { Sequence, staticFile } from \"remotion\";\nimport { Video } from \"@remotion/media\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Sequence from={1 * fps}>\n    <Video src={staticFile(\"video.mp4\")} />\n  </Sequence>\n);\n```",
+      "zh-Hans": "```tsx\nimport { Sequence, staticFile } from \"remotion\";\nimport { Video } from \"@remotion/media\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Sequence from={1 * fps}>\n    <Video src={staticFile(\"video.mp4\")} />\n  </Sequence>\n);\n```"
+    },
+    {
+      "en-US": "The video will appear after 1 second.",
+      "zh-Hans": "视频将在 1 秒后出现。"
+    },
+    {
+      "en-US": "## Sizing and Position",
+      "zh-Hans": "## 尺寸和位置"
+    },
+    {
+      "en-US": "Use the `style` prop to control size and position:",
+      "zh-Hans": "使用 `style` 属性来控制尺寸和位置："
+    },
+    {
+      "en-US": "```tsx\n<Video\n  src={staticFile(\"video.mp4\")}\n  style={{\n    width: 500,\n    height: 300,\n    position: \"absolute\",\n    top: 100,\n    left: 50,\n    objectFit: \"cover\",\n  }}\n/>\n```",
+      "zh-Hans": "```tsx\n<Video\n  src={staticFile(\"video.mp4\")}\n  style={{\n    width: 500,\n    height: 300,\n    position: \"absolute\",\n    top: 100,\n    left: 50,\n    objectFit: \"cover\",\n  }}\n/>\n```"
+    },
+    {
+      "en-US": "## Volume",
+      "zh-Hans": "## 音量"
+    },
+    {
+      "en-US": "Set a static volume (0 to 1):",
+      "zh-Hans": "设置静态音量（0 到 1）："
+    },
+    {
+      "en-US": "```tsx\n<Video src={staticFile(\"video.mp4\")} volume={0.5} />\n```",
+      "zh-Hans": "```tsx\n<Video src={staticFile(\"video.mp4\")} volume={0.5} />\n```"
+    },
+    {
+      "en-US": "Or use a callback for dynamic volume based on the current frame:",
+      "zh-Hans": "或者使用回调函数根据当前帧动态调整音量："
+    },
+    {
+      "en-US": "```tsx\nimport { interpolate } from \"remotion\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Video\n    src={staticFile(\"video.mp4\")}\n    volume={(f) =>\n      interpolate(f, [0, 1 * fps], [0, 1], { extrapolateRight: \"clamp\" })\n    }\n  />\n);\n```",
+      "zh-Hans": "```tsx\nimport { interpolate } from \"remotion\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Video\n    src={staticFile(\"video.mp4\")}\n    volume={(f) =>\n      interpolate(f, [0, 1 * fps], [0, 1], { extrapolateRight: \"clamp\" })\n    }\n  />\n);\n```"
+    },
+    {
+      "en-US": "Use `muted` to silence the video entirely:",
+      "zh-Hans": "使用 `muted` 来完全静音视频："
+    },
+    {
+      "en-US": "```tsx\n<Video src={staticFile(\"video.mp4\")} muted />\n```",
+      "zh-Hans": "```tsx\n<Video src={staticFile(\"video.mp4\")} muted />\n```"
+    },
+    {
+      "en-US": "## Speed",
+      "zh-Hans": "## 速度"
+    },
+    {
+      "en-US": "Use `playbackRate` to change the playback speed:",
+      "zh-Hans": "使用 `playbackRate` 来改变播放速度："
+    },
+    {
+      "en-US": "```tsx\n<Video src={staticFile(\"video.mp4\")} playbackRate={2} /> {/* 2x speed */}\n<Video src={staticFile(\"video.mp4\")} playbackRate={0.5} /> {/* Half speed */}\n```",
+      "zh-Hans": "```tsx\n<Video src={staticFile(\"video.mp4\")} playbackRate={2} /> {/* 2x speed */}\n<Video src={staticFile(\"video.mp4\")} playbackRate={0.5} /> {/* Half speed */}\n```"
+    },
+    {
+      "en-US": "Reverse playback is not supported.",
+      "zh-Hans": "不支持反向播放。"
+    },
+    {
+      "en-US": "## Looping",
+      "zh-Hans": "## 循环"
+    },
+    {
+      "en-US": "Use `loop` to loop the video indefinitely:",
+      "zh-Hans": "使用 `loop` 来无限循环视频："
+    },
+    {
+      "en-US": "```tsx\n<Video src={staticFile(\"video.mp4\")} loop />\n```",
+      "zh-Hans": "```tsx\n<Video src={staticFile(\"video.mp4\")} loop />\n```"
+    },
+    {
+      "en-US": "Use `loopVolumeCurveBehavior` to control how the frame count behaves when looping:",
+      "zh-Hans": "使用 `loopVolumeCurveBehavior` 来控制循环时帧计数的行为："
+    },
+    {
+      "en-US": "- `\"repeat\"`: Frame count resets to 0 each loop (for `volume` callback)\n- `\"extend\"`: Frame count continues incrementing",
+      "zh-Hans": "* `\"repeat\"`：每次循环帧计数重置为 0（适用于 `volume` 回调）\n* `\"extend\"`：帧计数持续递增"
+    },
+    {
+      "en-US": "```tsx\n<Video\n  src={staticFile(\"video.mp4\")}\n  loop\n  loopVolumeCurveBehavior=\"extend\"\n  volume={(f) => interpolate(f, [0, 300], [1, 0])} // Fade out over multiple loops\n/>\n```",
+      "zh-Hans": "```tsx\n<Video\n  src={staticFile(\"video.mp4\")}\n  loop\n  loopVolumeCurveBehavior=\"extend\"\n  volume={(f) => interpolate(f, [0, 300], [1, 0])} // Fade out over multiple loops\n/>\n```"
+    },
+    {
+      "en-US": "## Pitch",
+      "zh-Hans": "## 音高"
+    },
+    {
+      "en-US": "Use `toneFrequency` to adjust the pitch without affecting speed. Values range from 0.01 to 2:",
+      "zh-Hans": "使用 `toneFrequency` 来调整音高而不影响速度。值范围从 0.01 到 2："
+    },
+    {
+      "en-US": "```tsx\n<Video\n  src={staticFile(\"video.mp4\")}\n  toneFrequency={1.5} // Higher pitch\n/>\n<Video\n  src={staticFile(\"video.mp4\")}\n  toneFrequency={0.8} // Lower pitch\n/>\n```",
+      "zh-Hans": "```tsx\n<Video\n  src={staticFile(\"video.mp4\")}\n  toneFrequency={1.5} // Higher pitch\n/>\n<Video\n  src={staticFile(\"video.mp4\")}\n  toneFrequency={0.8} // Lower pitch\n/>\n```"
+    },
+    {
+      "en-US": "Pitch shifting only works during server-side rendering, not in the Remotion Studio preview or in the `<Player />`.",
+      "zh-Hans": "音高变换仅在服务器端渲染时有效，在 Remotion Studio 预览或 `<Player />` 中无效。"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "sourceFile": "rules/php/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.lock\"\n  - \"**/composer.json\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.php\"\n  - \"**/composer.lock\"\n  - \"**/composer.json\"\n---"
+    },
+    {
+      "en-US": "# PHP Security",
+      "zh-Hans": "# PHP 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with PHP specific content.",
+      "zh-Hans": "> 本文档在 [common/security.md](../common/security.md) 的基础上，补充了 PHP 相关的内容。"
+    },
+    {
+      "en-US": "## Input and Output",
+      "zh-Hans": "## 输入与输出"
+    },
+    {
+      "en-US": "- Validate request input at the framework boundary (`FormRequest`, Symfony Validator, or explicit DTO validation).\n- Escape output in templates by default; treat raw HTML rendering as an exception that must be justified.\n- Never trust query params, cookies, headers, or uploaded file metadata without validation.",
+      "zh-Hans": "* 在框架边界验证请求输入（`FormRequest`、Symfony Validator 或显式 DTO 验证）。\n* 默认在模板中转义输出；将原始 HTML 渲染视为需要合理解释的例外情况。\n* 未经验证，切勿信任查询参数、Cookie、请求头或上传文件的元数据。"
+    },
+    {
+      "en-US": "## Database Safety",
+      "zh-Hans": "## 数据库安全"
+    },
+    {
+      "en-US": "- Use prepared statements (`PDO`, Doctrine, Eloquent query builder) for all dynamic queries.\n- Avoid string-building SQL in controllers/views.\n- Scope ORM mass-assignment carefully and whitelist writable fields.",
+      "zh-Hans": "* 对所有动态查询使用预处理语句（`PDO`、Doctrine、Eloquent 查询构建器）。\n* 避免在控制器/视图中拼接 SQL 字符串。\n* 谨慎限定 ORM 批量赋值范围，并明确列出可写入字段的白名单。"
+    },
+    {
+      "en-US": "## Secrets and Dependencies",
+      "zh-Hans": "## 密钥与依赖项"
+    },
+    {
+      "en-US": "- Load secrets from environment variables or a secret manager, never from committed config files.\n- Run `composer audit` in CI and review new package maintainer trust before adding dependencies.\n- Pin major versions deliberately and remove abandoned packages quickly.",
+      "zh-Hans": "* 从环境变量或密钥管理器中加载密钥，切勿从已提交的配置文件中读取。\n* 在 CI 中运行 `composer audit`，并在添加依赖项前审查新包维护者的可信度。\n* 审慎锁定主版本号，并及时移除已废弃的包。"
+    },
+    {
+      "en-US": "## Auth and Session Safety",
+      "zh-Hans": "## 认证与会话安全"
+    },
+    {
+      "en-US": "- Use `password_hash()` / `password_verify()` for password storage.\n- Regenerate session identifiers after authentication and privilege changes.\n- Enforce CSRF protection on state-changing web requests.",
+      "zh-Hans": "* 使用 `password_hash()` / `password_verify()` 存储密码。\n* 在身份验证和权限变更后重新生成会话标识符。\n* 对状态变更的 Web 请求强制实施 CSRF 保护。"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `laravel-security` for Laravel-specific security guidance.",
+      "zh-Hans": "有关 Laravel 特定安全指南，请参阅技能：`laravel-security`。"
+    }
+  ]
+}

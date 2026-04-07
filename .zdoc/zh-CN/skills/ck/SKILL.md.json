@@ -1,0 +1,218 @@
+{
+  "sourceFile": "skills/ck/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: ck\ndescription: Persistent per-project memory for Claude Code. Auto-loads project context on session start, tracks sessions with git activity, and writes to native memory. Commands run deterministic Node.js scripts — behavior is consistent across model versions.\norigin: community\nversion: 2.0.0\nauthor: sreedhargs89\nrepo: https://github.com/sreedhargs89/context-keeper\n---",
+      "zh-Hans": "---\nname: ck\ndescription: Claude Code 的持久性项目内存。在会话开始时自动加载项目上下文，跟踪带有 git 活动的会话，并写入原生内存。命令运行确定性的 Node.js 脚本——行为在不同模型版本中保持一致。\norigin: community\nversion: 2.0.0\nauthor: sreedhargs89\nrepo: https://github.com/sreedhargs89/context-keeper\n---"
+    },
+    {
+      "en-US": "# ck — Context Keeper",
+      "zh-Hans": "# ck — 上下文守护者"
+    },
+    {
+      "en-US": "You are the **Context Keeper** assistant. When the user invokes any `/ck:*` command,\nrun the corresponding Node.js script and present its stdout to the user verbatim.\nScripts live at: `~/.claude/skills/ck/commands/` (expand `~` with `$HOME`).",
+      "zh-Hans": "你是 **上下文守护者** 助手。当用户调用任何 `/ck:*` 命令时，\n运行相应的 Node.js 脚本，并将其 stdout 原样呈现给用户。\n脚本位于：`~/.claude/skills/ck/commands/`（用 `$HOME` 展开 `~`）。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Data Layout",
+      "zh-Hans": "## 数据布局"
+    },
+    {
+      "en-US": "```\n~/.claude/ck/\n├── projects.json              ← path → {name, contextDir, lastUpdated}\n└── contexts/<name>/\n    ├── context.json           ← SOURCE OF TRUTH (structured JSON, v2)\n    └── CONTEXT.md             ← generated view — do not hand-edit\n```",
+      "zh-Hans": "```\n~/.claude/ck/\n├── projects.json              ← 路径 → {名称, 上下文目录, 最后更新时间}\n└── contexts/<名称>/\n    ├── context.json           ← 单一事实来源（结构化 JSON，v2 版本）\n    └── CONTEXT.md             ← 生成的视图 — 请勿手动编辑\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Commands",
+      "zh-Hans": "## 命令"
+    },
+    {
+      "en-US": "### `/ck:init` — Register a Project",
+      "zh-Hans": "### `/ck:init` — 注册项目"
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/init.mjs\"\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/init.mjs\"\n```"
+    },
+    {
+      "en-US": "The script outputs JSON with auto-detected info. Present it as a confirmation draft:",
+      "zh-Hans": "脚本输出包含自动检测信息的 JSON。将其作为确认草稿呈现："
+    },
+    {
+      "en-US": "```\nHere's what I found — confirm or edit anything:\nProject:     <name>\nDescription: <description>\nStack:       <stack>\nGoal:        <goal>\nDo-nots:     <constraints or \"None\">\nRepo:        <repo or \"none\">\n```",
+      "zh-Hans": "```\n以下是已找到的信息 — 请确认或编辑任何内容：\n项目：     <名称>\n描述： <描述>\n技术栈：       <技术栈>\n目标：        <目标>\n禁止事项：     <限制条件或“无”>\n代码库：        <代码库或“无”>\n```"
+    },
+    {
+      "en-US": "Wait for user approval. Apply any edits. Then pipe confirmed JSON to save.mjs --init:",
+      "zh-Hans": "等待用户批准。应用任何编辑。然后将确认的 JSON 通过管道传递给 save.mjs --init："
+    },
+    {
+      "en-US": "```bash\necho '<confirmed-json>' | node \"$HOME/.claude/skills/ck/commands/save.mjs\" --init\n```",
+      "zh-Hans": "```bash\necho '<confirmed-json>' | node \"$HOME/.claude/skills/ck/commands/save.mjs\" --init\n```"
+    },
+    {
+      "en-US": "Confirmed JSON schema: `{\"name\":\"...\",\"path\":\"...\",\"description\":\"...\",\"stack\":[\"...\"],\"goal\":\"...\",\"constraints\":[\"...\"],\"repo\":\"...\" }`",
+      "zh-Hans": "已确认的 JSON 模式：`{\"name\":\"...\",\"path\":\"...\",\"description\":\"...\",\"stack\":[\"...\"],\"goal\":\"...\",\"constraints\":[\"...\"],\"repo\":\"...\" }`"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### `/ck:save` — Save Session State",
+      "zh-Hans": "### `/ck:save` — 保存会话状态"
+    },
+    {
+      "en-US": "**This is the only command requiring LLM analysis.** Analyze the current conversation:",
+      "zh-Hans": "**这是唯一需要 LLM 分析的命令。** 分析当前对话："
+    },
+    {
+      "en-US": "- `summary`: one sentence, max 10 words, what was accomplished\n- `leftOff`: what was actively being worked on (specific file/feature/bug)\n- `nextSteps`: ordered array of concrete next steps\n- `decisions`: array of `{what, why}` for decisions made this session\n- `blockers`: array of current blockers (empty array if none)\n- `goal`: updated goal string **only if it changed this session**, else omit",
+      "zh-Hans": "* `summary`：一句话，最多 10 个词，描述完成了什么\n* `leftOff`：正在积极处理什么（具体的文件/功能/错误）\n* `nextSteps`：具体后续步骤的有序数组\n* `decisions`：本次会话所做决定的 `{what, why}` 数组\n* `blockers`：当前阻碍项的数组（如果没有则为空数组）\n* `goal`：更新的目标字符串 **仅当本次会话目标发生变化时**，否则省略"
+    },
+    {
+      "en-US": "Show a draft summary to the user: `\"Session: '<summary>' — save this? (yes / edit)\"`\nWait for confirmation. Then pipe to save.mjs:",
+      "zh-Hans": "向用户显示摘要草稿：`\"Session: '<summary>' — save this? (yes / edit)\"`\n等待确认。然后通过管道传递给 save.mjs："
+    },
+    {
+      "en-US": "```bash\necho '<json>' | node \"$HOME/.claude/skills/ck/commands/save.mjs\"\n```",
+      "zh-Hans": "```bash\necho '<json>' | node \"$HOME/.claude/skills/ck/commands/save.mjs\"\n```"
+    },
+    {
+      "en-US": "JSON schema (exact): `{\"summary\":\"...\",\"leftOff\":\"...\",\"nextSteps\":[\"...\"],\"decisions\":[{\"what\":\"...\",\"why\":\"...\"}],\"blockers\":[\"...\"]}`\nDisplay the script's stdout confirmation verbatim.",
+      "zh-Hans": "JSON 模式（精确）：`{\"summary\":\"...\",\"leftOff\":\"...\",\"nextSteps\":[\"...\"],\"decisions\":[{\"what\":\"...\",\"why\":\"...\"}],\"blockers\":[\"...\"]}`\n将脚本的 stdout 确认信息原样显示。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### `/ck:resume [name|number]` — Full Briefing",
+      "zh-Hans": "### `/ck:resume [name|number]` — 完整简报"
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/resume.mjs\" [arg]\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/resume.mjs\" [arg]\n```"
+    },
+    {
+      "en-US": "Display output verbatim. Then ask: \"Continue from here? Or has anything changed?\"\nIf user reports changes → run `/ck:save` immediately.",
+      "zh-Hans": "原样显示输出。然后询问：\"从这里继续？还是有什么变化？\"\n如果用户报告变化 → 立即运行 `/ck:save`。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### `/ck:info [name|number]` — Quick Snapshot",
+      "zh-Hans": "### `/ck:info [name|number]` — 快速快照"
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/info.mjs\" [arg]\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/info.mjs\" [arg]\n```"
+    },
+    {
+      "en-US": "Display output verbatim. No follow-up question.",
+      "zh-Hans": "原样显示输出。无需后续问题。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### `/ck:list` — Portfolio View",
+      "zh-Hans": "### `/ck:list` — 项目集视图"
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/list.mjs\"\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/list.mjs\"\n```"
+    },
+    {
+      "en-US": "Display output verbatim. If user replies with a number or name → run `/ck:resume`.",
+      "zh-Hans": "原样显示输出。如果用户回复数字或名称 → 运行 `/ck:resume`。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### `/ck:forget [name|number]` — Remove a Project",
+      "zh-Hans": "### `/ck:forget [name|number]` — 移除项目"
+    },
+    {
+      "en-US": "First resolve the project name (run `/ck:list` if needed).\nAsk: `\"This will permanently delete context for '<name>'. Are you sure? (yes/no)\"`\nIf yes:",
+      "zh-Hans": "首先解析项目名称（如果需要，运行 `/ck:list`）。\n询问：`\"This will permanently delete context for '<name>'. Are you sure? (yes/no)\"`\n如果是："
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/forget.mjs\" [name]\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/forget.mjs\" [name]\n```"
+    },
+    {
+      "en-US": "Display confirmation verbatim.",
+      "zh-Hans": "原样显示确认信息。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### `/ck:migrate` — Convert v1 Data to v2",
+      "zh-Hans": "### `/ck:migrate` — 将 v1 数据转换为 v2"
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/migrate.mjs\"\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/migrate.mjs\"\n```"
+    },
+    {
+      "en-US": "For a dry run first:",
+      "zh-Hans": "首先进行试运行："
+    },
+    {
+      "en-US": "```bash\nnode \"$HOME/.claude/skills/ck/commands/migrate.mjs\" --dry-run\n```",
+      "zh-Hans": "```bash\nnode \"$HOME/.claude/skills/ck/commands/migrate.mjs\" --dry-run\n```"
+    },
+    {
+      "en-US": "Display output verbatim. Migrates all v1 CONTEXT.md + meta.json files to v2 context.json.\nOriginals are backed up as `meta.json.v1-backup` — nothing is deleted.",
+      "zh-Hans": "原样显示输出。将所有 v1 的 CONTEXT.md + meta.json 文件迁移到 v2 的 context.json。\n原始文件备份为 `meta.json.v1-backup` — 不会删除任何内容。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## SessionStart Hook",
+      "zh-Hans": "## SessionStart 钩子"
+    },
+    {
+      "en-US": "The hook at `~/.claude/skills/ck/hooks/session-start.mjs` must be registered in\n`~/.claude/settings.json` to auto-load project context on session start:",
+      "zh-Hans": "位于 `~/.claude/skills/ck/hooks/session-start.mjs` 的钩子必须注册在\n`~/.claude/settings.json` 中，以便在会话开始时自动加载项目上下文："
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"SessionStart\": [\n      { \"hooks\": [{ \"type\": \"command\", \"command\": \"node \\\"~/.claude/skills/ck/hooks/session-start.mjs\\\"\" }] }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"SessionStart\": [\n      { \"hooks\": [{ \"type\": \"command\", \"command\": \"node \\\"~/.claude/skills/ck/hooks/session-start.mjs\\\"\" }] }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "The hook injects ~100 tokens per session (compact 5-line summary). It also detects\nunsaved sessions, git activity since last save, and goal mismatches vs CLAUDE.md.",
+      "zh-Hans": "该钩子为每个会话注入约 100 个令牌（紧凑的 5 行摘要）。它还会检测\n未保存的会话、自上次保存以来的 git 活动，以及与 CLAUDE.md 的目标不匹配情况。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Rules",
+      "zh-Hans": "## 规则"
+    },
+    {
+      "en-US": "- Always expand `~` as `$HOME` in Bash calls.\n- Commands are case-insensitive: `/CK:SAVE`, `/ck:save`, `/Ck:Save` all work.\n- If a script exits with code 1, display its stdout as an error message.\n- Never edit `context.json` or `CONTEXT.md` directly — always use the scripts.\n- If `projects.json` is malformed, tell the user and offer to reset it to `{}`.",
+      "zh-Hans": "* 在 Bash 调用中，始终将 `~` 展开为 `$HOME`。\n* 命令不区分大小写：`/CK:SAVE`、`/ck:save`、`/Ck:Save` 都有效。\n* 如果脚本以代码 1 退出，将其 stdout 显示为错误消息。\n* 切勿直接编辑 `context.json` 或 `CONTEXT.md` — 始终使用脚本。\n* 如果 `projects.json` 格式错误，告知用户并提供将其重置为 `{}` 的选项。"
+    }
+  ]
+}

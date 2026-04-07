@@ -1,0 +1,46 @@
+{
+  "sourceFile": "commands/prompt-optimize.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the prompt-optimizer skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于提示优化技能的旧版斜杠入口垫片。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Prompt Optimize (Legacy Shim)",
+      "zh-Hans": "# 提示词优化（旧版适配器）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/prompt-optimize`. The maintained workflow lives in `skills/prompt-optimizer/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/prompt-optimize` 时使用此功能。当前维护的工作流程位于 `skills/prompt-optimizer/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范界面"
+    },
+    {
+      "en-US": "- Prefer the `prompt-optimizer` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 建议直接使用 `prompt-optimizer` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托处理"
+    },
+    {
+      "en-US": "Apply the `prompt-optimizer` skill.",
+      "zh-Hans": "应用 `prompt-optimizer` 技能。"
+    },
+    {
+      "en-US": "- Keep it advisory-only: optimize the prompt, do not execute the task.\n- Return the recommended ECC components plus a ready-to-run prompt.\n- If the user actually wants direct execution, say so and tell them to make a normal task request instead of staying inside the shim.",
+      "zh-Hans": "* 保持其为仅建议性质：优化提示词，不执行任务。\n* 返回推荐的 ECC 组件以及一个可立即运行的提示词。\n* 如果用户确实希望直接执行，请说明并告知他们应发起一个正常的任务请求，而不是停留在适配器内。"
+    }
+  ]
+}

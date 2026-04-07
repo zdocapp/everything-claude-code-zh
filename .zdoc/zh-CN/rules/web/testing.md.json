@@ -1,0 +1,78 @@
+{
+  "sourceFile": "rules/web/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with web-specific testing content.",
+      "zh-Hans": "> 此文件在 [common/testing.md](../common/testing.md) 的基础上扩展了特定于 Web 的测试内容。"
+    },
+    {
+      "en-US": "# Web Testing Rules",
+      "zh-Hans": "# Web 测试规则"
+    },
+    {
+      "en-US": "## Priority Order",
+      "zh-Hans": "## 优先级顺序"
+    },
+    {
+      "en-US": "### 1. Visual Regression",
+      "zh-Hans": "### 1. 视觉回归"
+    },
+    {
+      "en-US": "- Screenshot key breakpoints: 320, 768, 1024, 1440\n- Test hero sections, scrollytelling sections, and meaningful states\n- Use Playwright screenshots for visual-heavy work\n- If both themes exist, test both",
+      "zh-Hans": "* 截取关键断点的屏幕截图：320、768、1024、1440\n* 测试英雄区域、滚动叙事区域以及有意义的状态\n* 对于视觉密集型工作，使用 Playwright 截图\n* 如果存在两种主题，则测试两者"
+    },
+    {
+      "en-US": "### 2. Accessibility",
+      "zh-Hans": "### 2. 可访问性"
+    },
+    {
+      "en-US": "- Run automated accessibility checks\n- Test keyboard navigation\n- Verify reduced-motion behavior\n- Verify color contrast",
+      "zh-Hans": "* 运行自动化可访问性检查\n* 测试键盘导航\n* 验证减少动画效果的行为\n* 验证颜色对比度"
+    },
+    {
+      "en-US": "### 3. Performance",
+      "zh-Hans": "### 3. 性能"
+    },
+    {
+      "en-US": "- Run Lighthouse or equivalent against meaningful pages\n- Keep CWV targets from [performance.md](performance.md)",
+      "zh-Hans": "* 对重要页面运行 Lighthouse 或等效工具\n* 保持 [performance.md](performance.md) 中的 CWV 目标"
+    },
+    {
+      "en-US": "### 4. Cross-Browser",
+      "zh-Hans": "### 4. 跨浏览器"
+    },
+    {
+      "en-US": "- Minimum: Chrome, Firefox, Safari\n- Test scrolling, motion, and fallback behavior",
+      "zh-Hans": "* 最低要求：Chrome、Firefox、Safari\n* 测试滚动、动画和回退行为"
+    },
+    {
+      "en-US": "### 5. Responsive",
+      "zh-Hans": "### 5. 响应式"
+    },
+    {
+      "en-US": "- Test 320, 375, 768, 1024, 1440, 1920\n- Verify no overflow\n- Verify touch interactions",
+      "zh-Hans": "* 测试 320、375、768、1024、1440、1920\n* 验证无内容溢出\n* 验证触摸交互"
+    },
+    {
+      "en-US": "## E2E Shape",
+      "zh-Hans": "## E2E 结构"
+    },
+    {
+      "en-US": "```ts\nimport { test, expect } from '@playwright/test';\n\ntest('landing hero loads', async ({ page }) => {\n  await page.goto('/');\n  await expect(page.locator('h1')).toBeVisible();\n});\n```",
+      "zh-Hans": "```ts\nimport { test, expect } from '@playwright/test';\n\ntest('landing hero loads', async ({ page }) => {\n  await page.goto('/');\n  await expect(page.locator('h1')).toBeVisible();\n});\n```"
+    },
+    {
+      "en-US": "- Avoid flaky timeout-based assertions\n- Prefer deterministic waits",
+      "zh-Hans": "* 避免使用不稳定的基于超时的断言\n* 优先使用确定性等待"
+    },
+    {
+      "en-US": "## Unit Tests",
+      "zh-Hans": "## 单元测试"
+    },
+    {
+      "en-US": "- Test utilities, data transforms, and custom hooks\n- For highly visual components, visual regression often carries more signal than brittle markup assertions\n- Visual regression supplements coverage targets; it does not replace them",
+      "zh-Hans": "* 测试工具函数、数据转换和自定义钩子\n* 对于高度视觉化的组件，视觉回归通常比脆弱的标记断言提供更多信息\n* 视觉回归补充覆盖率目标；它不能替代它们"
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "sourceFile": "commands/prp-pr.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Create a GitHub PR from current branch with unpushed commits — discovers templates, analyzes changes, pushes\nargument-hint: [base-branch] (default: main)\n---",
+      "zh-Hans": "---\ndescription: Create a GitHub PR from current branch with unpushed commits — discovers templates, analyzes changes, pushes\nargument-hint: [base-branch] (default: main)\n---"
+    },
+    {
+      "en-US": "# Create Pull Request",
+      "zh-Hans": "# 创建拉取请求"
+    },
+    {
+      "en-US": "> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.",
+      "zh-Hans": "> 改编自 Wirasm 的 PRPs-agentic-eng。PRP 工作流系列的一部分。"
+    },
+    {
+      "en-US": "**Input**: `$ARGUMENTS` — optional, may contain a base branch name and/or flags (e.g., `--draft`).",
+      "zh-Hans": "**输入**：`$ARGUMENTS` — 可选，可能包含一个基础分支名称和/或标志（例如，`--draft`）。"
+    },
+    {
+      "en-US": "**Parse `$ARGUMENTS`**:",
+      "zh-Hans": "**解析 `$ARGUMENTS`**："
+    },
+    {
+      "en-US": "- Extract any recognized flags (`--draft`)\n- Treat remaining non-flag text as the base branch name\n- Default base branch to `main` if none specified",
+      "zh-Hans": "* 提取任何已识别的标志（`--draft`）\n* 将剩余的非标志文本视为基础分支名称\n* 如果未指定，默认基础分支为 `main`"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 1 — VALIDATE",
+      "zh-Hans": "## 阶段 1 — 验证"
+    },
+    {
+      "en-US": "Check preconditions:",
+      "zh-Hans": "检查先决条件："
+    },
+    {
+      "en-US": "```bash\ngit branch --show-current\ngit status --short\ngit log origin/<base>..HEAD --oneline\n```",
+      "zh-Hans": "```bash\ngit branch --show-current\ngit status --short\ngit log origin/<base>..HEAD --oneline\n```"
+    },
+    {
+      "en-US": "| Check | Condition | Action if Failed |\n|---|---|---|\n| Not on base branch | Current branch ≠ base | Stop: \"Switch to a feature branch first.\" |\n| Clean working directory | No uncommitted changes | Warn: \"You have uncommitted changes. Commit or stash first. Use `/prp-commit` to commit.\" |\n| Has commits ahead | `git log origin/<base>..HEAD` not empty | Stop: \"No commits ahead of `<base>`. Nothing to PR.\" |\n| No existing PR | `gh pr list --head <branch> --json number` is empty | Stop: \"PR already exists: #<number>. Use `gh pr view <number> --web` to open it.\" |",
+      "zh-Hans": "| 检查项 | 条件 | 失败时的操作 |\n|---|---|---|\n| 不在基础分支上 | 当前分支 ≠ 基础分支 | 停止：\"请先切换到功能分支。\" |\n| 工作目录干净 | 没有未提交的更改 | 警告：\"您有未提交的更改。请先提交或储藏。使用 `/prp-commit` 进行提交。\" |\n| 有领先的提交 | `git log origin/<base>..HEAD` 不为空 | 停止：\"没有领先于 `<base>` 的提交。无需创建 PR。\" |\n| 没有已存在的 PR | `gh pr list --head <branch> --json number` 为空 | 停止：\"PR 已存在：#<编号>。使用 `gh pr view <number> --web` 打开它。\" |"
+    },
+    {
+      "en-US": "If all checks pass, proceed.",
+      "zh-Hans": "如果所有检查通过，继续。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 2 — DISCOVER",
+      "zh-Hans": "## 阶段 2 — 发现"
+    },
+    {
+      "en-US": "### PR Template",
+      "zh-Hans": "### PR 模板"
+    },
+    {
+      "en-US": "Search for PR template in order:",
+      "zh-Hans": "按顺序搜索 PR 模板："
+    },
+    {
+      "en-US": "1. `.github/PULL_REQUEST_TEMPLATE/` directory — if exists, list files and let user choose (or use `default.md`)\n2. `.github/PULL_REQUEST_TEMPLATE.md`\n3. `.github/pull_request_template.md`\n4. `docs/pull_request_template.md`",
+      "zh-Hans": "1. `.github/PULL_REQUEST_TEMPLATE/` 目录 — 如果存在，列出文件并让用户选择（或使用 `default.md`）\n2. `.github/PULL_REQUEST_TEMPLATE.md`\n3. `.github/pull_request_template.md`\n4. `docs/pull_request_template.md`"
+    },
+    {
+      "en-US": "If found, read it and use its structure for the PR body.",
+      "zh-Hans": "如果找到，读取它并使用其结构作为 PR 正文。"
+    },
+    {
+      "en-US": "### Commit Analysis",
+      "zh-Hans": "### 提交分析"
+    },
+    {
+      "en-US": "```bash\ngit log origin/<base>..HEAD --format=\"%h %s\" --reverse\n```",
+      "zh-Hans": "```bash\ngit log origin/<base>..HEAD --format=\"%h %s\" --reverse\n```"
+    },
+    {
+      "en-US": "Analyze commits to determine:",
+      "zh-Hans": "分析提交以确定："
+    },
+    {
+      "en-US": "- **PR title**: Use conventional commit format with type prefix — `feat: ...`, `fix: ...`, etc.\n  - If multiple types, use the dominant one\n  - If single commit, use its message as-is\n- **Change summary**: Group commits by type/area",
+      "zh-Hans": "* **PR 标题**：使用带有类型前缀的约定式提交格式 — `feat: ...`、`fix: ...` 等。\n  * 如果存在多种类型，使用占主导地位的类型\n  * 如果是单个提交，直接使用其提交信息\n* **变更摘要**：按类型/领域对提交进行分组"
+    },
+    {
+      "en-US": "### File Analysis",
+      "zh-Hans": "### 文件分析"
+    },
+    {
+      "en-US": "```bash\ngit diff origin/<base>..HEAD --stat\ngit diff origin/<base>..HEAD --name-only\n```",
+      "zh-Hans": "```bash\ngit diff origin/<base>..HEAD --stat\ngit diff origin/<base>..HEAD --name-only\n```"
+    },
+    {
+      "en-US": "Categorize changed files: source, tests, docs, config, migrations.",
+      "zh-Hans": "对更改的文件进行分类：源代码、测试、文档、配置、迁移。"
+    },
+    {
+      "en-US": "### PRP Artifacts",
+      "zh-Hans": "### PRP 工件"
+    },
+    {
+      "en-US": "Check for related PRP artifacts:",
+      "zh-Hans": "检查相关的 PRP 工件："
+    },
+    {
+      "en-US": "- `.claude/PRPs/reports/` — Implementation reports\n- `.claude/PRPs/plans/` — Plans that were executed\n- `.claude/PRPs/prds/` — Related PRDs",
+      "zh-Hans": "* `.claude/PRPs/reports/` — 实施报告\n* `.claude/PRPs/plans/` — 已执行的计划\n* `.claude/PRPs/prds/` — 相关的 PRD"
+    },
+    {
+      "en-US": "Reference these in the PR body if they exist.",
+      "zh-Hans": "如果存在，在 PR 正文中引用这些内容。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 3 — PUSH",
+      "zh-Hans": "## 阶段 3 — 推送"
+    },
+    {
+      "en-US": "```bash\ngit push -u origin HEAD\n```",
+      "zh-Hans": "```bash\ngit push -u origin HEAD\n```"
+    },
+    {
+      "en-US": "If push fails due to divergence:",
+      "zh-Hans": "如果推送因分支偏离而失败："
+    },
+    {
+      "en-US": "```bash\ngit fetch origin\ngit rebase origin/<base>\ngit push -u origin HEAD\n```",
+      "zh-Hans": "```bash\ngit fetch origin\ngit rebase origin/<base>\ngit push -u origin HEAD\n```"
+    },
+    {
+      "en-US": "If rebase conflicts occur, stop and inform the user.",
+      "zh-Hans": "如果变基发生冲突，停止并通知用户。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 4 — CREATE",
+      "zh-Hans": "## 阶段 4 — 创建"
+    },
+    {
+      "en-US": "### With Template",
+      "zh-Hans": "### 使用模板"
+    },
+    {
+      "en-US": "If a PR template was found in Phase 2, fill in each section using the commit and file analysis. Preserve all template sections — leave sections as \"N/A\" if not applicable rather than removing them.",
+      "zh-Hans": "如果在阶段 2 找到了 PR 模板，则使用提交和文件分析来填充每个部分。保留所有模板部分 — 如果不适用，将部分留为 \"N/A\" 而不是删除它们。"
+    },
+    {
+      "en-US": "### Without Template",
+      "zh-Hans": "### 无模板"
+    },
+    {
+      "en-US": "Use this default format:",
+      "zh-Hans": "使用此默认格式："
+    },
+    {
+      "en-US": "```markdown\n## Summary\n\n<1-2 sentence description of what this PR does and why>\n\n## Changes\n\n<bulleted list of changes grouped by area>\n\n## Files Changed\n\n<table or list of changed files with change type: Added/Modified/Deleted>\n\n## Testing\n\n<description of how changes were tested, or \"Needs testing\">\n\n## Related Issues\n\n<linked issues with Closes/Fixes/Relates to #N, or \"None\">\n```",
+      "zh-Hans": "```markdown\n## 摘要\n\n<1-2 句话描述此 PR 的作用及原因>\n\n## 变更内容\n\n<bulleted list of changes grouped by area>\n\n## 变更文件\n\n<table or list of changed files with change type: Added/Modified/Deleted>\n\n## 测试\n\n<描述如何测试变更，或“需要测试”>\n\n## 相关问题\n\n<使用 Closes/Fixes/Relates to #N 链接相关问题，或“无”>\n```"
+    },
+    {
+      "en-US": "### Create the PR",
+      "zh-Hans": "### 创建 PR"
+    },
+    {
+      "en-US": "```bash\ngh pr create \\\n  --title \"<PR title>\" \\\n  --base <base-branch> \\\n  --body \"<PR body>\"\n  # Add --draft if the --draft flag was parsed from $ARGUMENTS\n```",
+      "zh-Hans": "```bash\ngh pr create \\\n  --title \"<PR title>\" \\\n  --base <base-branch> \\\n  --body \"<PR body>\"\n  # Add --draft if the --draft flag was parsed from $ARGUMENTS\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 5 — VERIFY",
+      "zh-Hans": "## 阶段 5 — 验证"
+    },
+    {
+      "en-US": "```bash\ngh pr view --json number,url,title,state,baseRefName,headRefName,additions,deletions,changedFiles\ngh pr checks --json name,status,conclusion 2>/dev/null || true\n```",
+      "zh-Hans": "```bash\ngh pr view --json number,url,title,state,baseRefName,headRefName,additions,deletions,changedFiles\ngh pr checks --json name,status,conclusion 2>/dev/null || true\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 6 — OUTPUT",
+      "zh-Hans": "## 阶段 6 — 输出"
+    },
+    {
+      "en-US": "Report to user:",
+      "zh-Hans": "向用户报告："
+    },
+    {
+      "en-US": "```\nPR #<number>: <title>\nURL: <url>\nBranch: <head> → <base>\nChanges: +<additions> -<deletions> across <changedFiles> files\n\nCI Checks: <status summary or \"pending\" or \"none configured\">\n\nArtifacts referenced:\n  - <any PRP reports/plans linked in PR body>\n\nNext steps:\n  - gh pr view <number> --web   → open in browser\n  - /code-review <number>       → review the PR\n  - gh pr merge <number>        → merge when ready\n```",
+      "zh-Hans": "```\nPR #<编号>: <标题>\nURL: <网址>\n分支: <head> → <base>\n变更: +<新增行数> -<删除行数>，涉及 <changedFiles> 个文件\n\nCI 检查: <状态摘要或\"pending\"或\"none configured\">\n\n引用的制品:\n  - <PR 正文中链接的任何 PRP 报告/计划>\n\n后续步骤:\n  - gh pr view <编号> --web   → 在浏览器中打开\n  - /code-review <编号>       → 审查该 PR\n  - gh pr merge <编号>        → 准备就绪后合并\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Edge Cases",
+      "zh-Hans": "## 边缘情况"
+    },
+    {
+      "en-US": "- **No `gh` CLI**: Stop with: \"GitHub CLI (`gh`) is required. Install: <https://cli.github.com/>\"\n- **Not authenticated**: Stop with: \"Run `gh auth login` first.\"\n- **Force push needed**: If remote has diverged and rebase was done, use `git push --force-with-lease` (never `--force`).\n- **Multiple PR templates**: If `.github/PULL_REQUEST_TEMPLATE/` has multiple files, list them and ask user to choose.\n- **Large PR (>20 files)**: Warn about PR size. Suggest splitting if changes are logically separable.",
+      "zh-Hans": "* **没有 `gh` CLI**：停止并提示：\"需要 GitHub CLI (`gh`)。安装：<https://cli.github.com/>\"\n* **未认证**：停止并提示：\"请先运行 `gh auth login`。\"\n* **需要强制推送**：如果远程分支已偏离且已执行变基，使用 `git push --force-with-lease`（切勿使用 `--force`）。\n* **多个 PR 模板**：如果 `.github/PULL_REQUEST_TEMPLATE/` 有多个文件，列出它们并让用户选择。\n* **大型 PR (>20 个文件)**：警告 PR 规模。如果变更在逻辑上可分离，建议拆分。"
+    }
+  ]
+}

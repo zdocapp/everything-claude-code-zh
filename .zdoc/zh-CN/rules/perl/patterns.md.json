@@ -1,0 +1,86 @@
+{
+  "sourceFile": "rules/perl/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---"
+    },
+    {
+      "en-US": "# Perl Patterns",
+      "zh-Hans": "# Perl 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Perl-specific content.",
+      "zh-Hans": "> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 Perl 特定的内容。"
+    },
+    {
+      "en-US": "## Repository Pattern",
+      "zh-Hans": "## 仓储模式"
+    },
+    {
+      "en-US": "Use **DBI** or **DBIx::Class** behind an interface:",
+      "zh-Hans": "在接口背后使用 **DBI** 或 **DBIx::Class**："
+    },
+    {
+      "en-US": "```perl\npackage MyApp::Repo::User;\nuse Moo;\n\nhas dbh => (is => 'ro', required => 1);\n\nsub find_by_id ($self, $id) {\n    my $sth = $self->dbh->prepare('SELECT * FROM users WHERE id = ?');\n    $sth->execute($id);\n    return $sth->fetchrow_hashref;\n}\n```",
+      "zh-Hans": "```perl\npackage MyApp::Repo::User;\nuse Moo;\n\nhas dbh => (is => 'ro', required => 1);\n\nsub find_by_id ($self, $id) {\n    my $sth = $self->dbh->prepare('SELECT * FROM users WHERE id = ?');\n    $sth->execute($id);\n    return $sth->fetchrow_hashref;\n}\n```"
+    },
+    {
+      "en-US": "## DTOs / Value Objects",
+      "zh-Hans": "## DTOs / 值对象"
+    },
+    {
+      "en-US": "Use **Moo** classes with **Types::Standard** (equivalent to Python dataclasses):",
+      "zh-Hans": "使用带有 **Types::Standard** 的 **Moo** 类（相当于 Python 的 dataclasses）："
+    },
+    {
+      "en-US": "```perl\npackage MyApp::DTO::User;\nuse Moo;\nuse Types::Standard qw(Str Int);\n\nhas name  => (is => 'ro', isa => Str, required => 1);\nhas email => (is => 'ro', isa => Str, required => 1);\nhas age   => (is => 'ro', isa => Int);\n```",
+      "zh-Hans": "```perl\npackage MyApp::DTO::User;\nuse Moo;\nuse Types::Standard qw(Str Int);\n\nhas name  => (is => 'ro', isa => Str, required => 1);\nhas email => (is => 'ro', isa => Str, required => 1);\nhas age   => (is => 'ro', isa => Int);\n```"
+    },
+    {
+      "en-US": "## Resource Management",
+      "zh-Hans": "## 资源管理"
+    },
+    {
+      "en-US": "- Always use **three-arg open** with `autodie`\n- Use **Path::Tiny** for file operations",
+      "zh-Hans": "* 始终使用 **三参数 open** 配合 `autodie`\n* 使用 **Path::Tiny** 进行文件操作"
+    },
+    {
+      "en-US": "```perl\nuse autodie;\nuse Path::Tiny;\n\nmy $content = path('config.json')->slurp_utf8;\n```",
+      "zh-Hans": "```perl\nuse autodie;\nuse Path::Tiny;\n\nmy $content = path('config.json')->slurp_utf8;\n```"
+    },
+    {
+      "en-US": "## Module Interface",
+      "zh-Hans": "## 模块接口"
+    },
+    {
+      "en-US": "Use `Exporter 'import'` with `@EXPORT_OK` — never `@EXPORT`:",
+      "zh-Hans": "使用 `Exporter 'import'` 配合 `@EXPORT_OK` — 绝不使用 `@EXPORT`："
+    },
+    {
+      "en-US": "```perl\nuse Exporter 'import';\nour @EXPORT_OK = qw(parse_config validate_input);\n```",
+      "zh-Hans": "```perl\nuse Exporter 'import';\nour @EXPORT_OK = qw(parse_config validate_input);\n```"
+    },
+    {
+      "en-US": "## Dependency Management",
+      "zh-Hans": "## 依赖管理"
+    },
+    {
+      "en-US": "Use **cpanfile** + **carton** for reproducible installs:",
+      "zh-Hans": "使用 **cpanfile** + **carton** 以实现可复现的安装："
+    },
+    {
+      "en-US": "```bash\ncarton install\ncarton exec prove -lr t/\n```",
+      "zh-Hans": "```bash\ncarton install\ncarton exec prove -lr t/\n```"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `perl-patterns` for comprehensive modern Perl patterns and idioms.",
+      "zh-Hans": "查看技能：`perl-patterns` 以获取全面的现代 Perl 模式和惯用法。"
+    }
+  ]
+}

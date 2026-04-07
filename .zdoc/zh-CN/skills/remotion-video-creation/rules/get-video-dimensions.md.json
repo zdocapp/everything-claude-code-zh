@@ -1,0 +1,54 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/get-video-dimensions.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: get-video-dimensions\ndescription: Getting the width and height of a video file with Mediabunny\nmetadata:\n  tags: dimensions, width, height, resolution, size, video\n---",
+      "zh-Hans": "---\nname: get-video-dimensions\ndescription: 使用Mediabunny获取视频文件的宽度和高度\nmetadata:\n  tags: dimensions, width, height, resolution, size, video\n---"
+    },
+    {
+      "en-US": "# Getting video dimensions with Mediabunny",
+      "zh-Hans": "# 使用 Mediabunny 获取视频尺寸"
+    },
+    {
+      "en-US": "Mediabunny can extract the width and height of a video file. It works in browser, Node.js, and Bun environments.",
+      "zh-Hans": "Mediabunny 可以提取视频文件的宽度和高度。它适用于浏览器、Node.js 和 Bun 环境。"
+    },
+    {
+      "en-US": "## Getting video dimensions",
+      "zh-Hans": "## 获取视频尺寸"
+    },
+    {
+      "en-US": "```tsx\nimport { Input, ALL_FORMATS, UrlSource } from \"mediabunny\";\n\nexport const getVideoDimensions = async (src: string) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src, {\n      getRetryDelay: () => null,\n    }),\n  });\n\n  const videoTrack = await input.getPrimaryVideoTrack();\n  if (!videoTrack) {\n    throw new Error(\"No video track found\");\n  }\n\n  return {\n    width: videoTrack.displayWidth,\n    height: videoTrack.displayHeight,\n  };\n};\n```",
+      "zh-Hans": "```tsx\nimport { Input, ALL_FORMATS, UrlSource } from \"mediabunny\";\n\nexport const getVideoDimensions = async (src: string) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src, {\n      getRetryDelay: () => null,\n    }),\n  });\n\n  const videoTrack = await input.getPrimaryVideoTrack();\n  if (!videoTrack) {\n    throw new Error(\"No video track found\");\n  }\n\n  return {\n    width: videoTrack.displayWidth,\n    height: videoTrack.displayHeight,\n  };\n};\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```tsx\nconst dimensions = await getVideoDimensions(\"https://remotion.media/video.mp4\");\nconsole.log(dimensions.width);  // e.g. 1920\nconsole.log(dimensions.height); // e.g. 1080\n```",
+      "zh-Hans": "```tsx\nconst dimensions = await getVideoDimensions(\"https://remotion.media/video.mp4\");\nconsole.log(dimensions.width);  // e.g. 1920\nconsole.log(dimensions.height); // e.g. 1080\n```"
+    },
+    {
+      "en-US": "## Using with local files",
+      "zh-Hans": "## 使用本地文件"
+    },
+    {
+      "en-US": "For local files, use `FileSource` instead of `UrlSource`:",
+      "zh-Hans": "对于本地文件，请使用 `FileSource` 而非 `UrlSource`："
+    },
+    {
+      "en-US": "```tsx\nimport { Input, ALL_FORMATS, FileSource } from \"mediabunny\";\n\nconst input = new Input({\n  formats: ALL_FORMATS,\n  source: new FileSource(file), // File object from input or drag-drop\n});\n\nconst videoTrack = await input.getPrimaryVideoTrack();\nconst width = videoTrack.displayWidth;\nconst height = videoTrack.displayHeight;\n```",
+      "zh-Hans": "```tsx\nimport { Input, ALL_FORMATS, FileSource } from \"mediabunny\";\n\nconst input = new Input({\n  formats: ALL_FORMATS,\n  source: new FileSource(file), // File object from input or drag-drop\n});\n\nconst videoTrack = await input.getPrimaryVideoTrack();\nconst width = videoTrack.displayWidth;\nconst height = videoTrack.displayHeight;\n```"
+    },
+    {
+      "en-US": "## Using with staticFile in Remotion",
+      "zh-Hans": "## 在 Remotion 中使用 staticFile"
+    },
+    {
+      "en-US": "```tsx\nimport { staticFile } from \"remotion\";\n\nconst dimensions = await getVideoDimensions(staticFile(\"video.mp4\"));\n```",
+      "zh-Hans": "```tsx\nimport { staticFile } from \"remotion\";\n\nconst dimensions = await getVideoDimensions(staticFile(\"video.mp4\"));\n```"
+    }
+  ]
+}

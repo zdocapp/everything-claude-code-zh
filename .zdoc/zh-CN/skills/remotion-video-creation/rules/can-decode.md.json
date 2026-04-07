@@ -1,0 +1,50 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/can-decode.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: can-decode\ndescription: Check if a video can be decoded by the browser using Mediabunny\nmetadata:\n  tags: decode, validation, video, audio, compatibility, browser\n---",
+      "zh-Hans": "---\nname: can-decode\ndescription: 检查浏览器是否可以使用Mediabunny解码视频\nmetadata:\n  tags: decode, validation, video, audio, compatibility, browser\n---"
+    },
+    {
+      "en-US": "# Checking if a video can be decoded",
+      "zh-Hans": "# 检查视频是否可解码"
+    },
+    {
+      "en-US": "Use Mediabunny to check if a video can be decoded by the browser before attempting to play it.",
+      "zh-Hans": "使用 Mediabunny 在尝试播放视频前，检查浏览器是否能解码该视频。"
+    },
+    {
+      "en-US": "## The `canDecode()` function",
+      "zh-Hans": "## `canDecode()` 函数"
+    },
+    {
+      "en-US": "This function can be copy-pasted into any project.",
+      "zh-Hans": "此函数可复制粘贴到任何项目中。"
+    },
+    {
+      "en-US": "```tsx\nimport { Input, ALL_FORMATS, UrlSource } from \"mediabunny\";\n\nexport const canDecode = async (src: string) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src, {\n      getRetryDelay: () => null,\n    }),\n  });\n\n  try {\n    await input.getFormat();\n  } catch {\n    return false;\n  }\n\n  const videoTrack = await input.getPrimaryVideoTrack();\n  if (videoTrack && !(await videoTrack.canDecode())) {\n    return false;\n  }\n\n  const audioTrack = await input.getPrimaryAudioTrack();\n  if (audioTrack && !(await audioTrack.canDecode())) {\n    return false;\n  }\n\n  return true;\n};\n```",
+      "zh-Hans": "```tsx\nimport { Input, ALL_FORMATS, UrlSource } from \"mediabunny\";\n\nexport const canDecode = async (src: string) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src, {\n      getRetryDelay: () => null,\n    }),\n  });\n\n  try {\n    await input.getFormat();\n  } catch {\n    return false;\n  }\n\n  const videoTrack = await input.getPrimaryVideoTrack();\n  if (videoTrack && !(await videoTrack.canDecode())) {\n    return false;\n  }\n\n  const audioTrack = await input.getPrimaryAudioTrack();\n  if (audioTrack && !(await audioTrack.canDecode())) {\n    return false;\n  }\n\n  return true;\n};\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "```tsx\nconst src = \"https://remotion.media/video.mp4\";\nconst isDecodable = await canDecode(src);\n\nif (isDecodable) {\n  console.log(\"Video can be decoded\");\n} else {\n  console.log(\"Video cannot be decoded by this browser\");\n}\n```",
+      "zh-Hans": "```tsx\nconst src = \"https://remotion.media/video.mp4\";\nconst isDecodable = await canDecode(src);\n\nif (isDecodable) {\n  console.log(\"Video can be decoded\");\n} else {\n  console.log(\"Video cannot be decoded by this browser\");\n}\n```"
+    },
+    {
+      "en-US": "## Using with Blob",
+      "zh-Hans": "## 与 Blob 一起使用"
+    },
+    {
+      "en-US": "For file uploads or drag-and-drop, use `BlobSource`:",
+      "zh-Hans": "对于文件上传或拖放操作，使用 `BlobSource`："
+    },
+    {
+      "en-US": "```tsx\nimport { Input, ALL_FORMATS, BlobSource } from \"mediabunny\";\n\nexport const canDecodeBlob = async (blob: Blob) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new BlobSource(blob),\n  });\n\n  // Same validation logic as above\n};\n```",
+      "zh-Hans": "```tsx\nimport { Input, ALL_FORMATS, BlobSource } from \"mediabunny\";\n\nexport const canDecodeBlob = async (blob: Blob) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new BlobSource(blob),\n  });\n\n  // Same validation logic as above\n};\n```"
+    }
+  ]
+}

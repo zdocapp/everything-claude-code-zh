@@ -1,0 +1,302 @@
+{
+  "sourceFile": "skills/ui-demo/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: ui-demo\ndescription: Record polished UI demo videos using Playwright. Use when the user asks to create a demo, walkthrough, screen recording, or tutorial video of a web application. Produces WebM videos with visible cursor, natural pacing, and professional feel.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: ui-demo\ndescription: 使用Playwright录制精美的UI演示视频。当用户要求创建Web应用程序的演示、演练、屏幕录制或教程视频时使用。生成WebM格式的视频，包含可见光标、自然节奏和专业感。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# UI Demo Video Recorder",
+      "zh-Hans": "# UI 演示视频录制器"
+    },
+    {
+      "en-US": "Record polished demo videos of web applications using Playwright's video recording with an injected cursor overlay, natural pacing, and storytelling flow.",
+      "zh-Hans": "使用 Playwright 的视频录制功能，结合注入的光标覆盖层、自然的节奏和叙事流程，录制精美的 Web 应用程序演示视频。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- User asks for a \"demo video\", \"screen recording\", \"walkthrough\", or \"tutorial\"\n- User wants to showcase a feature or workflow visually\n- User needs a video for documentation, onboarding, or stakeholder presentation",
+      "zh-Hans": "* 用户要求“演示视频”、“屏幕录制”、“操作演示”或“教程”\n* 用户希望直观地展示某个功能或工作流程\n* 用户需要用于文档、入职培训或向利益相关者展示的视频"
+    },
+    {
+      "en-US": "## Three-Phase Process",
+      "zh-Hans": "## 三阶段流程"
+    },
+    {
+      "en-US": "Every demo goes through three phases: **Discover -> Rehearse -> Record**. Never skip straight to recording.",
+      "zh-Hans": "每个演示都需经过三个阶段：**探索 -> 排练 -> 录制**。切勿跳过阶段直接录制。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 1: Discover",
+      "zh-Hans": "## 阶段 1：探索"
+    },
+    {
+      "en-US": "Before writing any script, explore the target pages to understand what is actually there.",
+      "zh-Hans": "在编写任何脚本之前，先浏览目标页面以了解实际内容。"
+    },
+    {
+      "en-US": "### Why",
+      "zh-Hans": "### 原因"
+    },
+    {
+      "en-US": "You cannot script what you have not seen. Fields may be `<input>` not `<textarea>`, dropdowns may be custom components not `<select>`, and comment boxes may support `@mentions` or `#tags`. Assumptions break recordings silently.",
+      "zh-Hans": "你无法为未曾见过的东西编写脚本。字段可能是 `<input>` 而非 `<textarea>`，下拉框可能是自定义组件而非 `<select>`，评论框可能支持 `@mentions` 或 `#tags`。错误的假设会导致录制无声地失败。"
+    },
+    {
+      "en-US": "### How",
+      "zh-Hans": "### 方法"
+    },
+    {
+      "en-US": "Navigate to each page in the flow and dump its interactive elements:",
+      "zh-Hans": "导航到流程中的每个页面，并转储其交互元素："
+    },
+    {
+      "en-US": "```javascript\n// Run this for each page in the flow BEFORE writing the demo script\nconst fields = await page.evaluate(() => {\n  const els = [];\n  document.querySelectorAll('input, select, textarea, button, [contenteditable]').forEach(el => {\n    if (el.offsetParent !== null) {\n      els.push({\n        tag: el.tagName,\n        type: el.type || '',\n        name: el.name || '',\n        placeholder: el.placeholder || '',\n        text: el.textContent?.trim().substring(0, 40) || '',\n        contentEditable: el.contentEditable === 'true',\n        role: el.getAttribute('role') || '',\n      });\n    }\n  });\n  return els;\n});\nconsole.log(JSON.stringify(fields, null, 2));\n```",
+      "zh-Hans": "```javascript\n// Run this for each page in the flow BEFORE writing the demo script\nconst fields = await page.evaluate(() => {\n  const els = [];\n  document.querySelectorAll('input, select, textarea, button, [contenteditable]').forEach(el => {\n    if (el.offsetParent !== null) {\n      els.push({\n        tag: el.tagName,\n        type: el.type || '',\n        name: el.name || '',\n        placeholder: el.placeholder || '',\n        text: el.textContent?.trim().substring(0, 40) || '',\n        contentEditable: el.contentEditable === 'true',\n        role: el.getAttribute('role') || '',\n      });\n    }\n  });\n  return els;\n});\nconsole.log(JSON.stringify(fields, null, 2));\n```"
+    },
+    {
+      "en-US": "### What to look for",
+      "zh-Hans": "### 需要关注的内容"
+    },
+    {
+      "en-US": "- **Form fields**: Are they `<select>`, `<input>`, custom dropdowns, or comboboxes?\n- **Select options**: Dump option values AND text. Placeholders often have `value=\"0\"` or `value=\"\"` which looks non-empty. Use `Array.from(el.options).map(o => ({ value: o.value, text: o.text }))`. Skip options where text includes \"Select\" or value is `\"0\"`.\n- **Rich text**: Does the comment box support `@mentions`, `#tags`, markdown, or emoji? Check placeholder text.\n- **Required fields**: Which fields block form submission? Check `required`, `*` in labels, and try submitting empty to see validation errors.\n- **Dynamic content**: Do fields appear after other fields are filled?\n- **Button labels**: Exact text such as `\"Submit\"`, `\"Submit Request\"`, or `\"Send\"`.\n- **Table column headers**: For table-driven modals, map each `input[type=\"number\"]` to its column header instead of assuming all numeric inputs mean the same thing.",
+      "zh-Hans": "* **表单字段**：它们是 `<select>`、`<input>`、自定义下拉框还是组合框？\n* **选择选项**：转储选项值和文本。占位符通常带有 `value=\"0\"` 或 `value=\"\"`，看起来非空。使用 `Array.from(el.options).map(o => ({ value: o.value, text: o.text }))`。跳过文本包含“Select”或值为 `\"0\"` 的选项。\n* **富文本**：评论框是否支持 `@mentions`、`#tags`、Markdown 或表情符号？检查占位符文本。\n* **必填字段**：哪些字段会阻止表单提交？检查标签中的 `required`、`*`，并尝试提交空表单以查看验证错误。\n* **动态内容**：是否在其他字段填写后出现新字段？\n* **按钮标签**：确切的文本，例如 `\"Submit\"`、`\"Submit Request\"` 或 `\"Send\"`。\n* **表格列标题**：对于基于表格的模态框，将每个 `input[type=\"number\"]` 映射到其列标题，而不是假设所有数字输入都表示相同的内容。"
+    },
+    {
+      "en-US": "### Output",
+      "zh-Hans": "### 输出"
+    },
+    {
+      "en-US": "A field map for each page, used to write correct selectors in the script. Example:",
+      "zh-Hans": "每个页面的字段映射，用于在脚本中编写正确的选择器。示例："
+    },
+    {
+      "en-US": "```text\n/purchase-requests/new:\n  - Budget Code: <select> (first select on page, 4 options)\n  - Desired Delivery: <input type=\"date\">\n  - Context: <textarea> (not input)\n  - BOM table: inline-editable cells with span.cursor-pointer -> input pattern\n  - Submit: <button> text=\"Submit\"\n\n/purchase-requests/N (detail):\n  - Comment: <input placeholder=\"Type a message...\"> supports @user and #PR tags\n  - Send: <button> text=\"Send\" (disabled until input has content)\n```",
+      "zh-Hans": "```text\n/purchase-requests/new:\n  - 预算代码: <select> (页面首个选择框，4个选项)\n  - 期望交付日期: <input type=\"date\">\n  - 背景说明: <textarea> (非输入框)\n  - BOM表格: 内联可编辑单元格，采用 span.cursor-pointer -> input 模式\n  - 提交: <button> text=\"提交\"\n\n/purchase-requests/N (详情页):\n  - 评论: <input placeholder=\"输入消息...\"> 支持 @用户 和 #PR 标签\n  - 发送: <button> text=\"发送\" (输入框有内容前禁用)\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 2: Rehearse",
+      "zh-Hans": "## 阶段 2：排练"
+    },
+    {
+      "en-US": "Run through all steps without recording. Verify every selector resolves.",
+      "zh-Hans": "在不录制的情况下运行所有步骤。验证每个选择器都能正确解析。"
+    },
+    {
+      "en-US": "### Why",
+      "zh-Hans": "### 原因"
+    },
+    {
+      "en-US": "Silent selector failures are the main reason demo recordings break. Rehearsal catches them before you waste a recording.",
+      "zh-Hans": "选择器无声失败是演示录制失败的主要原因。排练可以在浪费录制时间之前发现这些问题。"
+    },
+    {
+      "en-US": "### How",
+      "zh-Hans": "### 方法"
+    },
+    {
+      "en-US": "Use `ensureVisible`, a wrapper that logs and fails loudly:",
+      "zh-Hans": "使用 `ensureVisible`，这是一个会记录日志并大声报错的包装器："
+    },
+    {
+      "en-US": "```javascript\nasync function ensureVisible(page, locator, label) {\n  const el = typeof locator === 'string' ? page.locator(locator).first() : locator;\n  const visible = await el.isVisible().catch(() => false);\n  if (!visible) {\n    const msg = `REHEARSAL FAIL: \"${label}\" not found - selector: ${typeof locator === 'string' ? locator : '(locator object)'}`;\n    console.error(msg);\n    const found = await page.evaluate(() => {\n      return Array.from(document.querySelectorAll('button, input, select, textarea, a'))\n        .filter(el => el.offsetParent !== null)\n        .map(el => `${el.tagName}[${el.type || ''}] \"${el.textContent?.trim().substring(0, 30)}\"`)\n        .join('\\n  ');\n    });\n    console.error('  Visible elements:\\n  ' + found);\n    return false;\n  }\n  console.log(`REHEARSAL OK: \"${label}\"`);\n  return true;\n}\n```",
+      "zh-Hans": "```javascript\nasync function ensureVisible(page, locator, label) {\n  const el = typeof locator === 'string' ? page.locator(locator).first() : locator;\n  const visible = await el.isVisible().catch(() => false);\n  if (!visible) {\n    const msg = `REHEARSAL FAIL: \"${label}\" not found - selector: ${typeof locator === 'string' ? locator : '(locator object)'}`;\n    console.error(msg);\n    const found = await page.evaluate(() => {\n      return Array.from(document.querySelectorAll('button, input, select, textarea, a'))\n        .filter(el => el.offsetParent !== null)\n        .map(el => `${el.tagName}[${el.type || ''}] \"${el.textContent?.trim().substring(0, 30)}\"`)\n        .join('\\n  ');\n    });\n    console.error('  Visible elements:\\n  ' + found);\n    return false;\n  }\n  console.log(`REHEARSAL OK: \"${label}\"`);\n  return true;\n}\n```"
+    },
+    {
+      "en-US": "### Rehearsal script structure",
+      "zh-Hans": "### 排练脚本结构"
+    },
+    {
+      "en-US": "```javascript\nconst steps = [\n  { label: 'Login email field', selector: '#email' },\n  { label: 'Login submit', selector: 'button[type=\"submit\"]' },\n  { label: 'New Request button', selector: 'button:has-text(\"New Request\")' },\n  { label: 'Budget Code select', selector: 'select' },\n  { label: 'Delivery date', selector: 'input[type=\"date\"]:visible' },\n  { label: 'Description field', selector: 'textarea:visible' },\n  { label: 'Add Item button', selector: 'button:has-text(\"Add Item\")' },\n  { label: 'Submit button', selector: 'button:has-text(\"Submit\")' },\n];\n\nlet allOk = true;\nfor (const step of steps) {\n  if (!await ensureVisible(page, step.selector, step.label)) {\n    allOk = false;\n  }\n}\nif (!allOk) {\n  console.error('REHEARSAL FAILED - fix selectors before recording');\n  process.exit(1);\n}\nconsole.log('REHEARSAL PASSED - all selectors verified');\n```",
+      "zh-Hans": "```javascript\nconst steps = [\n  { label: 'Login email field', selector: '#email' },\n  { label: 'Login submit', selector: 'button[type=\"submit\"]' },\n  { label: 'New Request button', selector: 'button:has-text(\"New Request\")' },\n  { label: 'Budget Code select', selector: 'select' },\n  { label: 'Delivery date', selector: 'input[type=\"date\"]:visible' },\n  { label: 'Description field', selector: 'textarea:visible' },\n  { label: 'Add Item button', selector: 'button:has-text(\"Add Item\")' },\n  { label: 'Submit button', selector: 'button:has-text(\"Submit\")' },\n];\n\nlet allOk = true;\nfor (const step of steps) {\n  if (!await ensureVisible(page, step.selector, step.label)) {\n    allOk = false;\n  }\n}\nif (!allOk) {\n  console.error('REHEARSAL FAILED - fix selectors before recording');\n  process.exit(1);\n}\nconsole.log('REHEARSAL PASSED - all selectors verified');\n```"
+    },
+    {
+      "en-US": "### When rehearsal fails",
+      "zh-Hans": "### 当排练失败时"
+    },
+    {
+      "en-US": "1. Read the visible-element dump.\n2. Find the correct selector.\n3. Update the script.\n4. Re-run rehearsal.\n5. Only proceed when every selector passes.",
+      "zh-Hans": "1. 阅读可见元素转储。\n2. 找到正确的选择器。\n3. 更新脚本。\n4. 重新运行排练。\n5. 只有当每个选择器都通过时，才继续下一步。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 3: Record",
+      "zh-Hans": "## 阶段 3：录制"
+    },
+    {
+      "en-US": "Only after discovery and rehearsal pass should you create the recording.",
+      "zh-Hans": "只有在探索和排练都通过后，才能开始创建录制。"
+    },
+    {
+      "en-US": "### Recording Principles",
+      "zh-Hans": "### 录制原则"
+    },
+    {
+      "en-US": "#### 1. Storytelling Flow",
+      "zh-Hans": "#### 1. 叙事流程"
+    },
+    {
+      "en-US": "Plan the video as a story. Follow user-specified order, or use this default:",
+      "zh-Hans": "将视频规划成一个故事。遵循用户指定的顺序，或使用以下默认流程："
+    },
+    {
+      "en-US": "- **Entry**: Login or navigate to the starting point\n- **Context**: Pan the surroundings so viewers orient themselves\n- **Action**: Perform the main workflow steps\n- **Variation**: Show a secondary feature such as settings, theme, or localization\n- **Result**: Show the outcome, confirmation, or new state",
+      "zh-Hans": "* **入口**：登录或导航到起点\n* **上下文**：平移周围环境，让观众了解所处位置\n* **动作**：执行主要工作流程步骤\n* **变化**：展示次要功能，如设置、主题或本地化\n* **结果**：展示结果、确认信息或新状态"
+    },
+    {
+      "en-US": "#### 2. Pacing",
+      "zh-Hans": "#### 2. 节奏"
+    },
+    {
+      "en-US": "- After login: `4s`\n- After navigation: `3s`\n- After clicking a button: `2s`\n- Between major steps: `1.5-2s`\n- After the final action: `3s`\n- Typing delay: `25-40ms` per character",
+      "zh-Hans": "* 登录后：`4s`\n* 导航后：`3s`\n* 点击按钮后：`2s`\n* 主要步骤之间：`1.5-2s`\n* 最终操作后：`3s`\n* 输入延迟：每个字符 `25-40ms`"
+    },
+    {
+      "en-US": "#### 3. Cursor Overlay",
+      "zh-Hans": "#### 3. 光标覆盖层"
+    },
+    {
+      "en-US": "Inject an SVG arrow cursor that follows mouse movements:",
+      "zh-Hans": "注入一个跟随鼠标移动的 SVG 箭头光标："
+    },
+    {
+      "en-US": "```javascript\nasync function injectCursor(page) {\n  await page.evaluate(() => {\n    if (document.getElementById('demo-cursor')) return;\n    const cursor = document.createElement('div');\n    cursor.id = 'demo-cursor';\n    cursor.innerHTML = `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M5 3L19 12L12 13L9 20L5 3Z\" fill=\"white\" stroke=\"black\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/>\n    </svg>`;\n    cursor.style.cssText = `\n      position: fixed; z-index: 999999; pointer-events: none;\n      width: 24px; height: 24px;\n      transition: left 0.1s, top 0.1s;\n      filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));\n    `;\n    cursor.style.left = '0px';\n    cursor.style.top = '0px';\n    document.body.appendChild(cursor);\n    document.addEventListener('mousemove', (e) => {\n      cursor.style.left = e.clientX + 'px';\n      cursor.style.top = e.clientY + 'px';\n    });\n  });\n}\n```",
+      "zh-Hans": "```javascript\nasync function injectCursor(page) {\n  await page.evaluate(() => {\n    if (document.getElementById('demo-cursor')) return;\n    const cursor = document.createElement('div');\n    cursor.id = 'demo-cursor';\n    cursor.innerHTML = `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M5 3L19 12L12 13L9 20L5 3Z\" fill=\"white\" stroke=\"black\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/>\n    </svg>`;\n    cursor.style.cssText = `\n      position: fixed; z-index: 999999; pointer-events: none;\n      width: 24px; height: 24px;\n      transition: left 0.1s, top 0.1s;\n      filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));\n    `;\n    cursor.style.left = '0px';\n    cursor.style.top = '0px';\n    document.body.appendChild(cursor);\n    document.addEventListener('mousemove', (e) => {\n      cursor.style.left = e.clientX + 'px';\n      cursor.style.top = e.clientY + 'px';\n    });\n  });\n}\n```"
+    },
+    {
+      "en-US": "Call `injectCursor(page)` after every page navigation because the overlay is destroyed on navigate.",
+      "zh-Hans": "每次页面导航后调用 `injectCursor(page)`，因为覆盖层在导航时会被销毁。"
+    },
+    {
+      "en-US": "#### 4. Mouse Movement",
+      "zh-Hans": "#### 4. 鼠标移动"
+    },
+    {
+      "en-US": "Never teleport the cursor. Move to the target before clicking:",
+      "zh-Hans": "切勿让光标瞬间移动。在点击前先移动到目标位置："
+    },
+    {
+      "en-US": "```javascript\nasync function moveAndClick(page, locator, label, opts = {}) {\n  const { postClickDelay = 800, ...clickOpts } = opts;\n  const el = typeof locator === 'string' ? page.locator(locator).first() : locator;\n  const visible = await el.isVisible().catch(() => false);\n  if (!visible) {\n    console.error(`WARNING: moveAndClick skipped - \"${label}\" not visible`);\n    return false;\n  }\n  try {\n    await el.scrollIntoViewIfNeeded();\n    await page.waitForTimeout(300);\n    const box = await el.boundingBox();\n    if (box) {\n      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 10 });\n      await page.waitForTimeout(400);\n    }\n    await el.click(clickOpts);\n  } catch (e) {\n    console.error(`WARNING: moveAndClick failed on \"${label}\": ${e.message}`);\n    return false;\n  }\n  await page.waitForTimeout(postClickDelay);\n  return true;\n}\n```",
+      "zh-Hans": "```javascript\nasync function moveAndClick(page, locator, label, opts = {}) {\n  const { postClickDelay = 800, ...clickOpts } = opts;\n  const el = typeof locator === 'string' ? page.locator(locator).first() : locator;\n  const visible = await el.isVisible().catch(() => false);\n  if (!visible) {\n    console.error(`WARNING: moveAndClick skipped - \"${label}\" not visible`);\n    return false;\n  }\n  try {\n    await el.scrollIntoViewIfNeeded();\n    await page.waitForTimeout(300);\n    const box = await el.boundingBox();\n    if (box) {\n      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 10 });\n      await page.waitForTimeout(400);\n    }\n    await el.click(clickOpts);\n  } catch (e) {\n    console.error(`WARNING: moveAndClick failed on \"${label}\": ${e.message}`);\n    return false;\n  }\n  await page.waitForTimeout(postClickDelay);\n  return true;\n}\n```"
+    },
+    {
+      "en-US": "Every call should include a descriptive `label` for debugging.",
+      "zh-Hans": "每次调用都应包含一个描述性的 `label` 以便调试。"
+    },
+    {
+      "en-US": "#### 5. Typing",
+      "zh-Hans": "#### 5. 输入"
+    },
+    {
+      "en-US": "Type visibly, not instant-fill:",
+      "zh-Hans": "可见地输入，而非瞬间填充："
+    },
+    {
+      "en-US": "```javascript\nasync function typeSlowly(page, locator, text, label, charDelay = 35) {\n  const el = typeof locator === 'string' ? page.locator(locator).first() : locator;\n  const visible = await el.isVisible().catch(() => false);\n  if (!visible) {\n    console.error(`WARNING: typeSlowly skipped - \"${label}\" not visible`);\n    return false;\n  }\n  await moveAndClick(page, el, label);\n  await el.fill('');\n  await el.pressSequentially(text, { delay: charDelay });\n  await page.waitForTimeout(500);\n  return true;\n}\n```",
+      "zh-Hans": "```javascript\nasync function typeSlowly(page, locator, text, label, charDelay = 35) {\n  const el = typeof locator === 'string' ? page.locator(locator).first() : locator;\n  const visible = await el.isVisible().catch(() => false);\n  if (!visible) {\n    console.error(`WARNING: typeSlowly skipped - \"${label}\" not visible`);\n    return false;\n  }\n  await moveAndClick(page, el, label);\n  await el.fill('');\n  await el.pressSequentially(text, { delay: charDelay });\n  await page.waitForTimeout(500);\n  return true;\n}\n```"
+    },
+    {
+      "en-US": "#### 6. Scrolling",
+      "zh-Hans": "#### 6. 滚动"
+    },
+    {
+      "en-US": "Use smooth scroll instead of jumps:",
+      "zh-Hans": "使用平滑滚动而非跳跃："
+    },
+    {
+      "en-US": "```javascript\nawait page.evaluate(() => window.scrollTo({ top: 400, behavior: 'smooth' }));\nawait page.waitForTimeout(1500);\n```",
+      "zh-Hans": "```javascript\nawait page.evaluate(() => window.scrollTo({ top: 400, behavior: 'smooth' }));\nawait page.waitForTimeout(1500);\n```"
+    },
+    {
+      "en-US": "#### 7. Dashboard Panning",
+      "zh-Hans": "#### 7. 仪表板平移"
+    },
+    {
+      "en-US": "When showing a dashboard or overview page, move the cursor across key elements:",
+      "zh-Hans": "当展示仪表板或概览页面时，将光标移动到关键元素上："
+    },
+    {
+      "en-US": "```javascript\nasync function panElements(page, selector, maxCount = 6) {\n  const elements = await page.locator(selector).all();\n  for (let i = 0; i < Math.min(elements.length, maxCount); i++) {\n    try {\n      const box = await elements[i].boundingBox();\n      if (box && box.y < 700) {\n        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 8 });\n        await page.waitForTimeout(600);\n      }\n    } catch (e) {\n      console.warn(`WARNING: panElements skipped element ${i} (selector: \"${selector}\"): ${e.message}`);\n    }\n  }\n}\n```",
+      "zh-Hans": "```javascript\nasync function panElements(page, selector, maxCount = 6) {\n  const elements = await page.locator(selector).all();\n  for (let i = 0; i < Math.min(elements.length, maxCount); i++) {\n    try {\n      const box = await elements[i].boundingBox();\n      if (box && box.y < 700) {\n        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 8 });\n        await page.waitForTimeout(600);\n      }\n    } catch (e) {\n      console.warn(`WARNING: panElements skipped element ${i} (selector: \"${selector}\"): ${e.message}`);\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "#### 8. Subtitles",
+      "zh-Hans": "#### 8. 字幕"
+    },
+    {
+      "en-US": "Inject a subtitle bar at the bottom of the viewport:",
+      "zh-Hans": "在视口底部注入一个字幕栏："
+    },
+    {
+      "en-US": "```javascript\nasync function injectSubtitleBar(page) {\n  await page.evaluate(() => {\n    if (document.getElementById('demo-subtitle')) return;\n    const bar = document.createElement('div');\n    bar.id = 'demo-subtitle';\n    bar.style.cssText = `\n      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999998;\n      text-align: center; padding: 12px 24px;\n      background: rgba(0, 0, 0, 0.75);\n      color: white; font-family: -apple-system, \"Segoe UI\", sans-serif;\n      font-size: 16px; font-weight: 500; letter-spacing: 0.3px;\n      transition: opacity 0.3s;\n      pointer-events: none;\n    `;\n    bar.textContent = '';\n    bar.style.opacity = '0';\n    document.body.appendChild(bar);\n  });\n}\n\nasync function showSubtitle(page, text) {\n  await page.evaluate((t) => {\n    const bar = document.getElementById('demo-subtitle');\n    if (!bar) return;\n    if (t) {\n      bar.textContent = t;\n      bar.style.opacity = '1';\n    } else {\n      bar.style.opacity = '0';\n    }\n  }, text);\n  if (text) await page.waitForTimeout(800);\n}\n```",
+      "zh-Hans": "```javascript\nasync function injectSubtitleBar(page) {\n  await page.evaluate(() => {\n    if (document.getElementById('demo-subtitle')) return;\n    const bar = document.createElement('div');\n    bar.id = 'demo-subtitle';\n    bar.style.cssText = `\n      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999998;\n      text-align: center; padding: 12px 24px;\n      background: rgba(0, 0, 0, 0.75);\n      color: white; font-family: -apple-system, \"Segoe UI\", sans-serif;\n      font-size: 16px; font-weight: 500; letter-spacing: 0.3px;\n      transition: opacity 0.3s;\n      pointer-events: none;\n    `;\n    bar.textContent = '';\n    bar.style.opacity = '0';\n    document.body.appendChild(bar);\n  });\n}\n\nasync function showSubtitle(page, text) {\n  await page.evaluate((t) => {\n    const bar = document.getElementById('demo-subtitle');\n    if (!bar) return;\n    if (t) {\n      bar.textContent = t;\n      bar.style.opacity = '1';\n    } else {\n      bar.style.opacity = '0';\n    }\n  }, text);\n  if (text) await page.waitForTimeout(800);\n}\n```"
+    },
+    {
+      "en-US": "Call `injectSubtitleBar(page)` alongside `injectCursor(page)` after every navigation.",
+      "zh-Hans": "每次导航后，与 `injectCursor(page)` 一起调用 `injectSubtitleBar(page)`。"
+    },
+    {
+      "en-US": "Usage pattern:",
+      "zh-Hans": "使用模式："
+    },
+    {
+      "en-US": "```javascript\nawait showSubtitle(page, 'Step 1 - Logging in');\nawait showSubtitle(page, 'Step 2 - Dashboard overview');\nawait showSubtitle(page, '');\n```",
+      "zh-Hans": "```javascript\nawait showSubtitle(page, 'Step 1 - Logging in');\nawait showSubtitle(page, 'Step 2 - Dashboard overview');\nawait showSubtitle(page, '');\n```"
+    },
+    {
+      "en-US": "Guidelines:",
+      "zh-Hans": "指导原则："
+    },
+    {
+      "en-US": "- Keep subtitle text short, ideally under 60 characters.\n- Use `Step N - Action` format for consistency.\n- Clear the subtitle during long pauses where the UI can speak for itself.",
+      "zh-Hans": "* 保持字幕文本简短，最好在 60 个字符以内。\n* 使用 `Step N - Action` 格式以保持一致性。\n* 在 UI 本身足以说明情况的长暂停期间，清除字幕。"
+    },
+    {
+      "en-US": "## Script Template",
+      "zh-Hans": "## 脚本模板"
+    },
+    {
+      "en-US": "```javascript\n'use strict';\nconst { chromium } = require('playwright');\nconst path = require('path');\nconst fs = require('fs');\n\nconst BASE_URL = process.env.QA_BASE_URL || 'http://localhost:3000';\nconst VIDEO_DIR = path.join(__dirname, 'screenshots');\nconst OUTPUT_NAME = 'demo-FEATURE.webm';\nconst REHEARSAL = process.argv.includes('--rehearse');\n\n// Paste injectCursor, injectSubtitleBar, showSubtitle, moveAndClick,\n// typeSlowly, ensureVisible, and panElements here.\n\n(async () => {\n  const browser = await chromium.launch({ headless: true });\n\n  if (REHEARSAL) {\n    const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });\n    const page = await context.newPage();\n    // Navigate through the flow and run ensureVisible for each selector.\n    await browser.close();\n    return;\n  }\n\n  const context = await browser.newContext({\n    recordVideo: { dir: VIDEO_DIR, size: { width: 1280, height: 720 } },\n    viewport: { width: 1280, height: 720 }\n  });\n  const page = await context.newPage();\n\n  try {\n    await injectCursor(page);\n    await injectSubtitleBar(page);\n\n    await showSubtitle(page, 'Step 1 - Logging in');\n    // login actions\n\n    await page.goto(`${BASE_URL}/dashboard`);\n    await injectCursor(page);\n    await injectSubtitleBar(page);\n    await showSubtitle(page, 'Step 2 - Dashboard overview');\n    // pan dashboard\n\n    await showSubtitle(page, 'Step 3 - Main workflow');\n    // action sequence\n\n    await showSubtitle(page, 'Step 4 - Result');\n    // final reveal\n    await showSubtitle(page, '');\n  } catch (err) {\n    console.error('DEMO ERROR:', err.message);\n  } finally {\n    await context.close();\n    const video = page.video();\n    if (video) {\n      const src = await video.path();\n      const dest = path.join(VIDEO_DIR, OUTPUT_NAME);\n      try {\n        fs.copyFileSync(src, dest);\n        console.log('Video saved:', dest);\n      } catch (e) {\n        console.error('ERROR: Failed to copy video:', e.message);\n        console.error('  Source:', src);\n        console.error('  Destination:', dest);\n      }\n    }\n    await browser.close();\n  }\n})();\n```",
+      "zh-Hans": "```javascript\n'use strict';\nconst { chromium } = require('playwright');\nconst path = require('path');\nconst fs = require('fs');\n\nconst BASE_URL = process.env.QA_BASE_URL || 'http://localhost:3000';\nconst VIDEO_DIR = path.join(__dirname, 'screenshots');\nconst OUTPUT_NAME = 'demo-FEATURE.webm';\nconst REHEARSAL = process.argv.includes('--rehearse');\n\n// Paste injectCursor, injectSubtitleBar, showSubtitle, moveAndClick,\n// typeSlowly, ensureVisible, and panElements here.\n\n(async () => {\n  const browser = await chromium.launch({ headless: true });\n\n  if (REHEARSAL) {\n    const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });\n    const page = await context.newPage();\n    // Navigate through the flow and run ensureVisible for each selector.\n    await browser.close();\n    return;\n  }\n\n  const context = await browser.newContext({\n    recordVideo: { dir: VIDEO_DIR, size: { width: 1280, height: 720 } },\n    viewport: { width: 1280, height: 720 }\n  });\n  const page = await context.newPage();\n\n  try {\n    await injectCursor(page);\n    await injectSubtitleBar(page);\n\n    await showSubtitle(page, 'Step 1 - Logging in');\n    // login actions\n\n    await page.goto(`${BASE_URL}/dashboard`);\n    await injectCursor(page);\n    await injectSubtitleBar(page);\n    await showSubtitle(page, 'Step 2 - Dashboard overview');\n    // pan dashboard\n\n    await showSubtitle(page, 'Step 3 - Main workflow');\n    // action sequence\n\n    await showSubtitle(page, 'Step 4 - Result');\n    // final reveal\n    await showSubtitle(page, '');\n  } catch (err) {\n    console.error('DEMO ERROR:', err.message);\n  } finally {\n    await context.close();\n    const video = page.video();\n    if (video) {\n      const src = await video.path();\n      const dest = path.join(VIDEO_DIR, OUTPUT_NAME);\n      try {\n        fs.copyFileSync(src, dest);\n        console.log('Video saved:', dest);\n      } catch (e) {\n        console.error('ERROR: Failed to copy video:', e.message);\n        console.error('  Source:', src);\n        console.error('  Destination:', dest);\n      }\n    }\n    await browser.close();\n  }\n})();\n```"
+    },
+    {
+      "en-US": "Usage:",
+      "zh-Hans": "用法："
+    },
+    {
+      "en-US": "```bash\n# Phase 2: Rehearse\nnode demo-script.cjs --rehearse\n\n# Phase 3: Record\nnode demo-script.cjs\n```",
+      "zh-Hans": "```bash\n# Phase 2: Rehearse\nnode demo-script.cjs --rehearse\n\n# Phase 3: Record\nnode demo-script.cjs\n```"
+    },
+    {
+      "en-US": "## Checklist Before Recording",
+      "zh-Hans": "## 录制前检查清单"
+    },
+    {
+      "en-US": "- [ ] Discovery phase completed\n- [ ] Rehearsal passes with all selectors OK\n- [ ] Headless mode enabled\n- [ ] Resolution set to `1280x720`\n- [ ] Cursor and subtitle overlays re-injected after every navigation\n- [ ] `showSubtitle(page, 'Step N - ...')` used at major transitions\n- [ ] `moveAndClick` used for all clicks with descriptive labels\n- [ ] `typeSlowly` used for visible input\n- [ ] No silent catches; helpers log warnings\n- [ ] Smooth scrolling used for content reveal\n- [ ] Key pauses are visible to a human viewer\n- [ ] Flow matches the requested story order\n- [ ] Script reflects the actual UI discovered in phase 1",
+      "zh-Hans": "* \\[ ] 探索阶段已完成\n* \\[ ] 排练通过，所有选择器正常\n* \\[ ] 已启用无头模式\n* \\[ ] 分辨率设置为 `1280x720`\n* \\[ ] 每次导航后重新注入光标和字幕覆盖层\n* \\[ ] 在主要过渡处使用了 `showSubtitle(page, 'Step N - ...')`\n* \\[ ] 所有点击都使用了带有描述性标签的 `moveAndClick`\n* \\[ ] 可见输入使用了 `typeSlowly`\n* \\[ ] 没有静默捕获；辅助函数会记录警告\n* \\[ ] 内容展示使用了平滑滚动\n* \\[ ] 关键暂停对人类观众可见\n* \\[ ] 流程符合请求的故事顺序\n* \\[ ] 脚本反映了阶段 1 中探索到的实际 UI"
+    },
+    {
+      "en-US": "## Common Pitfalls",
+      "zh-Hans": "## 常见陷阱"
+    },
+    {
+      "en-US": "1. Cursor disappears after navigation - re-inject it.\n2. Video is too fast - add pauses.\n3. Cursor is a dot instead of an arrow - use the SVG overlay.\n4. Cursor teleports - move before clicking.\n5. Select dropdowns look wrong - show the move, then pick the option.\n6. Modals feel abrupt - add a read pause before confirming.\n7. Video file path is random - copy it to a stable output name.\n8. Selector failures are swallowed - never use silent catch blocks.\n9. Field types were assumed - discover them first.\n10. Features were assumed - inspect the actual UI before scripting.\n11. Placeholder select values look real - watch for `\"0\"` and `\"Select...\"`.\n12. Popups create separate videos - capture popup pages explicitly and merge later if needed.",
+      "zh-Hans": "1. 导航后光标消失 - 重新注入它。\n2. 视频太快 - 添加暂停。\n3. 光标是圆点而非箭头 - 使用 SVG 覆盖层。\n4. 光标瞬间移动 - 点击前先移动。\n5. 选择下拉框看起来不对 - 先展示移动，再选择选项。\n6. 模态框感觉突兀 - 在确认前添加一个阅读暂停。\n7. 视频文件路径随机 - 将其复制到一个稳定的输出名称。\n8. 选择器失败被忽略 - 切勿使用静默捕获块。\n9. 字段类型是假设的 - 先进行探索。\n10. 功能是假设的 - 在编写脚本前检查实际 UI。\n11. 占位符选择值看起来像真的 - 注意 `\"0\"` 和 `\"Select...\"`。\n12. 弹窗创建了单独的视频 - 显式捕获弹窗页面，如果需要，稍后合并。"
+    }
+  ]
+}

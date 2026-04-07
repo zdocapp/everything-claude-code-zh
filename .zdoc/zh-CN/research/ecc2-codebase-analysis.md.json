@@ -1,0 +1,234 @@
+{
+  "sourceFile": "research/ecc2-codebase-analysis.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# ECC2 Codebase Research Report",
+      "zh-Hans": "# ECC2 代码库研究报告"
+    },
+    {
+      "en-US": "**Date:** 2026-03-26\n**Subject:** `ecc-tui` v0.1.0 — Agentic IDE Control Plane\n**Total Lines:** 4,417 across 15 `.rs` files",
+      "zh-Hans": "**日期：** 2026-03-26\n**主题：** `ecc-tui` v0.1.0 — 智能体 IDE 控制平面\n**总行数：** 4,417 行，分布在 15 个 `.rs` 文件中"
+    },
+    {
+      "en-US": "## 1. Architecture Overview",
+      "zh-Hans": "## 1. 架构概览"
+    },
+    {
+      "en-US": "ECC2 is a Rust TUI application that orchestrates AI coding agent sessions. It uses:",
+      "zh-Hans": "ECC2 是一个 Rust TUI 应用程序，用于编排 AI 编码智能体会话。它使用："
+    },
+    {
+      "en-US": "- **ratatui 0.29** + **crossterm 0.28** for terminal UI\n- **rusqlite 0.32** (bundled) for local state persistence\n- **tokio 1** (full) for async runtime\n- **clap 4** (derive) for CLI",
+      "zh-Hans": "* **ratatui 0.29** + **crossterm 0.28** 用于终端 UI\n* **rusqlite 0.32**（捆绑）用于本地状态持久化\n* **tokio 1**（完整）用于异步运行时\n* **clap 4**（派生）用于 CLI"
+    },
+    {
+      "en-US": "### Module Breakdown",
+      "zh-Hans": "### 模块分解"
+    },
+    {
+      "en-US": "| Module | Lines | Purpose |\n|--------|------:|---------|\n| `session/` | 1,974 | Session lifecycle, persistence, runtime, output |\n| `tui/` | 1,613 | Dashboard, app loop, custom widgets |\n| `observability/` | 409 | Tool call risk scoring and logging |\n| `config/` | 144 | Configuration (TOML file) |\n| `main.rs` | 142 | CLI entry point |\n| `worktree/` | 99 | Git worktree management |\n| `comms/` | 36 | Inter-agent messaging (send only) |",
+      "zh-Hans": "| 模块 | 行数 | 用途 |\n|--------|------:|---------|\n| `session/` | 1,974 | 会话生命周期、持久化、运行时、输出 |\n| `tui/` | 1,613 | 仪表板、应用循环、自定义组件 |\n| `observability/` | 409 | 工具调用风险评分和日志记录 |\n| `config/` | 144 | 配置（TOML 文件） |\n| `main.rs` | 142 | CLI 入口点 |\n| `worktree/` | 99 | Git 工作树管理 |\n| `comms/` | 36 | 智能体间消息传递（仅发送） |"
+    },
+    {
+      "en-US": "### Key Architectural Patterns",
+      "zh-Hans": "### 关键架构模式"
+    },
+    {
+      "en-US": "- **DbWriter thread** in `session/runtime.rs` — dedicated OS thread for SQLite writes from async context via `mpsc::unbounded_channel` with oneshot acknowledgements. Clean solution to the \"SQLite from async\" problem.\n- **Session state machine** with enforced transitions: `Pending → {Running, Failed, Stopped}`, `Running → {Idle, Completed, Failed, Stopped}`, etc.\n- **Ring buffer** for session output — `OUTPUT_BUFFER_LIMIT = 1000` lines per session with automatic eviction.\n- **Risk scoring** on tool calls — 4-axis analysis (base tool risk, file sensitivity, blast radius, irreversibility) producing composite 0.0–1.0 scores with suggested actions (Allow/Review/RequireConfirmation/Block).",
+      "zh-Hans": "* **`session/runtime.rs` 中的 DbWriter 线程** — 一个专用的操作系统线程，用于通过 `mpsc::unbounded_channel` 从异步上下文进行 SQLite 写入，并带有一次性确认。这是解决“异步环境下的 SQLite”问题的简洁方案。\n* **具有强制转换的会话状态机**：`Pending → {Running, Failed, Stopped}`、`Running → {Idle, Completed, Failed, Stopped}` 等。\n* **用于会话输出的环形缓冲区** — 每个会话 `OUTPUT_BUFFER_LIMIT = 1000` 行，具有自动淘汰机制。\n* **工具调用的风险评分** — 4 轴分析（基础工具风险、文件敏感性、影响范围、不可逆性），生成 0.0–1.0 的综合评分，并给出建议操作（允许/审查/需要确认/阻止）。"
+    },
+    {
+      "en-US": "## 2. Code Quality Metrics",
+      "zh-Hans": "## 2. 代码质量指标"
+    },
+    {
+      "en-US": "| Metric | Value |\n|--------|-------|\n| Total lines | 4,417 |\n| Test functions | 29 |\n| `unwrap()` calls | 3 |\n| `unsafe` blocks | 0 |\n| TODO/FIXME comments | 0 |\n| Max file size | 1,273 lines (`dashboard.rs`) |",
+      "zh-Hans": "| 指标 | 值 |\n|--------|-------|\n| 总行数 | 4,417 |\n| 测试函数 | 29 |\n| `unwrap()` 调用 | 3 |\n| `unsafe` 块 | 0 |\n| TODO/FIXME 注释 | 0 |\n| 最大文件大小 | 1,273 行（`dashboard.rs`） |"
+    },
+    {
+      "en-US": "**Assessment:** The codebase is clean. Only 3 `unwrap()` calls (2 in tests, 1 in config `default()`), zero `unsafe`, and all modules use proper `anyhow::Result` error propagation. The `dashboard.rs` file at 1,273 lines exceeds the repo's 800-line max-file guideline, but it is still manageable at the current scope.",
+      "zh-Hans": "**评估：** 代码库很干净。只有 3 个 `unwrap()` 调用（2 个在测试中，1 个在配置 `default()` 中），零个 `unsafe`，并且所有模块都使用适当的 `anyhow::Result` 错误传播。`dashboard.rs` 文件有 1,273 行，超过了仓库 800 行的最大文件指导原则，但在当前范围内仍然可以管理。"
+    },
+    {
+      "en-US": "## 3. Identified Gaps",
+      "zh-Hans": "## 3. 已识别的差距"
+    },
+    {
+      "en-US": "### 3.1 Comms Module — Send Without Receive",
+      "zh-Hans": "### 3.1 通信模块 — 仅发送无接收"
+    },
+    {
+      "en-US": "`comms/mod.rs` (36 lines) has `send()` but no `receive()`, `poll()`, `inbox()`, or `subscribe()`. The `messages` table exists in SQLite, but nothing reads from it. The inter-agent messaging story is half-built.",
+      "zh-Hans": "`comms/mod.rs`（36 行）有 `send()`，但没有 `receive()`、`poll()`、`inbox()` 或 `subscribe()`。SQLite 中存在 `messages` 表，但没有代码从中读取。智能体间消息传递的故事只完成了一半。"
+    },
+    {
+      "en-US": "**Impact:** Agents cannot coordinate. The `TaskHandoff`, `Query`, `Response`, and `Conflict` message types are defined but unusable.",
+      "zh-Hans": "**影响：** 智能体无法协调。定义了 `TaskHandoff`、`Query`、`Response` 和 `Conflict` 消息类型，但无法使用。"
+    },
+    {
+      "en-US": "### 3.2 New Session Dialog — Stub",
+      "zh-Hans": "### 3.2 新建会话对话框 — 存根"
+    },
+    {
+      "en-US": "`dashboard.rs:495` — `new_session()` logs `\"New session dialog requested\"` but does nothing. Users must use the CLI (`ecc start --task \"...\"`) to create sessions; the TUI dashboard cannot.",
+      "zh-Hans": "`dashboard.rs:495` — `new_session()` 记录 `\"New session dialog requested\"` 但不执行任何操作。用户必须使用 CLI（`ecc start --task \"...\"`）来创建会话；TUI 仪表板无法创建。"
+    },
+    {
+      "en-US": "### 3.3 Single Agent Support",
+      "zh-Hans": "### 3.3 单一智能体支持"
+    },
+    {
+      "en-US": "`session/manager.rs` — `agent_program()` only supports `\"claude\"`. The CLI accepts `--agent` but anything other than `\"claude\"` fails. No codex, opencode, or custom agent support.",
+      "zh-Hans": "`session/manager.rs` — `agent_program()` 仅支持 `\"claude\"`。CLI 接受 `--agent`，但任何非 `\"claude\"` 的值都会失败。不支持 codex、opencode 或自定义智能体。"
+    },
+    {
+      "en-US": "### 3.4 Config — File-Only",
+      "zh-Hans": "### 3.4 配置 — 仅文件"
+    },
+    {
+      "en-US": "`Config::load()` reads `~/.claude/ecc2.toml` only. The implementation lacks environment variable overrides (e.g., `ECC_DB_PATH`, `ECC_WORKTREE_ROOT`) and CLI flags for configuration.",
+      "zh-Hans": "`Config::load()` 仅读取 `~/.claude/ecc2.toml`。实现缺少环境变量覆盖（例如 `ECC_DB_PATH`、`ECC_WORKTREE_ROOT`）和用于配置的 CLI 标志。"
+    },
+    {
+      "en-US": "### 3.5 Legacy Dependency Candidate: `git2`",
+      "zh-Hans": "### 3.5 遗留依赖候选：`git2`"
+    },
+    {
+      "en-US": "`git2 = \"0.20\"` is still declared in `Cargo.toml`, but the `worktree` module shells out to the `git` CLI instead. That makes `git2` a strong removal candidate rather than an already-completed cleanup.",
+      "zh-Hans": "`git2 = \"0.20\"` 仍然在 `Cargo.toml` 中声明，但 `worktree` 模块改为调用 `git` CLI。这使得 `git2` 成为一个强有力的移除候选，而不是已经完成的清理。"
+    },
+    {
+      "en-US": "### 3.6 No Metrics Aggregation",
+      "zh-Hans": "### 3.6 无指标聚合"
+    },
+    {
+      "en-US": "`SessionMetrics` tracks tokens, cost, duration, tool_calls, files_changed per session. But there's no aggregate view: total cost across sessions, average duration, top tools by usage, etc. The Metrics pane in the dashboard shows per-session detail only.",
+      "zh-Hans": "`SessionMetrics` 跟踪每个会话的令牌数、成本、持续时间、工具调用次数、更改的文件数。但没有聚合视图：跨会话的总成本、平均持续时间、使用最多的工具等。仪表板中的指标窗格仅显示每个会话的详细信息。"
+    },
+    {
+      "en-US": "### 3.7 Daemon — No Health Reporting",
+      "zh-Hans": "### 3.7 守护进程 — 无健康报告"
+    },
+    {
+      "en-US": "`session/daemon.rs` runs an infinite loop checking session timeouts. No health endpoint, no log rotation, no PID file, no signal handling for graceful shutdown. `Ctrl+C` during daemon mode kills the process uncleanly.",
+      "zh-Hans": "`session/daemon.rs` 运行一个无限循环检查会话超时。没有健康端点，没有日志轮换，没有 PID 文件，没有用于优雅关闭的信号处理。在守护进程模式下 `Ctrl+C` 会不干净地终止进程。"
+    },
+    {
+      "en-US": "## 4. Test Coverage Analysis",
+      "zh-Hans": "## 4. 测试覆盖率分析"
+    },
+    {
+      "en-US": "34 test functions across 10 source modules:",
+      "zh-Hans": "10 个源模块中共有 34 个测试函数："
+    },
+    {
+      "en-US": "| Module | Tests | Coverage Focus |\n|--------|------:|----------------|\n| `main.rs` | 1 | CLI parsing |\n| `config/mod.rs` | 5 | Defaults, deserialization, legacy fallback |\n| `observability/mod.rs` | 5 | Risk scoring, persistence, pagination |\n| `session/daemon.rs` | 2 | Crash recovery / liveness handling |\n| `session/manager.rs` | 4 | Session lifecycle, resume, stop, latest status |\n| `session/output.rs` | 2 | Ring buffer, broadcast |\n| `session/runtime.rs` | 1 | Output capture persistence/events |\n| `session/store.rs` | 3 | Buffer window, migration, state transitions |\n| `tui/dashboard.rs` | 8 | Rendering, selection, pane navigation, scrolling |\n| `tui/widgets.rs` | 3 | Token meter rendering and thresholds |",
+      "zh-Hans": "| 模块 | 测试数 | 覆盖重点 |\n|--------|------:|----------------|\n| `main.rs` | 1 | CLI 解析 |\n| `config/mod.rs` | 5 | 默认值、反序列化、遗留回退 |\n| `observability/mod.rs` | 5 | 风险评分、持久化、分页 |\n| `session/daemon.rs` | 2 | 崩溃恢复/活跃性处理 |\n| `session/manager.rs` | 4 | 会话生命周期、恢复、停止、最新状态 |\n| `session/output.rs` | 2 | 环形缓冲区、广播 |\n| `session/runtime.rs` | 1 | 输出捕获持久化/事件 |\n| `session/store.rs` | 3 | 缓冲区窗口、迁移、状态转换 |\n| `tui/dashboard.rs` | 8 | 渲染、选择、窗格导航、滚动 |\n| `tui/widgets.rs` | 3 | 令牌计量器渲染和阈值 |"
+    },
+    {
+      "en-US": "**Direct coverage gaps:**",
+      "zh-Hans": "**直接覆盖差距：**"
+    },
+    {
+      "en-US": "- `comms/mod.rs` — 0 tests\n- `worktree/mod.rs` — 0 tests",
+      "zh-Hans": "* `comms/mod.rs` — 0 个测试\n* `worktree/mod.rs` — 0 个测试"
+    },
+    {
+      "en-US": "The core I/O-heavy paths are no longer completely untested: `manager.rs`, `runtime.rs`, and `daemon.rs` each have targeted tests. The remaining gap is breadth rather than total absence, especially around `comms/`, `worktree/`, and more adversarial process/worktree failure cases.",
+      "zh-Hans": "核心 I/O 密集型路径不再完全未经测试：`manager.rs`、`runtime.rs` 和 `daemon.rs` 都有针对性的测试。剩余的差距是广度而非完全缺失，尤其是在 `comms/`、`worktree/` 以及更多对抗性进程/工作树故障情况方面。"
+    },
+    {
+      "en-US": "## 5. Security Observations",
+      "zh-Hans": "## 5. 安全观察"
+    },
+    {
+      "en-US": "- **No secrets in code.** Config reads from TOML file, no hardcoded credentials.\n- **Process spawning** uses `tokio::process::Command` with explicit `Stdio::piped()` — no shell injection vectors.\n- **Risk scoring** is a strong feature — catches `rm -rf`, `git push --force origin main`, file access to `.env`/secrets.\n- **No input sanitization on session task strings.** The task string is passed directly to `claude --print`. If the task contains shell metacharacters, it could be exploited depending on how `Command` handles argument quoting. Currently safe (arguments are not shell-interpreted), but worth auditing.",
+      "zh-Hans": "* **代码中没有秘密。** 配置从 TOML 文件读取，没有硬编码的凭据。\n* **进程生成** 使用 `tokio::process::Command` 并显式设置 `Stdio::piped()` — 没有 shell 注入向量。\n* **风险评分** 是一个强大的功能 — 捕获 `rm -rf`、`git push --force origin main`、对 `.env`/秘密文件的访问。\n* **会话任务字符串没有输入清理。** 任务字符串直接传递给 `claude --print`。如果任务包含 shell 元字符，则可能被利用，具体取决于 `Command` 如何处理参数引用。目前是安全的（参数不会被 shell 解释），但值得审计。"
+    },
+    {
+      "en-US": "## 6. Dependency Health",
+      "zh-Hans": "## 6. 依赖项健康状况"
+    },
+    {
+      "en-US": "| Crate | Version | Latest | Notes |\n|-------|---------|--------|-------|\n| ratatui | 0.29 | **0.30.0** | Update available |\n| crossterm | 0.28 | **0.29.0** | Update available |\n| rusqlite | 0.32 | **0.39.0** | Update available |\n| tokio | 1 | **1.50.0** | Update available |\n| serde | 1 | **1.0.228** | Update available |\n| clap | 4 | **4.6.0** | Update available |\n| chrono | 0.4 | **0.4.44** | Update available |\n| uuid | 1 | **1.22.0** | Update available |",
+      "zh-Hans": "| Crate | 版本 | 最新版本 | 备注 |\n|-------|---------|--------|-------|\n| ratatui | 0.29 | **0.30.0** | 有可用更新 |\n| crossterm | 0.28 | **0.29.0** | 有可用更新 |\n| rusqlite | 0.32 | **0.39.0** | 有可用更新 |\n| tokio | 1 | **1.50.0** | 有可用更新 |\n| serde | 1 | **1.0.228** | 有可用更新 |\n| clap | 4 | **4.6.0** | 有可用更新 |\n| chrono | 0.4 | **0.4.44** | 有可用更新 |\n| uuid | 1 | **1.22.0** | 有可用更新 |"
+    },
+    {
+      "en-US": "`git2` is still present in `Cargo.toml` even though the `worktree` module shells out to the `git` CLI. Several other dependencies are outdated; either remove `git2` or start using it before the next release.",
+      "zh-Hans": "`git2` 仍然存在于 `Cargo.toml` 中，即使 `worktree` 模块改为调用 `git` CLI。其他几个依赖项也已过时；要么移除 `git2`，要么在下一次发布前开始使用它。"
+    },
+    {
+      "en-US": "## 7. Recommendations (Prioritized)",
+      "zh-Hans": "## 7. 建议（按优先级排序）"
+    },
+    {
+      "en-US": "### P0 — Quick Wins",
+      "zh-Hans": "### P0 — 快速见效"
+    },
+    {
+      "en-US": "1. **Add environment variable support to `Config::load()`** — `ECC_DB_PATH`, `ECC_WORKTREE_ROOT`, `ECC_DEFAULT_AGENT`. Standard practice for CLI tools.",
+      "zh-Hans": "1. **为 `Config::load()` 添加环境变量支持** — `ECC_DB_PATH`、`ECC_WORKTREE_ROOT`、`ECC_DEFAULT_AGENT`。这是 CLI 工具的标准做法。"
+    },
+    {
+      "en-US": "### P1 — Feature Completions",
+      "zh-Hans": "### P1 — 功能完善"
+    },
+    {
+      "en-US": "2. **Implement `comms::receive()` / `comms::poll()`** — read unread messages from the `messages` table, optionally with a `broadcast` channel for real-time delivery. Wire it into the dashboard.\n3. **Build the new-session dialog in the TUI** — modal form with task input, agent selector, worktree toggle. Should call `session::manager::create_session()`.\n4. **Add aggregate metrics** — total cost, average session duration, tool call frequency, cost per session. Show in the Metrics pane.",
+      "zh-Hans": "2. **实现 `comms::receive()` / `comms::poll()`** — 从 `messages` 表中读取未读消息，可选地使用 `broadcast` 通道进行实时传递。将其连接到仪表板。\n3. **在 TUI 中构建新建会话对话框** — 带有任务输入、智能体选择器、工作树切换的模式表单。应调用 `session::manager::create_session()`。\n4. **添加聚合指标** — 总成本、平均会话持续时间、工具调用频率、每次会话成本。在指标窗格中显示。"
+    },
+    {
+      "en-US": "### P2 — Robustness",
+      "zh-Hans": "### P2 — 健壮性"
+    },
+    {
+      "en-US": "5. **Expand integration coverage for `manager.rs`, `runtime.rs`, and `daemon.rs`** — the repo now has baseline tests here, but it still needs failure-path coverage around process crashes, timeouts, and cleanup edge cases.\n6. **Add first-party tests for `worktree/mod.rs` and `comms/mod.rs`** — these are still uncovered and back important orchestration features.\n7. **Add daemon health reporting** — PID file, structured logging, graceful shutdown via signal handler.\n8. **Task string security audit** — The session task uses `claude --print` via `tokio::process::Command`. Verify arguments are never shell-interpreted. Checklist: confirm `Command` arg usage, threat-model metacharacter injection, input validation/escaping strategy, logging of raw inputs, and automated tests. Re-audit if invocation code changes.\n9. **Break up `dashboard.rs`** — extract SessionsPane, OutputPane, MetricsPane, LogPane into separate files under `tui/panes/`.",
+      "zh-Hans": "5. **扩展 `manager.rs`、`runtime.rs` 和 `daemon.rs` 的集成覆盖** — 仓库现在有了这些模块的基线测试，但仍需要围绕进程崩溃、超时和清理边缘情况的故障路径覆盖。\n6. **为 `worktree/mod.rs` 和 `comms/mod.rs` 添加第一方测试** — 这些模块仍然未被覆盖，并且支持重要的编排功能。\n7. **添加守护进程健康报告** — PID 文件、结构化日志记录、通过信号处理器优雅关闭。\n8. **任务字符串安全审计** — 会话任务通过 `claude --print` 使用 `tokio::process::Command`。验证参数永远不会被 shell 解释。检查清单：确认 `Command` 参数用法、威胁模型元字符注入、输入验证/转义策略、原始输入日志记录以及自动化测试。如果调用代码发生变化，则重新审计。\n9. **拆分 `dashboard.rs`** — 将会话窗格、输出窗格、指标窗格、日志窗格提取到 `tui/panes/` 下的单独文件中。"
+    },
+    {
+      "en-US": "### P3 — Extensibility",
+      "zh-Hans": "### P3 — 可扩展性"
+    },
+    {
+      "en-US": "10. **Multi-agent support** — make `agent_program()` pluggable. Add `codex`, `opencode`, `custom` agent types.\n11. **Config validation** — validate risk thresholds sum correctly, budget values are positive, paths exist.",
+      "zh-Hans": "10. **多智能体支持** — 使 `agent_program()` 可插拔。添加 `codex`、`opencode`、`custom` 智能体类型。\n11. **配置验证** — 验证风险阈值总和是否正确、预算值为正、路径存在。"
+    },
+    {
+      "en-US": "## 8. Comparison with Ratatui 0.29 Best Practices",
+      "zh-Hans": "## 8. 与 Ratatui 0.29 最佳实践对比"
+    },
+    {
+      "en-US": "The codebase follows ratatui conventions well:",
+      "zh-Hans": "代码库很好地遵循了 ratatui 约定："
+    },
+    {
+      "en-US": "- Uses `TableState` for stateful selection (correct pattern)\n- Custom `Widget` trait implementation for `TokenMeter` (idiomatic)\n- `tick()` method for periodic state sync (standard)\n- `broadcast::channel` for real-time output events (appropriate)",
+      "zh-Hans": "* 使用 `TableState` 进行有状态选择（正确模式）\n* 为 `Widget` 实现自定义 `TokenMeter` 特性（符合惯例）\n* 使用 `tick()` 方法进行定期状态同步（标准做法）\n* 使用 `broadcast::channel` 处理实时输出事件（合适）"
+    },
+    {
+      "en-US": "**Minor deviations:**",
+      "zh-Hans": "**细微偏差：**"
+    },
+    {
+      "en-US": "- The `Dashboard` struct directly holds `StateStore` (SQLite connection). Ratatui best practice is to keep the state store behind an `Arc<Mutex<>>` to allow background updates. Currently the TUI owns the DB exclusively, which blocks adding a background metrics refresh task.\n- No `Clear` widget usage when rendering the help overlay — could cause rendering artifacts on some terminals.",
+      "zh-Hans": "* `Dashboard` 结构体直接持有 `StateStore`（SQLite 连接）。Ratatui 的最佳实践是将状态存储放在 `Arc<Mutex<>>` 后面，以允许后台更新。目前 TUI 独占拥有数据库，这阻碍了添加后台指标刷新任务。\n* 渲染帮助覆盖层时未使用 `Clear` 组件 — 在某些终端上可能导致渲染伪影。"
+    },
+    {
+      "en-US": "## 9. Risk Assessment",
+      "zh-Hans": "## 9. 风险评估"
+    },
+    {
+      "en-US": "| Risk | Likelihood | Impact | Mitigation |\n|------|-----------|--------|------------|\n| Dashboard file exceeds 1500 lines (projected) | High | Medium | At 1,273 lines currently (Section 2); extract panes into modules before it grows further |\n| SQLite lock contention | Low | High | DbWriter pattern already handles this |\n| No agent diversity | Medium | Medium | Pluggable agent support |\n| Task-string handling assumptions drift over time | Medium | Medium | Keep `Command` argument handling shell-free, document the threat model, and add regression tests for metacharacter-heavy task input |",
+      "zh-Hans": "| 风险 | 可能性 | 影响 | 缓解措施 |\n|------|-----------|--------|------------|\n| 仪表板文件超过 1500 行（预计） | 高 | 中 | 目前 1,273 行（第 2 节）；在进一步增长之前将窗格提取到模块中 |\n| SQLite 锁争用 | 低 | 高 | DbWriter 模式已处理此问题 |\n| 无智能体多样性 | 中 | 中 | 可插拔智能体支持 |\n| 任务字符串处理假设随时间推移而漂移 | 中 | 中 | 保持 `Command` 参数处理无 shell 解释，记录威胁模型，并为包含大量元字符的任务输入添加回归测试 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "**Bottom line:** ECC2 is a well-structured Rust project with clean error handling, good separation of concerns, and strong security features (risk scoring). The main gaps are incomplete features (comms, new-session dialog, single agent) rather than architectural problems. The codebase is ready for feature work on top of the solid foundation.",
+      "zh-Hans": "**结论：** ECC2 是一个结构良好的 Rust 项目，具有清晰的错误处理、良好的关注点分离和强大的安全功能（风险评分）。主要差距在于功能不完整（通信、新建会话对话框、单一智能体），而非架构问题。代码库已准备好在坚实的基础上进行功能开发。"
+    }
+  ]
+}

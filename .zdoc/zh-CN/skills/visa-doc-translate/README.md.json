@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/visa-doc-translate/README.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Visa Document Translator",
+      "zh-Hans": "# 签证文件翻译器"
+    },
+    {
+      "en-US": "Automatically translate visa application documents from images to professional English PDFs.",
+      "zh-Hans": "自动将签证申请文件从图像翻译为专业的英文 PDF。"
+    },
+    {
+      "en-US": "## Features",
+      "zh-Hans": "## 功能"
+    },
+    {
+      "en-US": "- **Automatic OCR**: Tries multiple OCR methods (macOS Vision, EasyOCR, Tesseract)\n- **Bilingual PDF**: Original image + professional English translation\n- **Multi-language**: Supports Chinese, and other languages\n- **Professional Format**: Suitable for official visa applications\n- **Fully Automated**: No manual intervention required",
+      "zh-Hans": "* **自动OCR**：尝试多种OCR方法（macOS Vision、EasyOCR、Tesseract）\n* **双语PDF**：原始图像 + 专业英文翻译\n* **多语言支持**：支持中文及其他语言\n* **专业格式**：适用于官方签证申请\n* **全自动化**：无需人工干预"
+    },
+    {
+      "en-US": "## Supported Documents",
+      "zh-Hans": "## 支持的文件类型"
+    },
+    {
+      "en-US": "- Bank deposit certificates (存款证明)\n- Employment certificates (在职证明)\n- Retirement certificates (退休证明)\n- Income certificates (收入证明)\n- Property certificates (房产证明)\n- Business licenses (营业执照)\n- ID cards and passports",
+      "zh-Hans": "* 银行存款证明（存款证明）\n* 在职证明（在职证明）\n* 退休证明（退休证明）\n* 收入证明（收入证明）\n* 房产证明（房产证明）\n* 营业执照（营业执照）\n* 身份证和护照"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```bash\n/visa-doc-translate <image-file>\n```",
+      "zh-Hans": "```bash\n/visa-doc-translate <image-file>\n```"
+    },
+    {
+      "en-US": "### Examples",
+      "zh-Hans": "### 示例"
+    },
+    {
+      "en-US": "```bash\n/visa-doc-translate RetirementCertificate.PNG\n/visa-doc-translate BankStatement.HEIC\n/visa-doc-translate EmploymentLetter.jpg\n```",
+      "zh-Hans": "```bash\n/visa-doc-translate RetirementCertificate.PNG\n/visa-doc-translate BankStatement.HEIC\n/visa-doc-translate EmploymentLetter.jpg\n```"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "Creates `<filename>_Translated.pdf` with:",
+      "zh-Hans": "创建 `<filename>_Translated.pdf`，包含："
+    },
+    {
+      "en-US": "- **Page 1**: Original document image (centered, A4 size)\n- **Page 2**: Professional English translation",
+      "zh-Hans": "* **第 1 页**：原始文件图像（居中，A4 尺寸）\n* **第 2 页**：专业英文翻译"
+    },
+    {
+      "en-US": "## Requirements",
+      "zh-Hans": "## 要求"
+    },
+    {
+      "en-US": "### Python Libraries",
+      "zh-Hans": "### Python 库"
+    },
+    {
+      "en-US": "```bash\npip install pillow reportlab\n```",
+      "zh-Hans": "```bash\npip install pillow reportlab\n```"
+    },
+    {
+      "en-US": "### OCR (one of the following)",
+      "zh-Hans": "### OCR（需要以下之一）"
+    },
+    {
+      "en-US": "**macOS (recommended)**:",
+      "zh-Hans": "**macOS（推荐）**："
+    },
+    {
+      "en-US": "```bash\npip install pyobjc-framework-Vision pyobjc-framework-Quartz\n```",
+      "zh-Hans": "```bash\npip install pyobjc-framework-Vision pyobjc-framework-Quartz\n```"
+    },
+    {
+      "en-US": "**Cross-platform**:",
+      "zh-Hans": "**跨平台**："
+    },
+    {
+      "en-US": "```bash\npip install easyocr\n```",
+      "zh-Hans": "```bash\npip install easyocr\n```"
+    },
+    {
+      "en-US": "**Tesseract**:",
+      "zh-Hans": "**Tesseract**："
+    },
+    {
+      "en-US": "```bash\nbrew install tesseract tesseract-lang\npip install pytesseract\n```",
+      "zh-Hans": "```bash\nbrew install tesseract tesseract-lang\npip install pytesseract\n```"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "1. Converts HEIC to PNG if needed\n2. Checks and applies EXIF rotation\n3. Extracts text using available OCR method\n4. Translates to professional English\n5. Generates bilingual PDF",
+      "zh-Hans": "1. 如有需要，将 HEIC 转换为 PNG\n2. 检查并应用 EXIF 旋转\n3. 使用可用的 OCR 方法提取文本\n4. 翻译为专业英文\n5. 生成双语 PDF"
+    },
+    {
+      "en-US": "## Perfect For",
+      "zh-Hans": "## 完美适用于"
+    },
+    {
+      "en-US": "- Australia visa applications\n- USA visa applications\n- Canada visa applications\n- UK visa applications\n- EU visa applications",
+      "zh-Hans": "* 澳大利亚签证申请\n* 美国签证申请\n* 加拿大签证申请\n* 英国签证申请\n* 欧盟签证申请"
+    },
+    {
+      "en-US": "## License",
+      "zh-Hans": "## 许可证"
+    },
+    {
+      "en-US": "MIT",
+      "zh-Hans": "MIT"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "sourceFile": "rules/dart/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n  - \"**/analysis_options.yaml\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n  - \"**/analysis_options.yaml\"\n---"
+    },
+    {
+      "en-US": "# Dart/Flutter Coding Style",
+      "zh-Hans": "# Dart/Flutter 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Dart and Flutter-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/coding-style.md](../common/coding-style.md) 中关于 Dart 和 Flutter 的特定内容。"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- **dart format** for all `.dart` files — enforced in CI (`dart format --set-exit-if-changed .`)\n- Line length: 80 characters (dart format default)\n- Trailing commas on multi-line argument/parameter lists to improve diffs and formatting",
+      "zh-Hans": "* 对所有 `.dart` 文件使用 **dart format** — 在 CI 中强制执行 (`dart format --set-exit-if-changed .`)\n* 行长度：80 个字符 (dart format 默认值)\n* 在多行参数/参数列表中使用尾随逗号，以改善差异对比和格式化效果"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "- Prefer `final` for local variables and `const` for compile-time constants\n- Use `const` constructors wherever all fields are `final`\n- Return unmodifiable collections from public APIs (`List.unmodifiable`, `Map.unmodifiable`)\n- Use `copyWith()` for state mutations in immutable state classes",
+      "zh-Hans": "* 局部变量优先使用 `final`，编译时常量使用 `const`\n* 在所有字段都是 `final` 的地方使用 `const` 构造函数\n* 从公共 API 返回不可修改的集合 (`List.unmodifiable`, `Map.unmodifiable`)\n* 在不可变状态类中使用 `copyWith()` 进行状态变更"
+    },
+    {
+      "en-US": "```dart\n// BAD\nvar count = 0;\nList<String> items = ['a', 'b'];\n\n// GOOD\nfinal count = 0;\nconst items = ['a', 'b'];\n```",
+      "zh-Hans": "```dart\n// BAD\nvar count = 0;\nList<String> items = ['a', 'b'];\n\n// GOOD\nfinal count = 0;\nconst items = ['a', 'b'];\n```"
+    },
+    {
+      "en-US": "## Naming",
+      "zh-Hans": "## 命名"
+    },
+    {
+      "en-US": "Follow Dart conventions:",
+      "zh-Hans": "遵循 Dart 约定："
+    },
+    {
+      "en-US": "- `camelCase` for variables, parameters, and named constructors\n- `PascalCase` for classes, enums, typedefs, and extensions\n- `snake_case` for file names and library names\n- `SCREAMING_SNAKE_CASE` for constants declared with `const` at top level\n- Prefix private members with `_`\n- Extension names describe the type they extend: `StringExtensions`, not `MyHelpers`",
+      "zh-Hans": "* `camelCase` 用于变量、参数和命名构造函数\n* `PascalCase` 用于类、枚举、类型定义和扩展\n* `snake_case` 用于文件名和库名\n* 在顶层使用 `const` 声明的常量使用 `SCREAMING_SNAKE_CASE`\n* 私有成员前缀使用 `_`\n* 扩展名应描述其扩展的类型：`StringExtensions`，而不是 `MyHelpers`"
+    },
+    {
+      "en-US": "## Null Safety",
+      "zh-Hans": "## 空安全"
+    },
+    {
+      "en-US": "- Avoid `!` (bang operator) — prefer `?.`, `??`, `if (x != null)`, or Dart 3 pattern matching; reserve `!` only where a null value is a programming error and crashing is the right behaviour\n- Avoid `late` unless initialization is guaranteed before first use (prefer nullable or constructor init)\n- Use `required` for constructor parameters that must always be provided",
+      "zh-Hans": "* 避免使用 `!` (空断言操作符) — 优先使用 `?.`、`??`、`if (x != null)` 或 Dart 3 的模式匹配；仅在空值属于编程错误且崩溃是正确行为时才保留使用 `!`\n* 避免使用 `late`，除非能保证在首次使用前完成初始化 (优先使用可空类型或构造函数初始化)\n* 对于必须始终提供的构造函数参数，使用 `required`"
+    },
+    {
+      "en-US": "```dart\n// BAD — crashes at runtime if user is null\nfinal name = user!.name;\n\n// GOOD — null-aware operators\nfinal name = user?.name ?? 'Unknown';\n\n// GOOD — Dart 3 pattern matching (exhaustive, compiler-checked)\nfinal name = switch (user) {\n  User(:final name) => name,\n  null => 'Unknown',\n};\n\n// GOOD — early-return null guard\nString getUserName(User? user) {\n  if (user == null) return 'Unknown';\n  return user.name; // promoted to non-null after the guard\n}\n```",
+      "zh-Hans": "```dart\n// BAD — crashes at runtime if user is null\nfinal name = user!.name;\n\n// GOOD — null-aware operators\nfinal name = user?.name ?? 'Unknown';\n\n// GOOD — Dart 3 pattern matching (exhaustive, compiler-checked)\nfinal name = switch (user) {\n  User(:final name) => name,\n  null => 'Unknown',\n};\n\n// GOOD — early-return null guard\nString getUserName(User? user) {\n  if (user == null) return 'Unknown';\n  return user.name; // promoted to non-null after the guard\n}\n```"
+    },
+    {
+      "en-US": "## Sealed Types and Pattern Matching (Dart 3+)",
+      "zh-Hans": "## 密封类型和模式匹配 (Dart 3+)"
+    },
+    {
+      "en-US": "Use sealed classes to model closed state hierarchies:",
+      "zh-Hans": "使用密封类来建模封闭的状态层次结构："
+    },
+    {
+      "en-US": "```dart\nsealed class AsyncState<T> {\n  const AsyncState();\n}\n\nfinal class Loading<T> extends AsyncState<T> {\n  const Loading();\n}\n\nfinal class Success<T> extends AsyncState<T> {\n  const Success(this.data);\n  final T data;\n}\n\nfinal class Failure<T> extends AsyncState<T> {\n  const Failure(this.error);\n  final Object error;\n}\n```",
+      "zh-Hans": "```dart\nsealed class AsyncState<T> {\n  const AsyncState();\n}\n\nfinal class Loading<T> extends AsyncState<T> {\n  const Loading();\n}\n\nfinal class Success<T> extends AsyncState<T> {\n  const Success(this.data);\n  final T data;\n}\n\nfinal class Failure<T> extends AsyncState<T> {\n  const Failure(this.error);\n  final Object error;\n}\n```"
+    },
+    {
+      "en-US": "Always use exhaustive `switch` with sealed types — no default/wildcard:",
+      "zh-Hans": "始终对密封类型使用穷尽的 `switch` — 不使用默认/通配符分支："
+    },
+    {
+      "en-US": "```dart\n// BAD\nif (state is Loading) { ... }\n\n// GOOD\nreturn switch (state) {\n  Loading() => const CircularProgressIndicator(),\n  Success(:final data) => DataWidget(data),\n  Failure(:final error) => ErrorWidget(error.toString()),\n};\n```",
+      "zh-Hans": "```dart\n// BAD\nif (state is Loading) { ... }\n\n// GOOD\nreturn switch (state) {\n  Loading() => const CircularProgressIndicator(),\n  Success(:final data) => DataWidget(data),\n  Failure(:final error) => ErrorWidget(error.toString()),\n};\n```"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Specify exception types in `on` clauses — never use bare `catch (e)`\n- Never catch `Error` subtypes — they indicate programming bugs\n- Use `Result`-style types or sealed classes for recoverable errors\n- Avoid using exceptions for control flow",
+      "zh-Hans": "* 在 `on` 子句中指定异常类型 — 绝不使用裸的 `catch (e)`\n* 绝不捕获 `Error` 的子类型 — 它们表示程序错误\n* 对可恢复的错误使用 `Result` 风格的类型或密封类\n* 避免使用异常进行控制流"
+    },
+    {
+      "en-US": "```dart\n// BAD\ntry {\n  await fetchUser();\n} catch (e) {\n  log(e.toString());\n}\n\n// GOOD\ntry {\n  await fetchUser();\n} on NetworkException catch (e) {\n  log('Network error: ${e.message}');\n} on NotFoundException {\n  handleNotFound();\n}\n```",
+      "zh-Hans": "```dart\n// BAD\ntry {\n  await fetchUser();\n} catch (e) {\n  log(e.toString());\n}\n\n// GOOD\ntry {\n  await fetchUser();\n} on NetworkException catch (e) {\n  log('Network error: ${e.message}');\n} on NotFoundException {\n  handleNotFound();\n}\n```"
+    },
+    {
+      "en-US": "## Async / Futures",
+      "zh-Hans": "## 异步 / Futures"
+    },
+    {
+      "en-US": "- Always `await` Futures or explicitly call `unawaited()` to signal intentional fire-and-forget\n- Never mark a function `async` if it never `await`s anything\n- Use `Future.wait` / `Future.any` for concurrent operations\n- Check `context.mounted` before using `BuildContext` after any `await` (Flutter 3.7+)",
+      "zh-Hans": "* 始终对 Futures 使用 `await` 或显式调用 `unawaited()` 以表明是故意“发射后不管”\n* 如果一个函数从不 `await` 任何内容，绝不将其标记为 `async`\n* 使用 `Future.wait` / `Future.any` 进行并发操作\n* 在任何 `await` 之后，使用 `BuildContext` 之前检查 `context.mounted` (Flutter 3.7+)"
+    },
+    {
+      "en-US": "```dart\n// BAD — ignoring Future\nfetchData(); // fire-and-forget without marking intent\n\n// GOOD\nunawaited(fetchData()); // explicit fire-and-forget\nawait fetchData();      // or properly awaited\n```",
+      "zh-Hans": "```dart\n// BAD — ignoring Future\nfetchData(); // fire-and-forget without marking intent\n\n// GOOD\nunawaited(fetchData()); // explicit fire-and-forget\nawait fetchData();      // or properly awaited\n```"
+    },
+    {
+      "en-US": "## Imports",
+      "zh-Hans": "## 导入"
+    },
+    {
+      "en-US": "- Use `package:` imports throughout — never relative imports (`../`) for cross-feature or cross-layer code\n- Order: `dart:` → external `package:` → internal `package:` (same package)\n- No unused imports — `dart analyze` enforces this with `unused_import`",
+      "zh-Hans": "* 始终使用 `package:` 导入 — 对于跨功能或跨层的代码，绝不使用相对导入 (`../`)\n* 导入顺序：`dart:` → 外部 `package:` → 内部 `package:` (同一包内)\n* 无未使用的导入 — `dart analyze` 通过 `unused_import` 强制执行此规则"
+    },
+    {
+      "en-US": "## Code Generation",
+      "zh-Hans": "## 代码生成"
+    },
+    {
+      "en-US": "- Generated files (`.g.dart`, `.freezed.dart`, `.gr.dart`) must be committed or gitignored consistently — pick one strategy per project\n- Never manually edit generated files\n- Keep generator annotations (`@JsonSerializable`, `@freezed`, `@riverpod`, etc.) on the canonical source file only",
+      "zh-Hans": "* 生成的文件 (`.g.dart`, `.freezed.dart`, `.gr.dart`) 必须一致地提交或通过 gitignore 忽略 — 每个项目选择一种策略\n* 绝不手动编辑生成的文件\n* 仅将生成器注解 (`@JsonSerializable`, `@freezed`, `@riverpod` 等) 保留在规范的源文件上"
+    }
+  ]
+}

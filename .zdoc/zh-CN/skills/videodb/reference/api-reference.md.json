@@ -1,0 +1,418 @@
+{
+  "sourceFile": "skills/videodb/reference/api-reference.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Complete API Reference",
+      "zh-Hans": "# 完整 API 参考"
+    },
+    {
+      "en-US": "Reference material for the VideoDB skill. For usage guidance and workflow selection, start with [../SKILL.md](../SKILL.md).",
+      "zh-Hans": "VideoDB 技能参考材料。关于使用指南和工作流选择，请从 [../SKILL.md](../SKILL.md) 开始。"
+    },
+    {
+      "en-US": "## Connection",
+      "zh-Hans": "## 连接"
+    },
+    {
+      "en-US": "```python\nimport videodb\n\nconn = videodb.connect(\n    api_key=\"your-api-key\",      # or set VIDEO_DB_API_KEY env var\n    base_url=None,                # custom API endpoint (optional)\n)\n```",
+      "zh-Hans": "```python\nimport videodb\n\nconn = videodb.connect(\n    api_key=\"your-api-key\",      # or set VIDEO_DB_API_KEY env var\n    base_url=None,                # custom API endpoint (optional)\n)\n```"
+    },
+    {
+      "en-US": "**Returns:** `Connection` object",
+      "zh-Hans": "**返回:** `Connection` 对象"
+    },
+    {
+      "en-US": "### Connection Methods",
+      "zh-Hans": "### 连接方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `conn.get_collection(collection_id=\"default\")` | `Collection` | Get collection (default if no ID) |\n| `conn.get_collections()` | `list[Collection]` | List all collections |\n| `conn.create_collection(name, description, is_public=False)` | `Collection` | Create new collection |\n| `conn.update_collection(id, name, description)` | `Collection` | Update a collection |\n| `conn.check_usage()` | `dict` | Get account usage stats |\n| `conn.upload(source, media_type, name, ...)` | `Video\\|Audio\\|Image` | Upload to default collection |\n| `conn.record_meeting(meeting_url, bot_name, ...)` | `Meeting` | Record a meeting |\n| `conn.create_capture_session(...)` | `CaptureSession` | Create a capture session (see [capture-reference.md](capture-reference.md)) |\n| `conn.youtube_search(query, result_threshold, duration)` | `list[dict]` | Search YouTube |\n| `conn.transcode(source, callback_url, mode, ...)` | `str` | Transcode video (returns job ID) |\n| `conn.get_transcode_details(job_id)` | `dict` | Get transcode job status and details |\n| `conn.connect_websocket(collection_id)` | `WebSocketConnection` | Connect to WebSocket (see [capture-reference.md](capture-reference.md)) |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `conn.get_collection(collection_id=\"default\")` | `Collection` | 获取集合（若无 ID 则获取默认集合） |\n| `conn.get_collections()` | `list[Collection]` | 列出所有集合 |\n| `conn.create_collection(name, description, is_public=False)` | `Collection` | 创建新集合 |\n| `conn.update_collection(id, name, description)` | `Collection` | 更新集合 |\n| `conn.check_usage()` | `dict` | 获取账户使用统计 |\n| `conn.upload(source, media_type, name, ...)` | `Video\\|Audio\\|Image` | 上传到默认集合 |\n| `conn.record_meeting(meeting_url, bot_name, ...)` | `Meeting` | 录制会议 |\n| `conn.create_capture_session(...)` | `CaptureSession` | 创建捕获会话（见 [capture-reference.md](capture-reference.md)） |\n| `conn.youtube_search(query, result_threshold, duration)` | `list[dict]` | 搜索 YouTube |\n| `conn.transcode(source, callback_url, mode, ...)` | `str` | 转码视频（返回作业 ID） |\n| `conn.get_transcode_details(job_id)` | `dict` | 获取转码作业状态和详情 |\n| `conn.connect_websocket(collection_id)` | `WebSocketConnection` | 连接到 WebSocket（见 [capture-reference.md](capture-reference.md)） |"
+    },
+    {
+      "en-US": "### Transcode",
+      "zh-Hans": "### 转码"
+    },
+    {
+      "en-US": "Transcode a video from a URL with custom resolution, quality, and audio settings. Processing happens server-side — no local ffmpeg required.",
+      "zh-Hans": "使用自定义分辨率、质量和音频设置从 URL 转码视频。处理在服务器端进行——无需本地 ffmpeg。"
+    },
+    {
+      "en-US": "```python\nfrom videodb import TranscodeMode, VideoConfig, AudioConfig\n\njob_id = conn.transcode(\n    source=\"https://example.com/video.mp4\",\n    callback_url=\"https://example.com/webhook\",\n    mode=TranscodeMode.economy,\n    video_config=VideoConfig(resolution=720, quality=23),\n    audio_config=AudioConfig(mute=False),\n)\n```",
+      "zh-Hans": "```python\nfrom videodb import TranscodeMode, VideoConfig, AudioConfig\n\njob_id = conn.transcode(\n    source=\"https://example.com/video.mp4\",\n    callback_url=\"https://example.com/webhook\",\n    mode=TranscodeMode.economy,\n    video_config=VideoConfig(resolution=720, quality=23),\n    audio_config=AudioConfig(mute=False),\n)\n```"
+    },
+    {
+      "en-US": "#### transcode Parameters",
+      "zh-Hans": "#### transcode 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `source` | `str` | required | URL of the video to transcode (preferably a downloadable URL) |\n| `callback_url` | `str` | required | URL to receive the callback when transcoding completes |\n| `mode` | `TranscodeMode` | `TranscodeMode.economy` | Transcoding speed: `economy` or `lightning` |\n| `video_config` | `VideoConfig` | `VideoConfig()` | Video encoding settings |\n| `audio_config` | `AudioConfig` | `AudioConfig()` | Audio encoding settings |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `source` | `str` | 必需 | 要转码的视频 URL（最好是可下载的 URL） |\n| `callback_url` | `str` | 必需 | 转码完成时接收回调的 URL |\n| `mode` | `TranscodeMode` | `TranscodeMode.economy` | 转码速度：`economy` 或 `lightning` |\n| `video_config` | `VideoConfig` | `VideoConfig()` | 视频编码设置 |\n| `audio_config` | `AudioConfig` | `AudioConfig()` | 音频编码设置 |"
+    },
+    {
+      "en-US": "Returns a job ID (`str`). Use `conn.get_transcode_details(job_id)` to check job status.",
+      "zh-Hans": "返回一个作业 ID (`str`)。使用 `conn.get_transcode_details(job_id)` 来检查作业状态。"
+    },
+    {
+      "en-US": "```python\ndetails = conn.get_transcode_details(job_id)\n```",
+      "zh-Hans": "```python\ndetails = conn.get_transcode_details(job_id)\n```"
+    },
+    {
+      "en-US": "#### VideoConfig",
+      "zh-Hans": "#### VideoConfig"
+    },
+    {
+      "en-US": "```python\nfrom videodb import VideoConfig, ResizeMode\n\nconfig = VideoConfig(\n    resolution=720,              # Target resolution height (e.g. 480, 720, 1080)\n    quality=23,                  # Encoding quality (lower = better, default 23)\n    framerate=30,                # Target framerate\n    aspect_ratio=\"16:9\",         # Target aspect ratio\n    resize_mode=ResizeMode.crop, # How to fit: crop, fit, or pad\n)\n```",
+      "zh-Hans": "```python\nfrom videodb import VideoConfig, ResizeMode\n\nconfig = VideoConfig(\n    resolution=720,              # Target resolution height (e.g. 480, 720, 1080)\n    quality=23,                  # Encoding quality (lower = better, default 23)\n    framerate=30,                # Target framerate\n    aspect_ratio=\"16:9\",         # Target aspect ratio\n    resize_mode=ResizeMode.crop, # How to fit: crop, fit, or pad\n)\n```"
+    },
+    {
+      "en-US": "| Field | Type | Default | Description |\n|-------|------|---------|-------------|\n| `resolution` | `int\\|None` | `None` | Target resolution height in pixels |\n| `quality` | `int` | `23` | Encoding quality (lower = higher quality) |\n| `framerate` | `int\\|None` | `None` | Target framerate |\n| `aspect_ratio` | `str\\|None` | `None` | Target aspect ratio (e.g. `\"16:9\"`, `\"9:16\"`) |\n| `resize_mode` | `str` | `ResizeMode.crop` | Resize strategy: `crop`, `fit`, or `pad` |",
+      "zh-Hans": "| 字段 | 类型 | 默认值 | 描述 |\n|-------|------|---------|-------------|\n| `resolution` | `int\\|None` | `None` | 目标分辨率高度（像素） |\n| `quality` | `int` | `23` | 编码质量（值越低，质量越高） |\n| `framerate` | `int\\|None` | `None` | 目标帧率 |\n| `aspect_ratio` | `str\\|None` | `None` | 目标宽高比（例如 `\"16:9\"`, `\"9:16\"`） |\n| `resize_mode` | `str` | `ResizeMode.crop` | 调整大小策略：`crop`, `fit`, 或 `pad` |"
+    },
+    {
+      "en-US": "#### AudioConfig",
+      "zh-Hans": "#### AudioConfig"
+    },
+    {
+      "en-US": "```python\nfrom videodb import AudioConfig\n\nconfig = AudioConfig(mute=False)\n```",
+      "zh-Hans": "```python\nfrom videodb import AudioConfig\n\nconfig = AudioConfig(mute=False)\n```"
+    },
+    {
+      "en-US": "| Field | Type | Default | Description |\n|-------|------|---------|-------------|\n| `mute` | `bool` | `False` | Mute the audio track |",
+      "zh-Hans": "| 字段 | 类型 | 默认值 | 描述 |\n|-------|------|---------|-------------|\n| `mute` | `bool` | `False` | 静音音轨 |"
+    },
+    {
+      "en-US": "## Collections",
+      "zh-Hans": "## 集合"
+    },
+    {
+      "en-US": "```python\ncoll = conn.get_collection()\n```",
+      "zh-Hans": "```python\ncoll = conn.get_collection()\n```"
+    },
+    {
+      "en-US": "### Collection Methods",
+      "zh-Hans": "### 集合方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `coll.get_videos()` | `list[Video]` | List all videos |\n| `coll.get_video(video_id)` | `Video` | Get specific video |\n| `coll.get_audios()` | `list[Audio]` | List all audios |\n| `coll.get_audio(audio_id)` | `Audio` | Get specific audio |\n| `coll.get_images()` | `list[Image]` | List all images |\n| `coll.get_image(image_id)` | `Image` | Get specific image |\n| `coll.upload(url=None, file_path=None, media_type=None, name=None)` | `Video\\|Audio\\|Image` | Upload media |\n| `coll.search(query, search_type, index_type, score_threshold, namespace, scene_index_id, ...)` | `SearchResult` | Search across collection (semantic only; keyword and scene search raise `NotImplementedError`) |\n| `coll.generate_image(prompt, aspect_ratio=\"1:1\")` | `Image` | Generate image with AI |\n| `coll.generate_video(prompt, duration=5)` | `Video` | Generate video with AI |\n| `coll.generate_music(prompt, duration=5)` | `Audio` | Generate music with AI |\n| `coll.generate_sound_effect(prompt, duration=2)` | `Audio` | Generate sound effect |\n| `coll.generate_voice(text, voice_name=\"Default\")` | `Audio` | Generate speech from text |\n| `coll.generate_text(prompt, model_name=\"basic\", response_type=\"text\")` | `dict` | LLM text generation — access result via `[\"output\"]` |\n| `coll.dub_video(video_id, language_code)` | `Video` | Dub video into another language |\n| `coll.record_meeting(meeting_url, bot_name, ...)` | `Meeting` | Record a live meeting |\n| `coll.create_capture_session(...)` | `CaptureSession` | Create a capture session (see [capture-reference.md](capture-reference.md)) |\n| `coll.get_capture_session(...)` | `CaptureSession` | Retrieve capture session (see [capture-reference.md](capture-reference.md)) |\n| `coll.connect_rtstream(url, name, ...)` | `RTStream` | Connect to a live stream (see [rtstream-reference.md](rtstream-reference.md)) |\n| `coll.make_public()` | `None` | Make collection public |\n| `coll.make_private()` | `None` | Make collection private |\n| `coll.delete_video(video_id)` | `None` | Delete a video |\n| `coll.delete_audio(audio_id)` | `None` | Delete an audio |\n| `coll.delete_image(image_id)` | `None` | Delete an image |\n| `coll.delete()` | `None` | Delete the collection |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `coll.get_videos()` | `list[Video]` | 列出所有视频 |\n| `coll.get_video(video_id)` | `Video` | 获取特定视频 |\n| `coll.get_audios()` | `list[Audio]` | 列出所有音频 |\n| `coll.get_audio(audio_id)` | `Audio` | 获取特定音频 |\n| `coll.get_images()` | `list[Image]` | 列出所有图像 |\n| `coll.get_image(image_id)` | `Image` | 获取特定图像 |\n| `coll.upload(url=None, file_path=None, media_type=None, name=None)` | `Video\\|Audio\\|Image` | 上传媒体 |\n| `coll.search(query, search_type, index_type, score_threshold, namespace, scene_index_id, ...)` | `SearchResult` | 在集合中搜索（仅语义搜索；关键词和场景搜索会引发 `NotImplementedError`） |\n| `coll.generate_image(prompt, aspect_ratio=\"1:1\")` | `Image` | 使用 AI 生成图像 |\n| `coll.generate_video(prompt, duration=5)` | `Video` | 使用 AI 生成视频 |\n| `coll.generate_music(prompt, duration=5)` | `Audio` | 使用 AI 生成音乐 |\n| `coll.generate_sound_effect(prompt, duration=2)` | `Audio` | 生成音效 |\n| `coll.generate_voice(text, voice_name=\"Default\")` | `Audio` | 从文本生成语音 |\n| `coll.generate_text(prompt, model_name=\"basic\", response_type=\"text\")` | `dict` | LLM 文本生成——通过 `[\"output\"]` 访问结果 |\n| `coll.dub_video(video_id, language_code)` | `Video` | 将视频配音为另一种语言 |\n| `coll.record_meeting(meeting_url, bot_name, ...)` | `Meeting` | 录制实时会议 |\n| `coll.create_capture_session(...)` | `CaptureSession` | 创建捕获会话（见 [capture-reference.md](capture-reference.md)） |\n| `coll.get_capture_session(...)` | `CaptureSession` | 检索捕获会话（见 [capture-reference.md](capture-reference.md)） |\n| `coll.connect_rtstream(url, name, ...)` | `RTStream` | 连接到实时流（见 [rtstream-reference.md](rtstream-reference.md)） |\n| `coll.make_public()` | `None` | 使集合公开 |\n| `coll.make_private()` | `None` | 使集合私有 |\n| `coll.delete_video(video_id)` | `None` | 删除视频 |\n| `coll.delete_audio(audio_id)` | `None` | 删除音频 |\n| `coll.delete_image(image_id)` | `None` | 删除图像 |\n| `coll.delete()` | `None` | 删除集合 |"
+    },
+    {
+      "en-US": "### Upload Parameters",
+      "zh-Hans": "### 上传参数"
+    },
+    {
+      "en-US": "```python\nvideo = coll.upload(\n    url=None,            # Remote URL (HTTP, YouTube)\n    file_path=None,      # Local file path\n    media_type=None,     # \"video\", \"audio\", or \"image\" (auto-detected if omitted)\n    name=None,           # Custom name for the media\n    description=None,    # Description\n    callback_url=None,   # Webhook URL for async notification\n)\n```",
+      "zh-Hans": "```python\nvideo = coll.upload(\n    url=None,            # Remote URL (HTTP, YouTube)\n    file_path=None,      # Local file path\n    media_type=None,     # \"video\", \"audio\", or \"image\" (auto-detected if omitted)\n    name=None,           # Custom name for the media\n    description=None,    # Description\n    callback_url=None,   # Webhook URL for async notification\n)\n```"
+    },
+    {
+      "en-US": "## Video Object",
+      "zh-Hans": "## 视频对象"
+    },
+    {
+      "en-US": "```python\nvideo = coll.get_video(video_id)\n```",
+      "zh-Hans": "```python\nvideo = coll.get_video(video_id)\n```"
+    },
+    {
+      "en-US": "### Video Properties",
+      "zh-Hans": "### 视频属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `video.id` | `str` | Unique video ID |\n| `video.collection_id` | `str` | Parent collection ID |\n| `video.name` | `str` | Video name |\n| `video.description` | `str` | Video description |\n| `video.length` | `float` | Duration in seconds |\n| `video.stream_url` | `str` | Default stream URL |\n| `video.player_url` | `str` | Player embed URL |\n| `video.thumbnail_url` | `str` | Thumbnail URL |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `video.id` | `str` | 唯一视频 ID |\n| `video.collection_id` | `str` | 父集合 ID |\n| `video.name` | `str` | 视频名称 |\n| `video.description` | `str` | 视频描述 |\n| `video.length` | `float` | 时长（秒） |\n| `video.stream_url` | `str` | 默认流 URL |\n| `video.player_url` | `str` | 播放器嵌入 URL |\n| `video.thumbnail_url` | `str` | 缩略图 URL |"
+    },
+    {
+      "en-US": "### Video Methods",
+      "zh-Hans": "### 视频方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `video.generate_stream(timeline=None)` | `str` | Generate stream URL (optional timeline of `[(start, end)]` tuples) |\n| `video.play()` | `str` | Open stream in browser, returns player URL |\n| `video.index_spoken_words(language_code=None, force=False)` | `None` | Index speech for search. Use `force=True` to skip if already indexed. |\n| `video.index_scenes(extraction_type, prompt, extraction_config, metadata, model_name, name, scenes, callback_url)` | `str` | Index visual scenes (returns scene_index_id) |\n| `video.index_visuals(prompt, batch_config, ...)` | `str` | Index visuals (returns scene_index_id) |\n| `video.index_audio(prompt, model_name, ...)` | `str` | Index audio with LLM (returns scene_index_id) |\n| `video.get_transcript(start=None, end=None)` | `list[dict]` | Get timestamped transcript |\n| `video.get_transcript_text(start=None, end=None)` | `str` | Get full transcript text |\n| `video.generate_transcript(force=None)` | `dict` | Generate transcript |\n| `video.translate_transcript(language, additional_notes)` | `list[dict]` | Translate transcript |\n| `video.search(query, search_type, index_type, filter, **kwargs)` | `SearchResult` | Search within video |\n| `video.add_subtitle(style=SubtitleStyle())` | `str` | Add subtitles (returns stream URL) |\n| `video.generate_thumbnail(time=None)` | `str\\|Image` | Generate thumbnail |\n| `video.get_thumbnails()` | `list[Image]` | Get all thumbnails |\n| `video.extract_scenes(extraction_type, extraction_config)` | `SceneCollection` | Extract scenes |\n| `video.reframe(start, end, target, mode, callback_url)` | `Video\\|None` | Reframe video aspect ratio |\n| `video.clip(prompt, content_type, model_name)` | `str` | Generate clip from prompt (returns stream URL) |\n| `video.insert_video(video, timestamp)` | `str` | Insert video at timestamp |\n| `video.download(name=None)` | `dict` | Download the video |\n| `video.delete()` | `None` | Delete the video |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `video.generate_stream(timeline=None)` | `str` | 生成流 URL（可选的 `[(start, end)]` 元组时间线） |\n| `video.play()` | `str` | 在浏览器中打开流，返回播放器 URL |\n| `video.index_spoken_words(language_code=None, force=False)` | `None` | 为语音搜索建立索引。使用 `force=True` 在已建立索引时跳过。 |\n| `video.index_scenes(extraction_type, prompt, extraction_config, metadata, model_name, name, scenes, callback_url)` | `str` | 索引视觉场景（返回 scene\\_index\\_id） |\n| `video.index_visuals(prompt, batch_config, ...)` | `str` | 索引视觉内容（返回 scene\\_index\\_id） |\n| `video.index_audio(prompt, model_name, ...)` | `str` | 使用 LLM 索引音频（返回 scene\\_index\\_id） |\n| `video.get_transcript(start=None, end=None)` | `list[dict]` | 获取带时间戳的转录稿 |\n| `video.get_transcript_text(start=None, end=None)` | `str` | 获取完整转录文本 |\n| `video.generate_transcript(force=None)` | `dict` | 生成转录稿 |\n| `video.translate_transcript(language, additional_notes)` | `list[dict]` | 翻译转录稿 |\n| `video.search(query, search_type, index_type, filter, **kwargs)` | `SearchResult` | 在视频内搜索 |\n| `video.add_subtitle(style=SubtitleStyle())` | `str` | 添加字幕（返回流 URL） |\n| `video.generate_thumbnail(time=None)` | `str\\|Image` | 生成缩略图 |\n| `video.get_thumbnails()` | `list[Image]` | 获取所有缩略图 |\n| `video.extract_scenes(extraction_type, extraction_config)` | `SceneCollection` | 提取场景 |\n| `video.reframe(start, end, target, mode, callback_url)` | `Video\\|None` | 调整视频宽高比 |\n| `video.clip(prompt, content_type, model_name)` | `str` | 根据提示生成剪辑（返回流 URL） |\n| `video.insert_video(video, timestamp)` | `str` | 在时间戳处插入视频 |\n| `video.download(name=None)` | `dict` | 下载视频 |\n| `video.delete()` | `None` | 删除视频 |"
+    },
+    {
+      "en-US": "### Reframe",
+      "zh-Hans": "### 调整宽高比"
+    },
+    {
+      "en-US": "Convert a video to a different aspect ratio with optional smart object tracking. Processing is server-side.",
+      "zh-Hans": "将视频转换为不同的宽高比，可选智能对象跟踪。处理在服务器端进行。"
+    },
+    {
+      "en-US": "> **Warning:** Reframe is a slow server-side operation. It can take several minutes for long videos and may time out. Always use `start`/`end` to limit the segment, or pass `callback_url` for async processing.",
+      "zh-Hans": "> **警告：** 调整宽高比是缓慢的服务器端操作。对于长视频可能需要几分钟，并可能超时。始终使用 `start`/`end` 来限制片段，或传递 `callback_url` 进行异步处理。"
+    },
+    {
+      "en-US": "```python\nfrom videodb import ReframeMode\n\n# Always prefer short segments to avoid timeouts:\nreframed = video.reframe(start=0, end=60, target=\"vertical\", mode=ReframeMode.smart)\n\n# Async reframe for full-length videos (returns None, result via webhook):\nvideo.reframe(target=\"vertical\", callback_url=\"https://example.com/webhook\")\n\n# Custom dimensions\nreframed = video.reframe(start=0, end=60, target={\"width\": 1080, \"height\": 1080})\n```",
+      "zh-Hans": "```python\nfrom videodb import ReframeMode\n\n# Always prefer short segments to avoid timeouts:\nreframed = video.reframe(start=0, end=60, target=\"vertical\", mode=ReframeMode.smart)\n\n# Async reframe for full-length videos (returns None, result via webhook):\nvideo.reframe(target=\"vertical\", callback_url=\"https://example.com/webhook\")\n\n# Custom dimensions\nreframed = video.reframe(start=0, end=60, target={\"width\": 1080, \"height\": 1080})\n```"
+    },
+    {
+      "en-US": "#### reframe Parameters",
+      "zh-Hans": "#### reframe 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `start` | `float\\|None` | `None` | Start time in seconds (None = beginning) |\n| `end` | `float\\|None` | `None` | End time in seconds (None = end of video) |\n| `target` | `str\\|dict` | `\"vertical\"` | Preset string (`\"vertical\"`, `\"square\"`, `\"landscape\"`) or `{\"width\": int, \"height\": int}` |\n| `mode` | `str` | `ReframeMode.smart` | `\"simple\"` (centre crop) or `\"smart\"` (object tracking) |\n| `callback_url` | `str\\|None` | `None` | Webhook URL for async notification |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `start` | `float\\|None` | `None` | 开始时间（秒）（None = 开始） |\n| `end` | `float\\|None` | `None` | 结束时间（秒）（None = 视频结束） |\n| `target` | `str\\|dict` | `\"vertical\"` | 预设字符串（`\"vertical\"`, `\"square\"`, `\"landscape\"`）或 `{\"width\": int, \"height\": int}` |\n| `mode` | `str` | `ReframeMode.smart` | `\"simple\"`（中心裁剪）或 `\"smart\"`（对象跟踪） |\n| `callback_url` | `str\\|None` | `None` | 异步通知的 Webhook URL |"
+    },
+    {
+      "en-US": "Returns a `Video` object when no `callback_url` is provided, `None` otherwise.",
+      "zh-Hans": "当未提供 `callback_url` 时返回 `Video` 对象，否则返回 `None`。"
+    },
+    {
+      "en-US": "## Audio Object",
+      "zh-Hans": "## 音频对象"
+    },
+    {
+      "en-US": "```python\naudio = coll.get_audio(audio_id)\n```",
+      "zh-Hans": "```python\naudio = coll.get_audio(audio_id)\n```"
+    },
+    {
+      "en-US": "### Audio Properties",
+      "zh-Hans": "### 音频属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `audio.id` | `str` | Unique audio ID |\n| `audio.collection_id` | `str` | Parent collection ID |\n| `audio.name` | `str` | Audio name |\n| `audio.length` | `float` | Duration in seconds |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `audio.id` | `str` | 唯一音频 ID |\n| `audio.collection_id` | `str` | 父集合 ID |\n| `audio.name` | `str` | 音频名称 |\n| `audio.length` | `float` | 时长（秒） |"
+    },
+    {
+      "en-US": "### Audio Methods",
+      "zh-Hans": "### 音频方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `audio.generate_url()` | `str` | Generate signed URL for playback |\n| `audio.get_transcript(start=None, end=None)` | `list[dict]` | Get timestamped transcript |\n| `audio.get_transcript_text(start=None, end=None)` | `str` | Get full transcript text |\n| `audio.generate_transcript(force=None)` | `dict` | Generate transcript |\n| `audio.delete()` | `None` | Delete the audio |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `audio.generate_url()` | `str` | 生成用于播放的签名 URL |\n| `audio.get_transcript(start=None, end=None)` | `list[dict]` | 获取带时间戳的转录稿 |\n| `audio.get_transcript_text(start=None, end=None)` | `str` | 获取完整转录文本 |\n| `audio.generate_transcript(force=None)` | `dict` | 生成转录稿 |\n| `audio.delete()` | `None` | 删除音频 |"
+    },
+    {
+      "en-US": "## Image Object",
+      "zh-Hans": "## 图像对象"
+    },
+    {
+      "en-US": "```python\nimage = coll.get_image(image_id)\n```",
+      "zh-Hans": "```python\nimage = coll.get_image(image_id)\n```"
+    },
+    {
+      "en-US": "### Image Properties",
+      "zh-Hans": "### 图像属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `image.id` | `str` | Unique image ID |\n| `image.collection_id` | `str` | Parent collection ID |\n| `image.name` | `str` | Image name |\n| `image.url` | `str\\|None` | Image URL (may be `None` for generated images — use `generate_url()` instead) |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `image.id` | `str` | 唯一图像 ID |\n| `image.collection_id` | `str` | 父集合 ID |\n| `image.name` | `str` | 图像名称 |\n| `image.url` | `str\\|None` | 图像 URL（对于生成的图像可能为 `None`——请改用 `generate_url()`） |"
+    },
+    {
+      "en-US": "### Image Methods",
+      "zh-Hans": "### 图像方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `image.generate_url()` | `str` | Generate signed URL |\n| `image.delete()` | `None` | Delete the image |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `image.generate_url()` | `str` | 生成签名 URL |\n| `image.delete()` | `None` | 删除图像 |"
+    },
+    {
+      "en-US": "## Timeline & Editor",
+      "zh-Hans": "## 时间线与编辑器"
+    },
+    {
+      "en-US": "### Timeline",
+      "zh-Hans": "### 时间线"
+    },
+    {
+      "en-US": "```python\nfrom videodb.timeline import Timeline\n\ntimeline = Timeline(conn)\n```",
+      "zh-Hans": "```python\nfrom videodb.timeline import Timeline\n\ntimeline = Timeline(conn)\n```"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `timeline.add_inline(asset)` | `None` | Add `VideoAsset` sequentially on main track |\n| `timeline.add_overlay(start, asset)` | `None` | Overlay `AudioAsset`, `ImageAsset`, or `TextAsset` at timestamp |\n| `timeline.generate_stream()` | `str` | Compile and get stream URL |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `timeline.add_inline(asset)` | `None` | 在主轨道上顺序添加 `VideoAsset` |\n| `timeline.add_overlay(start, asset)` | `None` | 在时间戳处叠加 `AudioAsset`、`ImageAsset` 或 `TextAsset` |\n| `timeline.generate_stream()` | `str` | 编译并获取流 URL |"
+    },
+    {
+      "en-US": "### Asset Types",
+      "zh-Hans": "### 资产类型"
+    },
+    {
+      "en-US": "#### VideoAsset",
+      "zh-Hans": "#### VideoAsset"
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import VideoAsset\n\nasset = VideoAsset(\n    asset_id=video.id,\n    start=0,              # trim start (seconds)\n    end=None,             # trim end (seconds, None = full)\n)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import VideoAsset\n\nasset = VideoAsset(\n    asset_id=video.id,\n    start=0,              # trim start (seconds)\n    end=None,             # trim end (seconds, None = full)\n)\n```"
+    },
+    {
+      "en-US": "#### AudioAsset",
+      "zh-Hans": "#### AudioAsset"
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import AudioAsset\n\nasset = AudioAsset(\n    asset_id=audio.id,\n    start=0,\n    end=None,\n    disable_other_tracks=True,   # mute original audio when True\n    fade_in_duration=0,          # seconds (max 5)\n    fade_out_duration=0,         # seconds (max 5)\n)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import AudioAsset\n\nasset = AudioAsset(\n    asset_id=audio.id,\n    start=0,\n    end=None,\n    disable_other_tracks=True,   # mute original audio when True\n    fade_in_duration=0,          # seconds (max 5)\n    fade_out_duration=0,         # seconds (max 5)\n)\n```"
+    },
+    {
+      "en-US": "#### ImageAsset",
+      "zh-Hans": "#### ImageAsset"
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import ImageAsset\n\nasset = ImageAsset(\n    asset_id=image.id,\n    duration=None,        # display duration (seconds)\n    width=100,            # display width\n    height=100,           # display height\n    x=80,                 # horizontal position (px from left)\n    y=20,                 # vertical position (px from top)\n)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import ImageAsset\n\nasset = ImageAsset(\n    asset_id=image.id,\n    duration=None,        # display duration (seconds)\n    width=100,            # display width\n    height=100,           # display height\n    x=80,                 # horizontal position (px from left)\n    y=20,                 # vertical position (px from top)\n)\n```"
+    },
+    {
+      "en-US": "#### TextAsset",
+      "zh-Hans": "#### TextAsset"
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import TextAsset, TextStyle\n\nasset = TextAsset(\n    text=\"Hello World\",\n    duration=5,\n    style=TextStyle(\n        fontsize=24,\n        fontcolor=\"black\",\n        boxcolor=\"white\",       # background box colour\n        alpha=1.0,\n        font=\"Sans\",\n        text_align=\"T\",         # text alignment within box\n    ),\n)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import TextAsset, TextStyle\n\nasset = TextAsset(\n    text=\"Hello World\",\n    duration=5,\n    style=TextStyle(\n        fontsize=24,\n        fontcolor=\"black\",\n        boxcolor=\"white\",       # background box colour\n        alpha=1.0,\n        font=\"Sans\",\n        text_align=\"T\",         # text alignment within box\n    ),\n)\n```"
+    },
+    {
+      "en-US": "#### CaptionAsset (Editor API)",
+      "zh-Hans": "#### CaptionAsset（编辑器 API）"
+    },
+    {
+      "en-US": "CaptionAsset belongs to the Editor API, which has its own Timeline, Track, and Clip system:",
+      "zh-Hans": "CaptionAsset 属于编辑器 API，它有自己的时间线、轨道和剪辑系统："
+    },
+    {
+      "en-US": "```python\nfrom videodb.editor import CaptionAsset, FontStyling\n\nasset = CaptionAsset(\n    src=\"auto\",                    # \"auto\" or base64 ASS string\n    font=FontStyling(name=\"Clear Sans\", size=30),\n    primary_color=\"&H00FFFFFF\",\n)\n```",
+      "zh-Hans": "```python\nfrom videodb.editor import CaptionAsset, FontStyling\n\nasset = CaptionAsset(\n    src=\"auto\",                    # \"auto\" or base64 ASS string\n    font=FontStyling(name=\"Clear Sans\", size=30),\n    primary_color=\"&H00FFFFFF\",\n)\n```"
+    },
+    {
+      "en-US": "See [editor.md](editor.md#caption-overlays) for full CaptionAsset usage with the Editor API.",
+      "zh-Hans": "完整的 CaptionAsset 用法请见 [editor.md](editor.md#caption-overlays) 中的编辑器 API。"
+    },
+    {
+      "en-US": "## Video Search Parameters",
+      "zh-Hans": "## 视频搜索参数"
+    },
+    {
+      "en-US": "```python\nresults = video.search(\n    query=\"your query\",\n    search_type=SearchType.semantic,       # semantic, keyword, or scene\n    index_type=IndexType.spoken_word,      # spoken_word or scene\n    result_threshold=None,                 # max number of results\n    score_threshold=None,                  # minimum relevance score\n    dynamic_score_percentage=None,         # percentage of dynamic score\n    scene_index_id=None,                   # target a specific scene index (pass via **kwargs)\n    filter=[],                             # metadata filters for scene search\n)\n```",
+      "zh-Hans": "```python\nresults = video.search(\n    query=\"your query\",\n    search_type=SearchType.semantic,       # semantic, keyword, or scene\n    index_type=IndexType.spoken_word,      # spoken_word or scene\n    result_threshold=None,                 # max number of results\n    score_threshold=None,                  # minimum relevance score\n    dynamic_score_percentage=None,         # percentage of dynamic score\n    scene_index_id=None,                   # target a specific scene index (pass via **kwargs)\n    filter=[],                             # metadata filters for scene search\n)\n```"
+    },
+    {
+      "en-US": "> **Note:** `filter` is an explicit named parameter in `video.search()`. `scene_index_id` is passed through `**kwargs` to the API.\n>\n> **Important:** `video.search()` raises `InvalidRequestError` with message `\"No results found\"` when there are no matches. Always wrap search calls in try/except. For scene search, use `score_threshold=0.3` or higher to filter low-relevance noise.",
+      "zh-Hans": "> **注意：** `filter` 是 `video.search()` 中的一个显式命名参数。`scene_index_id` 通过 `**kwargs` 传递给 API。\n>\n> **重要：** `video.search()` 在没有匹配项时会引发 `InvalidRequestError`，并附带消息 `\"No results found\"`。请始终将搜索调用包装在 try/except 中。对于场景搜索，请使用 `score_threshold=0.3` 或更高值来过滤低相关性的噪声。"
+    },
+    {
+      "en-US": "For scene search, use `search_type=SearchType.semantic` with `index_type=IndexType.scene`. Pass `scene_index_id` when targeting a specific scene index. See [search.md](search.md) for details.",
+      "zh-Hans": "对于场景搜索，请使用 `search_type=SearchType.semantic` 并设置 `index_type=IndexType.scene`。当针对特定场景索引时，传递 `scene_index_id`。详情请参阅 [search.md](search.md)。"
+    },
+    {
+      "en-US": "## SearchResult Object",
+      "zh-Hans": "## SearchResult 对象"
+    },
+    {
+      "en-US": "```python\nresults = video.search(\"query\", search_type=SearchType.semantic)\n```",
+      "zh-Hans": "```python\nresults = video.search(\"query\", search_type=SearchType.semantic)\n```"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `results.get_shots()` | `list[Shot]` | Get list of matching segments |\n| `results.compile()` | `str` | Compile all shots into a stream URL |\n| `results.play()` | `str` | Open compiled stream in browser |",
+      "zh-Hans": "| 方法 | 返回值 | 描述 |\n|--------|---------|-------------|\n| `results.get_shots()` | `list[Shot]` | 获取匹配的片段列表 |\n| `results.compile()` | `str` | 将所有镜头编译为流 URL |\n| `results.play()` | `str` | 在浏览器中打开编译后的流 |"
+    },
+    {
+      "en-US": "### Shot Properties",
+      "zh-Hans": "### Shot 属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `shot.video_id` | `str` | Source video ID |\n| `shot.video_length` | `float` | Source video duration |\n| `shot.video_title` | `str` | Source video title |\n| `shot.start` | `float` | Start time (seconds) |\n| `shot.end` | `float` | End time (seconds) |\n| `shot.text` | `str` | Matched text content |\n| `shot.search_score` | `float` | Search relevance score |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `shot.video_id` | `str` | 源视频 ID |\n| `shot.video_length` | `float` | 源视频时长 |\n| `shot.video_title` | `str` | 源视频标题 |\n| `shot.start` | `float` | 开始时间（秒） |\n| `shot.end` | `float` | 结束时间（秒） |\n| `shot.text` | `str` | 匹配的文本内容 |\n| `shot.search_score` | `float` | 搜索相关性分数 |"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `shot.generate_stream()` | `str` | Stream this specific shot |\n| `shot.play()` | `str` | Open shot stream in browser |",
+      "zh-Hans": "| 方法 | 返回值 | 描述 |\n|--------|---------|-------------|\n| `shot.generate_stream()` | `str` | 流式传输此特定镜头 |\n| `shot.play()` | `str` | 在浏览器中打开镜头流 |"
+    },
+    {
+      "en-US": "## Meeting Object",
+      "zh-Hans": "## Meeting 对象"
+    },
+    {
+      "en-US": "```python\nmeeting = coll.record_meeting(\n    meeting_url=\"https://meet.google.com/...\",\n    bot_name=\"Bot\",\n    callback_url=None,          # Webhook URL for status updates\n    callback_data=None,         # Optional dict passed through to callbacks\n    time_zone=\"UTC\",            # Time zone for the meeting\n)\n```",
+      "zh-Hans": "```python\nmeeting = coll.record_meeting(\n    meeting_url=\"https://meet.google.com/...\",\n    bot_name=\"Bot\",\n    callback_url=None,          # Webhook URL for status updates\n    callback_data=None,         # Optional dict passed through to callbacks\n    time_zone=\"UTC\",            # Time zone for the meeting\n)\n```"
+    },
+    {
+      "en-US": "### Meeting Properties",
+      "zh-Hans": "### Meeting 属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `meeting.id` | `str` | Unique meeting ID |\n| `meeting.collection_id` | `str` | Parent collection ID |\n| `meeting.status` | `str` | Current status |\n| `meeting.video_id` | `str` | Recorded video ID (after completion) |\n| `meeting.bot_name` | `str` | Bot name |\n| `meeting.meeting_title` | `str` | Meeting title |\n| `meeting.meeting_url` | `str` | Meeting URL |\n| `meeting.speaker_timeline` | `dict` | Speaker timeline data |\n| `meeting.is_active` | `bool` | True if initializing or processing |\n| `meeting.is_completed` | `bool` | True if done |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `meeting.id` | `str` | 唯一会议 ID |\n| `meeting.collection_id` | `str` | 父集合 ID |\n| `meeting.status` | `str` | 当前状态 |\n| `meeting.video_id` | `str` | 录制视频 ID（完成后） |\n| `meeting.bot_name` | `str` | 机器人名称 |\n| `meeting.meeting_title` | `str` | 会议标题 |\n| `meeting.meeting_url` | `str` | 会议 URL |\n| `meeting.speaker_timeline` | `dict` | 发言人时间线数据 |\n| `meeting.is_active` | `bool` | 如果正在初始化或处理中则为真 |\n| `meeting.is_completed` | `bool` | 如果已完成则为真 |"
+    },
+    {
+      "en-US": "### Meeting Methods",
+      "zh-Hans": "### Meeting 方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `meeting.refresh()` | `Meeting` | Refresh data from server |\n| `meeting.wait_for_status(target_status, timeout=14400, interval=120)` | `bool` | Poll until status reached |",
+      "zh-Hans": "| 方法 | 返回值 | 描述 |\n|--------|---------|-------------|\n| `meeting.refresh()` | `Meeting` | 从服务器刷新数据 |\n| `meeting.wait_for_status(target_status, timeout=14400, interval=120)` | `bool` | 轮询直到达到指定状态 |"
+    },
+    {
+      "en-US": "## RTStream & Capture",
+      "zh-Hans": "## RTStream 与 Capture"
+    },
+    {
+      "en-US": "For RTStream (live ingestion, indexing, transcription), see [rtstream-reference.md](rtstream-reference.md).",
+      "zh-Hans": "关于 RTStream（实时摄取、索引、转录），请参阅 [rtstream-reference.md](rtstream-reference.md)。"
+    },
+    {
+      "en-US": "For capture sessions (desktop recording, CaptureClient, channels), see [capture-reference.md](capture-reference.md).",
+      "zh-Hans": "关于捕获会话（桌面录制、CaptureClient、频道），请参阅 [capture-reference.md](capture-reference.md)。"
+    },
+    {
+      "en-US": "## Enums & Constants",
+      "zh-Hans": "## 枚举与常量"
+    },
+    {
+      "en-US": "### SearchType",
+      "zh-Hans": "### SearchType"
+    },
+    {
+      "en-US": "```python\nfrom videodb import SearchType\n\nSearchType.semantic    # Natural language semantic search\nSearchType.keyword     # Exact keyword matching\nSearchType.scene       # Visual scene search (may require paid plan)\nSearchType.llm         # LLM-powered search\n```",
+      "zh-Hans": "```python\nfrom videodb import SearchType\n\nSearchType.semantic    # Natural language semantic search\nSearchType.keyword     # Exact keyword matching\nSearchType.scene       # Visual scene search (may require paid plan)\nSearchType.llm         # LLM-powered search\n```"
+    },
+    {
+      "en-US": "### SceneExtractionType",
+      "zh-Hans": "### SceneExtractionType"
+    },
+    {
+      "en-US": "```python\nfrom videodb import SceneExtractionType\n\nSceneExtractionType.shot_based   # Automatic shot boundary detection\nSceneExtractionType.time_based   # Fixed time interval extraction\nSceneExtractionType.transcript   # Transcript-based scene extraction\n```",
+      "zh-Hans": "```python\nfrom videodb import SceneExtractionType\n\nSceneExtractionType.shot_based   # Automatic shot boundary detection\nSceneExtractionType.time_based   # Fixed time interval extraction\nSceneExtractionType.transcript   # Transcript-based scene extraction\n```"
+    },
+    {
+      "en-US": "### SubtitleStyle",
+      "zh-Hans": "### SubtitleStyle"
+    },
+    {
+      "en-US": "```python\nfrom videodb import SubtitleStyle\n\nstyle = SubtitleStyle(\n    font_name=\"Arial\",\n    font_size=18,\n    primary_colour=\"&H00FFFFFF\",\n    bold=False,\n    # ... see SubtitleStyle for all options\n)\nvideo.add_subtitle(style=style)\n```",
+      "zh-Hans": "```python\nfrom videodb import SubtitleStyle\n\nstyle = SubtitleStyle(\n    font_name=\"Arial\",\n    font_size=18,\n    primary_colour=\"&H00FFFFFF\",\n    bold=False,\n    # ... see SubtitleStyle for all options\n)\nvideo.add_subtitle(style=style)\n```"
+    },
+    {
+      "en-US": "### SubtitleAlignment & SubtitleBorderStyle",
+      "zh-Hans": "### SubtitleAlignment 与 SubtitleBorderStyle"
+    },
+    {
+      "en-US": "```python\nfrom videodb import SubtitleAlignment, SubtitleBorderStyle\n```",
+      "zh-Hans": "```python\nfrom videodb import SubtitleAlignment, SubtitleBorderStyle\n```"
+    },
+    {
+      "en-US": "### TextStyle",
+      "zh-Hans": "### TextStyle"
+    },
+    {
+      "en-US": "```python\nfrom videodb import TextStyle\n# or: from videodb.asset import TextStyle\n\nstyle = TextStyle(\n    fontsize=24,\n    fontcolor=\"black\",\n    boxcolor=\"white\",\n    font=\"Sans\",\n    text_align=\"T\",\n    alpha=1.0,\n)\n```",
+      "zh-Hans": "```python\nfrom videodb import TextStyle\n# or: from videodb.asset import TextStyle\n\nstyle = TextStyle(\n    fontsize=24,\n    fontcolor=\"black\",\n    boxcolor=\"white\",\n    font=\"Sans\",\n    text_align=\"T\",\n    alpha=1.0,\n)\n```"
+    },
+    {
+      "en-US": "### Other Constants",
+      "zh-Hans": "### 其他常量"
+    },
+    {
+      "en-US": "```python\nfrom videodb import (\n    IndexType,          # spoken_word, scene\n    MediaType,          # video, audio, image\n    Segmenter,          # word, sentence, time\n    SegmentationType,   # sentence, llm\n    TranscodeMode,      # economy, lightning\n    ResizeMode,         # crop, fit, pad\n    ReframeMode,        # simple, smart\n    RTStreamChannelType,\n)\n```",
+      "zh-Hans": "```python\nfrom videodb import (\n    IndexType,          # spoken_word, scene\n    MediaType,          # video, audio, image\n    Segmenter,          # word, sentence, time\n    SegmentationType,   # sentence, llm\n    TranscodeMode,      # economy, lightning\n    ResizeMode,         # crop, fit, pad\n    ReframeMode,        # simple, smart\n    RTStreamChannelType,\n)\n```"
+    },
+    {
+      "en-US": "## Exceptions",
+      "zh-Hans": "## 异常"
+    },
+    {
+      "en-US": "```python\nfrom videodb.exceptions import (\n    AuthenticationError,     # Invalid or missing API key\n    InvalidRequestError,     # Bad parameters or malformed request\n    RequestTimeoutError,     # Request timed out\n    SearchError,             # Search operation failure (e.g. not indexed)\n    VideodbError,            # Base exception for all VideoDB errors\n)\n```",
+      "zh-Hans": "```python\nfrom videodb.exceptions import (\n    AuthenticationError,     # Invalid or missing API key\n    InvalidRequestError,     # Bad parameters or malformed request\n    RequestTimeoutError,     # Request timed out\n    SearchError,             # Search operation failure (e.g. not indexed)\n    VideodbError,            # Base exception for all VideoDB errors\n)\n```"
+    },
+    {
+      "en-US": "| Exception | Common Cause |\n|-----------|-------------|\n| `AuthenticationError` | Missing or invalid `VIDEO_DB_API_KEY` |\n| `InvalidRequestError` | Invalid URL, unsupported format, bad parameters |\n| `RequestTimeoutError` | Server took too long to respond |\n| `SearchError` | Searching before indexing, invalid search type |\n| `VideodbError` | Server errors, network issues, generic failures |",
+      "zh-Hans": "| 异常 | 常见原因 |\n|-----------|-------------|\n| `AuthenticationError` | 缺少或无效的 `VIDEO_DB_API_KEY` |\n| `InvalidRequestError` | 无效 URL、不支持的格式、错误参数 |\n| `RequestTimeoutError` | 服务器响应时间过长 |\n| `SearchError` | 在索引前进行搜索、无效的搜索类型 |\n| `VideodbError` | 服务器错误、网络问题、通用故障 |"
+    }
+  ]
+}

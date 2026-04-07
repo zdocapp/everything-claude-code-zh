@@ -1,0 +1,466 @@
+{
+  "sourceFile": "skills/videodb/reference/rtstream-reference.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# RTStream Reference",
+      "zh-Hans": "# RTStream 参考"
+    },
+    {
+      "en-US": "Code-level details for RTStream operations. For workflow guide, see [rtstream.md](rtstream.md).\nFor usage guidance and workflow selection, start with [../SKILL.md](../SKILL.md).",
+      "zh-Hans": "RTStream 操作的代码级详情。工作流程指南请参阅 [rtstream.md](rtstream.md)。\n有关使用指导和流程选择，请从 [../SKILL.md](../SKILL.md) 开始。"
+    },
+    {
+      "en-US": "Based on [docs.videodb.io](https://docs.videodb.io/pages/ingest/live-streams/realtime-apis.md).",
+      "zh-Hans": "基于 [docs.videodb.io](https://docs.videodb.io/pages/ingest/live-streams/realtime-apis.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Collection RTStream Methods",
+      "zh-Hans": "## Collection RTStream 方法"
+    },
+    {
+      "en-US": "Methods on `Collection` for managing RTStreams:",
+      "zh-Hans": "`Collection` 上用于管理 RTStream 的方法："
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `coll.connect_rtstream(url, name, ...)` | `RTStream` | Create new RTStream from RTSP/RTMP URL |\n| `coll.get_rtstream(id)` | `RTStream` | Get existing RTStream by ID |\n| `coll.list_rtstreams(limit, offset, status, name, ordering)` | `List[RTStream]` | List all RTStreams in collection |\n| `coll.search(query, namespace=\"rtstream\")` | `RTStreamSearchResult` | Search across all RTStreams |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `coll.connect_rtstream(url, name, ...)` | `RTStream` | 从 RTSP/RTMP URL 创建新的 RTStream |\n| `coll.get_rtstream(id)` | `RTStream` | 通过 ID 获取现有的 RTStream |\n| `coll.list_rtstreams(limit, offset, status, name, ordering)` | `List[RTStream]` | 列出集合中的所有 RTStream |\n| `coll.search(query, namespace=\"rtstream\")` | `RTStreamSearchResult` | 在所有 RTStream 中搜索 |"
+    },
+    {
+      "en-US": "### Connect RTStream",
+      "zh-Hans": "### 连接 RTStream"
+    },
+    {
+      "en-US": "```python\nimport videodb\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nrtstream = coll.connect_rtstream(\n    url=\"rtmp://your-stream-server/live/stream-key\",\n    name=\"My Live Stream\",\n    media_types=[\"video\"],  # or [\"audio\", \"video\"]\n    sample_rate=30,         # optional\n    store=True,             # enable recording storage for export\n    enable_transcript=True, # optional\n    ws_connection_id=ws_id, # optional, for real-time events\n)\n```",
+      "zh-Hans": "```python\nimport videodb\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nrtstream = coll.connect_rtstream(\n    url=\"rtmp://your-stream-server/live/stream-key\",\n    name=\"My Live Stream\",\n    media_types=[\"video\"],  # or [\"audio\", \"video\"]\n    sample_rate=30,         # optional\n    store=True,             # enable recording storage for export\n    enable_transcript=True, # optional\n    ws_connection_id=ws_id, # optional, for real-time events\n)\n```"
+    },
+    {
+      "en-US": "### Get Existing RTStream",
+      "zh-Hans": "### 获取现有 RTStream"
+    },
+    {
+      "en-US": "```python\nrtstream = coll.get_rtstream(\"rts-xxx\")\n```",
+      "zh-Hans": "```python\nrtstream = coll.get_rtstream(\"rts-xxx\")\n```"
+    },
+    {
+      "en-US": "### List RTStreams",
+      "zh-Hans": "### 列出 RTStream"
+    },
+    {
+      "en-US": "```python\nrtstreams = coll.list_rtstreams(\n    limit=10,\n    offset=0,\n    status=\"connected\",  # optional filter\n    name=\"meeting\",      # optional filter\n    ordering=\"-created_at\",\n)\n\nfor rts in rtstreams:\n    print(f\"{rts.id}: {rts.name} - {rts.status}\")\n```",
+      "zh-Hans": "```python\nrtstreams = coll.list_rtstreams(\n    limit=10,\n    offset=0,\n    status=\"connected\",  # optional filter\n    name=\"meeting\",      # optional filter\n    ordering=\"-created_at\",\n)\n\nfor rts in rtstreams:\n    print(f\"{rts.id}: {rts.name} - {rts.status}\")\n```"
+    },
+    {
+      "en-US": "### From Capture Session",
+      "zh-Hans": "### 从捕获会话获取"
+    },
+    {
+      "en-US": "After a capture session is active, retrieve RTStream objects:",
+      "zh-Hans": "捕获会话激活后，检索 RTStream 对象："
+    },
+    {
+      "en-US": "```python\nsession = conn.get_capture_session(session_id)\n\nmics = session.get_rtstream(\"mic\")\ndisplays = session.get_rtstream(\"screen\")\nsystem_audios = session.get_rtstream(\"system_audio\")\n```",
+      "zh-Hans": "```python\nsession = conn.get_capture_session(session_id)\n\nmics = session.get_rtstream(\"mic\")\ndisplays = session.get_rtstream(\"screen\")\nsystem_audios = session.get_rtstream(\"system_audio\")\n```"
+    },
+    {
+      "en-US": "Or use the `rtstreams` data from the `capture_session.active` WebSocket event:",
+      "zh-Hans": "或使用 `capture_session.active` WebSocket 事件中的 `rtstreams` 数据："
+    },
+    {
+      "en-US": "```python\nfor rts in rtstreams:\n    rtstream = coll.get_rtstream(rts[\"rtstream_id\"])\n```",
+      "zh-Hans": "```python\nfor rts in rtstreams:\n    rtstream = coll.get_rtstream(rts[\"rtstream_id\"])\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## RTStream Methods",
+      "zh-Hans": "## RTStream 方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `rtstream.start()` | `None` | Begin ingestion |\n| `rtstream.stop()` | `None` | Stop ingestion |\n| `rtstream.generate_stream(start, end)` | `str` | Stream recorded segment (Unix timestamps) |\n| `rtstream.export(name=None)` | `RTStreamExportResult` | Export to permanent video |\n| `rtstream.index_visuals(prompt, ...)` | `RTStreamSceneIndex` | Create visual index with AI analysis |\n| `rtstream.index_audio(prompt, ...)` | `RTStreamSceneIndex` | Create audio index with LLM summarization |\n| `rtstream.list_scene_indexes()` | `List[RTStreamSceneIndex]` | List all scene indexes on the stream |\n| `rtstream.get_scene_index(index_id)` | `RTStreamSceneIndex` | Get a specific scene index |\n| `rtstream.search(query, ...)` | `RTStreamSearchResult` | Search indexed content |\n| `rtstream.start_transcript(ws_connection_id, engine)` | `dict` | Start live transcription |\n| `rtstream.get_transcript(page, page_size, start, end, since)` | `dict` | Get transcript pages |\n| `rtstream.stop_transcript(engine)` | `dict` | Stop transcription |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `rtstream.start()` | `None` | 开始摄取 |\n| `rtstream.stop()` | `None` | 停止摄取 |\n| `rtstream.generate_stream(start, end)` | `str` | 流式传输录制的片段（Unix 时间戳） |\n| `rtstream.export(name=None)` | `RTStreamExportResult` | 导出为永久视频 |\n| `rtstream.index_visuals(prompt, ...)` | `RTStreamSceneIndex` | 创建带 AI 分析的视觉索引 |\n| `rtstream.index_audio(prompt, ...)` | `RTStreamSceneIndex` | 创建带 LLM 摘要的音频索引 |\n| `rtstream.list_scene_indexes()` | `List[RTStreamSceneIndex]` | 列出流上的所有场景索引 |\n| `rtstream.get_scene_index(index_id)` | `RTStreamSceneIndex` | 获取特定场景索引 |\n| `rtstream.search(query, ...)` | `RTStreamSearchResult` | 搜索索引内容 |\n| `rtstream.start_transcript(ws_connection_id, engine)` | `dict` | 开始实时转录 |\n| `rtstream.get_transcript(page, page_size, start, end, since)` | `dict` | 获取转录页面 |\n| `rtstream.stop_transcript(engine)` | `dict` | 停止转录 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Starting and Stopping",
+      "zh-Hans": "## 启动和停止"
+    },
+    {
+      "en-US": "```python\n# Begin ingestion\nrtstream.start()\n\n# ... stream is being recorded ...\n\n# Stop ingestion\nrtstream.stop()\n```",
+      "zh-Hans": "```python\n# Begin ingestion\nrtstream.start()\n\n# ... stream is being recorded ...\n\n# Stop ingestion\nrtstream.stop()\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Generating Streams",
+      "zh-Hans": "## 生成流"
+    },
+    {
+      "en-US": "Use Unix timestamps (not seconds offsets) to generate a playback stream from recorded content:",
+      "zh-Hans": "使用 Unix 时间戳（而非秒数偏移）从录制内容生成播放流："
+    },
+    {
+      "en-US": "```python\nimport time\n\nstart_ts = time.time()\nrtstream.start()\n\n# Let it record for a while...\ntime.sleep(60)\n\nend_ts = time.time()\nrtstream.stop()\n\n# Generate a stream URL for the recorded segment\nstream_url = rtstream.generate_stream(start=start_ts, end=end_ts)\nprint(f\"Recorded stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport time\n\nstart_ts = time.time()\nrtstream.start()\n\n# Let it record for a while...\ntime.sleep(60)\n\nend_ts = time.time()\nrtstream.stop()\n\n# Generate a stream URL for the recorded segment\nstream_url = rtstream.generate_stream(start=start_ts, end=end_ts)\nprint(f\"Recorded stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Exporting to Video",
+      "zh-Hans": "## 导出为视频"
+    },
+    {
+      "en-US": "Export the recorded stream to a permanent video in the collection:",
+      "zh-Hans": "将录制的流导出为集合中的永久视频："
+    },
+    {
+      "en-US": "```python\nexport_result = rtstream.export(name=\"Meeting Recording 2024-01-15\")\n\nprint(f\"Video ID: {export_result.video_id}\")\nprint(f\"Stream URL: {export_result.stream_url}\")\nprint(f\"Player URL: {export_result.player_url}\")\nprint(f\"Duration: {export_result.duration}s\")\n```",
+      "zh-Hans": "```python\nexport_result = rtstream.export(name=\"Meeting Recording 2024-01-15\")\n\nprint(f\"Video ID: {export_result.video_id}\")\nprint(f\"Stream URL: {export_result.stream_url}\")\nprint(f\"Player URL: {export_result.player_url}\")\nprint(f\"Duration: {export_result.duration}s\")\n```"
+    },
+    {
+      "en-US": "### RTStreamExportResult Properties",
+      "zh-Hans": "### RTStreamExportResult 属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `video_id` | `str` | ID of the exported video |\n| `stream_url` | `str` | HLS stream URL |\n| `player_url` | `str` | Web player URL |\n| `name` | `str` | Video name |\n| `duration` | `float` | Duration in seconds |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `video_id` | `str` | 导出视频的 ID |\n| `stream_url` | `str` | HLS 流 URL |\n| `player_url` | `str` | Web 播放器 URL |\n| `name` | `str` | 视频名称 |\n| `duration` | `float` | 时长（秒） |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## AI Pipelines",
+      "zh-Hans": "## AI 管道"
+    },
+    {
+      "en-US": "AI pipelines process live streams and send results via WebSocket.",
+      "zh-Hans": "AI 管道处理实时流并通过 WebSocket 发送结果。"
+    },
+    {
+      "en-US": "### RTStream AI Pipeline Methods",
+      "zh-Hans": "### RTStream AI 管道方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `rtstream.index_audio(prompt, batch_config, ...)` | `RTStreamSceneIndex` | Start audio indexing with LLM summarization |\n| `rtstream.index_visuals(prompt, batch_config, ...)` | `RTStreamSceneIndex` | Start visual indexing of screen content |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `rtstream.index_audio(prompt, batch_config, ...)` | `RTStreamSceneIndex` | 开始带 LLM 摘要的音频索引 |\n| `rtstream.index_visuals(prompt, batch_config, ...)` | `RTStreamSceneIndex` | 开始屏幕内容的视觉索引 |"
+    },
+    {
+      "en-US": "### Audio Indexing",
+      "zh-Hans": "### 音频索引"
+    },
+    {
+      "en-US": "Generate LLM summaries of audio content at intervals:",
+      "zh-Hans": "以一定间隔生成音频内容的 LLM 摘要："
+    },
+    {
+      "en-US": "```python\naudio_index = rtstream.index_audio(\n    prompt=\"Summarize what is being discussed\",\n    batch_config={\"type\": \"word\", \"value\": 50},\n    model_name=None,       # optional\n    name=\"meeting_audio\",  # optional\n    ws_connection_id=ws_id,\n)\n```",
+      "zh-Hans": "```python\naudio_index = rtstream.index_audio(\n    prompt=\"Summarize what is being discussed\",\n    batch_config={\"type\": \"word\", \"value\": 50},\n    model_name=None,       # optional\n    name=\"meeting_audio\",  # optional\n    ws_connection_id=ws_id,\n)\n```"
+    },
+    {
+      "en-US": "**Audio batch_config options:**",
+      "zh-Hans": "**音频 batch\\_config 选项：**"
+    },
+    {
+      "en-US": "| Type | Value | Description |\n|------|-------|-------------|\n| `\"word\"` | count | Segment every N words |\n| `\"sentence\"` | count | Segment every N sentences |\n| `\"time\"` | seconds | Segment every N seconds |",
+      "zh-Hans": "| 类型 | 值 | 描述 |\n|------|-------|-------------|\n| `\"word\"` | count | 每 N 个词分段 |\n| `\"sentence\"` | count | 每 N 个句子分段 |\n| `\"time\"` | seconds | 每 N 秒分段 |"
+    },
+    {
+      "en-US": "Examples:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "```python\n{\"type\": \"word\", \"value\": 50}      # every 50 words\n{\"type\": \"sentence\", \"value\": 5}   # every 5 sentences\n{\"type\": \"time\", \"value\": 30}      # every 30 seconds\n```",
+      "zh-Hans": "```python\n{\"type\": \"word\", \"value\": 50}      # every 50 words\n{\"type\": \"sentence\", \"value\": 5}   # every 5 sentences\n{\"type\": \"time\", \"value\": 30}      # every 30 seconds\n```"
+    },
+    {
+      "en-US": "Results arrive on the `audio_index` WebSocket channel.",
+      "zh-Hans": "结果通过 `audio_index` WebSocket 通道送达。"
+    },
+    {
+      "en-US": "### Visual Indexing",
+      "zh-Hans": "### 视觉索引"
+    },
+    {
+      "en-US": "Generate AI descriptions of visual content:",
+      "zh-Hans": "生成视觉内容的 AI 描述："
+    },
+    {
+      "en-US": "```python\nscene_index = rtstream.index_visuals(\n    prompt=\"Describe what is happening on screen\",\n    batch_config={\"type\": \"time\", \"value\": 2, \"frame_count\": 5},\n    model_name=\"basic\",\n    name=\"screen_monitor\",  # optional\n    ws_connection_id=ws_id,\n)\n```",
+      "zh-Hans": "```python\nscene_index = rtstream.index_visuals(\n    prompt=\"Describe what is happening on screen\",\n    batch_config={\"type\": \"time\", \"value\": 2, \"frame_count\": 5},\n    model_name=\"basic\",\n    name=\"screen_monitor\",  # optional\n    ws_connection_id=ws_id,\n)\n```"
+    },
+    {
+      "en-US": "**Parameters:**",
+      "zh-Hans": "**参数：**"
+    },
+    {
+      "en-US": "| Parameter | Type | Description |\n|-----------|------|-------------|\n| `prompt` | `str` | Instructions for the AI model (supports structured JSON output) |\n| `batch_config` | `dict` | Controls frame sampling (see below) |\n| `model_name` | `str` | Model tier: `\"mini\"`, `\"basic\"`, `\"pro\"`, `\"ultra\"` |\n| `name` | `str` | Name for the index (optional) |\n| `ws_connection_id` | `str` | WebSocket connection ID for receiving results |",
+      "zh-Hans": "| 参数 | 类型 | 描述 |\n|-----------|------|-------------|\n| `prompt` | `str` | AI 模型的指令（支持结构化 JSON 输出） |\n| `batch_config` | `dict` | 控制帧采样（见下文） |\n| `model_name` | `str` | 模型层级：`\"mini\"`、`\"basic\"`、`\"pro\"`、`\"ultra\"` |\n| `name` | `str` | 索引名称（可选） |\n| `ws_connection_id` | `str` | 用于接收结果的 WebSocket 连接 ID |"
+    },
+    {
+      "en-US": "**Visual batch_config:**",
+      "zh-Hans": "**视觉 batch\\_config：**"
+    },
+    {
+      "en-US": "| Key | Type | Description |\n|-----|------|-------------|\n| `type` | `str` | Only `\"time\"` is supported for visuals |\n| `value` | `int` | Window size in seconds |\n| `frame_count` | `int` | Number of frames to extract per window |",
+      "zh-Hans": "| 键 | 类型 | 描述 |\n|-----|------|-------------|\n| `type` | `str` | 仅 `\"time\"` 支持视觉索引 |\n| `value` | `int` | 窗口大小（秒） |\n| `frame_count` | `int` | 每个窗口提取的帧数 |"
+    },
+    {
+      "en-US": "Example: `{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}` samples 5 frames every 2 seconds and sends them to the model.",
+      "zh-Hans": "示例：`{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}` 每 2 秒采样 5 帧并将其发送到模型。"
+    },
+    {
+      "en-US": "**Structured JSON output:**",
+      "zh-Hans": "**结构化 JSON 输出：**"
+    },
+    {
+      "en-US": "Use a prompt that requests JSON format for structured responses:",
+      "zh-Hans": "使用请求 JSON 格式的提示语以获得结构化响应："
+    },
+    {
+      "en-US": "```python\nscene_index = rtstream.index_visuals(\n    prompt=\"\"\"Analyze the screen and return a JSON object with:\n{\n  \"app_name\": \"name of the active application\",\n  \"activity\": \"what the user is doing\",\n  \"ui_elements\": [\"list of visible UI elements\"],\n  \"contains_text\": true/false,\n  \"dominant_colors\": [\"list of main colors\"]\n}\nReturn only valid JSON.\"\"\",\n    batch_config={\"type\": \"time\", \"value\": 3, \"frame_count\": 3},\n    model_name=\"pro\",\n    ws_connection_id=ws_id,\n)\n```",
+      "zh-Hans": "```python\nscene_index = rtstream.index_visuals(\n    prompt=\"\"\"Analyze the screen and return a JSON object with:\n{\n  \"app_name\": \"name of the active application\",\n  \"activity\": \"what the user is doing\",\n  \"ui_elements\": [\"list of visible UI elements\"],\n  \"contains_text\": true/false,\n  \"dominant_colors\": [\"list of main colors\"]\n}\nReturn only valid JSON.\"\"\",\n    batch_config={\"type\": \"time\", \"value\": 3, \"frame_count\": 3},\n    model_name=\"pro\",\n    ws_connection_id=ws_id,\n)\n```"
+    },
+    {
+      "en-US": "Results arrive on the `scene_index` WebSocket channel.",
+      "zh-Hans": "结果通过 `scene_index` WebSocket 通道送达。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Batch Config Summary",
+      "zh-Hans": "## 批处理配置摘要"
+    },
+    {
+      "en-US": "| Indexing Type | `type` Options | `value` | Extra Keys |\n|---------------|----------------|---------|------------|\n| **Audio** | `\"word\"`, `\"sentence\"`, `\"time\"` | words/sentences/seconds | - |\n| **Visual** | `\"time\"` only | seconds | `frame_count` |",
+      "zh-Hans": "| 索引类型 | `type` 选项 | `value` | 额外键 |\n|---------------|----------------|---------|------------|\n| **音频** | `\"word\"`、`\"sentence\"`、`\"time\"` | words/sentences/seconds | - |\n| **视觉** | 仅 `\"time\"` | seconds | `frame_count` |"
+    },
+    {
+      "en-US": "Examples:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "```python\n# Audio: every 50 words\n{\"type\": \"word\", \"value\": 50}\n\n# Audio: every 30 seconds\n{\"type\": \"time\", \"value\": 30}\n\n# Visual: 5 frames every 2 seconds\n{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}\n```",
+      "zh-Hans": "```python\n# Audio: every 50 words\n{\"type\": \"word\", \"value\": 50}\n\n# Audio: every 30 seconds\n{\"type\": \"time\", \"value\": 30}\n\n# Visual: 5 frames every 2 seconds\n{\"type\": \"time\", \"value\": 2, \"frame_count\": 5}\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Transcription",
+      "zh-Hans": "## 转录"
+    },
+    {
+      "en-US": "Real-time transcription via WebSocket:",
+      "zh-Hans": "通过 WebSocket 进行实时转录："
+    },
+    {
+      "en-US": "```python\n# Start live transcription\nrtstream.start_transcript(\n    ws_connection_id=ws_id,\n    engine=None,  # optional, defaults to \"assemblyai\"\n)\n\n# Get transcript pages (with optional filters)\ntranscript = rtstream.get_transcript(\n    page=1,\n    page_size=100,\n    start=None,   # optional: start timestamp filter\n    end=None,     # optional: end timestamp filter\n    since=None,   # optional: for polling, get transcripts after this timestamp\n    engine=None,\n)\n\n# Stop transcription\nrtstream.stop_transcript(engine=None)\n```",
+      "zh-Hans": "```python\n# Start live transcription\nrtstream.start_transcript(\n    ws_connection_id=ws_id,\n    engine=None,  # optional, defaults to \"assemblyai\"\n)\n\n# Get transcript pages (with optional filters)\ntranscript = rtstream.get_transcript(\n    page=1,\n    page_size=100,\n    start=None,   # optional: start timestamp filter\n    end=None,     # optional: end timestamp filter\n    since=None,   # optional: for polling, get transcripts after this timestamp\n    engine=None,\n)\n\n# Stop transcription\nrtstream.stop_transcript(engine=None)\n```"
+    },
+    {
+      "en-US": "Transcript results arrive on the `transcript` WebSocket channel.",
+      "zh-Hans": "转录结果通过 `transcript` WebSocket 通道送达。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## RTStreamSceneIndex",
+      "zh-Hans": "## RTStreamSceneIndex"
+    },
+    {
+      "en-US": "When you call `index_audio()` or `index_visuals()`, the method returns an `RTStreamSceneIndex` object. This object represents the running index and provides methods for managing scenes and alerts.",
+      "zh-Hans": "当您调用 `index_audio()` 或 `index_visuals()` 时，该方法返回一个 `RTStreamSceneIndex` 对象。此对象表示正在运行的索引，并提供用于管理场景和警报的方法。"
+    },
+    {
+      "en-US": "```python\n# index_visuals returns an RTStreamSceneIndex\nscene_index = rtstream.index_visuals(\n    prompt=\"Describe what is on screen\",\n    ws_connection_id=ws_id,\n)\n\n# index_audio also returns an RTStreamSceneIndex\naudio_index = rtstream.index_audio(\n    prompt=\"Summarize the discussion\",\n    ws_connection_id=ws_id,\n)\n```",
+      "zh-Hans": "```python\n# index_visuals returns an RTStreamSceneIndex\nscene_index = rtstream.index_visuals(\n    prompt=\"Describe what is on screen\",\n    ws_connection_id=ws_id,\n)\n\n# index_audio also returns an RTStreamSceneIndex\naudio_index = rtstream.index_audio(\n    prompt=\"Summarize the discussion\",\n    ws_connection_id=ws_id,\n)\n```"
+    },
+    {
+      "en-US": "### RTStreamSceneIndex Properties",
+      "zh-Hans": "### RTStreamSceneIndex 属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `rtstream_index_id` | `str` | Unique ID of the index |\n| `rtstream_id` | `str` | ID of the parent RTStream |\n| `extraction_type` | `str` | Type of extraction (`time` or `transcript`) |\n| `extraction_config` | `dict` | Extraction configuration |\n| `prompt` | `str` | The prompt used for analysis |\n| `name` | `str` | Name of the index |\n| `status` | `str` | Status (`connected`, `stopped`) |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `rtstream_index_id` | `str` | 索引的唯一 ID |\n| `rtstream_id` | `str` | 父 RTStream 的 ID |\n| `extraction_type` | `str` | 提取类型（`time` 或 `transcript`） |\n| `extraction_config` | `dict` | 提取配置 |\n| `prompt` | `str` | 用于分析的提示语 |\n| `name` | `str` | 索引名称 |\n| `status` | `str` | 状态（`connected`、`stopped`） |"
+    },
+    {
+      "en-US": "### RTStreamSceneIndex Methods",
+      "zh-Hans": "### RTStreamSceneIndex 方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `index.get_scenes(start, end, page, page_size)` | `dict` | Get indexed scenes |\n| `index.start()` | `None` | Start/resume the index |\n| `index.stop()` | `None` | Stop the index |\n| `index.create_alert(event_id, callback_url, ws_connection_id)` | `str` | Create alert for event detection |\n| `index.list_alerts()` | `list` | List all alerts on this index |\n| `index.enable_alert(alert_id)` | `None` | Enable an alert |\n| `index.disable_alert(alert_id)` | `None` | Disable an alert |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `index.get_scenes(start, end, page, page_size)` | `dict` | 获取已索引的场景 |\n| `index.start()` | `None` | 启动/恢复索引 |\n| `index.stop()` | `None` | 停止索引 |\n| `index.create_alert(event_id, callback_url, ws_connection_id)` | `str` | 创建事件检测警报 |\n| `index.list_alerts()` | `list` | 列出此索引上的所有警报 |\n| `index.enable_alert(alert_id)` | `None` | 启用警报 |\n| `index.disable_alert(alert_id)` | `None` | 禁用警报 |"
+    },
+    {
+      "en-US": "### Getting Scenes",
+      "zh-Hans": "### 获取场景"
+    },
+    {
+      "en-US": "Poll indexed scenes from the index:",
+      "zh-Hans": "从索引轮询已索引的场景："
+    },
+    {
+      "en-US": "```python\nresult = scene_index.get_scenes(\n    start=None,      # optional: start timestamp\n    end=None,        # optional: end timestamp\n    page=1,\n    page_size=100,\n)\n\nfor scene in result[\"scenes\"]:\n    print(f\"[{scene['start']}-{scene['end']}] {scene['text']}\")\n\nif result[\"next_page\"]:\n    # fetch next page\n    pass\n```",
+      "zh-Hans": "```python\nresult = scene_index.get_scenes(\n    start=None,      # optional: start timestamp\n    end=None,        # optional: end timestamp\n    page=1,\n    page_size=100,\n)\n\nfor scene in result[\"scenes\"]:\n    print(f\"[{scene['start']}-{scene['end']}] {scene['text']}\")\n\nif result[\"next_page\"]:\n    # fetch next page\n    pass\n```"
+    },
+    {
+      "en-US": "### Managing Scene Indexes",
+      "zh-Hans": "### 管理场景索引"
+    },
+    {
+      "en-US": "```python\n# List all indexes on the stream\nindexes = rtstream.list_scene_indexes()\n\n# Get a specific index by ID\nscene_index = rtstream.get_scene_index(index_id)\n\n# Stop an index\nscene_index.stop()\n\n# Restart an index\nscene_index.start()\n```",
+      "zh-Hans": "```python\n# List all indexes on the stream\nindexes = rtstream.list_scene_indexes()\n\n# Get a specific index by ID\nscene_index = rtstream.get_scene_index(index_id)\n\n# Stop an index\nscene_index.stop()\n\n# Restart an index\nscene_index.start()\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Events",
+      "zh-Hans": "## 事件"
+    },
+    {
+      "en-US": "Events are reusable detection rules. Create them once, attach to any index via alerts.",
+      "zh-Hans": "事件是可重用的检测规则。创建一次，即可通过警报附加到任何索引。"
+    },
+    {
+      "en-US": "### Connection Event Methods",
+      "zh-Hans": "### 连接事件方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `conn.create_event(event_prompt, label)` | `str` (event_id) | Create detection event |\n| `conn.list_events()` | `list` | List all events |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `conn.create_event(event_prompt, label)` | `str` (event\\_id) | 创建检测事件 |\n| `conn.list_events()` | `list` | 列出所有事件 |"
+    },
+    {
+      "en-US": "### Creating an Event",
+      "zh-Hans": "### 创建事件"
+    },
+    {
+      "en-US": "```python\nevent_id = conn.create_event(\n    event_prompt=\"User opened Slack application\",\n    label=\"slack_opened\",\n)\n```",
+      "zh-Hans": "```python\nevent_id = conn.create_event(\n    event_prompt=\"User opened Slack application\",\n    label=\"slack_opened\",\n)\n```"
+    },
+    {
+      "en-US": "### Listing Events",
+      "zh-Hans": "### 列出事件"
+    },
+    {
+      "en-US": "```python\nevents = conn.list_events()\nfor event in events:\n    print(f\"{event['event_id']}: {event['label']}\")\n```",
+      "zh-Hans": "```python\nevents = conn.list_events()\nfor event in events:\n    print(f\"{event['event_id']}: {event['label']}\")\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Alerts",
+      "zh-Hans": "## 警报"
+    },
+    {
+      "en-US": "Alerts wire events to indexes for real-time notifications. When the AI detects content matching the event description, an alert is sent.",
+      "zh-Hans": "警报将事件连接到索引以实现实时通知。当 AI 检测到与事件描述匹配的内容时，会发送警报。"
+    },
+    {
+      "en-US": "### Creating an Alert",
+      "zh-Hans": "### 创建警报"
+    },
+    {
+      "en-US": "```python\n# Get the RTStreamSceneIndex from index_visuals\nscene_index = rtstream.index_visuals(\n    prompt=\"Describe what application is open on screen\",\n    ws_connection_id=ws_id,\n)\n\n# Create an alert on the index\nalert_id = scene_index.create_alert(\n    event_id=event_id,\n    callback_url=\"https://your-backend.com/alerts\",  # for webhook delivery\n    ws_connection_id=ws_id,  # for WebSocket delivery (optional)\n)\n```",
+      "zh-Hans": "```python\n# Get the RTStreamSceneIndex from index_visuals\nscene_index = rtstream.index_visuals(\n    prompt=\"Describe what application is open on screen\",\n    ws_connection_id=ws_id,\n)\n\n# Create an alert on the index\nalert_id = scene_index.create_alert(\n    event_id=event_id,\n    callback_url=\"https://your-backend.com/alerts\",  # for webhook delivery\n    ws_connection_id=ws_id,  # for WebSocket delivery (optional)\n)\n```"
+    },
+    {
+      "en-US": "**Note:** `callback_url` is required. Pass an empty string `\"\"` if only using WebSocket delivery.",
+      "zh-Hans": "**注意：** `callback_url` 是必需的。如果仅使用 WebSocket 交付，请传递空字符串 `\"\"`。"
+    },
+    {
+      "en-US": "### Managing Alerts",
+      "zh-Hans": "### 管理警报"
+    },
+    {
+      "en-US": "```python\n# List all alerts on an index\nalerts = scene_index.list_alerts()\n\n# Enable/disable alerts\nscene_index.disable_alert(alert_id)\nscene_index.enable_alert(alert_id)\n```",
+      "zh-Hans": "```python\n# List all alerts on an index\nalerts = scene_index.list_alerts()\n\n# Enable/disable alerts\nscene_index.disable_alert(alert_id)\nscene_index.enable_alert(alert_id)\n```"
+    },
+    {
+      "en-US": "### Alert Delivery",
+      "zh-Hans": "### 警报交付"
+    },
+    {
+      "en-US": "| Method | Latency | Use Case |\n|--------|---------|----------|\n| WebSocket | Real-time | Dashboards, live UI |\n| Webhook | < 1 second | Server-to-server, automation |",
+      "zh-Hans": "| 方法 | 延迟 | 使用场景 |\n|--------|---------|----------|\n| WebSocket | 实时 | 仪表板、实时 UI |\n| Webhook | < 1 秒 | 服务器到服务器、自动化 |"
+    },
+    {
+      "en-US": "### WebSocket Alert Event",
+      "zh-Hans": "### WebSocket 警报事件"
+    },
+    {
+      "en-US": "```json\n{\n  \"channel\": \"alert\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"data\": {\n    \"event_label\": \"slack_opened\",\n    \"timestamp\": 1710000012340,\n    \"text\": \"User opened Slack application\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"channel\": \"alert\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"data\": {\n    \"event_label\": \"slack_opened\",\n    \"timestamp\": 1710000012340,\n    \"text\": \"User opened Slack application\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Webhook Payload",
+      "zh-Hans": "### Webhook 负载"
+    },
+    {
+      "en-US": "```json\n{\n  \"event_id\": \"event-xxx\",\n  \"label\": \"slack_opened\",\n  \"confidence\": 0.95,\n  \"explanation\": \"User opened the Slack application\",\n  \"timestamp\": \"2024-01-15T10:30:45Z\",\n  \"start_time\": 1234.5,\n  \"end_time\": 1238.0,\n  \"stream_url\": \"https://stream.videodb.io/v3/...\",\n  \"player_url\": \"https://console.videodb.io/player?url=...\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"event_id\": \"event-xxx\",\n  \"label\": \"slack_opened\",\n  \"confidence\": 0.95,\n  \"explanation\": \"User opened the Slack application\",\n  \"timestamp\": \"2024-01-15T10:30:45Z\",\n  \"start_time\": 1234.5,\n  \"end_time\": 1238.0,\n  \"stream_url\": \"https://stream.videodb.io/v3/...\",\n  \"player_url\": \"https://console.videodb.io/player?url=...\"\n}\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## WebSocket Integration",
+      "zh-Hans": "## WebSocket 集成"
+    },
+    {
+      "en-US": "All real-time AI results are delivered via WebSocket. Pass `ws_connection_id` to:",
+      "zh-Hans": "所有实时 AI 结果均通过 WebSocket 交付。将 `ws_connection_id` 传递给："
+    },
+    {
+      "en-US": "- `rtstream.start_transcript()`\n- `rtstream.index_audio()`\n- `rtstream.index_visuals()`\n- `scene_index.create_alert()`",
+      "zh-Hans": "* `rtstream.start_transcript()`\n* `rtstream.index_audio()`\n* `rtstream.index_visuals()`\n* `scene_index.create_alert()`"
+    },
+    {
+      "en-US": "### WebSocket Channels",
+      "zh-Hans": "### WebSocket 通道"
+    },
+    {
+      "en-US": "| Channel | Source | Content |\n|---------|--------|---------|\n| `transcript` | `start_transcript()` | Real-time speech-to-text |\n| `scene_index` | `index_visuals()` | Visual analysis results |\n| `audio_index` | `index_audio()` | Audio analysis results |\n| `alert` | `create_alert()` | Alert notifications |",
+      "zh-Hans": "| 通道 | 来源 | 内容 |\n|---------|--------|---------|\n| `transcript` | `start_transcript()` | 实时语音转文本 |\n| `scene_index` | `index_visuals()` | 视觉分析结果 |\n| `audio_index` | `index_audio()` | 音频分析结果 |\n| `alert` | `create_alert()` | 警报通知 |"
+    },
+    {
+      "en-US": "For WebSocket event structures and ws_listener usage, see [capture-reference.md](capture-reference.md).",
+      "zh-Hans": "有关 WebSocket 事件结构和 ws\\_listener 用法，请参阅 [capture-reference.md](capture-reference.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Complete Workflow",
+      "zh-Hans": "## 完整工作流程"
+    },
+    {
+      "en-US": "```python\nimport time\nimport videodb\nfrom videodb.exceptions import InvalidRequestError\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\n# 1. Connect and start recording\nrtstream = coll.connect_rtstream(\n    url=\"rtmp://your-stream-server/live/stream-key\",\n    name=\"Weekly Standup\",\n    store=True,\n)\nrtstream.start()\n\n# 2. Record for the duration of the meeting\nstart_ts = time.time()\ntime.sleep(1800)  # 30 minutes\nend_ts = time.time()\nrtstream.stop()\n\n# Generate an immediate playback URL for the captured window\nstream_url = rtstream.generate_stream(start=start_ts, end=end_ts)\nprint(f\"Recorded stream: {stream_url}\")\n\n# 3. Export to a permanent video\nexport_result = rtstream.export(name=\"Weekly Standup Recording\")\nprint(f\"Exported video: {export_result.video_id}\")\n\n# 4. Index the exported video for search\nvideo = coll.get_video(export_result.video_id)\nvideo.index_spoken_words(force=True)\n\n# 5. Search for action items\ntry:\n    results = video.search(\"action items and next steps\")\n    stream_url = results.compile()\n    print(f\"Action items clip: {stream_url}\")\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        print(\"No action items were detected in the recording.\")\n    else:\n        raise\n```",
+      "zh-Hans": "```python\nimport time\nimport videodb\nfrom videodb.exceptions import InvalidRequestError\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\n# 1. Connect and start recording\nrtstream = coll.connect_rtstream(\n    url=\"rtmp://your-stream-server/live/stream-key\",\n    name=\"Weekly Standup\",\n    store=True,\n)\nrtstream.start()\n\n# 2. Record for the duration of the meeting\nstart_ts = time.time()\ntime.sleep(1800)  # 30 minutes\nend_ts = time.time()\nrtstream.stop()\n\n# Generate an immediate playback URL for the captured window\nstream_url = rtstream.generate_stream(start=start_ts, end=end_ts)\nprint(f\"Recorded stream: {stream_url}\")\n\n# 3. Export to a permanent video\nexport_result = rtstream.export(name=\"Weekly Standup Recording\")\nprint(f\"Exported video: {export_result.video_id}\")\n\n# 4. Index the exported video for search\nvideo = coll.get_video(export_result.video_id)\nvideo.index_spoken_words(force=True)\n\n# 5. Search for action items\ntry:\n    results = video.search(\"action items and next steps\")\n    stream_url = results.compile()\n    print(f\"Action items clip: {stream_url}\")\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        print(\"No action items were detected in the recording.\")\n    else:\n        raise\n```"
+    }
+  ]
+}

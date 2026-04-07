@@ -1,0 +1,86 @@
+{
+  "sourceFile": "rules/kotlin/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---"
+    },
+    {
+      "en-US": "# Kotlin Security",
+      "zh-Hans": "# Kotlin 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with Kotlin and Android/KMP-specific content.",
+      "zh-Hans": "> 本文档基于 [common/security.md](../common/security.md)，补充了 Kotlin 和 Android/KMP 相关的内容。"
+    },
+    {
+      "en-US": "## Secrets Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "- Never hardcode API keys, tokens, or credentials in source code\n- Use `local.properties` (git-ignored) for local development secrets\n- Use `BuildConfig` fields generated from CI secrets for release builds\n- Use `EncryptedSharedPreferences` (Android) or Keychain (iOS) for runtime secret storage",
+      "zh-Hans": "* 切勿在源代码中硬编码 API 密钥、令牌或凭据\n* 本地开发时，使用 `local.properties`（已通过 git 忽略）来管理密钥\n* 发布版本中，使用由 CI 密钥生成的 `BuildConfig` 字段\n* 运行时密钥存储使用 `EncryptedSharedPreferences`（Android）或 Keychain（iOS）"
+    },
+    {
+      "en-US": "```kotlin\n// BAD\nval apiKey = \"sk-abc123...\"\n\n// GOOD — from BuildConfig (generated at build time)\nval apiKey = BuildConfig.API_KEY\n\n// GOOD — from secure storage at runtime\nval token = secureStorage.get(\"auth_token\")\n```",
+      "zh-Hans": "```kotlin\n// BAD\nval apiKey = \"sk-abc123...\"\n\n// GOOD — from BuildConfig (generated at build time)\nval apiKey = BuildConfig.API_KEY\n\n// GOOD — from secure storage at runtime\nval token = secureStorage.get(\"auth_token\")\n```"
+    },
+    {
+      "en-US": "## Network Security",
+      "zh-Hans": "## 网络安全"
+    },
+    {
+      "en-US": "- Use HTTPS exclusively — configure `network_security_config.xml` to block cleartext\n- Pin certificates for sensitive endpoints using OkHttp `CertificatePinner` or Ktor equivalent\n- Set timeouts on all HTTP clients — never leave defaults (which may be infinite)\n- Validate and sanitize all server responses before use",
+      "zh-Hans": "* 仅使用 HTTPS —— 配置 `network_security_config.xml` 以阻止明文传输\n* 使用 OkHttp 的 `CertificatePinner` 或 Ktor 的等效功能为敏感端点固定证书\n* 为所有 HTTP 客户端设置超时 —— 切勿使用默认值（可能为无限长）\n* 在使用所有服务器响应前，先进行验证和清理"
+    },
+    {
+      "en-US": "```xml\n<!-- res/xml/network_security_config.xml -->\n<network-security-config>\n    <base-config cleartextTrafficPermitted=\"false\" />\n</network-security-config>\n```",
+      "zh-Hans": "```xml\n<!-- res/xml/network_security_config.xml -->\n<network-security-config>\n    <base-config cleartextTrafficPermitted=\"false\" />\n</network-security-config>\n```"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "- Validate all user input before processing or sending to API\n- Use parameterized queries for Room/SQLDelight — never concatenate user input into SQL\n- Sanitize file paths from user input to prevent path traversal",
+      "zh-Hans": "* 在处理或将用户输入发送到 API 之前，验证所有用户输入\n* 对 Room/SQLDelight 使用参数化查询 —— 切勿将用户输入拼接到 SQL 语句中\n* 清理用户输入中的文件路径，以防止路径遍历攻击"
+    },
+    {
+      "en-US": "```kotlin\n// BAD — SQL injection\n@Query(\"SELECT * FROM items WHERE name = '$input'\")\n\n// GOOD — parameterized\n@Query(\"SELECT * FROM items WHERE name = :input\")\nfun findByName(input: String): List<ItemEntity>\n```",
+      "zh-Hans": "```kotlin\n// BAD — SQL injection\n@Query(\"SELECT * FROM items WHERE name = '$input'\")\n\n// GOOD — parameterized\n@Query(\"SELECT * FROM items WHERE name = :input\")\nfun findByName(input: String): List<ItemEntity>\n```"
+    },
+    {
+      "en-US": "## Data Protection",
+      "zh-Hans": "## 数据保护"
+    },
+    {
+      "en-US": "- Use `EncryptedSharedPreferences` for sensitive key-value data on Android\n- Use `@Serializable` with explicit field names — don't leak internal property names\n- Clear sensitive data from memory when no longer needed\n- Use `@Keep` or ProGuard rules for serialized classes to prevent name mangling",
+      "zh-Hans": "* 在 Android 上，使用 `EncryptedSharedPreferences` 存储敏感键值数据\n* 使用 `@Serializable` 并明确指定字段名 —— 不要泄露内部属性名\n* 敏感数据不再需要时，从内存中清除\n* 对序列化类使用 `@Keep` 或 ProGuard 规则，以防止名称混淆"
+    },
+    {
+      "en-US": "## Authentication",
+      "zh-Hans": "## 身份验证"
+    },
+    {
+      "en-US": "- Store tokens in secure storage, not in plain SharedPreferences\n- Implement token refresh with proper 401/403 handling\n- Clear all auth state on logout (tokens, cached user data, cookies)\n- Use biometric authentication (`BiometricPrompt`) for sensitive operations",
+      "zh-Hans": "* 将令牌存储在安全存储中，而非普通的 SharedPreferences\n* 实现令牌刷新机制，并正确处理 401/403 状态码\n* 退出登录时清除所有身份验证状态（令牌、缓存的用户数据、Cookie）\n* 对敏感操作使用生物特征认证（`BiometricPrompt`）"
+    },
+    {
+      "en-US": "## ProGuard / R8",
+      "zh-Hans": "## ProGuard / R8"
+    },
+    {
+      "en-US": "- Keep rules for all serialized models (`@Serializable`, Gson, Moshi)\n- Keep rules for reflection-based libraries (Koin, Retrofit)\n- Test release builds — obfuscation can break serialization silently",
+      "zh-Hans": "* 为所有序列化模型（`@Serializable`、Gson、Moshi）保留规则\n* 为基于反射的库（Koin、Retrofit）保留规则\n* 测试发布版本 —— 混淆可能会静默地破坏序列化"
+    },
+    {
+      "en-US": "## WebView Security",
+      "zh-Hans": "## WebView 安全"
+    },
+    {
+      "en-US": "- Disable JavaScript unless explicitly needed: `settings.javaScriptEnabled = false`\n- Validate URLs before loading in WebView\n- Never expose `@JavascriptInterface` methods that access sensitive data\n- Use `WebViewClient.shouldOverrideUrlLoading()` to control navigation",
+      "zh-Hans": "* 除非明确需要，否则禁用 JavaScript：`settings.javaScriptEnabled = false`\n* 在 WebView 中加载 URL 前，先进行验证\n* 切勿暴露访问敏感数据的 `@JavascriptInterface` 方法\n* 使用 `WebViewClient.shouldOverrideUrlLoading()` 来控制导航"
+    }
+  ]
+}

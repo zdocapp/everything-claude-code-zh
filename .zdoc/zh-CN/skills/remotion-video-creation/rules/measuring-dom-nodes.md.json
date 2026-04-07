@@ -1,0 +1,26 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/measuring-dom-nodes.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: measuring-dom-nodes\ndescription: Measuring DOM element dimensions in Remotion\nmetadata:\n  tags: measure, layout, dimensions, getBoundingClientRect, scale\n---",
+      "zh-Hans": "---\nname: measuring-dom-nodes\ndescription: 在Remotion中测量DOM元素尺寸\nmetadata:\n  tags: measure, layout, dimensions, getBoundingClientRect, scale\n---"
+    },
+    {
+      "en-US": "# Measuring DOM nodes in Remotion",
+      "zh-Hans": "# 在 Remotion 中测量 DOM 节点"
+    },
+    {
+      "en-US": "Remotion applies a `scale()` transform to the video container, which affects values from `getBoundingClientRect()`. Use `useCurrentScale()` to get correct measurements.",
+      "zh-Hans": "Remotion 对视频容器应用了 `scale()` 变换，这会影响来自 `getBoundingClientRect()` 的数值。使用 `useCurrentScale()` 来获取正确的测量结果。"
+    },
+    {
+      "en-US": "## Measuring element dimensions",
+      "zh-Hans": "## 测量元素尺寸"
+    },
+    {
+      "en-US": "```tsx\nimport { useCurrentScale } from \"remotion\";\nimport { useRef, useEffect, useState } from \"react\";\n\nexport const MyComponent = () => {\n  const ref = useRef<HTMLDivElement>(null);\n  const scale = useCurrentScale();\n  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });\n\n  useEffect(() => {\n    if (!ref.current) return;\n    const rect = ref.current.getBoundingClientRect();\n    setDimensions({\n      width: rect.width / scale,\n      height: rect.height / scale,\n    });\n  }, [scale]);\n\n  return <div ref={ref}>Content to measure</div>;\n};\n```",
+      "zh-Hans": "```tsx\nimport { useCurrentScale } from \"remotion\";\nimport { useRef, useEffect, useState } from \"react\";\n\nexport const MyComponent = () => {\n  const ref = useRef<HTMLDivElement>(null);\n  const scale = useCurrentScale();\n  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });\n\n  useEffect(() => {\n    if (!ref.current) return;\n    const rect = ref.current.getBoundingClientRect();\n    setDimensions({\n      width: rect.width / scale,\n      height: rect.height / scale,\n    });\n  }, [scale]);\n\n  return <div ref={ref}>Content to measure</div>;\n};\n```"
+    }
+  ]
+}

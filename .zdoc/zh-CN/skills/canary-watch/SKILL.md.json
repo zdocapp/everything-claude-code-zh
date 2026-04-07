@@ -1,0 +1,106 @@
+{
+  "sourceFile": "skills/canary-watch/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: canary-watch\ndescription: Use this skill to monitor a deployed URL for regressions after deploys, merges, or dependency upgrades.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: canary-watch\ndescription: 使用此技能在部署、合并或依赖项升级后监控已部署的URL是否存在回归问题。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Canary Watch — Post-Deploy Monitoring",
+      "zh-Hans": "# Canary Watch — 部署后监控"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- After deploying to production or staging\n- After merging a risky PR\n- When you want to verify a fix actually fixed it\n- Continuous monitoring during a launch window\n- After dependency upgrades",
+      "zh-Hans": "* 部署到生产或预发布环境后\n* 合并有风险的 PR 后\n* 当您想验证某个修复是否确实生效时\n* 在发布窗口期间进行持续监控\n* 依赖项升级后"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "Monitors a deployed URL for regressions. Runs in a loop until stopped or until the watch window expires.",
+      "zh-Hans": "监控已部署的 URL 是否存在回归问题。循环运行，直到手动停止或监控窗口到期。"
+    },
+    {
+      "en-US": "### What It Watches",
+      "zh-Hans": "### 监控内容"
+    },
+    {
+      "en-US": "```\n1. HTTP Status — is the page returning 200?\n2. Console Errors — new errors that weren't there before?\n3. Network Failures — failed API calls, 5xx responses?\n4. Performance — LCP/CLS/INP regression vs baseline?\n5. Content — did key elements disappear? (h1, nav, footer, CTA)\n6. API Health — are critical endpoints responding within SLA?\n```",
+      "zh-Hans": "```\n1. HTTP 状态码 — 页面是否返回 200？\n2. 控制台错误 — 是否有之前未出现的新错误？\n3. 网络请求失败 — 是否有失败的 API 调用、5xx 响应？\n4. 性能 — LCP/CLS/INP 指标相较于基线是否有退化？\n5. 内容 — 关键元素是否消失？（h1、导航、页脚、行动号召按钮）\n6. API 健康状态 — 关键端点是否在 SLA 内响应？\n```"
+    },
+    {
+      "en-US": "### Watch Modes",
+      "zh-Hans": "### 监控模式"
+    },
+    {
+      "en-US": "**Quick check** (default): single pass, report results",
+      "zh-Hans": "**快速检查**（默认）：单次运行，报告结果"
+    },
+    {
+      "en-US": "```\n/canary-watch https://myapp.com\n```",
+      "zh-Hans": "```\n/canary-watch https://myapp.com\n```"
+    },
+    {
+      "en-US": "**Sustained watch**: check every N minutes for M hours",
+      "zh-Hans": "**持续监控**：每隔 N 分钟检查一次，持续 M 小时"
+    },
+    {
+      "en-US": "```\n/canary-watch https://myapp.com --interval 5m --duration 2h\n```",
+      "zh-Hans": "```\n/canary-watch https://myapp.com --interval 5m --duration 2h\n```"
+    },
+    {
+      "en-US": "**Diff mode**: compare staging vs production",
+      "zh-Hans": "**差异模式**：比较预发布环境与生产环境"
+    },
+    {
+      "en-US": "```\n/canary-watch --compare https://staging.myapp.com https://myapp.com\n```",
+      "zh-Hans": "```\n/canary-watch --compare https://staging.myapp.com https://myapp.com\n```"
+    },
+    {
+      "en-US": "### Alert Thresholds",
+      "zh-Hans": "### 告警阈值"
+    },
+    {
+      "en-US": "```yaml\ncritical:  # immediate alert\n  - HTTP status != 200\n  - Console error count > 5 (new errors only)\n  - LCP > 4s\n  - API endpoint returns 5xx\n\nwarning:   # flag in report\n  - LCP increased > 500ms from baseline\n  - CLS > 0.1\n  - New console warnings\n  - Response time > 2x baseline\n\ninfo:      # log only\n  - Minor performance variance\n  - New network requests (third-party scripts added?)\n```",
+      "zh-Hans": "```yaml\ncritical:  # immediate alert\n  - HTTP status != 200\n  - Console error count > 5 (new errors only)\n  - LCP > 4s\n  - API endpoint returns 5xx\n\nwarning:   # flag in report\n  - LCP increased > 500ms from baseline\n  - CLS > 0.1\n  - New console warnings\n  - Response time > 2x baseline\n\ninfo:      # log only\n  - Minor performance variance\n  - New network requests (third-party scripts added?)\n```"
+    },
+    {
+      "en-US": "### Notifications",
+      "zh-Hans": "### 通知"
+    },
+    {
+      "en-US": "When a critical threshold is crossed:",
+      "zh-Hans": "当超过关键阈值时："
+    },
+    {
+      "en-US": "- Desktop notification (macOS/Linux)\n- Optional: Slack/Discord webhook\n- Log to `~/.claude/canary-watch.log`",
+      "zh-Hans": "* 桌面通知（macOS/Linux）\n* 可选：Slack/Discord webhook\n* 记录到 `~/.claude/canary-watch.log`"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "```markdown\n## Canary Report — myapp.com — 2026-03-23 03:15 PST\n\n### Status: HEALTHY ✓\n\n| Check | Result | Baseline | Delta |\n|-------|--------|----------|-------|\n| HTTP | 200 ✓ | 200 | — |\n| Console errors | 0 ✓ | 0 | — |\n| LCP | 1.8s ✓ | 1.6s | +200ms |\n| CLS | 0.01 ✓ | 0.01 | — |\n| API /health | 145ms ✓ | 120ms | +25ms |\n\n### No regressions detected. Deploy is clean.\n```",
+      "zh-Hans": "```markdown\n## Canary 报告 — myapp.com — 2026-03-23 03:15 PST\n\n### 状态：健康 ✓\n\n| 检查项 | 结果 | 基线 | 差值 |\n|-------|--------|----------|-------|\n| HTTP | 200 ✓ | 200 | — |\n| 控制台错误 | 0 ✓ | 0 | — |\n| LCP | 1.8s ✓ | 1.6s | +200ms |\n| CLS | 0.01 ✓ | 0.01 | — |\n| API /health | 145ms ✓ | 120ms | +25ms |\n\n### 未检测到回归。部署正常。\n```"
+    },
+    {
+      "en-US": "## Integration",
+      "zh-Hans": "## 集成"
+    },
+    {
+      "en-US": "Pair with:",
+      "zh-Hans": "可与以下工具配合使用："
+    },
+    {
+      "en-US": "- `/browser-qa` for pre-deploy verification\n- Hooks: add as a PostToolUse hook on `git push` to auto-check after deploys\n- CI: run in GitHub Actions after deploy step",
+      "zh-Hans": "* `/browser-qa` 用于部署前验证\n* 钩子：在 `git push` 上添加为 PostToolUse 钩子，以便在部署后自动检查\n* CI：在 GitHub Actions 的部署步骤后运行"
+    }
+  ]
+}

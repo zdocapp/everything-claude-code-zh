@@ -1,0 +1,126 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/gifs.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: gif\ndescription: Displaying GIFs, APNG, AVIF and WebP in Remotion\nmetadata:\n  tags: gif, animation, images, animated, apng, avif, webp\n---",
+      "zh-Hans": "---\nname: gif\ndescription: 在Remotion中显示GIF、APNG、AVIF和WebP\nmetadata:\n  tags: gif, animation, images, animated, apng, avif, webp\n---"
+    },
+    {
+      "en-US": "# Using Animated images in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用动画图像"
+    },
+    {
+      "en-US": "## Basic usage",
+      "zh-Hans": "## 基本用法"
+    },
+    {
+      "en-US": "Use `<AnimatedImage>` to display a GIF, APNG, AVIF or WebP image synchronized with Remotion's timeline:",
+      "zh-Hans": "使用 `<AnimatedImage>` 来显示与 Remotion 时间线同步的 GIF、APNG、AVIF 或 WebP 图像："
+    },
+    {
+      "en-US": "```tsx\nimport {AnimatedImage, staticFile} from 'remotion';\n\nexport const MyComposition = () => {\n  return <AnimatedImage src={staticFile('animation.gif')} width={500} height={500} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport {AnimatedImage, staticFile} from 'remotion';\n\nexport const MyComposition = () => {\n  return <AnimatedImage src={staticFile('animation.gif')} width={500} height={500} />;\n};\n```"
+    },
+    {
+      "en-US": "Remote URLs are also supported (must have CORS enabled):",
+      "zh-Hans": "也支持远程 URL（必须启用 CORS）："
+    },
+    {
+      "en-US": "```tsx\n<AnimatedImage src=\"https://example.com/animation.gif\" width={500} height={500} />\n```",
+      "zh-Hans": "```tsx\n<AnimatedImage src=\"https://example.com/animation.gif\" width={500} height={500} />\n```"
+    },
+    {
+      "en-US": "## Sizing and fit",
+      "zh-Hans": "## 尺寸与适配"
+    },
+    {
+      "en-US": "Control how the image fills its container with the `fit` prop:",
+      "zh-Hans": "使用 `fit` 属性控制图像如何填充其容器："
+    },
+    {
+      "en-US": "```tsx\n// Stretch to fill (default)\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={300} fit=\"fill\" />\n\n// Maintain aspect ratio, fit inside container\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={300} fit=\"contain\" />\n\n// Fill container, crop if needed\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={300} fit=\"cover\" />\n```",
+      "zh-Hans": "```tsx\n// Stretch to fill (default)\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={300} fit=\"fill\" />\n\n// Maintain aspect ratio, fit inside container\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={300} fit=\"contain\" />\n\n// Fill container, crop if needed\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={300} fit=\"cover\" />\n```"
+    },
+    {
+      "en-US": "## Playback speed",
+      "zh-Hans": "## 播放速度"
+    },
+    {
+      "en-US": "Use `playbackRate` to control the animation speed:",
+      "zh-Hans": "使用 `playbackRate` 控制动画速度："
+    },
+    {
+      "en-US": "```tsx\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} playbackRate={2} /> {/* 2x speed */}\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} playbackRate={0.5} /> {/* Half speed */}\n```",
+      "zh-Hans": "```tsx\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} playbackRate={2} /> {/* 2x speed */}\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} playbackRate={0.5} /> {/* Half speed */}\n```"
+    },
+    {
+      "en-US": "## Looping behavior",
+      "zh-Hans": "## 循环行为"
+    },
+    {
+      "en-US": "Control what happens when the animation finishes:",
+      "zh-Hans": "控制动画结束时的行为："
+    },
+    {
+      "en-US": "```tsx\n// Loop indefinitely (default)\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} loopBehavior=\"loop\" />\n\n// Play once, show final frame\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} loopBehavior=\"pause-after-finish\" />\n\n// Play once, then clear canvas\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} loopBehavior=\"clear-after-finish\" />\n```",
+      "zh-Hans": "```tsx\n// Loop indefinitely (default)\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} loopBehavior=\"loop\" />\n\n// Play once, show final frame\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} loopBehavior=\"pause-after-finish\" />\n\n// Play once, then clear canvas\n<AnimatedImage src={staticFile(\"animation.gif\")} width={500} height={500} loopBehavior=\"clear-after-finish\" />\n```"
+    },
+    {
+      "en-US": "## Styling",
+      "zh-Hans": "## 样式"
+    },
+    {
+      "en-US": "Use the `style` prop for additional CSS (use `width` and `height` props for sizing):",
+      "zh-Hans": "使用 `style` 属性添加额外的 CSS（使用 `width` 和 `height` 属性控制尺寸）："
+    },
+    {
+      "en-US": "```tsx\n<AnimatedImage\n  src={staticFile('animation.gif')}\n  width={500}\n  height={500}\n  style={{\n    borderRadius: 20,\n    position: 'absolute',\n    top: 100,\n    left: 50,\n  }}\n/>\n```",
+      "zh-Hans": "```tsx\n<AnimatedImage\n  src={staticFile('animation.gif')}\n  width={500}\n  height={500}\n  style={{\n    borderRadius: 20,\n    position: 'absolute',\n    top: 100,\n    left: 50,\n  }}\n/>\n```"
+    },
+    {
+      "en-US": "## Getting GIF duration",
+      "zh-Hans": "## 获取 GIF 时长"
+    },
+    {
+      "en-US": "Use `getGifDurationInSeconds()` from `@remotion/gif` to get the duration of a GIF.",
+      "zh-Hans": "使用 `@remotion/gif` 中的 `getGifDurationInSeconds()` 来获取 GIF 的时长。"
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/gif # If project uses npm\nbunx remotion add @remotion/gif # If project uses bun\nyarn remotion add @remotion/gif # If project uses yarn\npnpm exec remotion add @remotion/gif # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/gif # If project uses npm\nbunx remotion add @remotion/gif # If project uses bun\nyarn remotion add @remotion/gif # If project uses yarn\npnpm exec remotion add @remotion/gif # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "```tsx\nimport {getGifDurationInSeconds} from '@remotion/gif';\nimport {staticFile} from 'remotion';\n\nconst duration = await getGifDurationInSeconds(staticFile('animation.gif'));\nconsole.log(duration); // e.g. 2.5\n```",
+      "zh-Hans": "```tsx\nimport {getGifDurationInSeconds} from '@remotion/gif';\nimport {staticFile} from 'remotion';\n\nconst duration = await getGifDurationInSeconds(staticFile('animation.gif'));\nconsole.log(duration); // e.g. 2.5\n```"
+    },
+    {
+      "en-US": "This is useful for setting the composition duration to match the GIF:",
+      "zh-Hans": "这对于将合成时长设置为与 GIF 匹配非常有用："
+    },
+    {
+      "en-US": "```tsx\nimport {getGifDurationInSeconds} from '@remotion/gif';\nimport {staticFile, CalculateMetadataFunction} from 'remotion';\n\nconst calculateMetadata: CalculateMetadataFunction = async () => {\n  const duration = await getGifDurationInSeconds(staticFile('animation.gif'));\n  return {\n    durationInFrames: Math.ceil(duration * 30),\n  };\n};\n```",
+      "zh-Hans": "```tsx\nimport {getGifDurationInSeconds} from '@remotion/gif';\nimport {staticFile, CalculateMetadataFunction} from 'remotion';\n\nconst calculateMetadata: CalculateMetadataFunction = async () => {\n  const duration = await getGifDurationInSeconds(staticFile('animation.gif'));\n  return {\n    durationInFrames: Math.ceil(duration * 30),\n  };\n};\n```"
+    },
+    {
+      "en-US": "## Alternative",
+      "zh-Hans": "## 替代方案"
+    },
+    {
+      "en-US": "If `<AnimatedImage>` does not work (only supported in Chrome and Firefox), you can use `<Gif>` from `@remotion/gif` instead.",
+      "zh-Hans": "如果 `<AnimatedImage>` 不工作（仅 Chrome 和 Firefox 支持），你可以改用 `@remotion/gif` 中的 `<Gif>`。"
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/gif # If project uses npm\nbunx remotion add @remotion/gif # If project uses bun\nyarn remotion add @remotion/gif # If project uses yarn\npnpm exec remotion add @remotion/gif # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/gif # If project uses npm\nbunx remotion add @remotion/gif # If project uses bun\nyarn remotion add @remotion/gif # If project uses yarn\npnpm exec remotion add @remotion/gif # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "```tsx\nimport {Gif} from '@remotion/gif';\nimport {staticFile} from 'remotion';\n\nexport const MyComposition = () => {\n  return <Gif src={staticFile('animation.gif')} width={500} height={500} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport {Gif} from '@remotion/gif';\nimport {staticFile} from 'remotion';\n\nexport const MyComposition = () => {\n  return <Gif src={staticFile('animation.gif')} width={500} height={500} />;\n};\n```"
+    },
+    {
+      "en-US": "The `<Gif>` component has the same props as `<AnimatedImage>` but only supports GIF files.",
+      "zh-Hans": "`<Gif>` 组件具有与 `<AnimatedImage>` 相同的属性，但仅支持 GIF 文件。"
+    }
+  ]
+}

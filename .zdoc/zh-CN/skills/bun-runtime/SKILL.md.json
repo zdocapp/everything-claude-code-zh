@@ -1,0 +1,94 @@
+{
+  "sourceFile": "skills/bun-runtime/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: bun-runtime\ndescription: Bun as runtime, package manager, bundler, and test runner. When to choose Bun vs Node, migration notes, and Vercel support.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: bun-runtime\ndescription: Bun 作为运行时、包管理器、打包器和测试运行器。何时选择 Bun 而非 Node、迁移注意事项以及 Vercel 支持。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Bun Runtime",
+      "zh-Hans": "# Bun 运行时"
+    },
+    {
+      "en-US": "Bun is a fast all-in-one JavaScript runtime and toolkit: runtime, package manager, bundler, and test runner.",
+      "zh-Hans": "Bun 是一个快速的全能 JavaScript 运行时和工具集：运行时、包管理器、打包器和测试运行器。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- **Prefer Bun** for: new JS/TS projects, scripts where install/run speed matters, Vercel deployments with Bun runtime, and when you want a single toolchain (run + install + test + build).\n- **Prefer Node** for: maximum ecosystem compatibility, legacy tooling that assumes Node, or when a dependency has known Bun issues.",
+      "zh-Hans": "* **优先选择 Bun** 用于：新的 JS/TS 项目、安装/运行速度很重要的脚本、使用 Bun 运行时的 Vercel 部署，以及当您想要单一工具链（运行 + 安装 + 测试 + 构建）时。\n* **优先选择 Node** 用于：最大的生态系统兼容性、假定使用 Node 的遗留工具，或者当某个依赖项存在已知的 Bun 问题时。"
+    },
+    {
+      "en-US": "Use when: adopting Bun, migrating from Node, writing or debugging Bun scripts/tests, or configuring Bun on Vercel or other platforms.",
+      "zh-Hans": "在以下情况下使用：采用 Bun、从 Node 迁移、编写或调试 Bun 脚本/测试，或在 Vercel 或其他平台上配置 Bun。"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "- **Runtime**: Drop-in Node-compatible runtime (built on JavaScriptCore, implemented in Zig).\n- **Package manager**: `bun install` is significantly faster than npm/yarn. Lockfile is `bun.lock` (text) by default in current Bun; older versions used `bun.lockb` (binary).\n- **Bundler**: Built-in bundler and transpiler for apps and libraries.\n- **Test runner**: Built-in `bun test` with Jest-like API.",
+      "zh-Hans": "* **运行时**：开箱即用的 Node 兼容运行时（基于 JavaScriptCore，用 Zig 实现）。\n* **包管理器**：`bun install` 比 npm/yarn 快得多。在当前 Bun 中，锁文件默认为 `bun.lock`（文本）；旧版本使用 `bun.lockb`（二进制）。\n* **打包器**：用于应用程序和库的内置打包器和转译器。\n* **测试运行器**：内置的 `bun test`，具有类似 Jest 的 API。"
+    },
+    {
+      "en-US": "**Migration from Node**: Replace `node script.js` with `bun run script.js` or `bun script.js`. Run `bun install` in place of `npm install`; most packages work. Use `bun run` for npm scripts; `bun x` for npx-style one-off runs. Node built-ins are supported; prefer Bun APIs where they exist for better performance.",
+      "zh-Hans": "**从 Node 迁移**：将 `node script.js` 替换为 `bun run script.js` 或 `bun script.js`。运行 `bun install` 代替 `npm install`；大多数包都能工作。使用 `bun run` 来执行 npm 脚本；使用 `bun x` 进行 npx 风格的临时运行。支持 Node 内置模块；在存在 Bun API 的地方优先使用它们以获得更好的性能。"
+    },
+    {
+      "en-US": "**Vercel**: Set runtime to Bun in project settings. Build: `bun run build` or `bun build ./src/index.ts --outdir=dist`. Install: `bun install --frozen-lockfile` for reproducible deploys.",
+      "zh-Hans": "**Vercel**：在项目设置中将运行时设置为 Bun。构建命令：`bun run build` 或 `bun build ./src/index.ts --outdir=dist`。安装命令：`bun install --frozen-lockfile` 用于可重复的部署。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Run and install",
+      "zh-Hans": "### 运行和安装"
+    },
+    {
+      "en-US": "```bash\n# Install dependencies (creates/updates bun.lock or bun.lockb)\nbun install\n\n# Run a script or file\nbun run dev\nbun run src/index.ts\nbun src/index.ts\n```",
+      "zh-Hans": "```bash\n# Install dependencies (creates/updates bun.lock or bun.lockb)\nbun install\n\n# Run a script or file\nbun run dev\nbun run src/index.ts\nbun src/index.ts\n```"
+    },
+    {
+      "en-US": "### Scripts and env",
+      "zh-Hans": "### 脚本和环境变量"
+    },
+    {
+      "en-US": "```bash\nbun run --env-file=.env dev\nFOO=bar bun run script.ts\n```",
+      "zh-Hans": "```bash\nbun run --env-file=.env dev\nFOO=bar bun run script.ts\n```"
+    },
+    {
+      "en-US": "### Testing",
+      "zh-Hans": "### 测试"
+    },
+    {
+      "en-US": "```bash\nbun test\nbun test --watch\n```",
+      "zh-Hans": "```bash\nbun test\nbun test --watch\n```"
+    },
+    {
+      "en-US": "```typescript\n// test/example.test.ts\nimport { expect, test } from \"bun:test\";\n\ntest(\"add\", () => {\n  expect(1 + 2).toBe(3);\n});\n```",
+      "zh-Hans": "```typescript\n// test/example.test.ts\nimport { expect, test } from \"bun:test\";\n\ntest(\"add\", () => {\n  expect(1 + 2).toBe(3);\n});\n```"
+    },
+    {
+      "en-US": "### Runtime API",
+      "zh-Hans": "### 运行时 API"
+    },
+    {
+      "en-US": "```typescript\nconst file = Bun.file(\"package.json\");\nconst json = await file.json();\n\nBun.serve({\n  port: 3000,\n  fetch(req) {\n    return new Response(\"Hello\");\n  },\n});\n```",
+      "zh-Hans": "```typescript\nconst file = Bun.file(\"package.json\");\nconst json = await file.json();\n\nBun.serve({\n  port: 3000,\n  fetch(req) {\n    return new Response(\"Hello\");\n  },\n});\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- Commit the lockfile (`bun.lock` or `bun.lockb`) for reproducible installs.\n- Prefer `bun run` for scripts. For TypeScript, Bun runs `.ts` natively.\n- Keep dependencies up to date; Bun and the ecosystem evolve quickly.",
+      "zh-Hans": "* 提交锁文件（`bun.lock` 或 `bun.lockb`）以实现可重复的安装。\n* 在脚本中优先使用 `bun run`。对于 TypeScript，Bun 原生运行 `.ts`。\n* 保持依赖项最新；Bun 和生态系统发展迅速。"
+    }
+  ]
+}

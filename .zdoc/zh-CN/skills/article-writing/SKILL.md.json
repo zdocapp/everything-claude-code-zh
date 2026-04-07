@@ -1,0 +1,106 @@
+{
+  "sourceFile": "skills/article-writing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: article-writing\ndescription: Write articles, guides, blog posts, tutorials, newsletter issues, and other long-form content in a distinctive voice derived from supplied examples or brand guidance. Use when the user wants polished written content longer than a paragraph, especially when voice consistency, structure, and credibility matter.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: article-writing\ndescription: 根据提供的示例或品牌指导，以独特的语气撰写文章、指南、博客帖子、教程、新闻简报等长篇内容。当用户需要超过一段的精致书面内容时使用，尤其是当语气一致性、结构和可信度至关重要时。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Article Writing",
+      "zh-Hans": "# 文章写作"
+    },
+    {
+      "en-US": "Write long-form content that sounds like an actual person with a point of view, not an LLM smoothing itself into paste.",
+      "zh-Hans": "撰写听起来像真人观点、而非像LLM自我平滑成糊状的长篇内容。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- drafting blog posts, essays, launch posts, guides, tutorials, or newsletter issues\n- turning notes, transcripts, or research into polished articles\n- matching an existing founder, operator, or brand voice from examples\n- tightening structure, pacing, and evidence in already-written long-form copy",
+      "zh-Hans": "* 起草博客文章、散文、发布帖、指南、教程或新闻简报时\n* 将笔记、转录稿或研究转化为精炼文章时\n* 根据示例匹配现有的创始人、运营者或品牌声音时\n* 强化已有长篇文稿的结构、节奏和论据时"
+    },
+    {
+      "en-US": "## Core Rules",
+      "zh-Hans": "## 核心规则"
+    },
+    {
+      "en-US": "1. Lead with the concrete thing: artifact, example, output, anecdote, number, screenshot, or code.\n2. Explain after the example, not before.\n3. Keep sentences tight unless the source voice is intentionally expansive.\n4. Use proof instead of adjectives.\n5. Never invent facts, credibility, or customer evidence.",
+      "zh-Hans": "1. 以具体事物开头：实物、示例、输出、轶事、数字、截图或代码。\n2. 先展示示例，后解释。\n3. 除非源文本风格有意铺陈，否则保持句子紧凑。\n4. 用证据代替形容词。\n5. 绝不捏造事实、可信度或客户证据。"
+    },
+    {
+      "en-US": "## Voice Handling",
+      "zh-Hans": "## 声音处理"
+    },
+    {
+      "en-US": "If the user wants a specific voice, run `brand-voice` first and reuse its `VOICE PROFILE`.\nDo not duplicate a second style-analysis pass here unless the user explicitly asks for one.",
+      "zh-Hans": "如果用户需要特定声音，先运行 `brand-voice` 并复用其 `VOICE PROFILE`。\n除非用户明确要求，否则不要在此处重复进行第二次风格分析。"
+    },
+    {
+      "en-US": "If no voice references are given, default to a sharp operator voice: concrete, unsentimental, useful.",
+      "zh-Hans": "如果未提供声音参考，则默认使用犀利的操作者声音：具体、不带感情色彩、实用。"
+    },
+    {
+      "en-US": "## Banned Patterns",
+      "zh-Hans": "## 禁止模式"
+    },
+    {
+      "en-US": "Delete and rewrite any of these:",
+      "zh-Hans": "删除并重写以下任何内容："
+    },
+    {
+      "en-US": "- \"In today's rapidly evolving landscape\"\n- \"game-changer\", \"cutting-edge\", \"revolutionary\"\n- \"here's why this matters\" as a standalone bridge\n- fake vulnerability arcs\n- a closing question added only to juice engagement\n- biography padding that does not move the argument\n- generic AI throat-clearing that delays the point",
+      "zh-Hans": "* \"在当今快速发展的格局中\"\n* \"游戏规则改变者\"、\"尖端\"、\"革命性\"\n* 将\"这就是为什么这很重要\"作为独立的过渡句\n* 虚假的脆弱性叙事弧\n* 仅为提升互动而添加的结尾提问\n* 无助于推进论点的生平填充\n* 拖延切入正题的通用AI式开场白"
+    },
+    {
+      "en-US": "## Writing Process",
+      "zh-Hans": "## 写作流程"
+    },
+    {
+      "en-US": "1. Clarify the audience and purpose.\n2. Build a hard outline with one job per section.\n3. Start sections with proof, artifact, conflict, or example.\n4. Expand only where the next sentence earns space.\n5. Cut anything that sounds templated, overexplained, or self-congratulatory.",
+      "zh-Hans": "1. 明确受众和目的。\n2. 构建一个硬性大纲，每个部分只负责一项任务。\n3. 以证据、实物、冲突或示例开始每个部分。\n4. 仅在下一句话值得占用空间时才展开。\n5. 删除任何听起来像模板、过度解释或自我祝贺的内容。"
+    },
+    {
+      "en-US": "## Structure Guidance",
+      "zh-Hans": "## 结构指导"
+    },
+    {
+      "en-US": "### Technical Guides",
+      "zh-Hans": "### 技术指南"
+    },
+    {
+      "en-US": "- open with what the reader gets\n- use code, commands, screenshots, or concrete output in major sections\n- end with actionable takeaways, not a soft recap",
+      "zh-Hans": "* 以读者能得到什么开头\n* 在主要部分使用代码、命令、截图或具体输出\n* 以可操作的要点结束，而非软性总结"
+    },
+    {
+      "en-US": "### Essays / Opinion",
+      "zh-Hans": "### 文章 / 观点"
+    },
+    {
+      "en-US": "- start with tension, contradiction, or a specific observation\n- keep one argument thread per section\n- make opinions answer to evidence",
+      "zh-Hans": "* 以张力、矛盾或具体观察开头\n* 每个部分只围绕一个论点线索\n* 让观点接受证据的检验"
+    },
+    {
+      "en-US": "### Newsletters",
+      "zh-Hans": "### 新闻简报"
+    },
+    {
+      "en-US": "- keep the first screen doing real work\n- do not front-load diary filler\n- use section labels only when they improve scanability",
+      "zh-Hans": "* 让第一屏内容真正发挥作用\n* 不要前置日记式的填充内容\n* 仅在能提高可浏览性时才使用章节标签"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量检查"
+    },
+    {
+      "en-US": "Before delivering:",
+      "zh-Hans": "交付前："
+    },
+    {
+      "en-US": "- factual claims are backed by provided sources\n- generic AI transitions are gone\n- the voice matches the supplied examples or the agreed `VOICE PROFILE`\n- every section adds something new\n- formatting matches the intended medium",
+      "zh-Hans": "* 事实性主张有提供的来源支持\n* 通用的AI过渡句已删除\n* 声音与提供的示例或约定的 `VOICE PROFILE` 相符\n* 每个部分都增加了新内容\n* 格式符合预期媒介"
+    }
+  ]
+}

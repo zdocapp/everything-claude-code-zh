@@ -1,0 +1,138 @@
+{
+  "sourceFile": "skills/healthcare-cdss-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: healthcare-cdss-patterns\ndescription: Clinical Decision Support System (CDSS) development patterns. Drug interaction checking, dose validation, clinical scoring (NEWS2, qSOFA), alert severity classification, and integration into EMR workflows.\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: healthcare-cdss-patterns\ndescription: 临床决策支持系统（CDSS）开发模式。药物相互作用检查、剂量验证、临床评分（NEWS2、qSOFA）、警报严重程度分类以及集成到电子病历工作流程中。\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Healthcare CDSS Development Patterns",
+      "zh-Hans": "# 医疗临床决策支持系统开发模式"
+    },
+    {
+      "en-US": "Patterns for building Clinical Decision Support Systems that integrate into EMR workflows. CDSS modules are patient safety critical — zero tolerance for false negatives.",
+      "zh-Hans": "构建集成到电子病历工作流中的临床决策支持系统的模式。CDSS模块关乎患者安全——对假阴性零容忍。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Implementing drug interaction checking\n- Building dose validation engines\n- Implementing clinical scoring systems (NEWS2, qSOFA, APACHE, GCS)\n- Designing alert systems for abnormal clinical values\n- Building medication order entry with safety checks\n- Integrating lab result interpretation with clinical context",
+      "zh-Hans": "* 实施药物相互作用检查\n* 构建剂量验证引擎\n* 实施临床评分系统（NEWS2、qSOFA、APACHE、GCS）\n* 为异常临床值设计警报系统\n* 构建带有安全检查的医嘱录入系统\n* 将实验室结果解读与临床背景整合"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "The CDSS engine is a **pure function library with zero side effects**. Input clinical data, output alerts. This makes it fully testable.",
+      "zh-Hans": "CDSS引擎是一个**零副作用的纯函数库**。输入临床数据，输出警报。这使得它完全可测试。"
+    },
+    {
+      "en-US": "Three primary modules:",
+      "zh-Hans": "三个主要模块："
+    },
+    {
+      "en-US": "1. **`checkInteractions(newDrug, currentMeds, allergies)`** — Checks a new drug against current medications and known allergies. Returns severity-sorted `InteractionAlert[]`. Uses `DrugInteractionPair` data model.\n2. **`validateDose(drug, dose, route, weight, age, renalFunction)`** — Validates a prescribed dose against weight-based, age-adjusted, and renal-adjusted rules. Returns `DoseValidationResult`.\n3. **`calculateNEWS2(vitals)`** — National Early Warning Score 2 from `NEWS2Input`. Returns `NEWS2Result` with total score, risk level, and escalation guidance.",
+      "zh-Hans": "1. **`checkInteractions(newDrug, currentMeds, allergies)`** — 检查新药与当前用药及已知过敏的相互作用。返回按严重程度排序的`InteractionAlert[]`。使用`DrugInteractionPair`数据模型。\n2. **`validateDose(drug, dose, route, weight, age, renalFunction)`** — 根据基于体重、年龄调整和肾功能调整的规则验证处方剂量。返回`DoseValidationResult`。\n3. **`calculateNEWS2(vitals)`** — 来自`NEWS2Input`的国家早期预警评分2。返回包含总分、风险等级和升级指导的`NEWS2Result`。"
+    },
+    {
+      "en-US": "```\nEMR UI\n  ↓ (user enters data)\nCDSS Engine (pure functions, no side effects)\n  ├── Drug Interaction Checker\n  ├── Dose Validator\n  ├── Clinical Scoring (NEWS2, qSOFA, etc.)\n  └── Alert Classifier\n  ↓ (returns alerts)\nEMR UI (displays alerts inline, blocks if critical)\n```",
+      "zh-Hans": "```\nEMR UI\n  ↓ (用户输入数据)\nCDSS Engine (纯函数，无副作用)\n  ├── 药物相互作用检查器\n  ├── 剂量验证器\n  ├── 临床评分 (NEWS2, qSOFA 等)\n  └── 警报分类器\n  ↓ (返回警报)\nEMR UI (内联显示警报，若为严重则阻止)\n```"
+    },
+    {
+      "en-US": "### Drug Interaction Checking",
+      "zh-Hans": "### 药物相互作用检查"
+    },
+    {
+      "en-US": "```typescript\ninterface DrugInteractionPair {\n  drugA: string;           // generic name\n  drugB: string;           // generic name\n  severity: 'critical' | 'major' | 'minor';\n  mechanism: string;\n  clinicalEffect: string;\n  recommendation: string;\n}\n\nfunction checkInteractions(\n  newDrug: string,\n  currentMedications: string[],\n  allergyList: string[]\n): InteractionAlert[] {\n  if (!newDrug) return [];\n  const alerts: InteractionAlert[] = [];\n  for (const current of currentMedications) {\n    const interaction = findInteraction(newDrug, current);\n    if (interaction) {\n      alerts.push({ severity: interaction.severity, pair: [newDrug, current],\n        message: interaction.clinicalEffect, recommendation: interaction.recommendation });\n    }\n  }\n  for (const allergy of allergyList) {\n    if (isCrossReactive(newDrug, allergy)) {\n      alerts.push({ severity: 'critical', pair: [newDrug, allergy],\n        message: `Cross-reactivity with documented allergy: ${allergy}`,\n        recommendation: 'Do not prescribe without allergy consultation' });\n    }\n  }\n  return alerts.sort((a, b) => severityOrder(a.severity) - severityOrder(b.severity));\n}\n```",
+      "zh-Hans": "```typescript\ninterface DrugInteractionPair {\n  drugA: string;           // generic name\n  drugB: string;           // generic name\n  severity: 'critical' | 'major' | 'minor';\n  mechanism: string;\n  clinicalEffect: string;\n  recommendation: string;\n}\n\nfunction checkInteractions(\n  newDrug: string,\n  currentMedications: string[],\n  allergyList: string[]\n): InteractionAlert[] {\n  if (!newDrug) return [];\n  const alerts: InteractionAlert[] = [];\n  for (const current of currentMedications) {\n    const interaction = findInteraction(newDrug, current);\n    if (interaction) {\n      alerts.push({ severity: interaction.severity, pair: [newDrug, current],\n        message: interaction.clinicalEffect, recommendation: interaction.recommendation });\n    }\n  }\n  for (const allergy of allergyList) {\n    if (isCrossReactive(newDrug, allergy)) {\n      alerts.push({ severity: 'critical', pair: [newDrug, allergy],\n        message: `Cross-reactivity with documented allergy: ${allergy}`,\n        recommendation: 'Do not prescribe without allergy consultation' });\n    }\n  }\n  return alerts.sort((a, b) => severityOrder(a.severity) - severityOrder(b.severity));\n}\n```"
+    },
+    {
+      "en-US": "Interaction pairs must be **bidirectional**: if Drug A interacts with Drug B, then Drug B interacts with Drug A.",
+      "zh-Hans": "相互作用对必须是**双向的**：如果药物A与药物B相互作用，那么药物B也与药物A相互作用。"
+    },
+    {
+      "en-US": "### Dose Validation",
+      "zh-Hans": "### 剂量验证"
+    },
+    {
+      "en-US": "```typescript\ninterface DoseValidationResult {\n  valid: boolean;\n  message: string;\n  suggestedRange: { min: number; max: number; unit: string } | null;\n  factors: string[];\n}\n\nfunction validateDose(\n  drug: string,\n  dose: number,\n  route: 'oral' | 'iv' | 'im' | 'sc' | 'topical',\n  patientWeight?: number,\n  patientAge?: number,\n  renalFunction?: number\n): DoseValidationResult {\n  const rules = getDoseRules(drug, route);\n  if (!rules) return { valid: true, message: 'No validation rules available', suggestedRange: null, factors: [] };\n  const factors: string[] = [];\n\n  // SAFETY: if rules require weight but weight missing, BLOCK (not pass)\n  if (rules.weightBased) {\n    if (!patientWeight || patientWeight <= 0) {\n      return { valid: false, message: `Weight required for ${drug} (mg/kg drug)`,\n        suggestedRange: null, factors: ['weight_missing'] };\n    }\n    factors.push('weight');\n    const maxDose = rules.maxPerKg * patientWeight;\n    if (dose > maxDose) {\n      return { valid: false, message: `Dose exceeds max for ${patientWeight}kg`,\n        suggestedRange: { min: rules.minPerKg * patientWeight, max: maxDose, unit: rules.unit }, factors };\n    }\n  }\n\n  // Age-based adjustment (when rules define age brackets and age is provided)\n  if (rules.ageAdjusted && patientAge !== undefined) {\n    factors.push('age');\n    const ageMax = rules.getAgeAdjustedMax(patientAge);\n    if (dose > ageMax) {\n      return { valid: false, message: `Exceeds age-adjusted max for ${patientAge}yr`,\n        suggestedRange: { min: rules.typicalMin, max: ageMax, unit: rules.unit }, factors };\n    }\n  }\n\n  // Renal adjustment (when rules define eGFR brackets and eGFR is provided)\n  if (rules.renalAdjusted && renalFunction !== undefined) {\n    factors.push('renal');\n    const renalMax = rules.getRenalAdjustedMax(renalFunction);\n    if (dose > renalMax) {\n      return { valid: false, message: `Exceeds renal-adjusted max for eGFR ${renalFunction}`,\n        suggestedRange: { min: rules.typicalMin, max: renalMax, unit: rules.unit }, factors };\n    }\n  }\n\n  // Absolute max\n  if (dose > rules.absoluteMax) {\n    return { valid: false, message: `Exceeds absolute max ${rules.absoluteMax}${rules.unit}`,\n      suggestedRange: { min: rules.typicalMin, max: rules.absoluteMax, unit: rules.unit },\n      factors: [...factors, 'absolute_max'] };\n  }\n  return { valid: true, message: 'Within range',\n    suggestedRange: { min: rules.typicalMin, max: rules.typicalMax, unit: rules.unit }, factors };\n}\n```",
+      "zh-Hans": "```typescript\ninterface DoseValidationResult {\n  valid: boolean;\n  message: string;\n  suggestedRange: { min: number; max: number; unit: string } | null;\n  factors: string[];\n}\n\nfunction validateDose(\n  drug: string,\n  dose: number,\n  route: 'oral' | 'iv' | 'im' | 'sc' | 'topical',\n  patientWeight?: number,\n  patientAge?: number,\n  renalFunction?: number\n): DoseValidationResult {\n  const rules = getDoseRules(drug, route);\n  if (!rules) return { valid: true, message: 'No validation rules available', suggestedRange: null, factors: [] };\n  const factors: string[] = [];\n\n  // SAFETY: if rules require weight but weight missing, BLOCK (not pass)\n  if (rules.weightBased) {\n    if (!patientWeight || patientWeight <= 0) {\n      return { valid: false, message: `Weight required for ${drug} (mg/kg drug)`,\n        suggestedRange: null, factors: ['weight_missing'] };\n    }\n    factors.push('weight');\n    const maxDose = rules.maxPerKg * patientWeight;\n    if (dose > maxDose) {\n      return { valid: false, message: `Dose exceeds max for ${patientWeight}kg`,\n        suggestedRange: { min: rules.minPerKg * patientWeight, max: maxDose, unit: rules.unit }, factors };\n    }\n  }\n\n  // Age-based adjustment (when rules define age brackets and age is provided)\n  if (rules.ageAdjusted && patientAge !== undefined) {\n    factors.push('age');\n    const ageMax = rules.getAgeAdjustedMax(patientAge);\n    if (dose > ageMax) {\n      return { valid: false, message: `Exceeds age-adjusted max for ${patientAge}yr`,\n        suggestedRange: { min: rules.typicalMin, max: ageMax, unit: rules.unit }, factors };\n    }\n  }\n\n  // Renal adjustment (when rules define eGFR brackets and eGFR is provided)\n  if (rules.renalAdjusted && renalFunction !== undefined) {\n    factors.push('renal');\n    const renalMax = rules.getRenalAdjustedMax(renalFunction);\n    if (dose > renalMax) {\n      return { valid: false, message: `Exceeds renal-adjusted max for eGFR ${renalFunction}`,\n        suggestedRange: { min: rules.typicalMin, max: renalMax, unit: rules.unit }, factors };\n    }\n  }\n\n  // Absolute max\n  if (dose > rules.absoluteMax) {\n    return { valid: false, message: `Exceeds absolute max ${rules.absoluteMax}${rules.unit}`,\n      suggestedRange: { min: rules.typicalMin, max: rules.absoluteMax, unit: rules.unit },\n      factors: [...factors, 'absolute_max'] };\n  }\n  return { valid: true, message: 'Within range',\n    suggestedRange: { min: rules.typicalMin, max: rules.typicalMax, unit: rules.unit }, factors };\n}\n```"
+    },
+    {
+      "en-US": "### Clinical Scoring: NEWS2",
+      "zh-Hans": "### 临床评分：NEWS2"
+    },
+    {
+      "en-US": "```typescript\ninterface NEWS2Input {\n  respiratoryRate: number; oxygenSaturation: number; supplementalOxygen: boolean;\n  temperature: number; systolicBP: number; heartRate: number;\n  consciousness: 'alert' | 'voice' | 'pain' | 'unresponsive';\n}\ninterface NEWS2Result {\n  total: number;           // 0-20\n  risk: 'low' | 'low-medium' | 'medium' | 'high';\n  components: Record<string, number>;\n  escalation: string;\n}\n```",
+      "zh-Hans": "```typescript\ninterface NEWS2Input {\n  respiratoryRate: number; oxygenSaturation: number; supplementalOxygen: boolean;\n  temperature: number; systolicBP: number; heartRate: number;\n  consciousness: 'alert' | 'voice' | 'pain' | 'unresponsive';\n}\ninterface NEWS2Result {\n  total: number;           // 0-20\n  risk: 'low' | 'low-medium' | 'medium' | 'high';\n  components: Record<string, number>;\n  escalation: string;\n}\n```"
+    },
+    {
+      "en-US": "Scoring tables must match the Royal College of Physicians specification exactly.",
+      "zh-Hans": "评分表必须与皇家内科医师学会的规范完全一致。"
+    },
+    {
+      "en-US": "### Alert Severity and UI Behavior",
+      "zh-Hans": "### 警报严重程度与用户界面行为"
+    },
+    {
+      "en-US": "| Severity | UI Behavior | Clinician Action Required |\n|----------|-------------|--------------------------|\n| Critical | Block action. Non-dismissable modal. Red. | Must document override reason to proceed |\n| Major | Warning banner inline. Orange. | Must acknowledge before proceeding |\n| Minor | Info note inline. Yellow. | Awareness only, no action required |",
+      "zh-Hans": "| 严重程度 | 用户界面行为 | 临床医生所需操作 |\n|----------|-------------|--------------------------|\n| 严重 | 阻止操作。不可关闭的模态框。红色。 | 必须记录覆盖原因才能继续 |\n| 主要 | 内联警告横幅。橙色。 | 必须在继续前确认 |\n| 次要 | 内联信息提示。黄色。 | 仅需知晓，无需操作 |"
+    },
+    {
+      "en-US": "Critical alerts must NEVER be auto-dismissed or implemented as toast notifications. Override reasons must be stored in the audit trail.",
+      "zh-Hans": "严重警报**绝不能**自动关闭或实现为弹出式通知。覆盖原因必须存储在审计跟踪中。"
+    },
+    {
+      "en-US": "### Testing CDSS (Zero Tolerance for False Negatives)",
+      "zh-Hans": "### 测试CDSS（对假阴性零容忍）"
+    },
+    {
+      "en-US": "```typescript\ndescribe('CDSS — Patient Safety', () => {\n  INTERACTION_PAIRS.forEach(({ drugA, drugB, severity }) => {\n    it(`detects ${drugA} + ${drugB} (${severity})`, () => {\n      const alerts = checkInteractions(drugA, [drugB], []);\n      expect(alerts.length).toBeGreaterThan(0);\n      expect(alerts[0].severity).toBe(severity);\n    });\n    it(`detects ${drugB} + ${drugA} (reverse)`, () => {\n      const alerts = checkInteractions(drugB, [drugA], []);\n      expect(alerts.length).toBeGreaterThan(0);\n    });\n  });\n  it('blocks mg/kg drug when weight is missing', () => {\n    const result = validateDose('gentamicin', 300, 'iv');\n    expect(result.valid).toBe(false);\n    expect(result.factors).toContain('weight_missing');\n  });\n  it('handles malformed drug data gracefully', () => {\n    expect(() => checkInteractions('', [], [])).not.toThrow();\n  });\n});\n```",
+      "zh-Hans": "```typescript\ndescribe('CDSS — Patient Safety', () => {\n  INTERACTION_PAIRS.forEach(({ drugA, drugB, severity }) => {\n    it(`detects ${drugA} + ${drugB} (${severity})`, () => {\n      const alerts = checkInteractions(drugA, [drugB], []);\n      expect(alerts.length).toBeGreaterThan(0);\n      expect(alerts[0].severity).toBe(severity);\n    });\n    it(`detects ${drugB} + ${drugA} (reverse)`, () => {\n      const alerts = checkInteractions(drugB, [drugA], []);\n      expect(alerts.length).toBeGreaterThan(0);\n    });\n  });\n  it('blocks mg/kg drug when weight is missing', () => {\n    const result = validateDose('gentamicin', 300, 'iv');\n    expect(result.valid).toBe(false);\n    expect(result.factors).toContain('weight_missing');\n  });\n  it('handles malformed drug data gracefully', () => {\n    expect(() => checkInteractions('', [], [])).not.toThrow();\n  });\n});\n```"
+    },
+    {
+      "en-US": "Pass criteria: 100%. A single missed interaction is a patient safety event.",
+      "zh-Hans": "通过标准：100%。单个遗漏的相互作用即构成患者安全事件。"
+    },
+    {
+      "en-US": "### Anti-Patterns",
+      "zh-Hans": "### 反面模式"
+    },
+    {
+      "en-US": "- Making CDSS checks optional or skippable without documented reason\n- Implementing interaction checks as toast notifications\n- Using `any` types for drug or clinical data\n- Hardcoding interaction pairs instead of using a maintainable data structure\n- Silently catching errors in CDSS engine (must surface failures loudly)\n- Skipping weight-based validation when weight is not available (must block, not pass)",
+      "zh-Hans": "* 使CDSS检查成为可选或在无记录原因的情况下可跳过\n* 将相互作用检查实现为弹出式通知\n* 对药物或临床数据使用`any`类型\n* 硬编码相互作用对，而不是使用可维护的数据结构\n* 在CDSS引擎中静默捕获错误（必须大声暴露故障）\n* 在体重数据不可用时跳过基于体重的验证（必须阻止，而不是通过）"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Example 1: Drug Interaction Check",
+      "zh-Hans": "### 示例1：药物相互作用检查"
+    },
+    {
+      "en-US": "```typescript\nconst alerts = checkInteractions('warfarin', ['aspirin', 'metformin'], ['penicillin']);\n// [{ severity: 'critical', pair: ['warfarin', 'aspirin'],\n//    message: 'Increased bleeding risk', recommendation: 'Avoid combination' }]\n```",
+      "zh-Hans": "```typescript\nconst alerts = checkInteractions('warfarin', ['aspirin', 'metformin'], ['penicillin']);\n// [{ severity: 'critical', pair: ['warfarin', 'aspirin'],\n//    message: 'Increased bleeding risk', recommendation: 'Avoid combination' }]\n```"
+    },
+    {
+      "en-US": "### Example 2: Dose Validation",
+      "zh-Hans": "### 示例2：剂量验证"
+    },
+    {
+      "en-US": "```typescript\nconst ok = validateDose('paracetamol', 1000, 'oral', 70, 45);\n// { valid: true, suggestedRange: { min: 500, max: 4000, unit: 'mg' } }\n\nconst bad = validateDose('paracetamol', 5000, 'oral', 70, 45);\n// { valid: false, message: 'Exceeds absolute max 4000mg' }\n\nconst noWeight = validateDose('gentamicin', 300, 'iv');\n// { valid: false, factors: ['weight_missing'] }\n```",
+      "zh-Hans": "```typescript\nconst ok = validateDose('paracetamol', 1000, 'oral', 70, 45);\n// { valid: true, suggestedRange: { min: 500, max: 4000, unit: 'mg' } }\n\nconst bad = validateDose('paracetamol', 5000, 'oral', 70, 45);\n// { valid: false, message: 'Exceeds absolute max 4000mg' }\n\nconst noWeight = validateDose('gentamicin', 300, 'iv');\n// { valid: false, factors: ['weight_missing'] }\n```"
+    },
+    {
+      "en-US": "### Example 3: NEWS2 Scoring",
+      "zh-Hans": "### 示例3：NEWS2评分"
+    },
+    {
+      "en-US": "```typescript\nconst result = calculateNEWS2({\n  respiratoryRate: 24, oxygenSaturation: 93, supplementalOxygen: true,\n  temperature: 38.5, systolicBP: 100, heartRate: 110, consciousness: 'voice'\n});\n// { total: 13, risk: 'high', escalation: 'Urgent clinical review. Consider ICU.' }\n```",
+      "zh-Hans": "```typescript\nconst result = calculateNEWS2({\n  respiratoryRate: 24, oxygenSaturation: 93, supplementalOxygen: true,\n  temperature: 38.5, systolicBP: 100, heartRate: 110, consciousness: 'voice'\n});\n// { total: 13, risk: 'high', escalation: 'Urgent clinical review. Consider ICU.' }\n```"
+    }
+  ]
+}

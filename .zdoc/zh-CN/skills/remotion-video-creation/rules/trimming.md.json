@@ -1,0 +1,62 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/trimming.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: trimming\ndescription: Trimming patterns for Remotion - cut the beginning or end of animations\nmetadata:\n  tags: sequence, trim, clip, cut, offset\n---",
+      "zh-Hans": "---\nname: trimming\ndescription: Remotion 的修剪模式 - 裁剪动画的开头或结尾\nmetadata:\n  tags: sequence, trim, clip, cut, offset\n---"
+    },
+    {
+      "en-US": "Use `<Sequence>` with a negative `from` value to trim the start of an animation.",
+      "zh-Hans": "使用负值的 `<Sequence>` 来裁剪动画的开头。"
+    },
+    {
+      "en-US": "## Trim the Beginning",
+      "zh-Hans": "## 裁剪开头"
+    },
+    {
+      "en-US": "A negative `from` value shifts time backwards, making the animation start partway through:",
+      "zh-Hans": "负值的 `from` 会将时间向后推移，使动画从中间开始播放："
+    },
+    {
+      "en-US": "```tsx\nimport { Sequence, useVideoConfig } from \"remotion\";\n\nconst fps = useVideoConfig();\n\n<Sequence from={-0.5 * fps}>\n  <MyAnimation />\n</Sequence>\n```",
+      "zh-Hans": "```tsx\nimport { Sequence, useVideoConfig } from \"remotion\";\n\nconst fps = useVideoConfig();\n\n<Sequence from={-0.5 * fps}>\n  <MyAnimation />\n</Sequence>\n```"
+    },
+    {
+      "en-US": "The animation appears 15 frames into its progress - the first 15 frames are trimmed off.\nInside `<MyAnimation>`, `useCurrentFrame()` starts at 15 instead of 0.",
+      "zh-Hans": "动画从其进度的第 15 帧处开始出现——前 15 帧被裁剪掉了。\n在 `<MyAnimation>` 内部，`useCurrentFrame()` 从 15 开始，而不是 0。"
+    },
+    {
+      "en-US": "## Trim the End",
+      "zh-Hans": "## 裁剪结尾"
+    },
+    {
+      "en-US": "Use `durationInFrames` to unmount content after a specified duration:",
+      "zh-Hans": "使用 `durationInFrames` 在指定时长后卸载内容："
+    },
+    {
+      "en-US": "```tsx\n\n<Sequence durationInFrames={1.5 * fps}>\n  <MyAnimation />\n</Sequence>\n```",
+      "zh-Hans": "```tsx\n\n<Sequence durationInFrames={1.5 * fps}>\n  <MyAnimation />\n</Sequence>\n```"
+    },
+    {
+      "en-US": "The animation plays for 45 frames, then the component unmounts.",
+      "zh-Hans": "动画播放 45 帧，然后组件卸载。"
+    },
+    {
+      "en-US": "## Trim and Delay",
+      "zh-Hans": "## 裁剪与延迟"
+    },
+    {
+      "en-US": "Nest sequences to both trim the beginning and delay when it appears:",
+      "zh-Hans": "嵌套序列可以同时裁剪开头并延迟其出现时间："
+    },
+    {
+      "en-US": "```tsx\n<Sequence from={30}>\n  <Sequence from={-15}>\n    <MyAnimation />\n  </Sequence>\n</Sequence>\n```",
+      "zh-Hans": "```tsx\n<Sequence from={30}>\n  <Sequence from={-15}>\n    <MyAnimation />\n  </Sequence>\n</Sequence>\n```"
+    },
+    {
+      "en-US": "The inner sequence trims 15 frames from the start, and the outer sequence delays the result by 30 frames.",
+      "zh-Hans": "内部序列裁剪掉开头的 15 帧，外部序列将结果延迟 30 帧。"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/extract-frames.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: extract-frames\ndescription: Extract frames from videos at specific timestamps using Mediabunny\nmetadata:\n  tags: frames, extract, video, thumbnail, filmstrip, canvas\n---",
+      "zh-Hans": "---\nname: extract-frames\ndescription: 使用Mediabunny在特定时间戳从视频中提取帧\nmetadata:\n  tags: frames, extract, video, thumbnail, filmstrip, canvas\n---"
+    },
+    {
+      "en-US": "# Extracting frames from videos",
+      "zh-Hans": "# 从视频中提取帧"
+    },
+    {
+      "en-US": "Use Mediabunny to extract frames from videos at specific timestamps. This is useful for generating thumbnails, filmstrips, or processing individual frames.",
+      "zh-Hans": "使用 Mediabunny 在特定时间点从视频中提取帧。这对于生成缩略图、胶片条或处理单个帧很有用。"
+    },
+    {
+      "en-US": "## The `extractFrames()` function",
+      "zh-Hans": "## `extractFrames()` 函数"
+    },
+    {
+      "en-US": "This function can be copy-pasted into any project.",
+      "zh-Hans": "此函数可以复制粘贴到任何项目中。"
+    },
+    {
+      "en-US": "```tsx\nimport {\n  ALL_FORMATS,\n  Input,\n  UrlSource,\n  VideoSample,\n  VideoSampleSink,\n} from \"mediabunny\";\n\ntype Options = {\n  track: { width: number; height: number };\n  container: string;\n  durationInSeconds: number | null;\n};\n\nexport type ExtractFramesTimestampsInSecondsFn = (\n  options: Options\n) => Promise<number[]> | number[];\n\nexport type ExtractFramesProps = {\n  src: string;\n  timestampsInSeconds: number[] | ExtractFramesTimestampsInSecondsFn;\n  onVideoSample: (sample: VideoSample) => void;\n  signal?: AbortSignal;\n};\n\nexport async function extractFrames({\n  src,\n  timestampsInSeconds,\n  onVideoSample,\n  signal,\n}: ExtractFramesProps): Promise<void> {\n  using input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src),\n  });\n\n  const [durationInSeconds, format, videoTrack] = await Promise.all([\n    input.computeDuration(),\n    input.getFormat(),\n    input.getPrimaryVideoTrack(),\n  ]);\n\n  if (!videoTrack) {\n    throw new Error(\"No video track found in the input\");\n  }\n\n  if (signal?.aborted) {\n    throw new Error(\"Aborted\");\n  }\n\n  const timestamps =\n    typeof timestampsInSeconds === \"function\"\n      ? await timestampsInSeconds({\n          track: {\n            width: videoTrack.displayWidth,\n            height: videoTrack.displayHeight,\n          },\n          container: format.name,\n          durationInSeconds,\n        })\n      : timestampsInSeconds;\n\n  if (timestamps.length === 0) {\n    return;\n  }\n\n  if (signal?.aborted) {\n    throw new Error(\"Aborted\");\n  }\n\n  const sink = new VideoSampleSink(videoTrack);\n\n  for await (using videoSample of sink.samplesAtTimestamps(timestamps)) {\n    if (signal?.aborted) {\n      break;\n    }\n\n    if (!videoSample) {\n      continue;\n    }\n\n    onVideoSample(videoSample);\n  }\n}\n```",
+      "zh-Hans": "```tsx\nimport {\n  ALL_FORMATS,\n  Input,\n  UrlSource,\n  VideoSample,\n  VideoSampleSink,\n} from \"mediabunny\";\n\ntype Options = {\n  track: { width: number; height: number };\n  container: string;\n  durationInSeconds: number | null;\n};\n\nexport type ExtractFramesTimestampsInSecondsFn = (\n  options: Options\n) => Promise<number[]> | number[];\n\nexport type ExtractFramesProps = {\n  src: string;\n  timestampsInSeconds: number[] | ExtractFramesTimestampsInSecondsFn;\n  onVideoSample: (sample: VideoSample) => void;\n  signal?: AbortSignal;\n};\n\nexport async function extractFrames({\n  src,\n  timestampsInSeconds,\n  onVideoSample,\n  signal,\n}: ExtractFramesProps): Promise<void> {\n  using input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src),\n  });\n\n  const [durationInSeconds, format, videoTrack] = await Promise.all([\n    input.computeDuration(),\n    input.getFormat(),\n    input.getPrimaryVideoTrack(),\n  ]);\n\n  if (!videoTrack) {\n    throw new Error(\"No video track found in the input\");\n  }\n\n  if (signal?.aborted) {\n    throw new Error(\"Aborted\");\n  }\n\n  const timestamps =\n    typeof timestampsInSeconds === \"function\"\n      ? await timestampsInSeconds({\n          track: {\n            width: videoTrack.displayWidth,\n            height: videoTrack.displayHeight,\n          },\n          container: format.name,\n          durationInSeconds,\n        })\n      : timestampsInSeconds;\n\n  if (timestamps.length === 0) {\n    return;\n  }\n\n  if (signal?.aborted) {\n    throw new Error(\"Aborted\");\n  }\n\n  const sink = new VideoSampleSink(videoTrack);\n\n  for await (using videoSample of sink.samplesAtTimestamps(timestamps)) {\n    if (signal?.aborted) {\n      break;\n    }\n\n    if (!videoSample) {\n      continue;\n    }\n\n    onVideoSample(videoSample);\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Basic usage",
+      "zh-Hans": "## 基本用法"
+    },
+    {
+      "en-US": "Extract frames at specific timestamps:",
+      "zh-Hans": "在特定时间点提取帧："
+    },
+    {
+      "en-US": "```tsx\nawait extractFrames({\n  src: \"https://remotion.media/video.mp4\",\n  timestampsInSeconds: [0, 1, 2, 3, 4],\n  onVideoSample: (sample) => {\n    const canvas = document.createElement(\"canvas\");\n    canvas.width = sample.displayWidth;\n    canvas.height = sample.displayHeight;\n    const ctx = canvas.getContext(\"2d\");\n    sample.draw(ctx!, 0, 0);\n  },\n});\n```",
+      "zh-Hans": "```tsx\nawait extractFrames({\n  src: \"https://remotion.media/video.mp4\",\n  timestampsInSeconds: [0, 1, 2, 3, 4],\n  onVideoSample: (sample) => {\n    const canvas = document.createElement(\"canvas\");\n    canvas.width = sample.displayWidth;\n    canvas.height = sample.displayHeight;\n    const ctx = canvas.getContext(\"2d\");\n    sample.draw(ctx!, 0, 0);\n  },\n});\n```"
+    },
+    {
+      "en-US": "## Creating a filmstrip",
+      "zh-Hans": "## 创建胶片条"
+    },
+    {
+      "en-US": "Use a callback function to dynamically calculate timestamps based on video metadata:",
+      "zh-Hans": "使用回调函数根据视频元数据动态计算时间点："
+    },
+    {
+      "en-US": "```tsx\nconst canvasWidth = 500;\nconst canvasHeight = 80;\nconst fromSeconds = 0;\nconst toSeconds = 10;\n\nawait extractFrames({\n  src: \"https://remotion.media/video.mp4\",\n  timestampsInSeconds: async ({ track, durationInSeconds }) => {\n    const aspectRatio = track.width / track.height;\n    const amountOfFramesFit = Math.ceil(\n      canvasWidth / (canvasHeight * aspectRatio)\n    );\n    const segmentDuration = toSeconds - fromSeconds;\n    const timestamps: number[] = [];\n\n    for (let i = 0; i < amountOfFramesFit; i++) {\n      timestamps.push(\n        fromSeconds + (segmentDuration / amountOfFramesFit) * (i + 0.5)\n      );\n    }\n\n    return timestamps;\n  },\n  onVideoSample: (sample) => {\n    console.log(`Frame at ${sample.timestamp}s`);\n\n    const canvas = document.createElement(\"canvas\");\n    canvas.width = sample.displayWidth;\n    canvas.height = sample.displayHeight;\n    const ctx = canvas.getContext(\"2d\");\n    sample.draw(ctx!, 0, 0);\n  },\n});\n```",
+      "zh-Hans": "```tsx\nconst canvasWidth = 500;\nconst canvasHeight = 80;\nconst fromSeconds = 0;\nconst toSeconds = 10;\n\nawait extractFrames({\n  src: \"https://remotion.media/video.mp4\",\n  timestampsInSeconds: async ({ track, durationInSeconds }) => {\n    const aspectRatio = track.width / track.height;\n    const amountOfFramesFit = Math.ceil(\n      canvasWidth / (canvasHeight * aspectRatio)\n    );\n    const segmentDuration = toSeconds - fromSeconds;\n    const timestamps: number[] = [];\n\n    for (let i = 0; i < amountOfFramesFit; i++) {\n      timestamps.push(\n        fromSeconds + (segmentDuration / amountOfFramesFit) * (i + 0.5)\n      );\n    }\n\n    return timestamps;\n  },\n  onVideoSample: (sample) => {\n    console.log(`Frame at ${sample.timestamp}s`);\n\n    const canvas = document.createElement(\"canvas\");\n    canvas.width = sample.displayWidth;\n    canvas.height = sample.displayHeight;\n    const ctx = canvas.getContext(\"2d\");\n    sample.draw(ctx!, 0, 0);\n  },\n});\n```"
+    },
+    {
+      "en-US": "## Cancellation with AbortSignal",
+      "zh-Hans": "## 使用 AbortSignal 取消操作"
+    },
+    {
+      "en-US": "Cancel frame extraction after a timeout:",
+      "zh-Hans": "在超时后取消帧提取："
+    },
+    {
+      "en-US": "```tsx\nconst controller = new AbortController();\n\nsetTimeout(() => controller.abort(), 5000);\n\ntry {\n  await extractFrames({\n    src: \"https://remotion.media/video.mp4\",\n    timestampsInSeconds: [0, 1, 2, 3, 4],\n    onVideoSample: (sample) => {\n      using frame = sample;\n      const canvas = document.createElement(\"canvas\");\n      canvas.width = frame.displayWidth;\n      canvas.height = frame.displayHeight;\n      const ctx = canvas.getContext(\"2d\");\n      frame.draw(ctx!, 0, 0);\n    },\n    signal: controller.signal,\n  });\n\n  console.log(\"Frame extraction complete!\");\n} catch (error) {\n  console.error(\"Frame extraction was aborted or failed:\", error);\n}\n```",
+      "zh-Hans": "```tsx\nconst controller = new AbortController();\n\nsetTimeout(() => controller.abort(), 5000);\n\ntry {\n  await extractFrames({\n    src: \"https://remotion.media/video.mp4\",\n    timestampsInSeconds: [0, 1, 2, 3, 4],\n    onVideoSample: (sample) => {\n      using frame = sample;\n      const canvas = document.createElement(\"canvas\");\n      canvas.width = frame.displayWidth;\n      canvas.height = frame.displayHeight;\n      const ctx = canvas.getContext(\"2d\");\n      frame.draw(ctx!, 0, 0);\n    },\n    signal: controller.signal,\n  });\n\n  console.log(\"Frame extraction complete!\");\n} catch (error) {\n  console.error(\"Frame extraction was aborted or failed:\", error);\n}\n```"
+    },
+    {
+      "en-US": "## Timeout with Promise.race",
+      "zh-Hans": "## 使用 Promise.race 设置超时"
+    },
+    {
+      "en-US": "```tsx\nconst controller = new AbortController();\n\nconst timeoutPromise = new Promise<never>((_, reject) => {\n  const timeoutId = setTimeout(() => {\n    controller.abort();\n    reject(new Error(\"Frame extraction timed out after 10 seconds\"));\n  }, 10000);\n\n  controller.signal.addEventListener(\"abort\", () => clearTimeout(timeoutId), {\n    once: true,\n  });\n});\n\ntry {\n  await Promise.race([\n    extractFrames({\n      src: \"https://remotion.media/video.mp4\",\n      timestampsInSeconds: [0, 1, 2, 3, 4],\n      onVideoSample: (sample) => {\n        using frame = sample;\n        const canvas = document.createElement(\"canvas\");\n        canvas.width = frame.displayWidth;\n        canvas.height = frame.displayHeight;\n        const ctx = canvas.getContext(\"2d\");\n        frame.draw(ctx!, 0, 0);\n      },\n      signal: controller.signal,\n    }),\n    timeoutPromise,\n  ]);\n\n  console.log(\"Frame extraction complete!\");\n} catch (error) {\n  console.error(\"Frame extraction was aborted or failed:\", error);\n}\n```",
+      "zh-Hans": "```tsx\nconst controller = new AbortController();\n\nconst timeoutPromise = new Promise<never>((_, reject) => {\n  const timeoutId = setTimeout(() => {\n    controller.abort();\n    reject(new Error(\"Frame extraction timed out after 10 seconds\"));\n  }, 10000);\n\n  controller.signal.addEventListener(\"abort\", () => clearTimeout(timeoutId), {\n    once: true,\n  });\n});\n\ntry {\n  await Promise.race([\n    extractFrames({\n      src: \"https://remotion.media/video.mp4\",\n      timestampsInSeconds: [0, 1, 2, 3, 4],\n      onVideoSample: (sample) => {\n        using frame = sample;\n        const canvas = document.createElement(\"canvas\");\n        canvas.width = frame.displayWidth;\n        canvas.height = frame.displayHeight;\n        const ctx = canvas.getContext(\"2d\");\n        frame.draw(ctx!, 0, 0);\n      },\n      signal: controller.signal,\n    }),\n    timeoutPromise,\n  ]);\n\n  console.log(\"Frame extraction complete!\");\n} catch (error) {\n  console.error(\"Frame extraction was aborted or failed:\", error);\n}\n```"
+    }
+  ]
+}

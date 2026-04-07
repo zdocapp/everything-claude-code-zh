@@ -1,0 +1,142 @@
+{
+  "sourceFile": "rules/common/code-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Code Review Standards",
+      "zh-Hans": "# 代码审查标准"
+    },
+    {
+      "en-US": "## Purpose",
+      "zh-Hans": "## 目的"
+    },
+    {
+      "en-US": "Code review ensures quality, security, and maintainability before code is merged. This rule defines when and how to conduct code reviews.",
+      "zh-Hans": "代码审查确保代码在合并前具备质量、安全性和可维护性。本规则定义了何时以及如何进行代码审查。"
+    },
+    {
+      "en-US": "## When to Review",
+      "zh-Hans": "## 何时审查"
+    },
+    {
+      "en-US": "**MANDATORY review triggers:**",
+      "zh-Hans": "**强制审查触发条件：**"
+    },
+    {
+      "en-US": "- After writing or modifying code\n- Before any commit to shared branches\n- When security-sensitive code is changed (auth, payments, user data)\n- When architectural changes are made\n- Before merging pull requests",
+      "zh-Hans": "* 编写或修改代码后\n* 提交到共享分支前\n* 更改安全敏感代码时（认证、支付、用户数据）\n* 进行架构变更时\n* 合并拉取请求前"
+    },
+    {
+      "en-US": "**Pre-Review Requirements:**",
+      "zh-Hans": "**预审要求：**"
+    },
+    {
+      "en-US": "Before requesting review, ensure:",
+      "zh-Hans": "在请求审查前，请确保："
+    },
+    {
+      "en-US": "- All automated checks (CI/CD) are passing\n- Merge conflicts are resolved\n- Branch is up to date with target branch",
+      "zh-Hans": "* 所有自动化检查（CI/CD）均已通过\n* 合并冲突已解决\n* 分支已更新至目标分支的最新状态"
+    },
+    {
+      "en-US": "## Review Checklist",
+      "zh-Hans": "## 审查清单"
+    },
+    {
+      "en-US": "Before marking code complete:",
+      "zh-Hans": "在标记代码完成前："
+    },
+    {
+      "en-US": "- [ ] Code is readable and well-named\n- [ ] Functions are focused (<50 lines)\n- [ ] Files are cohesive (<800 lines)\n- [ ] No deep nesting (>4 levels)\n- [ ] Errors are handled explicitly\n- [ ] No hardcoded secrets or credentials\n- [ ] No console.log or debug statements\n- [ ] Tests exist for new functionality\n- [ ] Test coverage meets 80% minimum",
+      "zh-Hans": "* \\[ ] 代码可读且命名良好\n* \\[ ] 函数职责单一（<50行）\n* \\[ ] 文件内聚性高（<800行）\n* \\[ ] 无深层嵌套（>4层）\n* \\[ ] 错误已显式处理\n* \\[ ] 无硬编码的密钥或凭据\n* \\[ ] 无 console.log 或调试语句\n* \\[ ] 新功能已有测试\n* \\[ ] 测试覆盖率满足最低80%要求"
+    },
+    {
+      "en-US": "## Security Review Triggers",
+      "zh-Hans": "## 安全审查触发条件"
+    },
+    {
+      "en-US": "**STOP and use security-reviewer agent when:**",
+      "zh-Hans": "**遇到以下情况时，请立即停止并使用安全审查代理：**"
+    },
+    {
+      "en-US": "- Authentication or authorization code\n- User input handling\n- Database queries\n- File system operations\n- External API calls\n- Cryptographic operations\n- Payment or financial code",
+      "zh-Hans": "* 认证或授权代码\n* 用户输入处理\n* 数据库查询\n* 文件系统操作\n* 外部 API 调用\n* 加密操作\n* 支付或金融代码"
+    },
+    {
+      "en-US": "## Review Severity Levels",
+      "zh-Hans": "## 审查严重级别"
+    },
+    {
+      "en-US": "| Level | Meaning | Action |\n|-------|---------|--------|\n| CRITICAL | Security vulnerability or data loss risk | **BLOCK** - Must fix before merge |\n| HIGH | Bug or significant quality issue | **WARN** - Should fix before merge |\n| MEDIUM | Maintainability concern | **INFO** - Consider fixing |\n| LOW | Style or minor suggestion | **NOTE** - Optional |",
+      "zh-Hans": "| 级别 | 含义 | 处理措施 |\n|-------|---------|--------|\n| 严重 | 安全漏洞或数据丢失风险 | **阻止** - 必须在合并前修复 |\n| 高 | 错误或重大质量问题 | **警告** - 应在合并前修复 |\n| 中 | 可维护性问题 | **信息** - 建议修复 |\n| 低 | 风格或微小建议 | **备注** - 可选 |"
+    },
+    {
+      "en-US": "## Agent Usage",
+      "zh-Hans": "## 代理使用"
+    },
+    {
+      "en-US": "Use these agents for code review:",
+      "zh-Hans": "使用以下代理进行代码审查："
+    },
+    {
+      "en-US": "| Agent | Purpose |\n|-------|---------|\n| **code-reviewer** | General code quality, patterns, best practices |\n| **security-reviewer** | Security vulnerabilities, OWASP Top 10 |\n| **typescript-reviewer** | TypeScript/JavaScript specific issues |\n| **python-reviewer** | Python specific issues |\n| **go-reviewer** | Go specific issues |\n| **rust-reviewer** | Rust specific issues |",
+      "zh-Hans": "| 代理 | 用途 |\n|-------|---------|\n| **code-reviewer** | 通用代码质量、模式、最佳实践 |\n| **security-reviewer** | 安全漏洞、OWASP Top 10 |\n| **typescript-reviewer** | TypeScript/JavaScript 特定问题 |\n| **python-reviewer** | Python 特定问题 |\n| **go-reviewer** | Go 特定问题 |\n| **rust-reviewer** | Rust 特定问题 |"
+    },
+    {
+      "en-US": "## Review Workflow",
+      "zh-Hans": "## 审查工作流"
+    },
+    {
+      "en-US": "```\n1. Run git diff to understand changes\n2. Check security checklist first\n3. Review code quality checklist\n4. Run relevant tests\n5. Verify coverage >= 80%\n6. Use appropriate agent for detailed review\n```",
+      "zh-Hans": "```\n1. 运行 git diff 以了解变更内容\n2. 首先检查安全清单\n3. 审查代码质量清单\n4. 运行相关测试\n5. 验证覆盖率 >= 80%\n6. 使用合适的代理进行详细审查\n```"
+    },
+    {
+      "en-US": "## Common Issues to Catch",
+      "zh-Hans": "## 常见需捕获的问题"
+    },
+    {
+      "en-US": "### Security",
+      "zh-Hans": "### 安全"
+    },
+    {
+      "en-US": "- Hardcoded credentials (API keys, passwords, tokens)\n- SQL injection (string concatenation in queries)\n- XSS vulnerabilities (unescaped user input)\n- Path traversal (unsanitized file paths)\n- CSRF protection missing\n- Authentication bypasses",
+      "zh-Hans": "* 硬编码凭据（API密钥、密码、令牌）\n* SQL注入（查询中的字符串拼接）\n* XSS漏洞（未转义的用户输入）\n* 路径遍历（未清理的文件路径）\n* 缺少CSRF保护\n* 认证绕过"
+    },
+    {
+      "en-US": "### Code Quality",
+      "zh-Hans": "### 代码质量"
+    },
+    {
+      "en-US": "- Large functions (>50 lines) - split into smaller\n- Large files (>800 lines) - extract modules\n- Deep nesting (>4 levels) - use early returns\n- Missing error handling - handle explicitly\n- Mutation patterns - prefer immutable operations\n- Missing tests - add test coverage",
+      "zh-Hans": "* 函数过大（>50行）- 拆分为更小的函数\n* 文件过大（>800行）- 提取为模块\n* 深层嵌套（>4层）- 使用提前返回\n* 缺少错误处理 - 显式处理错误\n* 可变模式 - 优先使用不可变操作\n* 缺少测试 - 增加测试覆盖率"
+    },
+    {
+      "en-US": "### Performance",
+      "zh-Hans": "### 性能"
+    },
+    {
+      "en-US": "- N+1 queries - use JOINs or batching\n- Missing pagination - add LIMIT to queries\n- Unbounded queries - add constraints\n- Missing caching - cache expensive operations",
+      "zh-Hans": "* N+1查询 - 使用 JOIN 或批处理\n* 缺少分页 - 为查询添加 LIMIT\n* 无限制查询 - 添加约束条件\n* 缺少缓存 - 缓存昂贵操作"
+    },
+    {
+      "en-US": "## Approval Criteria",
+      "zh-Hans": "## 批准标准"
+    },
+    {
+      "en-US": "- **Approve**: No CRITICAL or HIGH issues\n- **Warning**: Only HIGH issues (merge with caution)\n- **Block**: CRITICAL issues found",
+      "zh-Hans": "* **批准**：无严重或高级别问题\n* **警告**：仅存在高级别问题（谨慎合并）\n* **阻止**：发现严重问题"
+    },
+    {
+      "en-US": "## Integration with Other Rules",
+      "zh-Hans": "## 与其他规则的集成"
+    },
+    {
+      "en-US": "This rule works with:",
+      "zh-Hans": "本规则与以下规则协同工作："
+    },
+    {
+      "en-US": "- [testing.md](testing.md) - Test coverage requirements\n- [security.md](security.md) - Security checklist\n- [git-workflow.md](git-workflow.md) - Commit standards\n- [agents.md](agents.md) - Agent delegation",
+      "zh-Hans": "* [testing.md](testing.md) - 测试覆盖率要求\n* [security.md](security.md) - 安全检查清单\n* [git-workflow.md](git-workflow.md) - 提交标准\n* [agents.md](agents.md) - 代理委派"
+    }
+  ]
+}

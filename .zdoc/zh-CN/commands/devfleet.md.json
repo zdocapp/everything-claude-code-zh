@@ -1,0 +1,46 @@
+{
+  "sourceFile": "commands/devfleet.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the claude-devfleet skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于claude-devfleet技能的旧版斜杠入口垫片。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# DevFleet (Legacy Shim)",
+      "zh-Hans": "# DevFleet（旧版适配层）"
+    },
+    {
+      "en-US": "Use this only if you still call `/devfleet`. The maintained workflow lives in `skills/claude-devfleet/SKILL.md`.",
+      "zh-Hans": "仅在你仍调用 `/devfleet` 时使用此工作流。维护中的工作流位于 `skills/claude-devfleet/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范使用方式"
+    },
+    {
+      "en-US": "- Prefer the `claude-devfleet` skill directly.\n- Keep this file only as a compatibility entry point while command-first usage is retired.",
+      "zh-Hans": "* 优先直接使用 `claude-devfleet` 技能。\n* 仅将此文件保留为兼容性入口点，同时逐步淘汰命令优先的使用方式。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托执行"
+    },
+    {
+      "en-US": "Apply the `claude-devfleet` skill.",
+      "zh-Hans": "应用 `claude-devfleet` 技能。"
+    },
+    {
+      "en-US": "- Plan from the user's description, show the DAG, and get approval before dispatch unless the user already said to proceed.\n- Prefer polling status over blocking waits for long missions.\n- Report mission IDs, files changed, failures, and next steps from structured mission reports.",
+      "zh-Hans": "* 根据用户描述制定计划，展示 DAG，并在派发前获取批准，除非用户已明确指示继续执行。\n* 对于长时间任务，优先选择轮询状态而非阻塞等待。\n* 从结构化的任务报告中汇报任务 ID、已更改的文件、失败情况以及后续步骤。"
+    }
+  ]
+}

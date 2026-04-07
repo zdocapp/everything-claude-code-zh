@@ -1,0 +1,58 @@
+{
+  "sourceFile": "rules/dart/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n  - \"**/analysis_options.yaml\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n  - \"**/analysis_options.yaml\"\n---"
+    },
+    {
+      "en-US": "# Dart/Flutter Hooks",
+      "zh-Hans": "# Dart/Flutter Hooks"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Dart and Flutter-specific content.",
+      "zh-Hans": "> 此文件扩展了 [common/hooks.md](../common/hooks.md)，包含 Dart 和 Flutter 特定内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse Hooks"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **dart format**: Auto-format `.dart` files after edit\n- **dart analyze**: Run static analysis after editing Dart files and surface warnings\n- **flutter test**: Optionally run affected tests after significant changes",
+      "zh-Hans": "* **dart format**：编辑后自动格式化 `.dart` 文件\n* **dart analyze**：编辑 Dart 文件后运行静态分析并显示警告\n* **flutter test**：在重大更改后可选地运行受影响的测试"
+    },
+    {
+      "en-US": "## Recommended Hook Configuration",
+      "zh-Hans": "## 推荐的 Hook 配置"
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": { \"tool_name\": \"Edit\", \"file_paths\": [\"**/*.dart\"] },\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"dart format $CLAUDE_FILE_PATHS\" }\n        ]\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": { \"tool_name\": \"Edit\", \"file_paths\": [\"**/*.dart\"] },\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"dart format $CLAUDE_FILE_PATHS\" }\n        ]\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Pre-commit Checks",
+      "zh-Hans": "## 预提交检查"
+    },
+    {
+      "en-US": "Run before committing Dart/Flutter changes:",
+      "zh-Hans": "在提交 Dart/Flutter 更改前运行："
+    },
+    {
+      "en-US": "```bash\ndart format --set-exit-if-changed .\ndart analyze --fatal-infos\nflutter test\n```",
+      "zh-Hans": "```bash\ndart format --set-exit-if-changed .\ndart analyze --fatal-infos\nflutter test\n```"
+    },
+    {
+      "en-US": "## Useful One-liners",
+      "zh-Hans": "## 有用的单行命令"
+    },
+    {
+      "en-US": "```bash\n# Format all Dart files\ndart format .\n\n# Analyze and report issues\ndart analyze\n\n# Run all tests with coverage\nflutter test --coverage\n\n# Regenerate code-gen files\ndart run build_runner build --delete-conflicting-outputs\n\n# Check for outdated packages\nflutter pub outdated\n\n# Upgrade packages within constraints\nflutter pub upgrade\n```",
+      "zh-Hans": "```bash\n# Format all Dart files\ndart format .\n\n# Analyze and report issues\ndart analyze\n\n# Run all tests with coverage\nflutter test --coverage\n\n# Regenerate code-gen files\ndart run build_runner build --delete-conflicting-outputs\n\n# Check for outdated packages\nflutter pub outdated\n\n# Upgrade packages within constraints\nflutter pub upgrade\n```"
+    }
+  ]
+}

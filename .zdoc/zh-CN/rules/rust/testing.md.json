@@ -1,0 +1,114 @@
+{
+  "sourceFile": "rules/rust/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.rs\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.rs\"\n---"
+    },
+    {
+      "en-US": "# Rust Testing",
+      "zh-Hans": "# Rust 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Rust-specific content.",
+      "zh-Hans": "> 本文件扩展了 [common/testing.md](../common/testing.md) 中关于 Rust 的特定内容。"
+    },
+    {
+      "en-US": "## Test Framework",
+      "zh-Hans": "## 测试框架"
+    },
+    {
+      "en-US": "- **`#[test]`** with `#[cfg(test)]` modules for unit tests\n- **rstest** for parameterized tests and fixtures\n- **proptest** for property-based testing\n- **mockall** for trait-based mocking\n- **`#[tokio::test]`** for async tests",
+      "zh-Hans": "* **`#[test]`** 配合 `#[cfg(test)]` 模块进行单元测试\n* **rstest** 用于参数化测试和夹具\n* **proptest** 用于基于属性的测试\n* **mockall** 用于基于特征的模拟\n* **`#[tokio::test]`** 用于异步测试"
+    },
+    {
+      "en-US": "## Test Organization",
+      "zh-Hans": "## 测试组织"
+    },
+    {
+      "en-US": "```text\nmy_crate/\n├── src/\n│   ├── lib.rs           # Unit tests in #[cfg(test)] modules\n│   ├── auth/\n│   │   └── mod.rs       # #[cfg(test)] mod tests { ... }\n│   └── orders/\n│       └── service.rs   # #[cfg(test)] mod tests { ... }\n├── tests/               # Integration tests (each file = separate binary)\n│   ├── api_test.rs\n│   ├── db_test.rs\n│   └── common/          # Shared test utilities\n│       └── mod.rs\n└── benches/             # Criterion benchmarks\n    └── benchmark.rs\n```",
+      "zh-Hans": "```text\nmy_crate/\n├── src/\n│   ├── lib.rs           # 位于 #[cfg(test)] 模块中的单元测试\n│   ├── auth/\n│   │   └── mod.rs       # #[cfg(test)] mod tests { ... }\n│   └── orders/\n│       └── service.rs   # #[cfg(test)] mod tests { ... }\n├── tests/               # 集成测试（每个文件 = 独立的二进制文件）\n│   ├── api_test.rs\n│   ├── db_test.rs\n│   └── common/          # 共享的测试工具\n│       └── mod.rs\n└── benches/             # Criterion 基准测试\n    └── benchmark.rs\n```"
+    },
+    {
+      "en-US": "Unit tests go inside `#[cfg(test)]` modules in the same file. Integration tests go in `tests/`.",
+      "zh-Hans": "单元测试放在同一文件的 `#[cfg(test)]` 模块内。集成测试放在 `tests/` 目录中。"
+    },
+    {
+      "en-US": "## Unit Test Pattern",
+      "zh-Hans": "## 单元测试模式"
+    },
+    {
+      "en-US": "```rust\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    #[test]\n    fn creates_user_with_valid_email() {\n        let user = User::new(\"Alice\", \"alice@example.com\").unwrap();\n        assert_eq!(user.name, \"Alice\");\n    }\n\n    #[test]\n    fn rejects_invalid_email() {\n        let result = User::new(\"Bob\", \"not-an-email\");\n        assert!(result.is_err());\n        assert!(result.unwrap_err().to_string().contains(\"invalid email\"));\n    }\n}\n```",
+      "zh-Hans": "```rust\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    #[test]\n    fn creates_user_with_valid_email() {\n        let user = User::new(\"Alice\", \"alice@example.com\").unwrap();\n        assert_eq!(user.name, \"Alice\");\n    }\n\n    #[test]\n    fn rejects_invalid_email() {\n        let result = User::new(\"Bob\", \"not-an-email\");\n        assert!(result.is_err());\n        assert!(result.unwrap_err().to_string().contains(\"invalid email\"));\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Parameterized Tests",
+      "zh-Hans": "## 参数化测试"
+    },
+    {
+      "en-US": "```rust\nuse rstest::rstest;\n\n#[rstest]\n#[case(\"hello\", 5)]\n#[case(\"\", 0)]\n#[case(\"rust\", 4)]\nfn test_string_length(#[case] input: &str, #[case] expected: usize) {\n    assert_eq!(input.len(), expected);\n}\n```",
+      "zh-Hans": "```rust\nuse rstest::rstest;\n\n#[rstest]\n#[case(\"hello\", 5)]\n#[case(\"\", 0)]\n#[case(\"rust\", 4)]\nfn test_string_length(#[case] input: &str, #[case] expected: usize) {\n    assert_eq!(input.len(), expected);\n}\n```"
+    },
+    {
+      "en-US": "## Async Tests",
+      "zh-Hans": "## 异步测试"
+    },
+    {
+      "en-US": "```rust\n#[tokio::test]\nasync fn fetches_data_successfully() {\n    let client = TestClient::new().await;\n    let result = client.get(\"/data\").await;\n    assert!(result.is_ok());\n}\n```",
+      "zh-Hans": "```rust\n#[tokio::test]\nasync fn fetches_data_successfully() {\n    let client = TestClient::new().await;\n    let result = client.get(\"/data\").await;\n    assert!(result.is_ok());\n}\n```"
+    },
+    {
+      "en-US": "## Mocking with mockall",
+      "zh-Hans": "## 使用 mockall 进行模拟"
+    },
+    {
+      "en-US": "Define traits in production code; generate mocks in test modules:",
+      "zh-Hans": "在生产代码中定义特征；在测试模块中生成模拟对象："
+    },
+    {
+      "en-US": "```rust\n// Production trait — pub so integration tests can import it\npub trait UserRepository {\n    fn find_by_id(&self, id: u64) -> Option<User>;\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    use mockall::predicate::eq;\n\n    mockall::mock! {\n        pub Repo {}\n        impl UserRepository for Repo {\n            fn find_by_id(&self, id: u64) -> Option<User>;\n        }\n    }\n\n    #[test]\n    fn service_returns_user_when_found() {\n        let mut mock = MockRepo::new();\n        mock.expect_find_by_id()\n            .with(eq(42))\n            .times(1)\n            .returning(|_| Some(User { id: 42, name: \"Alice\".into() }));\n\n        let service = UserService::new(Box::new(mock));\n        let user = service.get_user(42).unwrap();\n        assert_eq!(user.name, \"Alice\");\n    }\n}\n```",
+      "zh-Hans": "```rust\n// Production trait — pub so integration tests can import it\npub trait UserRepository {\n    fn find_by_id(&self, id: u64) -> Option<User>;\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    use mockall::predicate::eq;\n\n    mockall::mock! {\n        pub Repo {}\n        impl UserRepository for Repo {\n            fn find_by_id(&self, id: u64) -> Option<User>;\n        }\n    }\n\n    #[test]\n    fn service_returns_user_when_found() {\n        let mut mock = MockRepo::new();\n        mock.expect_find_by_id()\n            .with(eq(42))\n            .times(1)\n            .returning(|_| Some(User { id: 42, name: \"Alice\".into() }));\n\n        let service = UserService::new(Box::new(mock));\n        let user = service.get_user(42).unwrap();\n        assert_eq!(user.name, \"Alice\");\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Test Naming",
+      "zh-Hans": "## 测试命名"
+    },
+    {
+      "en-US": "Use descriptive names that explain the scenario:",
+      "zh-Hans": "使用描述性的名称来解释场景："
+    },
+    {
+      "en-US": "- `creates_user_with_valid_email()`\n- `rejects_order_when_insufficient_stock()`\n- `returns_none_when_not_found()`",
+      "zh-Hans": "* `creates_user_with_valid_email()`\n* `rejects_order_when_insufficient_stock()`\n* `returns_none_when_not_found()`"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "- Target 80%+ line coverage\n- Use **cargo-llvm-cov** for coverage reporting\n- Focus on business logic — exclude generated code and FFI bindings",
+      "zh-Hans": "* 目标为 80%+ 的行覆盖率\n* 使用 **cargo-llvm-cov** 生成覆盖率报告\n* 关注业务逻辑 —— 排除生成的代码和 FFI 绑定"
+    },
+    {
+      "en-US": "```bash\ncargo llvm-cov                       # Summary\ncargo llvm-cov --html                # HTML report\ncargo llvm-cov --fail-under-lines 80 # Fail if below threshold\n```",
+      "zh-Hans": "```bash\ncargo llvm-cov                       # Summary\ncargo llvm-cov --html                # HTML report\ncargo llvm-cov --fail-under-lines 80 # Fail if below threshold\n```"
+    },
+    {
+      "en-US": "## Testing Commands",
+      "zh-Hans": "## 测试命令"
+    },
+    {
+      "en-US": "```bash\ncargo test                       # Run all tests\ncargo test -- --nocapture        # Show println output\ncargo test test_name             # Run tests matching pattern\ncargo test --lib                 # Unit tests only\ncargo test --test api_test       # Specific integration test (tests/api_test.rs)\ncargo test --doc                 # Doc tests only\n```",
+      "zh-Hans": "```bash\ncargo test                       # Run all tests\ncargo test -- --nocapture        # Show println output\ncargo test test_name             # Run tests matching pattern\ncargo test --lib                 # Unit tests only\ncargo test --test api_test       # Specific integration test (tests/api_test.rs)\ncargo test --doc                 # Doc tests only\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `rust-testing` for comprehensive testing patterns including property-based testing, fixtures, and benchmarking with Criterion.",
+      "zh-Hans": "有关全面的测试模式（包括基于属性的测试、夹具以及使用 Criterion 进行基准测试），请参阅技能：`rust-testing`。"
+    }
+  ]
+}

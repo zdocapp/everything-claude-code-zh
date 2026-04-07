@@ -1,0 +1,106 @@
+{
+  "sourceFile": "rules/web/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with web-specific patterns.",
+      "zh-Hans": "> 此文件基于 [common/patterns.md](../common/patterns.md) 扩展，包含特定于 Web 的模式。"
+    },
+    {
+      "en-US": "# Web Patterns",
+      "zh-Hans": "# Web 模式"
+    },
+    {
+      "en-US": "## Component Composition",
+      "zh-Hans": "## 组件组合"
+    },
+    {
+      "en-US": "### Compound Components",
+      "zh-Hans": "### 复合组件"
+    },
+    {
+      "en-US": "Use compound components when related UI shares state and interaction semantics:",
+      "zh-Hans": "当相关的 UI 共享状态和交互语义时，使用复合组件："
+    },
+    {
+      "en-US": "```tsx\n<Tabs defaultValue=\"overview\">\n  <Tabs.List>\n    <Tabs.Trigger value=\"overview\">Overview</Tabs.Trigger>\n    <Tabs.Trigger value=\"settings\">Settings</Tabs.Trigger>\n  </Tabs.List>\n  <Tabs.Content value=\"overview\">...</Tabs.Content>\n  <Tabs.Content value=\"settings\">...</Tabs.Content>\n</Tabs>\n```",
+      "zh-Hans": "```tsx\n<Tabs defaultValue=\"overview\">\n  <Tabs.List>\n    <Tabs.Trigger value=\"overview\">Overview</Tabs.Trigger>\n    <Tabs.Trigger value=\"settings\">Settings</Tabs.Trigger>\n  </Tabs.List>\n  <Tabs.Content value=\"overview\">...</Tabs.Content>\n  <Tabs.Content value=\"settings\">...</Tabs.Content>\n</Tabs>\n```"
+    },
+    {
+      "en-US": "- Parent owns state\n- Children consume via context\n- Prefer this over prop drilling for complex widgets",
+      "zh-Hans": "* 父组件拥有状态\n* 子组件通过上下文消费状态\n* 对于复杂的小部件，优先使用此模式而非属性透传"
+    },
+    {
+      "en-US": "### Render Props / Slots",
+      "zh-Hans": "### 渲染属性 / 插槽"
+    },
+    {
+      "en-US": "- Use render props or slot patterns when behavior is shared but markup must vary\n- Keep keyboard handling, ARIA, and focus logic in the headless layer",
+      "zh-Hans": "* 当行为共享但标记必须变化时，使用渲染属性或插槽模式\n* 将键盘处理、ARIA 和焦点逻辑保持在无头层"
+    },
+    {
+      "en-US": "### Container / Presentational Split",
+      "zh-Hans": "### 容器 / 展示型组件分离"
+    },
+    {
+      "en-US": "- Container components own data loading and side effects\n- Presentational components receive props and render UI\n- Presentational components should stay pure",
+      "zh-Hans": "* 容器组件负责数据加载和副作用\n* 展示型组件接收属性并渲染 UI\n* 展示型组件应保持纯净"
+    },
+    {
+      "en-US": "## State Management",
+      "zh-Hans": "## 状态管理"
+    },
+    {
+      "en-US": "Treat these separately:",
+      "zh-Hans": "分别处理以下关注点："
+    },
+    {
+      "en-US": "| Concern | Tooling |\n|---------|---------|\n| Server state | TanStack Query, SWR, tRPC |\n| Client state | Zustand, Jotai, signals |\n| URL state | search params, route segments |\n| Form state | React Hook Form or equivalent |",
+      "zh-Hans": "| 关注点 | 工具 |\n|---------|---------|\n| 服务器状态 | TanStack Query、SWR、tRPC |\n| 客户端状态 | Zustand、Jotai、signals |\n| URL 状态 | 搜索参数、路由片段 |\n| 表单状态 | React Hook Form 或等效工具 |"
+    },
+    {
+      "en-US": "- Do not duplicate server state into client stores\n- Derive values instead of storing redundant computed state",
+      "zh-Hans": "* 不要将服务器状态复制到客户端存储中\n* 推导值，而非存储冗余的计算状态"
+    },
+    {
+      "en-US": "## URL As State",
+      "zh-Hans": "## URL 作为状态"
+    },
+    {
+      "en-US": "Persist shareable state in the URL:",
+      "zh-Hans": "将可共享的状态持久化到 URL 中："
+    },
+    {
+      "en-US": "- filters\n- sort order\n- pagination\n- active tab\n- search query",
+      "zh-Hans": "* 过滤器\n* 排序顺序\n* 分页\n* 活动标签页\n* 搜索查询"
+    },
+    {
+      "en-US": "## Data Fetching",
+      "zh-Hans": "## 数据获取"
+    },
+    {
+      "en-US": "### Stale-While-Revalidate",
+      "zh-Hans": "### 陈旧数据优先重新验证"
+    },
+    {
+      "en-US": "- Return cached data immediately\n- Revalidate in the background\n- Prefer existing libraries instead of rolling this by hand",
+      "zh-Hans": "* 立即返回缓存数据\n* 在后台重新验证\n* 优先使用现有库，而非手动实现"
+    },
+    {
+      "en-US": "### Optimistic Updates",
+      "zh-Hans": "### 乐观更新"
+    },
+    {
+      "en-US": "- Snapshot current state\n- Apply optimistic update\n- Roll back on failure\n- Emit visible error feedback when rolling back",
+      "zh-Hans": "* 快照当前状态\n* 应用乐观更新\n* 失败时回滚\n* 回滚时发出可见的错误反馈"
+    },
+    {
+      "en-US": "### Parallel Loading",
+      "zh-Hans": "### 并行加载"
+    },
+    {
+      "en-US": "- Fetch independent data in parallel\n- Avoid parent-child request waterfalls\n- Prefetch likely next routes or states when justified",
+      "zh-Hans": "* 并行获取独立数据\n* 避免父子请求瀑布流\n* 在合理的情况下预取可能的下一个路由或状态"
+    }
+  ]
+}

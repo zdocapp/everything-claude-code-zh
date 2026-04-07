@@ -1,0 +1,90 @@
+{
+  "sourceFile": "CLAUDE.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# CLAUDE.md",
+      "zh-Hans": "# CLAUDE.md"
+    },
+    {
+      "en-US": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.",
+      "zh-Hans": "本文件为 Claude Code (claude.ai/code) 处理此仓库代码时提供指导。"
+    },
+    {
+      "en-US": "## Project Overview",
+      "zh-Hans": "## 项目概述"
+    },
+    {
+      "en-US": "This is a **Claude Code plugin** - a collection of production-ready agents, skills, hooks, commands, rules, and MCP configurations. The project provides battle-tested workflows for software development using Claude Code.",
+      "zh-Hans": "这是一个 **Claude Code 插件** - 一个包含生产就绪的代理、技能、钩子、命令、规则和 MCP 配置的集合。该项目提供了使用 Claude Code 进行软件开发的经验证的工作流。"
+    },
+    {
+      "en-US": "## Running Tests",
+      "zh-Hans": "## 运行测试"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\nnode tests/run-all.js\n\n# Run individual test files\nnode tests/lib/utils.test.js\nnode tests/lib/package-manager.test.js\nnode tests/hooks/hooks.test.js\n```",
+      "zh-Hans": "```bash\n# Run all tests\nnode tests/run-all.js\n\n# Run individual test files\nnode tests/lib/utils.test.js\nnode tests/lib/package-manager.test.js\nnode tests/hooks/hooks.test.js\n```"
+    },
+    {
+      "en-US": "## Architecture",
+      "zh-Hans": "## 架构"
+    },
+    {
+      "en-US": "The project is organized into several core components:",
+      "zh-Hans": "项目组织为以下几个核心组件："
+    },
+    {
+      "en-US": "- **agents/** - Specialized subagents for delegation (planner, code-reviewer, tdd-guide, etc.)\n- **skills/** - Workflow definitions and domain knowledge (coding standards, patterns, testing)\n- **commands/** - Slash commands invoked by users (/tdd, /plan, /e2e, etc.)\n- **hooks/** - Trigger-based automations (session persistence, pre/post-tool hooks)\n- **rules/** - Always-follow guidelines (security, coding style, testing requirements)\n- **mcp-configs/** - MCP server configurations for external integrations\n- **scripts/** - Cross-platform Node.js utilities for hooks and setup\n- **tests/** - Test suite for scripts and utilities",
+      "zh-Hans": "* **agents/** - 用于委派的专业化子代理（规划器、代码审查员、TDD 指南等）\n* **skills/** - 工作流定义和领域知识（编码标准、模式、测试）\n* **commands/** - 由用户调用的斜杠命令（/tdd, /plan, /e2e 等）\n* **hooks/** - 基于触发的自动化（会话持久化、工具前后钩子）\n* **rules/** - 始终遵循的指南（安全、编码风格、测试要求）\n* **mcp-configs/** - 用于外部集成的 MCP 服务器配置\n* **scripts/** - 用于钩子和设置的跨平台 Node.js 工具\n* **tests/** - 脚本和工具的测试套件"
+    },
+    {
+      "en-US": "## Key Commands",
+      "zh-Hans": "## 关键命令"
+    },
+    {
+      "en-US": "- `/tdd` - Test-driven development workflow\n- `/plan` - Implementation planning\n- `/e2e` - Generate and run E2E tests\n- `/code-review` - Quality review\n- `/build-fix` - Fix build errors\n- `/learn` - Extract patterns from sessions\n- `/skill-create` - Generate skills from git history",
+      "zh-Hans": "* `/tdd` - 测试驱动开发工作流\n* `/plan` - 实施规划\n* `/e2e` - 生成并运行端到端测试\n* `/code-review` - 质量审查\n* `/build-fix` - 修复构建错误\n* `/learn` - 从会话中提取模式\n* `/skill-create` - 从 git 历史记录生成技能"
+    },
+    {
+      "en-US": "## Development Notes",
+      "zh-Hans": "## 开发说明"
+    },
+    {
+      "en-US": "- Package manager detection: npm, pnpm, yarn, bun (configurable via `CLAUDE_PACKAGE_MANAGER` env var or project config)\n- Cross-platform: Windows, macOS, Linux support via Node.js scripts\n- Agent format: Markdown with YAML frontmatter (name, description, tools, model)\n- Skill format: Markdown with clear sections for when to use, how it works, examples\n- Skill placement: Curated in skills/; generated/imported under ~/.claude/skills/. See docs/SKILL-PLACEMENT-POLICY.md\n- Hook format: JSON with matcher conditions and command/notification hooks",
+      "zh-Hans": "* 包管理器检测：npm、pnpm、yarn、bun（可通过 `CLAUDE_PACKAGE_MANAGER` 环境变量或项目配置进行配置）\n* 跨平台支持：通过 Node.js 脚本支持 Windows、macOS、Linux\n* 智能体格式：采用带 YAML 前言的 Markdown（包含名称、描述、工具、模型）\n* 技能格式：采用带明确章节的 Markdown（包含使用时机、工作原理、示例）\n* 技能存放位置：精选技能存放于 skills/ 目录；生成/导入的技能存放于 ~/.claude/skills/ 目录。详见 docs/SKILL-PLACEMENT-POLICY.md\n* 钩子格式：采用带匹配器条件和命令/通知钩子的 JSON"
+    },
+    {
+      "en-US": "## Contributing",
+      "zh-Hans": "## 贡献"
+    },
+    {
+      "en-US": "Follow the formats in CONTRIBUTING.md:",
+      "zh-Hans": "遵循 CONTRIBUTING.md 中的格式："
+    },
+    {
+      "en-US": "- Agents: Markdown with frontmatter (name, description, tools, model)\n- Skills: Clear sections (When to Use, How It Works, Examples)\n- Commands: Markdown with description frontmatter\n- Hooks: JSON with matcher and hooks array",
+      "zh-Hans": "* 代理：带有前言的 Markdown（名称、描述、工具、模型）\n* 技能：清晰的章节（何时使用、如何工作、示例）\n* 命令：带有描述前言的 Markdown\n* 钩子：带有匹配器和钩子数组的 JSON"
+    },
+    {
+      "en-US": "File naming: lowercase with hyphens (e.g., `python-reviewer.md`, `tdd-workflow.md`)",
+      "zh-Hans": "文件命名：小写字母并用连字符连接（例如 `python-reviewer.md`, `tdd-workflow.md`）"
+    },
+    {
+      "en-US": "## Skills",
+      "zh-Hans": "## 技能"
+    },
+    {
+      "en-US": "Use the following skills when working on related files:",
+      "zh-Hans": "处理相关文件时请使用以下技能："
+    },
+    {
+      "en-US": "| File(s) | Skill |\n|---------|-------|\n| `README.md` | `/readme` |\n| `.github/workflows/*.yml` | `/ci-workflow` |",
+      "zh-Hans": "| 文件 | 技能 |\n|---------|-------|\n| `README.md` | `/readme` |\n| `.github/workflows/*.yml` | `/ci-workflow` |"
+    },
+    {
+      "en-US": "When spawning subagents, always pass conventions from the respective skill into the agent's prompt.",
+      "zh-Hans": "生成子智能体时，请务必将相应技能中的约定规则传入智能体提示词。"
+    }
+  ]
+}

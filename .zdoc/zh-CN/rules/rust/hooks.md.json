@@ -1,0 +1,30 @@
+{
+  "sourceFile": "rules/rust/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.rs\"\n  - \"**/Cargo.toml\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.rs\"\n  - \"**/Cargo.toml\"\n---"
+    },
+    {
+      "en-US": "# Rust Hooks",
+      "zh-Hans": "# Rust 钩子"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Rust-specific content.",
+      "zh-Hans": "> 此文件扩展了 [common/hooks.md](../common/hooks.md)，包含 Rust 特定内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse 钩子"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **cargo fmt**: Auto-format `.rs` files after edit\n- **cargo clippy**: Run lint checks after editing Rust files\n- **cargo check**: Verify compilation after changes (faster than `cargo build`)",
+      "zh-Hans": "* **cargo fmt**：编辑后自动格式化 `.rs` 文件\n* **cargo clippy**：编辑 Rust 文件后运行 lint 检查\n* **cargo check**：更改后验证编译（比 `cargo build` 更快）"
+    }
+  ]
+}
