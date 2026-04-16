@@ -7,7 +7,7 @@ paths:
 
 # Go 安全
 
-> 此文件基于 [common/security.md](../common/security.md) 扩展了 Go 特定内容。
+> 本文档在 [common/security.md](../common/security.md) 的基础上扩展了 Go 语言特定的内容。
 
 ## 密钥管理
 

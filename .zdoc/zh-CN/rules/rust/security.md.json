@@ -1,0 +1,98 @@
+{
+  "sourceFile": "rules/rust/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.rs\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.rs\"\n---"
+    },
+    {
+      "en-US": "# Rust Security",
+      "zh-Hans": "# Rust 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with Rust-specific content.",
+      "zh-Hans": "> 本文档在 [common/security.md](../common/security.md) 的基础上，补充了 Rust 相关的内容。"
+    },
+    {
+      "en-US": "## Secrets Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "- Never hardcode API keys, tokens, or credentials in source code\n- Use environment variables: `std::env::var(\"API_KEY\")`\n- Fail fast if required secrets are missing at startup\n- Keep `.env` files in `.gitignore`",
+      "zh-Hans": "* 切勿在源代码中硬编码 API 密钥、令牌或凭证\n* 使用环境变量：`std::env::var(\"API_KEY\")`\n* 启动时若缺少必需的密钥，应快速失败\n* 将 `.env` 文件保存在 `.gitignore`"
+    },
+    {
+      "en-US": "```rust\n// BAD\nconst API_KEY: &str = \"sk-abc123...\";\n\n// GOOD — environment variable with early validation\nfn load_api_key() -> anyhow::Result<String> {\n    std::env::var(\"PAYMENT_API_KEY\")\n        .context(\"PAYMENT_API_KEY must be set\")\n}\n```",
+      "zh-Hans": "```rust\n// BAD\nconst API_KEY: &str = \"sk-abc123...\";\n\n// GOOD — environment variable with early validation\nfn load_api_key() -> anyhow::Result<String> {\n    std::env::var(\"PAYMENT_API_KEY\")\n        .context(\"PAYMENT_API_KEY must be set\")\n}\n```"
+    },
+    {
+      "en-US": "## SQL Injection Prevention",
+      "zh-Hans": "## SQL 注入防范"
+    },
+    {
+      "en-US": "- Always use parameterized queries — never format user input into SQL strings\n- Use query builder or ORM (sqlx, diesel, sea-orm) with bind parameters",
+      "zh-Hans": "* 始终使用参数化查询——切勿将用户输入格式化为 SQL 字符串\n* 使用支持绑定参数的查询构建器或 ORM（如 sqlx、diesel、sea-orm）"
+    },
+    {
+      "en-US": "```rust\n// BAD — SQL injection via format string\nlet query = format!(\"SELECT * FROM users WHERE name = '{name}'\");\nsqlx::query(&query).fetch_one(&pool).await?;\n\n// GOOD — parameterized query with sqlx\n// Placeholder syntax varies by backend: Postgres: $1  |  MySQL: ?  |  SQLite: $1\nsqlx::query(\"SELECT * FROM users WHERE name = $1\")\n    .bind(&name)\n    .fetch_one(&pool)\n    .await?;\n```",
+      "zh-Hans": "```rust\n// BAD — SQL injection via format string\nlet query = format!(\"SELECT * FROM users WHERE name = '{name}'\");\nsqlx::query(&query).fetch_one(&pool).await?;\n\n// GOOD — parameterized query with sqlx\n// Placeholder syntax varies by backend: Postgres: $1  |  MySQL: ?  |  SQLite: $1\nsqlx::query(\"SELECT * FROM users WHERE name = $1\")\n    .bind(&name)\n    .fetch_one(&pool)\n    .await?;\n```"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "- Validate all user input at system boundaries before processing\n- Use the type system to enforce invariants (newtype pattern)\n- Parse, don't validate — convert unstructured data to typed structs at the boundary\n- Reject invalid input with clear error messages",
+      "zh-Hans": "* 在处理前，于系统边界处验证所有用户输入\n* 利用类型系统强制不变量（使用 newtype 模式）\n* 解析而非验证——在边界处将非结构化数据转换为有类型的结构体\n* 拒绝无效输入，并提供清晰的错误信息"
+    },
+    {
+      "en-US": "```rust\n// Parse, don't validate — invalid states are unrepresentable\npub struct Email(String);\n\nimpl Email {\n    pub fn parse(input: &str) -> Result<Self, ValidationError> {\n        let trimmed = input.trim();\n        let at_pos = trimmed.find('@')\n            .filter(|&p| p > 0 && p < trimmed.len() - 1)\n            .ok_or_else(|| ValidationError::InvalidEmail(input.to_string()))?;\n        let domain = &trimmed[at_pos + 1..];\n        if trimmed.len() > 254 || !domain.contains('.') {\n            return Err(ValidationError::InvalidEmail(input.to_string()));\n        }\n        // For production use, prefer a validated email crate (e.g., `email_address`)\n        Ok(Self(trimmed.to_string()))\n    }\n\n    pub fn as_str(&self) -> &str {\n        &self.0\n    }\n}\n```",
+      "zh-Hans": "```rust\n// Parse, don't validate — invalid states are unrepresentable\npub struct Email(String);\n\nimpl Email {\n    pub fn parse(input: &str) -> Result<Self, ValidationError> {\n        let trimmed = input.trim();\n        let at_pos = trimmed.find('@')\n            .filter(|&p| p > 0 && p < trimmed.len() - 1)\n            .ok_or_else(|| ValidationError::InvalidEmail(input.to_string()))?;\n        let domain = &trimmed[at_pos + 1..];\n        if trimmed.len() > 254 || !domain.contains('.') {\n            return Err(ValidationError::InvalidEmail(input.to_string()));\n        }\n        // For production use, prefer a validated email crate (e.g., `email_address`)\n        Ok(Self(trimmed.to_string()))\n    }\n\n    pub fn as_str(&self) -> &str {\n        &self.0\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Unsafe Code",
+      "zh-Hans": "## 不安全代码"
+    },
+    {
+      "en-US": "- Minimize `unsafe` blocks — prefer safe abstractions\n- Every `unsafe` block must have a `// SAFETY:` comment explaining the invariant\n- Never use `unsafe` to bypass the borrow checker for convenience\n- Audit all `unsafe` code during review — it is a red flag without justification\n- Prefer `safe` FFI wrappers around C libraries",
+      "zh-Hans": "* 尽量减少 `unsafe` 块——优先使用安全的抽象\n* 每个 `unsafe` 块都必须附带 `// SAFETY:` 注释，解释其不变式\n* 切勿为了方便而使用 `unsafe` 来绕过借用检查器\n* 在代码审查时审核所有 `unsafe` 代码——若无正当理由，它就是一个危险信号\n* 优先使用 `safe` 作为 C 库的 FFI 包装器"
+    },
+    {
+      "en-US": "```rust\n// GOOD — safety comment documents ALL required invariants\nlet widget: &Widget = {\n    // SAFETY: `ptr` is non-null, aligned, points to an initialized Widget,\n    // and no mutable references or mutations exist for its lifetime.\n    unsafe { &*ptr }\n};\n\n// BAD — no safety justification\nunsafe { &*ptr }\n```",
+      "zh-Hans": "```rust\n// GOOD — safety comment documents ALL required invariants\nlet widget: &Widget = {\n    // SAFETY: `ptr` is non-null, aligned, points to an initialized Widget,\n    // and no mutable references or mutations exist for its lifetime.\n    unsafe { &*ptr }\n};\n\n// BAD — no safety justification\nunsafe { &*ptr }\n```"
+    },
+    {
+      "en-US": "## Dependency Security",
+      "zh-Hans": "## 依赖项安全"
+    },
+    {
+      "en-US": "- Run `cargo audit` to scan for known CVEs in dependencies\n- Run `cargo deny check` for license and advisory compliance\n- Use `cargo tree` to audit transitive dependencies\n- Keep dependencies updated — set up Dependabot or Renovate\n- Minimize dependency count — evaluate before adding new crates",
+      "zh-Hans": "* 运行 `cargo audit` 以扫描依赖项中已知的 CVE\n* 运行 `cargo deny check` 以确保许可证和公告合规\n* 使用 `cargo tree` 来审计传递依赖项\n* 保持依赖项更新——设置 Dependabot 或 Renovate\n* 尽量减少依赖项数量——在添加新 crate 前进行评估"
+    },
+    {
+      "en-US": "```bash\n# Security audit\ncargo audit\n\n# Deny advisories, duplicate versions, and restricted licenses\ncargo deny check\n\n# Inspect dependency tree\ncargo tree\ncargo tree -d  # Show duplicates only\n```",
+      "zh-Hans": "```bash\n# Security audit\ncargo audit\n\n# Deny advisories, duplicate versions, and restricted licenses\ncargo deny check\n\n# Inspect dependency tree\ncargo tree\ncargo tree -d  # Show duplicates only\n```"
+    },
+    {
+      "en-US": "## Error Messages",
+      "zh-Hans": "## 错误信息"
+    },
+    {
+      "en-US": "- Never expose internal paths, stack traces, or database errors in API responses\n- Log detailed errors server-side; return generic messages to clients\n- Use `tracing` or `log` for structured server-side logging",
+      "zh-Hans": "* 切勿在 API 响应中暴露内部路径、堆栈跟踪或数据库错误\n* 在服务器端记录详细错误；向客户端返回通用信息\n* 使用 `tracing` 或 `log` 进行结构化的服务器端日志记录"
+    },
+    {
+      "en-US": "```rust\n// Map errors to appropriate status codes and generic messages\n// (Example uses axum; adapt the response type to your framework)\nmatch order_service.find_by_id(id) {\n    Ok(order) => Ok((StatusCode::OK, Json(order))),\n    Err(ServiceError::NotFound(_)) => {\n        tracing::info!(order_id = id, \"order not found\");\n        Err((StatusCode::NOT_FOUND, \"Resource not found\"))\n    }\n    Err(e) => {\n        tracing::error!(order_id = id, error = %e, \"unexpected error\");\n        Err((StatusCode::INTERNAL_SERVER_ERROR, \"Internal server error\"))\n    }\n}\n```",
+      "zh-Hans": "```rust\n// Map errors to appropriate status codes and generic messages\n// (Example uses axum; adapt the response type to your framework)\nmatch order_service.find_by_id(id) {\n    Ok(order) => Ok((StatusCode::OK, Json(order))),\n    Err(ServiceError::NotFound(_)) => {\n        tracing::info!(order_id = id, \"order not found\");\n        Err((StatusCode::NOT_FOUND, \"Resource not found\"))\n    }\n    Err(e) => {\n        tracing::error!(order_id = id, error = %e, \"unexpected error\");\n        Err((StatusCode::INTERNAL_SERVER_ERROR, \"Internal server error\"))\n    }\n}\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "See skill: `rust-patterns` for unsafe code guidelines and ownership patterns.\nSee skill: `security-review` for general security checklists.",
+      "zh-Hans": "有关不安全代码指南和所有权模式，请参阅技能：`rust-patterns`。\n有关通用安全检查清单，请参阅技能：`security-review`。"
+    }
+  ]
+}

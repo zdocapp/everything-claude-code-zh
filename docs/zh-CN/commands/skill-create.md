@@ -1,12 +1,12 @@
 ---
 name: skill-create
-description: 分析本地Git历史以提取编码模式并生成SKILL.md文件。Skill Creator GitHub应用的本地版本。
+description: 分析本地git历史以提取编码模式并生成SKILL.md文件。Skill Creator GitHub App的本地版本。
 allowed_tools: ["Bash", "Read", "Write", "Grep", "Glob"]
 ---
 
 # /skill-create - 本地技能生成
 
-分析你的仓库的 git 历史，以提取编码模式并生成 SKILL.md 文件，用于向 Claude 传授你团队的实践方法。
+分析您仓库的 git 历史记录，提取编码模式，并生成 SKILL.md 文件，以向 Claude 传授您团队的实践。
 
 ## 使用方法
 
@@ -17,12 +17,12 @@ allowed_tools: ["Bash", "Read", "Write", "Grep", "Glob"]
 /skill-create --instincts        # Also generate instincts for continuous-learning-v2
 ```
 
-## 功能说明
+## 功能
 
-1. **解析 Git 历史** - 分析提交记录、文件更改和模式
-2. **检测模式** - 识别重复出现的工作流程和约定
+1. **解析 Git 历史记录** - 分析提交、文件更改和模式
+2. **检测模式** - 识别重复出现的工作流和约定
 3. **生成 SKILL.md** - 创建有效的 Claude Code 技能文件
-4. **可选创建 Instincts** - 用于 continuous-learning-v2 系统
+4. **可选创建本能** - 用于 continuous-learning-v2 系统
 
 ## 分析步骤
 
@@ -41,12 +41,12 @@ git log --oneline -n 200 | cut -d' ' -f2- | head -50
 
 ### 步骤 2：检测模式
 
-寻找以下模式类型：
+查找以下模式类型：
 
 | 模式 | 检测方法 |
 |---------|-----------------|
-| **提交约定** | 对提交消息进行正则匹配 (feat:, fix:, chore:) |
-| **文件协同更改** | 总是同时更改的文件 |
+| **提交约定** | 对提交消息进行正则表达式匹配 (feat:, fix:, chore:) |
+| **文件协同更改** | 总是一起更改的文件 |
 | **工作流序列** | 重复的文件更改模式 |
 | **架构** | 文件夹结构和命名约定 |
 | **测试模式** | 测试文件位置、命名、覆盖率 |
@@ -58,7 +58,7 @@ git log --oneline -n 200 | cut -d' ' -f2- | head -50
 ```markdown
 ---
 name: {repo-name}-patterns
-description: 从 {repo-name} 提取的编码模式
+description: Coding patterns extracted from {repo-name}
 version: 1.0.0
 source: local-git-analysis
 analyzed_commits: {count}
@@ -67,20 +67,19 @@ analyzed_commits: {count}
 # {Repo Name} 模式
 
 ## 提交规范
-{detected commit message patterns}
+{检测到的提交信息模式}
 
 ## 代码架构
-{detected folder structure and organization}
+{检测到的文件夹结构与组织方式}
 
-## 工作流
-{detected repeating file change patterns}
+## 工作流程
+{检测到的重复文件变更模式}
 
 ## 测试模式
-{detected test conventions}
-
+{检测到的测试规范}
 ```
 
-### 步骤 4：生成 Instincts（如果使用 --instincts）
+### 步骤 4：生成本能（如果使用 --instincts）
 
 用于 continuous-learning-v2 集成：
 
@@ -116,18 +115,17 @@ source: local-git-analysis
 analyzed_commits: 150
 ---
 
-# My App 模式
+# 我的应用模式
 
-## 提交约定
+## 提交规范
 
-该项目使用 **约定式提交**：
+本项目采用**约定式提交**：
 - `feat:` - 新功能
 - `fix:` - 错误修复
 - `chore:` - 维护任务
 - `docs:` - 文档更新
 
 ## 代码架构
-
 ```
 
 src/
@@ -138,7 +136,8 @@ src/
 └── services/       # API 和外部服务
 
 ```
-## 工作流
+
+## 工作流程
 
 ### 添加新组件
 1. 创建 `src/components/ComponentName.tsx`
@@ -161,16 +160,16 @@ src/
 
 对于高级功能（10k+ 提交、团队共享、自动 PR），请使用 [Skill Creator GitHub 应用](https://github.com/apps/skill-creator)：
 
-* 安装: [github.com/apps/skill-creator](https://github.com/apps/skill-creator)
-* 在任何议题上评论 `/skill-creator analyze`
+* 安装：[github.com/apps/skill-creator](https://github.com/apps/skill-creator)
+* 在任何问题上评论 `/skill-creator analyze`
 * 接收包含生成技能的 PR
 
 ## 相关命令
 
-* `/instinct-import` - 导入生成的 instincts
-* `/instinct-status` - 查看已学习的 instincts
-* `/evolve` - 将 instincts 聚类为技能/代理
+* `/instinct-import` - 导入生成的本能
+* `/instinct-status` - 查看已学习的本能
+* `/evolve` - 将本能聚类为技能/代理
 
 ***
 
-*属于 [Everything Claude Code](https://github.com/affaan-m/everything-claude-code)*
+*[Everything Claude Code](https://github.com/affaan-m/everything-claude-code) 的一部分*

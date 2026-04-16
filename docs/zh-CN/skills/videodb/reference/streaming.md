@@ -1,16 +1,16 @@
 # 流媒体与播放
 
-VideoDB 按需生成流媒体，返回 HLS 兼容的 URL，可在任何标准视频播放器中即时播放。无需渲染时间或导出等待——编辑、搜索和组合内容可立即流式传输。
+VideoDB 按需生成流，返回 HLS 兼容的 URL，可在任何标准视频播放器中即时播放。无需渲染时间或导出等待——编辑、搜索和组合内容可立即流式传输。
 
-## 前提条件
+## 先决条件
 
-视频**必须上传**到某个集合后，才能生成流媒体。对于基于搜索的流媒体，视频还必须被**索引**（口语单词和/或场景）。有关索引的详细信息，请参阅 [search.md](search.md)。
+视频**必须上传**到集合中，才能生成流。对于基于搜索的流，视频还必须**已建立索引**（口语单词和/或场景）。有关索引的详细信息，请参阅 [search.md](search.md)。
 
 ## 核心概念
 
-### 流媒体生成
+### 流生成
 
-VideoDB 中的每个视频、搜索结果和时间线都可以生成一个**流媒体 URL**。该 URL 指向一个按需编译的 HLS（HTTP 实时流媒体）清单。
+VideoDB 中的每个视频、搜索结果和时间线都可以生成一个**流 URL**。此 URL 指向一个按需编译的 HLS（HTTP 实时流）清单。
 
 ```python
 # From a video
@@ -98,13 +98,13 @@ stream_url = timeline.generate_stream()
 print(f"Composed stream: {stream_url}")
 ```
 
-**重要说明：**`add_inline()` 仅接受 `VideoAsset`。对于 `AudioAsset`、`ImageAsset` 和 `TextAsset`，请使用 `add_overlay()`。
+**重要提示：** `add_inline()` 仅接受 `VideoAsset`。对于 `AudioAsset`、`ImageAsset` 和 `TextAsset`，请使用 `add_overlay()`。
 
 有关详细的时间线编辑，请参阅 [editor.md](editor.md)。
 
 ## 流式传输搜索结果
 
-将搜索结果编译为包含所有匹配片段的单一流：
+将搜索结果编译成包含所有匹配片段的单一流：
 
 ```python
 from videodb import SearchType
@@ -127,7 +127,7 @@ except InvalidRequestError as exc:
         raise
 ```
 
-### 流式传输单个搜索结果
+### 流式传输单个搜索结果命中项
 
 ```python
 from videodb.exceptions import InvalidRequestError
@@ -156,7 +156,7 @@ print(f"Audio URL: {playback_url}")
 
 ## 完整工作流程示例
 
-### 搜索到流媒体管道
+### 搜索到流式传输的流水线
 
 在一个工作流程中结合搜索、时间线组合和流式传输：
 
@@ -236,9 +236,9 @@ stream_url = timeline.generate_stream()
 print(f"Multi-video stream: {stream_url}")
 ```
 
-### 条件流媒体组装
+### 条件流组装
 
-根据搜索结果的可用性动态构建流媒体：
+根据搜索可用性动态构建流：
 
 ```python
 import videodb
@@ -292,9 +292,9 @@ else:
     print(f"Full video stream: {stream_url}")
 ```
 
-### 直播事件回顾
+### 直播活动回顾
 
-将事件录音处理成包含多个部分的可流式传输回顾：
+将活动录制内容处理成包含多个部分的可流式传输回顾：
 
 ```python
 import videodb
@@ -396,11 +396,11 @@ print(f"Event recap: {stream_url}")
 
 ## 提示
 
-* **HLS 兼容性**：流媒体 URL 返回 HLS 清单（`.m3u8`）。它们在 Safari 中原生工作，在其他浏览器中通过 hls.js 或类似库工作。
-* **按需编译**：流媒体在请求时在服务器端编译。首次播放可能会有短暂的编译延迟；同一组合的后续播放会被缓存。
-* **缓存**：第二次调用 `video.generate_stream()`（不带参数）将返回缓存的流媒体 URL，而不是重新编译。
+* **HLS 兼容性**：流 URL 返回 HLS 清单（`.m3u8`）。它们在 Safari 中原生工作，在其他浏览器中通过 hls.js 或类似库工作。
+* **按需编译**：流在请求时在服务器端编译。首次播放可能会有短暂的编译延迟；同一组合的后续播放会被缓存。
+* **缓存**：第二次调用 `video.generate_stream()` 而不带参数将返回缓存的流 URL，而不是重新编译。
 * **片段流**：`video.generate_stream(timeline=[(start, end)])` 是流式传输特定剪辑的最快方式，无需构建完整的 `Timeline` 对象。
-* **内联与叠加**：`add_inline()` 仅接受 `VideoAsset` 并将资产按顺序放置在主轨道上。`add_overlay()` 接受 `AudioAsset`、`ImageAsset` 和 `TextAsset`，并在给定开始时间将它们叠加在顶部。
-* **TextStyle 默认值**：`TextStyle` 默认为 `font='Sans'`、`fontcolor='black'`。对于文本背景色，请使用 `boxcolor`（而非 `bgcolor`）。
-* **与生成结合**：使用 `coll.generate_music(prompt, duration)` 和 `coll.generate_image(prompt, aspect_ratio)` 为时间线组合创建资产。
-* **播放**：`.play()` 在默认系统浏览器中打开流媒体 URL。对于编程使用，请直接处理 URL 字符串。
+* **内联与覆盖**：`add_inline()` 仅接受 `VideoAsset` 并将资产按顺序放置在主轨道上。`add_overlay()` 接受 `AudioAsset`、`ImageAsset` 和 `TextAsset`，并在给定开始时间将它们分层放置在顶部。
+* **TextStyle 默认值**：`TextStyle` 默认为 `font='Sans'`、`fontcolor='black'`。对于文本的背景颜色，请使用 `boxcolor`（而不是 `bgcolor`）。
+* **与生成结合使用**：使用 `coll.generate_music(prompt, duration)` 和 `coll.generate_image(prompt, aspect_ratio)` 为时间线组合创建资产。
+* **播放**：`.play()` 在默认系统浏览器中打开流 URL。对于编程使用，请直接使用 URL 字符串。

@@ -6,11 +6,11 @@ paths:
 
 # Kotlin 模式
 
-> 此文件扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 Kotlin 和 Android/KMP 特定的内容。
+> 本文档扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 Kotlin 和 Android/KMP 特有的部分。
 
 ## 依赖注入
 
-首选构造函数注入。使用 Koin（KMP）或 Hilt（仅限 Android）：
+优先使用构造函数注入。使用 Koin（KMP）或 Hilt（仅限 Android）：
 
 ```kotlin
 // Koin — declare modules
@@ -53,7 +53,7 @@ class ScreenViewModel(private val useCase: GetItemsUseCase) : ViewModel() {
 ## 仓库模式
 
 * `suspend` 函数返回 `Result<T>` 或自定义错误类型
-* 对于响应式流使用 `Flow`
+* 使用 `Flow` 处理响应式流
 * 协调本地和远程数据源
 
 ```kotlin
@@ -82,7 +82,7 @@ class GetItemsUseCase(private val repository: ItemRepository) {
 }
 ```
 
-## expect/actual (KMP)
+## expect/actual（KMP）
 
 用于平台特定的实现：
 
@@ -111,9 +111,9 @@ actual class SecureStorage {
 
 ## 协程模式
 
-* 在 ViewModels 中使用 `viewModelScope`，对于结构化的子工作使用 `coroutineScope`
-* 对于来自冷流的 StateFlow 使用 `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialValue)`
-* 当子任务失败应独立处理时使用 `supervisorScope`
+* 在 ViewModels 中使用 `viewModelScope`，对于结构化的子任务使用 `coroutineScope`
+* 使用 `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialValue)` 从冷流创建 StateFlow
+* 当子任务失败应独立处理时，使用 `supervisorScope`
 
 ## 使用 DSL 的构建器模式
 
@@ -141,7 +141,7 @@ val client = httpClient {
 }
 ```
 
-## 参考
+## 参考资料
 
-有关详细的协程模式，请参阅技能：`kotlin-coroutines-flows`。
-有关模块和分层模式，请参阅技能：`android-clean-architecture`。
+详细协程模式请参见技能：`kotlin-coroutines-flows`。
+模块和分层模式请参见技能：`android-clean-architecture`。

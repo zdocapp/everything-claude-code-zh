@@ -1,6 +1,6 @@
 ---
 name: claude-api
-description: Anthropic Claude API 的 Python 和 TypeScript 使用模式。涵盖 Messages API、流式处理、工具使用、视觉功能、扩展思维、批量处理、提示缓存和 Claude Agent SDK。适用于使用 Claude API 或 Anthropic SDK 构建应用程序的场景。
+description: Anthropic Claude API 的 Python 和 TypeScript 模式。涵盖消息 API、流式传输、工具使用、视觉、扩展思考、批处理、提示缓存和 Claude Agent SDK。适用于使用 Claude API 或 Anthropic SDK 构建应用程序时。
 origin: ECC
 ---
 
@@ -21,10 +21,10 @@ origin: ECC
 | 模型 | ID | 最适合 |
 |-------|-----|----------|
 | Opus 4.1 | `claude-opus-4-1` | 复杂推理、架构设计、研究 |
-| Sonnet 4 | `claude-sonnet-4-0` | 平衡的编码任务，大多数开发工作 |
-| Haiku 3.5 | `claude-3-5-haiku-latest` | 快速响应、高吞吐量、成本敏感型 |
+| Sonnet 4 | `claude-sonnet-4-0` | 平衡的编码任务、大多数开发工作 |
+| Haiku 3.5 | `claude-3-5-haiku-latest` | 快速响应、高吞吐量、成本敏感型任务 |
 
-默认使用 Sonnet 4，除非任务需要深度推理（Opus）或速度/成本优化（Haiku）。对于生产环境，优先使用固定的快照 ID 而非别名。
+默认使用 Sonnet 4，除非任务需要深度推理 (Opus) 或速度/成本优化 (Haiku)。对于生产环境，优先使用固定的快照 ID 而非别名。
 
 ## Python SDK
 
@@ -227,7 +227,7 @@ print(f"Cache creation: {message.usage.cache_creation_input_tokens}")
 
 ## 批量 API
 
-以 50% 的成本降低异步处理大量数据：
+以 50% 的成本降低异步处理大量任务：
 
 ```python
 import time
@@ -297,13 +297,13 @@ while True:
 
 ## 成本优化
 
-| 策略 | 节省幅度 | 使用时机 |
+| 策略 | 节省 | 使用时机 |
 |----------|---------|-------------|
-| 提示词缓存 | 缓存令牌成本降低高达 90% | 重复的系统提示词或上下文 |
+| 提示词缓存 | 缓存令牌成本最高 90% | 重复的系统提示词或上下文 |
 | 批量 API | 50% | 非时间敏感的批量处理 |
 | 使用 Haiku 而非 Sonnet | ~75% | 简单任务、分类、提取 |
-| 缩短 max\_tokens | 可变 | 已知输出较短时 |
-| 流式传输 | 无（成本相同） | 更好的用户体验，价格相同 |
+| 缩短 max\_tokens | 可变 | 当您知道输出会很短时 |
+| 流式传输 | 无 (成本相同) | 更好的用户体验，价格不变 |
 
 ## 错误处理
 

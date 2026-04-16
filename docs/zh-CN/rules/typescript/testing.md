@@ -8,7 +8,7 @@ paths:
 
 # TypeScript/JavaScript 测试
 
-> 本文档基于 [common/testing.md](../common/testing.md) 扩展，补充了 TypeScript/JavaScript 特定的内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 TypeScript/JavaScript 相关内容。
 
 ## E2E 测试
 

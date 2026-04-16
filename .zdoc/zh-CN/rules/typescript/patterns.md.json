@@ -1,0 +1,42 @@
+{
+  "sourceFile": "rules/typescript/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.ts\"\n  - \"**/*.tsx\"\n  - \"**/*.js\"\n  - \"**/*.jsx\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.ts\"\n  - \"**/*.tsx\"\n  - \"**/*.js\"\n  - \"**/*.jsx\"\n---"
+    },
+    {
+      "en-US": "# TypeScript/JavaScript Patterns",
+      "zh-Hans": "# TypeScript/JavaScript 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with TypeScript/JavaScript specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/patterns.md](../common/patterns.md) 中关于 TypeScript/JavaScript 的特定内容。"
+    },
+    {
+      "en-US": "## API Response Format",
+      "zh-Hans": "## API 响应格式"
+    },
+    {
+      "en-US": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n  meta?: {\n    total: number\n    page: number\n    limit: number\n  }\n}\n```",
+      "zh-Hans": "```typescript\ninterface ApiResponse<T> {\n  success: boolean\n  data?: T\n  error?: string\n  meta?: {\n    total: number\n    page: number\n    limit: number\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Custom Hooks Pattern",
+      "zh-Hans": "## 自定义 Hooks 模式"
+    },
+    {
+      "en-US": "```typescript\nexport function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState<T>(value)\n\n  useEffect(() => {\n    const handler = setTimeout(() => setDebouncedValue(value), delay)\n    return () => clearTimeout(handler)\n  }, [value, delay])\n\n  return debouncedValue\n}\n```",
+      "zh-Hans": "```typescript\nexport function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState<T>(value)\n\n  useEffect(() => {\n    const handler = setTimeout(() => setDebouncedValue(value), delay)\n    return () => clearTimeout(handler)\n  }, [value, delay])\n\n  return debouncedValue\n}\n```"
+    },
+    {
+      "en-US": "## Repository Pattern",
+      "zh-Hans": "## 仓库模式"
+    },
+    {
+      "en-US": "```typescript\ninterface Repository<T> {\n  findAll(filters?: Filters): Promise<T[]>\n  findById(id: string): Promise<T | null>\n  create(data: CreateDto): Promise<T>\n  update(id: string, data: UpdateDto): Promise<T>\n  delete(id: string): Promise<void>\n}\n```",
+      "zh-Hans": "```typescript\ninterface Repository<T> {\n  findAll(filters?: Filters): Promise<T[]>\n  findById(id: string): Promise<T | null>\n  create(data: CreateDto): Promise<T>\n  update(id: string, data: UpdateDto): Promise<T>\n  delete(id: string): Promise<void>\n}\n```"
+    }
+  ]
+}

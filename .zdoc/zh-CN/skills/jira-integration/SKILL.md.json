@@ -1,0 +1,258 @@
+{
+  "sourceFile": "skills/jira-integration/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: jira-integration\ndescription: Use this skill when retrieving Jira tickets, analyzing requirements, updating ticket status, adding comments, or transitioning issues. Provides Jira API patterns via MCP or direct REST calls.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: jira-integration\ndescription: 在检索Jira工单、分析需求、更新工单状态、添加评论或转换问题时使用此技能。通过MCP或直接REST调用提供Jira API模式。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Jira Integration Skill",
+      "zh-Hans": "# Jira 集成技能"
+    },
+    {
+      "en-US": "Retrieve, analyze, and update Jira tickets directly from your AI coding workflow. Supports both **MCP-based** (recommended) and **direct REST API** approaches.",
+      "zh-Hans": "直接从您的 AI 编码工作流中检索、分析和更新 Jira 工单。支持 **基于 MCP 的**（推荐）和 **直接 REST API** 两种方法。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Fetching a Jira ticket to understand requirements\n- Extracting testable acceptance criteria from a ticket\n- Adding progress comments to a Jira issue\n- Transitioning a ticket status (To Do → In Progress → Done)\n- Linking merge requests or branches to a Jira issue\n- Searching for issues by JQL query",
+      "zh-Hans": "* 获取 Jira 工单以理解需求\n* 从工单中提取可测试的验收标准\n* 向 Jira 问题添加进度评论\n* 转换工单状态（待办 → 进行中 → 已完成）\n* 将合并请求或分支链接到 Jira 问题\n* 通过 JQL 查询搜索问题"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "### Option A: MCP Server (Recommended)",
+      "zh-Hans": "### 选项 A: MCP 服务器（推荐）"
+    },
+    {
+      "en-US": "Install the `mcp-atlassian` MCP server. This exposes Jira tools directly to your AI agent.",
+      "zh-Hans": "安装 `mcp-atlassian` MCP 服务器。这将 Jira 工具直接暴露给您的 AI 代理。"
+    },
+    {
+      "en-US": "**Requirements:**",
+      "zh-Hans": "**要求:**"
+    },
+    {
+      "en-US": "- Python 3.10+\n- `uvx` (from `uv`), installed via your package manager or the official `uv` installation documentation",
+      "zh-Hans": "* Python 3.10+\n* `uvx`（来自 `uv`），通过您的包管理器或官方 `uv` 安装文档安装"
+    },
+    {
+      "en-US": "**Add to your MCP config** (e.g., `~/.claude.json` → `mcpServers`):",
+      "zh-Hans": "**添加到您的 MCP 配置**（例如，`~/.claude.json` → `mcpServers`）:"
+    },
+    {
+      "en-US": "```json\n{\n  \"jira\": {\n    \"command\": \"uvx\",\n    \"args\": [\"mcp-atlassian==0.21.0\"],\n    \"env\": {\n      \"JIRA_URL\": \"https://YOUR_ORG.atlassian.net\",\n      \"JIRA_EMAIL\": \"your.email@example.com\",\n      \"JIRA_API_TOKEN\": \"your-api-token\"\n    },\n    \"description\": \"Jira issue tracking — search, create, update, comment, transition\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"jira\": {\n    \"command\": \"uvx\",\n    \"args\": [\"mcp-atlassian==0.21.0\"],\n    \"env\": {\n      \"JIRA_URL\": \"https://YOUR_ORG.atlassian.net\",\n      \"JIRA_EMAIL\": \"your.email@example.com\",\n      \"JIRA_API_TOKEN\": \"your-api-token\"\n    },\n    \"description\": \"Jira issue tracking — search, create, update, comment, transition\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "> **Security:** Never hardcode secrets. Prefer setting `JIRA_URL`, `JIRA_EMAIL`, and `JIRA_API_TOKEN` in your system environment (or a secrets manager). Only use the MCP `env` block for local, uncommitted config files.",
+      "zh-Hans": "> **安全提示:** 切勿硬编码密钥。建议在系统环境（或密钥管理器）中设置 `JIRA_URL`、`JIRA_EMAIL` 和 `JIRA_API_TOKEN`。仅将 MCP `env` 块用于本地、未提交的配置文件。"
+    },
+    {
+      "en-US": "**To get a Jira API token:**",
+      "zh-Hans": "**获取 Jira API 令牌:**"
+    },
+    {
+      "en-US": "1. Go to <https://id.atlassian.com/manage-profile/security/api-tokens>\n2. Click **Create API token**\n3. Copy the token — store it in your environment, never in source code",
+      "zh-Hans": "1. 访问 <https://id.atlassian.com/manage-profile/security/api-tokens>\n2. 点击 **创建 API 令牌**\n3. 复制令牌 — 将其存储在您的环境中，切勿存储在源代码中"
+    },
+    {
+      "en-US": "### Option B: Direct REST API",
+      "zh-Hans": "### 选项 B: 直接 REST API"
+    },
+    {
+      "en-US": "If MCP is not available, use the Jira REST API v3 directly via `curl` or a helper script.",
+      "zh-Hans": "如果 MCP 不可用，请通过 `curl` 或辅助脚本直接使用 Jira REST API v3。"
+    },
+    {
+      "en-US": "**Required environment variables:**",
+      "zh-Hans": "**所需环境变量:**"
+    },
+    {
+      "en-US": "| Variable | Description |\n|----------|-------------|\n| `JIRA_URL` | Your Jira instance URL (e.g., `https://yourorg.atlassian.net`) |\n| `JIRA_EMAIL` | Your Atlassian account email |\n| `JIRA_API_TOKEN` | API token from id.atlassian.com |",
+      "zh-Hans": "| 变量 | 描述 |\n|----------|-------------|\n| `JIRA_URL` | 您的 Jira 实例 URL（例如，`https://yourorg.atlassian.net`） |\n| `JIRA_EMAIL` | 您的 Atlassian 账户邮箱 |\n| `JIRA_API_TOKEN` | 来自 id.atlassian.com 的 API 令牌 |"
+    },
+    {
+      "en-US": "Store these in your shell environment, secrets manager, or an untracked local env file. Do not commit them to the repo.",
+      "zh-Hans": "将这些存储在您的 shell 环境、密钥管理器或未跟踪的本地环境文件中。不要将它们提交到仓库。"
+    },
+    {
+      "en-US": "## MCP Tools Reference",
+      "zh-Hans": "## MCP 工具参考"
+    },
+    {
+      "en-US": "When the `mcp-atlassian` MCP server is configured, these tools are available:",
+      "zh-Hans": "当配置了 `mcp-atlassian` MCP 服务器时，以下工具可用:"
+    },
+    {
+      "en-US": "| Tool | Purpose | Example |\n|------|---------|---------|\n| `jira_search` | JQL queries | `project = PROJ AND status = \"In Progress\"` |\n| `jira_get_issue` | Fetch full issue details by key | `PROJ-1234` |\n| `jira_create_issue` | Create issues (Task, Bug, Story, Epic) | New bug report |\n| `jira_update_issue` | Update fields (summary, description, assignee) | Change assignee |\n| `jira_transition_issue` | Change status | Move to \"In Review\" |\n| `jira_add_comment` | Add comments | Progress update |\n| `jira_get_sprint_issues` | List issues in a sprint | Active sprint review |\n| `jira_create_issue_link` | Link issues (Blocks, Relates to) | Dependency tracking |\n| `jira_get_issue_development_info` | See linked PRs, branches, commits | Dev context |",
+      "zh-Hans": "| 工具 | 用途 | 示例 |\n|------|---------|---------|\n| `jira_search` | JQL 查询 | `project = PROJ AND status = \"In Progress\"` |\n| `jira_get_issue` | 通过键获取完整问题详情 | `PROJ-1234` |\n| `jira_create_issue` | 创建问题（任务、缺陷、故事、史诗） | 新建缺陷报告 |\n| `jira_update_issue` | 更新字段（摘要、描述、经办人） | 更改经办人 |\n| `jira_transition_issue` | 更改状态 | 移至\"评审中\" |\n| `jira_add_comment` | 添加评论 | 进度更新 |\n| `jira_get_sprint_issues` | 列出冲刺中的问题 | 活跃冲刺评审 |\n| `jira_create_issue_link` | 链接问题（阻塞、关联到） | 依赖关系跟踪 |\n| `jira_get_issue_development_info` | 查看链接的 PR、分支、提交 | 开发上下文 |"
+    },
+    {
+      "en-US": "> **Tip:** Always call `jira_get_transitions` before transitioning — transition IDs vary per project workflow.",
+      "zh-Hans": "> **提示:** 在转换状态前，始终调用 `jira_get_transitions` — 转换 ID 因项目工作流而异。"
+    },
+    {
+      "en-US": "## Direct REST API Reference",
+      "zh-Hans": "## 直接 REST API 参考"
+    },
+    {
+      "en-US": "### Fetch a Ticket",
+      "zh-Hans": "### 获取工单"
+    },
+    {
+      "en-US": "```bash\ncurl -s -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234\" | jq '{\n    key: .key,\n    summary: .fields.summary,\n    status: .fields.status.name,\n    priority: .fields.priority.name,\n    type: .fields.issuetype.name,\n    assignee: .fields.assignee.displayName,\n    labels: .fields.labels,\n    description: .fields.description\n  }'\n```",
+      "zh-Hans": "```bash\ncurl -s -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234\" | jq '{\n    key: .key,\n    summary: .fields.summary,\n    status: .fields.status.name,\n    priority: .fields.priority.name,\n    type: .fields.issuetype.name,\n    assignee: .fields.assignee.displayName,\n    labels: .fields.labels,\n    description: .fields.description\n  }'\n```"
+    },
+    {
+      "en-US": "### Fetch Comments",
+      "zh-Hans": "### 获取评论"
+    },
+    {
+      "en-US": "```bash\ncurl -s -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234?fields=comment\" | jq '.fields.comment.comments[] | {\n    author: .author.displayName,\n    created: .created[:10],\n    body: .body\n  }'\n```",
+      "zh-Hans": "```bash\ncurl -s -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234?fields=comment\" | jq '.fields.comment.comments[] | {\n    author: .author.displayName,\n    created: .created[:10],\n    body: .body\n  }'\n```"
+    },
+    {
+      "en-US": "### Add a Comment",
+      "zh-Hans": "### 添加评论"
+    },
+    {
+      "en-US": "```bash\ncurl -s -X POST -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"body\": {\n      \"version\": 1,\n      \"type\": \"doc\",\n      \"content\": [{\n        \"type\": \"paragraph\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Your comment here\"}]\n      }]\n    }\n  }' \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234/comment\"\n```",
+      "zh-Hans": "```bash\ncurl -s -X POST -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"body\": {\n      \"version\": 1,\n      \"type\": \"doc\",\n      \"content\": [{\n        \"type\": \"paragraph\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Your comment here\"}]\n      }]\n    }\n  }' \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234/comment\"\n```"
+    },
+    {
+      "en-US": "### Transition a Ticket",
+      "zh-Hans": "### 转换工单状态"
+    },
+    {
+      "en-US": "```bash\n# 1. Get available transitions\ncurl -s -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234/transitions\" | jq '.transitions[] | {id, name: .name}'\n\n# 2. Execute transition (replace TRANSITION_ID)\ncurl -s -X POST -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"transition\": {\"id\": \"TRANSITION_ID\"}}' \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234/transitions\"\n```",
+      "zh-Hans": "```bash\n# 1. Get available transitions\ncurl -s -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234/transitions\" | jq '.transitions[] | {id, name: .name}'\n\n# 2. Execute transition (replace TRANSITION_ID)\ncurl -s -X POST -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"transition\": {\"id\": \"TRANSITION_ID\"}}' \\\n  \"$JIRA_URL/rest/api/3/issue/PROJ-1234/transitions\"\n```"
+    },
+    {
+      "en-US": "### Search with JQL",
+      "zh-Hans": "### 使用 JQL 搜索"
+    },
+    {
+      "en-US": "```bash\ncurl -s -G -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  --data-urlencode \"jql=project = PROJ AND status = 'In Progress'\" \\\n  \"$JIRA_URL/rest/api/3/search\"\n```",
+      "zh-Hans": "```bash\ncurl -s -G -u \"$JIRA_EMAIL:$JIRA_API_TOKEN\" \\\n  --data-urlencode \"jql=project = PROJ AND status = 'In Progress'\" \\\n  \"$JIRA_URL/rest/api/3/search\"\n```"
+    },
+    {
+      "en-US": "## Analyzing a Ticket",
+      "zh-Hans": "## 分析工单"
+    },
+    {
+      "en-US": "When retrieving a ticket for development or test automation, extract:",
+      "zh-Hans": "当为开发或测试自动化检索工单时，提取:"
+    },
+    {
+      "en-US": "### 1. Testable Requirements",
+      "zh-Hans": "### 1. 可测试的需求"
+    },
+    {
+      "en-US": "- **Functional requirements** — What the feature does\n- **Acceptance criteria** — Conditions that must be met\n- **Testable behaviors** — Specific actions and expected outcomes\n- **User roles** — Who uses this feature and their permissions\n- **Data requirements** — What data is needed\n- **Integration points** — APIs, services, or systems involved",
+      "zh-Hans": "* **功能需求** — 功能做什么\n* **验收标准** — 必须满足的条件\n* **可测试的行为** — 具体操作和预期结果\n* **用户角色** — 谁使用此功能及其权限\n* **数据需求** — 需要什么数据\n* **集成点** — 涉及的 API、服务或系统"
+    },
+    {
+      "en-US": "### 2. Test Types Needed",
+      "zh-Hans": "### 2. 所需的测试类型"
+    },
+    {
+      "en-US": "- **Unit tests** — Individual functions and utilities\n- **Integration tests** — API endpoints and service interactions\n- **E2E tests** — User-facing UI flows\n- **API tests** — Endpoint contracts and error handling",
+      "zh-Hans": "* **单元测试** — 单个函数和工具\n* **集成测试** — API 端点和服务交互\n* **端到端测试** — 面向用户的 UI 流程\n* **API 测试** — 端点契约和错误处理"
+    },
+    {
+      "en-US": "### 3. Edge Cases & Error Scenarios",
+      "zh-Hans": "### 3. 边界情况和错误场景"
+    },
+    {
+      "en-US": "- Invalid inputs (empty, too long, special characters)\n- Unauthorized access\n- Network failures or timeouts\n- Concurrent users or race conditions\n- Boundary conditions\n- Missing or null data\n- State transitions (back navigation, refresh, etc.)",
+      "zh-Hans": "* 无效输入（空、过长、特殊字符）\n* 未授权访问\n* 网络故障或超时\n* 并发用户或竞态条件\n* 边界条件\n* 缺失或空数据\n* 状态转换（后退导航、刷新等）"
+    },
+    {
+      "en-US": "### 4. Structured Analysis Output",
+      "zh-Hans": "### 4. 结构化分析输出"
+    },
+    {
+      "en-US": "```\nTicket: PROJ-1234\nSummary: [ticket title]\nStatus: [current status]\nPriority: [High/Medium/Low]\nTest Types: Unit, Integration, E2E\n\nRequirements:\n1. [requirement 1]\n2. [requirement 2]\n\nAcceptance Criteria:\n- [ ] [criterion 1]\n- [ ] [criterion 2]\n\nTest Scenarios:\n- Happy Path: [description]\n- Error Case: [description]\n- Edge Case: [description]\n\nTest Data Needed:\n- [data item 1]\n- [data item 2]\n\nDependencies:\n- [dependency 1]\n- [dependency 2]\n```",
+      "zh-Hans": "```\nTicket: PROJ-1234\nSummary: [工单标题]\nStatus: [当前状态]\nPriority: [高/中/低]\nTest Types: 单元测试, 集成测试, 端到端测试\n\nRequirements:\n1. [需求 1]\n2. [需求 2]\n\nAcceptance Criteria:\n- [ ] [验收标准 1]\n- [ ] [验收标准 2]\n\nTest Scenarios:\n- 正常路径: [描述]\n- 错误情况: [描述]\n- 边界情况: [描述]\n\nTest Data Needed:\n- [数据项 1]\n- [数据项 2]\n\nDependencies:\n- [依赖项 1]\n- [依赖项 2]\n```"
+    },
+    {
+      "en-US": "## Updating Tickets",
+      "zh-Hans": "## 更新工单"
+    },
+    {
+      "en-US": "### When to Update",
+      "zh-Hans": "### 何时更新"
+    },
+    {
+      "en-US": "| Workflow Step | Jira Update |\n|---|---|\n| Start work | Transition to \"In Progress\" |\n| Tests written | Comment with test coverage summary |\n| Branch created | Comment with branch name |\n| PR/MR created | Comment with link, link issue |\n| Tests passing | Comment with results summary |\n| PR/MR merged | Transition to \"Done\" or \"In Review\" |",
+      "zh-Hans": "| 工作流步骤 | Jira 更新 |\n|---|---|\n| 开始工作 | 转换到\"进行中\" |\n| 测试编写完成 | 评论附带测试覆盖率摘要 |\n| 分支创建完成 | 评论附带分支名称 |\n| PR/MR 创建完成 | 评论附带链接，链接问题 |\n| 测试通过 | 评论附带结果摘要 |\n| PR/MR 合并完成 | 转换到\"已完成\"或\"评审中\" |"
+    },
+    {
+      "en-US": "### Comment Templates",
+      "zh-Hans": "### 评论模板"
+    },
+    {
+      "en-US": "**Starting Work:**",
+      "zh-Hans": "**开始工作:**"
+    },
+    {
+      "en-US": "```\nStarting implementation for this ticket.\nBranch: feat/PROJ-1234-feature-name\n```",
+      "zh-Hans": "```\n开始实施此工单。\n分支：feat/PROJ-1234-feature-name\n```"
+    },
+    {
+      "en-US": "**Tests Implemented:**",
+      "zh-Hans": "**测试已实现:**"
+    },
+    {
+      "en-US": "```\nAutomated tests implemented:\n\nUnit Tests:\n- [test file 1] — [what it covers]\n- [test file 2] — [what it covers]\n\nIntegration Tests:\n- [test file] — [endpoints/flows covered]\n\nAll tests passing locally. Coverage: XX%\n```",
+      "zh-Hans": "```\n已实现的自动化测试：\n\n单元测试：\n- [测试文件 1] — [覆盖内容]\n- [测试文件 2] — [覆盖内容]\n\n集成测试：\n- [测试文件] — [覆盖的端点/流程]\n\n所有测试在本地通过。覆盖率：XX%\n```"
+    },
+    {
+      "en-US": "**PR Created:**",
+      "zh-Hans": "**PR 已创建:**"
+    },
+    {
+      "en-US": "```\nPull request created:\n[PR Title](https://github.com/org/repo/pull/XXX)\n\nReady for review.\n```",
+      "zh-Hans": "```\nPull request created:\n[PR Title](https://github.com/org/repo/pull/XXX)\n\nReady for review.\n```"
+    },
+    {
+      "en-US": "**Work Complete:**",
+      "zh-Hans": "**工作完成:**"
+    },
+    {
+      "en-US": "```\nImplementation complete.\n\nPR merged: [link]\nTest results: All passing (X/Y)\nCoverage: XX%\n```",
+      "zh-Hans": "```\n实施完成。\n\nPR 已合并：[链接]\n测试结果：全部通过 (X/Y)\n覆盖率：XX%\n```"
+    },
+    {
+      "en-US": "## Security Guidelines",
+      "zh-Hans": "## 安全指南"
+    },
+    {
+      "en-US": "- **Never hardcode** Jira API tokens in source code or skill files\n- **Always use** environment variables or a secrets manager\n- **Add `.env`** to `.gitignore` in every project\n- **Rotate tokens** immediately if exposed in git history\n- **Use least-privilege** API tokens scoped to required projects\n- **Validate** that credentials are set before making API calls — fail fast with a clear message",
+      "zh-Hans": "* **切勿硬编码** Jira API 令牌到源代码或技能文件中\n* **始终使用** 环境变量或密钥管理器\n* **将 `.env` 添加到** 每个项目的 `.gitignore` 中\n* **如果令牌在 git 历史记录中暴露，立即轮换**\n* **使用最小权限** 的 API 令牌，范围限定在所需项目\n* **验证** 在发起 API 调用前是否已设置凭据 — 快速失败并给出明确消息"
+    },
+    {
+      "en-US": "## Troubleshooting",
+      "zh-Hans": "## 故障排除"
+    },
+    {
+      "en-US": "| Error | Cause | Fix |\n|---|---|---|\n| `401 Unauthorized` | Invalid or expired API token | Regenerate at id.atlassian.com |\n| `403 Forbidden` | Token lacks project permissions | Check token scopes and project access |\n| `404 Not Found` | Wrong ticket key or base URL | Verify `JIRA_URL` and ticket key |\n| `spawn uvx ENOENT` | IDE cannot find `uvx` on PATH | Use full path (e.g., `~/.local/bin/uvx`) or set PATH in `~/.zprofile` |\n| Connection timeout | Network/VPN issue | Check VPN connection and firewall rules |",
+      "zh-Hans": "| 错误 | 原因 | 修复方法 |\n|---|---|---|\n| `401 Unauthorized` | 无效或过期的 API 令牌 | 在 id.atlassian.com 重新生成 |\n| `403 Forbidden` | 令牌缺少项目权限 | 检查令牌范围和项目访问权限 |\n| `404 Not Found` | 错误的工单键或基础 URL | 验证 `JIRA_URL` 和工单键 |\n| `spawn uvx ENOENT` | IDE 在 PATH 上找不到 `uvx` | 使用完整路径（例如，`~/.local/bin/uvx`）或在 `~/.zprofile` 中设置 PATH |\n| 连接超时 | 网络/VPN 问题 | 检查 VPN 连接和防火墙规则 |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- Update Jira as you go, not all at once at the end\n- Keep comments concise but informative\n- Link rather than copy — point to PRs, test reports, and dashboards\n- Use @mentions if you need input from others\n- Check linked issues to understand full feature scope before starting\n- If acceptance criteria are vague, ask for clarification before writing code",
+      "zh-Hans": "* 边做边更新 Jira，而不是最后一次性更新\n* 保持评论简洁但信息丰富\n* 使用链接而非复制 — 指向 PR、测试报告和仪表板\n* 如果需要他人输入，使用 @提及\n* 在开始前检查链接的问题以理解完整功能范围\n* 如果验收标准模糊，在编写代码前请求澄清"
+    }
+  ]
+}

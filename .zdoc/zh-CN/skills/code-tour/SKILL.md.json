@@ -1,0 +1,278 @@
+{
+  "sourceFile": "skills/code-tour/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: code-tour\ndescription: Create CodeTour `.tour` files — persona-targeted, step-by-step walkthroughs with real file and line anchors. Use for onboarding tours, architecture walkthroughs, PR tours, RCA tours, and structured \"explain how this works\" requests.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: code-tour\ndescription: 创建 CodeTour `.tour` 文件——针对特定角色、分步进行的演练，包含真实文件和行锚点。用于入职导览、架构演练、PR 导览、RCA 导览以及结构化的“解释其工作原理”请求。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Code Tour",
+      "zh-Hans": "# 代码导览"
+    },
+    {
+      "en-US": "Create **CodeTour** `.tour` files for codebase walkthroughs that open directly to real files and line ranges. Tours live in `.tours/` and are meant for the CodeTour format, not ad hoc Markdown notes.",
+      "zh-Hans": "创建 **CodeTour** `.tour` 文件，用于代码库的逐步讲解，可直接打开真实文件和行范围。导览文件存放在 `.tours/` 中，专为 CodeTour 格式设计，而非临时 Markdown 笔记。"
+    },
+    {
+      "en-US": "A good tour is a narrative for a specific reader:",
+      "zh-Hans": "一个好的导览是为特定读者讲述的故事："
+    },
+    {
+      "en-US": "- what they are looking at\n- why it matters\n- what path they should follow next",
+      "zh-Hans": "* 他们正在看什么\n* 为什么这很重要\n* 接下来他们应该遵循什么路径"
+    },
+    {
+      "en-US": "Only create `.tour` JSON files. Do not modify source code as part of this skill.",
+      "zh-Hans": "仅创建 `.tour` JSON 文件。不要将此技能用于修改源代码。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use this skill when:",
+      "zh-Hans": "在以下情况使用此技能："
+    },
+    {
+      "en-US": "- the user asks for a code tour, onboarding tour, architecture walkthrough, or PR tour\n- the user says \"explain how X works\" and wants a reusable guided artifact\n- the user wants a ramp-up path for a new engineer or reviewer\n- the task is better served by a guided sequence than a flat summary",
+      "zh-Hans": "* 用户要求进行代码导览、入职导览、架构讲解或 PR 导览\n* 用户说“解释 X 如何工作”并希望得到一个可重复使用的引导性产物\n* 用户希望为新工程师或审阅者提供一条快速上手的路径\n* 任务更适合通过引导式序列而非扁平化摘要来完成"
+    },
+    {
+      "en-US": "Examples:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- onboarding a new maintainer\n- architecture tour for one service or package\n- PR-review walk-through anchored to changed files\n- RCA tour showing the failure path\n- security review tour of trust boundaries and key checks",
+      "zh-Hans": "* 新维护者入职\n* 单个服务或包的架构导览\n* 基于变更文件的 PR 审阅逐步讲解\n* 展示故障路径的根本原因分析导览\n* 关于信任边界和关键检查的安全审查导览"
+    },
+    {
+      "en-US": "## When NOT to Use",
+      "zh-Hans": "## 何时不使用"
+    },
+    {
+      "en-US": "| Instead of code-tour | Use |\n| --- | --- |\n| A one-off explanation in chat is enough | answer directly |\n| The user wants prose docs, not a `.tour` artifact | `documentation-lookup` or repo docs editing |\n| The task is implementation or refactoring | do the implementation work |\n| The task is broad codebase onboarding without a tour artifact | `codebase-onboarding` |",
+      "zh-Hans": "| 替代代码导览的情况 | 使用 |\n| --- | --- |\n| 聊天中的一次性解释已足够 | 直接回答 |\n| 用户需要散文式文档，而非 `.tour` 产物 | `documentation-lookup` 或仓库文档编辑 |\n| 任务是实现或重构 | 执行实现工作 |\n| 任务是不需要导览产物的广泛代码库入职 | `codebase-onboarding` |"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Discover",
+      "zh-Hans": "### 1. 探索"
+    },
+    {
+      "en-US": "Explore the repo before writing anything:",
+      "zh-Hans": "在编写任何内容之前先探索仓库："
+    },
+    {
+      "en-US": "- README and package/app entry points\n- folder structure\n- relevant config files\n- the changed files if the tour is PR-focused",
+      "zh-Hans": "* README 和包/应用的入口点\n* 文件夹结构\n* 相关的配置文件\n* 如果导览是 PR 导向的，则查看变更的文件"
+    },
+    {
+      "en-US": "Do not start writing steps before you understand the shape of the code.",
+      "zh-Hans": "在理解代码结构之前，不要开始编写步骤。"
+    },
+    {
+      "en-US": "### 2. Infer the reader",
+      "zh-Hans": "### 2. 推断读者"
+    },
+    {
+      "en-US": "Decide the persona and depth from the request.",
+      "zh-Hans": "根据请求决定用户画像和深度。"
+    },
+    {
+      "en-US": "| Request shape | Persona | Suggested depth |\n| --- | --- | --- |\n| \"onboarding\", \"new joiner\" | `new-joiner` | 9-13 steps |\n| \"quick tour\", \"vibe check\" | `vibecoder` | 5-8 steps |\n| \"architecture\" | `architect` | 14-18 steps |\n| \"tour this PR\" | `pr-reviewer` | 7-11 steps |\n| \"why did this break\" | `rca-investigator` | 7-11 steps |\n| \"security review\" | `security-reviewer` | 7-11 steps |\n| \"explain how this feature works\" | `feature-explainer` | 7-11 steps |\n| \"debug this path\" | `bug-fixer` | 7-11 steps |",
+      "zh-Hans": "| 请求类型 | 用户画像 | 建议深度 |\n| --- | --- | --- |\n| \"onboarding\", \"new joiner\" | `new-joiner` | 9-13 步 |\n| \"quick tour\", \"vibe check\" | `vibecoder` | 5-8 步 |\n| \"architecture\" | `architect` | 14-18 步 |\n| \"tour this PR\" | `pr-reviewer` | 7-11 步 |\n| \"why did this break\" | `rca-investigator` | 7-11 步 |\n| \"security review\" | `security-reviewer` | 7-11 步 |\n| \"explain how this feature works\" | `feature-explainer` | 7-11 步 |\n| \"debug this path\" | `bug-fixer` | 7-11 步 |"
+    },
+    {
+      "en-US": "### 3. Read and verify anchors",
+      "zh-Hans": "### 3. 读取并验证锚点"
+    },
+    {
+      "en-US": "Every file path and line anchor must be real:",
+      "zh-Hans": "每个文件路径和行锚点都必须是真实的："
+    },
+    {
+      "en-US": "- confirm the file exists\n- confirm the line numbers are in range\n- if using a selection, verify the exact block\n- if the file is volatile, prefer a pattern-based anchor",
+      "zh-Hans": "* 确认文件存在\n* 确认行号在有效范围内\n* 如果使用选择范围，请验证确切的代码块\n* 如果文件易变，优先使用基于模式的锚点"
+    },
+    {
+      "en-US": "Never guess line numbers.",
+      "zh-Hans": "切勿猜测行号。"
+    },
+    {
+      "en-US": "### 4. Write the `.tour`",
+      "zh-Hans": "### 4. 编写 `.tour`"
+    },
+    {
+      "en-US": "Write to:",
+      "zh-Hans": "编写时遵循："
+    },
+    {
+      "en-US": "```text\n.tours/<persona>-<focus>.tour\n```",
+      "zh-Hans": "```text\n.tours/<persona>-<focus>.tour\n```"
+    },
+    {
+      "en-US": "Keep the path deterministic and readable.",
+      "zh-Hans": "保持路径确定性和可读性。"
+    },
+    {
+      "en-US": "### 5. Validate",
+      "zh-Hans": "### 5. 验证"
+    },
+    {
+      "en-US": "Before finishing:",
+      "zh-Hans": "在完成之前："
+    },
+    {
+      "en-US": "- every referenced path exists\n- every line or selection is valid\n- the first step is anchored to a real file or directory\n- the tour tells a coherent story rather than listing files",
+      "zh-Hans": "* 每个引用的路径都存在\n* 每个行或选择范围都是有效的\n* 第一步锚定到真实的文件或目录\n* 导览讲述的是一个连贯的故事，而非文件列表"
+    },
+    {
+      "en-US": "## Step Types",
+      "zh-Hans": "## 步骤类型"
+    },
+    {
+      "en-US": "### Content",
+      "zh-Hans": "### 内容"
+    },
+    {
+      "en-US": "Use sparingly, usually only for a closing step:",
+      "zh-Hans": "谨慎使用，通常仅用于结束步骤："
+    },
+    {
+      "en-US": "```json\n{ \"title\": \"Next Steps\", \"description\": \"You can now trace the request path end to end.\" }\n```",
+      "zh-Hans": "```json\n{ \"title\": \"Next Steps\", \"description\": \"You can now trace the request path end to end.\" }\n```"
+    },
+    {
+      "en-US": "Do not make the first step content-only.",
+      "zh-Hans": "不要将第一步设为纯内容步骤。"
+    },
+    {
+      "en-US": "### Directory",
+      "zh-Hans": "### 目录"
+    },
+    {
+      "en-US": "Use to orient the reader to a module:",
+      "zh-Hans": "用于引导读者了解模块："
+    },
+    {
+      "en-US": "```json\n{ \"directory\": \"src/services\", \"title\": \"Service Layer\", \"description\": \"The core orchestration logic lives here.\" }\n```",
+      "zh-Hans": "```json\n{ \"directory\": \"src/services\", \"title\": \"Service Layer\", \"description\": \"The core orchestration logic lives here.\" }\n```"
+    },
+    {
+      "en-US": "### File + line",
+      "zh-Hans": "### 文件 + 行"
+    },
+    {
+      "en-US": "This is the default step type:",
+      "zh-Hans": "这是默认的步骤类型："
+    },
+    {
+      "en-US": "```json\n{ \"file\": \"src/auth/middleware.ts\", \"line\": 42, \"title\": \"Auth Gate\", \"description\": \"Every protected request passes here first.\" }\n```",
+      "zh-Hans": "```json\n{ \"file\": \"src/auth/middleware.ts\", \"line\": 42, \"title\": \"Auth Gate\", \"description\": \"Every protected request passes here first.\" }\n```"
+    },
+    {
+      "en-US": "### Selection",
+      "zh-Hans": "### 选择范围"
+    },
+    {
+      "en-US": "Use when one code block matters more than the whole file:",
+      "zh-Hans": "当某个代码块比整个文件更重要时使用："
+    },
+    {
+      "en-US": "```json\n{\n  \"file\": \"src/core/pipeline.ts\",\n  \"selection\": {\n    \"start\": { \"line\": 15, \"character\": 0 },\n    \"end\": { \"line\": 34, \"character\": 0 }\n  },\n  \"title\": \"Request Pipeline\",\n  \"description\": \"This block wires validation, auth, and downstream execution.\"\n}\n```",
+      "zh-Hans": "```json\n{\n  \"file\": \"src/core/pipeline.ts\",\n  \"selection\": {\n    \"start\": { \"line\": 15, \"character\": 0 },\n    \"end\": { \"line\": 34, \"character\": 0 }\n  },\n  \"title\": \"Request Pipeline\",\n  \"description\": \"This block wires validation, auth, and downstream execution.\"\n}\n```"
+    },
+    {
+      "en-US": "### Pattern",
+      "zh-Hans": "### 模式"
+    },
+    {
+      "en-US": "Use when exact lines may drift:",
+      "zh-Hans": "当精确行号可能漂移时使用："
+    },
+    {
+      "en-US": "```json\n{ \"file\": \"src/app.ts\", \"pattern\": \"export default class App\", \"title\": \"Application Entry\" }\n```",
+      "zh-Hans": "```json\n{ \"file\": \"src/app.ts\", \"pattern\": \"export default class App\", \"title\": \"Application Entry\" }\n```"
+    },
+    {
+      "en-US": "### URI",
+      "zh-Hans": "### URI"
+    },
+    {
+      "en-US": "Use for PRs, issues, or docs when helpful:",
+      "zh-Hans": "在有助于理解时，用于 PR、问题或文档："
+    },
+    {
+      "en-US": "```json\n{ \"uri\": \"https://github.com/org/repo/pull/456\", \"title\": \"The PR\" }\n```",
+      "zh-Hans": "```json\n{ \"uri\": \"https://github.com/org/repo/pull/456\", \"title\": \"The PR\" }\n```"
+    },
+    {
+      "en-US": "## Writing Rule: SMIG",
+      "zh-Hans": "## 编写规则：SMIG"
+    },
+    {
+      "en-US": "Each description should answer:",
+      "zh-Hans": "每个描述应回答："
+    },
+    {
+      "en-US": "- **Situation**: what the reader is looking at\n- **Mechanism**: how it works\n- **Implication**: why it matters for this persona\n- **Gotcha**: what a smart reader might miss",
+      "zh-Hans": "* **情境**：读者正在看什么\n* **机制**：它是如何工作的\n* **含义**：这对该用户画像为何重要\n* **陷阱**：聪明的读者可能会错过什么"
+    },
+    {
+      "en-US": "Keep descriptions compact, specific, and grounded in the actual code.",
+      "zh-Hans": "保持描述简洁、具体，并基于实际代码。"
+    },
+    {
+      "en-US": "## Narrative Shape",
+      "zh-Hans": "## 叙事结构"
+    },
+    {
+      "en-US": "Use this arc unless the task clearly needs something different:",
+      "zh-Hans": "除非任务明确需要其他形式，否则使用此结构："
+    },
+    {
+      "en-US": "1. orientation\n2. module map\n3. core execution path\n4. edge case or gotcha\n5. closing / next move",
+      "zh-Hans": "1. 定位\n2. 模块概览\n3. 核心执行路径\n4. 边界情况或陷阱\n5. 结束 / 下一步行动"
+    },
+    {
+      "en-US": "The tour should feel like a path, not an inventory.",
+      "zh-Hans": "导览应感觉像一条路径，而非一份清单。"
+    },
+    {
+      "en-US": "## Example",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "```json\n{\n  \"$schema\": \"https://aka.ms/codetour-schema\",\n  \"title\": \"API Service Tour\",\n  \"description\": \"Walkthrough of the request path for the payments service.\",\n  \"ref\": \"main\",\n  \"steps\": [\n    {\n      \"directory\": \"src\",\n      \"title\": \"Source Root\",\n      \"description\": \"All runtime code for the service starts here.\"\n    },\n    {\n      \"file\": \"src/server.ts\",\n      \"line\": 12,\n      \"title\": \"Entry Point\",\n      \"description\": \"The server boots here and wires middleware before any route is reached.\"\n    },\n    {\n      \"file\": \"src/routes/payments.ts\",\n      \"line\": 8,\n      \"title\": \"Payment Routes\",\n      \"description\": \"Every payments request enters through this router before hitting service logic.\"\n    },\n    {\n      \"title\": \"Next Steps\",\n      \"description\": \"You can now follow any payment request end to end with the main anchors in place.\"\n    }\n  ]\n}\n```",
+      "zh-Hans": "```json\n{\n  \"$schema\": \"https://aka.ms/codetour-schema\",\n  \"title\": \"API Service Tour\",\n  \"description\": \"Walkthrough of the request path for the payments service.\",\n  \"ref\": \"main\",\n  \"steps\": [\n    {\n      \"directory\": \"src\",\n      \"title\": \"Source Root\",\n      \"description\": \"All runtime code for the service starts here.\"\n    },\n    {\n      \"file\": \"src/server.ts\",\n      \"line\": 12,\n      \"title\": \"Entry Point\",\n      \"description\": \"The server boots here and wires middleware before any route is reached.\"\n    },\n    {\n      \"file\": \"src/routes/payments.ts\",\n      \"line\": 8,\n      \"title\": \"Payment Routes\",\n      \"description\": \"Every payments request enters through this router before hitting service logic.\"\n    },\n    {\n      \"title\": \"Next Steps\",\n      \"description\": \"You can now follow any payment request end to end with the main anchors in place.\"\n    }\n  ]\n}\n```"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "| Anti-pattern | Fix |\n| --- | --- |\n| Flat file listing | Tell a story with dependency between steps |\n| Generic descriptions | Name the concrete code path or pattern |\n| Guessed anchors | Verify every file and line first |\n| Too many steps for a quick tour | Cut aggressively |\n| First step is content-only | Anchor the first step to a real file or directory |\n| Persona mismatch | Write for the actual reader, not a generic engineer |",
+      "zh-Hans": "| 反模式 | 修正方法 |\n| --- | --- |\n| 扁平的文件列表 | 用步骤间的依赖关系讲述一个故事 |\n| 通用描述 | 命名具体的代码路径或模式 |\n| 猜测的锚点 | 首先验证每个文件和行 |\n| 快速导览步骤过多 | 果断删减 |\n| 第一步是纯内容步骤 | 将第一步锚定到真实的文件或目录 |\n| 用户画像不匹配 | 为实际读者而非通用工程师编写 |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- keep step count proportional to repo size and persona depth\n- use directory steps for orientation, file steps for substance\n- for PR tours, cover changed files first\n- for monorepos, scope to the relevant packages instead of touring everything\n- close with what the reader can now do, not a recap",
+      "zh-Hans": "* 使步骤数量与仓库大小和用户画像深度成比例\n* 使用目录步骤进行定位，使用文件步骤进行实质讲解\n* 对于 PR 导览，首先覆盖变更的文件\n* 对于单体仓库，将范围限定在相关包，而非遍历所有内容\n* 以读者现在可以做什么结束，而非总结回顾"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `codebase-onboarding`\n- `coding-standards`\n- `council`\n- official upstream format: `microsoft/codetour`",
+      "zh-Hans": "* `codebase-onboarding`\n* `coding-standards`\n* `council`\n* 官方上游格式：`microsoft/codetour`"
+    }
+  ]
+}

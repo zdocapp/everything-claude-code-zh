@@ -1,6 +1,6 @@
 ---
 name: kotlin-testing
-description: 使用Kotest、MockK、协程测试、基于属性的测试和Kover覆盖率的Kotlin测试模式。遵循TDD方法论和地道的Kotlin实践。
+description: 使用Kotest、MockK、协程测试、基于属性的测试和Kover覆盖率的Kotlin测试模式。遵循TDD方法论，采用地道的Kotlin实践。
 origin: ECC
 ---
 
@@ -11,28 +11,28 @@ origin: ECC
 ## 何时使用
 
 * 编写新的 Kotlin 函数或类
-* 为现有 Kotlin 代码添加测试覆盖率
+* 为现有 Kotlin 代码添加测试覆盖
 * 实现基于属性的测试
 * 在 Kotlin 项目中遵循 TDD 工作流
-* 为代码覆盖率配置 Kover
+* 配置 Kover 以获取代码覆盖率
 
 ## 工作原理
 
-1. **确定目标代码** — 找到要测试的函数、类或模块
-2. **编写 Kotest 规范** — 选择与测试范围匹配的规范样式（StringSpec、FunSpec、BehaviorSpec）
-3. **模拟依赖项** — 使用 MockK 来隔离被测单元
-4. **运行测试（红色阶段）** — 验证测试是否按预期失败
-5. **实现代码（绿色阶段）** — 编写最少的代码以使测试通过
+1. **识别目标代码** — 找到要测试的函数、类或模块
+2. **编写 Kotest 规范** — 选择与测试范围匹配的规范风格（StringSpec、FunSpec、BehaviorSpec）
+3. **模拟依赖项** — 使用 MockK 隔离被测单元
+4. **运行测试（RED）** — 验证测试是否按预期失败
+5. **实现代码（GREEN）** — 编写最少的代码以使测试通过
 6. **重构** — 改进实现，同时保持测试通过
 7. **检查覆盖率** — 运行 `./gradlew koverHtmlReport` 并验证 80%+ 的覆盖率
 
 ## 示例
 
-以下部分包含每个测试模式的详细、可运行示例：
+以下部分包含每种测试模式的详细、可运行示例：
 
 ### 快速参考
 
-* **Kotest 规范** — [Kotest 规范样式](#kotest-规范样式) 中的 StringSpec、FunSpec、BehaviorSpec、DescribeSpec 示例
+* **Kotest 规范** — [Kotest 规范风格](#kotest-规范风格) 中的 StringSpec、FunSpec、BehaviorSpec、DescribeSpec 示例
 * **模拟** — [MockK](#mockk) 中的 MockK 设置、协程模拟、参数捕获
 * **TDD 演练** — [Kotlin 的 TDD 工作流](#kotlin-的-tdd-工作流) 中 EmailValidator 的完整 RED/GREEN/REFACTOR 周期
 * **覆盖率** — [Kover 覆盖率](#kover-覆盖率) 中的 Kover 配置和命令
@@ -45,11 +45,11 @@ origin: ECC
 ```
 RED     -> 首先编写一个失败的测试
 GREEN   -> 编写最少的代码使测试通过
-REFACTOR -> 改进代码同时保持测试通过
+REFACTOR -> 在保持测试通过的同时改进代码
 REPEAT  -> 继续下一个需求
 ```
 
-#### Kotlin 中逐步进行 TDD
+#### Kotlin 中的逐步 TDD
 
 ```kotlin
 // Step 1: Define the interface/signature
@@ -105,7 +105,7 @@ fun validateEmail(email: String): Result<String> {
 // Step 6: Refactor if needed, verify tests still pass
 ```
 
-### Kotest 规范样式
+### Kotest 规范风格
 
 #### StringSpec（最简单）
 
@@ -289,7 +289,7 @@ user should beActiveUser()
 
 ### MockK
 
-#### 基本模拟
+#### 基础模拟
 
 ```kotlin
 class UserServiceTest : FunSpec({
@@ -583,7 +583,7 @@ class ParserTest : FunSpec({
 })
 ```
 
-### 测试生命周期和固件
+### 测试生命周期和夹具
 
 #### BeforeTest / AfterTest
 
@@ -778,22 +778,22 @@ class ApiRoutesTest : FunSpec({
 
 ### 最佳实践
 
-**应做：**
+**应该：**
 
-* 先写测试（TDD）
-* 在整个项目中一致地使用 Kotest 的规范样式
+* 首先编写测试（TDD）
+* 在整个项目中一致地使用 Kotest 的规范风格
 * 对挂起函数使用 MockK 的 `coEvery`/`coVerify`
 * 对协程测试使用 `runTest`
 * 测试行为，而非实现
 * 对纯函数使用基于属性的测试
-* 为清晰起见使用 `data class` 测试固件
+* 为清晰起见使用 `data class` 测试夹具
 
-**不应做：**
+**不应该：**
 
 * 混合使用测试框架（选择 Kotest 并坚持使用）
 * 模拟数据类（使用真实实例）
-* 在协程测试中使用 `Thread.sleep()`（改用 `advanceTimeBy`）
-* 跳过 TDD 中的红色阶段
+* 在协程测试中使用 `Thread.sleep()`（使用 `advanceTimeBy`）
+* 在 TDD 中跳过 RED 阶段
 * 直接测试私有函数
 * 忽略不稳定的测试
 
@@ -823,4 +823,4 @@ test:
         token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
-**记住**：测试就是文档。它们展示了你的 Kotlin 代码应如何使用。使用 Kotest 富有表现力的匹配器使测试可读，并使用 MockK 来清晰地模拟依赖项。
+**记住**：测试即文档。它们展示了你的 Kotlin 代码应如何使用。使用 Kotest 富有表现力的匹配器使测试可读，并使用 MockK 对依赖项进行清晰的模拟。

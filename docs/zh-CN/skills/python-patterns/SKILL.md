@@ -1,14 +1,14 @@
 ---
 name: python-patterns
-description: Pythonic 惯用法、PEP 8 标准、类型提示以及构建稳健、高效且可维护的 Python 应用程序的最佳实践。
+description: Pythonic 惯用法、PEP 8 标准、类型提示以及构建健壮、高效和可维护的 Python 应用程序的最佳实践。
 origin: ECC
 ---
 
 # Python 开发模式
 
-用于构建健壮、高效和可维护应用程序的惯用 Python 模式与最佳实践。
+构建健壮、高效且可维护应用程序的惯用 Python 模式与最佳实践。
 
-## 何时激活
+## 何时启用
 
 * 编写新的 Python 代码
 * 审查 Python 代码
@@ -17,9 +17,9 @@ origin: ECC
 
 ## 核心原则
 
-### 1. 可读性很重要
+### 1. 可读性至关重要
 
-Python 优先考虑可读性。代码应该清晰且易于理解。
+Python 优先考虑可读性。代码应该显而易见且易于理解。
 
 ```python
 # Good: Clear and readable
@@ -35,7 +35,7 @@ def get_active_users(u):
 
 ### 2. 显式优于隐式
 
-避免魔法；清晰说明你的代码在做什么。
+避免魔法；明确你的代码在做什么。
 
 ```python
 # Good: Explicit configuration
@@ -53,7 +53,7 @@ some_module.setup()  # What does this do?
 
 ### 3. EAFP - 请求宽恕比请求许可更容易
 
-Python 倾向于使用异常处理而非检查条件。
+Python 更倾向于异常处理而非条件检查。
 
 ```python
 # Good: EAFP style
@@ -89,7 +89,7 @@ def process_user(
     return User(user_id, data)
 ```
 
-### 现代类型提示（Python 3.9+）
+### 现代类型提示 (Python 3.9+)
 
 ```python
 # Python 3.9+ - Use built-in types
@@ -103,7 +103,7 @@ def process_items(items: List[str]) -> Dict[str, int]:
     return {item: len(item) for item in items}
 ```
 
-### 类型别名和 TypeVar
+### 类型别名与 TypeVar
 
 ```python
 from typing import TypeVar, Union
@@ -255,7 +255,7 @@ with DatabaseTransaction(conn):
     conn.create_profile(user.id, profile_data)
 ```
 
-## 推导式和生成器
+## 推导式与生成器
 
 ### 列表推导式
 
@@ -306,7 +306,7 @@ for line in read_large_file("huge.txt"):
     process(line)
 ```
 
-## 数据类和命名元组
+## 数据类与命名元组
 
 ### 数据类
 
@@ -479,7 +479,7 @@ def process_all(datasets: list[list[int]]) -> list[int]:
     return results
 ```
 
-### 用于并发 I/O 的异步/等待
+### 用于并发 I/O 的 Async/Await
 
 ```python
 import asyncio
@@ -560,7 +560,7 @@ from mypackage.utils import format_name
 __all__ = ["User", "Post", "format_name"]
 ```
 
-## 内存和性能
+## 内存与性能
 
 ### 使用 **slots** 提高内存效率
 
@@ -580,7 +580,7 @@ class Point:
         self.y = y
 ```
 
-### 生成器用于大数据
+### 生成器处理大数据
 
 ```python
 # Bad: Returns full list in memory
@@ -688,16 +688,16 @@ addopts = "--cov=mypackage --cov-report=term-missing"
 |-------|-------------|
 | EAFP | 请求宽恕比请求许可更容易 |
 | 上下文管理器 | 使用 `with` 进行资源管理 |
-| 列表推导式 | 用于简单的转换 |
-| 生成器 | 用于惰性求值和大数据集 |
+| 列表推导式 | 用于简单转换 |
+| 生成器 | 用于惰性求值和大型数据集 |
 | 类型提示 | 注解函数签名 |
 | 数据类 | 用于具有自动生成方法的数据容器 |
 | `__slots__` | 用于内存优化 |
-| f-strings | 用于字符串格式化（Python 3.6+） |
-| `pathlib.Path` | 用于路径操作（Python 3.4+） |
+| f-strings | 用于字符串格式化 (Python 3.6+) |
+| `pathlib.Path` | 用于路径操作 (Python 3.4+) |
 | `enumerate` | 用于循环中的索引-元素对 |
 
-## 要避免的反模式
+## 应避免的反模式
 
 ```python
 # Bad: Mutable default arguments
@@ -747,4 +747,4 @@ except SpecificError as e:
     logger.error(f"Operation failed: {e}")
 ```
 
-**记住**：Python 代码应该具有可读性、显式性，并遵循最小意外原则。如有疑问，优先考虑清晰性而非巧妙性。
+**记住**：Python 代码应具有可读性、显式性，并遵循最小意外原则。如有疑问，优先考虑清晰度而非巧妙性。

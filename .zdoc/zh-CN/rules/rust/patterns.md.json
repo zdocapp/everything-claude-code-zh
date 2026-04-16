@@ -1,0 +1,118 @@
+{
+  "sourceFile": "rules/rust/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.rs\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.rs\"\n---"
+    },
+    {
+      "en-US": "# Rust Patterns",
+      "zh-Hans": "# Rust 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Rust-specific content.",
+      "zh-Hans": "> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 Rust 特有的内容。"
+    },
+    {
+      "en-US": "## Repository Pattern with Traits",
+      "zh-Hans": "## 使用 Trait 的仓储模式"
+    },
+    {
+      "en-US": "Encapsulate data access behind a trait:",
+      "zh-Hans": "将数据访问封装在 trait 之后："
+    },
+    {
+      "en-US": "```rust\npub trait OrderRepository: Send + Sync {\n    fn find_by_id(&self, id: u64) -> Result<Option<Order>, StorageError>;\n    fn find_all(&self) -> Result<Vec<Order>, StorageError>;\n    fn save(&self, order: &Order) -> Result<Order, StorageError>;\n    fn delete(&self, id: u64) -> Result<(), StorageError>;\n}\n```",
+      "zh-Hans": "```rust\npub trait OrderRepository: Send + Sync {\n    fn find_by_id(&self, id: u64) -> Result<Option<Order>, StorageError>;\n    fn find_all(&self) -> Result<Vec<Order>, StorageError>;\n    fn save(&self, order: &Order) -> Result<Order, StorageError>;\n    fn delete(&self, id: u64) -> Result<(), StorageError>;\n}\n```"
+    },
+    {
+      "en-US": "Concrete implementations handle storage details (Postgres, SQLite, in-memory for tests).",
+      "zh-Hans": "具体的实现处理存储细节（Postgres、SQLite、用于测试的内存存储）。"
+    },
+    {
+      "en-US": "## Service Layer",
+      "zh-Hans": "## 服务层"
+    },
+    {
+      "en-US": "Business logic in service structs; inject dependencies via constructor:",
+      "zh-Hans": "业务逻辑位于服务结构体中；通过构造函数注入依赖："
+    },
+    {
+      "en-US": "```rust\npub struct OrderService {\n    repo: Box<dyn OrderRepository>,\n    payment: Box<dyn PaymentGateway>,\n}\n\nimpl OrderService {\n    pub fn new(repo: Box<dyn OrderRepository>, payment: Box<dyn PaymentGateway>) -> Self {\n        Self { repo, payment }\n    }\n\n    pub fn place_order(&self, request: CreateOrderRequest) -> anyhow::Result<OrderSummary> {\n        let order = Order::from(request);\n        self.payment.charge(order.total())?;\n        let saved = self.repo.save(&order)?;\n        Ok(OrderSummary::from(saved))\n    }\n}\n```",
+      "zh-Hans": "```rust\npub struct OrderService {\n    repo: Box<dyn OrderRepository>,\n    payment: Box<dyn PaymentGateway>,\n}\n\nimpl OrderService {\n    pub fn new(repo: Box<dyn OrderRepository>, payment: Box<dyn PaymentGateway>) -> Self {\n        Self { repo, payment }\n    }\n\n    pub fn place_order(&self, request: CreateOrderRequest) -> anyhow::Result<OrderSummary> {\n        let order = Order::from(request);\n        self.payment.charge(order.total())?;\n        let saved = self.repo.save(&order)?;\n        Ok(OrderSummary::from(saved))\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Newtype Pattern for Type Safety",
+      "zh-Hans": "## 用于类型安全的新类型模式"
+    },
+    {
+      "en-US": "Prevent argument mix-ups with distinct wrapper types:",
+      "zh-Hans": "使用不同的包装类型防止参数混淆："
+    },
+    {
+      "en-US": "```rust\nstruct UserId(u64);\nstruct OrderId(u64);\n\nfn get_order(user: UserId, order: OrderId) -> anyhow::Result<Order> {\n    // Can't accidentally swap user and order IDs at call sites\n    todo!()\n}\n```",
+      "zh-Hans": "```rust\nstruct UserId(u64);\nstruct OrderId(u64);\n\nfn get_order(user: UserId, order: OrderId) -> anyhow::Result<Order> {\n    // Can't accidentally swap user and order IDs at call sites\n    todo!()\n}\n```"
+    },
+    {
+      "en-US": "## Enum State Machines",
+      "zh-Hans": "## 枚举状态机"
+    },
+    {
+      "en-US": "Model states as enums — make illegal states unrepresentable:",
+      "zh-Hans": "将状态建模为枚举——使非法状态无法表示："
+    },
+    {
+      "en-US": "```rust\nenum ConnectionState {\n    Disconnected,\n    Connecting { attempt: u32 },\n    Connected { session_id: String },\n    Failed { reason: String, retries: u32 },\n}\n\nfn handle(state: &ConnectionState) {\n    match state {\n        ConnectionState::Disconnected => connect(),\n        ConnectionState::Connecting { attempt } if *attempt > 3 => abort(),\n        ConnectionState::Connecting { .. } => wait(),\n        ConnectionState::Connected { session_id } => use_session(session_id),\n        ConnectionState::Failed { retries, .. } if *retries < 5 => retry(),\n        ConnectionState::Failed { reason, .. } => log_failure(reason),\n    }\n}\n```",
+      "zh-Hans": "```rust\nenum ConnectionState {\n    Disconnected,\n    Connecting { attempt: u32 },\n    Connected { session_id: String },\n    Failed { reason: String, retries: u32 },\n}\n\nfn handle(state: &ConnectionState) {\n    match state {\n        ConnectionState::Disconnected => connect(),\n        ConnectionState::Connecting { attempt } if *attempt > 3 => abort(),\n        ConnectionState::Connecting { .. } => wait(),\n        ConnectionState::Connected { session_id } => use_session(session_id),\n        ConnectionState::Failed { retries, .. } if *retries < 5 => retry(),\n        ConnectionState::Failed { reason, .. } => log_failure(reason),\n    }\n}\n```"
+    },
+    {
+      "en-US": "Always match exhaustively — no wildcard `_` for business-critical enums.",
+      "zh-Hans": "始终进行穷尽匹配——对于业务关键枚举，不要使用通配符 `_`。"
+    },
+    {
+      "en-US": "## Builder Pattern",
+      "zh-Hans": "## 建造者模式"
+    },
+    {
+      "en-US": "Use for structs with many optional parameters:",
+      "zh-Hans": "用于具有多个可选参数的结构体："
+    },
+    {
+      "en-US": "```rust\npub struct ServerConfig {\n    host: String,\n    port: u16,\n    max_connections: usize,\n}\n\nimpl ServerConfig {\n    pub fn builder(host: impl Into<String>, port: u16) -> ServerConfigBuilder {\n        ServerConfigBuilder {\n            host: host.into(),\n            port,\n            max_connections: 100,\n        }\n    }\n}\n\npub struct ServerConfigBuilder {\n    host: String,\n    port: u16,\n    max_connections: usize,\n}\n\nimpl ServerConfigBuilder {\n    pub fn max_connections(mut self, n: usize) -> Self {\n        self.max_connections = n;\n        self\n    }\n\n    pub fn build(self) -> ServerConfig {\n        ServerConfig {\n            host: self.host,\n            port: self.port,\n            max_connections: self.max_connections,\n        }\n    }\n}\n```",
+      "zh-Hans": "```rust\npub struct ServerConfig {\n    host: String,\n    port: u16,\n    max_connections: usize,\n}\n\nimpl ServerConfig {\n    pub fn builder(host: impl Into<String>, port: u16) -> ServerConfigBuilder {\n        ServerConfigBuilder {\n            host: host.into(),\n            port,\n            max_connections: 100,\n        }\n    }\n}\n\npub struct ServerConfigBuilder {\n    host: String,\n    port: u16,\n    max_connections: usize,\n}\n\nimpl ServerConfigBuilder {\n    pub fn max_connections(mut self, n: usize) -> Self {\n        self.max_connections = n;\n        self\n    }\n\n    pub fn build(self) -> ServerConfig {\n        ServerConfig {\n            host: self.host,\n            port: self.port,\n            max_connections: self.max_connections,\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Sealed Traits for Extensibility Control",
+      "zh-Hans": "## 密封 Trait 以控制可扩展性"
+    },
+    {
+      "en-US": "Use a private module to seal a trait, preventing external implementations:",
+      "zh-Hans": "使用私有模块来密封 trait，防止外部实现："
+    },
+    {
+      "en-US": "```rust\nmod private {\n    pub trait Sealed {}\n}\n\npub trait Format: private::Sealed {\n    fn encode(&self, data: &[u8]) -> Vec<u8>;\n}\n\npub struct Json;\nimpl private::Sealed for Json {}\nimpl Format for Json {\n    fn encode(&self, data: &[u8]) -> Vec<u8> { todo!() }\n}\n```",
+      "zh-Hans": "```rust\nmod private {\n    pub trait Sealed {}\n}\n\npub trait Format: private::Sealed {\n    fn encode(&self, data: &[u8]) -> Vec<u8>;\n}\n\npub struct Json;\nimpl private::Sealed for Json {}\nimpl Format for Json {\n    fn encode(&self, data: &[u8]) -> Vec<u8> { todo!() }\n}\n```"
+    },
+    {
+      "en-US": "## API Response Envelope",
+      "zh-Hans": "## API 响应信封"
+    },
+    {
+      "en-US": "Consistent API responses using a generic enum:",
+      "zh-Hans": "使用通用枚举实现一致的 API 响应："
+    },
+    {
+      "en-US": "```rust\n#[derive(Debug, serde::Serialize)]\n#[serde(tag = \"status\")]\npub enum ApiResponse<T: serde::Serialize> {\n    #[serde(rename = \"ok\")]\n    Ok { data: T },\n    #[serde(rename = \"error\")]\n    Error { message: String },\n}\n```",
+      "zh-Hans": "```rust\n#[derive(Debug, serde::Serialize)]\n#[serde(tag = \"status\")]\npub enum ApiResponse<T: serde::Serialize> {\n    #[serde(rename = \"ok\")]\n    Ok { data: T },\n    #[serde(rename = \"error\")]\n    Error { message: String },\n}\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "See skill: `rust-patterns` for comprehensive patterns including ownership, traits, generics, concurrency, and async.",
+      "zh-Hans": "有关全面的模式（包括所有权、trait、泛型、并发和异步），请参阅技能：`rust-patterns`。"
+    }
+  ]
+}

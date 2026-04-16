@@ -1,48 +1,48 @@
 ---
-description: 为Rust强制执行TDD工作流。先写测试，然后实现。使用cargo-llvm-cov验证80%以上的覆盖率。
+description: 强制执行Rust的TDD工作流程。先编写测试，然后实现。使用cargo-llvm-cov验证80%以上的覆盖率。
 ---
 
 # Rust TDD 命令
 
-该命令使用 `#[test]`、rstest、proptest 和 mockall 来强制执行 Rust 代码的测试驱动开发方法。
+此命令使用 `#[test]`、rstest、proptest 和 mockall 为 Rust 代码强制执行测试驱动开发方法。
 
-## 该命令的作用
+## 此命令的作用
 
 1. **定义类型/特征**：使用 `todo!()` 搭建函数签名
-2. **编写测试**：创建全面的测试模块（RED）
-3. **运行测试**：验证测试因正确的原因而失败
-4. **实现代码**：编写通过测试所需的最少代码（GREEN）
-5. **重构**：在保持测试通过的前提下进行改进
-6. **检查覆盖率**：使用 cargo-llvm-cov 确保 80%+ 的覆盖率
+2. **编写测试**：创建全面的测试模块（RED 阶段）
+3. **运行测试**：验证测试因正确原因而失败
+4. **实现代码**：编写最少的代码以通过测试（GREEN 阶段）
+5. **重构**：在保持测试通过的同时改进代码
+6. **检查覆盖率**：确保使用 cargo-llvm-cov 达到 80%+ 的覆盖率
 
 ## 何时使用
 
-在以下情况使用 `/rust-test`：
+在以下情况下使用 `/rust-test`：
 
-* 实现新的 Rust 函数、方法或特征时
-* 为现有 Rust 代码添加测试覆盖时
-* 修复错误时（首先编写失败的测试）
-* 构建关键业务逻辑时
-* 学习 Rust 中的 TDD 工作流程时
+* 实现新的 Rust 函数、方法或特征
+* 为现有 Rust 代码添加测试覆盖率
+* 修复错误（首先编写失败的测试）
+* 构建关键业务逻辑
+* 学习 Rust 中的 TDD 工作流程
 
 ## TDD 循环
 
 ```
-RED     -> 先编写失败的测试
-GREEN   -> 实现最小化代码以通过测试
-REFACTOR -> 改进代码，保持测试通过
+RED     -> 首先编写失败的测试
+GREEN   -> 实现最少的代码以通过测试
+REFACTOR -> 改进代码，测试保持通过
 REPEAT  -> 下一个测试用例
 ```
 
 ## 示例会话
 
 ````text
-User: /rust-test I need a function to validate user registration
+User: /rust-test 我需要一个函数来验证用户注册
 
 Agent:
-# TDD Session: Registration Validator
+# TDD 会话：注册验证器
 
-## Step 1: Define Interface
+## 步骤 1：定义接口
 
 ```rust
 // src/validator.rs
@@ -62,7 +62,7 @@ pub fn validate_registration(request: &RegistrationRequest) -> ValidationResult 
 }
 ```
 
-## Step 2: Write Tests (RED)
+## 步骤 2：编写测试（RED）
 
 ```rust
 #[cfg(test)]
@@ -122,7 +122,7 @@ mod tests {
 }
 ```
 
-## Step 3: Run Tests — Verify FAIL
+## 步骤 3：运行测试 — 验证 FAIL
 
 ```bash
 $ cargo test
@@ -133,9 +133,9 @@ test tests::invalid_email_returns_invalid ... FAILED
 test tests::short_password_returns_invalid ... FAILED
 ```
 
-Tests fail as expected (todo! panic).
+测试按预期失败（todo! panic）。
 
-## Step 4: Implement Minimal Code (GREEN)
+## 步骤 4：实现最小代码（GREEN）
 
 ```rust
 pub fn validate_registration(request: &RegistrationRequest) -> ValidationResult {
@@ -159,7 +159,7 @@ pub fn validate_registration(request: &RegistrationRequest) -> ValidationResult 
 }
 ```
 
-## Step 5: Run Tests — Verify PASS
+## 步骤 5：运行测试 — 验证 PASS
 
 ```bash
 $ cargo test
@@ -172,18 +172,18 @@ test tests::short_password_returns_invalid ... ok
 test result: ok. 4 passed; 0 failed
 ```
 
-All tests passing!
+所有测试通过！
 
-## Step 6: Check Coverage
+## 步骤 6：检查覆盖率
 
 ```bash
 $ cargo llvm-cov
 Coverage: 100.0% of lines
 ```
 
-Coverage: 100%
+覆盖率：100%
 
-## TDD Complete!
+## TDD 完成！
 ````
 
 ## 测试模式
@@ -209,7 +209,7 @@ mod tests {
 }
 ```
 
-### 使用 rstest 进行参数化测试
+### 使用 rstest 的参数化测试
 
 ```rust
 use rstest::{rstest, fixture};
@@ -282,22 +282,22 @@ cargo test --no-fail-fast
 
 ## TDD 最佳实践
 
-**应做：**
+**应该：**
 
-* **首先**编写测试，在任何实现之前
+* 首先编写测试，在任何实现之前
 * 每次更改后运行测试
-* 使用 `assert_eq!` 而非 `assert!` 以获得更好的错误信息
+* 使用 `assert_eq!` 而不是 `assert!` 以获得更好的错误信息
 * 在返回 `Result` 的测试中使用 `?` 以获得更清晰的输出
 * 测试行为，而非实现
-* 包含边界情况（空值、边界值、错误路径）
+* 包含边界情况（空值、边界、错误路径）
 
-**不应做：**
+**不应该：**
 
 * 在测试之前编写实现
 * 跳过 RED 阶段
 * 在 `Result::is_err()` 可用时使用 `#[should_panic]`
-* 在测试中使用 `sleep()` — 应使用通道或 `tokio::time::pause()`
-* 模拟一切 — 在可行时优先使用集成测试
+* 在测试中使用 `sleep()` —— 使用通道或 `tokio::time::pause()`
+* 模拟所有内容 —— 在可行时优先使用集成测试
 
 ## 相关命令
 

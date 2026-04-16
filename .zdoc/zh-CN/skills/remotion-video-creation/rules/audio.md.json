@@ -1,0 +1,174 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/audio.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: audio\ndescription: Using audio and sound in Remotion - importing, trimming, volume, speed, pitch\nmetadata:\n  tags: audio, media, trim, volume, speed, loop, pitch, mute, sound, sfx\n---",
+      "zh-Hans": "---\nname: audio\ndescription: 在Remotion中使用音频和声音 - 导入、修剪、音量、速度、音高\nmetadata:\n  tags: audio, media, trim, volume, speed, loop, pitch, mute, sound, sfx\n---"
+    },
+    {
+      "en-US": "# Using audio in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用音频"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "First, the @remotion/media package needs to be installed.\nIf it is not installed, use the following command:",
+      "zh-Hans": "首先，需要安装 @remotion/media 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/media # If project uses npm\nbunx remotion add @remotion/media # If project uses bun\nyarn remotion add @remotion/media # If project uses yarn\npnpm exec remotion add @remotion/media # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/media # If project uses npm\nbunx remotion add @remotion/media # If project uses bun\nyarn remotion add @remotion/media # If project uses yarn\npnpm exec remotion add @remotion/media # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "## Importing Audio",
+      "zh-Hans": "## 导入音频"
+    },
+    {
+      "en-US": "Use `<Audio>` from `@remotion/media` to add audio to your composition.",
+      "zh-Hans": "使用来自 `@remotion/media` 的 `<Audio>` 来向你的合成中添加音频。"
+    },
+    {
+      "en-US": "```tsx\nimport { Audio } from \"@remotion/media\";\nimport { staticFile } from \"remotion\";\n\nexport const MyComposition = () => {\n  return <Audio src={staticFile(\"audio.mp3\")} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport { Audio } from \"@remotion/media\";\nimport { staticFile } from \"remotion\";\n\nexport const MyComposition = () => {\n  return <Audio src={staticFile(\"audio.mp3\")} />;\n};\n```"
+    },
+    {
+      "en-US": "Remote URLs are also supported:",
+      "zh-Hans": "也支持远程 URL："
+    },
+    {
+      "en-US": "```tsx\n<Audio src=\"https://remotion.media/audio.mp3\" />\n```",
+      "zh-Hans": "```tsx\n<Audio src=\"https://remotion.media/audio.mp3\" />\n```"
+    },
+    {
+      "en-US": "By default, audio plays from the start, at full volume and full length.\nMultiple audio tracks can be layered by adding multiple `<Audio>` components.",
+      "zh-Hans": "默认情况下，音频从开头开始播放，音量为最大，播放完整长度。\n可以通过添加多个 `<Audio>` 组件来叠加多个音轨。"
+    },
+    {
+      "en-US": "## Trimming",
+      "zh-Hans": "## 修剪"
+    },
+    {
+      "en-US": "Use `trimBefore` and `trimAfter` to remove portions of the audio. Values are in frames.",
+      "zh-Hans": "使用 `trimBefore` 和 `trimAfter` 来移除音频的部分片段。值以帧为单位。"
+    },
+    {
+      "en-US": "```tsx\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Audio\n    src={staticFile(\"audio.mp3\")}\n    trimBefore={2 * fps} // Skip the first 2 seconds\n    trimAfter={10 * fps} // End at the 10 second mark\n  />\n);\n```",
+      "zh-Hans": "```tsx\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Audio\n    src={staticFile(\"audio.mp3\")}\n    trimBefore={2 * fps} // Skip the first 2 seconds\n    trimAfter={10 * fps} // End at the 10 second mark\n  />\n);\n```"
+    },
+    {
+      "en-US": "The audio still starts playing at the beginning of the composition - only the specified portion is played.",
+      "zh-Hans": "音频仍然从合成的开头开始播放——只播放指定的部分。"
+    },
+    {
+      "en-US": "## Delaying",
+      "zh-Hans": "## 延迟"
+    },
+    {
+      "en-US": "Wrap the audio in a `<Sequence>` to delay when it starts:",
+      "zh-Hans": "将音频包裹在 `<Sequence>` 中以延迟其开始时间："
+    },
+    {
+      "en-US": "```tsx\nimport { Sequence, staticFile } from \"remotion\";\nimport { Audio } from \"@remotion/media\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Sequence from={1 * fps}>\n    <Audio src={staticFile(\"audio.mp3\")} />\n  </Sequence>\n);\n```",
+      "zh-Hans": "```tsx\nimport { Sequence, staticFile } from \"remotion\";\nimport { Audio } from \"@remotion/media\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Sequence from={1 * fps}>\n    <Audio src={staticFile(\"audio.mp3\")} />\n  </Sequence>\n);\n```"
+    },
+    {
+      "en-US": "The audio will start playing after 1 second.",
+      "zh-Hans": "音频将在 1 秒后开始播放。"
+    },
+    {
+      "en-US": "## Volume",
+      "zh-Hans": "## 音量"
+    },
+    {
+      "en-US": "Set a static volume (0 to 1):",
+      "zh-Hans": "设置静态音量（0 到 1）："
+    },
+    {
+      "en-US": "```tsx\n<Audio src={staticFile(\"audio.mp3\")} volume={0.5} />\n```",
+      "zh-Hans": "```tsx\n<Audio src={staticFile(\"audio.mp3\")} volume={0.5} />\n```"
+    },
+    {
+      "en-US": "Or use a callback for dynamic volume based on the current frame:",
+      "zh-Hans": "或者使用回调函数，根据当前帧动态调整音量："
+    },
+    {
+      "en-US": "```tsx\nimport { interpolate } from \"remotion\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Audio\n    src={staticFile(\"audio.mp3\")}\n    volume={(f) =>\n      interpolate(f, [0, 1 * fps], [0, 1], { extrapolateRight: \"clamp\" })\n    }\n  />\n);\n```",
+      "zh-Hans": "```tsx\nimport { interpolate } from \"remotion\";\n\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Audio\n    src={staticFile(\"audio.mp3\")}\n    volume={(f) =>\n      interpolate(f, [0, 1 * fps], [0, 1], { extrapolateRight: \"clamp\" })\n    }\n  />\n);\n```"
+    },
+    {
+      "en-US": "The value of `f` starts at 0 when the audio begins to play, not the composition frame.",
+      "zh-Hans": "`f` 的值从音频开始播放时为 0 开始计算，而不是合成帧。"
+    },
+    {
+      "en-US": "## Muting",
+      "zh-Hans": "## 静音"
+    },
+    {
+      "en-US": "Use `muted` to silence the audio. It can be set dynamically:",
+      "zh-Hans": "使用 `muted` 来使音频静音。可以动态设置："
+    },
+    {
+      "en-US": "```tsx\nconst frame = useCurrentFrame();\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Audio\n    src={staticFile(\"audio.mp3\")}\n    muted={frame >= 2 * fps && frame <= 4 * fps} // Mute between 2s and 4s\n  />\n);\n```",
+      "zh-Hans": "```tsx\nconst frame = useCurrentFrame();\nconst { fps } = useVideoConfig();\n\nreturn (\n  <Audio\n    src={staticFile(\"audio.mp3\")}\n    muted={frame >= 2 * fps && frame <= 4 * fps} // Mute between 2s and 4s\n  />\n);\n```"
+    },
+    {
+      "en-US": "## Speed",
+      "zh-Hans": "## 速度"
+    },
+    {
+      "en-US": "Use `playbackRate` to change the playback speed:",
+      "zh-Hans": "使用 `playbackRate` 来改变播放速度："
+    },
+    {
+      "en-US": "```tsx\n<Audio src={staticFile(\"audio.mp3\")} playbackRate={2} /> {/* 2x speed */}\n<Audio src={staticFile(\"audio.mp3\")} playbackRate={0.5} /> {/* Half speed */}\n```",
+      "zh-Hans": "```tsx\n<Audio src={staticFile(\"audio.mp3\")} playbackRate={2} /> {/* 2x speed */}\n<Audio src={staticFile(\"audio.mp3\")} playbackRate={0.5} /> {/* Half speed */}\n```"
+    },
+    {
+      "en-US": "Reverse playback is not supported.",
+      "zh-Hans": "不支持反向播放。"
+    },
+    {
+      "en-US": "## Looping",
+      "zh-Hans": "## 循环"
+    },
+    {
+      "en-US": "Use `loop` to loop the audio indefinitely:",
+      "zh-Hans": "使用 `loop` 来无限循环音频："
+    },
+    {
+      "en-US": "```tsx\n<Audio src={staticFile(\"audio.mp3\")} loop />\n```",
+      "zh-Hans": "```tsx\n<Audio src={staticFile(\"audio.mp3\")} loop />\n```"
+    },
+    {
+      "en-US": "Use `loopVolumeCurveBehavior` to control how the frame count behaves when looping:",
+      "zh-Hans": "使用 `loopVolumeCurveBehavior` 来控制循环时帧计数的行为："
+    },
+    {
+      "en-US": "- `\"repeat\"`: Frame count resets to 0 each loop (default)\n- `\"extend\"`: Frame count continues incrementing",
+      "zh-Hans": "* `\"repeat\"`：每次循环帧计数重置为 0（默认）\n* `\"extend\"`：帧计数继续递增"
+    },
+    {
+      "en-US": "```tsx\n<Audio\n  src={staticFile(\"audio.mp3\")}\n  loop\n  loopVolumeCurveBehavior=\"extend\"\n  volume={(f) => interpolate(f, [0, 300], [1, 0])} // Fade out over multiple loops\n/>\n```",
+      "zh-Hans": "```tsx\n<Audio\n  src={staticFile(\"audio.mp3\")}\n  loop\n  loopVolumeCurveBehavior=\"extend\"\n  volume={(f) => interpolate(f, [0, 300], [1, 0])} // Fade out over multiple loops\n/>\n```"
+    },
+    {
+      "en-US": "## Pitch",
+      "zh-Hans": "## 音高"
+    },
+    {
+      "en-US": "Use `toneFrequency` to adjust the pitch without affecting speed. Values range from 0.01 to 2:",
+      "zh-Hans": "使用 `toneFrequency` 来调整音高而不影响速度。值范围从 0.01 到 2："
+    },
+    {
+      "en-US": "```tsx\n<Audio\n  src={staticFile(\"audio.mp3\")}\n  toneFrequency={1.5} // Higher pitch\n/>\n<Audio\n  src={staticFile(\"audio.mp3\")}\n  toneFrequency={0.8} // Lower pitch\n/>\n```",
+      "zh-Hans": "```tsx\n<Audio\n  src={staticFile(\"audio.mp3\")}\n  toneFrequency={1.5} // Higher pitch\n/>\n<Audio\n  src={staticFile(\"audio.mp3\")}\n  toneFrequency={0.8} // Lower pitch\n/>\n```"
+    },
+    {
+      "en-US": "Pitch shifting only works during server-side rendering, not in the Remotion Studio preview or in the `<Player />`.",
+      "zh-Hans": "音高变换仅在服务器端渲染时有效，在 Remotion Studio 预览或 `<Player />` 中无效。"
+    }
+  ]
+}

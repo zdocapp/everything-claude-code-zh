@@ -1,23 +1,23 @@
 # Laravel API — 项目 CLAUDE.md
 
-> 使用 PostgreSQL、Redis 和队列的 Laravel API 真实案例。
-> 复制此文件到你的项目根目录，并根据你的服务进行自定义。
+> 使用 PostgreSQL、Redis 和队列的 Laravel API 真实示例。
+> 将此文件复制到您的项目根目录，并根据您的服务进行自定义。
 
 ## 项目概述
 
-**技术栈:** PHP 8.2+, Laravel 11.x, PostgreSQL, Redis, Horizon, PHPUnit/Pest, Docker Compose
+**技术栈:** PHP 8.2+、Laravel 11.x、PostgreSQL、Redis、Horizon、PHPUnit/Pest、Docker Compose
 
-**架构:** 采用控制器 -> 服务 -> 操作的模块化 Laravel 应用，使用 Eloquent ORM、异步工作队列、表单请求进行验证，以及 API 资源确保一致的 JSON 响应。
+**架构:** 模块化 Laravel 应用，采用控制器 -> 服务 -> 操作模式，使用 Eloquent ORM、队列处理异步任务、Form Request 进行验证，以及 API Resource 确保一致的 JSON 响应。
 
 ## 关键规则
 
 ### PHP 约定
 
 * 所有 PHP 文件中使用 `declare(strict_types=1)`
-* 处处使用类型属性和返回类型
+* 处处使用类型化属性和返回类型
 * 服务和操作优先使用 `final` 类
-* 提交的代码中不允许出现 `dd()` 或 `dump()`
-* 通过 Laravel Pint 进行格式化 (PSR-12)
+* 提交的代码中不得出现 `dd()` 或 `dump()`
+* 通过 Laravel Pint (PSR-12) 进行格式化
 
 ### API 响应封装
 
@@ -36,26 +36,26 @@
 
 * 迁移文件提交到 git
 * 使用 Eloquent 或查询构造器（除非参数化，否则不使用原始 SQL）
-* 为 `where` 或 `orderBy` 中使用的任何列建立索引
-* 避免在服务中修改模型实例；优先通过存储库或查询构造器进行创建/更新
+* 为任何用于 `where` 或 `orderBy` 的列建立索引
+* 避免在服务中直接修改模型实例；优先通过仓库或查询构造器进行创建/更新
 
-### 认证
+### 身份验证
 
-* 通过 Sanctum 进行 API 认证
-* 使用策略进行模型级授权
-* 在控制器和服务中强制执行认证
+* 通过 Sanctum 进行 API 身份验证
+* 使用策略进行模型级别的授权
+* 在控制器和服务中强制执行身份验证
 
 ### 验证
 
-* 使用表单请求进行验证
+* 使用 Form Request 进行验证
 * 将输入转换为 DTO 以供业务逻辑使用
 * 切勿信任请求负载中的派生字段
 
 ### 错误处理
 
 * 在服务中抛出领域异常
-* 在 `bootstrap/app.php` 中通过 `withExceptions` 将异常映射到 HTTP 响应
-* 绝不向客户端暴露内部错误
+* 通过 `withExceptions` 在 `bootstrap/app.php` 中将异常映射到 HTTP 响应
+* 切勿向客户端暴露内部错误
 
 ### 代码风格
 
@@ -166,7 +166,7 @@ final class OrderPolicy
 }
 ```
 
-### 表单请求 + DTO
+### Form Request + DTO
 
 ```php
 <?php

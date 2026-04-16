@@ -1,0 +1,154 @@
+{
+  "sourceFile": "skills/context-budget/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: context-budget\ndescription: Audits Claude Code context window consumption across agents, skills, MCP servers, and rules. Identifies bloat, redundant components, and produces prioritized token-savings recommendations.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: context-budget\ndescription: 审计Claude Code上下文窗口在代理、技能、MCP服务器和规则中的消耗情况。识别膨胀、冗余组件，并提供优先级的令牌节省建议。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Context Budget",
+      "zh-Hans": "# 上下文预算"
+    },
+    {
+      "en-US": "Analyze token overhead across every loaded component in a Claude Code session and surface actionable optimizations to reclaim context space.",
+      "zh-Hans": "分析 Claude Code 会话中每个已加载组件的令牌开销，并提供可操作的优化建议以回收上下文空间。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Session performance feels sluggish or output quality is degrading\n- You've recently added many skills, agents, or MCP servers\n- You want to know how much context headroom you actually have\n- Planning to add more components and need to know if there's room\n- Running `/context-budget` command (this skill backs it)",
+      "zh-Hans": "* 会话性能感觉迟缓或输出质量下降时\n* 您最近添加了许多技能、代理或 MCP 服务器时\n* 您想知道实际有多少上下文余量时\n* 计划添加更多组件并需要确认是否有空间时\n* 运行 `/context-budget` 命令时（本技能为其提供支持）"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Phase 1: Inventory",
+      "zh-Hans": "### 阶段 1：清点"
+    },
+    {
+      "en-US": "Scan all component directories and estimate token consumption:",
+      "zh-Hans": "扫描所有组件目录并估算令牌消耗："
+    },
+    {
+      "en-US": "**Agents** (`agents/*.md`)",
+      "zh-Hans": "**代理** (`agents/*.md`)"
+    },
+    {
+      "en-US": "- Count lines and tokens per file (words × 1.3)\n- Extract `description` frontmatter length\n- Flag: files >200 lines (heavy), description >30 words (bloated frontmatter)",
+      "zh-Hans": "* 统计每个文件的行数和令牌数（单词数 × 1.3）\n* 提取 `description` 前置元数据长度\n* 标记：文件 >200 行（繁重），描述 >30 词（臃肿的前置元数据）"
+    },
+    {
+      "en-US": "**Skills** (`skills/*/SKILL.md`)",
+      "zh-Hans": "**技能** (`skills/*/SKILL.md`)"
+    },
+    {
+      "en-US": "- Count tokens per SKILL.md\n- Flag: files >400 lines\n- Check for duplicate copies in `.agents/skills/` — skip identical copies to avoid double-counting",
+      "zh-Hans": "* 统计每个 SKILL.md 的令牌数\n* 标记：文件 >400 行\n* 检查 `.agents/skills/` 中是否存在重复副本 — 跳过相同副本以避免重复计数"
+    },
+    {
+      "en-US": "**Rules** (`rules/**/*.md`)",
+      "zh-Hans": "**规则** (`rules/**/*.md`)"
+    },
+    {
+      "en-US": "- Count tokens per file\n- Flag: files >100 lines\n- Detect content overlap between rule files in the same language module",
+      "zh-Hans": "* 统计每个文件的令牌数\n* 标记：文件 >100 行\n* 检测同一语言模块中规则文件之间的内容重叠"
+    },
+    {
+      "en-US": "**MCP Servers** (`.mcp.json` or active MCP config)",
+      "zh-Hans": "**MCP 服务器** (`.mcp.json` 或活动的 MCP 配置)"
+    },
+    {
+      "en-US": "- Count configured servers and total tool count\n- Estimate schema overhead at ~500 tokens per tool\n- Flag: servers with >20 tools, servers that wrap simple CLI commands (`gh`, `git`, `npm`, `supabase`, `vercel`)",
+      "zh-Hans": "* 统计已配置的服务器数量和工具总数\n* 估算模式开销约为每个工具 500 令牌\n* 标记：工具数 >20 的服务器，包装简单 CLI 命令的服务器 (`gh`, `git`, `npm`, `supabase`, `vercel`)"
+    },
+    {
+      "en-US": "**CLAUDE.md** (project + user-level)",
+      "zh-Hans": "**CLAUDE.md**（项目级 + 用户级）"
+    },
+    {
+      "en-US": "- Count tokens per file in the CLAUDE.md chain\n- Flag: combined total >300 lines",
+      "zh-Hans": "* 统计 CLAUDE.md 链中每个文件的令牌数\n* 标记：合并总数 >300 行"
+    },
+    {
+      "en-US": "### Phase 2: Classify",
+      "zh-Hans": "### 阶段 2：分类"
+    },
+    {
+      "en-US": "Sort every component into a bucket:",
+      "zh-Hans": "将每个组件归类到一个桶中："
+    },
+    {
+      "en-US": "| Bucket | Criteria | Action |\n|--------|----------|--------|\n| **Always needed** | Referenced in CLAUDE.md, backs an active command, or matches current project type | Keep |\n| **Sometimes needed** | Domain-specific (e.g. language patterns), not referenced in CLAUDE.md | Consider on-demand activation |\n| **Rarely needed** | No command reference, overlapping content, or no obvious project match | Remove or lazy-load |",
+      "zh-Hans": "| 桶 | 标准 | 操作 |\n|--------|----------|--------|\n| **始终需要** | 在 CLAUDE.md 中被引用、支持活动命令或匹配当前项目类型 | 保留 |\n| **有时需要** | 领域特定（例如语言模式），未在 CLAUDE.md 中引用 | 考虑按需激活 |\n| **很少需要** | 无命令引用、内容重叠或无明显的项目匹配 | 移除或延迟加载 |"
+    },
+    {
+      "en-US": "### Phase 3: Detect Issues",
+      "zh-Hans": "### 阶段 3：检测问题"
+    },
+    {
+      "en-US": "Identify the following problem patterns:",
+      "zh-Hans": "识别以下问题模式："
+    },
+    {
+      "en-US": "- **Bloated agent descriptions** — description >30 words in frontmatter loads into every Task tool invocation\n- **Heavy agents** — files >200 lines inflate Task tool context on every spawn\n- **Redundant components** — skills that duplicate agent logic, rules that duplicate CLAUDE.md\n- **MCP over-subscription** — >10 servers, or servers wrapping CLI tools available for free\n- **CLAUDE.md bloat** — verbose explanations, outdated sections, instructions that should be rules",
+      "zh-Hans": "* **臃肿的代理描述** — 前置元数据中描述 >30 词，会在每次 Task 工具调用时加载\n* **繁重的代理** — 文件 >200 行，会在每次生成时增加 Task 工具上下文\n* **冗余组件** — 重复代理逻辑的技能，重复 CLAUDE.md 的规则\n* **MCP 过度订阅** — >10 个服务器，或包装了可免费使用的 CLI 工具的服务器\n* **CLAUDE.md 臃肿** — 冗长的解释、过时的部分、本应作为规则的指令"
+    },
+    {
+      "en-US": "### Phase 4: Report",
+      "zh-Hans": "### 阶段 4：报告"
+    },
+    {
+      "en-US": "Produce the context budget report:",
+      "zh-Hans": "生成上下文预算报告："
+    },
+    {
+      "en-US": "```\nContext Budget Report\n═══════════════════════════════════════\n\nTotal estimated overhead: ~XX,XXX tokens\nContext model: Claude Sonnet (200K window)\nEffective available context: ~XXX,XXX tokens (XX%)\n\nComponent Breakdown:\n┌─────────────────┬────────┬───────────┐\n│ Component       │ Count  │ Tokens    │\n├─────────────────┼────────┼───────────┤\n│ Agents          │ N      │ ~X,XXX    │\n│ Skills          │ N      │ ~X,XXX    │\n│ Rules           │ N      │ ~X,XXX    │\n│ MCP tools       │ N      │ ~XX,XXX   │\n│ CLAUDE.md       │ N      │ ~X,XXX    │\n└─────────────────┴────────┴───────────┘\n\nWARNING: Issues Found (N):\n[ranked by token savings]\n\nTop 3 Optimizations:\n1. [action] → save ~X,XXX tokens\n2. [action] → save ~X,XXX tokens\n3. [action] → save ~X,XXX tokens\n\nPotential savings: ~XX,XXX tokens (XX% of current overhead)\n```",
+      "zh-Hans": "```\n上下文预算报告\n═══════════════════════════════════════\n\n总预估开销：约 XX,XXX 个令牌\n上下文模型：Claude Sonnet (200K 窗口)\n有效可用上下文：约 XXX,XXX 个令牌 (XX%)\n\n组件细分：\n┌─────────────────┬────────┬───────────┐\n│ 组件            │ 数量   │ 令牌数    │\n├─────────────────┼────────┼───────────┤\n│ 智能体          │ N      │ ~X,XXX    │\n│ 技能            │ N      │ ~X,XXX    │\n│ 规则            │ N      │ ~X,XXX    │\n│ MCP 工具        │ N      │ ~XX,XXX   │\n│ CLAUDE.md       │ N      │ ~X,XXX    │\n└─────────────────┴────────┴───────────┘\n\n警告：发现的问题 (N)：\n[按令牌节省量排序]\n\n前 3 项优化建议：\n1. [操作] → 节省约 X,XXX 个令牌\n2. [操作] → 节省约 X,XXX 个令牌\n3. [操作] → 节省约 X,XXX 个令牌\n\n潜在节省量：约 XX,XXX 个令牌 (当前开销的 XX%)\n```"
+    },
+    {
+      "en-US": "In verbose mode, additionally output per-file token counts, line-by-line breakdown of the heaviest files, specific redundant lines between overlapping components, and MCP tool list with per-tool schema size estimates.",
+      "zh-Hans": "在详细模式下，额外输出每个文件的令牌计数、最繁重文件的逐行细分、重叠组件之间的具体冗余行，以及 MCP 工具列表和每个工具的模式大小估算。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "**Basic audit**",
+      "zh-Hans": "**基本审计**"
+    },
+    {
+      "en-US": "```\nUser: /context-budget\nSkill: Scans setup → 16 agents (12,400 tokens), 28 skills (6,200), 87 MCP tools (43,500), 2 CLAUDE.md (1,200)\n       Flags: 3 heavy agents, 14 MCP servers (3 CLI-replaceable)\n       Top saving: remove 3 MCP servers → -27,500 tokens (47% overhead reduction)\n```",
+      "zh-Hans": "```\n用户：/context-budget\n技能：扫描设置 → 16 个代理（12,400 个令牌），28 个技能（6,200），87 个 MCP 工具（43,500），2 个 CLAUDE.md（1,200）\n       标记：3 个重型代理，14 个 MCP 服务器（3 个可被 CLI 替换）\n       最高节省：移除 3 个 MCP 服务器 → -27,500 个令牌（减少 47% 开销）\n```"
+    },
+    {
+      "en-US": "**Verbose mode**",
+      "zh-Hans": "**详细模式**"
+    },
+    {
+      "en-US": "```\nUser: /context-budget --verbose\nSkill: Full report + per-file breakdown showing planner.md (213 lines, 1,840 tokens),\n       MCP tool list with per-tool sizes, duplicated rule lines side by side\n```",
+      "zh-Hans": "```\nUser: /context-budget --verbose\nSkill: 完整报告 + 按文件细分显示 planner.md (213 行, 1,840 个词元),\n       MCP 工具列表及各工具大小，重复规则行并排显示\n```"
+    },
+    {
+      "en-US": "**Pre-expansion check**",
+      "zh-Hans": "**扩展前检查**"
+    },
+    {
+      "en-US": "```\nUser: I want to add 5 more MCP servers, do I have room?\nSkill: Current overhead 33% → adding 5 servers (~50 tools) would add ~25,000 tokens → pushes to 45% overhead\n       Recommendation: remove 2 CLI-replaceable servers first to stay under 40%\n```",
+      "zh-Hans": "```\nUser: 我想再添加 5 个 MCP 服务器，还有空间吗？\nSkill: 当前开销 33% → 添加 5 个服务器（约 50 个工具）将增加约 25,000 个令牌 → 开销将升至 45%\n       建议：先移除 2 个可被 CLI 替代的服务器，以将开销保持在 40% 以下\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Token estimation**: use `words × 1.3` for prose, `chars / 4` for code-heavy files\n- **MCP is the biggest lever**: each tool schema costs ~500 tokens; a 30-tool server costs more than all your skills combined\n- **Agent descriptions are loaded always**: even if the agent is never invoked, its description field is present in every Task tool context\n- **Verbose mode for debugging**: use when you need to pinpoint the exact files driving overhead, not for regular audits\n- **Audit after changes**: run after adding any agent, skill, or MCP server to catch creep early",
+      "zh-Hans": "* **令牌估算**：对散文使用 `words × 1.3`，对代码密集型文件使用 `chars / 4`\n* **MCP 是最大的杠杆**：每个工具模式约消耗 500 令牌；一个 30 个工具的服务器比您所有技能加起来消耗的还多\n* **代理描述始终加载**：即使代理从未被调用，其描述字段也存在于每个 Task 工具上下文中\n* **详细模式用于调试**：当您需要精确定位导致开销的确切文件时使用，而非用于常规审计\n* **变更后审计**：添加任何代理、技能或 MCP 服务器后运行，以便及早发现增长"
+    }
+  ]
+}

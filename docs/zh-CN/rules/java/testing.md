@@ -5,13 +5,13 @@ paths:
 
 # Java 测试
 
-> 本文档扩展了 [common/testing.md](../common/testing.md) 中与 Java 相关的内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Java 相关的内容。
 
 ## 测试框架
 
 * **JUnit 5** (`@Test`, `@ParameterizedTest`, `@Nested`, `@DisplayName`)
 * **AssertJ** 用于流式断言 (`assertThat(result).isEqualTo(expected)`)
-* **Mockito** 用于模拟依赖
+* **Mockito** 用于模拟依赖项
 * **Testcontainers** 用于需要数据库或服务的集成测试
 
 ## 测试组织
@@ -19,7 +19,7 @@ paths:
 ```
 src/test/java/com/example/app/
   service/           # 服务层单元测试
-  controller/        # Web 层/API 测试
+  controller/        # Web层 / API 测试
   repository/        # 数据访问测试
   integration/       # 跨层集成测试
 ```
@@ -83,7 +83,7 @@ void applyDiscount(BigDecimal price, int pct, BigDecimal expected) {
 
 ## 集成测试
 
-使用 Testcontainers 进行真实的数据库集成：
+使用 Testcontainers 进行真实的数据库集成测试：
 
 ```java
 @Testcontainers
@@ -123,11 +123,11 @@ class OrderRepositoryIT {
 
 ## 覆盖率
 
-* 目标为 80%+ 的行覆盖率
+* 目标行覆盖率 80% 以上
 * 使用 JaCoCo 生成覆盖率报告
-* 重点关注服务和领域逻辑 — 跳过简单的 getter/配置类
+* 重点关注服务和领域逻辑 —— 跳过简单的 getter 和配置类
 
 ## 参考
 
 关于使用 MockMvc 和 Testcontainers 的 Spring Boot TDD 模式，请参阅技能：`springboot-tdd`。
-关于测试期望，请参阅技能：`java-coding-standards`。
+关于测试预期，请参阅技能：`java-coding-standards`。

@@ -1,23 +1,23 @@
 ---
 name: data-scraper-agent
-description: 构建一个全自动化的AI驱动数据收集代理，适用于任何公共来源——招聘网站、价格信息、新闻、GitHub、体育赛事等任何内容。按计划进行抓取，使用免费LLM（Gemini Flash）丰富数据，将结果存储在Notion/Sheets/Supabase中，并从用户反馈中学习。完全免费在GitHub Actions上运行。适用于用户希望自动监控、收集或跟踪任何公共数据的场景。
+description: 构建一个全自动的AI驱动数据收集代理，适用于任何公共来源——招聘网站、价格、新闻、GitHub、体育等任何内容。按计划抓取数据，使用免费LLM（Gemini Flash）丰富数据，将结果存储在Notion/Sheets/Supabase中，并从用户反馈中学习。在GitHub Actions上100%免费运行。当用户想要自动监控、收集或跟踪任何公共数据时使用。
 origin: community
 ---
 
 # 数据抓取代理
 
-构建一个生产就绪、AI驱动的数据收集代理，适用于任何公共数据源。
-按计划运行，使用免费LLM丰富结果，存储到数据库，并随时间推移不断改进。
+构建一个生产就绪、AI 驱动的数据收集代理，适用于任何公共数据源。
+按计划运行，使用免费 LLM 丰富结果，存储到数据库，并随时间推移不断改进。
 
 **技术栈：Python · Gemini Flash (免费) · GitHub Actions (免费) · Notion / Sheets / Supabase**
 
 ## 何时激活
 
-* 用户想要抓取或监控任何公共网站或API
-* 用户说"构建一个检查...的机器人"、"为我监控X"、"从...收集数据"
+* 用户想要抓取或监控任何公共网站或 API
+* 用户说"构建一个检查...的机器人"、"为我监控 X"、"从...收集数据"
 * 用户想要跟踪工作、价格、新闻、仓库、体育比分、事件、列表
-* 用户询问如何自动化数据收集而无需支付托管费用
-* 用户想要一个能根据他们的决策随时间推移变得更智能的代理
+* 用户询问如何在不支付托管费用的情况下自动化数据收集
+* 用户想要一个能根据其决策随时间推移变得更智能的代理
 
 ## 核心概念
 
@@ -36,18 +36,18 @@ schedule   summarises Sheets /
 
 ### 免费技术栈
 
-| 层级 | 工具 | 原因 |
+| 层 | 工具 | 原因 |
 |---|---|---|
-| **抓取** | `requests` + `BeautifulSoup` | 无成本，覆盖80%的公共网站 |
-| **JS渲染的网站** | `playwright` (免费) | 当HTML抓取失败时使用 |
-| **AI丰富** | 通过REST API的Gemini Flash | 500次请求/天，100万令牌/天 — 免费 |
-| **存储** | Notion API | 免费层级，用于审查的优秀UI |
-| **调度** | GitHub Actions cron | 对公共仓库免费 |
-| **学习** | 仓库中的JSON反馈文件 | 零基础设施，在git中持久化 |
+| **抓取** | `requests` + `BeautifulSoup` | 无成本，覆盖 80% 的公共网站 |
+| **JS 渲染网站** | `playwright` (免费) | 当 HTML 抓取失败时使用 |
+| **AI 丰富** | 通过 REST API 使用 Gemini Flash | 500 次请求/天，100 万令牌/天 — 免费 |
+| **存储** | Notion API | 免费层，用于审查的优秀 UI |
+| **调度** | GitHub Actions cron | 公共仓库免费 |
+| **学习** | 仓库中的 JSON 反馈文件 | 零基础设施，持久化在 git 中 |
 
-### AI模型后备链
+### AI 模型回退链
 
-构建代理以在配额耗尽时自动在Gemini模型间回退：
+构建代理以在配额耗尽时自动在 Gemini 模型间回退：
 
 ```
 gemini-2.0-flash-lite (30 RPM) →
@@ -56,9 +56,9 @@ gemini-2.5-flash (10 RPM) →
 gemini-flash-lite-latest (fallback)
 ```
 
-### 批量API调用以提高效率
+### 批量 API 调用以提高效率
 
-切勿为每个项目单独调用LLM。始终批量处理：
+切勿为每个项目单独调用 LLM。始终批量处理：
 
 ```python
 # BAD: 33 API calls for 33 items
@@ -74,30 +74,30 @@ for batch in chunks(items, size=5):
 
 ## 工作流程
 
-### 步骤 1: 理解目标
+### 步骤 1：理解目标
 
 询问用户：
 
 1. **收集什么：** "数据源是什么？URL / API / RSS / 公共端点？"
 2. **提取什么：** "哪些字段重要？标题、价格、URL、日期、分数？"
-3. **如何存储：** "结果应该存储在哪里？Notion、Google Sheets、Supabase，还是本地文件？"
-4. **如何丰富：** "您希望AI对每个项目进行评分、总结、分类或匹配吗？"
+3. **如何存储：** "结果应该存储在哪里？Notion、Google Sheets、Supabase 还是本地文件？"
+4. **如何丰富：** "你希望 AI 对每个项目进行评分、总结、分类或匹配吗？"
 5. **频率：** "应该多久运行一次？每小时、每天、每周？"
 
-常见的提示示例：
+用于提示的常见示例：
 
 * 招聘网站 → 根据简历评分相关性
 * 产品价格 → 降价时发出警报
-* GitHub仓库 → 总结新版本
-* 新闻源 → 按主题+情感分类
-* 体育结果 → 提取统计数据到跟踪器
+* GitHub 仓库 → 总结新版本
+* 新闻源 → 按主题 + 情感分类
+* 体育结果 → 提取统计数据到追踪器
 * 活动日历 → 按兴趣筛选
 
 ***
 
-### 步骤 2: 设计代理架构
+### 步骤 2：设计代理架构
 
-为用户生成以下目录结构：
+为用户生成此目录结构：
 
 ```
 my-agent/
@@ -133,7 +133,7 @@ my-agent/
 
 ***
 
-### 步骤 3: 构建抓取器源
+### 步骤 3：构建抓取器源
 
 适用于任何数据源的模板：
 
@@ -182,7 +182,7 @@ def _normalise(raw: dict) -> dict:
     }
 ```
 
-**HTML抓取模式：**
+**HTML 抓取模式：**
 
 ```python
 soup = BeautifulSoup(resp.text, "lxml")
@@ -193,7 +193,7 @@ for card in soup.select("[class*='listing']"):
         link = f"https://example.com{link}"
 ```
 
-**RSS源模式：**
+**RSS 源模式：**
 
 ```python
 import xml.etree.ElementTree as ET
@@ -205,7 +205,7 @@ for item in root.findall(".//item"):
 
 ***
 
-### 步骤 4: 构建Gemini AI客户端
+### 步骤 4：构建 Gemini AI 客户端
 
 ````python
 # ai/client.py
@@ -279,7 +279,7 @@ def _parse(resp) -> dict:
 
 ***
 
-### 步骤 5: 构建AI管道（批量）
+### 步骤 5：构建 AI 流水线（批量）
 
 ```python
 # ai/pipeline.py
@@ -346,7 +346,7 @@ Be concise. Score 90+=excellent match, 70-89=good, 50-69=ok, <50=weak."""
 
 ***
 
-### 步骤 6: 构建反馈学习系统
+### 步骤 6：构建反馈学习系统
 
 ```python
 # ai/memory.py
@@ -387,11 +387,11 @@ def build_preference_prompt(feedback: dict, max_examples: int = 15) -> str:
     return "\n".join(lines)
 ```
 
-**与存储层集成：** 每次运行后，从数据库中查询具有正面/负面状态的项，并使用提取的模式调用 `save_feedback()`。
+**与存储层集成：** 每次运行后，从数据库中查询具有积极/消极状态的项目，并使用提取的模式调用 `save_feedback()`。
 
 ***
 
-### 步骤 7: 构建存储（Notion示例）
+### 步骤 7：构建存储（Notion 示例）
 
 ```python
 # storage/notion_sync.py
@@ -458,7 +458,7 @@ def sync(db_id: str, items: list[dict]) -> tuple[int, int]:
 
 ***
 
-### 步骤 8: 在 main.py 中编排
+### 步骤 8：在 main.py 中进行编排
 
 ```python
 # scraper/main.py
@@ -538,7 +538,7 @@ if __name__ == "__main__":
 
 ***
 
-### 步骤 9: GitHub Actions工作流
+### 步骤 9：GitHub Actions 工作流
 
 ```yaml
 # .github/workflows/scraper.yml
@@ -589,7 +589,7 @@ jobs:
 
 ***
 
-### 步骤 10: config.yaml 模板
+### 步骤 10：config.yaml 模板
 
 ```yaml
 # Customise this file — no code changes needed
@@ -626,14 +626,14 @@ ai:
 
 ## 常见抓取模式
 
-### 模式 1: REST API（最简单）
+### 模式 1：REST API（最简单）
 
 ```python
 resp = requests.get(url, params={"q": query}, headers=HEADERS, timeout=15)
 items = resp.json().get("results", [])
 ```
 
-### 模式 2: HTML抓取
+### 模式 2：HTML 抓取
 
 ```python
 soup = BeautifulSoup(resp.text, "lxml")
@@ -642,7 +642,7 @@ for card in soup.select(".listing-card"):
     href = card.select_one("a")["href"]
 ```
 
-### 模式 3: RSS源
+### 模式 3：RSS 源
 
 ```python
 import xml.etree.ElementTree as ET
@@ -653,7 +653,7 @@ for item in root.findall(".//item"):
     pub_date = item.findtext("pubDate", "")
 ```
 
-### 模式 4: 分页API
+### 模式 4：分页 API
 
 ```python
 page = 1
@@ -670,7 +670,7 @@ while True:
     page += 1
 ```
 
-### 模式 5: JS渲染页面（Playwright）
+### 模式 5：JS 渲染页面 (Playwright)
 
 ```python
 from playwright.sync_api import sync_playwright
@@ -692,28 +692,28 @@ soup = BeautifulSoup(html, "lxml")
 
 | 反模式 | 问题 | 修复方法 |
 |---|---|---|
-| 每个项目调用一次LLM | 立即达到速率限制 | 每次调用批量处理5个项目 |
-| 代码中硬编码关键字 | 不可重用 | 将所有配置移动到 `config.yaml` |
-| 没有速率限制的抓取 | IP被禁止 | 在请求之间添加 `time.sleep(1)` |
+| 每个项目调用一次 LLM | 立即达到速率限制 | 每次调用批量处理 5 个项目 |
+| 代码中硬编码关键词 | 不可重用 | 将所有配置移至 `config.yaml` |
+| 无速率限制抓取 | IP 被封禁 | 在请求之间添加 `time.sleep(1)` |
 | 在代码中存储密钥 | 安全风险 | 始终使用 `.env` + GitHub Secrets |
-| 没有去重 | 重复行堆积 | 在推送前始终检查URL |
-| 忽略 `robots.txt` | 法律/道德风险 | 遵守爬虫规则；尽可能使用公共API |
-| 使用 `requests` 处理JS渲染的网站 | 空响应 | 使用Playwright或查找底层API |
-| `maxOutputTokens` 太低 | JSON截断，解析错误 | 对批量响应使用2048+ |
+| 无去重 | 重复行堆积 | 推送前始终检查 URL |
+| 忽略 `robots.txt` | 法律/道德风险 | 尊重爬虫规则；尽可能使用公共 API |
+| 使用 `requests` 处理 JS 渲染网站 | 空响应 | 使用 Playwright 或寻找底层 API |
+| `maxOutputTokens` 过低 | JSON 截断，解析错误 | 批量响应使用 2048+ |
 
 ***
 
-## 免费层级限制参考
+## 免费层限制参考
 
-| 服务 | 免费限制 | 典型用法 |
+| 服务 | 免费限制 | 典型使用情况 |
 |---|---|---|
-| Gemini Flash Lite | 30 RPM, 1500 RPD | 以3小时间隔约56次请求/天 |
-| Gemini 2.0 Flash | 15 RPM, 1500 RPD | 良好的后备选项 |
+| Gemini Flash Lite | 30 RPM, 1500 RPD | 以 3 小时间隔约 56 次请求/天 |
+| Gemini 2.0 Flash | 15 RPM, 1500 RPD | 良好的回退选择 |
 | Gemini 2.5 Flash | 10 RPM, 500 RPD | 谨慎使用 |
-| GitHub Actions | 无限（公共仓库） | 约20分钟/天 |
-| Notion API | 无限 | 约200次写入/天 |
-| Supabase | 500MB DB, 2GB传输 | 适用于大多数代理 |
-| Google Sheets API | 300次请求/分钟 | 适用于小型代理 |
+| GitHub Actions | 无限（公共仓库） | 约 20 分钟/天 |
+| Notion API | 无限 | 约 200 次写入/天 |
+| Supabase | 500MB 数据库，2GB 传输 | 适用于大多数代理 |
+| Google Sheets API | 300 次请求/分钟 | 适用于小型代理 |
 
 ***
 
@@ -725,28 +725,28 @@ beautifulsoup4==4.12.3
 lxml==5.1.0
 python-dotenv==1.0.1
 pyyaml==6.0.2
-notion-client==2.2.1   # 如需使用 Notion
-# playwright==1.40.0   # 针对 JS 渲染的站点，请取消注释
+notion-client==2.2.1   # 如果使用 Notion
+# playwright==1.40.0   # 对于 JS 渲染的站点，取消注释
 ```
 
 ***
 
 ## 质量检查清单
 
-在将代理标记为完成之前：
+在标记代理完成之前：
 
-* \[ ] `config.yaml` 控制所有面向用户的设置 — 没有硬编码的值
-* \[ ] `profile/context.md` 保存用于AI匹配的用户特定上下文
-* \[ ] 在每次存储推送前通过URL进行去重
-* \[ ] Gemini客户端具有模型后备链（4个模型）
-* \[ ] 批量大小 ≤ 每个API调用5个项目
+* \[ ] `config.yaml` 控制所有面向用户的设置 — 无硬编码值
+* \[ ] `profile/context.md` 保存用于 AI 匹配的用户特定上下文
+* \[ ] 每次存储推送前通过 URL 去重
+* \[ ] Gemini 客户端具有模型回退链（4 个模型）
+* \[ ] 批量大小 ≤ 5 个项目/API 调用
 * \[ ] `maxOutputTokens` ≥ 2048
-* \[ ] `.env` 在 `.gitignore` 中
-* \[ ] 提供了用于入门的 `.env.example`
+* \[ ] `.env` 位于 `.gitignore` 中
+* \[ ] 提供 `.env.example` 用于入门
 * \[ ] `setup.py` 在首次运行时创建数据库模式
-* \[ ] `enrich_existing.py` 回填旧行的AI分数
-* \[ ] GitHub Actions工作流在每次运行后提交 `feedback.json`
-* \[ ] README涵盖：在<5分钟内设置，所需的密钥，自定义
+* \[ ] `enrich_existing.py` 对旧行进行 AI 评分回填
+* \[ ] GitHub Actions 工作流在每次运行后提交 `feedback.json`
+* \[ ] README 涵盖：在 < 5 分钟内完成设置、所需密钥、自定义
 
 ***
 
@@ -754,19 +754,19 @@ notion-client==2.2.1   # 如需使用 Notion
 
 ```
 "为我构建一个监控 Hacker News 上 AI 初创公司融资新闻的智能体"
-"从 3 家电商网站抓取产品价格并在降价时发出提醒"
-"追踪标记有 'llm' 或 'agents' 的新 GitHub 仓库——并为每个仓库生成摘要"
-"将 LinkedIn 和 Cutshort 上的首席运营官职位列表收集到 Notion 中"
-"监控一个提到我公司的 subreddit 帖子——并进行情感分类"
-"每日从 arXiv 抓取我关注主题的新学术论文"
-"追踪体育赛事结果并在 Google Sheets 中维护动态更新的表格"
-"构建一个房地产房源监控器——在新房源价格低于 1 千万卢比时发出提醒"
+"从 3 个电商网站抓取产品价格，并在价格下降时发出提醒"
+"追踪 GitHub 上标记为 'llm' 或 'agents' 的新仓库——并总结每个仓库"
+"从 LinkedIn 和 Cutshort 收集首席运营官职位列表，并整理到 Notion 中"
+"监控一个 subreddit 上提及我公司的帖子——并进行情感分类"
+"每天从 arXiv 抓取我关注主题的新学术论文"
+"追踪体育赛事结果，并在 Google Sheets 中维护实时积分榜"
+"构建一个房地产房源监控器——当出现价格低于 1 千万卢比的新房源时发出提醒"
 ```
 
 ***
 
 ## 参考实现
 
-一个使用此确切架构构建的完整工作代理将抓取4+个数据源，
-批量处理Gemini调用，从存储在Notion中的"已应用"/"已拒绝"决策中学习，并且
-在GitHub Actions上100%免费运行。按照上述步骤1-9构建您自己的代理。
+一个使用此确切架构构建的完整工作代理将抓取 4 个以上的数据源，
+批量处理 Gemini 调用，从存储在 Notion 中的"已应用"/"已拒绝"决策中学习，
+并在 GitHub Actions 上 100% 免费运行。按照上述步骤 1–9 构建你自己的代理。

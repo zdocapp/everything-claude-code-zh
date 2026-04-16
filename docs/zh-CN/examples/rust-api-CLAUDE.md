@@ -1,31 +1,31 @@
 # Rust API 服务 — 项目 CLAUDE.md
 
-> 使用 Axum、PostgreSQL 和 Docker 构建 Rust API 服务的真实示例。
-> 将此文件复制到您的项目根目录，并根据您的服务进行自定义。
+> 一个使用 Axum、PostgreSQL 和 Docker 的 Rust API 服务真实示例。
+> 复制此文件到你的项目根目录，并根据你的服务进行定制。
 
 ## 项目概述
 
-**技术栈：** Rust 1.78+, Axum (Web 框架), SQLx (异步数据库), PostgreSQL, Tokio (异步运行时), Docker
+**技术栈：** Rust 1.78+、Axum（Web 框架）、SQLx（异步数据库）、PostgreSQL、Tokio（异步运行时）、Docker
 
-**架构：** 采用分层架构，包含 handler → service → repository 分离。Axum 用于 HTTP，SQLx 用于编译时类型检查的 SQL，Tower 中间件用于横切关注点。
+**架构：** 采用分层架构，实现 handler → service → repository 分离。使用 Axum 处理 HTTP，SQLx 实现编译时类型检查的 SQL，Tower 中间件处理横切关注点。
 
 ## 关键规则
 
 ### Rust 约定
 
 * 库错误使用 `thiserror`，仅在二进制 crate 或测试中使用 `anyhow`
-* 生产代码中不使用 `.unwrap()` 或 `.expect()` — 使用 `?` 传播错误
+* 生产代码中禁止使用 `.unwrap()` 或 `.expect()` — 使用 `?` 传播错误
 * 函数参数中优先使用 `&str` 而非 `String`；所有权转移时返回 `String`
-* 使用 `clippy` 和 `#![deny(clippy::all, clippy::pedantic)]` — 修复所有警告
-* 在所有公共类型上派生 `Debug`；仅在需要时派生 `Clone`、`PartialEq`
-* 除非有 `// SAFETY:` 注释说明理由，否则不使用 `unsafe` 块
+* 使用 `clippy` 配合 `#![deny(clippy::all, clippy::pedantic)]` — 修复所有警告
+* 为所有公共类型派生 `Debug`；仅在需要时派生 `Clone`、`PartialEq`
+* 除非有 `// SAFETY:` 注释说明理由，否则禁止使用 `unsafe` 代码块
 
 ### 数据库
 
-* 所有查询使用 SQLx 的 `query!` 或 `query_as!` 宏 — 针对模式进行编译时验证
+* 所有查询使用 SQLx 的 `query!` 或 `query_as!` 宏 — 在编译时根据模式进行验证
 * 在 `migrations/` 中使用 `sqlx migrate` 进行迁移 — 切勿直接修改数据库
 * 使用 `sqlx::Pool<Postgres>` 作为共享状态 — 切勿为每个请求创建连接
-* 所有查询使用参数化占位符 (`$1`, `$2`) — 切勿使用字符串格式化
+* 所有查询使用参数化占位符（`$1`、`$2`）— 禁止使用字符串格式化
 
 ```rust
 // BAD: String interpolation (SQL injection risk)
@@ -39,9 +39,9 @@ let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = $1", id)
 
 ### 错误处理
 
-* 为每个模块使用 `thiserror` 定义一个领域错误枚举
+* 为每个模块定义一个领域错误枚举，使用 `thiserror`
 * 通过 `IntoResponse` 将错误映射到 HTTP 响应 — 切勿暴露内部细节
-* 使用 `tracing` 进行结构化日志记录 — 切勿使用 `println!` 或 `eprintln!`
+* 使用 `tracing` 进行结构化日志记录 — 禁止使用 `println!` 或 `eprintln!`
 
 ```rust
 use thiserror::Error;
@@ -77,8 +77,8 @@ impl IntoResponse for AppError {
 ### 测试
 
 * 单元测试放在每个源文件内的 `#[cfg(test)]` 模块中
-* 集成测试放在 `tests/` 目录中，使用真实的 PostgreSQL (Testcontainers 或 Docker)
-* 使用 `#[sqlx::test]` 进行数据库测试，包含自动迁移和回滚
+* 集成测试放在 `tests/` 目录中，使用真实的 PostgreSQL（Testcontainers 或 Docker）
+* 使用 `#[sqlx::test]` 进行数据库测试，实现自动迁移和回滚
 * 使用 `mockall` 或 `wiremock` 模拟外部服务
 
 ### 代码风格
@@ -92,15 +92,15 @@ impl IntoResponse for AppError {
 
 ```
 src/
-  main.rs              # 入口点、服务器设置、优雅关闭
-  lib.rs               # 用于集成测试的重新导出
+  main.rs              # 入口点，服务器设置，优雅关闭
+  lib.rs               # 为集成测试重新导出
   config.rs            # 使用 envy 或 figment 的环境配置
   router.rs            # 包含所有路由的 Axum 路由器
   middleware/
-    auth.rs            # JWT 提取与验证
+    auth.rs            # JWT 提取和验证
     logging.rs         # 请求/响应追踪
   handlers/
-    mod.rs             # 路由处理器（精简版——委托给服务层）
+    mod.rs             # 路由处理器（精简 — 委托给服务层）
     users.rs
     orders.rs
   services/
@@ -112,21 +112,21 @@ src/
     users.rs
     orders.rs
   domain/
-    mod.rs             # 领域类型、错误枚举
+    mod.rs             # 领域类型，错误枚举
     user.rs
     order.rs
 migrations/
   001_create_users.sql
   002_create_orders.sql
 tests/
-  common/mod.rs        # 共享测试辅助工具、测试服务器设置
+  common/mod.rs        # 共享测试助手，测试服务器设置
   api_users.rs         # 用户端点的集成测试
   api_orders.rs        # 订单端点的集成测试
 ```
 
 ## 关键模式
 
-### Handler (薄层)
+### Handler（薄层）
 
 ```rust
 async fn create_user(
@@ -138,7 +138,7 @@ async fn create_user(
 }
 ```
 
-### Service (业务逻辑)
+### Service（业务逻辑）
 
 ```rust
 impl UserService {
@@ -155,7 +155,7 @@ impl UserService {
 }
 ```
 
-### Repository (数据访问)
+### Repository（数据访问）
 
 ```rust
 impl UserRepository {

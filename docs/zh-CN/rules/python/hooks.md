@@ -6,7 +6,7 @@ paths:
 
 # Python 钩子
 
-> 本文档扩展了 [common/hooks.md](../common/hooks.md) 中关于 Python 的特定内容。
+> 本文档在 [common/hooks.md](../common/hooks.md) 的基础上扩展了 Python 相关的内容。
 
 ## PostToolUse 钩子
 
@@ -17,4 +17,4 @@ paths:
 
 ## 警告
 
-* 对编辑文件中的 `print()` 语句发出警告（应使用 `logging` 模块替代）
+* 对编辑文件中的 `print()` 语句发出警告（请改用 `logging` 模块）

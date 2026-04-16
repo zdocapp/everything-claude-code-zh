@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/fonts.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: fonts\ndescription: Loading Google Fonts and local fonts in Remotion\nmetadata:\n  tags: fonts, google-fonts, typography, text\n---",
+      "zh-Hans": "---\nname: fonts\ndescription: 在Remotion中加载Google字体和本地字体\nmetadata:\n  tags: fonts, google-fonts, typography, text\n---"
+    },
+    {
+      "en-US": "# Using fonts in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用字体"
+    },
+    {
+      "en-US": "## Google Fonts with @remotion/google-fonts",
+      "zh-Hans": "## 通过 @remotion/google-fonts 使用 Google Fonts"
+    },
+    {
+      "en-US": "The recommended way to use Google Fonts. It's type-safe and automatically blocks rendering until the font is ready.",
+      "zh-Hans": "这是使用 Google Fonts 的推荐方式。它是类型安全的，并会自动阻止渲染，直到字体准备就绪。"
+    },
+    {
+      "en-US": "### Prerequisites",
+      "zh-Hans": "### 前提条件"
+    },
+    {
+      "en-US": "First, the @remotion/google-fonts package needs to be installed.\nIf it is not installed, use the following command:",
+      "zh-Hans": "首先，需要安装 @remotion/google-fonts 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/google-fonts # If project uses npm\nbunx remotion add @remotion/google-fonts # If project uses bun\nyarn remotion add @remotion/google-fonts # If project uses yarn\npnpm exec remotion add @remotion/google-fonts # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/google-fonts # If project uses npm\nbunx remotion add @remotion/google-fonts # If project uses bun\nyarn remotion add @remotion/google-fonts # If project uses yarn\npnpm exec remotion add @remotion/google-fonts # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Lobster\";\n\nconst { fontFamily } = loadFont();\n\nexport const MyComposition = () => {\n  return <div style={{ fontFamily }}>Hello World</div>;\n};\n```",
+      "zh-Hans": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Lobster\";\n\nconst { fontFamily } = loadFont();\n\nexport const MyComposition = () => {\n  return <div style={{ fontFamily }}>Hello World</div>;\n};\n```"
+    },
+    {
+      "en-US": "Preferrably, specify only needed weights and subsets to reduce file size:",
+      "zh-Hans": "为了减小文件大小，最好只指定所需的字重和子集："
+    },
+    {
+      "en-US": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Roboto\";\n\nconst { fontFamily } = loadFont(\"normal\", {\n  weights: [\"400\", \"700\"],\n  subsets: [\"latin\"],\n});\n```",
+      "zh-Hans": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Roboto\";\n\nconst { fontFamily } = loadFont(\"normal\", {\n  weights: [\"400\", \"700\"],\n  subsets: [\"latin\"],\n});\n```"
+    },
+    {
+      "en-US": "### Waiting for font to load",
+      "zh-Hans": "### 等待字体加载"
+    },
+    {
+      "en-US": "Use `waitUntilDone()` if you need to know when the font is ready:",
+      "zh-Hans": "如果需要知道字体何时准备就绪，请使用 `waitUntilDone()`："
+    },
+    {
+      "en-US": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Lobster\";\n\nconst { fontFamily, waitUntilDone } = loadFont();\n\nawait waitUntilDone();\n```",
+      "zh-Hans": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Lobster\";\n\nconst { fontFamily, waitUntilDone } = loadFont();\n\nawait waitUntilDone();\n```"
+    },
+    {
+      "en-US": "## Local fonts with @remotion/fonts",
+      "zh-Hans": "## 通过 @remotion/fonts 使用本地字体"
+    },
+    {
+      "en-US": "For local font files, use the `@remotion/fonts` package.",
+      "zh-Hans": "对于本地字体文件，请使用 `@remotion/fonts` 包。"
+    },
+    {
+      "en-US": "### Prerequisites",
+      "zh-Hans": "### 前提条件"
+    },
+    {
+      "en-US": "First, install @remotion/fonts:",
+      "zh-Hans": "首先，安装 @remotion/fonts："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/fonts # If project uses npm\nbunx remotion add @remotion/fonts # If project uses bun\nyarn remotion add @remotion/fonts # If project uses yarn\npnpm exec remotion add @remotion/fonts # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/fonts # If project uses npm\nbunx remotion add @remotion/fonts # If project uses bun\nyarn remotion add @remotion/fonts # If project uses yarn\npnpm exec remotion add @remotion/fonts # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "### Loading a local font",
+      "zh-Hans": "### 加载本地字体"
+    },
+    {
+      "en-US": "Place your font file in the `public/` folder and use `loadFont()`:",
+      "zh-Hans": "将你的字体文件放在 `public/` 文件夹中，并使用 `loadFont()`："
+    },
+    {
+      "en-US": "```tsx\nimport { loadFont } from \"@remotion/fonts\";\nimport { staticFile } from \"remotion\";\n\nawait loadFont({\n  family: \"MyFont\",\n  url: staticFile(\"MyFont-Regular.woff2\"),\n});\n\nexport const MyComposition = () => {\n  return <div style={{ fontFamily: \"MyFont\" }}>Hello World</div>;\n};\n```",
+      "zh-Hans": "```tsx\nimport { loadFont } from \"@remotion/fonts\";\nimport { staticFile } from \"remotion\";\n\nawait loadFont({\n  family: \"MyFont\",\n  url: staticFile(\"MyFont-Regular.woff2\"),\n});\n\nexport const MyComposition = () => {\n  return <div style={{ fontFamily: \"MyFont\" }}>Hello World</div>;\n};\n```"
+    },
+    {
+      "en-US": "### Loading multiple weights",
+      "zh-Hans": "### 加载多个字重"
+    },
+    {
+      "en-US": "Load each weight separately with the same family name:",
+      "zh-Hans": "使用相同的字体系列名称分别加载每个字重："
+    },
+    {
+      "en-US": "```tsx\nimport { loadFont } from \"@remotion/fonts\";\nimport { staticFile } from \"remotion\";\n\nawait Promise.all([\n  loadFont({\n    family: \"Inter\",\n    url: staticFile(\"Inter-Regular.woff2\"),\n    weight: \"400\",\n  }),\n  loadFont({\n    family: \"Inter\",\n    url: staticFile(\"Inter-Bold.woff2\"),\n    weight: \"700\",\n  }),\n]);\n```",
+      "zh-Hans": "```tsx\nimport { loadFont } from \"@remotion/fonts\";\nimport { staticFile } from \"remotion\";\n\nawait Promise.all([\n  loadFont({\n    family: \"Inter\",\n    url: staticFile(\"Inter-Regular.woff2\"),\n    weight: \"400\",\n  }),\n  loadFont({\n    family: \"Inter\",\n    url: staticFile(\"Inter-Bold.woff2\"),\n    weight: \"700\",\n  }),\n]);\n```"
+    },
+    {
+      "en-US": "### Available options",
+      "zh-Hans": "### 可用选项"
+    },
+    {
+      "en-US": "```tsx\nloadFont({\n  family: \"MyFont\", // Required: name to use in CSS\n  url: staticFile(\"font.woff2\"), // Required: font file URL\n  format: \"woff2\", // Optional: auto-detected from extension\n  weight: \"400\", // Optional: font weight\n  style: \"normal\", // Optional: normal or italic\n  display: \"block\", // Optional: font-display behavior\n});\n```",
+      "zh-Hans": "```tsx\nloadFont({\n  family: \"MyFont\", // Required: name to use in CSS\n  url: staticFile(\"font.woff2\"), // Required: font file URL\n  format: \"woff2\", // Optional: auto-detected from extension\n  weight: \"400\", // Optional: font weight\n  style: \"normal\", // Optional: normal or italic\n  display: \"block\", // Optional: font-display behavior\n});\n```"
+    },
+    {
+      "en-US": "## Using in components",
+      "zh-Hans": "## 在组件中使用"
+    },
+    {
+      "en-US": "Call `loadFont()` at the top level of your component or in a separate file that's imported early:",
+      "zh-Hans": "在你的组件顶层或在一个较早导入的单独文件中调用 `loadFont()`："
+    },
+    {
+      "en-US": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Montserrat\";\n\nconst { fontFamily } = loadFont(\"normal\", {\n  weights: [\"400\", \"700\"],\n  subsets: [\"latin\"],\n});\n\nexport const Title: React.FC<{ text: string }> = ({ text }) => {\n  return (\n    <h1\n      style={{\n        fontFamily,\n        fontSize: 80,\n        fontWeight: \"bold\",\n      }}\n    >\n      {text}\n    </h1>\n  );\n};\n```",
+      "zh-Hans": "```tsx\nimport { loadFont } from \"@remotion/google-fonts/Montserrat\";\n\nconst { fontFamily } = loadFont(\"normal\", {\n  weights: [\"400\", \"700\"],\n  subsets: [\"latin\"],\n});\n\nexport const Title: React.FC<{ text: string }> = ({ text }) => {\n  return (\n    <h1\n      style={{\n        fontFamily,\n        fontSize: 80,\n        fontWeight: \"bold\",\n      }}\n    >\n      {text}\n    </h1>\n  );\n};\n```"
+    }
+  ]
+}

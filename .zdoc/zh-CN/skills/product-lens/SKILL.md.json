@@ -1,0 +1,110 @@
+{
+  "sourceFile": "skills/product-lens/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: product-lens\ndescription: Use this skill to validate the \"why\" before building, run product diagnostics, and pressure-test product direction before the request becomes an implementation contract.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: product-lens\ndescription: 使用此技能在构建前验证“为什么”，运行产品诊断，并在需求成为实施合同前对产品方向进行压力测试。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Product Lens — Think Before You Build",
+      "zh-Hans": "# 产品透镜 —— 构建之前先思考"
+    },
+    {
+      "en-US": "This lane owns product diagnosis, not implementation-ready specification writing.",
+      "zh-Hans": "此流程负责产品诊断，而非撰写可直接实施的规范。"
+    },
+    {
+      "en-US": "If the user needs a durable PRD-to-SRS or capability-contract artifact, hand off to `product-capability`.",
+      "zh-Hans": "如果用户需要一份持久的 PRD 到 SRS 或能力契约工件，请转交给 `product-capability`。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Before starting any feature — validate the \"why\"\n- Weekly product review — are we building the right thing?\n- When stuck choosing between features\n- Before a launch — sanity check the user journey\n- When converting a vague idea into a product brief before engineering planning starts",
+      "zh-Hans": "* 在启动任何功能之前 —— 验证“为什么”\n* 每周产品评审 —— 我们是否在构建正确的东西？\n* 在功能之间难以抉择时\n* 发布之前 —— 对用户旅程进行合理性检查\n* 在将模糊想法转化为产品简报，并开始工程规划之前"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Mode 1: Product Diagnostic",
+      "zh-Hans": "### 模式 1：产品诊断"
+    },
+    {
+      "en-US": "Like YC office hours but automated. Asks the hard questions:",
+      "zh-Hans": "类似 YC 办公时间，但自动化。提出尖锐问题："
+    },
+    {
+      "en-US": "```\n1. Who is this for? (specific person, not \"developers\")\n2. What's the pain? (quantify: how often, how bad, what do they do today?)\n3. Why now? (what changed that makes this possible/necessary?)\n4. What's the 10-star version? (if money/time were unlimited)\n5. What's the MVP? (smallest thing that proves the thesis)\n6. What's the anti-goal? (what are you explicitly NOT building?)\n7. How do you know it's working? (metric, not vibes)\n```",
+      "zh-Hans": "```\n1. 这是为谁准备的？（具体的人，而非泛指“开发者”）\n2. 痛点是什么？（量化：频率、严重程度、他们目前如何应对？）\n3. 为什么是现在？（是什么变化使得这成为可能/必要？）\n4. 10星级版本是什么？（如果资金/时间不受限）\n5. MVP（最小可行产品）是什么？（能验证核心假设的最小可行方案）\n6. 反目标是什么？（明确声明不构建什么？）\n7. 如何衡量它是否有效？（具体指标，而非感觉）\n```"
+    },
+    {
+      "en-US": "Output: a `PRODUCT-BRIEF.md` with answers, risks, and a go/no-go recommendation.",
+      "zh-Hans": "输出：一份包含答案、风险和“执行/不执行”建议的 `PRODUCT-BRIEF.md`。"
+    },
+    {
+      "en-US": "If the result is \"yes, build this,\" the next lane is `product-capability`, not more founder-theater.",
+      "zh-Hans": "如果结果是“是的，构建这个”，则下一流程是 `product-capability`，而非更多创始人式的空谈。"
+    },
+    {
+      "en-US": "### Mode 2: Founder Review",
+      "zh-Hans": "### 模式 2：创始人评审"
+    },
+    {
+      "en-US": "Reviews your current project through a founder lens:",
+      "zh-Hans": "通过创始人视角评审你当前的项目："
+    },
+    {
+      "en-US": "```\n1. Read README, CLAUDE.md, package.json, recent commits\n2. Infer: what is this trying to be?\n3. Score: product-market fit signals (0-10)\n   - Usage growth trajectory\n   - Retention indicators (repeat contributors, return users)\n   - Revenue signals (pricing page, billing code, Stripe integration)\n   - Competitive moat (what's hard to copy?)\n4. Identify: the one thing that would 10x this\n5. Flag: things you're building that don't matter\n```",
+      "zh-Hans": "```\n1. 阅读 README、CLAUDE.md、package.json、最近的提交记录\n2. 推断：这个项目试图成为什么？\n3. 评分：产品-市场匹配信号（0-10分）\n   - 使用增长轨迹\n   - 留存指标（重复贡献者、回访用户）\n   - 收入信号（定价页面、计费代码、Stripe集成）\n   - 竞争护城河（哪些方面难以复制？）\n4. 识别：能让这个项目增长10倍的那一件事\n5. 标记：你正在构建但无关紧要的事情\n```"
+    },
+    {
+      "en-US": "### Mode 3: User Journey Audit",
+      "zh-Hans": "### 模式 3：用户旅程审计"
+    },
+    {
+      "en-US": "Maps the actual user experience:",
+      "zh-Hans": "映射真实的用户体验："
+    },
+    {
+      "en-US": "```\n1. Clone/install the product as a new user\n2. Document every friction point (confusing steps, errors, missing docs)\n3. Time each step\n4. Compare to competitor onboarding\n5. Score: time-to-value (how long until the user gets their first win?)\n6. Recommend: top 3 fixes for onboarding\n```",
+      "zh-Hans": "```\n1. 以新用户身份克隆/安装产品\n2. 记录每一个摩擦点（令人困惑的步骤、错误、缺失的文档）\n3. 为每个步骤计时\n4. 与竞争对手的入门流程进行比较\n5. 评分：价值实现时间（用户需要多久才能获得首次成功？）\n6. 建议：优化入门流程的前3项改进措施\n```"
+    },
+    {
+      "en-US": "### Mode 4: Feature Prioritization",
+      "zh-Hans": "### 模式 4：功能优先级排序"
+    },
+    {
+      "en-US": "When you have 10 ideas and need to pick 2:",
+      "zh-Hans": "当你有 10 个想法但需要选择 2 个时："
+    },
+    {
+      "en-US": "```\n1. List all candidate features\n2. Score each on: impact (1-5) × confidence (1-5) ÷ effort (1-5)\n3. Rank by ICE score\n4. Apply constraints: runway, team size, dependencies\n5. Output: prioritized roadmap with rationale\n```",
+      "zh-Hans": "```\n1. 列出所有候选功能\n2. 为每个功能评分：影响度 (1-5) × 置信度 (1-5) ÷ 工作量 (1-5)\n3. 按 ICE 分数排序\n4. 应用约束条件：可用时间、团队规模、依赖关系\n5. 输出：带有理由的优先级路线图\n```"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "All modes output actionable docs, not essays. Every recommendation has a specific next step.",
+      "zh-Hans": "所有模式都输出可操作的文档，而非长篇大论。每个建议都有具体的后续步骤。"
+    },
+    {
+      "en-US": "## Integration",
+      "zh-Hans": "## 集成"
+    },
+    {
+      "en-US": "Pair with:",
+      "zh-Hans": "可与以下流程配合使用："
+    },
+    {
+      "en-US": "- `/browser-qa` to verify the user journey audit findings\n- `/design-system audit` for visual polish assessment\n- `/canary-watch` for post-launch monitoring\n- `product-capability` when the product brief needs to become an implementation-ready capability plan",
+      "zh-Hans": "* `/browser-qa` 用于验证用户旅程审计结果\n* `/design-system audit` 用于视觉美化评估\n* `/canary-watch` 用于发布后监控\n* `product-capability` 当产品简报需要转变为可实施的能力计划时"
+    }
+  ]
+}

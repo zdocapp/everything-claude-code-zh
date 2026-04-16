@@ -1,0 +1,378 @@
+{
+  "sourceFile": "skills/videodb/reference/capture-reference.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Capture Reference",
+      "zh-Hans": "# 捕获参考"
+    },
+    {
+      "en-US": "Code-level details for VideoDB capture sessions. For workflow guide, see [capture.md](capture.md).",
+      "zh-Hans": "VideoDB 捕获会话的代码级详细信息。工作流程指南请参阅 [capture.md](capture.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## WebSocket Events",
+      "zh-Hans": "## WebSocket 事件"
+    },
+    {
+      "en-US": "Real-time events from capture sessions and AI pipelines. No webhooks or polling required.",
+      "zh-Hans": "来自捕获会话和 AI 管道的实时事件。无需 webhook 或轮询。"
+    },
+    {
+      "en-US": "Use [scripts/ws_listener.py](../scripts/ws_listener.py) to connect and dump events to `${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_events.jsonl`.",
+      "zh-Hans": "使用 [scripts/ws\\_listener.py](../scripts/ws_listener.py) 连接并将事件转储到 `${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_events.jsonl`。"
+    },
+    {
+      "en-US": "### Event Channels",
+      "zh-Hans": "### 事件通道"
+    },
+    {
+      "en-US": "| Channel | Source | Content |\n|---------|--------|---------|\n| `capture_session` | Session lifecycle | Status changes |\n| `transcript` | `start_transcript()` | Speech-to-text |\n| `visual_index` / `scene_index` | `index_visuals()` | Visual analysis |\n| `audio_index` | `index_audio()` | Audio analysis |\n| `alert` | `create_alert()` | Alert notifications |",
+      "zh-Hans": "| 通道 | 来源 | 内容 |\n|---------|--------|---------|\n| `capture_session` | 会话生命周期 | 状态变更 |\n| `transcript` | `start_transcript()` | 语音转文本 |\n| `visual_index` / `scene_index` | `index_visuals()` | 视觉分析 |\n| `audio_index` | `index_audio()` | 音频分析 |\n| `alert` | `create_alert()` | 警报通知 |"
+    },
+    {
+      "en-US": "### Session Lifecycle Events",
+      "zh-Hans": "### 会话生命周期事件"
+    },
+    {
+      "en-US": "| Event | Status | Key Data |\n|-------|--------|----------|\n| `capture_session.created` | `created` | — |\n| `capture_session.starting` | `starting` | — |\n| `capture_session.active` | `active` | `rtstreams[]` |\n| `capture_session.stopping` | `stopping` | — |\n| `capture_session.stopped` | `stopped` | — |\n| `capture_session.exported` | `exported` | `exported_video_id`, `stream_url`, `player_url` |\n| `capture_session.failed` | `failed` | `error` |",
+      "zh-Hans": "| 事件 | 状态 | 关键数据 |\n|-------|--------|----------|\n| `capture_session.created` | `created` | — |\n| `capture_session.starting` | `starting` | — |\n| `capture_session.active` | `active` | `rtstreams[]` |\n| `capture_session.stopping` | `stopping` | — |\n| `capture_session.stopped` | `stopped` | — |\n| `capture_session.exported` | `exported` | `exported_video_id`, `stream_url`, `player_url` |\n| `capture_session.failed` | `failed` | `error` |"
+    },
+    {
+      "en-US": "### Event Structures",
+      "zh-Hans": "### 事件结构"
+    },
+    {
+      "en-US": "**Transcript event:**",
+      "zh-Hans": "**转录事件：**"
+    },
+    {
+      "en-US": "```json\n{\n  \"channel\": \"transcript\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"rtstream_name\": \"mic:default\",\n  \"data\": {\n    \"text\": \"Let's schedule the meeting for Thursday\",\n    \"is_final\": true,\n    \"start\": 1710000001234,\n    \"end\": 1710000002345\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"channel\": \"transcript\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"rtstream_name\": \"mic:default\",\n  \"data\": {\n    \"text\": \"Let's schedule the meeting for Thursday\",\n    \"is_final\": true,\n    \"start\": 1710000001234,\n    \"end\": 1710000002345\n  }\n}\n```"
+    },
+    {
+      "en-US": "**Visual index event:**",
+      "zh-Hans": "**视觉索引事件：**"
+    },
+    {
+      "en-US": "```json\n{\n  \"channel\": \"visual_index\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"rtstream_name\": \"display:1\",\n  \"data\": {\n    \"text\": \"User is viewing a Slack conversation with 3 unread messages\",\n    \"start\": 1710000012340,\n    \"end\": 1710000018900\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"channel\": \"visual_index\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"rtstream_name\": \"display:1\",\n  \"data\": {\n    \"text\": \"User is viewing a Slack conversation with 3 unread messages\",\n    \"start\": 1710000012340,\n    \"end\": 1710000018900\n  }\n}\n```"
+    },
+    {
+      "en-US": "**Audio index event:**",
+      "zh-Hans": "**音频索引事件：**"
+    },
+    {
+      "en-US": "```json\n{\n  \"channel\": \"audio_index\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"rtstream_name\": \"mic:default\",\n  \"data\": {\n    \"text\": \"Discussion about scheduling a team meeting\",\n    \"start\": 1710000021500,\n    \"end\": 1710000029200\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"channel\": \"audio_index\",\n  \"rtstream_id\": \"rts-xxx\",\n  \"rtstream_name\": \"mic:default\",\n  \"data\": {\n    \"text\": \"Discussion about scheduling a team meeting\",\n    \"start\": 1710000021500,\n    \"end\": 1710000029200\n  }\n}\n```"
+    },
+    {
+      "en-US": "**Session active event:**",
+      "zh-Hans": "**会话活跃事件：**"
+    },
+    {
+      "en-US": "```json\n{\n  \"event\": \"capture_session.active\",\n  \"capture_session_id\": \"cap-xxx\",\n  \"status\": \"active\",\n  \"data\": {\n    \"rtstreams\": [\n      { \"rtstream_id\": \"rts-1\", \"name\": \"mic:default\", \"media_types\": [\"audio\"] },\n      { \"rtstream_id\": \"rts-2\", \"name\": \"system_audio:default\", \"media_types\": [\"audio\"] },\n      { \"rtstream_id\": \"rts-3\", \"name\": \"display:1\", \"media_types\": [\"video\"] }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"event\": \"capture_session.active\",\n  \"capture_session_id\": \"cap-xxx\",\n  \"status\": \"active\",\n  \"data\": {\n    \"rtstreams\": [\n      { \"rtstream_id\": \"rts-1\", \"name\": \"mic:default\", \"media_types\": [\"audio\"] },\n      { \"rtstream_id\": \"rts-2\", \"name\": \"system_audio:default\", \"media_types\": [\"audio\"] },\n      { \"rtstream_id\": \"rts-3\", \"name\": \"display:1\", \"media_types\": [\"video\"] }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "**Session exported event:**",
+      "zh-Hans": "**会话导出事件：**"
+    },
+    {
+      "en-US": "```json\n{\n  \"event\": \"capture_session.exported\",\n  \"capture_session_id\": \"cap-xxx\",\n  \"status\": \"exported\",\n  \"data\": {\n    \"exported_video_id\": \"v_xyz789\",\n    \"stream_url\": \"https://stream.videodb.io/...\",\n    \"player_url\": \"https://console.videodb.io/player?url=...\"\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"event\": \"capture_session.exported\",\n  \"capture_session_id\": \"cap-xxx\",\n  \"status\": \"exported\",\n  \"data\": {\n    \"exported_video_id\": \"v_xyz789\",\n    \"stream_url\": \"https://stream.videodb.io/...\",\n    \"player_url\": \"https://console.videodb.io/player?url=...\"\n  }\n}\n```"
+    },
+    {
+      "en-US": "> For latest details, see [VideoDB Realtime Context docs](https://docs.videodb.io/pages/ingest/capture-sdks/realtime-context.md).",
+      "zh-Hans": "> 获取最新详细信息，请参阅 [VideoDB 实时上下文文档](https://docs.videodb.io/pages/ingest/capture-sdks/realtime-context.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Event Persistence",
+      "zh-Hans": "## 事件持久化"
+    },
+    {
+      "en-US": "Use `ws_listener.py` to dump all WebSocket events to a JSONL file for later analysis.",
+      "zh-Hans": "使用 `ws_listener.py` 将所有 WebSocket 事件转储到 JSONL 文件以供后续分析。"
+    },
+    {
+      "en-US": "### Start Listener and Get WebSocket ID",
+      "zh-Hans": "### 启动监听器并获取 WebSocket ID"
+    },
+    {
+      "en-US": "```bash\n# Start with --clear to clear old events (recommended for new sessions)\npython scripts/ws_listener.py --clear &\n\n# Append to existing events (for reconnects)\npython scripts/ws_listener.py &\n```",
+      "zh-Hans": "```bash\n# Start with --clear to clear old events (recommended for new sessions)\npython scripts/ws_listener.py --clear &\n\n# Append to existing events (for reconnects)\npython scripts/ws_listener.py &\n```"
+    },
+    {
+      "en-US": "Or specify a custom output directory:",
+      "zh-Hans": "或指定自定义输出目录："
+    },
+    {
+      "en-US": "```bash\npython scripts/ws_listener.py --clear /path/to/output &\n# Or via environment variable:\nVIDEODB_EVENTS_DIR=/path/to/output python scripts/ws_listener.py --clear &\n```",
+      "zh-Hans": "```bash\npython scripts/ws_listener.py --clear /path/to/output &\n# Or via environment variable:\nVIDEODB_EVENTS_DIR=/path/to/output python scripts/ws_listener.py --clear &\n```"
+    },
+    {
+      "en-US": "The script outputs `WS_ID=<connection_id>` on the first line, then listens indefinitely.",
+      "zh-Hans": "脚本在第一行输出 `WS_ID=<connection_id>`，然后无限期监听。"
+    },
+    {
+      "en-US": "**Get the ws_id:**",
+      "zh-Hans": "**获取 ws\\_id：**"
+    },
+    {
+      "en-US": "```bash\ncat \"${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_ws_id\"\n```",
+      "zh-Hans": "```bash\ncat \"${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_ws_id\"\n```"
+    },
+    {
+      "en-US": "**Stop the listener:**",
+      "zh-Hans": "**停止监听器：**"
+    },
+    {
+      "en-US": "```bash\nkill \"$(cat \"${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_ws_pid\")\"\n```",
+      "zh-Hans": "```bash\nkill \"$(cat \"${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_ws_pid\")\"\n```"
+    },
+    {
+      "en-US": "**Functions that accept `ws_connection_id`:**",
+      "zh-Hans": "**接受 `ws_connection_id` 的函数：**"
+    },
+    {
+      "en-US": "| Function | Purpose |\n|----------|---------|\n| `conn.create_capture_session()` | Session lifecycle events |\n| RTStream methods | See [rtstream-reference.md](rtstream-reference.md) |",
+      "zh-Hans": "| 函数 | 用途 |\n|----------|---------|\n| `conn.create_capture_session()` | 会话生命周期事件 |\n| RTStream 方法 | 请参阅 [rtstream-reference.md](rtstream-reference.md) |"
+    },
+    {
+      "en-US": "**Output files** (in output directory, default `${XDG_STATE_HOME:-$HOME/.local/state}/videodb`):",
+      "zh-Hans": "**输出文件**（位于输出目录中，默认为 `${XDG_STATE_HOME:-$HOME/.local/state}/videodb`）："
+    },
+    {
+      "en-US": "- `videodb_ws_id` - WebSocket connection ID\n- `videodb_events.jsonl` - All events\n- `videodb_ws_pid` - Process ID for easy termination",
+      "zh-Hans": "* `videodb_ws_id` - WebSocket 连接 ID\n* `videodb_events.jsonl` - 所有事件\n* `videodb_ws_pid` - 进程 ID，便于终止"
+    },
+    {
+      "en-US": "**Features:**",
+      "zh-Hans": "**功能：**"
+    },
+    {
+      "en-US": "- `--clear` flag to clear events file on start (use for new sessions)\n- Auto-reconnect with exponential backoff on connection drops\n- Graceful shutdown on SIGINT/SIGTERM\n- Connection status logging",
+      "zh-Hans": "* `--clear` 标志用于在启动时清除事件文件（用于新会话）\n* 连接断开时使用指数退避自动重连\n* 在 SIGINT/SIGTERM 信号下优雅关闭\n* 连接状态日志记录"
+    },
+    {
+      "en-US": "### JSONL Format",
+      "zh-Hans": "### JSONL 格式"
+    },
+    {
+      "en-US": "Each line is a JSON object with added timestamps:",
+      "zh-Hans": "每行是一个添加了时间戳的 JSON 对象："
+    },
+    {
+      "en-US": "```json\n{\"ts\": \"2026-03-02T10:15:30.123Z\", \"unix_ts\": 1772446530.123, \"channel\": \"visual_index\", \"data\": {\"text\": \"...\"}}\n{\"ts\": \"2026-03-02T10:15:31.456Z\", \"unix_ts\": 1772446531.456, \"event\": \"capture_session.active\", \"capture_session_id\": \"cap-xxx\"}\n```",
+      "zh-Hans": "```json\n{\"ts\": \"2026-03-02T10:15:30.123Z\", \"unix_ts\": 1772446530.123, \"channel\": \"visual_index\", \"data\": {\"text\": \"...\"}}\n{\"ts\": \"2026-03-02T10:15:31.456Z\", \"unix_ts\": 1772446531.456, \"event\": \"capture_session.active\", \"capture_session_id\": \"cap-xxx\"}\n```"
+    },
+    {
+      "en-US": "### Reading Events",
+      "zh-Hans": "### 读取事件"
+    },
+    {
+      "en-US": "```python\nimport json\nimport time\nfrom pathlib import Path\n\nevents_path = Path.home() / \".local\" / \"state\" / \"videodb\" / \"videodb_events.jsonl\"\ntranscripts = []\nrecent = []\nvisual = []\n\ncutoff = time.time() - 600\nwith events_path.open(encoding=\"utf-8\") as handle:\n    for line in handle:\n        event = json.loads(line)\n        if event.get(\"channel\") == \"transcript\":\n            transcripts.append(event)\n        if event.get(\"unix_ts\", 0) > cutoff:\n            recent.append(event)\n        if (\n            event.get(\"channel\") == \"visual_index\"\n            and \"code\" in event.get(\"data\", {}).get(\"text\", \"\").lower()\n        ):\n            visual.append(event)\n```",
+      "zh-Hans": "```python\nimport json\nimport time\nfrom pathlib import Path\n\nevents_path = Path.home() / \".local\" / \"state\" / \"videodb\" / \"videodb_events.jsonl\"\ntranscripts = []\nrecent = []\nvisual = []\n\ncutoff = time.time() - 600\nwith events_path.open(encoding=\"utf-8\") as handle:\n    for line in handle:\n        event = json.loads(line)\n        if event.get(\"channel\") == \"transcript\":\n            transcripts.append(event)\n        if event.get(\"unix_ts\", 0) > cutoff:\n            recent.append(event)\n        if (\n            event.get(\"channel\") == \"visual_index\"\n            and \"code\" in event.get(\"data\", {}).get(\"text\", \"\").lower()\n        ):\n            visual.append(event)\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## WebSocket Connection",
+      "zh-Hans": "## WebSocket 连接"
+    },
+    {
+      "en-US": "Connect to receive real-time AI results from transcription and indexing pipelines.",
+      "zh-Hans": "连接以接收来自转录和索引管道的实时 AI 结果。"
+    },
+    {
+      "en-US": "```python\nws_wrapper = conn.connect_websocket()\nws = await ws_wrapper.connect()\nws_id = ws.connection_id\n```",
+      "zh-Hans": "```python\nws_wrapper = conn.connect_websocket()\nws = await ws_wrapper.connect()\nws_id = ws.connection_id\n```"
+    },
+    {
+      "en-US": "| Property / Method | Type | Description |\n|-------------------|------|-------------|\n| `ws.connection_id` | `str` | Unique connection ID (pass to AI pipeline methods) |\n| `ws.receive()` | `AsyncIterator[dict]` | Async iterator yielding real-time messages |",
+      "zh-Hans": "| 属性 / 方法 | 类型 | 描述 |\n|-------------------|------|-------------|\n| `ws.connection_id` | `str` | 唯一连接 ID（传递给 AI 管道方法） |\n| `ws.receive()` | `AsyncIterator[dict]` | 异步迭代器，产生实时消息 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## CaptureSession",
+      "zh-Hans": "## CaptureSession"
+    },
+    {
+      "en-US": "### Connection Methods",
+      "zh-Hans": "### 连接方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `conn.create_capture_session(end_user_id, collection_id, ws_connection_id, metadata)` | `CaptureSession` | Create a new capture session |\n| `conn.get_capture_session(capture_session_id)` | `CaptureSession` | Retrieve an existing capture session |\n| `conn.generate_client_token()` | `str` | Generate a client-side authentication token |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `conn.create_capture_session(end_user_id, collection_id, ws_connection_id, metadata)` | `CaptureSession` | 创建新的捕获会话 |\n| `conn.get_capture_session(capture_session_id)` | `CaptureSession` | 检索现有的捕获会话 |\n| `conn.generate_client_token()` | `str` | 生成客户端身份验证令牌 |"
+    },
+    {
+      "en-US": "### Create a Capture Session",
+      "zh-Hans": "### 创建捕获会话"
+    },
+    {
+      "en-US": "```python\nfrom pathlib import Path\n\nws_id = (Path.home() / \".local\" / \"state\" / \"videodb\" / \"videodb_ws_id\").read_text().strip()\n\nsession = conn.create_capture_session(\n    end_user_id=\"user-123\",  # required\n    collection_id=\"default\",\n    ws_connection_id=ws_id,\n    metadata={\"app\": \"my-app\"},\n)\nprint(f\"Session ID: {session.id}\")\n```",
+      "zh-Hans": "```python\nfrom pathlib import Path\n\nws_id = (Path.home() / \".local\" / \"state\" / \"videodb\" / \"videodb_ws_id\").read_text().strip()\n\nsession = conn.create_capture_session(\n    end_user_id=\"user-123\",  # required\n    collection_id=\"default\",\n    ws_connection_id=ws_id,\n    metadata={\"app\": \"my-app\"},\n)\nprint(f\"Session ID: {session.id}\")\n```"
+    },
+    {
+      "en-US": "> **Note:** `end_user_id` is required and identifies the user initiating the capture. For testing or demo purposes, any unique string identifier works (e.g., `\"demo-user\"`, `\"test-123\"`).",
+      "zh-Hans": "> **注意：** `end_user_id` 是必需的，用于标识发起捕获的用户。出于测试或演示目的，任何唯一的字符串标识符都有效（例如 `\"demo-user\"`、`\"test-123\"`）。"
+    },
+    {
+      "en-US": "### CaptureSession Properties",
+      "zh-Hans": "### CaptureSession 属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `session.id` | `str` | Unique capture session ID |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `session.id` | `str` | 唯一的捕获会话 ID |"
+    },
+    {
+      "en-US": "### CaptureSession Methods",
+      "zh-Hans": "### CaptureSession 方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `session.get_rtstream(type)` | `list[RTStream]` | Get RTStreams by type: `\"mic\"`, `\"screen\"`, or `\"system_audio\"` |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `session.get_rtstream(type)` | `list[RTStream]` | 按类型获取 RTStream：`\"mic\"`、`\"screen\"` 或 `\"system_audio\"` |"
+    },
+    {
+      "en-US": "### Generate a Client Token",
+      "zh-Hans": "### 生成客户端令牌"
+    },
+    {
+      "en-US": "```python\ntoken = conn.generate_client_token()\n```",
+      "zh-Hans": "```python\ntoken = conn.generate_client_token()\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## CaptureClient",
+      "zh-Hans": "## CaptureClient"
+    },
+    {
+      "en-US": "The client runs on the user's machine and handles permissions, channel discovery, and streaming.",
+      "zh-Hans": "客户端在用户机器上运行，处理权限、通道发现和流传输。"
+    },
+    {
+      "en-US": "```python\nfrom videodb.capture import CaptureClient\n\nclient = CaptureClient(client_token=token)\n```",
+      "zh-Hans": "```python\nfrom videodb.capture import CaptureClient\n\nclient = CaptureClient(client_token=token)\n```"
+    },
+    {
+      "en-US": "### CaptureClient Methods",
+      "zh-Hans": "### CaptureClient 方法"
+    },
+    {
+      "en-US": "| Method | Returns | Description |\n|--------|---------|-------------|\n| `await client.request_permission(type)` | `None` | Request device permission (`\"microphone\"`, `\"screen_capture\"`) |\n| `await client.list_channels()` | `Channels` | Discover available audio/video channels |\n| `await client.start_capture_session(capture_session_id, channels, primary_video_channel_id)` | `None` | Start streaming selected channels |\n| `await client.stop_capture()` | `None` | Gracefully stop the capture session |\n| `await client.shutdown()` | `None` | Clean up client resources |",
+      "zh-Hans": "| 方法 | 返回 | 描述 |\n|--------|---------|-------------|\n| `await client.request_permission(type)` | `None` | 请求设备权限（`\"microphone\"`、`\"screen_capture\"`） |\n| `await client.list_channels()` | `Channels` | 发现可用的音频/视频通道 |\n| `await client.start_capture_session(capture_session_id, channels, primary_video_channel_id)` | `None` | 开始流传输选定的通道 |\n| `await client.stop_capture()` | `None` | 优雅地停止捕获会话 |\n| `await client.shutdown()` | `None` | 清理客户端资源 |"
+    },
+    {
+      "en-US": "### Request Permissions",
+      "zh-Hans": "### 请求权限"
+    },
+    {
+      "en-US": "```python\nawait client.request_permission(\"microphone\")\nawait client.request_permission(\"screen_capture\")\n```",
+      "zh-Hans": "```python\nawait client.request_permission(\"microphone\")\nawait client.request_permission(\"screen_capture\")\n```"
+    },
+    {
+      "en-US": "### Start a Session",
+      "zh-Hans": "### 启动会话"
+    },
+    {
+      "en-US": "```python\nselected_channels = [c for c in [mic, display, system_audio] if c]\nawait client.start_capture_session(\n    capture_session_id=session.id,\n    channels=selected_channels,\n    primary_video_channel_id=display.id if display else None,\n)\n```",
+      "zh-Hans": "```python\nselected_channels = [c for c in [mic, display, system_audio] if c]\nawait client.start_capture_session(\n    capture_session_id=session.id,\n    channels=selected_channels,\n    primary_video_channel_id=display.id if display else None,\n)\n```"
+    },
+    {
+      "en-US": "### Stop a Session",
+      "zh-Hans": "### 停止会话"
+    },
+    {
+      "en-US": "```python\nawait client.stop_capture()\nawait client.shutdown()\n```",
+      "zh-Hans": "```python\nawait client.stop_capture()\nawait client.shutdown()\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Channels",
+      "zh-Hans": "## 通道"
+    },
+    {
+      "en-US": "Returned by `client.list_channels()`. Groups available devices by type.",
+      "zh-Hans": "由 `client.list_channels()` 返回。按类型分组可用设备。"
+    },
+    {
+      "en-US": "```python\nchannels = await client.list_channels()\nfor ch in channels.all():\n    print(f\"  {ch.id} ({ch.type}): {ch.name}\")\n\nmic = channels.mics.default\ndisplay = channels.displays.default\nsystem_audio = channels.system_audio.default\n```",
+      "zh-Hans": "```python\nchannels = await client.list_channels()\nfor ch in channels.all():\n    print(f\"  {ch.id} ({ch.type}): {ch.name}\")\n\nmic = channels.mics.default\ndisplay = channels.displays.default\nsystem_audio = channels.system_audio.default\n```"
+    },
+    {
+      "en-US": "### Channel Groups",
+      "zh-Hans": "### 通道组"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `channels.mics` | `ChannelGroup` | Available microphones |\n| `channels.displays` | `ChannelGroup` | Available screen displays |\n| `channels.system_audio` | `ChannelGroup` | Available system audio sources |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `channels.mics` | `ChannelGroup` | 可用的麦克风 |\n| `channels.displays` | `ChannelGroup` | 可用的屏幕显示器 |\n| `channels.system_audio` | `ChannelGroup` | 可用的系统音频源 |"
+    },
+    {
+      "en-US": "### ChannelGroup Methods & Properties",
+      "zh-Hans": "### ChannelGroup 方法与属性"
+    },
+    {
+      "en-US": "| Member | Type | Description |\n|--------|------|-------------|\n| `group.default` | `Channel` | Default channel in the group (or `None`) |\n| `group.all()` | `list[Channel]` | All channels in the group |",
+      "zh-Hans": "| 成员 | 类型 | 描述 |\n|--------|------|-------------|\n| `group.default` | `Channel` | 组中的默认通道（或 `None`） |\n| `group.all()` | `list[Channel]` | 组中的所有通道 |"
+    },
+    {
+      "en-US": "### Channel Properties",
+      "zh-Hans": "### 通道属性"
+    },
+    {
+      "en-US": "| Property | Type | Description |\n|----------|------|-------------|\n| `ch.id` | `str` | Unique channel ID |\n| `ch.type` | `str` | Channel type (`\"mic\"`, `\"display\"`, `\"system_audio\"`) |\n| `ch.name` | `str` | Human-readable channel name |\n| `ch.store` | `bool` | Whether to persist the recording (set to `True` to save) |",
+      "zh-Hans": "| 属性 | 类型 | 描述 |\n|----------|------|-------------|\n| `ch.id` | `str` | 唯一的通道 ID |\n| `ch.type` | `str` | 通道类型（`\"mic\"`、`\"display\"`、`\"system_audio\"`） |\n| `ch.name` | `str` | 人类可读的通道名称 |\n| `ch.store` | `bool` | 是否持久化录制（设置为 `True` 以保存） |"
+    },
+    {
+      "en-US": "Without `store = True`, streams are processed in real-time but not saved.",
+      "zh-Hans": "没有 `store = True`，流会实时处理但不会被保存。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## RTStreams and AI Pipelines",
+      "zh-Hans": "## RTStream 和 AI 管道"
+    },
+    {
+      "en-US": "After session is active, retrieve RTStream objects with `session.get_rtstream()`.",
+      "zh-Hans": "会话激活后，使用 `session.get_rtstream()` 检索 RTStream 对象。"
+    },
+    {
+      "en-US": "For RTStream methods (indexing, transcription, alerts, batch config), see [rtstream-reference.md](rtstream-reference.md).",
+      "zh-Hans": "有关 RTStream 方法（索引、转录、警报、批处理配置），请参阅 [rtstream-reference.md](rtstream-reference.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Session Lifecycle",
+      "zh-Hans": "## 会话生命周期"
+    },
+    {
+      "en-US": "```\n  create_capture_session()\n          │\n          v\n  ┌───────────────┐\n  │    created     │\n  └───────┬───────┘\n          │  client.start_capture_session()\n          v\n  ┌───────────────┐     WebSocket: capture_session.starting\n  │   starting     │ ──> Capture channels connect\n  └───────┬───────┘\n          │\n          v\n  ┌───────────────┐     WebSocket: capture_session.active\n  │    active      │ ──> Start AI pipelines\n  └───────┬──────────────┐\n          │              │\n          │              v\n          │      ┌───────────────┐     WebSocket: capture_session.failed\n          │      │    failed      │ ──> Inspect error payload and retry setup\n          │      └───────────────┘\n          │      unrecoverable capture error\n          │\n          │  client.stop_capture()\n          v\n  ┌───────────────┐     WebSocket: capture_session.stopping\n  │   stopping     │ ──> Finalize streams\n  └───────┬───────┘\n          │\n          v\n  ┌───────────────┐     WebSocket: capture_session.stopped\n  │   stopped      │ ──> All streams finalized\n  └───────┬───────┘\n          │  (if store=True)\n          v\n  ┌───────────────┐     WebSocket: capture_session.exported\n  │   exported     │ ──> Access video_id, stream_url, player_url\n  └───────────────┘\n```",
+      "zh-Hans": "```\n  create_capture_session()\n          │\n          v\n  ┌───────────────┐\n  │    已创建      │\n  └───────┬───────┘\n          │  client.start_capture_session()\n          v\n  ┌───────────────┐     WebSocket: capture_session.starting\n  │    启动中      │ ──> 捕获通道连接\n  └───────┬───────┘\n          │\n          v\n  ┌───────────────┐     WebSocket: capture_session.active\n  │    活跃中      │ ──> 启动 AI 管道\n  └───────┬──────────────┐\n          │              │\n          │              v\n          │      ┌───────────────┐     WebSocket: capture_session.failed\n          │      │     失败       │ ──> 检查错误负载并重试设置\n          │      └───────────────┘\n          │      不可恢复的捕获错误\n          │\n          │  client.stop_capture()\n          v\n  ┌───────────────┐     WebSocket: capture_session.stopping\n  │    停止中      │ ──> 完成流处理\n  └───────┬───────┘\n          │\n          v\n  ┌───────────────┐     WebSocket: capture_session.stopped\n  │     已停止     │ ──> 所有流处理完成\n  └───────┬───────┘\n          │  (如果 store=True)\n          v\n  ┌───────────────┐     WebSocket: capture_session.exported\n  │    已导出      │ ──> 访问 video_id, stream_url, player_url\n  └───────────────┘\n```"
+    }
+  ]
+}

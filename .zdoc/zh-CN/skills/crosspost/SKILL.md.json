@@ -1,0 +1,162 @@
+{
+  "sourceFile": "skills/crosspost/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: crosspost\ndescription: Multi-platform content distribution across X, LinkedIn, Threads, and Bluesky. Adapts content per platform using content-engine patterns. Never posts identical content cross-platform. Use when the user wants to distribute content across social platforms.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: crosspost\ndescription: 跨X、LinkedIn、Threads和Bluesky的多平台内容分发。使用内容引擎模式适配每个平台的内容。从不跨平台发布相同内容。当用户希望跨社交平台分发内容时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Crosspost",
+      "zh-Hans": "# 跨平台发布"
+    },
+    {
+      "en-US": "Distribute content across platforms without turning it into the same fake post in four costumes.",
+      "zh-Hans": "将内容分发到多个平台，而不将其变成同一篇虚假帖子换上四套不同的装扮。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- the user wants to publish the same underlying idea across multiple platforms\n- a launch, update, release, or essay needs platform-specific versions\n- the user says \"crosspost\", \"post this everywhere\", or \"adapt this for X and LinkedIn\"",
+      "zh-Hans": "* 用户希望将同一个核心想法发布到多个平台\n* 一次发布、更新、版本发布或文章需要针对特定平台的版本\n* 用户提到“跨平台发布”、“把这个发到所有地方”或“为 X 和 LinkedIn 平台调整一下这个内容”"
+    },
+    {
+      "en-US": "## Core Rules",
+      "zh-Hans": "## 核心规则"
+    },
+    {
+      "en-US": "1. Do not publish identical copy across platforms.\n2. Preserve the author's voice across platforms.\n3. Adapt for constraints, not stereotypes.\n4. One post should still be about one thing.\n5. Do not invent a CTA, question, or moral if the source did not earn one.",
+      "zh-Hans": "1. 不要在多个平台发布完全相同的文案。\n2. 在不同平台上保持作者的风格。\n3. 根据平台限制进行调整，而非刻板印象。\n4. 一篇帖子仍应专注于一件事。\n5. 如果原文没有，不要凭空添加行动号召、问题或寓意。"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### Step 1: Start with the Primary Version",
+      "zh-Hans": "### 步骤 1：从主要版本开始"
+    },
+    {
+      "en-US": "Pick the strongest source version first:",
+      "zh-Hans": "首先选择最强的源版本："
+    },
+    {
+      "en-US": "- the original X post\n- the original article\n- the launch note\n- the thread\n- the memo or changelog",
+      "zh-Hans": "* 原始的 X 帖子\n* 原始文章\n* 发布说明\n* 帖子串\n* 备忘录或更新日志"
+    },
+    {
+      "en-US": "Use `content-engine` first if the source still needs voice shaping.",
+      "zh-Hans": "如果源内容仍需风格塑造，请先使用 `content-engine`。"
+    },
+    {
+      "en-US": "### Step 2: Capture the Voice Fingerprint",
+      "zh-Hans": "### 步骤 2：捕捉风格指纹"
+    },
+    {
+      "en-US": "Run `brand-voice` first if the source voice is not already captured in the current session.",
+      "zh-Hans": "如果当前会话尚未捕捉到源内容的风格，请先运行 `brand-voice`。"
+    },
+    {
+      "en-US": "Reuse the resulting `VOICE PROFILE` directly.\nDo not build a second ad hoc voice checklist here unless the user explicitly wants a fresh override for this campaign.",
+      "zh-Hans": "直接复用生成的 `VOICE PROFILE`。\n除非用户明确希望为本次发布活动进行全新的覆盖，否则不要在此处构建第二个临时风格检查清单。"
+    },
+    {
+      "en-US": "### Step 3: Adapt by Platform Constraint",
+      "zh-Hans": "### 步骤 3：根据平台限制进行调整"
+    },
+    {
+      "en-US": "### X",
+      "zh-Hans": "### X"
+    },
+    {
+      "en-US": "- keep it compressed\n- lead with the sharpest claim or artifact\n- use a thread only when a single post would collapse the argument\n- avoid hashtags and generic filler",
+      "zh-Hans": "* 保持简洁\n* 以最犀利的观点或事实开头\n* 仅当单条帖子会削弱论点时才使用帖子串\n* 避免话题标签和通用填充内容"
+    },
+    {
+      "en-US": "### LinkedIn",
+      "zh-Hans": "### LinkedIn"
+    },
+    {
+      "en-US": "- add only the context needed for people outside the niche\n- do not turn it into a fake founder-reflection post\n- do not add a closing question just because it is LinkedIn\n- do not force a polished \"professional tone\" if the author is naturally sharper",
+      "zh-Hans": "* 仅添加非该领域人士所需了解的背景信息\n* 不要将其变成虚假的创始人反思帖\n* 不要仅仅因为是在 LinkedIn 就添加一个结尾问题\n* 如果作者风格本就犀利，不要强行使用“专业腔调”"
+    },
+    {
+      "en-US": "### Threads",
+      "zh-Hans": "### Threads"
+    },
+    {
+      "en-US": "- keep it readable and direct\n- do not write fake hyper-casual creator copy\n- do not paste the LinkedIn version and shorten it",
+      "zh-Hans": "* 保持可读性和直接性\n* 不要编写虚假的超随意创作者文案\n* 不要粘贴 LinkedIn 版本然后缩短它"
+    },
+    {
+      "en-US": "### Bluesky",
+      "zh-Hans": "### Bluesky"
+    },
+    {
+      "en-US": "- keep it concise\n- preserve the author's cadence\n- do not rely on hashtags or feed-gaming language",
+      "zh-Hans": "* 保持简洁\n* 保持作者的节奏感\n* 不要依赖话题标签或迎合算法推荐的语言"
+    },
+    {
+      "en-US": "## Posting Order",
+      "zh-Hans": "## 发布顺序"
+    },
+    {
+      "en-US": "Default:",
+      "zh-Hans": "默认："
+    },
+    {
+      "en-US": "1. post the strongest native version first\n2. adapt for the secondary platforms\n3. stagger timing only if the user wants sequencing help",
+      "zh-Hans": "1. 首先发布最强的原生平台版本\n2. 为次要平台进行调整\n3. 仅在用户需要时间安排帮助时才错开发布时间"
+    },
+    {
+      "en-US": "Do not add cross-platform references unless useful. Most of the time, the post should stand on its own.",
+      "zh-Hans": "除非有用，否则不要添加跨平台引用。大多数情况下，帖子应能独立成立。"
+    },
+    {
+      "en-US": "## Banned Patterns",
+      "zh-Hans": "## 禁止模式"
+    },
+    {
+      "en-US": "Delete and rewrite any of these:",
+      "zh-Hans": "删除并重写以下任何内容："
+    },
+    {
+      "en-US": "- \"Excited to share\"\n- \"Here's what I learned\"\n- \"What do you think?\"\n- \"link in bio\" unless that is literally true\n- generic \"professional takeaway\" paragraphs that were not in the source",
+      "zh-Hans": "* “很高兴分享”\n* “以下是我的心得”\n* “你怎么看？”\n* “链接在简介中”（除非事实确实如此）\n* 源内容中没有的通用“专业要点”段落"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Return:",
+      "zh-Hans": "返回："
+    },
+    {
+      "en-US": "- the primary platform version\n- adapted variants for each requested platform\n- a short note on what changed and why\n- any publishing constraint the user still needs to resolve",
+      "zh-Hans": "* 主要平台版本\n* 每个请求平台的调整版本\n* 关于更改内容及原因的简短说明\n* 用户仍需解决的任何发布限制"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量检查"
+    },
+    {
+      "en-US": "Before delivering:",
+      "zh-Hans": "交付前检查："
+    },
+    {
+      "en-US": "- each version reads like the same author under different constraints\n- no platform version feels padded or sanitized\n- no copy is duplicated verbatim across platforms\n- any extra context added for LinkedIn or newsletter use is actually necessary",
+      "zh-Hans": "* 每个版本读起来都像是同一位作者在不同限制下的作品\n* 没有哪个平台版本感觉是填充内容或经过消毒处理的\n* 没有文案在不同平台间逐字重复\n* 为 LinkedIn 或新闻通讯添加的任何额外背景信息确实是必要的"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `brand-voice` for reusable source-derived voice capture\n- `content-engine` for voice capture and source shaping\n- `x-api` for X publishing workflows",
+      "zh-Hans": "* `brand-voice` 用于可复用的、源自内容的风格捕捉\n* `content-engine` 用于风格捕捉和内容塑造\n* `x-api` 用于 X 发布工作流程"
+    }
+  ]
+}

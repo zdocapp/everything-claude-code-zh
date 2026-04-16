@@ -6,14 +6,14 @@ origin: ECC
 
 # Python 测试模式
 
-使用 pytest、TDD 方法论和最佳实践的 Python 应用程序全面测试策略。
+使用 pytest、TDD 方法论和最佳实践的 Python 应用程序综合测试策略。
 
 ## 何时激活
 
-* 编写新的 Python 代码（遵循 TDD：红、绿、重构）
-* 为 Python 项目设计测试套件
-* 审查 Python 测试覆盖率
-* 设置测试基础设施
+* 编写新的 Python 代码时（遵循 TDD：红、绿、重构）
+* 为 Python 项目设计测试套件时
+* 审查 Python 测试覆盖率时
+* 设置测试基础设施时
 
 ## 核心测试理念
 
@@ -23,7 +23,7 @@ origin: ECC
 
 1. **红**：为期望的行为编写一个失败的测试
 2. **绿**：编写最少的代码使测试通过
-3. **重构**：在保持测试通过的同时改进代码
+3. **重构**：改进代码，同时保持测试通过
 
 ```python
 # Step 1: Write failing test (RED)
@@ -115,7 +115,7 @@ assert str(exc_info.value) == "error message"
 
 ## 夹具
 
-### 基本夹具使用
+### 基本夹具用法
 
 ```python
 import pytest
@@ -223,7 +223,7 @@ def test_without_fixture_call():
     assert Config.get_setting("debug") is False
 ```
 
-### 使用 Conftest.py 共享夹具
+### 使用 conftest.py 共享夹具
 
 ```python
 # tests/conftest.py
@@ -308,9 +308,9 @@ def test_database_operations(db):
     assert result is not None
 ```
 
-## 标记器和测试选择
+## 标记和测试选择
 
-### 自定义标记器
+### 自定义标记
 
 ```python
 # Mark slow tests
@@ -346,7 +346,7 @@ pytest -m "integration or slow"
 pytest -m "unit and not slow"
 ```
 
-### 在 pytest.ini 中配置标记器
+### 在 pytest.ini 中配置标记
 
 ```ini
 [pytest]
@@ -357,7 +357,7 @@ markers =
     django: marks tests as requiring Django
 ```
 
-## 模拟和补丁
+## 模拟和打补丁
 
 ### 模拟函数
 
@@ -417,7 +417,7 @@ def test_file_reading(mock_file):
     assert result == "file content"
 ```
 
-### 使用 Autospec
+### 使用自动规范
 
 ```python
 @patch("mypackage.DBConnection", autospec=True)
@@ -595,7 +595,7 @@ def test_with_tmpdir(tmpdir):
 
 ```
 tests/
-├── conftest.py                 # 共享 fixtures
+├── conftest.py                 # 共享的测试夹具
 ├── __init__.py
 ├── unit/                       # 单元测试
 │   ├── __init__.py
@@ -638,22 +638,22 @@ class TestUserService:
 
 ### 应该做
 
-* **遵循 TDD**：在代码之前编写测试（红-绿-重构）
-* **测试单一事物**：每个测试应验证一个单一行为
+* **遵循 TDD**：先写测试再写代码（红-绿-重构）
+* **测试单一功能**：每个测试应验证一个单一行为
 * **使用描述性名称**：`test_user_login_with_invalid_credentials_fails`
 * **使用夹具**：用夹具消除重复
 * **模拟外部依赖**：不要依赖外部服务
 * **测试边界情况**：空输入、None 值、边界条件
-* **目标 80%+ 覆盖率**：关注关键路径
+* **目标 80%+ 覆盖率**：专注于关键路径
 * **保持测试快速**：使用标记来分离慢速测试
 
-### 不要做
+### 不应该做
 
-* **不要测试实现**：测试行为，而非内部实现
-* **不要在测试中使用复杂的条件语句**：保持测试简单
+* **不要测试实现细节**：测试行为，而非内部实现
+* **不要在测试中使用复杂的条件判断**：保持测试简单
 * **不要忽略测试失败**：所有测试必须通过
 * **不要测试第三方代码**：相信库能正常工作
-* **不要在测试之间共享状态**：测试应该是独立的
+* **不要在测试之间共享状态**：测试应相互独立
 * **不要在测试中捕获异常**：使用 `pytest.raises`
 * **不要使用 print 语句**：使用断言和 pytest 输出
 * **不要编写过于脆弱的测试**：避免过度具体的模拟
@@ -801,7 +801,7 @@ pytest --pdb
 
 ## 快速参考
 
-| 模式 | 用法 |
+| 模式 | 用途 |
 |---------|-------|
 | `pytest.raises()` | 测试预期异常 |
 | `@pytest.fixture()` | 创建可重用的测试夹具 |

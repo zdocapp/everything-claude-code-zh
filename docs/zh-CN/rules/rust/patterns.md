@@ -3,11 +3,11 @@ paths:
   - "**/*.rs"
 ---
 
-# Rust 设计模式
+# Rust 模式
 
-> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上，补充了 Rust 特有的内容。
+> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 Rust 特有的内容。
 
-## 基于 Trait 的 Repository 模式
+## 使用 Trait 的仓储模式
 
 将数据访问封装在 trait 之后：
 
@@ -20,7 +20,7 @@ pub trait OrderRepository: Send + Sync {
 }
 ```
 
-具体的实现负责处理存储细节（如 Postgres、SQLite，或用于测试的内存存储）。
+具体的实现处理存储细节（Postgres、SQLite、用于测试的内存存储）。
 
 ## 服务层
 
@@ -46,7 +46,7 @@ impl OrderService {
 }
 ```
 
-## 为类型安全使用 Newtype 模式
+## 用于类型安全的新类型模式
 
 使用不同的包装类型防止参数混淆：
 
@@ -62,7 +62,7 @@ fn get_order(user: UserId, order: OrderId) -> anyhow::Result<Order> {
 
 ## 枚举状态机
 
-将状态建模为枚举 —— 使非法状态无法表示：
+将状态建模为枚举——使非法状态无法表示：
 
 ```rust
 enum ConnectionState {
@@ -84,11 +84,11 @@ fn handle(state: &ConnectionState) {
 }
 ```
 
-始终进行穷尽匹配 —— 对于业务关键的枚举，不要使用通配符 `_`。
+始终进行穷尽匹配——对于业务关键枚举，不要使用通配符 `_`。
 
 ## 建造者模式
 
-适用于具有多个可选参数的结构体：
+用于具有多个可选参数的结构体：
 
 ```rust
 pub struct ServerConfig {
@@ -129,9 +129,9 @@ impl ServerConfigBuilder {
 }
 ```
 
-## 密封 Trait 以控制扩展性
+## 密封 Trait 以控制可扩展性
 
-使用私有模块来密封一个 trait，防止外部实现：
+使用私有模块来密封 trait，防止外部实现：
 
 ```rust
 mod private {
@@ -149,9 +149,9 @@ impl Format for Json {
 }
 ```
 
-## API 响应包装器
+## API 响应信封
 
-使用泛型枚举实现一致的 API 响应：
+使用通用枚举实现一致的 API 响应：
 
 ```rust
 #[derive(Debug, serde::Serialize)]
@@ -166,4 +166,4 @@ pub enum ApiResponse<T: serde::Serialize> {
 
 ## 参考资料
 
-参见技能：`rust-patterns`，其中包含全面的模式，涵盖所有权、trait、泛型、并发和异步。
+有关全面的模式（包括所有权、trait、泛型、并发和异步），请参阅技能：`rust-patterns`。

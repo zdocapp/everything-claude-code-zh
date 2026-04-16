@@ -1,13 +1,13 @@
 # Django REST API — 项目 CLAUDE.md
 
-> 使用 PostgreSQL 和 Celery 的 Django REST Framework API 真实示例。
-> 将此复制到你的项目根目录并针对你的服务进行自定义。
+> 一个使用 PostgreSQL 和 Celery 的 Django REST Framework API 真实示例。
+> 将此复制到您的项目根目录，并根据您的服务进行自定义。
 
 ## 项目概述
 
 **技术栈:** Python 3.12+, Django 5.x, Django REST Framework, PostgreSQL, Celery + Redis, pytest, Docker Compose
 
-**架构:** 采用领域驱动设计，每个业务领域对应一个应用。DRF 用于 API 层，Celery 用于异步任务，pytest 用于测试。所有端点返回 JSON — 无模板渲染。
+**架构:** 基于领域驱动设计，每个业务域对应一个应用。DRF 用于 API 层，Celery 用于异步任务，pytest 用于测试。所有端点返回 JSON — 无模板渲染。
 
 ## 关键规则
 
@@ -17,15 +17,15 @@
 * 不使用 `print()` 语句 — 使用 `logging.getLogger(__name__)`
 * 字符串格式化使用 f-strings，绝不使用 `%` 或 `.format()`
 * 文件操作使用 `pathlib.Path` 而非 `os.path`
-* 导入排序使用 isort：标准库、第三方库、本地库（由 ruff 强制执行）
+* 导入使用 isort 排序：标准库、第三方库、本地库（由 ruff 强制执行）
 
 ### 数据库
 
-* 所有查询使用 Django ORM — 原始 SQL 仅与 `.raw()` 和参数化查询一起使用
-* 迁移文件提交到 git — 生产中绝不使用 `--fake`
-* 使用 `select_related()` 和 `prefetch_related()` 防止 N+1 查询
+* 所有查询使用 Django ORM — 原始 SQL 仅在使用 `.raw()` 和参数化查询时使用
+* 迁移文件提交到 git — 生产环境绝不使用 `--fake`
+* 使用 `select_related()` 和 `prefetch_related()` 来防止 N+1 查询
 * 所有模型必须具有 `created_at` 和 `updated_at` 自动字段
-* 在 `filter()`、`order_by()` 或 `WHERE` 子句中使用的任何字段上建立索引
+* 在用于 `filter()`、`order_by()` 或 `WHERE` 子句的任何字段上建立索引
 
 ```python
 # BAD: N+1 query
@@ -37,17 +37,17 @@ for order in orders:
 orders = Order.objects.select_related("customer").all()
 ```
 
-### 认证
+### 身份验证
 
 * 通过 `djangorestframework-simplejwt` 使用 JWT — 访问令牌（15 分钟）+ 刷新令牌（7 天）
-* 每个视图都设置权限类 — 绝不依赖默认设置
+* 每个视图都必须使用权限类 — 绝不依赖默认设置
 * 使用 `IsAuthenticated` 作为基础，为对象级访问添加自定义权限
-* 为登出启用令牌黑名单
+* 启用令牌黑名单以支持登出
 
 ### 序列化器
 
 * 简单 CRUD 使用 `ModelSerializer`，复杂验证使用 `Serializer`
-* 当输入/输出结构不同时，分离读写序列化器
+* 当输入/输出结构不同时，使用独立的读写序列化器
 * 在序列化器层面进行验证，而非在视图中 — 视图应保持精简
 
 ```python
@@ -71,9 +71,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
 ### 错误处理
 
-* 使用 DRF 异常处理器确保一致的错误响应
+* 使用 DRF 异常处理器以确保一致的错误响应
 * 业务逻辑中的自定义异常放在 `core/exceptions.py`
-* 绝不向客户端暴露内部错误细节
+* 绝不向客户端暴露内部错误详情
 
 ```python
 # core/exceptions.py
@@ -90,7 +90,7 @@ class InsufficientStockError(APIException):
 * 代码或注释中不使用表情符号
 * 最大行长度：120 个字符（由 ruff 强制执行）
 * 类名：PascalCase，函数/变量名：snake\_case，常量：UPPER\_SNAKE\_CASE
-* 视图保持精简 — 业务逻辑放在服务函数或模型方法中
+* 视图保持精简 — 业务逻辑应位于服务函数或模型方法中
 
 ## 文件结构
 
@@ -128,7 +128,7 @@ core/
   exceptions.py          # 自定义 API 异常
   permissions.py         # 共享权限类
   pagination.py          # 自定义分页
-  middleware.py          # 请求日志记录、计时
+  middleware.py          # 请求日志、计时
   tests/
 ```
 
@@ -303,6 +303,6 @@ pytest --lf
 ## Git 工作流
 
 * `feat:` 新功能，`fix:` 错误修复，`refactor:` 代码变更
-* 功能分支从 `main` 创建，需要 PR
+* 功能分支从 `main` 创建，必须提交 PR
 * CI：ruff（代码检查 + 格式化）、mypy（类型检查）、pytest（测试）、safety（依赖检查）
 * 部署：Docker 镜像，通过 Kubernetes 或 Railway 管理

@@ -1,0 +1,78 @@
+{
+  "sourceFile": "rules/web/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with web-specific frontend content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上，扩展了特定于 Web 前端的内容。"
+    },
+    {
+      "en-US": "# Web Coding Style",
+      "zh-Hans": "# Web 编码规范"
+    },
+    {
+      "en-US": "## File Organization",
+      "zh-Hans": "## 文件组织"
+    },
+    {
+      "en-US": "Organize by feature or surface area, not by file type:",
+      "zh-Hans": "按功能或界面区域组织，而非按文件类型："
+    },
+    {
+      "en-US": "```text\nsrc/\n├── components/\n│   ├── hero/\n│   │   ├── Hero.tsx\n│   │   ├── HeroVisual.tsx\n│   │   └── hero.css\n│   ├── scrolly-section/\n│   │   ├── ScrollySection.tsx\n│   │   ├── StickyVisual.tsx\n│   │   └── scrolly.css\n│   └── ui/\n│       ├── Button.tsx\n│       ├── SurfaceCard.tsx\n│       └── AnimatedText.tsx\n├── hooks/\n│   ├── useReducedMotion.ts\n│   └── useScrollProgress.ts\n├── lib/\n│   ├── animation.ts\n│   └── color.ts\n└── styles/\n    ├── tokens.css\n    ├── typography.css\n    └── global.css\n```",
+      "zh-Hans": "```text\nsrc/\n├── components/\n│   ├── hero/\n│   │   ├── Hero.tsx\n│   │   ├── HeroVisual.tsx\n│   │   └── hero.css\n│   ├── scrolly-section/\n│   │   ├── ScrollySection.tsx\n│   │   ├── StickyVisual.tsx\n│   │   └── scrolly.css\n│   └── ui/\n│       ├── Button.tsx\n│       ├── SurfaceCard.tsx\n│       └── AnimatedText.tsx\n├── hooks/\n│   ├── useReducedMotion.ts\n│   └── useScrollProgress.ts\n├── lib/\n│   ├── animation.ts\n│   └── color.ts\n└── styles/\n    ├── tokens.css\n    ├── typography.css\n    └── global.css\n```"
+    },
+    {
+      "en-US": "## CSS Custom Properties",
+      "zh-Hans": "## CSS 自定义属性"
+    },
+    {
+      "en-US": "Define design tokens as variables. Do not hardcode palette, typography, or spacing repeatedly:",
+      "zh-Hans": "将设计令牌定义为变量。不要重复硬编码调色板、排版或间距："
+    },
+    {
+      "en-US": "```css\n:root {\n  --color-surface: oklch(98% 0 0);\n  --color-text: oklch(18% 0 0);\n  --color-accent: oklch(68% 0.21 250);\n\n  --text-base: clamp(1rem, 0.92rem + 0.4vw, 1.125rem);\n  --text-hero: clamp(3rem, 1rem + 7vw, 8rem);\n\n  --space-section: clamp(4rem, 3rem + 5vw, 10rem);\n\n  --duration-fast: 150ms;\n  --duration-normal: 300ms;\n  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);\n}\n```",
+      "zh-Hans": "```css\n:root {\n  --color-surface: oklch(98% 0 0);\n  --color-text: oklch(18% 0 0);\n  --color-accent: oklch(68% 0.21 250);\n\n  --text-base: clamp(1rem, 0.92rem + 0.4vw, 1.125rem);\n  --text-hero: clamp(3rem, 1rem + 7vw, 8rem);\n\n  --space-section: clamp(4rem, 3rem + 5vw, 10rem);\n\n  --duration-fast: 150ms;\n  --duration-normal: 300ms;\n  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);\n}\n```"
+    },
+    {
+      "en-US": "## Animation-Only Properties",
+      "zh-Hans": "## 仅动画属性"
+    },
+    {
+      "en-US": "Prefer compositor-friendly motion:",
+      "zh-Hans": "优先使用合成器友好的动画属性："
+    },
+    {
+      "en-US": "- `transform`\n- `opacity`\n- `clip-path`\n- `filter` (sparingly)",
+      "zh-Hans": "* `transform`\n* `opacity`\n* `clip-path`\n* `filter`（谨慎使用）"
+    },
+    {
+      "en-US": "Avoid animating layout-bound properties:",
+      "zh-Hans": "避免动画化与布局绑定的属性："
+    },
+    {
+      "en-US": "- `width`\n- `height`\n- `top`\n- `left`\n- `margin`\n- `padding`\n- `border`\n- `font-size`",
+      "zh-Hans": "* `width`\n* `height`\n* `top`\n* `left`\n* `margin`\n* `padding`\n* `border`\n* `font-size`"
+    },
+    {
+      "en-US": "## Semantic HTML First",
+      "zh-Hans": "## 语义化 HTML 优先"
+    },
+    {
+      "en-US": "```html\n<header>\n  <nav aria-label=\"Main navigation\">...</nav>\n</header>\n<main>\n  <section aria-labelledby=\"hero-heading\">\n    <h1 id=\"hero-heading\">...</h1>\n  </section>\n</main>\n<footer>...</footer>\n```",
+      "zh-Hans": "```html\n<header>\n  <nav aria-label=\"Main navigation\">...</nav>\n</header>\n<main>\n  <section aria-labelledby=\"hero-heading\">\n    <h1 id=\"hero-heading\">...</h1>\n  </section>\n</main>\n<footer>...</footer>\n```"
+    },
+    {
+      "en-US": "Do not reach for generic wrapper `div` stacks when a semantic element exists.",
+      "zh-Hans": "当存在语义化元素时，不要使用通用的包装器 `div` 堆叠。"
+    },
+    {
+      "en-US": "## Naming",
+      "zh-Hans": "## 命名规范"
+    },
+    {
+      "en-US": "- Components: PascalCase (`ScrollySection`, `SurfaceCard`)\n- Hooks: `use` prefix (`useReducedMotion`)\n- CSS classes: kebab-case or utility classes\n- Animation timelines: camelCase with intent (`heroRevealTl`)",
+      "zh-Hans": "* 组件：PascalCase（`ScrollySection`，`SurfaceCard`）\n* Hooks：`use` 前缀（`useReducedMotion`）\n* CSS 类：kebab-case 或实用工具类\n* 动画时间线：具有意图的 camelCase（`heroRevealTl`）"
+    }
+  ]
+}

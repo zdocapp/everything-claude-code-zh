@@ -1,0 +1,78 @@
+{
+  "sourceFile": "SECURITY.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Security Policy",
+      "zh-Hans": "# 安全政策"
+    },
+    {
+      "en-US": "## Supported Versions",
+      "zh-Hans": "## 支持的版本"
+    },
+    {
+      "en-US": "| Version | Supported          |\n| ------- | ------------------ |\n| 1.9.x   | :white_check_mark: |\n| 1.8.x   | :white_check_mark: |\n| < 1.8   | :x:                |",
+      "zh-Hans": "| 版本    | 支持状态          |\n| ------- | ------------------ |\n| 1.9.x   | :white\\_check\\_mark: |\n| 1.8.x   | :white\\_check\\_mark: |\n| < 1.8   | :x:                |"
+    },
+    {
+      "en-US": "## Reporting a Vulnerability",
+      "zh-Hans": "## 报告漏洞"
+    },
+    {
+      "en-US": "If you discover a security vulnerability in ECC, please report it responsibly.",
+      "zh-Hans": "如果您在 ECC 中发现安全漏洞，请负责任地报告。"
+    },
+    {
+      "en-US": "**Do not open a public GitHub issue for security vulnerabilities.**",
+      "zh-Hans": "**请勿为安全漏洞创建公开的 GitHub issue。**"
+    },
+    {
+      "en-US": "Instead, email **<security@ecc.tools>** with:",
+      "zh-Hans": "请发送邮件至 **<security@ecc.tools>**，内容应包括："
+    },
+    {
+      "en-US": "- A description of the vulnerability\n- Steps to reproduce\n- The affected version(s)\n- Any potential impact assessment",
+      "zh-Hans": "* 漏洞描述\n* 重现步骤\n* 受影响的版本\n* 任何潜在的影响评估"
+    },
+    {
+      "en-US": "You can expect:",
+      "zh-Hans": "您可以期待："
+    },
+    {
+      "en-US": "- **Acknowledgment** within 48 hours\n- **Status update** within 7 days\n- **Fix or mitigation** within 30 days for critical issues",
+      "zh-Hans": "* **48 小时内**收到确认\n* **7 天内**收到状态更新\n* 对于关键问题，**30 天内**提供修复或缓解措施"
+    },
+    {
+      "en-US": "If the vulnerability is accepted, we will:",
+      "zh-Hans": "如果漏洞被接受，我们将："
+    },
+    {
+      "en-US": "- Credit you in the release notes (unless you prefer anonymity)\n- Fix the issue in a timely manner\n- Coordinate disclosure timing with you",
+      "zh-Hans": "* 在发布说明中致谢（除非您希望匿名）\n* 及时修复问题\n* 与您协调披露时间"
+    },
+    {
+      "en-US": "If the vulnerability is declined, we will explain why and provide guidance on whether it should be reported elsewhere.",
+      "zh-Hans": "如果漏洞被拒绝，我们将解释原因，并就是否应向其他地方报告提供指导。"
+    },
+    {
+      "en-US": "## Scope",
+      "zh-Hans": "## 范围"
+    },
+    {
+      "en-US": "This policy covers:",
+      "zh-Hans": "本政策涵盖："
+    },
+    {
+      "en-US": "- The ECC plugin and all scripts in this repository\n- Hook scripts that execute on your machine\n- Install/uninstall/repair lifecycle scripts\n- MCP configurations shipped with ECC\n- The AgentShield security scanner ([github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield))",
+      "zh-Hans": "* ECC 插件及此仓库中的所有脚本\n* 在您机器上执行的钩子脚本\n* 安装/卸载/修复生命周期脚本\n* 随 ECC 分发的 MCP 配置\n* AgentShield 安全扫描器 ([github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield))"
+    },
+    {
+      "en-US": "## Security Resources",
+      "zh-Hans": "## 安全资源"
+    },
+    {
+      "en-US": "- **AgentShield**: Scan your agent config for vulnerabilities — `npx ecc-agentshield scan`\n- **Security Guide**: [The Shorthand Guide to Everything Agentic Security](./the-security-guide.md)\n- **OWASP MCP Top 10**: [owasp.org/www-project-mcp-top-10](https://owasp.org/www-project-mcp-top-10/)\n- **OWASP Agentic Applications Top 10**: [genai.owasp.org](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)",
+      "zh-Hans": "* **AgentShield**：扫描您的代理配置以查找漏洞 — `npx ecc-agentshield scan`\n* **安全指南**：[The Shorthand Guide to Everything Agentic Security](./the-security-guide.md)\n* **OWASP MCP Top 10**：[owasp.org/www-project-mcp-top-10](https://owasp.org/www-project-mcp-top-10/)\n* **OWASP Agentic Applications Top 10**：[genai.owasp.org](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)"
+    }
+  ]
+}

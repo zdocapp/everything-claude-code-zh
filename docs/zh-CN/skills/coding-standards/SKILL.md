@@ -1,48 +1,69 @@
 ---
 name: coding-standards
-description: 适用于TypeScript、JavaScript、React和Node.js开发的通用编码标准、最佳实践和模式。
+description: 跨项目编码规范的基线，涵盖命名、可读性、不可变性和代码质量审查。使用详细的前端或后端技能来实现框架特定的模式。
 origin: ECC
 ---
 
 # 编码标准与最佳实践
 
-适用于所有项目的通用编码标准。
+适用于各项目的基线编码规范。
+
+此技能是共享的基础，而非详细的框架操作手册。
+
+* 对于 React、状态、表单、渲染和 UI 架构，使用 `frontend-patterns`。
+* 对于仓库/服务层、端点设计、验证和服务器特定关注点，使用 `backend-patterns` 或 `api-design`。
+* 当需要最短的可复用规则层而非完整的技能演练时，使用 `rules/common/coding-style.md`。
 
 ## 何时激活
 
-* 开始新项目或新模块时
+* 启动新项目或模块时
 * 审查代码质量和可维护性时
-* 重构现有代码以遵循约定时
+* 重构现有代码以遵循规范时
 * 强制执行命名、格式或结构一致性时
 * 设置代码检查、格式化或类型检查规则时
-* 引导新贡献者熟悉编码规范时
+* 向新贡献者介绍编码规范时
+
+## 范围边界
+
+在以下情况下激活此技能：
+
+* 描述性命名
+* 默认不可变性
+* 可读性、KISS、DRY 和 YAGNI 原则的强制执行
+* 错误处理预期和代码异味审查
+
+不要将此技能作为以下内容的主要来源：
+
+* React 组合、钩子或渲染模式
+* 后端架构、API 设计或数据库分层
+* 当已存在更具体的 ECC 技能时，用于特定领域的框架指导
 
 ## 代码质量原则
 
 ### 1. 可读性优先
 
-* 代码被阅读的次数远多于被编写的次数
+* 代码被阅读的次数多于被编写的次数
 * 清晰的变量和函数名
-* 优先选择自文档化代码，而非注释
-* 一致的格式化
+* 优先选择自文档化代码而非注释
+* 一致的格式
 
-### 2. KISS (保持简单，傻瓜)
+### 2. KISS（保持简单，傻瓜）
 
-* 采用能工作的最简单方案
+* 采用可行的最简单解决方案
 * 避免过度设计
 * 不要过早优化
-* 易于理解 > 聪明的代码
+* 易于理解 > 巧妙的代码
 
-### 3. DRY (不要重复自己)
+### 3. DRY（不要重复自己）
 
 * 将通用逻辑提取到函数中
-* 创建可复用的组件
+* 创建可复用组件
 * 跨模块共享工具函数
 * 避免复制粘贴式编程
 
-### 4. YAGNI (你不会需要它)
+### 4. YAGNI（你不会需要它）
 
-* 不要预先构建不需要的功能
+* 不要在需要之前构建功能
 * 避免推测性泛化
 * 仅在需要时增加复杂性
 * 从简单开始，需要时再重构
@@ -77,7 +98,7 @@ function similarity(a, b) { }
 function email(e) { }
 ```
 
-### 不可变性模式 (关键)
+### 不可变性模式（关键）
 
 ```typescript
 // PASS: ALWAYS use spread operator
@@ -192,7 +213,7 @@ export function Button(props) {
 }
 ```
 
-### 自定义 Hooks
+### 自定义钩子
 
 ```typescript
 // PASS: GOOD: Reusable custom hook
@@ -322,29 +343,29 @@ export async function POST(request: Request) {
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── api/               # API routes
-│   ├── markets/           # Market pages
-│   └── (auth)/           # Auth pages (route groups)
-├── components/            # React components
-│   ├── ui/               # Generic UI components
-│   ├── forms/            # Form components
-│   └── layouts/          # Layout components
-├── hooks/                # Custom React hooks
-├── lib/                  # Utilities and configs
-│   ├── api/             # API clients
-│   ├── utils/           # Helper functions
-│   └── constants/       # Constants
-├── types/                # TypeScript types
-└── styles/              # Global styles
+│   ├── api/               # API 路由
+│   ├── markets/           # 市场页面
+│   └── (auth)/           # 认证页面（路由组）
+├── components/            # React 组件
+│   ├── ui/               # 通用 UI 组件
+│   ├── forms/            # 表单组件
+│   └── layouts/          # 布局组件
+├── hooks/                # 自定义 React hooks
+├── lib/                  # 工具和配置
+│   ├── api/             # API 客户端
+│   ├── utils/           # 辅助函数
+│   └── constants/       # 常量
+├── types/                # TypeScript 类型
+└── styles/              # 全局样式
 ```
 
 ### 文件命名
 
 ```
-components/Button.tsx          # 组件使用帕斯卡命名法
-hooks/useAuth.ts              # 使用 'use' 前缀的驼峰命名法
-lib/formatDate.ts             # 工具函数使用驼峰命名法
-types/market.types.ts         # 使用 .types 后缀的驼峰命名法
+components/Button.tsx          # 组件使用 PascalCase 命名
+hooks/useAuth.ts              # 以 'use' 为前缀的 camelCase 命名
+lib/formatDate.ts             # 工具函数使用 camelCase 命名
+types/market.types.ts         # 以 .types 为后缀的 camelCase 命名
 ```
 
 ## 注释与文档
@@ -444,7 +465,7 @@ const { data } = await supabase
 
 ## 测试标准
 
-### 测试结构 (AAA 模式)
+### 测试结构（AAA 模式）
 
 ```typescript
 test('calculates similarity correctly', () => {
@@ -475,9 +496,9 @@ test('test search', () => { })
 
 ## 代码异味检测
 
-警惕以下反模式：
+注意以下反模式：
 
-### 1. 长函数
+### 1. 过长函数
 
 ```typescript
 // FAIL: BAD: Function > 50 lines
@@ -534,4 +555,4 @@ if (retryCount > MAX_RETRIES) { }
 setTimeout(callback, DEBOUNCE_DELAY_MS)
 ```
 
-**记住**：代码质量不容妥协。清晰、可维护的代码能够实现快速开发和自信的重构。
+**记住**：代码质量不容妥协。清晰、可维护的代码能实现快速开发和自信的重构。

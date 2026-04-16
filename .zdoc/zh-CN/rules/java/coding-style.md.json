@@ -1,0 +1,106 @@
+{
+  "sourceFile": "rules/java/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.java\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.java\"\n---"
+    },
+    {
+      "en-US": "# Java Coding Style",
+      "zh-Hans": "# Java 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Java-specific content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Java 相关的内容。"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- **google-java-format** or **Checkstyle** (Google or Sun style) for enforcement\n- One public top-level type per file\n- Consistent indent: 2 or 4 spaces (match project standard)\n- Member order: constants, fields, constructors, public methods, protected, private",
+      "zh-Hans": "* 使用 **google-java-format** 或 **Checkstyle**（Google 或 Sun 风格）进行规范检查\n* 每个文件只包含一个顶层的公共类型\n* 保持一致的缩进：2 或 4 个空格（与项目标准保持一致）\n* 成员顺序：常量、字段、构造函数、公共方法、受保护方法、私有方法"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "- Prefer `record` for value types (Java 16+)\n- Mark fields `final` by default — use mutable state only when required\n- Return defensive copies from public APIs: `List.copyOf()`, `Map.copyOf()`, `Set.copyOf()`\n- Copy-on-write: return new instances rather than mutating existing ones",
+      "zh-Hans": "* 对于值类型，优先使用 `record`（Java 16+）\n* 默认将字段标记为 `final` —— 仅在需要时才使用可变状态\n* 从公共 API 返回防御性副本：`List.copyOf()`、`Map.copyOf()`、`Set.copyOf()`\n* 写时复制：返回新实例而非修改现有实例"
+    },
+    {
+      "en-US": "```java\n// GOOD — immutable value type\npublic record OrderSummary(Long id, String customerName, BigDecimal total) {}\n\n// GOOD — final fields, no setters\npublic class Order {\n    private final Long id;\n    private final List<LineItem> items;\n\n    public List<LineItem> getItems() {\n        return List.copyOf(items);\n    }\n}\n```",
+      "zh-Hans": "```java\n// GOOD — immutable value type\npublic record OrderSummary(Long id, String customerName, BigDecimal total) {}\n\n// GOOD — final fields, no setters\npublic class Order {\n    private final Long id;\n    private final List<LineItem> items;\n\n    public List<LineItem> getItems() {\n        return List.copyOf(items);\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Naming",
+      "zh-Hans": "## 命名"
+    },
+    {
+      "en-US": "Follow standard Java conventions:",
+      "zh-Hans": "遵循标准的 Java 约定："
+    },
+    {
+      "en-US": "- `PascalCase` for classes, interfaces, records, enums\n- `camelCase` for methods, fields, parameters, local variables\n- `SCREAMING_SNAKE_CASE` for `static final` constants\n- Packages: all lowercase, reverse domain (`com.example.app.service`)",
+      "zh-Hans": "* 类、接口、记录、枚举使用 `PascalCase`\n* 方法、字段、参数、局部变量使用 `camelCase`\n* `static final` 常量使用 `SCREAMING_SNAKE_CASE`\n* 包名：全小写，使用反向域名格式（`com.example.app.service`）"
+    },
+    {
+      "en-US": "## Modern Java Features",
+      "zh-Hans": "## 现代 Java 特性"
+    },
+    {
+      "en-US": "Use modern language features where they improve clarity:",
+      "zh-Hans": "在能提高代码清晰度的地方使用现代语言特性："
+    },
+    {
+      "en-US": "- **Records** for DTOs and value types (Java 16+)\n- **Sealed classes** for closed type hierarchies (Java 17+)\n- **Pattern matching** with `instanceof` — no explicit cast (Java 16+)\n- **Text blocks** for multi-line strings — SQL, JSON templates (Java 15+)\n- **Switch expressions** with arrow syntax (Java 14+)\n- **Pattern matching in switch** — exhaustive sealed type handling (Java 21+)",
+      "zh-Hans": "* 使用 **记录类** 处理 DTO 和值类型（Java 16+）\n* 使用 **密封类** 处理封闭的类型层次结构（Java 17+）\n* 使用 `instanceof` 进行**模式匹配** —— 避免显式类型转换（Java 16+）\n* 使用**文本块**处理多行字符串 —— 如 SQL、JSON 模板（Java 15+）\n* 使用带箭头语法的**Switch 表达式**（Java 14+）\n* 使用 **Switch 中的模式匹配** —— 用于密封类型的穷举处理（Java 21+）"
+    },
+    {
+      "en-US": "```java\n// Pattern matching instanceof\nif (shape instanceof Circle c) {\n    return Math.PI * c.radius() * c.radius();\n}\n\n// Sealed type hierarchy\npublic sealed interface PaymentMethod permits CreditCard, BankTransfer, Wallet {}\n\n// Switch expression\nString label = switch (status) {\n    case ACTIVE -> \"Active\";\n    case SUSPENDED -> \"Suspended\";\n    case CLOSED -> \"Closed\";\n};\n```",
+      "zh-Hans": "```java\n// Pattern matching instanceof\nif (shape instanceof Circle c) {\n    return Math.PI * c.radius() * c.radius();\n}\n\n// Sealed type hierarchy\npublic sealed interface PaymentMethod permits CreditCard, BankTransfer, Wallet {}\n\n// Switch expression\nString label = switch (status) {\n    case ACTIVE -> \"Active\";\n    case SUSPENDED -> \"Suspended\";\n    case CLOSED -> \"Closed\";\n};\n```"
+    },
+    {
+      "en-US": "## Optional Usage",
+      "zh-Hans": "## Optional 的使用"
+    },
+    {
+      "en-US": "- Return `Optional<T>` from finder methods that may have no result\n- Use `map()`, `flatMap()`, `orElseThrow()` — never call `get()` without `isPresent()`\n- Never use `Optional` as a field type or method parameter",
+      "zh-Hans": "* 从可能没有结果的查找方法中返回 `Optional<T>`\n* 使用 `map()`、`flatMap()`、`orElseThrow()` —— 绝不直接调用 `get()` 而不先检查 `isPresent()`\n* 绝不将 `Optional` 用作字段类型或方法参数"
+    },
+    {
+      "en-US": "```java\n// GOOD\nreturn repository.findById(id)\n    .map(ResponseDto::from)\n    .orElseThrow(() -> new OrderNotFoundException(id));\n\n// BAD — Optional as parameter\npublic void process(Optional<String> name) {}\n```",
+      "zh-Hans": "```java\n// GOOD\nreturn repository.findById(id)\n    .map(ResponseDto::from)\n    .orElseThrow(() -> new OrderNotFoundException(id));\n\n// BAD — Optional as parameter\npublic void process(Optional<String> name) {}\n```"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Prefer unchecked exceptions for domain errors\n- Create domain-specific exceptions extending `RuntimeException`\n- Avoid broad `catch (Exception e)` unless at top-level handlers\n- Include context in exception messages",
+      "zh-Hans": "* 对于领域错误，优先使用非受检异常\n* 创建继承自 `RuntimeException` 的领域特定异常\n* 避免宽泛的 `catch (Exception e)`，除非在顶层的异常处理器中\n* 在异常消息中包含上下文信息"
+    },
+    {
+      "en-US": "```java\npublic class OrderNotFoundException extends RuntimeException {\n    public OrderNotFoundException(Long id) {\n        super(\"Order not found: id=\" + id);\n    }\n}\n```",
+      "zh-Hans": "```java\npublic class OrderNotFoundException extends RuntimeException {\n    public OrderNotFoundException(Long id) {\n        super(\"Order not found: id=\" + id);\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Streams",
+      "zh-Hans": "## 流"
+    },
+    {
+      "en-US": "- Use streams for transformations; keep pipelines short (3-4 operations max)\n- Prefer method references when readable: `.map(Order::getTotal)`\n- Avoid side effects in stream operations\n- For complex logic, prefer a loop over a convoluted stream pipeline",
+      "zh-Hans": "* 使用流进行转换操作；保持流水线简短（最多 3-4 个操作）\n* 在可读性好的情况下优先使用方法引用：`.map(Order::getTotal)`\n* 避免在流操作中产生副作用\n* 对于复杂逻辑，优先使用循环而非难以理解的流式管道"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `java-coding-standards` for full coding standards with examples.\nSee skill: `jpa-patterns` for JPA/Hibernate entity design patterns.",
+      "zh-Hans": "完整编码标准及示例，请参见技能：`java-coding-standards`。\nJPA/Hibernate 实体设计模式，请参见技能：`jpa-patterns`。"
+    }
+  ]
+}

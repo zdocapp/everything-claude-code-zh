@@ -1,0 +1,122 @@
+{
+  "sourceFile": "skills/agent-payment-x402/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: agent-payment-x402\ndescription: Add x402 payment execution to AI agents — per-task budgets, spending controls, and non-custodial wallets via MCP tools. Use when agents need to pay for APIs, services, or other agents.\norigin: community\n---",
+      "zh-Hans": "---\nname: agent-payment-x402\ndescription: 为AI代理添加x402支付执行功能——通过MCP工具实现按任务预算、支出控制和非托管钱包。适用于代理需要支付API、服务或其他代理的场景。\norigin: community\n---"
+    },
+    {
+      "en-US": "# Agent Payment Execution (x402)",
+      "zh-Hans": "# 代理支付执行 (x402)"
+    },
+    {
+      "en-US": "Enable AI agents to make autonomous payments with built-in spending controls. Uses the x402 HTTP payment protocol and MCP tools so agents can pay for external services, APIs, or other agents without custodial risk.",
+      "zh-Hans": "使 AI 代理能够通过内置的支出控制进行自主支付。使用 x402 HTTP 支付协议和 MCP 工具，使代理能够为外部服务、API 或其他代理支付费用，而无需托管风险。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use when: your agent needs to pay for an API call, purchase a service, settle with another agent, enforce per-task spending limits, or manage a non-custodial wallet. Pairs naturally with cost-aware-llm-pipeline and security-review skills.",
+      "zh-Hans": "在以下情况下使用：您的代理需要为 API 调用付费、购买服务、与其他代理结算、强制执行每任务支出限制或管理非托管钱包。与成本感知 LLM 管道和安全审查技能自然搭配使用。"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### x402 Protocol",
+      "zh-Hans": "### x402 协议"
+    },
+    {
+      "en-US": "x402 extends HTTP 402 (Payment Required) into a machine-negotiable flow. When a server returns `402`, the agent's payment tool automatically negotiates price, checks budget, signs a transaction, and retries — no human in the loop.",
+      "zh-Hans": "x402 将 HTTP 402（需要付款）扩展为机器可协商的流程。当服务器返回 `402` 时，代理的支付工具会自动协商价格、检查预算、签署交易并重试——无需人工干预。"
+    },
+    {
+      "en-US": "### Spending Controls",
+      "zh-Hans": "### 支出控制"
+    },
+    {
+      "en-US": "Every payment tool call enforces a `SpendingPolicy`:",
+      "zh-Hans": "每次支付工具调用都会强制执行一个 `SpendingPolicy`："
+    },
+    {
+      "en-US": "- **Per-task budget** — max spend for a single agent action\n- **Per-session budget** — cumulative limit across an entire session\n- **Allowlisted recipients** — restrict which addresses/services the agent can pay\n- **Rate limits** — max transactions per minute/hour",
+      "zh-Hans": "* **每任务预算** — 单个代理操作的最大支出\n* **每会话预算** — 整个会话期间的累计限额\n* **允许列表收件人** — 限制代理可以支付的地址/服务\n* **速率限制** — 每分钟/小时的最大交易次数"
+    },
+    {
+      "en-US": "### Non-Custodial Wallets",
+      "zh-Hans": "### 非托管钱包"
+    },
+    {
+      "en-US": "Agents hold their own keys via ERC-4337 smart accounts. The orchestrator sets policy before delegation; the agent can only spend within bounds. No pooled funds, no custodial risk.",
+      "zh-Hans": "代理通过 ERC-4337 智能账户持有自己的密钥。编排器在委托之前设置策略；代理只能在限定范围内支出。没有资金池，没有托管风险。"
+    },
+    {
+      "en-US": "## MCP Integration",
+      "zh-Hans": "## MCP 集成"
+    },
+    {
+      "en-US": "The payment layer exposes standard MCP tools that slot into any Claude Code or agent harness setup.",
+      "zh-Hans": "支付层暴露了标准的 MCP 工具，可以插入任何 Claude Code 或代理框架设置中。"
+    },
+    {
+      "en-US": "> **Security note**: Always pin the package version. This tool manages private keys — unpinned `npx` installs introduce supply-chain risk.",
+      "zh-Hans": "> **安全提示**：始终固定软件包版本。此工具管理私钥——未固定的 `npx` 安装会引入供应链风险。"
+    },
+    {
+      "en-US": "```json\n{\n  \"mcpServers\": {\n    \"agentpay\": {\n      \"command\": \"npx\",\n      \"args\": [\"agentwallet-sdk@6.0.0\"]\n    }\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"mcpServers\": {\n    \"agentpay\": {\n      \"command\": \"npx\",\n      \"args\": [\"agentwallet-sdk@6.0.0\"]\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Available Tools (agent-callable)",
+      "zh-Hans": "### 可用工具（代理可调用）"
+    },
+    {
+      "en-US": "| Tool | Purpose |\n|------|---------|\n| `get_balance` | Check agent wallet balance |\n| `send_payment` | Send payment to address or ENS |\n| `check_spending` | Query remaining budget |\n| `list_transactions` | Audit trail of all payments |",
+      "zh-Hans": "| 工具 | 用途 |\n|------|---------|\n| `get_balance` | 检查代理钱包余额 |\n| `send_payment` | 向地址或 ENS 发送付款 |\n| `check_spending` | 查询剩余预算 |\n| `list_transactions` | 所有支付的审计跟踪 |"
+    },
+    {
+      "en-US": "> **Note**: Spending policy is set by the **orchestrator** before delegating to the agent — not by the agent itself. This prevents agents from escalating their own spending limits. Configure policy via `set_policy` in your orchestration layer or pre-task hook, never as an agent-callable tool.",
+      "zh-Hans": "> **注意**：支出策略由**编排器**在委托给代理**之前**设置——而不是由代理自身设置。这可以防止代理自行提升其支出限额。通过编排层或任务前钩子中的 `set_policy` 配置策略，切勿将其作为代理可调用工具。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Budget enforcement in an MCP client",
+      "zh-Hans": "### MCP 客户端中的预算强制执行"
+    },
+    {
+      "en-US": "When building an orchestrator that calls the agentpay MCP server, enforce budgets before dispatching paid tool calls.",
+      "zh-Hans": "在构建调用 agentpay MCP 服务器的编排器时，在分派付费工具调用之前强制执行预算。"
+    },
+    {
+      "en-US": "> **Prerequisites**: Install the package before adding the MCP config — `npx` without `-y` will prompt for confirmation in non-interactive environments, causing the server to hang: `npm install -g agentwallet-sdk@6.0.0`",
+      "zh-Hans": "> **先决条件**：在添加 MCP 配置之前安装软件包——在非交互式环境中，没有 `-y` 的 `npx` 将提示确认，导致服务器挂起：`npm install -g agentwallet-sdk@6.0.0`"
+    },
+    {
+      "en-US": "```typescript\nimport { Client } from \"@modelcontextprotocol/sdk/client/index.js\";\nimport { StdioClientTransport } from \"@modelcontextprotocol/sdk/client/stdio.js\";\n\nasync function main() {\n  // 1. Validate credentials before constructing the transport.\n  //    A missing key must fail immediately — never let the subprocess start without auth.\n  const walletKey = process.env.WALLET_PRIVATE_KEY;\n  if (!walletKey) {\n    throw new Error(\"WALLET_PRIVATE_KEY is not set — refusing to start payment server\");\n  }\n\n  // Connect to the agentpay MCP server via stdio transport.\n  // Whitelist only the env vars the server needs — never forward all of process.env\n  // to a third-party subprocess that manages private keys.\n  const transport = new StdioClientTransport({\n    command: \"npx\",\n    args: [\"agentwallet-sdk@6.0.0\"],\n    env: {\n      PATH: process.env.PATH ?? \"\",\n      NODE_ENV: process.env.NODE_ENV ?? \"production\",\n      WALLET_PRIVATE_KEY: walletKey,\n    },\n  });\n  const agentpay = new Client({ name: \"orchestrator\", version: \"1.0.0\" });\n  await agentpay.connect(transport);\n\n  // 2. Set spending policy before delegating to the agent.\n  //    Always verify success — a silent failure means no controls are active.\n  const policyResult = await agentpay.callTool({\n    name: \"set_policy\",\n    arguments: {\n      per_task_budget: 0.50,\n      per_session_budget: 5.00,\n      allowlisted_recipients: [\"api.example.com\"],\n    },\n  });\n  if (policyResult.isError) {\n    throw new Error(\n      `Failed to set spending policy — do not delegate: ${JSON.stringify(policyResult.content)}`\n    );\n  }\n\n  // 3. Use preToolCheck before any paid action\n  await preToolCheck(agentpay, 0.01);\n}\n\n// Pre-tool hook: fail-closed budget enforcement with four distinct error paths.\nasync function preToolCheck(agentpay: Client, apiCost: number): Promise<void> {\n  // Path 1: Reject invalid input (NaN/Infinity bypass the < comparison)\n  if (!Number.isFinite(apiCost) || apiCost < 0) {\n    throw new Error(`Invalid apiCost: ${apiCost} — action blocked`);\n  }\n\n  // Path 2: Transport/connectivity failure\n  let result;\n  try {\n    result = await agentpay.callTool({ name: \"check_spending\" });\n  } catch (err) {\n    throw new Error(`Payment service unreachable — action blocked: ${err}`);\n  }\n\n  // Path 3: Tool returned an error (e.g., auth failure, wallet not initialised)\n  if (result.isError) {\n    throw new Error(\n      `check_spending failed — action blocked: ${JSON.stringify(result.content)}`\n    );\n  }\n\n  // Path 4: Parse and validate the response shape\n  let remaining: number;\n  try {\n    const parsed = JSON.parse(\n      (result.content as Array<{ text: string }>)[0].text\n    );\n    if (!Number.isFinite(parsed?.remaining)) {\n      throw new TypeError(\"missing or non-finite 'remaining' field\");\n    }\n    remaining = parsed.remaining;\n  } catch (err) {\n    throw new Error(\n      `check_spending returned unexpected format — action blocked: ${err}`\n    );\n  }\n\n  // Path 5: Budget exceeded\n  if (remaining < apiCost) {\n    throw new Error(\n      `Budget exceeded: need $${apiCost} but only $${remaining} remaining`\n    );\n  }\n}\n\nmain().catch((err) => {\n  console.error(err);\n  process.exitCode = 1;\n});\n```",
+      "zh-Hans": "```typescript\nimport { Client } from \"@modelcontextprotocol/sdk/client/index.js\";\nimport { StdioClientTransport } from \"@modelcontextprotocol/sdk/client/stdio.js\";\n\nasync function main() {\n  // 1. Validate credentials before constructing the transport.\n  //    A missing key must fail immediately — never let the subprocess start without auth.\n  const walletKey = process.env.WALLET_PRIVATE_KEY;\n  if (!walletKey) {\n    throw new Error(\"WALLET_PRIVATE_KEY is not set — refusing to start payment server\");\n  }\n\n  // Connect to the agentpay MCP server via stdio transport.\n  // Whitelist only the env vars the server needs — never forward all of process.env\n  // to a third-party subprocess that manages private keys.\n  const transport = new StdioClientTransport({\n    command: \"npx\",\n    args: [\"agentwallet-sdk@6.0.0\"],\n    env: {\n      PATH: process.env.PATH ?? \"\",\n      NODE_ENV: process.env.NODE_ENV ?? \"production\",\n      WALLET_PRIVATE_KEY: walletKey,\n    },\n  });\n  const agentpay = new Client({ name: \"orchestrator\", version: \"1.0.0\" });\n  await agentpay.connect(transport);\n\n  // 2. Set spending policy before delegating to the agent.\n  //    Always verify success — a silent failure means no controls are active.\n  const policyResult = await agentpay.callTool({\n    name: \"set_policy\",\n    arguments: {\n      per_task_budget: 0.50,\n      per_session_budget: 5.00,\n      allowlisted_recipients: [\"api.example.com\"],\n    },\n  });\n  if (policyResult.isError) {\n    throw new Error(\n      `Failed to set spending policy — do not delegate: ${JSON.stringify(policyResult.content)}`\n    );\n  }\n\n  // 3. Use preToolCheck before any paid action\n  await preToolCheck(agentpay, 0.01);\n}\n\n// Pre-tool hook: fail-closed budget enforcement with four distinct error paths.\nasync function preToolCheck(agentpay: Client, apiCost: number): Promise<void> {\n  // Path 1: Reject invalid input (NaN/Infinity bypass the < comparison)\n  if (!Number.isFinite(apiCost) || apiCost < 0) {\n    throw new Error(`Invalid apiCost: ${apiCost} — action blocked`);\n  }\n\n  // Path 2: Transport/connectivity failure\n  let result;\n  try {\n    result = await agentpay.callTool({ name: \"check_spending\" });\n  } catch (err) {\n    throw new Error(`Payment service unreachable — action blocked: ${err}`);\n  }\n\n  // Path 3: Tool returned an error (e.g., auth failure, wallet not initialised)\n  if (result.isError) {\n    throw new Error(\n      `check_spending failed — action blocked: ${JSON.stringify(result.content)}`\n    );\n  }\n\n  // Path 4: Parse and validate the response shape\n  let remaining: number;\n  try {\n    const parsed = JSON.parse(\n      (result.content as Array<{ text: string }>)[0].text\n    );\n    if (!Number.isFinite(parsed?.remaining)) {\n      throw new TypeError(\"missing or non-finite 'remaining' field\");\n    }\n    remaining = parsed.remaining;\n  } catch (err) {\n    throw new Error(\n      `check_spending returned unexpected format — action blocked: ${err}`\n    );\n  }\n\n  // Path 5: Budget exceeded\n  if (remaining < apiCost) {\n    throw new Error(\n      `Budget exceeded: need $${apiCost} but only $${remaining} remaining`\n    );\n  }\n}\n\nmain().catch((err) => {\n  console.error(err);\n  process.exitCode = 1;\n});\n```"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "- **Set budgets before delegation**: When spawning sub-agents, attach a SpendingPolicy via your orchestration layer. Never give an agent unlimited spend.\n- **Pin your dependencies**: Always specify an exact version in your MCP config (e.g., `agentwallet-sdk@6.0.0`). Verify package integrity before deploying to production.\n- **Audit trails**: Use `list_transactions` in post-task hooks to log what was spent and why.\n- **Fail closed**: If the payment tool is unreachable, block the paid action — don't fall back to unmetered access.\n- **Pair with security-review**: Payment tools are high-privilege. Apply the same scrutiny as shell access.\n- **Test with testnets first**: Use Base Sepolia for development; switch to Base mainnet for production.",
+      "zh-Hans": "* **在委托前设置预算**：当生成子代理时，通过您的编排层附加 SpendingPolicy。切勿给予代理无限支出权限。\n* **固定您的依赖项**：始终在 MCP 配置中指定确切版本（例如，`agentwallet-sdk@6.0.0`）。在部署到生产环境之前验证软件包的完整性。\n* **审计跟踪**：在任务后钩子中使用 `list_transactions` 来记录花费了什么以及原因。\n* **故障关闭**：如果支付工具无法访问，则阻止付费操作——不要回退到未计量的访问。\n* **与安全审查配对使用**：支付工具是高权限的。应用与 shell 访问相同的审查级别。\n* **首先使用测试网进行测试**：开发时使用 Base Sepolia；生产时切换到 Base 主网。"
+    },
+    {
+      "en-US": "## Production Reference",
+      "zh-Hans": "## 生产参考"
+    },
+    {
+      "en-US": "- **npm**: [`agentwallet-sdk`](https://www.npmjs.com/package/agentwallet-sdk)\n- **Merged into NVIDIA NeMo Agent Toolkit**: [PR #17](https://github.com/NVIDIA/NeMo-Agent-Toolkit-Examples/pull/17) — x402 payment tool for NVIDIA's agent examples\n- **Protocol spec**: [x402.org](https://x402.org)",
+      "zh-Hans": "* **npm**：[`agentwallet-sdk`](https://www.npmjs.com/package/agentwallet-sdk)\n* **已合并到 NVIDIA NeMo Agent Toolkit**：[PR #17](https://github.com/NVIDIA/NeMo-Agent-Toolkit-Examples/pull/17) — 用于 NVIDIA 代理示例的 x402 支付工具\n* **协议规范**：[x402.org](https://x402.org)"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "sourceFile": "rules/cpp/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---"
+    },
+    {
+      "en-US": "# C++ Patterns",
+      "zh-Hans": "# C++ 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with C++ specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 C++ 特定部分。"
+    },
+    {
+      "en-US": "## RAII (Resource Acquisition Is Initialization)",
+      "zh-Hans": "## RAII（资源获取即初始化）"
+    },
+    {
+      "en-US": "Tie resource lifetime to object lifetime:",
+      "zh-Hans": "将资源生命周期与对象生命周期绑定："
+    },
+    {
+      "en-US": "```cpp\nclass FileHandle {\npublic:\n    explicit FileHandle(const std::string& path) : file_(std::fopen(path.c_str(), \"r\")) {}\n    ~FileHandle() { if (file_) std::fclose(file_); }\n    FileHandle(const FileHandle&) = delete;\n    FileHandle& operator=(const FileHandle&) = delete;\nprivate:\n    std::FILE* file_;\n};\n```",
+      "zh-Hans": "```cpp\nclass FileHandle {\npublic:\n    explicit FileHandle(const std::string& path) : file_(std::fopen(path.c_str(), \"r\")) {}\n    ~FileHandle() { if (file_) std::fclose(file_); }\n    FileHandle(const FileHandle&) = delete;\n    FileHandle& operator=(const FileHandle&) = delete;\nprivate:\n    std::FILE* file_;\n};\n```"
+    },
+    {
+      "en-US": "## Rule of Five/Zero",
+      "zh-Hans": "## 三五法则/零法则"
+    },
+    {
+      "en-US": "- **Rule of Zero**: Prefer classes that need no custom destructor, copy/move constructors, or assignments\n- **Rule of Five**: If you define any of destructor/copy-ctor/copy-assign/move-ctor/move-assign, define all five",
+      "zh-Hans": "* **零法则**：优先使用不需要自定义析构函数、拷贝/移动构造函数或赋值操作符的类\n* **三五法则**：如果定义了析构函数、拷贝构造函数、拷贝赋值运算符、移动构造函数或移动赋值运算符中的任何一个，则应定义全部五个"
+    },
+    {
+      "en-US": "## Value Semantics",
+      "zh-Hans": "## 值语义"
+    },
+    {
+      "en-US": "- Pass small/trivial types by value\n- Pass large types by `const&`\n- Return by value (rely on RVO/NRVO)\n- Use move semantics for sink parameters",
+      "zh-Hans": "* 小型/平凡类型按值传递\n* 大型类型通过 `const&` 传递\n* 按值返回（依赖 RVO/NRVO）\n* 对接收参数使用移动语义"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Use exceptions for exceptional conditions\n- Use `std::optional` for values that may not exist\n- Use `std::expected` (C++23) or result types for expected failures",
+      "zh-Hans": "* 对异常情况使用异常\n* 对可能不存在的值使用 `std::optional`\n* 对预期的失败使用 `std::expected`（C++23）或结果类型"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `cpp-coding-standards` for comprehensive C++ patterns and anti-patterns.",
+      "zh-Hans": "有关全面的 C++ 模式和反模式，请参阅技能：`cpp-coding-standards`。"
+    }
+  ]
+}

@@ -1,38 +1,38 @@
 ---
 name: database-migrations
-description: 数据库迁移最佳实践，涵盖模式变更、数据迁移、回滚以及零停机部署，适用于PostgreSQL、MySQL及常用ORM（Prisma、Drizzle、Django、TypeORM、golang-migrate）。
+description: 数据库迁移最佳实践，涵盖模式变更、数据迁移、回滚以及零停机部署，适用于PostgreSQL、MySQL及常见ORM（Prisma、Drizzle、Kysely、Django、TypeORM、golang-migrate）。
 origin: ECC
 ---
 
 # 数据库迁移模式
 
-为生产系统提供安全、可逆的数据库模式变更。
+适用于生产系统的安全、可逆的数据库模式变更。
 
 ## 何时激活
 
 * 创建或修改数据库表
 * 添加/删除列或索引
 * 运行数据迁移（回填、转换）
-* 计划零停机模式变更
+* 规划零停机时间模式变更
 * 为新项目设置迁移工具
 
 ## 核心原则
 
-1. **每个变更都是一次迁移** — 切勿手动更改生产数据库
-2. **迁移在生产环境中是只进不退的** — 回滚使用新的前向迁移
-3. **模式迁移和数据迁移是分开的** — 切勿在一个迁移中混合 DDL 和 DML
-4. **针对生产规模的数据测试迁移** — 适用于 100 行的迁移可能在 1000 万行时锁定
-5. **迁移一旦部署就是不可变的** — 切勿编辑已在生产中运行的迁移
+1. **每次变更都是一次迁移** — 切勿手动更改生产数据库
+2. **迁移在生产环境中是单向的** — 回滚使用新的前向迁移
+3. **模式迁移和数据迁移是分开的** — 切勿将 DDL 和 DML 混在一次迁移中
+4. **针对生产规模的数据测试迁移** — 在 100 行上有效的迁移可能在 1000 万行上锁定
+5. **迁移一旦部署即不可变** — 切勿编辑已在生产环境中运行过的迁移
 
 ## 迁移安全检查清单
 
 应用任何迁移之前：
 
-* \[ ] 迁移同时包含 UP 和 DOWN（或明确标记为不可逆）
+* \[ ] 迁移同时包含 UP 和 DOWN 操作（或明确标记为不可逆）
 * \[ ] 对大表没有全表锁（使用并发操作）
-* \[ ] 新列有默认值或可为空（切勿添加没有默认值的 NOT NULL）
+* \[ ] 新列有默认值或可为空（切勿添加没有默认值的 NOT NULL 约束）
 * \[ ] 索引是并发创建的（对于现有表，不与 CREATE TABLE 内联创建）
-* \[ ] 数据回填是与模式变更分开的迁移
+* \[ ] 数据回填与模式变更分开进行迁移
 * \[ ] 已针对生产数据副本进行测试
 * \[ ] 回滚计划已记录
 
@@ -52,7 +52,7 @@ ALTER TABLE users ADD COLUMN role TEXT NOT NULL;
 -- This locks the table and rewrites every row
 ```
 
-### 无停机添加索引
+### 无停机时间添加索引
 
 ```sql
 -- BAD: Blocks writes on large tables
@@ -65,9 +65,9 @@ CREATE INDEX CONCURRENTLY idx_users_email ON users (email);
 -- Most migration tools need special handling for this
 ```
 
-### 重命名列（零停机）
+### 重命名列（零停机时间）
 
-切勿在生产中直接重命名。使用扩展-收缩模式：
+切勿在生产环境中直接重命名。使用扩展-收缩模式：
 
 ```sql
 -- Step 1: Add new column (migration 001)
@@ -126,7 +126,7 @@ END $$;
 
 ## Prisma (TypeScript/Node.js)
 
-### 工作流
+### 工作流程
 
 ```bash
 # Create migration from schema changes
@@ -176,7 +176,7 @@ CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_email ON users (email);
 
 ## Drizzle (TypeScript/Node.js)
 
-### 工作流
+### 工作流程
 
 ```bash
 # Generate migration from schema changes
@@ -204,9 +204,103 @@ export const users = pgTable("users", {
 });
 ```
 
+## Kysely (TypeScript/Node.js)
+
+### 工作流程 (kysely-ctl)
+
+```bash
+# Initialize config file (kysely.config.ts)
+kysely init
+
+# Create a new migration file
+kysely migrate make add_user_avatar
+
+# Apply all pending migrations
+kysely migrate latest
+
+# Rollback last migration
+kysely migrate down
+
+# Show migration status
+kysely migrate list
+```
+
+### 迁移文件
+
+```typescript
+// migrations/2024_01_15_001_create_user_profile.ts
+import { type Kysely, sql } from 'kysely'
+
+// IMPORTANT: Always use Kysely<any>, not your typed DB interface.
+// Migrations are frozen in time and must not depend on current schema types.
+export async function up(db: Kysely<any>): Promise<void> {
+  await db.schema
+    .createTable('user_profile')
+    .addColumn('id', 'serial', (col) => col.primaryKey())
+    .addColumn('email', 'varchar(255)', (col) => col.notNull().unique())
+    .addColumn('avatar_url', 'text')
+    .addColumn('created_at', 'timestamp', (col) =>
+      col.defaultTo(sql`now()`).notNull()
+    )
+    .execute()
+
+  await db.schema
+    .createIndex('idx_user_profile_avatar')
+    .on('user_profile')
+    .column('avatar_url')
+    .execute()
+}
+
+export async function down(db: Kysely<any>): Promise<void> {
+  await db.schema.dropTable('user_profile').execute()
+}
+```
+
+### 编程式迁移器
+
+```typescript
+import { Migrator, FileMigrationProvider } from 'kysely'
+import { promises as fs } from 'fs'
+import * as path from 'path'
+// ESM only — CJS can use __dirname directly
+import { fileURLToPath } from 'url'
+const migrationFolder = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  './migrations',
+)
+
+// `db` is your Kysely<any> database instance
+const migrator = new Migrator({
+  db,
+  provider: new FileMigrationProvider({
+    fs,
+    path,
+    migrationFolder,
+  }),
+  // WARNING: Only enable in development. Disables timestamp-ordering
+  // validation, which can cause schema drift between environments.
+  // allowUnorderedMigrations: true,
+})
+
+const { error, results } = await migrator.migrateToLatest()
+
+results?.forEach((it) => {
+  if (it.status === 'Success') {
+    console.log(`migration "${it.migrationName}" executed successfully`)
+  } else if (it.status === 'Error') {
+    console.error(`failed to execute migration "${it.migrationName}"`)
+  }
+})
+
+if (error) {
+  console.error('migration failed', error)
+  process.exit(1)
+}
+```
+
 ## Django (Python)
 
-### 工作流
+### 工作流程
 
 ```bash
 # Generate migration from model changes
@@ -250,7 +344,7 @@ class Migration(migrations.Migration):
 
 ### SeparateDatabaseAndState
 
-从 Django 模型中删除列，而不立即从数据库中删除：
+从 Django 模型中移除列，但不立即从数据库中删除：
 
 ```python
 class Migration(migrations.Migration):
@@ -266,7 +360,7 @@ class Migration(migrations.Migration):
 
 ## golang-migrate (Go)
 
-### 工作流
+### 工作流程
 
 ```bash
 # Create migration pair
@@ -294,42 +388,42 @@ DROP INDEX IF EXISTS idx_users_avatar;
 ALTER TABLE users DROP COLUMN IF EXISTS avatar_url;
 ```
 
-## 零停机迁移策略
+## 零停机时间迁移策略
 
 对于关键的生产变更，遵循扩展-收缩模式：
 
 ```
-Phase 1: EXPAND
+Phase 1: 扩展
   - 添加新列/表（可为空或带有默认值）
   - 部署：应用同时写入旧数据和新数据
   - 回填现有数据
 
-Phase 2: MIGRATE
-  - 部署：应用读取新数据，同时写入新旧数据
+Phase 2: 迁移
+  - 部署：应用从新数据读取，同时写入新旧数据
   - 验证数据一致性
 
-Phase 3: CONTRACT
+Phase 3: 收缩
   - 部署：应用仅使用新数据
-  - 在单独迁移中删除旧列/表
+  - 在单独的迁移中删除旧列/表
 ```
 
 ### 时间线示例
 
 ```
-Day 1：迁移添加新的 `new_status` 列（可空）
-Day 1：部署应用 v2 —— 同时写入 `status` 和 `new_status`
-Day 2：运行针对现有行的回填迁移
-Day 3：部署应用 v3 —— 仅从 `new_status` 读取
-Day 7：迁移删除旧的 `status` 列
+Day 1: 迁移添加 new_status 列（可为空）
+Day 1: 部署应用 v2 — 同时写入 status 和 new_status
+Day 2: 运行现有行的回填迁移
+Day 3: 部署应用 v3 — 仅从 new_status 读取
+Day 7: 迁移删除旧的 status 列
 ```
 
 ## 反模式
 
-| 反模式 | 为何会失败 | 更好的方法 |
+| 反模式 | 失败原因 | 更好的方法 |
 |-------------|-------------|-----------------|
-| 在生产中手动执行 SQL | 没有审计追踪，不可重复 | 始终使用迁移文件 |
-| 编辑已部署的迁移 | 导致环境间出现差异 | 改为创建新迁移 |
-| 没有默认值的 NOT NULL | 锁定表，重写所有行 | 添加可为空列，回填数据，然后添加约束 |
+| 在生产环境中手动执行 SQL | 无审计跟踪，不可重复 | 始终使用迁移文件 |
+| 编辑已部署的迁移 | 导致环境间出现差异 | 创建新的迁移 |
+| 没有默认值的 NOT NULL | 锁定表，重写所有行 | 先添加可为空列，回填数据，然后添加约束 |
 | 在大表上内联创建索引 | 在构建期间阻塞写入 | 使用 CREATE INDEX CONCURRENTLY |
-| 在一个迁移中混合模式和数据的变更 | 难以回滚，事务时间长 | 分开的迁移 |
-| 在移除代码之前删除列 | 应用程序在缺失列时出错 | 先移除代码，下一次部署再删除列 |
+| 将模式和数据变更放在一次迁移中 | 难以回滚，事务时间长 | 分开进行迁移 |
+| 在移除代码前删除列 | 应用程序因缺少列而报错 | 先移除代码，下次部署时再删除列 |

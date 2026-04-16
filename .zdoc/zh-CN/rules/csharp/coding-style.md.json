@@ -1,0 +1,70 @@
+{
+  "sourceFile": "rules/csharp/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.cs\"\n  - \"**/*.csx\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.cs\"\n  - \"**/*.csx\"\n---"
+    },
+    {
+      "en-US": "# C# Coding Style",
+      "zh-Hans": "# C# 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with C#-specific content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 C# 相关的内容。"
+    },
+    {
+      "en-US": "## Standards",
+      "zh-Hans": "## 标准"
+    },
+    {
+      "en-US": "- Follow current .NET conventions and enable nullable reference types\n- Prefer explicit access modifiers on public and internal APIs\n- Keep files aligned with the primary type they define",
+      "zh-Hans": "* 遵循当前的 .NET 约定并启用可为空的引用类型\n* 在公共和内部 API 上优先使用显式访问修饰符\n* 保持文件与其定义的主要类型一致"
+    },
+    {
+      "en-US": "## Types and Models",
+      "zh-Hans": "## 类型与模型"
+    },
+    {
+      "en-US": "- Prefer `record` or `record struct` for immutable value-like models\n- Use `class` for entities or types with identity and lifecycle\n- Use `interface` for service boundaries and abstractions\n- Avoid `dynamic` in application code; prefer generics or explicit models",
+      "zh-Hans": "* 对于不可变的值类型模型，优先使用 `record` 或 `record struct`\n* 对于具有标识和生命周期的实体或类型，使用 `class`\n* 对于服务边界和抽象，使用 `interface`\n* 避免在应用程序代码中使用 `dynamic`；优先使用泛型或显式模型"
+    },
+    {
+      "en-US": "```csharp\npublic sealed record UserDto(Guid Id, string Email);\n\npublic interface IUserRepository\n{\n    Task<UserDto?> FindByIdAsync(Guid id, CancellationToken cancellationToken);\n}\n```",
+      "zh-Hans": "```csharp\npublic sealed record UserDto(Guid Id, string Email);\n\npublic interface IUserRepository\n{\n    Task<UserDto?> FindByIdAsync(Guid id, CancellationToken cancellationToken);\n}\n```"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "- Prefer `init` setters, constructor parameters, and immutable collections for shared state\n- Do not mutate input models in-place when producing updated state",
+      "zh-Hans": "* 对于共享状态，优先使用 `init` 设置器、构造函数参数和不可变集合\n* 在生成更新状态时，不要原地修改输入模型"
+    },
+    {
+      "en-US": "```csharp\npublic sealed record UserProfile(string Name, string Email);\n\npublic static UserProfile Rename(UserProfile profile, string name) =>\n    profile with { Name = name };\n```",
+      "zh-Hans": "```csharp\npublic sealed record UserProfile(string Name, string Email);\n\npublic static UserProfile Rename(UserProfile profile, string name) =>\n    profile with { Name = name };\n```"
+    },
+    {
+      "en-US": "## Async and Error Handling",
+      "zh-Hans": "## 异步与错误处理"
+    },
+    {
+      "en-US": "- Prefer `async`/`await` over blocking calls like `.Result` or `.Wait()`\n- Pass `CancellationToken` through public async APIs\n- Throw specific exceptions and log with structured properties",
+      "zh-Hans": "* 优先使用 `async`/`await`，而非像 `.Result` 或 `.Wait()` 这样的阻塞调用\n* 通过公共异步 API 传递 `CancellationToken`\n* 抛出特定异常并使用结构化属性进行日志记录"
+    },
+    {
+      "en-US": "```csharp\npublic async Task<Order> LoadOrderAsync(\n    Guid orderId,\n    CancellationToken cancellationToken)\n{\n    try\n    {\n        return await repository.FindAsync(orderId, cancellationToken)\n            ?? throw new InvalidOperationException($\"Order {orderId} was not found.\");\n    }\n    catch (Exception ex)\n    {\n        logger.LogError(ex, \"Failed to load order {OrderId}\", orderId);\n        throw;\n    }\n}\n```",
+      "zh-Hans": "```csharp\npublic async Task<Order> LoadOrderAsync(\n    Guid orderId,\n    CancellationToken cancellationToken)\n{\n    try\n    {\n        return await repository.FindAsync(orderId, cancellationToken)\n            ?? throw new InvalidOperationException($\"Order {orderId} was not found.\");\n    }\n    catch (Exception ex)\n    {\n        logger.LogError(ex, \"Failed to load order {OrderId}\", orderId);\n        throw;\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- Use `dotnet format` for formatting and analyzer fixes\n- Keep `using` directives organized and remove unused imports\n- Prefer expression-bodied members only when they stay readable",
+      "zh-Hans": "* 使用 `dotnet format` 进行格式化和分析器修复\n* 保持 `using` 指令有序并移除未使用的导入\n* 仅当表达式体成员保持可读性时才优先使用它们"
+    }
+  ]
+}

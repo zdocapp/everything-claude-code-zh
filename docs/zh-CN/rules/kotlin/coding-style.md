@@ -6,33 +6,33 @@ paths:
 
 # Kotlin 编码风格
 
-> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Kotlin 相关内容。
+> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Kotlin 相关的内容。
 
 ## 格式化
 
 * 使用 **ktlint** 或 **Detekt** 进行风格检查
-* 遵循官方 Kotlin 代码风格 (`kotlin.code.style=official` 在 `gradle.properties` 中)
+* 遵循官方 Kotlin 代码风格（`kotlin.code.style=official` 在 `gradle.properties` 中）
 
 ## 不可变性
 
 * 优先使用 `val` 而非 `var` — 默认使用 `val`，仅在需要可变性时使用 `var`
-* 对值类型使用 `data class`；在公共 API 中使用不可变集合 (`List`, `Map`, `Set`)
+* 使用 `data class` 表示值类型；在公共 API 中使用不可变集合（`List`、`Map`、`Set`）
 * 状态更新使用写时复制：`state.copy(field = newValue)`
 
 ## 命名
 
-遵循 Kotlin 约定：
+遵循 Kotlin 命名约定：
 
 * 函数和属性使用 `camelCase`
 * 类、接口、对象和类型别名使用 `PascalCase`
-* 常量 (`const val` 或 `@JvmStatic`) 使用 `SCREAMING_SNAKE_CASE`
-* 接口以行为而非 `I` 为前缀：使用 `Clickable` 而非 `IClickable`
+* 常量使用 `SCREAMING_SNAKE_CASE`（`const val` 或 `@JvmStatic`）
+* 接口名称应描述行为，而非以 `I` 开头：使用 `Clickable` 而非 `IClickable`
 
 ## 空安全
 
-* 绝不使用 `!!` — 优先使用 `?.`, `?:`, `requireNotNull()` 或 `checkNotNull()`
+* 绝不使用 `!!` — 优先使用 `?.`、`?:`、`requireNotNull()` 或 `checkNotNull()`
 * 使用 `?.let {}` 进行作用域内的空安全操作
-* 对于确实可能没有结果的函数，返回可为空的类型
+* 对于可能没有合法结果的函数，返回可空类型
 
 ```kotlin
 // BAD
@@ -55,13 +55,13 @@ sealed interface UiState<out T> {
 }
 ```
 
-对密封类型始终使用详尽的 `when` — 不要使用 `else` 分支。
+始终对密封类型使用穷尽的 `when` — 不要使用 `else` 分支。
 
 ## 扩展函数
 
 使用扩展函数实现工具操作，但要确保其可发现性：
 
-* 放在以接收者类型命名的文件中 (`StringExt.kt`, `FlowExt.kt`)
+* 放置在以接收者类型命名的文件中（`StringExt.kt`、`FlowExt.kt`）
 * 限制作用域 — 不要向 `Any` 或过于泛化的类型添加扩展
 
 ## 作用域函数

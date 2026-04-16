@@ -1,6 +1,6 @@
 ---
 name: django-patterns
-description: Django架构模式，使用DRF设计REST API，ORM最佳实践，缓存，信号，中间件，以及生产级Django应用程序。
+description: Django架构模式、使用DRF设计REST API、ORM最佳实践、缓存、信号、中间件以及生产级Django应用。
 origin: ECC
 ---
 
@@ -8,13 +8,13 @@ origin: ECC
 
 适用于可扩展、可维护应用程序的生产级 Django 架构模式。
 
-## 何时激活
+## 何时启用
 
-* 构建 Django Web 应用程序时
-* 设计 Django REST Framework API 时
-* 使用 Django ORM 和模型时
-* 设置 Django 项目结构时
-* 实现缓存、信号、中间件时
+* 构建 Django Web 应用程序
+* 设计 Django REST Framework API
+* 使用 Django ORM 和模型
+* 设置 Django 项目结构
+* 实现缓存、信号、中间件
 
 ## 项目结构
 
@@ -721,7 +721,7 @@ Product.objects.filter(stock=0).delete()
 | 模式 | 描述 |
 |---------|-------------|
 | 拆分设置 | 分离开发/生产/测试设置 |
-| 自定义 QuerySet | 可重用的查询方法 |
+| 自定义 QuerySet | 可复用的查询方法 |
 | 服务层 | 业务逻辑分离 |
 | ViewSet | REST API 端点 |
 | 序列化器验证 | 请求/响应转换 |
@@ -731,4 +731,4 @@ Product.objects.filter(stock=0).delete()
 | 信号 | 事件驱动操作 |
 | 中间件 | 请求/响应处理 |
 
-请记住：Django 提供了许多快捷方式，但对于生产应用程序来说，结构和组织比简洁的代码更重要。为可维护性而构建。
+请记住：Django 提供了许多快捷方式，但对于生产应用程序，结构和组织比简洁的代码更重要。为可维护性而构建。

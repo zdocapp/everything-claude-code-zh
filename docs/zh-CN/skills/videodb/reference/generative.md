@@ -1,6 +1,6 @@
 # 生成式媒体指南
 
-VideoDB 提供 AI 驱动的图像、视频、音乐、音效、语音和文本内容生成。所有生成方法均在 **Collection** 对象上。
+VideoDB 提供由 AI 驱动的图像、视频、音乐、音效、语音和文本内容生成。所有生成方法都在 **Collection** 对象上。
 
 ## 先决条件
 
@@ -33,10 +33,10 @@ print(image.generate_url())  # returns a signed download URL
 | 参数 | 类型 | 默认值 | 描述 |
 |-----------|------|---------|-------------|
 | `prompt` | `str` | 必需 | 要生成的图像的文本描述 |
-| `aspect_ratio` | `str` | `"1:1"` | 宽高比：`"1:1"`, `"9:16"`, `"16:9"`, `"4:3"`, 或 `"3:4"` |
+| `aspect_ratio` | `str` | `"1:1"` | 宽高比：`"1:1"`、`"9:16"`、`"16:9"`、`"4:3"` 或 `"3:4"` |
 | `callback_url` | `str\|None` | `None` | 接收异步回调的 URL |
 
-返回一个 `Image` 对象，包含 `.id`、`.name` 和 `.collection_id`。`.url` 属性对于生成的图像可能为 `None` —— 始终使用 `image.generate_url()` 来获取可靠的签名下载 URL。
+返回一个 `Image` 对象，包含 `.id`、`.name` 和 `.collection_id`。`.url` 属性对于生成的图像可能为 `None` —— 始终使用 `image.generate_url()` 来获取可靠的有签名下载 URL。
 
 > **注意：** 与 `Video` 对象（使用 `.generate_stream()`）不同，`Image` 对象使用 `.generate_url()` 来检索图像 URL。`.url` 属性仅针对某些图像类型（例如缩略图）填充。
 
@@ -62,7 +62,7 @@ video.play()
 | `duration` | `int` | `5` | 持续时间（秒）（必须是整数值，5-8） |
 | `callback_url` | `str\|None` | `None` | 接收异步回调的 URL |
 
-返回一个 `Video` 对象。生成的视频会自动添加到集合中，并且可以像任何上传的视频一样在时间线、搜索和编译中使用。
+返回一个 `Video` 对象。生成的视频会自动添加到集合中，并且可以像任何上传的视频一样用于时间线、搜索和汇编。
 
 ## 音频生成
 
@@ -127,7 +127,7 @@ voice = coll.generate_voice(
 
 ## 文本生成（LLM 集成）
 
-使用 `coll.generate_text()` 来运行 LLM 分析。这是一个 **集合级** 方法 —— 直接在提示字符串中传递任何上下文（转录、描述）。
+使用 `coll.generate_text()` 运行 LLM 分析。这是一个 **集合级别** 的方法 —— 直接在提示字符串中传递任何上下文（转录、描述）。
 
 ```python
 # Get transcript from a video first
@@ -150,7 +150,7 @@ print(result["output"])
 | `model_name` | `str` | `"basic"` | 模型层级：`"basic"`、`"pro"` 或 `"ultra"` |
 | `response_type` | `str` | `"text"` | 响应格式：`"text"` 或 `"json"` |
 
-返回一个 `dict`，带有一个 `output` 键。当 `response_type="text"` 时，`output` 是一个 `str`。当 `response_type="json"` 时，`output` 是一个 `dict`。
+返回一个 `dict`，其中包含一个 `output` 键。当 `response_type="text"` 时，`output` 是一个 `str`。当 `response_type="json"` 时，`output` 是一个 `dict`。
 
 ```python
 result = coll.generate_text(prompt="Summarize this", model_name="pro")
@@ -199,7 +199,7 @@ print(result["output"])
 
 ### 为视频配音
 
-使用集合方法将视频配音为另一种语言：
+使用集合方法将视频配音成另一种语言：
 
 ```python
 dubbed_video = coll.dub_video(
@@ -222,7 +222,7 @@ dubbed_video.play()
 
 ### 翻译转录
 
-翻译视频的转录文本，无需配音：
+在不配音的情况下翻译视频的转录：
 
 ```python
 translated = video.translate_transcript(
@@ -236,7 +236,7 @@ for entry in translated:
 
 **支持的语言** 包括：`en`、`es`、`fr`、`de`、`it`、`pt`、`ja`、`ko`、`zh`、`hi`、`ar` 等。
 
-## 完整工作流示例
+## 完整工作流程示例
 
 ### 为视频生成旁白
 
@@ -322,10 +322,10 @@ print(result["output"]["topics"])
 
 ## 提示
 
-* **生成的媒体是持久性的**：所有生成的内容都存储在您的集合中，并且可以重复使用。
-* **三种音频方法**：使用 `generate_music()` 生成背景音乐，`generate_sound_effect()` 生成音效，`generate_voice()` 进行文本转语音。没有统一的 `generate_audio()` 方法。
-* **文本生成是集合级的**：`coll.generate_text()` 不会自动访问视频内容。使用 `video.get_transcript_text()` 获取转录文本，并将其传递到提示中。
-* **模型层级**：`"basic"` 速度最快，`"pro"` 是平衡选项，`"ultra"` 质量最高。对于大多数分析任务，使用 `"pro"`。
-* **组合生成类型**：生成图像用于叠加、生成音乐用于背景、生成语音用于旁白，然后使用时间线进行组合（参见 [editor.md](editor.md)）。
-* **提示质量很重要**：描述性、具体的提示在所有生成类型中都能产生更好的结果。
+* **生成的媒体是持久的**：所有生成的内容都存储在您的集合中，并且可以重复使用。
+* **三种音频方法**：使用 `generate_music()` 生成背景音乐，`generate_sound_effect()` 生成音效，`generate_voice()` 生成文本转语音。没有统一的 `generate_audio()` 方法。
+* **文本生成是集合级别的**：`coll.generate_text()` 不会自动访问视频内容。使用 `video.get_transcript_text()` 获取转录并将其传递到提示中。
+* **模型层级**：`"basic"` 速度最快，`"pro"` 平衡，`"ultra"` 质量最高。对于大多数分析任务，使用 `"pro"`。
+* **组合生成类型**：生成用于叠加的图像、用于背景的音乐和用于旁白的语音，然后使用时间线进行组合（参见 [editor.md](editor.md)）。
+* **提示质量很重要**：在所有生成类型中，描述性、具体的提示会产生更好的结果。
 * **图像的宽高比**：从 `"1:1"`、`"9:16"`、`"16:9"`、`"4:3"` 或 `"3:4"` 中选择。

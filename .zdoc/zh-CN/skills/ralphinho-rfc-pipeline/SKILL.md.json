@@ -1,0 +1,86 @@
+{
+  "sourceFile": "skills/ralphinho-rfc-pipeline/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: ralphinho-rfc-pipeline\ndescription: RFC-driven multi-agent DAG execution pattern with quality gates, merge queues, and work unit orchestration.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: ralphinho-rfc-pipeline\ndescription: 基于RFC驱动的多智能体DAG执行模式，包含质量门、合并队列和工作单元编排。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Ralphinho RFC Pipeline",
+      "zh-Hans": "# Ralphinho RFC 流水线"
+    },
+    {
+      "en-US": "Inspired by [humanplane](https://github.com/humanplane) style RFC decomposition patterns and multi-unit orchestration workflows.",
+      "zh-Hans": "灵感来源于 [humanplane](https://github.com/humanplane) 风格的 RFC 分解模式和多单元编排工作流。"
+    },
+    {
+      "en-US": "Use this skill when a feature is too large for a single agent pass and must be split into independently verifiable work units.",
+      "zh-Hans": "当一个功能过于庞大，无法通过单次代理处理且必须拆分为可独立验证的工作单元时，请使用此技能。"
+    },
+    {
+      "en-US": "## Pipeline Stages",
+      "zh-Hans": "## 流水线阶段"
+    },
+    {
+      "en-US": "1. RFC intake\n2. DAG decomposition\n3. Unit assignment\n4. Unit implementation\n5. Unit validation\n6. Merge queue and integration\n7. Final system verification",
+      "zh-Hans": "1. RFC 接收\n2. DAG 分解\n3. 单元分配\n4. 单元实现\n5. 单元验证\n6. 合并队列与集成\n7. 最终系统验证"
+    },
+    {
+      "en-US": "## Unit Spec Template",
+      "zh-Hans": "## 单元规格模板"
+    },
+    {
+      "en-US": "Each work unit should include:",
+      "zh-Hans": "每个工作单元应包含："
+    },
+    {
+      "en-US": "- `id`\n- `depends_on`\n- `scope`\n- `acceptance_tests`\n- `risk_level`\n- `rollback_plan`",
+      "zh-Hans": "* `id`\n* `depends_on`\n* `scope`\n* `acceptance_tests`\n* `risk_level`\n* `rollback_plan`"
+    },
+    {
+      "en-US": "## Complexity Tiers",
+      "zh-Hans": "## 复杂度层级"
+    },
+    {
+      "en-US": "- Tier 1: isolated file edits, deterministic tests\n- Tier 2: multi-file behavior changes, moderate integration risk\n- Tier 3: schema/auth/perf/security changes",
+      "zh-Hans": "* 层级 1：独立的文件编辑，确定性测试\n* 层级 2：多文件行为变更，中等集成风险\n* 层级 3：架构/认证/性能/安全变更"
+    },
+    {
+      "en-US": "## Quality Pipeline per Unit",
+      "zh-Hans": "## 每个单元的质量流水线"
+    },
+    {
+      "en-US": "1. research\n2. implementation plan\n3. implementation\n4. tests\n5. review\n6. merge-ready report",
+      "zh-Hans": "1. 研究\n2. 实现计划\n3. 实现\n4. 测试\n5. 审查\n6. 合并就绪报告"
+    },
+    {
+      "en-US": "## Merge Queue Rules",
+      "zh-Hans": "## 合并队列规则"
+    },
+    {
+      "en-US": "- Never merge a unit with unresolved dependency failures.\n- Always rebase unit branches on latest integration branch.\n- Re-run integration tests after each queued merge.",
+      "zh-Hans": "* 绝不合并存在未解决依赖项失败的单元。\n* 始终将单元分支变基到最新的集成分支上。\n* 每次队列合并后重新运行集成测试。"
+    },
+    {
+      "en-US": "## Recovery",
+      "zh-Hans": "## 恢复"
+    },
+    {
+      "en-US": "If a unit stalls:",
+      "zh-Hans": "如果一个单元停滞："
+    },
+    {
+      "en-US": "- evict from active queue\n- snapshot findings\n- regenerate narrowed unit scope\n- retry with updated constraints",
+      "zh-Hans": "* 从活动队列中移除\n* 快照发现结果\n* 重新生成范围缩小的单元\n* 使用更新后的约束重试"
+    },
+    {
+      "en-US": "## Outputs",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "- RFC execution log\n- unit scorecards\n- dependency graph snapshot\n- integration risk summary",
+      "zh-Hans": "* RFC 执行日志\n* 单元记分卡\n* 依赖关系图快照\n* 集成风险摘要"
+    }
+  ]
+}

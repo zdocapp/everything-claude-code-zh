@@ -1,0 +1,58 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/charts.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: charts\ndescription: Chart and data visualization patterns for Remotion. Use when creating bar charts, pie charts, histograms, progress bars, or any data-driven animations.\nmetadata:\n  tags: charts, data, visualization, bar-chart, pie-chart, graphs\n---",
+      "zh-Hans": "---\nname: charts\ndescription: Remotion的图表和数据可视化模式。适用于创建条形图、饼图、直方图、进度条或任何数据驱动的动画。\nmetadata:\n  tags: charts, data, visualization, bar-chart, pie-chart, graphs\n---"
+    },
+    {
+      "en-US": "# Charts in Remotion",
+      "zh-Hans": "# Remotion 中的图表"
+    },
+    {
+      "en-US": "You can create bar charts in Remotion by using regular React code - HTML and SVG is allowed, as well as D3.js.",
+      "zh-Hans": "你可以使用常规的 React 代码在 Remotion 中创建条形图——允许使用 HTML 和 SVG，以及 D3.js。"
+    },
+    {
+      "en-US": "## No animations not powered by `useCurrentFrame()`",
+      "zh-Hans": "## 不由 `useCurrentFrame()` 驱动的动画"
+    },
+    {
+      "en-US": "Disable all animations by third party libraries.\nThey will cause flickering during rendering.\nInstead, drive all animations from `useCurrentFrame()`.",
+      "zh-Hans": "禁用所有第三方库的动画。\n它们会在渲染期间导致闪烁。\n相反，所有动画都应通过 `useCurrentFrame()` 来驱动。"
+    },
+    {
+      "en-US": "## Bar Chart Animations",
+      "zh-Hans": "## 条形图动画"
+    },
+    {
+      "en-US": "See [Bar Chart Example](assets/charts/bar-chart.tsx) for a basic example implmentation.",
+      "zh-Hans": "查看 [条形图示例](assets/charts/bar-chart.tsx) 了解一个基本的示例实现。"
+    },
+    {
+      "en-US": "### Staggered Bars",
+      "zh-Hans": "### 交错显示的条形"
+    },
+    {
+      "en-US": "You can animate the height of the bars and stagger them like this:",
+      "zh-Hans": "你可以像这样为条形的高度设置动画并使其交错显示："
+    },
+    {
+      "en-US": "```tsx\nconst STAGGER_DELAY = 5;\nconst frame = useCurrentFrame();\nconst {fps} = useVideoConfig();\n\nconst bars = data.map((item, i) => {\n  const delay = i * STAGGER_DELAY;\n  const height = spring({\n    frame,\n    fps,\n    delay,\n    config: {damping: 200},\n  });\n  return <div style={{height: height * item.value}} />;\n});\n```",
+      "zh-Hans": "```tsx\nconst STAGGER_DELAY = 5;\nconst frame = useCurrentFrame();\nconst {fps} = useVideoConfig();\n\nconst bars = data.map((item, i) => {\n  const delay = i * STAGGER_DELAY;\n  const height = spring({\n    frame,\n    fps,\n    delay,\n    config: {damping: 200},\n  });\n  return <div style={{height: height * item.value}} />;\n});\n```"
+    },
+    {
+      "en-US": "## Pie Chart Animation",
+      "zh-Hans": "## 饼图动画"
+    },
+    {
+      "en-US": "Animate segments using stroke-dashoffset, starting from 12 o'clock.",
+      "zh-Hans": "使用 stroke-dashoffset 为扇区设置动画，从 12 点钟方向开始。"
+    },
+    {
+      "en-US": "```tsx\nconst frame = useCurrentFrame();\nconst {fps} = useVideoConfig();\n\nconst progress = interpolate(frame, [0, 100], [0, 1]);\n\nconst circumference = 2 * Math.PI * radius;\nconst segmentLength = (value / total) * circumference;\nconst offset = interpolate(progress, [0, 1], [segmentLength, 0]);\n\n<circle r={radius} cx={center} cy={center} fill=\"none\" stroke={color} strokeWidth={strokeWidth} strokeDasharray={`${segmentLength} ${circumference}`} strokeDashoffset={offset} transform={`rotate(-90 ${center} ${center})`} />;\n```",
+      "zh-Hans": "```tsx\nconst frame = useCurrentFrame();\nconst {fps} = useVideoConfig();\n\nconst progress = interpolate(frame, [0, 100], [0, 1]);\n\nconst circumference = 2 * Math.PI * radius;\nconst segmentLength = (value / total) * circumference;\nconst offset = interpolate(progress, [0, 1], [segmentLength, 0]);\n\n<circle r={radius} cx={center} cy={center} fill=\"none\" stroke={color} strokeWidth={strokeWidth} strokeDasharray={`${segmentLength} ${circumference}`} strokeDashoffset={offset} transform={`rotate(-90 ${center} ${center})`} />;\n```"
+    }
+  ]
+}

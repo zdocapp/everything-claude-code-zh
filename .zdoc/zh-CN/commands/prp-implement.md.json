@@ -1,0 +1,382 @@
+{
+  "sourceFile": "commands/prp-implement.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Execute an implementation plan with rigorous validation loops\nargument-hint: <path/to/plan.md>\n---",
+      "zh-Hans": "---\ndescription: 执行一个具有严格验证循环的实施计划\nargument-hint: <path/to/plan.md>\n---"
+    },
+    {
+      "en-US": "> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.",
+      "zh-Hans": "> 改编自 Wirasm 的 PRPs-agentic-eng。PRP 工作流系列的一部分。"
+    },
+    {
+      "en-US": "# PRP Implement",
+      "zh-Hans": "# PRP 实施"
+    },
+    {
+      "en-US": "Execute a plan file step-by-step with continuous validation. Every change is verified immediately — never accumulate broken state.",
+      "zh-Hans": "逐步执行计划文件，并进行持续验证。每次更改后立即验证——绝不累积错误状态。"
+    },
+    {
+      "en-US": "**Core Philosophy**: Validation loops catch mistakes early. Run checks after every change. Fix issues immediately.",
+      "zh-Hans": "**核心原则**：验证循环及早发现错误。每次更改后运行检查。立即修复问题。"
+    },
+    {
+      "en-US": "**Golden Rule**: If a validation fails, fix it before moving on. Never accumulate broken state.",
+      "zh-Hans": "**黄金法则**：如果验证失败，先修复再继续。绝不累积错误状态。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 0 — DETECT",
+      "zh-Hans": "## 阶段 0 — 检测"
+    },
+    {
+      "en-US": "### Package Manager Detection",
+      "zh-Hans": "### 包管理器检测"
+    },
+    {
+      "en-US": "| File Exists | Package Manager | Runner |\n|---|---|---|\n| `bun.lockb` | bun | `bun run` |\n| `pnpm-lock.yaml` | pnpm | `pnpm run` |\n| `yarn.lock` | yarn | `yarn` |\n| `package-lock.json` | npm | `npm run` |\n| `pyproject.toml` or `requirements.txt` | uv / pip | `uv run` or `python -m` |\n| `Cargo.toml` | cargo | `cargo` |\n| `go.mod` | go | `go` |",
+      "zh-Hans": "| 文件存在 | 包管理器 | 运行器 |\n|---|---|---|\n| `bun.lockb` | bun | `bun run` |\n| `pnpm-lock.yaml` | pnpm | `pnpm run` |\n| `yarn.lock` | yarn | `yarn` |\n| `package-lock.json` | npm | `npm run` |\n| `pyproject.toml` 或 `requirements.txt` | uv / pip | `uv run` 或 `python -m` |\n| `Cargo.toml` | cargo | `cargo` |\n| `go.mod` | go | `go` |"
+    },
+    {
+      "en-US": "### Validation Scripts",
+      "zh-Hans": "### 验证脚本"
+    },
+    {
+      "en-US": "Check `package.json` (or equivalent) for available scripts:",
+      "zh-Hans": "检查 `package.json`（或等效文件）以获取可用脚本："
+    },
+    {
+      "en-US": "```bash\n# For Node.js projects\ncat package.json | grep -A 20 '\"scripts\"'\n```",
+      "zh-Hans": "```bash\n# For Node.js projects\ncat package.json | grep -A 20 '\"scripts\"'\n```"
+    },
+    {
+      "en-US": "Note available commands for: type-check, lint, test, build.",
+      "zh-Hans": "注意以下可用命令：类型检查、代码检查、测试、构建。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 1 — LOAD",
+      "zh-Hans": "## 阶段 1 — 加载"
+    },
+    {
+      "en-US": "Read the plan file:",
+      "zh-Hans": "读取计划文件："
+    },
+    {
+      "en-US": "```bash\ncat \"$ARGUMENTS\"\n```",
+      "zh-Hans": "```bash\ncat \"$ARGUMENTS\"\n```"
+    },
+    {
+      "en-US": "Extract these sections from the plan:",
+      "zh-Hans": "从计划中提取以下部分："
+    },
+    {
+      "en-US": "- **Summary** — What is being built\n- **Patterns to Mirror** — Code conventions to follow\n- **Files to Change** — What to create or modify\n- **Step-by-Step Tasks** — Implementation sequence\n- **Validation Commands** — How to verify correctness\n- **Acceptance Criteria** — Definition of done",
+      "zh-Hans": "* **摘要** — 正在构建什么\n* **要遵循的模式** — 要遵循的代码约定\n* **要更改的文件** — 要创建或修改的内容\n* **逐步任务** — 实施顺序\n* **验证命令** — 如何验证正确性\n* **验收标准** — 完成定义"
+    },
+    {
+      "en-US": "If the file doesn't exist or isn't a valid plan:",
+      "zh-Hans": "如果文件不存在或不是有效的计划："
+    },
+    {
+      "en-US": "```\nError: Plan file not found or invalid.\nRun /prp-plan <feature-description> to create a plan first.\n```",
+      "zh-Hans": "```\n错误：计划文件未找到或无效。\n请先运行 /prp-plan <功能描述> 来创建计划。\n```"
+    },
+    {
+      "en-US": "**CHECKPOINT**: Plan loaded. All sections identified. Tasks extracted.",
+      "zh-Hans": "**检查点**：计划已加载。所有部分已识别。任务已提取。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 2 — PREPARE",
+      "zh-Hans": "## 阶段 2 — 准备"
+    },
+    {
+      "en-US": "### Git State",
+      "zh-Hans": "### Git 状态"
+    },
+    {
+      "en-US": "```bash\ngit branch --show-current\ngit status --porcelain\n```",
+      "zh-Hans": "```bash\ngit branch --show-current\ngit status --porcelain\n```"
+    },
+    {
+      "en-US": "### Branch Decision",
+      "zh-Hans": "### 分支决策"
+    },
+    {
+      "en-US": "| Current State | Action |\n|---|---|\n| On feature branch | Use current branch |\n| On main, clean working tree | Create feature branch: `git checkout -b feat/{plan-name}` |\n| On main, dirty working tree | **STOP** — Ask user to stash or commit first |\n| In a git worktree for this feature | Use the worktree |",
+      "zh-Hans": "| 当前状态 | 操作 |\n|---|---|\n| 在功能分支上 | 使用当前分支 |\n| 在 main 分支上，工作树干净 | 创建功能分支：`git checkout -b feat/{plan-name}` |\n| 在 main 分支上，工作树有未提交更改 | **停止** — 要求用户先暂存或提交 |\n| 在此功能的 git worktree 中 | 使用该 worktree |"
+    },
+    {
+      "en-US": "### Sync Remote",
+      "zh-Hans": "### 同步远程"
+    },
+    {
+      "en-US": "```bash\ngit pull --rebase origin $(git branch --show-current) 2>/dev/null || true\n```",
+      "zh-Hans": "```bash\ngit pull --rebase origin $(git branch --show-current) 2>/dev/null || true\n```"
+    },
+    {
+      "en-US": "**CHECKPOINT**: On correct branch. Working tree ready. Remote synced.",
+      "zh-Hans": "**检查点**：位于正确的分支。工作树准备就绪。远程已同步。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 3 — EXECUTE",
+      "zh-Hans": "## 阶段 3 — 执行"
+    },
+    {
+      "en-US": "Process each task from the plan sequentially.",
+      "zh-Hans": "按顺序处理计划中的每个任务。"
+    },
+    {
+      "en-US": "### Per-Task Loop",
+      "zh-Hans": "### 每任务循环"
+    },
+    {
+      "en-US": "For each task in **Step-by-Step Tasks**:",
+      "zh-Hans": "对于 **逐步任务** 中的每个任务："
+    },
+    {
+      "en-US": "1. **Read MIRROR reference** — Open the pattern file referenced in the task's MIRROR field. Understand the convention before writing code.\n\n2. **Implement** — Write the code following the pattern exactly. Apply GOTCHA warnings. Use specified IMPORTS.\n\n3. **Validate immediately** — After EVERY file change:\n   ```bash\n   # Run type-check (adjust command per project)\n   [type-check command from Phase 0]\n   ```\n   If type-check fails → fix the error before moving to the next file.\n\n4. **Track progress** — Log: `[done] Task N: [task name] — complete`",
+      "zh-Hans": "1. **读取 MIRROR 参考** — 打开任务 MIRROR 字段中引用的模式文件。在编写代码前理解约定。\n\n2. **实施** — 严格按照模式编写代码。应用 GOTCHA 警告。使用指定的 IMPORTS。\n\n3. **立即验证** — 在 **每次** 文件更改后：\n   ```bash\n   # 运行类型检查（根据项目调整命令）\n   [来自阶段 0 的类型检查命令]\n   ```\n   如果类型检查失败 → 在继续下一个文件前修复错误。\n\n4. **跟踪进度** — 记录：`[done] Task N: [task name] — complete`"
+    },
+    {
+      "en-US": "### Handling Deviations",
+      "zh-Hans": "### 处理偏差"
+    },
+    {
+      "en-US": "If implementation must deviate from the plan:",
+      "zh-Hans": "如果实施必须偏离计划："
+    },
+    {
+      "en-US": "- Note **WHAT** changed\n- Note **WHY** it changed\n- Continue with the corrected approach\n- These deviations will be captured in the report",
+      "zh-Hans": "* 记录 **什么** 改变了\n* 记录 **为什么** 改变\n* 继续采用修正后的方法\n* 这些偏差将记录在报告中"
+    },
+    {
+      "en-US": "**CHECKPOINT**: All tasks executed. Deviations logged.",
+      "zh-Hans": "**检查点**：所有任务已执行。偏差已记录。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 4 — VALIDATE",
+      "zh-Hans": "## 阶段 4 — 验证"
+    },
+    {
+      "en-US": "Run all validation levels from the plan. Fix issues at each level before proceeding.",
+      "zh-Hans": "运行计划中的所有验证级别。在进入下一级别前修复每个级别的问题。"
+    },
+    {
+      "en-US": "### Level 1: Static Analysis",
+      "zh-Hans": "### 级别 1：静态分析"
+    },
+    {
+      "en-US": "```bash\n# Type checking — zero errors required\n[project type-check command]\n\n# Linting — fix automatically where possible\n[project lint command]\n[project lint-fix command]\n```",
+      "zh-Hans": "```bash\n# Type checking — zero errors required\n[project type-check command]\n\n# Linting — fix automatically where possible\n[project lint command]\n[project lint-fix command]\n```"
+    },
+    {
+      "en-US": "If lint errors remain after auto-fix, fix manually.",
+      "zh-Hans": "如果自动修复后仍有代码检查错误，请手动修复。"
+    },
+    {
+      "en-US": "### Level 2: Unit Tests",
+      "zh-Hans": "### 级别 2：单元测试"
+    },
+    {
+      "en-US": "Write tests for every new function (as specified in the plan's Testing Strategy).",
+      "zh-Hans": "为每个新函数编写测试（如计划中测试策略所指定）。"
+    },
+    {
+      "en-US": "```bash\n[project test command for affected area]\n```",
+      "zh-Hans": "```bash\n[project test command for affected area]\n```"
+    },
+    {
+      "en-US": "- Every function needs at least one test\n- Cover edge cases listed in the plan\n- If a test fails → fix the implementation (not the test, unless the test is wrong)",
+      "zh-Hans": "* 每个函数至少需要一个测试\n* 覆盖计划中列出的边界情况\n* 如果测试失败 → 修复实现（除非测试本身有误，否则不修改测试）"
+    },
+    {
+      "en-US": "### Level 3: Build Check",
+      "zh-Hans": "### 级别 3：构建检查"
+    },
+    {
+      "en-US": "```bash\n[project build command]\n```",
+      "zh-Hans": "```bash\n[project build command]\n```"
+    },
+    {
+      "en-US": "Build must succeed with zero errors.",
+      "zh-Hans": "构建必须成功且零错误。"
+    },
+    {
+      "en-US": "### Level 4: Integration Testing (if applicable)",
+      "zh-Hans": "### 级别 4：集成测试（如适用）"
+    },
+    {
+      "en-US": "```bash\n# Start server, run tests, stop server\n[project dev server command] &\nSERVER_PID=$!\n\n# Wait for server to be ready (adjust port as needed)\nSERVER_READY=0\nfor i in $(seq 1 30); do\n  if curl -sf http://localhost:PORT/health >/dev/null 2>&1; then\n    SERVER_READY=1\n    break\n  fi\n  sleep 1\ndone\n\nif [ \"$SERVER_READY\" -ne 1 ]; then\n  kill \"$SERVER_PID\" 2>/dev/null || true\n  echo \"ERROR: Server failed to start within 30s\" >&2\n  exit 1\nfi\n\n[integration test command]\nTEST_EXIT=$?\n\nkill \"$SERVER_PID\" 2>/dev/null || true\nwait \"$SERVER_PID\" 2>/dev/null || true\n\nexit \"$TEST_EXIT\"\n```",
+      "zh-Hans": "```bash\n# Start server, run tests, stop server\n[project dev server command] &\nSERVER_PID=$!\n\n# Wait for server to be ready (adjust port as needed)\nSERVER_READY=0\nfor i in $(seq 1 30); do\n  if curl -sf http://localhost:PORT/health >/dev/null 2>&1; then\n    SERVER_READY=1\n    break\n  fi\n  sleep 1\ndone\n\nif [ \"$SERVER_READY\" -ne 1 ]; then\n  kill \"$SERVER_PID\" 2>/dev/null || true\n  echo \"ERROR: Server failed to start within 30s\" >&2\n  exit 1\nfi\n\n[integration test command]\nTEST_EXIT=$?\n\nkill \"$SERVER_PID\" 2>/dev/null || true\nwait \"$SERVER_PID\" 2>/dev/null || true\n\nexit \"$TEST_EXIT\"\n```"
+    },
+    {
+      "en-US": "### Level 5: Edge Case Testing",
+      "zh-Hans": "### 级别 5：边界情况测试"
+    },
+    {
+      "en-US": "Run through edge cases from the plan's Testing Strategy checklist.",
+      "zh-Hans": "运行计划中测试策略检查清单的边界情况。"
+    },
+    {
+      "en-US": "**CHECKPOINT**: All 5 validation levels pass. Zero errors.",
+      "zh-Hans": "**检查点**：所有 5 个验证级别通过。零错误。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 5 — REPORT",
+      "zh-Hans": "## 阶段 5 — 报告"
+    },
+    {
+      "en-US": "### Create Implementation Report",
+      "zh-Hans": "### 创建实施报告"
+    },
+    {
+      "en-US": "```bash\nmkdir -p .claude/PRPs/reports\n```",
+      "zh-Hans": "```bash\nmkdir -p .claude/PRPs/reports\n```"
+    },
+    {
+      "en-US": "Write report to `.claude/PRPs/reports/{plan-name}-report.md`:",
+      "zh-Hans": "将报告写入 `.claude/PRPs/reports/{plan-name}-report.md`："
+    },
+    {
+      "en-US": "```markdown\n# Implementation Report: [Feature Name]\n\n## Summary\n[What was implemented]\n\n## Assessment vs Reality\n\n| Metric | Predicted (Plan) | Actual |\n|---|---|---|\n| Complexity | [from plan] | [actual] |\n| Confidence | [from plan] | [actual] |\n| Files Changed | [from plan] | [actual count] |\n\n## Tasks Completed\n\n| # | Task | Status | Notes |\n|---|---|---|---|\n| 1 | [task name] | [done] Complete | |\n| 2 | [task name] | [done] Complete | Deviated — [reason] |\n\n## Validation Results\n\n| Level | Status | Notes |\n|---|---|---|\n| Static Analysis | [done] Pass | |\n| Unit Tests | [done] Pass | N tests written |\n| Build | [done] Pass | |\n| Integration | [done] Pass | or N/A |\n| Edge Cases | [done] Pass | |\n\n## Files Changed\n\n| File | Action | Lines |\n|---|---|---|\n| `path/to/file` | CREATED | +N |\n| `path/to/file` | UPDATED | +N / -M |\n\n## Deviations from Plan\n[List any deviations with WHAT and WHY, or \"None\"]\n\n## Issues Encountered\n[List any problems and how they were resolved, or \"None\"]\n\n## Tests Written\n\n| Test File | Tests | Coverage |\n|---|---|---|\n| `path/to/test` | N tests | [area covered] |\n\n## Next Steps\n- [ ] Code review via `/code-review`\n- [ ] Create PR via `/prp-pr`\n```",
+      "zh-Hans": "```markdown\n# 实施报告：[功能名称]\n\n## 摘要\n[已实施的内容]\n\n## 评估与实际对比\n\n| 指标 | 预测（计划） | 实际 |\n|---|---|---|\n| 复杂度 | [来自计划] | [实际] |\n| 置信度 | [来自计划] | [实际] |\n| 更改的文件数 | [来自计划] | [实际数量] |\n\n## 已完成的任务\n\n| # | 任务 | 状态 | 备注 |\n|---|---|---|---|\n| 1 | [任务名称] | [已完成] 完成 | |\n| 2 | [任务名称] | [已完成] 完成 | 偏离 — [原因] |\n\n## 验证结果\n\n| 级别 | 状态 | 备注 |\n|---|---|---|\n| 静态分析 | [已完成] 通过 | |\n| 单元测试 | [已完成] 通过 | 编写了 N 个测试 |\n| 构建 | [已完成] 通过 | |\n| 集成 | [已完成] 通过 | 或 N/A |\n| 边界情况 | [已完成] 通过 | |\n\n## 更改的文件\n\n| 文件 | 操作 | 行数 |\n|---|---|---|\n| `path/to/file` | 创建 | +N |\n| `path/to/file` | 更新 | +N / -M |\n\n## 与计划的偏差\n[列出任何偏差及其原因，或写“无”]\n\n## 遇到的问题\n[列出任何问题及其解决方法，或写“无”]\n\n## 编写的测试\n\n| 测试文件 | 测试 | 覆盖率 |\n|---|---|---|\n| `path/to/test` | N 个测试 | [覆盖范围] |\n\n## 后续步骤\n- [ ] 通过 `/code-review` 进行代码审查\n- [ ] 通过 `/prp-pr` 创建 PR\n```"
+    },
+    {
+      "en-US": "### Update PRD (if applicable)",
+      "zh-Hans": "### 更新 PRD（如适用）"
+    },
+    {
+      "en-US": "If this implementation was for a PRD phase:",
+      "zh-Hans": "如果此实施是针对 PRD 阶段的："
+    },
+    {
+      "en-US": "1. Update the phase status from `in-progress` to `complete`\n2. Add report path as reference",
+      "zh-Hans": "1. 将阶段状态从 `in-progress` 更新为 `complete`\n2. 添加报告路径作为参考"
+    },
+    {
+      "en-US": "### Archive Plan",
+      "zh-Hans": "### 归档计划"
+    },
+    {
+      "en-US": "```bash\nmkdir -p .claude/PRPs/plans/completed\nmv \"$ARGUMENTS\" .claude/PRPs/plans/completed/\n```",
+      "zh-Hans": "```bash\nmkdir -p .claude/PRPs/plans/completed\nmv \"$ARGUMENTS\" .claude/PRPs/plans/completed/\n```"
+    },
+    {
+      "en-US": "**CHECKPOINT**: Report created. PRD updated. Plan archived.",
+      "zh-Hans": "**检查点**：报告已创建。PRD 已更新。计划已归档。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 6 — OUTPUT",
+      "zh-Hans": "## 阶段 6 — 输出"
+    },
+    {
+      "en-US": "Report to user:",
+      "zh-Hans": "向用户报告："
+    },
+    {
+      "en-US": "```\n## Implementation Complete\n\n- **Plan**: [plan file path] → archived to completed/\n- **Branch**: [current branch name]\n- **Status**: [done] All tasks complete\n\n### Validation Summary\n\n| Check | Status |\n|---|---|\n| Type Check | [done] |\n| Lint | [done] |\n| Tests | [done] (N written) |\n| Build | [done] |\n| Integration | [done] or N/A |\n\n### Files Changed\n- [N] files created, [M] files updated\n\n### Deviations\n[Summary or \"None — implemented exactly as planned\"]\n\n### Artifacts\n- Report: `.claude/PRPs/reports/{name}-report.md`\n- Archived Plan: `.claude/PRPs/plans/completed/{name}.plan.md`\n\n### PRD Progress (if applicable)\n| Phase | Status |\n|---|---|\n| Phase 1 | [done] Complete |\n| Phase 2 | [next] |\n| ... | ... |\n\n> Next step: Run `/prp-pr` to create a pull request, or `/code-review` to review changes first.\n```",
+      "zh-Hans": "```\n## 实施完成\n\n- **计划**: [plan file path] → 已归档至 completed/\n- **分支**: [current branch name]\n- **状态**: [done] 所有任务完成\n\n### 验证摘要\n\n| 检查项 | 状态 |\n|---|---|\n| 类型检查 | [done] |\n| 代码规范检查 | [done] |\n| 测试 | [done] (N 个已编写) |\n| 构建 | [done] |\n| 集成 | [done] 或 N/A |\n\n### 变更文件\n- [N] 个文件已创建，[M] 个文件已更新\n\n### 偏差说明\n[摘要或 \"无 — 完全按计划实施\"]\n\n### 产出物\n- 报告: `.claude/PRPs/reports/{name}-report.md`\n- 归档计划: `.claude/PRPs/plans/completed/{name}.plan.md`\n\n### PRD 进度 (如适用)\n| 阶段 | 状态 |\n|---|---|\n| 阶段 1 | [done] 完成 |\n| 阶段 2 | [next] |\n| ... | ... |\n\n> 下一步: 运行 `/prp-pr` 创建拉取请求，或运行 `/code-review` 先审查更改。\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Handling Failures",
+      "zh-Hans": "## 处理失败"
+    },
+    {
+      "en-US": "### Type Check Fails",
+      "zh-Hans": "### 类型检查失败"
+    },
+    {
+      "en-US": "1. Read the error message carefully\n2. Fix the type error in the source file\n3. Re-run type-check\n4. Continue only when clean",
+      "zh-Hans": "1. 仔细阅读错误信息\n2. 在源文件中修复类型错误\n3. 重新运行类型检查\n4. 仅在通过后继续"
+    },
+    {
+      "en-US": "### Tests Fail",
+      "zh-Hans": "### 测试失败"
+    },
+    {
+      "en-US": "1. Identify whether the bug is in the implementation or the test\n2. Fix the root cause (usually the implementation)\n3. Re-run tests\n4. Continue only when green",
+      "zh-Hans": "1. 确定问题是出在实现还是测试本身\n2. 修复根本原因（通常是实现）\n3. 重新运行测试\n4. 仅在通过后继续"
+    },
+    {
+      "en-US": "### Lint Fails",
+      "zh-Hans": "### 代码检查失败"
+    },
+    {
+      "en-US": "1. Run auto-fix first\n2. If errors remain, fix manually\n3. Re-run lint\n4. Continue only when clean",
+      "zh-Hans": "1. 先运行自动修复\n2. 如果仍有错误，手动修复\n3. 重新运行代码检查\n4. 仅在通过后继续"
+    },
+    {
+      "en-US": "### Build Fails",
+      "zh-Hans": "### 构建失败"
+    },
+    {
+      "en-US": "1. Usually a type or import issue — check error message\n2. Fix the offending file\n3. Re-run build\n4. Continue only when successful",
+      "zh-Hans": "1. 通常是类型或导入问题 — 检查错误信息\n2. 修复有问题的文件\n3. 重新运行构建\n4. 仅在成功后继续"
+    },
+    {
+      "en-US": "### Integration Test Fails",
+      "zh-Hans": "### 集成测试失败"
+    },
+    {
+      "en-US": "1. Check server started correctly\n2. Verify endpoint/route exists\n3. Check request format matches expected\n4. Fix and re-run",
+      "zh-Hans": "1. 检查服务器是否正确启动\n2. 验证端点/路由是否存在\n3. 检查请求格式是否符合预期\n4. 修复并重新运行"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Success Criteria",
+      "zh-Hans": "## 成功标准"
+    },
+    {
+      "en-US": "- **TASKS_COMPLETE**: All tasks from the plan executed\n- **TYPES_PASS**: Zero type errors\n- **LINT_PASS**: Zero lint errors\n- **TESTS_PASS**: All tests green, new tests written\n- **BUILD_PASS**: Build succeeds\n- **REPORT_CREATED**: Implementation report saved\n- **PLAN_ARCHIVED**: Plan moved to `completed/`",
+      "zh-Hans": "* **TASKS\\_COMPLETE**：计划中的所有任务已执行\n* **TYPES\\_PASS**：零类型错误\n* **LINT\\_PASS**：零代码检查错误\n* **TESTS\\_PASS**：所有测试通过，新测试已编写\n* **BUILD\\_PASS**：构建成功\n* **REPORT\\_CREATED**：实施报告已保存\n* **PLAN\\_ARCHIVED**：计划已移至 `completed/`"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Next Steps",
+      "zh-Hans": "## 后续步骤"
+    },
+    {
+      "en-US": "- Run `/code-review` to review changes before committing\n- Run `/prp-commit` to commit with a descriptive message\n- Run `/prp-pr` to create a pull request\n- Run `/prp-plan <next-phase>` if the PRD has more phases",
+      "zh-Hans": "* 运行 `/code-review` 在提交前审查更改\n* 运行 `/prp-commit` 提交并附带描述性信息\n* 运行 `/prp-pr` 创建拉取请求\n* 如果 PRD 有更多阶段，运行 `/prp-plan <next-phase>`"
+    }
+  ]
+}

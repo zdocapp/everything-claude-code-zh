@@ -5,9 +5,9 @@ disable-model-invocation: true
 
 # 包管理器设置
 
-配置您为此项目或全局偏好的包管理器。
+为此项目或全局配置您偏好的包管理器。
 
-## 使用方式
+## 使用方法
 
 ```bash
 # Detect current package manager
@@ -76,7 +76,7 @@ export CLAUDE_PACKAGE_MANAGER=pnpm
 
 ## 运行检测
 
-要查看当前包管理器检测结果，请运行：
+要查看当前的包管理器检测结果，请运行：
 
 ```bash
 node scripts/setup-package-manager.js --detect

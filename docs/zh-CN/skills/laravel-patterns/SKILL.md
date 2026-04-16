@@ -1,28 +1,28 @@
 ---
 name: laravel-patterns
-description: Laravel架构模式、路由/控制器、Eloquent ORM、服务层、队列、事件、缓存以及用于生产应用的API资源。
+description: Laravel架构模式、路由/控制器、Eloquent ORM、服务层、队列、事件、缓存以及用于生产应用程序的API资源。
 origin: ECC
 ---
 
 # Laravel 开发模式
 
-适用于可扩展、可维护应用的生产级 Laravel 架构模式。
+适用于可扩展、可维护应用程序的生产级 Laravel 架构模式。
 
-## 适用场景
+## 何时使用
 
-* 构建 Laravel Web 应用或 API
+* 构建 Laravel Web 应用程序或 API
 * 构建控制器、服务和领域逻辑
-* 使用 Eloquent 模型和关系
+* 使用 Eloquent 模型和关联关系
 * 使用资源和分页设计 API
 * 添加队列、事件、缓存和后台任务
 
 ## 工作原理
 
-* 围绕清晰的边界（控制器 -> 服务/操作 -> 模型）构建应用。
-* 使用显式绑定和作用域绑定来保持路由可预测；同时仍强制执行授权以实现访问控制。
-* 倾向于使用类型化模型、转换器和作用域来保持领域逻辑一致。
+* 围绕清晰的边界构建应用（控制器 -> 服务/操作 -> 模型）。
+* 使用显式绑定和范围绑定以保持路由可预测；仍需强制执行授权以进行访问控制。
+* 倾向于使用类型化模型、转换器和作用域以保持领域逻辑一致。
 * 将 IO 密集型工作放在队列中，并缓存昂贵的读取操作。
-* 将配置集中在 `config/*` 中，并保持环境配置显式化。
+* 将配置集中在 `config/*` 中，并保持环境配置明确。
 
 ## 示例
 
@@ -96,9 +96,9 @@ final class OrdersController extends Controller
 }
 ```
 
-### 路由与控制器
+### 路由和控制器
 
-为了清晰起见，优先使用路由模型绑定和资源控制器。
+为了清晰，优先使用路由模型绑定和资源控制器。
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -108,9 +108,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 ```
 
-### 路由模型绑定（作用域）
+### 路由模型绑定（范围限定）
 
-使用作用域绑定来防止跨租户访问。
+使用范围绑定以防止跨租户访问。
 
 ```php
 Route::scopeBindings()->group(function () {
@@ -120,9 +120,9 @@ Route::scopeBindings()->group(function () {
 
 ### 嵌套路由和绑定名称
 
-* 保持前缀和路径一致，避免双重嵌套（例如 `conversation` 与 `conversations`）。
-* 使用与绑定模型匹配的单一参数名（例如，`{conversation}` 对应 `Conversation`）。
-* 嵌套时优先使用作用域绑定以强制执行父子关系。
+* 保持前缀和路径一致以避免双重嵌套（例如 `conversation` 与 `conversations`）。
+* 使用与绑定模型匹配的单个参数名称（例如，对于 `Conversation` 使用 `{conversation}`）。
+* 嵌套时优先使用范围绑定以强制执行父子关系。
 
 ```php
 use App\Http\Controllers\Api\ConversationController;
@@ -156,7 +156,7 @@ Route::model('conversation', AiConversation::class);
 
 ### 服务容器绑定
 
-在服务提供者中将接口绑定到实现，以实现清晰的依赖关系连接。
+在服务提供者中将接口绑定到实现，以实现清晰的依赖注入。
 
 ```php
 use App\Repositories\EloquentOrderRepository;
@@ -200,7 +200,7 @@ final class Project extends Model
 }
 ```
 
-### 自定义转换器与值对象
+### 自定义转换器和值对象
 
 使用枚举或值对象进行严格类型化。
 
@@ -259,10 +259,10 @@ final class ProjectQuery
 }
 ```
 
-### 全局作用域与软删除
+### 全局作用域和软删除
 
 使用全局作用域进行默认筛选，并使用 `SoftDeletes` 处理可恢复的记录。
-对于同一筛选器，请使用全局作用域或命名作用域中的一种，除非你打算实现分层行为。
+对于相同的筛选器，使用全局作用域或命名作用域之一，而不是两者都用，除非你打算实现分层行为。
 
 ```php
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -298,7 +298,7 @@ final class Project extends Model
 $projects = Project::ownedBy($user->id)->get();
 ```
 
-### 用于多步更新的数据库事务
+### 用于多步骤更新的数据库事务
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -344,7 +344,7 @@ return new class extends Migration
 };
 ```
 
-### 表单请求与验证
+### 表单请求和验证
 
 将验证逻辑放在表单请求中，并将输入转换为 DTO。
 
@@ -399,17 +399,17 @@ return response()->json([
 
 ### 事件、任务和队列
 
-* 为副作用（邮件、分析）触发领域事件
-* 使用队列任务处理耗时工作（报告、导出、Webhook）
+* 为副作用（电子邮件、分析）发出领域事件
+* 对耗时工作（报告、导出、Webhook）使用队列任务
 * 优先使用具有重试和退避机制的幂等处理器
 
 ### 缓存
 
-* 缓存读密集型端点和昂贵查询
-* 在模型事件（创建/更新/删除）时使缓存失效
+* 缓存读取密集型端点和昂贵的查询
+* 在模型事件（创建/更新/删除）上使缓存失效
 * 缓存相关数据时使用标签以便于失效
 
-### 配置与环境
+### 配置和环境
 
-* 将机密信息保存在 `.env` 中，将配置保存在 `config/*.php` 中
+* 将密钥保存在 `.env` 中，将配置保存在 `config/*.php` 中
 * 使用按环境配置覆盖，并在生产环境中使用 `config:cache`

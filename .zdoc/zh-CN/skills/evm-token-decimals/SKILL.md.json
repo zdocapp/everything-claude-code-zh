@@ -1,0 +1,102 @@
+{
+  "sourceFile": "skills/evm-token-decimals/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: evm-token-decimals\ndescription: Prevent silent decimal mismatch bugs across EVM chains. Covers runtime decimal lookup, chain-aware caching, bridged-token precision drift, and safe normalization for bots, dashboards, and DeFi tools.\norigin: ECC direct-port adaptation\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: evm-token-decimals\ndescription: 防止跨EVM链的无声小数不匹配错误。涵盖运行时小数查找、链感知缓存、桥接代币精度漂移，以及为机器人、仪表板和DeFi工具提供安全标准化。\norigin: ECC direct-port adaptation\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# EVM Token Decimals",
+      "zh-Hans": "# EVM 代币小数位数"
+    },
+    {
+      "en-US": "Silent decimal mismatches are one of the easiest ways to ship balances or USD values that are off by orders of magnitude without throwing an error.",
+      "zh-Hans": "静默的小数位数不匹配是导致余额或美元价值出现数量级偏差而不会抛出错误的最简单方式之一。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Reading ERC-20 balances in Python, TypeScript, or Solidity\n- Calculating fiat values from on-chain balances\n- Comparing token amounts across multiple EVM chains\n- Handling bridged assets\n- Building portfolio trackers, bots, or aggregators",
+      "zh-Hans": "* 在 Python、TypeScript 或 Solidity 中读取 ERC-20 余额\n* 根据链上余额计算法币价值\n* 跨多个 EVM 链比较代币数量\n* 处理桥接资产\n* 构建投资组合跟踪器、机器人或聚合器"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "Never assume stablecoins use the same decimals everywhere. Query `decimals()` at runtime, cache by `(chain_id, token_address)`, and use decimal-safe math for value calculations.",
+      "zh-Hans": "切勿假设稳定币在所有地方都使用相同的小数位数。在运行时查询 `decimals()`，按 `(chain_id, token_address)` 缓存，并在进行价值计算时使用小数安全的数学运算。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Query decimals at runtime",
+      "zh-Hans": "### 在运行时查询小数位数"
+    },
+    {
+      "en-US": "```python\nfrom decimal import Decimal\nfrom web3 import Web3\n\nERC20_ABI = [\n    {\"name\": \"decimals\", \"type\": \"function\", \"inputs\": [],\n     \"outputs\": [{\"type\": \"uint8\"}], \"stateMutability\": \"view\"},\n    {\"name\": \"balanceOf\", \"type\": \"function\",\n     \"inputs\": [{\"name\": \"account\", \"type\": \"address\"}],\n     \"outputs\": [{\"type\": \"uint256\"}], \"stateMutability\": \"view\"},\n]\n\ndef get_token_balance(w3: Web3, token_address: str, wallet: str) -> Decimal:\n    contract = w3.eth.contract(\n        address=Web3.to_checksum_address(token_address),\n        abi=ERC20_ABI,\n    )\n    decimals = contract.functions.decimals().call()\n    raw = contract.functions.balanceOf(Web3.to_checksum_address(wallet)).call()\n    return Decimal(raw) / Decimal(10 ** decimals)\n```",
+      "zh-Hans": "```python\nfrom decimal import Decimal\nfrom web3 import Web3\n\nERC20_ABI = [\n    {\"name\": \"decimals\", \"type\": \"function\", \"inputs\": [],\n     \"outputs\": [{\"type\": \"uint8\"}], \"stateMutability\": \"view\"},\n    {\"name\": \"balanceOf\", \"type\": \"function\",\n     \"inputs\": [{\"name\": \"account\", \"type\": \"address\"}],\n     \"outputs\": [{\"type\": \"uint256\"}], \"stateMutability\": \"view\"},\n]\n\ndef get_token_balance(w3: Web3, token_address: str, wallet: str) -> Decimal:\n    contract = w3.eth.contract(\n        address=Web3.to_checksum_address(token_address),\n        abi=ERC20_ABI,\n    )\n    decimals = contract.functions.decimals().call()\n    raw = contract.functions.balanceOf(Web3.to_checksum_address(wallet)).call()\n    return Decimal(raw) / Decimal(10 ** decimals)\n```"
+    },
+    {
+      "en-US": "Do not hardcode `1_000_000` because a symbol usually has 6 decimals somewhere else.",
+      "zh-Hans": "不要硬编码 `1_000_000`，因为某个符号在其他地方通常有 6 位小数。"
+    },
+    {
+      "en-US": "### Cache by chain and token",
+      "zh-Hans": "### 按链和代币缓存"
+    },
+    {
+      "en-US": "```python\nfrom functools import lru_cache\n\n@lru_cache(maxsize=512)\ndef get_decimals(chain_id: int, token_address: str) -> int:\n    w3 = get_web3_for_chain(chain_id)\n    contract = w3.eth.contract(\n        address=Web3.to_checksum_address(token_address),\n        abi=ERC20_ABI,\n    )\n    return contract.functions.decimals().call()\n```",
+      "zh-Hans": "```python\nfrom functools import lru_cache\n\n@lru_cache(maxsize=512)\ndef get_decimals(chain_id: int, token_address: str) -> int:\n    w3 = get_web3_for_chain(chain_id)\n    contract = w3.eth.contract(\n        address=Web3.to_checksum_address(token_address),\n        abi=ERC20_ABI,\n    )\n    return contract.functions.decimals().call()\n```"
+    },
+    {
+      "en-US": "### Handle odd tokens defensively",
+      "zh-Hans": "### 防御性地处理特殊代币"
+    },
+    {
+      "en-US": "```python\ntry:\n    decimals = contract.functions.decimals().call()\nexcept Exception:\n    logging.warning(\n        \"decimals() reverted on %s (chain %s), defaulting to 18\",\n        token_address,\n        chain_id,\n    )\n    decimals = 18\n```",
+      "zh-Hans": "```python\ntry:\n    decimals = contract.functions.decimals().call()\nexcept Exception:\n    logging.warning(\n        \"decimals() reverted on %s (chain %s), defaulting to 18\",\n        token_address,\n        chain_id,\n    )\n    decimals = 18\n```"
+    },
+    {
+      "en-US": "Log the fallback and keep it visible. Old or non-standard tokens still exist.",
+      "zh-Hans": "记录回退情况并保持其可见性。旧的或非标准的代币仍然存在。"
+    },
+    {
+      "en-US": "### Normalize to 18-decimal WAD in Solidity",
+      "zh-Hans": "### 在 Solidity 中归一化为 18 位小数的 WAD"
+    },
+    {
+      "en-US": "```solidity\ninterface IERC20Metadata {\n    function decimals() external view returns (uint8);\n}\n\nfunction normalizeToWad(address token, uint256 amount) internal view returns (uint256) {\n    uint8 d = IERC20Metadata(token).decimals();\n    if (d == 18) return amount;\n    if (d < 18) return amount * 10 ** (18 - d);\n    return amount / 10 ** (d - 18);\n}\n```",
+      "zh-Hans": "```solidity\ninterface IERC20Metadata {\n    function decimals() external view returns (uint8);\n}\n\nfunction normalizeToWad(address token, uint256 amount) internal view returns (uint256) {\n    uint8 d = IERC20Metadata(token).decimals();\n    if (d == 18) return amount;\n    if (d < 18) return amount * 10 ** (18 - d);\n    return amount / 10 ** (d - 18);\n}\n```"
+    },
+    {
+      "en-US": "### TypeScript with ethers",
+      "zh-Hans": "### 使用 ethers 的 TypeScript"
+    },
+    {
+      "en-US": "```typescript\nimport { Contract, formatUnits } from 'ethers';\n\nconst ERC20_ABI = [\n  'function decimals() view returns (uint8)',\n  'function balanceOf(address) view returns (uint256)',\n];\n\nasync function getBalance(provider: any, tokenAddress: string, wallet: string): Promise<string> {\n  const token = new Contract(tokenAddress, ERC20_ABI, provider);\n  const [decimals, raw] = await Promise.all([\n    token.decimals(),\n    token.balanceOf(wallet),\n  ]);\n  return formatUnits(raw, decimals);\n}\n```",
+      "zh-Hans": "```typescript\nimport { Contract, formatUnits } from 'ethers';\n\nconst ERC20_ABI = [\n  'function decimals() view returns (uint8)',\n  'function balanceOf(address) view returns (uint256)',\n];\n\nasync function getBalance(provider: any, tokenAddress: string, wallet: string): Promise<string> {\n  const token = new Contract(tokenAddress, ERC20_ABI, provider);\n  const [decimals, raw] = await Promise.all([\n    token.decimals(),\n    token.balanceOf(wallet),\n  ]);\n  return formatUnits(raw, decimals);\n}\n```"
+    },
+    {
+      "en-US": "### Quick on-chain check",
+      "zh-Hans": "### 快速链上检查"
+    },
+    {
+      "en-US": "```bash\ncast call <token_address> \"decimals()(uint8)\" --rpc-url <rpc>\n```",
+      "zh-Hans": "```bash\ncast call <token_address> \"decimals()(uint8)\" --rpc-url <rpc>\n```"
+    },
+    {
+      "en-US": "## Rules",
+      "zh-Hans": "## 规则"
+    },
+    {
+      "en-US": "- Always query `decimals()` at runtime\n- Cache by chain plus token address, not symbol\n- Use `Decimal`, `BigInt`, or equivalent exact math, not float\n- Re-query decimals after bridging or wrapper changes\n- Normalize internal accounting consistently before comparison or pricing",
+      "zh-Hans": "* 始终在运行时查询 `decimals()`\n* 按链加代币地址缓存，而不是按符号\n* 使用 `Decimal`、`BigInt` 或等效的精确数学运算，而不是浮点数\n* 在桥接或包装器变更后重新查询小数位数\n* 在比较或定价之前，始终如一地归一化内部记账"
+    }
+  ]
+}

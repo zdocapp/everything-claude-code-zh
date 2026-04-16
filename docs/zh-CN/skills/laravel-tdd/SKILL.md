@@ -1,52 +1,52 @@
 ---
 name: laravel-tdd
-description: 使用 PHPUnit 和 Pest、工厂、数据库测试、模拟以及覆盖率目标进行 Laravel 的测试驱动开发。
+description: 使用PHPUnit和Pest进行Laravel的测试驱动开发，包括工厂、数据库测试、模拟和覆盖率目标。
 origin: ECC
 ---
 
 # Laravel TDD 工作流
 
-使用 PHPUnit 和 Pest 为 Laravel 应用程序进行测试驱动开发，覆盖率（单元 + 功能）达到 80% 以上。
+使用 PHPUnit 和 Pest 为 Laravel 应用程序进行测试驱动开发，实现 80% 以上的覆盖率（单元测试 + 功能测试）。
 
-## 使用时机
+## 何时使用
 
 * Laravel 中的新功能或端点
 * 错误修复或重构
-* 测试 Eloquent 模型、策略、作业和通知
-* 除非项目已标准化使用 PHPUnit，否则新测试首选 Pest
+* 测试 Eloquent 模型、策略、任务和通知
+* 除非项目已标准化使用 PHPUnit，否则新测试优先使用 Pest
 
 ## 工作原理
 
 ### 红-绿-重构循环
 
 1. 编写一个失败的测试
-2. 实施最小更改以通过测试
+2. 实现最小的更改以通过测试
 3. 在保持测试通过的同时进行重构
 
 ### 测试层级
 
-* **单元**：纯 PHP 类、值对象、服务
-* **功能**：HTTP 端点、身份验证、验证、策略
-* **集成**：数据库 + 队列 + 外部边界
+* **单元测试**：纯 PHP 类、值对象、服务
+* **功能测试**：HTTP 端点、身份验证、验证、策略
+* **集成测试**：数据库 + 队列 + 外部边界
 
 根据范围选择层级：
 
 * 对纯业务逻辑和服务使用**单元**测试。
 * 对 HTTP、身份验证、验证和响应结构使用**功能**测试。
-* 当需要验证数据库/队列/外部服务组合时使用**集成**测试。
+* 当需要验证数据库/队列/外部服务协同工作时使用**集成**测试。
 
 ### 数据库策略
 
-* 对于大多数功能/集成测试使用 `RefreshDatabase`（每次测试运行运行一次迁移，然后在支持时将每个测试包装在事务中；内存数据库可能每次测试重新迁移）
+* 对于大多数功能/集成测试使用 `RefreshDatabase`（每次测试运行运行一次迁移，然后在支持时将每个测试包装在事务中；内存数据库可能每次测试都重新迁移）
 * 当模式已迁移且仅需要每次测试回滚时使用 `DatabaseTransactions`
-* 当每次测试都需要完整迁移/刷新且可以承担其开销时使用 `DatabaseMigrations`
+* 当每次测试都需要完整的迁移/刷新并且可以承受其开销时使用 `DatabaseMigrations`
 
-将 `RefreshDatabase` 作为触及数据库的测试的默认选择：对于支持事务的数据库，它每次测试运行运行一次迁移（通过静态标志）并将每个测试包装在事务中；对于 `:memory:` SQLite 或不支持事务的连接，它在每次测试前进行迁移。当模式已迁移且仅需要每次测试回滚时使用 `DatabaseTransactions`。
+对于涉及数据库的测试，默认使用 `RefreshDatabase`：对于支持事务的数据库，它每次测试运行运行一次迁移（通过静态标志），并将每个测试包装在事务中；对于 `:memory:` SQLite 或不支持事务的连接，它会在每次测试前迁移。当模式已迁移且仅需要每次测试回滚时使用 `DatabaseTransactions`。
 
 ### 测试框架选择
 
-* 新测试默认使用 **Pest**（当可用时）。
-* 仅在项目已标准化使用它或需要 PHPUnit 特定工具时使用 **PHPUnit**。
+* 当可用时，新测试默认使用 **Pest**。
+* 仅当项目已标准化使用它或需要 PHPUnit 特定工具时才使用 **PHPUnit**。
 
 ## 示例
 
@@ -123,7 +123,7 @@ test('owner can create project', function () {
 });
 ```
 
-### Pest 功能测试示例（HTTP 层）
+### 功能测试 Pest 示例（HTTP 层）
 
 ```php
 use App\Models\Project;
@@ -148,7 +148,7 @@ test('projects index returns paginated results', function () {
 ### 工厂和状态
 
 * 使用工厂生成测试数据
-* 为边缘情况定义状态（已归档、管理员、试用）
+* 为边界情况定义状态（已归档、管理员、试用期）
 
 ```php
 $user = User::factory()->state(['role' => 'admin'])->create();
@@ -156,11 +156,11 @@ $user = User::factory()->state(['role' => 'admin'])->create();
 
 ### 数据库测试
 
-* 使用 `RefreshDatabase` 保持干净状态
+* 使用 `RefreshDatabase` 保持状态清洁
 * 保持测试隔离和确定性
 * 优先使用 `assertDatabaseHas` 而非手动查询
 
-### 持久性测试示例
+### 持久化测试示例
 
 ```php
 use App\Models\Project;
@@ -182,12 +182,12 @@ final class ProjectRepositoryTest extends TestCase
 }
 ```
 
-### 副作用模拟
+### 用于副作用的伪造对象
 
-* 作业使用 `Bus::fake()`
-* 队列工作使用 `Queue::fake()`
-* 通知使用 `Mail::fake()` 和 `Notification::fake()`
-* 领域事件使用 `Event::fake()`
+* 对任务使用 `Bus::fake()`
+* 对队列工作使用 `Queue::fake()`
+* 对通知使用 `Mail::fake()` 和 `Notification::fake()`
+* 对领域事件使用 `Event::fake()`
 
 ```php
 use Illuminate\Support\Facades\Queue;
@@ -227,7 +227,7 @@ $response->assertOk();
 
 ### 覆盖率目标
 
-* 对单元 + 功能测试强制执行 80% 以上的覆盖率
+* 强制执行单元测试 + 功能测试 80% 以上的覆盖率
 * 在 CI 中使用 `pcov` 或 `XDEBUG_MODE=coverage`
 
 ### 测试命令
@@ -239,7 +239,7 @@ $response->assertOk();
 ### 测试配置
 
 * 使用 `phpunit.xml` 设置 `DB_CONNECTION=sqlite` 和 `DB_DATABASE=:memory:` 以进行快速测试
-* 为测试保持独立的环境，以避免触及开发/生产数据
+* 为测试保持独立的环境，避免触及开发/生产数据
 
 ### 授权测试
 
@@ -252,7 +252,7 @@ $this->assertFalse(Gate::forUser($otherUser)->allows('update', $project));
 
 ### Inertia 功能测试
 
-使用 Inertia.js 时，使用 Inertia 测试辅助函数来断言组件名称和属性。
+当使用 Inertia.js 时，使用 Inertia 测试辅助函数断言组件名称和属性。
 
 ```php
 use App\Models\User;

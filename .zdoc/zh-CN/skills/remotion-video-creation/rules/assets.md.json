@@ -1,0 +1,94 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/assets.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: assets\ndescription: Importing images, videos, audio, and fonts into Remotion\nmetadata:\n  tags: assets, staticFile, images, fonts, public\n---",
+      "zh-Hans": "---\nname: assets\ndescription: 将图像、视频、音频和字体导入Remotion\nmetadata:\n  tags: assets, staticFile, images, fonts, public\n---"
+    },
+    {
+      "en-US": "# Importing assets in Remotion",
+      "zh-Hans": "# 在 Remotion 中导入资源"
+    },
+    {
+      "en-US": "## The public folder",
+      "zh-Hans": "## public 文件夹"
+    },
+    {
+      "en-US": "Place assets in the `public/` folder at your project root.",
+      "zh-Hans": "将资源放置在项目根目录的 `public/` 文件夹中。"
+    },
+    {
+      "en-US": "## Using staticFile()",
+      "zh-Hans": "## 使用 staticFile()"
+    },
+    {
+      "en-US": "You MUST use `staticFile()` to reference files from the `public/` folder:",
+      "zh-Hans": "引用 `public/` 文件夹中的文件时，**必须**使用 `staticFile()`："
+    },
+    {
+      "en-US": "```tsx\nimport {Img, staticFile} from 'remotion';\n\nexport const MyComposition = () => {\n  return <Img src={staticFile('logo.png')} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport {Img, staticFile} from 'remotion';\n\nexport const MyComposition = () => {\n  return <Img src={staticFile('logo.png')} />;\n};\n```"
+    },
+    {
+      "en-US": "The function returns an encoded URL that works correctly when deploying to subdirectories.",
+      "zh-Hans": "该函数返回一个编码后的 URL，在部署到子目录时能正常工作。"
+    },
+    {
+      "en-US": "## Using with components",
+      "zh-Hans": "## 与组件一起使用"
+    },
+    {
+      "en-US": "**Images:**",
+      "zh-Hans": "**图片：**"
+    },
+    {
+      "en-US": "```tsx\nimport {Img, staticFile} from 'remotion';\n\n<Img src={staticFile('photo.png')} />;\n```",
+      "zh-Hans": "```tsx\nimport {Img, staticFile} from 'remotion';\n\n<Img src={staticFile('photo.png')} />;\n```"
+    },
+    {
+      "en-US": "**Videos:**",
+      "zh-Hans": "**视频：**"
+    },
+    {
+      "en-US": "```tsx\nimport {Video} from '@remotion/media';\nimport {staticFile} from 'remotion';\n\n<Video src={staticFile('clip.mp4')} />;\n```",
+      "zh-Hans": "```tsx\nimport {Video} from '@remotion/media';\nimport {staticFile} from 'remotion';\n\n<Video src={staticFile('clip.mp4')} />;\n```"
+    },
+    {
+      "en-US": "**Audio:**",
+      "zh-Hans": "**音频：**"
+    },
+    {
+      "en-US": "```tsx\nimport {Audio} from '@remotion/media';\nimport {staticFile} from 'remotion';\n\n<Audio src={staticFile('music.mp3')} />;\n```",
+      "zh-Hans": "```tsx\nimport {Audio} from '@remotion/media';\nimport {staticFile} from 'remotion';\n\n<Audio src={staticFile('music.mp3')} />;\n```"
+    },
+    {
+      "en-US": "**Fonts:**",
+      "zh-Hans": "**字体：**"
+    },
+    {
+      "en-US": "```tsx\nimport {staticFile} from 'remotion';\n\nconst fontFamily = new FontFace('MyFont', `url(${staticFile('font.woff2')})`);\nawait fontFamily.load();\ndocument.fonts.add(fontFamily);\n```",
+      "zh-Hans": "```tsx\nimport {staticFile} from 'remotion';\n\nconst fontFamily = new FontFace('MyFont', `url(${staticFile('font.woff2')})`);\nawait fontFamily.load();\ndocument.fonts.add(fontFamily);\n```"
+    },
+    {
+      "en-US": "## Remote URLs",
+      "zh-Hans": "## 远程 URL"
+    },
+    {
+      "en-US": "Remote URLs can be used directly without `staticFile()`:",
+      "zh-Hans": "远程 URL 可以直接使用，无需 `staticFile()`："
+    },
+    {
+      "en-US": "```tsx\n<Img src=\"https://example.com/image.png\" />\n<Video src=\"https://remotion.media/video.mp4\" />\n```",
+      "zh-Hans": "```tsx\n<Img src=\"https://example.com/image.png\" />\n<Video src=\"https://remotion.media/video.mp4\" />\n```"
+    },
+    {
+      "en-US": "## Important notes",
+      "zh-Hans": "## 重要说明"
+    },
+    {
+      "en-US": "- Remotion components (`<Img>`, `<Video>`, `<Audio>`) ensure assets are fully loaded before rendering\n- Special characters in filenames (`#`, `?`, `&`) are automatically encoded",
+      "zh-Hans": "* Remotion 组件（`<Img>`、`<Video>`、`<Audio>`）确保资源在渲染前完全加载\n* 文件名中的特殊字符（`#`、`?`、`&`）会自动编码"
+    }
+  ]
+}

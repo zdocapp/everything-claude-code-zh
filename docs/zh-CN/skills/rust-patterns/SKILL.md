@@ -1,23 +1,23 @@
 ---
 name: rust-patterns
-description: 地道的Rust模式、所有权、错误处理、特质、并发，以及构建安全、高性能应用程序的最佳实践。
+description: 惯用的Rust模式、所有权、错误处理、特质、并发性，以及构建安全、高性能应用程序的最佳实践。
 origin: ECC
 ---
 
 # Rust 开发模式
 
-构建安全、高性能且可维护应用程序的惯用 Rust 模式和最佳实践。
+用于构建安全、高性能和可维护应用程序的惯用 Rust 模式与最佳实践。
 
-## 何时使用
+## 使用时机
 
-* 编写新的 Rust 代码时
-* 评审 Rust 代码时
-* 重构现有 Rust 代码时
-* 设计 crate 结构和模块布局时
+* 编写新的 Rust 代码
+* 审查 Rust 代码
+* 重构现有 Rust 代码
+* 设计 crate 结构和模块布局
 
 ## 工作原理
 
-此技能在六个关键领域强制执行惯用的 Rust 约定：所有权和借用，用于在编译时防止数据竞争；`Result`/`?` 错误传播，库使用 `thiserror` 而应用程序使用 `anyhow`；枚举和穷尽模式匹配，使非法状态无法表示；用于零成本抽象的 trait 和泛型；通过 `Arc<Mutex<T>>`、通道和 async/await 实现的安全并发；以及按领域组织的最小化 `pub` 接口。
+此技能在六个关键领域强制执行惯用的 Rust 约定：所有权和借用以在编译时防止数据竞争、`Result`/`?` 错误传播（库使用 `thiserror`，应用程序使用 `anyhow`）、枚举和穷尽模式匹配以使非法状态无法表示、用于零成本抽象的 trait 和泛型、通过 `Arc<Mutex<T>>`、通道和 async/await 实现的安全并发，以及按领域组织的最小化 `pub` 接口。
 
 ## 核心原则
 
@@ -59,7 +59,7 @@ fn normalize(input: &str) -> Cow<'_, str> {
 
 ## 错误处理
 
-### 使用 `Result` 和 `?` —— 切勿在生产环境中使用 `unwrap()`
+### 使用 `Result` 和 `?` —— 生产环境中绝不使用 `unwrap()`
 
 ```rust
 // Good: Propagate errors with context
@@ -108,7 +108,7 @@ fn run() -> Result<()> {
 }
 ```
 
-### 优先使用 `Option` 组合子而非嵌套匹配
+### 使用 `Option` 组合子替代嵌套匹配
 
 ```rust
 // Good: Combinator chain
@@ -275,7 +275,7 @@ for user in &users {
 }
 ```
 
-### 使用带有类型注解的 `collect()`
+### 使用带类型注解的 `collect()`
 
 ```rust
 // Collect into different types
@@ -363,7 +363,7 @@ async fn fetch_all(urls: Vec<String>) -> Vec<Result<String>> {
 
 ## 不安全代码
 
-### 何时可以使用 Unsafe
+### 何时可以使用不安全代码
 
 ```rust
 // Acceptable: FFI boundary with documented invariants (Rust 2024+)
@@ -379,7 +379,7 @@ unsafe fn widget_from_raw<'a>(ptr: *const Widget) -> &'a Widget {
 unsafe { slice.get_unchecked(index) }
 ```
 
-### 何时不可以使用 Unsafe
+### 何时不应使用不安全代码
 
 ```rust
 // Bad: Using unsafe to bypass borrow checker
@@ -459,13 +459,13 @@ cargo bench              # Run benchmarks
 
 | 惯用法 | 描述 |
 |-------|-------------|
-| 借用，而非克隆 | 传递 `&T`，除非需要所有权，否则不要克隆 |
+| 借用，而非克隆 | 传递 `&T` 而非克隆，除非需要所有权 |
 | 使非法状态无法表示 | 使用枚举仅对有效状态进行建模 |
-| `?` 优于 `unwrap()` | 传播错误，切勿在库/生产代码中恐慌 |
+| `?` 优于 `unwrap()` | 传播错误，绝不在库/生产代码中恐慌 |
 | 解析，而非验证 | 在边界处将非结构化数据转换为类型化结构体 |
-| Newtype 用于类型安全 | 将基本类型包装在 newtype 中以防止参数错位 |
+| 使用 Newtype 确保类型安全 | 将基本类型包装在 newtype 中以防止参数交换 |
 | 优先使用迭代器而非循环 | 声明式链更清晰且通常更快 |
-| 对 Result 使用 `#[must_use]` | 确保调用者处理返回值 |
+| 对 Results 使用 `#[must_use]` | 确保调用者处理返回值 |
 | 使用 `Cow` 实现灵活的所有权 | 当借用足够时避免分配 |
 | 穷尽匹配 | 业务关键枚举不使用通配符 `_` |
 | 最小化 `pub` 接口 | 内部 API 使用 `pub(crate)` |
@@ -496,4 +496,4 @@ async fn bad_async() {
 }
 ```
 
-**请记住**：如果它能编译，那它很可能是正确的 —— 但前提是你要避免 `unwrap()`，最小化 `unsafe`，并让类型系统为你工作。
+**请记住**：如果它能编译，那它很可能是正确的 —— 但前提是你避免 `unwrap()`，最小化 `unsafe`，并让类型系统为你工作。

@@ -1,0 +1,150 @@
+{
+  "sourceFile": "skills/customer-billing-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: customer-billing-ops\ndescription: Operate customer billing workflows such as subscriptions, refunds, churn triage, billing-portal recovery, and plan analysis using connected billing tools like Stripe. Use when the user needs to help a customer, inspect subscription state, or manage revenue-impacting billing operations.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: customer-billing-ops\ndescription: 使用连接的计费工具（如Stripe）操作客户计费工作流程，包括订阅、退款、流失分类、计费门户恢复和计划分析。当用户需要帮助客户、检查订阅状态或管理影响收入的计费操作时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Customer Billing Ops",
+      "zh-Hans": "# 客户账单运营"
+    },
+    {
+      "en-US": "Use this skill for real customer operations, not generic payment API design.",
+      "zh-Hans": "此技能用于真实的客户运营，而非通用的支付 API 设计。"
+    },
+    {
+      "en-US": "The goal is to help the operator answer: who is this customer, what happened, what is the safest fix, and what follow-up should we send?",
+      "zh-Hans": "目标是帮助运营人员回答：这位客户是谁，发生了什么，最安全的解决方案是什么，以及我们应该发送什么后续跟进？"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Customer says billing is broken, they want a refund, or they cannot cancel\n- Investigating duplicate subscriptions, accidental charges, failed renewals, or churn risk\n- Reviewing plan mix, active subscriptions, yearly vs monthly conversion, or team-seat confusion\n- Creating or validating a billing portal flow\n- Auditing support complaints that touch subscriptions, invoices, refunds, or payment methods",
+      "zh-Hans": "* 客户表示账单出错、要求退款或无法取消\n* 调查重复订阅、意外扣款、续订失败或流失风险\n* 审查套餐组合、有效订阅、年度与月度转换情况或团队席位混淆\n* 创建或验证账单门户流程\n* 审计涉及订阅、发票、退款或支付方式的支持投诉"
+    },
+    {
+      "en-US": "## Preferred Tool Surface",
+      "zh-Hans": "## 首选工具界面"
+    },
+    {
+      "en-US": "- Use connected billing tools such as Stripe first\n- Use email, GitHub, or issue trackers only as supporting evidence\n- Prefer hosted billing/customer portals over custom account-management code when the platform already provides the needed controls",
+      "zh-Hans": "* 优先使用已连接的账单工具，例如 Stripe\n* 仅将电子邮件、GitHub 或问题跟踪器作为辅助证据使用\n* 当平台已提供所需控制时，优先选择托管的账单/客户门户，而非自定义账户管理代码"
+    },
+    {
+      "en-US": "## Guardrails",
+      "zh-Hans": "## 防护措施"
+    },
+    {
+      "en-US": "- Never expose secret keys, full card details, or unnecessary customer PII in the response\n- Do not refund blindly; first classify the issue\n- Distinguish among:\n  - accidental duplicate purchase\n  - deliberate multi-seat or team purchase\n  - broken product / unmet value\n  - failed or incomplete checkout\n  - cancellation due to missing self-serve controls\n- For annual plans, team plans, and prorated states, verify the contract shape before taking action",
+      "zh-Hans": "* 切勿在回复中暴露密钥、完整卡号或不必要的客户个人身份信息\n* 不要盲目退款；首先对问题进行归类\n* 区分以下情况：\n  * 意外重复购买\n  * 有意的多席位或团队购买\n  * 产品故障 / 价值未实现\n  * 支付失败或未完成结账\n  * 因缺少自助服务控制而取消\n* 对于年度计划、团队计划和按比例计费状态，在采取行动前核实合同结构"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Identify the customer cleanly",
+      "zh-Hans": "### 1. 清晰地识别客户"
+    },
+    {
+      "en-US": "Start from the strongest identifier available:",
+      "zh-Hans": "从可用的最强标识符开始："
+    },
+    {
+      "en-US": "- customer email\n- Stripe customer ID\n- subscription ID\n- invoice ID\n- GitHub username or support email if it is known to map back to billing",
+      "zh-Hans": "* 客户邮箱\n* Stripe 客户 ID\n* 订阅 ID\n* 发票 ID\n* GitHub 用户名或支持邮箱（如果已知其与账单关联）"
+    },
+    {
+      "en-US": "Return a concise identity summary:",
+      "zh-Hans": "返回简洁的身份摘要："
+    },
+    {
+      "en-US": "- customer\n- active subscriptions\n- canceled subscriptions\n- invoices\n- obvious anomalies such as duplicate active subscriptions",
+      "zh-Hans": "* 客户\n* 有效订阅\n* 已取消的订阅\n* 发票\n* 明显的异常情况，例如重复的有效订阅"
+    },
+    {
+      "en-US": "### 2. Classify the issue",
+      "zh-Hans": "### 2. 对问题进行归类"
+    },
+    {
+      "en-US": "Put the case into one bucket before acting:",
+      "zh-Hans": "在采取行动前，将案例归入以下类别之一："
+    },
+    {
+      "en-US": "| Case | Typical action |\n|------|----------------|\n| Duplicate personal subscription | cancel extras, consider refund |\n| Real multi-seat/team intent | preserve seats, clarify billing model |\n| Failed payment / incomplete checkout | recover via portal or update payment method |\n| Missing self-serve controls | provide portal, cancellation path, or invoice access |\n| Product failure or trust break | refund, apologize, log product issue |",
+      "zh-Hans": "| 案例 | 典型操作 |\n|------|----------------|\n| 重复的个人订阅 | 取消额外订阅，考虑退款 |\n| 真实的多席位/团队意图 | 保留席位，澄清计费模式 |\n| 支付失败 / 未完成结账 | 通过门户恢复或更新支付方式 |\n| 缺少自助服务控制 | 提供门户、取消路径或发票访问权限 |\n| 产品故障或信任破裂 | 退款、致歉、记录产品问题 |"
+    },
+    {
+      "en-US": "### 3. Take the safest reversible action first",
+      "zh-Hans": "### 3. 首先采取最安全的可逆操作"
+    },
+    {
+      "en-US": "Preferred order:",
+      "zh-Hans": "首选顺序："
+    },
+    {
+      "en-US": "1. restore self-serve management\n2. fix duplicate or broken billing state\n3. refund only the affected charge or duplicate\n4. document the reason\n5. send a short customer follow-up",
+      "zh-Hans": "1. 恢复自助服务管理\n2. 修复重复或错误的账单状态\n3. 仅对受影响的费用或重复项退款\n4. 记录原因\n5. 发送简短的客户跟进信息"
+    },
+    {
+      "en-US": "If the fix requires product work, separate:",
+      "zh-Hans": "如果修复需要产品工作，则分开处理："
+    },
+    {
+      "en-US": "- customer remediation now\n- product bug / workflow gap for backlog",
+      "zh-Hans": "* 立即进行客户补救\n* 产品缺陷 / 工作流程漏洞纳入待办事项"
+    },
+    {
+      "en-US": "### 4. Check operator-side product gaps",
+      "zh-Hans": "### 4. 检查运营方产品漏洞"
+    },
+    {
+      "en-US": "If the customer pain comes from a missing operator surface, call it out explicitly. Common examples:",
+      "zh-Hans": "如果客户痛点源于缺少运营方界面，请明确指出。常见示例："
+    },
+    {
+      "en-US": "- no billing portal\n- no usage/rate-limit visibility\n- no plan/seat explanation\n- no cancellation flow\n- no duplicate-subscription guard",
+      "zh-Hans": "* 没有账单门户\n* 没有使用量/速率限制可见性\n* 没有套餐/席位说明\n* 没有取消流程\n* 没有重复订阅防护"
+    },
+    {
+      "en-US": "Treat those as ECC or website follow-up items, not just support incidents.",
+      "zh-Hans": "将这些视为 ECC 或网站跟进事项，而不仅仅是支持事件。"
+    },
+    {
+      "en-US": "### 5. Produce the operator handoff",
+      "zh-Hans": "### 5. 生成运营交接"
+    },
+    {
+      "en-US": "End with:",
+      "zh-Hans": "以以下内容结束："
+    },
+    {
+      "en-US": "- customer state summary\n- action taken\n- revenue impact\n- follow-up text to send\n- product or backlog issue to create",
+      "zh-Hans": "* 客户状态摘要\n* 已采取的操作\n* 收入影响\n* 待发送的跟进文本\n* 待创建的产品或待办事项问题"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Use this structure:",
+      "zh-Hans": "使用此结构："
+    },
+    {
+      "en-US": "```text\nCUSTOMER\n- name / email\n- relevant account identifiers\n\nBILLING STATE\n- active subscriptions\n- invoice or renewal state\n- anomalies\n\nDECISION\n- issue classification\n- why this action is correct\n\nACTION TAKEN\n- refund / cancel / portal / no-op\n\nFOLLOW-UP\n- short customer message\n\nPRODUCT GAP\n- what should be fixed in the product or website\n```",
+      "zh-Hans": "```text\n客户\n- 姓名 / 邮箱\n- 相关账户标识符\n\n账单状态\n- 有效订阅\n- 发票或续订状态\n- 异常情况\n\n决策\n- 问题分类\n- 为何此操作正确\n\n采取的行动\n- 退款 / 取消 / 门户 / 无操作\n\n后续跟进\n- 简短的客户消息\n\n产品差距\n- 应在产品或网站中修复的问题\n```"
+    },
+    {
+      "en-US": "## Examples of Good Recommendations",
+      "zh-Hans": "## 良好建议示例"
+    },
+    {
+      "en-US": "- \"The right fix is a billing portal, not a custom dashboard yet\"\n- \"This looks like duplicate personal checkout, not a real team-seat purchase\"\n- \"Refund one duplicate charge, keep the remaining active subscription, then convert the customer to org billing later if needed\"",
+      "zh-Hans": "* \"正确的解决方案是账单门户，而不是自定义仪表板\"\n* \"这看起来像是重复的个人结账，而非真实的团队席位购买\"\n* \"退还一笔重复扣款，保留剩余的有效订阅，然后在需要时稍后将客户转换为组织计费\""
+    }
+  ]
+}

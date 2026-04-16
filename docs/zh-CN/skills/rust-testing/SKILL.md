@@ -1,6 +1,6 @@
 ---
 name: rust-testing
-description: Rust测试模式，包括单元测试、集成测试、异步测试、基于属性的测试、模拟和覆盖率。遵循TDD方法学。
+description: Rust 测试模式包括单元测试、集成测试、异步测试、基于属性的测试、模拟和覆盖率。遵循 TDD 方法论。
 origin: ECC
 ---
 
@@ -21,23 +21,23 @@ origin: ECC
 1. **识别目标代码** — 找到要测试的函数、特征或模块
 2. **编写测试** — 在 `#[cfg(test)]` 模块中使用 `#[test]`，使用 rstest 进行参数化测试，或使用 proptest 进行基于属性的测试
 3. **模拟依赖项** — 使用 mockall 来隔离被测单元
-4. **运行测试 (RED)** — 验证测试是否按预期失败
-5. **实现 (GREEN)** — 编写最少代码以通过测试
-6. **重构** — 改进代码同时保持测试通过
-7. **检查覆盖率** — 使用 cargo-llvm-cov，目标 80% 以上
+4. **运行测试（RED）** — 验证测试是否按预期失败
+5. **实现（GREEN）** — 编写最少的代码以通过测试
+6. **重构** — 在保持测试通过的同时进行改进
+7. **检查覆盖率** — 使用 cargo-llvm-cov，目标覆盖率 80%+
 
 ## Rust 的 TDD 工作流
 
 ### RED-GREEN-REFACTOR 循环
 
 ```
-RED     → 先写一个失败的测试
-GREEN   → 编写最少代码使测试通过
-REFACTOR → 重构代码，同时保持测试通过
+RED     → 首先编写一个失败的测试
+GREEN   → 编写最少的代码使测试通过
+REFACTOR → 在保持测试通过的同时改进代码
 REPEAT  → 继续下一个需求
 ```
 
-### Rust 中的分步 TDD
+### Rust 中逐步进行 TDD
 
 ```rust
 // RED: Write test first, use todo!() as placeholder
@@ -113,7 +113,7 @@ assert_eq!(value, 42, "expected 42 but got {value}");    // Custom message
 assert!((0.1_f64 + 0.2 - 0.3).abs() < f64::EPSILON);   // Float comparison
 ```
 
-## 错误与 Panic 测试
+## 错误和恐慌测试
 
 ### 测试 `Result` 返回值
 
@@ -136,7 +136,7 @@ fn parse_succeeds_for_valid_input() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-### 测试 Panic
+### 测试恐慌
 
 ```rust
 #[test]
@@ -164,7 +164,7 @@ my_crate/
 ├── tests/              # 集成测试
 │   ├── api_test.rs     # 每个文件都是一个独立的测试二进制文件
 │   ├── db_test.rs
-│   └── common/         # 共享测试工具
+│   └── common/         # 共享的测试工具
 │       └── mod.rs
 ```
 
@@ -454,20 +454,20 @@ cargo test -- --ignored           # Run ignored tests
 
 ## 最佳实践
 
-**应该做：**
+**应做：**
 
-* 先写测试 (TDD)
+* 首先编写测试（TDD）
 * 使用 `#[cfg(test)]` 模块进行单元测试
 * 测试行为，而非实现
-* 使用描述性测试名称来解释场景
-* 为了更好的错误信息，优先使用 `assert_eq!` 而非 `assert!`
+* 使用描述性的测试名称来解释场景
+* 优先使用 `assert_eq!` 而非 `assert!` 以获得更好的错误信息
 * 在返回 `Result` 的测试中使用 `?` 以获得更清晰的错误输出
 * 保持测试独立 — 没有共享的可变状态
 
-**不应该做：**
+**不应做：**
 
 * 在可以测试 `Result::is_err()` 时使用 `#[should_panic]`
-* 模拟所有内容 — 在可行时优先考虑集成测试
+* 模拟所有内容 — 在可行时优先使用集成测试
 * 忽略不稳定的测试 — 修复或隔离它们
 * 在测试中使用 `sleep()` — 使用通道、屏障或 `tokio::time::pause()`
 * 跳过错误路径测试
@@ -499,4 +499,4 @@ test:
       run: cargo llvm-cov --fail-under-lines 80
 ```
 
-**记住**：测试就是文档。它们展示了你的代码应如何使用。清晰编写并保持更新。
+**记住**：测试就是文档。它们展示了你的代码应如何使用。清晰地编写它们并保持更新。

@@ -1,0 +1,354 @@
+{
+  "sourceFile": "skills/lead-intelligence/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: lead-intelligence\ndescription: AI-native lead intelligence and outreach pipeline. Replaces Apollo, Clay, and ZoomInfo with agent-powered signal scoring, mutual ranking, warm path discovery, source-derived voice modeling, and channel-specific outreach across email, LinkedIn, and X. Use when the user wants to find, qualify, and reach high-value contacts.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: lead-intelligence\ndescription: AI原生线索智能与触达管道。通过代理驱动的信号评分、相互排名、暖路径发现、来源衍生语音建模以及跨电子邮件、LinkedIn和X的渠道特定触达，取代Apollo、Clay和ZoomInfo。适用于用户希望寻找、筛选并触达高价值联系人的场景。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Lead Intelligence",
+      "zh-Hans": "# 线索智能"
+    },
+    {
+      "en-US": "Agent-powered lead intelligence pipeline that finds, scores, and reaches high-value contacts through social graph analysis and warm path discovery.",
+      "zh-Hans": "通过社交图谱分析和暖路径发现，寻找、评分并触达高价值联系人的智能体驱动线索智能管道。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- User wants to find leads or prospects in a specific industry\n- Building an outreach list for partnerships, sales, or fundraising\n- Researching who to reach out to and the best path to reach them\n- User says \"find leads\", \"outreach list\", \"who should I reach out to\", \"warm intros\"\n- Needs to score or rank a list of contacts by relevance\n- Wants to map mutual connections to find warm introduction paths",
+      "zh-Hans": "* 用户希望在特定行业寻找线索或潜在客户\n* 为合作、销售或融资建立外联名单\n* 研究应联系谁以及联系的最佳路径\n* 用户提及\"寻找线索\"、\"外联名单\"、\"我应该联系谁\"、\"暖介绍\"\n* 需要根据相关性对联系人列表进行评分或排序\n* 希望映射共同联系以寻找暖介绍路径"
+    },
+    {
+      "en-US": "## Tool Requirements",
+      "zh-Hans": "## 工具要求"
+    },
+    {
+      "en-US": "### Required",
+      "zh-Hans": "### 必需"
+    },
+    {
+      "en-US": "- **Exa MCP** — Deep web search for people, companies, and signals (`web_search_exa`)\n- **X API** — Follower/following graph, mutual analysis, recent activity (`X_BEARER_TOKEN`, plus write-context credentials such as `X_CONSUMER_KEY`, `X_CONSUMER_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`)",
+      "zh-Hans": "* **Exa MCP** — 用于人员、公司和信号深度网络搜索 (`web_search_exa`)\n* **X API** — 关注者/关注图谱、共同联系分析、近期活动 (`X_BEARER_TOKEN`，以及写入上下文凭证，例如 `X_CONSUMER_KEY`、`X_CONSUMER_SECRET`、`X_ACCESS_TOKEN`、`X_ACCESS_TOKEN_SECRET`)"
+    },
+    {
+      "en-US": "### Optional (enhance results)",
+      "zh-Hans": "### 可选（增强结果）"
+    },
+    {
+      "en-US": "- **LinkedIn** — Direct API if available, otherwise browser control for search, profile inspection, and drafting\n- **Apollo/Clay API** — For enrichment cross-reference if user has access\n- **GitHub MCP** — For developer-centric lead qualification\n- **Apple Mail / Mail.app** — Draft cold or warm email without sending automatically\n- **Browser control** — For LinkedIn and X when API coverage is missing or constrained",
+      "zh-Hans": "* **LinkedIn** — 如果可用则使用直接 API，否则使用浏览器控制进行搜索、资料检查和草拟\n* **Apollo/Clay API** — 如果用户有访问权限，用于丰富交叉引用\n* **GitHub MCP** — 用于以开发者为中心的线索资格认定\n* **Apple Mail / Mail.app** — 草拟冷邮件或暖邮件，但不自动发送\n* **浏览器控制** — 当 API 覆盖缺失或受限时，用于 LinkedIn 和 X"
+    },
+    {
+      "en-US": "## Pipeline Overview",
+      "zh-Hans": "## 管道概述"
+    },
+    {
+      "en-US": "```\n┌─────────────┐     ┌──────────────┐     ┌─────────────────┐     ┌──────────────┐     ┌─────────────────┐\n│ 1. Signal   │────>│ 2. Mutual    │────>│ 3. Warm Path    │────>│ 4. Enrich    │────>│ 5. Outreach     │\n│    Scoring  │     │    Ranking   │     │    Discovery    │     │              │     │    Draft        │\n└─────────────┘     └──────────────┘     └─────────────────┘     └──────────────┘     └─────────────────┘\n```",
+      "zh-Hans": "```\n┌─────────────┐     ┌──────────────┐     ┌─────────────────┐     ┌──────────────┐     ┌─────────────────┐\n│ 1. 信号     │────>│ 2. 互惠      │────>│ 3. 暖路径       │────>│ 4. 丰富      │────>│ 5. 外联        │\n│    评分     │     │    排名      │     │    发现        │     │              │     │    草稿        │\n└─────────────┘     └──────────────┘     └─────────────────┘     └──────────────┘     └─────────────────┘\n```"
+    },
+    {
+      "en-US": "## Voice Before Outreach",
+      "zh-Hans": "## 外联前的语调"
+    },
+    {
+      "en-US": "Do not draft outbound from generic sales copy.",
+      "zh-Hans": "不要根据通用的销售文案草拟外联内容。"
+    },
+    {
+      "en-US": "Run `brand-voice` first whenever the user's voice matters. Reuse its `VOICE PROFILE` instead of re-deriving style ad hoc inside this skill.",
+      "zh-Hans": "当用户的语调重要时，首先运行 `brand-voice`。复用其 `VOICE PROFILE`，而不是在此技能内临时重新推导风格。"
+    },
+    {
+      "en-US": "If live X access is available, pull recent original posts before drafting. If not, use supplied examples or the best repo/site material available.",
+      "zh-Hans": "如果实时 X 访问可用，在草拟前拉取近期原创帖子。如果不可用，则使用提供的示例或可用的最佳仓库/网站材料。"
+    },
+    {
+      "en-US": "## Stage 1: Signal Scoring",
+      "zh-Hans": "## 阶段 1：信号评分"
+    },
+    {
+      "en-US": "Search for high-signal people in target verticals. Assign a weight to each based on:",
+      "zh-Hans": "在目标垂直领域搜索高信号人员。根据以下因素为每个分配权重："
+    },
+    {
+      "en-US": "| Signal | Weight | Source |\n|--------|--------|--------|\n| Role/title alignment | 30% | Exa, LinkedIn |\n| Industry match | 25% | Exa company search |\n| Recent activity on topic | 20% | X API search, Exa |\n| Follower count / influence | 10% | X API |\n| Location proximity | 10% | Exa, LinkedIn |\n| Engagement with your content | 5% | X API interactions |",
+      "zh-Hans": "| 信号 | 权重 | 来源 |\n|--------|--------|--------|\n| 职位/头衔匹配度 | 30% | Exa, LinkedIn |\n| 行业匹配度 | 25% | Exa 公司搜索 |\n| 近期相关主题活动 | 20% | X API 搜索, Exa |\n| 关注者数量/影响力 | 10% | X API |\n| 地理位置接近度 | 10% | Exa, LinkedIn |\n| 与您内容的互动 | 5% | X API 互动 |"
+    },
+    {
+      "en-US": "### Signal Search Approach",
+      "zh-Hans": "### 信号搜索方法"
+    },
+    {
+      "en-US": "```python\n# Step 1: Define target parameters\ntarget_verticals = [\"prediction markets\", \"AI tooling\", \"developer tools\"]\ntarget_roles = [\"founder\", \"CEO\", \"CTO\", \"VP Engineering\", \"investor\", \"partner\"]\ntarget_locations = [\"San Francisco\", \"New York\", \"London\", \"remote\"]\n\n# Step 2: Exa deep search for people\nfor vertical in target_verticals:\n    results = web_search_exa(\n        query=f\"{vertical} {role} founder CEO\",\n        category=\"company\",\n        numResults=20\n    )\n    # Score each result\n\n# Step 3: X API search for active voices\nx_search = search_recent_tweets(\n    query=\"prediction markets OR AI tooling OR developer tools\",\n    max_results=100\n)\n# Extract and score unique authors\n```",
+      "zh-Hans": "```python\n# Step 1: Define target parameters\ntarget_verticals = [\"prediction markets\", \"AI tooling\", \"developer tools\"]\ntarget_roles = [\"founder\", \"CEO\", \"CTO\", \"VP Engineering\", \"investor\", \"partner\"]\ntarget_locations = [\"San Francisco\", \"New York\", \"London\", \"remote\"]\n\n# Step 2: Exa deep search for people\nfor vertical in target_verticals:\n    results = web_search_exa(\n        query=f\"{vertical} {role} founder CEO\",\n        category=\"company\",\n        numResults=20\n    )\n    # Score each result\n\n# Step 3: X API search for active voices\nx_search = search_recent_tweets(\n    query=\"prediction markets OR AI tooling OR developer tools\",\n    max_results=100\n)\n# Extract and score unique authors\n```"
+    },
+    {
+      "en-US": "## Stage 2: Mutual Ranking",
+      "zh-Hans": "## 阶段 2：共同联系排序"
+    },
+    {
+      "en-US": "For each scored target, analyze the user's social graph to find the warmest path.",
+      "zh-Hans": "对于每个已评分的目标，分析用户的社交图谱以找到最暖的路径。"
+    },
+    {
+      "en-US": "### Ranking Model",
+      "zh-Hans": "### 排序模型"
+    },
+    {
+      "en-US": "1. Pull user's X following list and LinkedIn connections\n2. For each high-signal target, check for shared connections\n3. Apply the `social-graph-ranker` model to score bridge value\n4. Rank mutuals by:",
+      "zh-Hans": "1. 拉取用户的 X 关注列表和 LinkedIn 联系\n2. 对于每个高信号目标，检查是否有共同联系\n3. 应用 `social-graph-ranker` 模型来评分桥梁价值\n4. 根据以下因素对共同联系进行排序："
+    },
+    {
+      "en-US": "| Factor | Weight |\n|--------|--------|\n| Number of connections to targets | 40% — highest weight, most connections = highest rank |\n| Mutual's current role/company | 20% — decision maker vs individual contributor |\n| Mutual's location | 15% — same city = easier intro |\n| Industry alignment | 15% — same vertical = natural intro |\n| Mutual's X handle / LinkedIn | 10% — identifiability for outreach |",
+      "zh-Hans": "| 因素 | 权重 |\n|--------|--------|\n| 与目标的连接数量 | 40% — 最高权重，连接最多 = 排名最高 |\n| 共同联系当前职位/公司 | 20% — 决策者 vs 个人贡献者 |\n| 共同联系所在地 | 15% — 同城 = 介绍更容易 |\n| 行业匹配度 | 15% — 相同垂直领域 = 自然介绍 |\n| 共同联系的 X 账号 / LinkedIn | 10% — 用于外联的可识别性 |"
+    },
+    {
+      "en-US": "Canonical rule:",
+      "zh-Hans": "规范规则："
+    },
+    {
+      "en-US": "```text\nUse social-graph-ranker when the user wants the graph math itself,\nthe bridge ranking as a standalone report, or explicit decay-model tuning.\n```",
+      "zh-Hans": "```text\n当用户需要图计算本身、作为独立报告的桥接排名，或显式的衰减模型调优时，使用 social-graph-ranker。\n```"
+    },
+    {
+      "en-US": "Inside this skill, use the same weighted bridge model:",
+      "zh-Hans": "在此技能内，使用相同的加权桥梁模型："
+    },
+    {
+      "en-US": "```text\nB(m) = Σ_{t ∈ T} w(t) · λ^(d(m,t) - 1)\nR(m) = B_ext(m) · (1 + β · engagement(m))\n```",
+      "zh-Hans": "```text\nB(m) = Σ_{t ∈ T} w(t) · λ^(d(m,t) - 1)\nR(m) = B_ext(m) · (1 + β · engagement(m))\n```"
+    },
+    {
+      "en-US": "Interpretation:",
+      "zh-Hans": "解释："
+    },
+    {
+      "en-US": "- Tier 1: high `R(m)` and direct bridge paths -> warm intro asks\n- Tier 2: medium `R(m)` and one-hop bridge paths -> conditional intro asks\n- Tier 3: no viable bridge -> direct cold outreach using the same lead record",
+      "zh-Hans": "* 第 1 层：高 `R(m)` 和直接桥梁路径 -> 暖介绍请求\n* 第 2 层：中等 `R(m)` 和单跳桥梁路径 -> 有条件的介绍请求\n* 第 3 层：无可行桥梁 -> 使用相同的线索记录进行直接冷外联"
+    },
+    {
+      "en-US": "### Output Format",
+      "zh-Hans": "### 输出格式"
+    },
+    {
+      "en-US": "```\n\nIf the user explicitly wants the ranking engine broken out, the math visualized, or the network scored outside the full lead workflow, run `social-graph-ranker` as a standalone pass first and feed the result back into this pipeline.\nMUTUAL RANKING REPORT\n=====================\n\n#1  @mutual_handle (Score: 92)\n    Name: Jane Smith\n    Role: Partner @ Acme Ventures\n    Location: San Francisco\n    Connections to targets: 7\n    Connected to: @target1, @target2, @target3, @target4, @target5, @target6, @target7\n    Best intro path: Jane invested in Target1's company\n\n#2  @mutual_handle2 (Score: 85)\n    ...\n```",
+      "zh-Hans": "```\n\n如果用户明确希望将排名引擎独立运行、可视化数学计算或在完整潜在客户工作流之外对网络进行评分，请先以独立方式运行 `social-graph-ranker`，然后将结果反馈到此流程中。\nMUTUAL RANKING REPORT\n=====================\n\n#1  @mutual_handle (Score: 92)\n    姓名: Jane Smith\n    职位: Partner @ Acme Ventures\n    地点: San Francisco\n    与目标的连接数: 7\n    已连接至: @target1, @target2, @target3, @target4, @target5, @target6, @target7\n    最佳介绍路径: Jane 投资了 Target1 的公司\n\n#2  @mutual_handle2 (Score: 85)\n    ...\n```"
+    },
+    {
+      "en-US": "## Stage 3: Warm Path Discovery",
+      "zh-Hans": "## 阶段 3：暖路径发现"
+    },
+    {
+      "en-US": "For each target, find the shortest introduction chain:",
+      "zh-Hans": "对于每个目标，找到最短的介绍链："
+    },
+    {
+      "en-US": "```\nYou ──[follows]──> Mutual A ──[invested in]──> Target Company\nYou ──[follows]──> Mutual B ──[co-founded with]──> Target Person\nYou ──[met at]──> Event ──[also attended]──> Target Person\n```",
+      "zh-Hans": "```\n你 ──[关注]──> 共同联系人A ──[投资于]──> 目标公司\n你 ──[关注]──> 共同联系人B ──[共同创立]──> 目标人物\n你 ──[相遇于]──> 活动 ──[亦出席]──> 目标人物\n```"
+    },
+    {
+      "en-US": "### Path Types (ordered by warmth)",
+      "zh-Hans": "### 路径类型（按暖度排序）"
+    },
+    {
+      "en-US": "1. **Direct mutual** — You both follow/know the same person\n2. **Portfolio connection** — Mutual invested in or advises target's company\n3. **Co-worker/alumni** — Mutual worked at same company or attended same school\n4. **Event overlap** — Both attended same conference/program\n5. **Content engagement** — Target engaged with mutual's content or vice versa",
+      "zh-Hans": "1. **直接共同联系** — 你们都认识/关注同一个人\n2. **投资组合联系** — 共同联系投资于或担任目标公司的顾问\n3. **同事/校友** — 共同联系在同一家公司工作过或就读于同一所学校\n4. **活动重叠** — 都参加过同一会议/项目\n5. **内容互动** — 目标与共同联系的内容互动过，反之亦然"
+    },
+    {
+      "en-US": "## Stage 4: Enrichment",
+      "zh-Hans": "## 阶段 4：信息丰富"
+    },
+    {
+      "en-US": "For each qualified lead, pull:",
+      "zh-Hans": "对于每个合格的线索，拉取："
+    },
+    {
+      "en-US": "- Full name, current title, company\n- Company size, funding stage, recent news\n- Recent X posts (last 30 days) — topics, tone, interests\n- Mutual interests with user (shared follows, similar content)\n- Recent company events (product launch, funding round, hiring)",
+      "zh-Hans": "* 全名、当前头衔、公司\n* 公司规模、融资阶段、近期新闻\n* 近期 X 帖子（最近 30 天）— 主题、语调、兴趣\n* 与用户的共同兴趣（共同关注、相似内容）\n* 近期公司事件（产品发布、融资轮次、招聘）"
+    },
+    {
+      "en-US": "### Enrichment Sources",
+      "zh-Hans": "### 信息丰富来源"
+    },
+    {
+      "en-US": "- Exa: company data, news, blog posts\n- X API: recent tweets, bio, followers\n- GitHub: open source contributions (for developer-centric leads)\n- LinkedIn (via browser-use): full profile, experience, education",
+      "zh-Hans": "* Exa：公司数据、新闻、博客文章\n* X API：近期推文、简介、关注者\n* GitHub：开源贡献（针对以开发者为中心的线索）\n* LinkedIn（通过浏览器使用）：完整资料、经历、教育背景"
+    },
+    {
+      "en-US": "## Stage 5: Outreach Draft",
+      "zh-Hans": "## 阶段 5：外联草拟"
+    },
+    {
+      "en-US": "Generate personalized outreach for each lead. The draft should match the source-derived voice profile and the target channel.",
+      "zh-Hans": "为每个线索生成个性化的外联内容。草稿应与来源推导的语调配置文件以及目标渠道相匹配。"
+    },
+    {
+      "en-US": "### Channel Rules",
+      "zh-Hans": "### 渠道规则"
+    },
+    {
+      "en-US": "#### Email",
+      "zh-Hans": "#### 电子邮件"
+    },
+    {
+      "en-US": "- Use for the highest-value cold outreach, warm intros, investor outreach, and partnership asks\n- Default to drafting in Apple Mail / Mail.app when local desktop control is available\n- Create drafts first, do not send automatically unless the user explicitly asks\n- Subject line should be plain and specific, not clever",
+      "zh-Hans": "* 用于最高价值的冷外联、暖介绍、投资者外联和合作请求\n* 当本地桌面控制可用时，默认在 Apple Mail / Mail.app 中草拟\n* 首先创建草稿，除非用户明确要求，否则不要自动发送\n* 主题行应简洁具体，不要花哨"
+    },
+    {
+      "en-US": "#### LinkedIn",
+      "zh-Hans": "#### LinkedIn"
+    },
+    {
+      "en-US": "- Use when the target is active there, when mutual graph context is stronger on LinkedIn, or when email confidence is low\n- Prefer API access if available\n- Otherwise use browser control to inspect profiles, recent activity, and draft the message\n- Keep it shorter than email and avoid fake professional warmth",
+      "zh-Hans": "* 当目标在该平台活跃、LinkedIn 上的共同联系图谱背景更强或电子邮件信心不足时使用\n* 如果可用，优先使用 API 访问\n* 否则使用浏览器控制来检查资料、近期活动并草拟消息\n* 保持比电子邮件更短，避免虚假的职业暖意"
+    },
+    {
+      "en-US": "#### X",
+      "zh-Hans": "#### X"
+    },
+    {
+      "en-US": "- Use for high-context operator, builder, or investor outreach where public posting behavior matters\n- Prefer API access for search, timeline, and engagement analysis\n- Fall back to browser control when needed\n- DMs and public replies should be much tighter than email and should reference something real from the target's timeline",
+      "zh-Hans": "* 用于高背景的操作者、构建者或投资者外联，其中公开发帖行为很重要\n* 优先使用 API 访问进行搜索、时间线和互动分析\n* 需要时回退到浏览器控制\n* 私信和公开回复应比电子邮件简洁得多，并应引用目标时间线上的真实内容"
+    },
+    {
+      "en-US": "#### Channel Selection Heuristic",
+      "zh-Hans": "#### 渠道选择启发式方法"
+    },
+    {
+      "en-US": "Pick one primary channel in this order:",
+      "zh-Hans": "按此顺序选择一个主要渠道："
+    },
+    {
+      "en-US": "1. warm intro by email\n2. direct email\n3. LinkedIn DM\n4. X DM or reply",
+      "zh-Hans": "1. 通过电子邮件的暖介绍\n2. 直接电子邮件\n3. LinkedIn 私信\n4. X 私信或回复"
+    },
+    {
+      "en-US": "Use multi-channel only when there is a strong reason and the cadence will not feel spammy.",
+      "zh-Hans": "仅在存在充分理由且节奏不会感觉像垃圾邮件时，才使用多渠道。"
+    },
+    {
+      "en-US": "### Warm Intro Request (to mutual)",
+      "zh-Hans": "### 暖介绍请求（向共同联系）"
+    },
+    {
+      "en-US": "Goal:",
+      "zh-Hans": "目标："
+    },
+    {
+      "en-US": "- one clear ask\n- one concrete reason this intro makes sense\n- easy-to-forward blurb if needed",
+      "zh-Hans": "* 一个明确的请求\n* 一个具体的理由说明此介绍有意义\n* 易于转发的简介（如果需要）"
+    },
+    {
+      "en-US": "Avoid:",
+      "zh-Hans": "避免："
+    },
+    {
+      "en-US": "- overexplaining your company\n- social-proof stacking\n- sounding like a fundraiser template",
+      "zh-Hans": "* 过度解释你的公司\n* 堆叠社会证明\n* 听起来像融资模板"
+    },
+    {
+      "en-US": "### Direct Cold Outreach (to target)",
+      "zh-Hans": "### 直接冷外联（向目标）"
+    },
+    {
+      "en-US": "Goal:",
+      "zh-Hans": "目标："
+    },
+    {
+      "en-US": "- open from something specific and recent\n- explain why the fit is real\n- make one low-friction ask",
+      "zh-Hans": "* 以具体且近期的事情开头\n* 解释为何匹配是真实的\n* 提出一个低摩擦的请求"
+    },
+    {
+      "en-US": "Avoid:",
+      "zh-Hans": "避免："
+    },
+    {
+      "en-US": "- generic admiration\n- feature dumping\n- broad asks like \"would love to connect\"\n- forced rhetorical questions",
+      "zh-Hans": "* 泛泛的赞美\n* 功能堆砌\n* 宽泛的请求，如\"希望建立联系\"\n* 强加的修辞性问题"
+    },
+    {
+      "en-US": "### Execution Pattern",
+      "zh-Hans": "### 执行模式"
+    },
+    {
+      "en-US": "For each target, produce:",
+      "zh-Hans": "对于每个目标，生成："
+    },
+    {
+      "en-US": "1. the recommended channel\n2. the reason that channel is best\n3. the message draft\n4. optional follow-up draft\n5. if email is the chosen channel and Apple Mail is available, create a draft instead of only returning text",
+      "zh-Hans": "1. 推荐的渠道\n2. 该渠道最佳的理由\n3. 消息草稿\n4. 可选的跟进草稿\n5. 如果电子邮件是所选渠道且 Apple Mail 可用，则创建草稿而不仅仅是返回文本"
+    },
+    {
+      "en-US": "If browser control is available:",
+      "zh-Hans": "如果浏览器控制可用："
+    },
+    {
+      "en-US": "- LinkedIn: inspect target profile, recent activity, and mutual context, then draft or prepare the message\n- X: inspect recent posts or replies, then draft DM or public reply language",
+      "zh-Hans": "* LinkedIn：检查目标资料、近期活动和共同联系背景，然后草拟或准备消息\n* X：检查近期帖子或回复，然后草拟私信或公开回复内容"
+    },
+    {
+      "en-US": "If desktop automation is available:",
+      "zh-Hans": "如果桌面自动化可用："
+    },
+    {
+      "en-US": "- Apple Mail: create draft email with subject, body, and recipient",
+      "zh-Hans": "* Apple Mail：创建包含主题、正文和收件人的电子邮件草稿"
+    },
+    {
+      "en-US": "Do not send messages automatically without explicit user approval.",
+      "zh-Hans": "未经用户明确批准，不要自动发送消息。"
+    },
+    {
+      "en-US": "### Anti-Patterns",
+      "zh-Hans": "### 反模式"
+    },
+    {
+      "en-US": "- generic templates with no personalization\n- long paragraphs explaining your whole company\n- multiple asks in one message\n- fake familiarity without specifics\n- bulk-sent messages with visible merge fields\n- identical copy reused for email, LinkedIn, and X\n- platform-shaped slop instead of the author's actual voice",
+      "zh-Hans": "* 没有个性化的通用模板\n* 解释整个公司的冗长段落\n* 一条消息中包含多个请求\n* 没有具体细节的虚假熟悉感\n* 带有可见合并字段的批量发送消息\n* 电子邮件、LinkedIn 和 X 重复使用相同副本\n* 平台化的敷衍内容，而非作者的真实语调"
+    },
+    {
+      "en-US": "## Configuration",
+      "zh-Hans": "## 配置"
+    },
+    {
+      "en-US": "Users should set these environment variables:",
+      "zh-Hans": "用户应设置以下环境变量："
+    },
+    {
+      "en-US": "```bash\n# Required\nexport X_BEARER_TOKEN=\"...\"\nexport X_ACCESS_TOKEN=\"...\"\nexport X_ACCESS_TOKEN_SECRET=\"...\"\nexport X_CONSUMER_KEY=\"...\"\nexport X_CONSUMER_SECRET=\"...\"\nexport EXA_API_KEY=\"...\"\n\n# Optional\nexport LINKEDIN_COOKIE=\"...\" # For browser-use LinkedIn access\nexport APOLLO_API_KEY=\"...\"  # For Apollo enrichment\n```",
+      "zh-Hans": "```bash\n# Required\nexport X_BEARER_TOKEN=\"...\"\nexport X_ACCESS_TOKEN=\"...\"\nexport X_ACCESS_TOKEN_SECRET=\"...\"\nexport X_CONSUMER_KEY=\"...\"\nexport X_CONSUMER_SECRET=\"...\"\nexport EXA_API_KEY=\"...\"\n\n# Optional\nexport LINKEDIN_COOKIE=\"...\" # For browser-use LinkedIn access\nexport APOLLO_API_KEY=\"...\"  # For Apollo enrichment\n```"
+    },
+    {
+      "en-US": "## Agents",
+      "zh-Hans": "## 智能体"
+    },
+    {
+      "en-US": "This skill includes specialized agents in the `agents/` subdirectory:",
+      "zh-Hans": "此技能在 `agents/` 子目录中包含专门的智能体："
+    },
+    {
+      "en-US": "- **signal-scorer** — Searches and ranks prospects by relevance signals\n- **mutual-mapper** — Maps social graph connections and finds warm paths\n- **enrichment-agent** — Pulls detailed profile and company data\n- **outreach-drafter** — Generates personalized messages",
+      "zh-Hans": "* **signal-scorer** — 根据相关信号搜索和排序潜在客户\n* **mutual-mapper** — 映射社交图谱连接并寻找暖路径\n* **enrichment-agent** — 拉取详细的资料和公司数据\n* **outreach-drafter** — 生成个性化消息"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```\nUser: find me the top 20 people in prediction markets I should reach out to\n\nAgent workflow:\n1. signal-scorer searches Exa and X for prediction market leaders\n2. mutual-mapper checks user's X graph for shared connections\n3. enrichment-agent pulls company data and recent activity\n4. outreach-drafter generates personalized messages for top ranked leads\n\nOutput: Ranked list with warm paths, voice profile summary, and channel-specific outreach drafts or drafts-in-app\n```",
+      "zh-Hans": "```\n用户：帮我找出预测市场中前20位我应该联系的人\n\n代理工作流程：\n1. signal-scorer 在 Exa 和 X 上搜索预测市场领导者\n2. mutual-mapper 检查用户的 X 社交图谱以寻找共同联系\n3. enrichment-agent 提取公司数据和近期活动信息\n4. outreach-drafter 为排名靠前的潜在客户生成个性化消息\n\n输出：包含暖路径、声音档案摘要以及渠道特定外联草稿或应用内草稿的排名列表\n```"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `brand-voice` for canonical voice capture\n- `connections-optimizer` for review-first network pruning and expansion before outreach",
+      "zh-Hans": "* `brand-voice` 用于规范语调捕获\n* `connections-optimizer` 用于在外联前进行先审阅的网络修剪和扩展"
+    }
+  ]
+}

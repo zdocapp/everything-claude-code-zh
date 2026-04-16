@@ -1,0 +1,266 @@
+{
+  "sourceFile": "skills/click-path-audit/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: click-path-audit\ndescription: \"Trace every user-facing button/touchpoint through its full state change sequence to find bugs where functions individually work but cancel each other out, produce wrong final state, or leave the UI in an inconsistent state. Use when: systematic debugging found no bugs but users report broken buttons, or after any major refactor touching shared state stores.\"\norigin: community\n---",
+      "zh-Hans": "---\nname: click-path-audit\ndescription: \"追踪每个面向用户的按钮/接触点，通过其完整的状态变化序列，以发现功能单独工作但相互抵消、产生错误最终状态或使UI处于不一致状态的错误。使用时机：系统调试未发现错误但用户报告按钮损坏，或在任何涉及共享状态存储的重大重构之后。\"\norigin: community\n---"
+    },
+    {
+      "en-US": "# /click-path-audit — Behavioural Flow Audit",
+      "zh-Hans": "# /click-path-audit — 行为流审计"
+    },
+    {
+      "en-US": "Find bugs that static code reading misses: state interaction side effects, race conditions between sequential calls, and handlers that silently undo each other.",
+      "zh-Hans": "发现静态代码阅读遗漏的缺陷：状态交互副作用、顺序调用间的竞态条件，以及相互静默抵消的处理函数。"
+    },
+    {
+      "en-US": "## The Problem This Solves",
+      "zh-Hans": "## 此技能解决的问题"
+    },
+    {
+      "en-US": "Traditional debugging checks:",
+      "zh-Hans": "传统调试检查："
+    },
+    {
+      "en-US": "- Does the function exist? (missing wiring)\n- Does it crash? (runtime errors)\n- Does it return the right type? (data flow)",
+      "zh-Hans": "* 函数是否存在？（缺少连接）\n* 是否会崩溃？（运行时错误）\n* 是否返回正确的类型？（数据流）"
+    },
+    {
+      "en-US": "But it does NOT check:",
+      "zh-Hans": "但它不检查："
+    },
+    {
+      "en-US": "- **Does the final UI state match what the button label promises?**\n- **Does function B silently undo what function A just did?**\n- **Does shared state (Zustand/Redux/context) have side effects that cancel the intended action?**",
+      "zh-Hans": "* **最终 UI 状态是否与按钮标签承诺的一致？**\n* **函数 B 是否会静默撤销函数 A 刚刚执行的操作？**\n* **共享状态（Zustand/Redux/上下文）是否具有抵消预期操作的副作用？**"
+    },
+    {
+      "en-US": "Real example: A \"New Email\" button called `setComposeMode(true)` then `selectThread(null)`. Both worked individually. But `selectThread` had a side effect resetting `composeMode: false`. The button did nothing. 54 bugs were found by systematic debugging — this one was missed.",
+      "zh-Hans": "真实示例：一个“新邮件”按钮调用了 `setComposeMode(true)` 然后 `selectThread(null)`。两者单独运行都正常。但 `selectThread` 有一个副作用会重置 `composeMode: false`。按钮点击后没有任何效果。通过系统化调试发现了 54 个缺陷——这一个被遗漏了。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "For EVERY interactive touchpoint in the target area:",
+      "zh-Hans": "针对目标区域内的每一个交互触点："
+    },
+    {
+      "en-US": "```\n1. IDENTIFY the handler (onClick, onSubmit, onChange, etc.)\n2. TRACE every function call in the handler, IN ORDER\n3. For EACH function call:\n   a. What state does it READ?\n   b. What state does it WRITE?\n   c. Does it have SIDE EFFECTS on shared state?\n   d. Does it reset/clear any state as a side effect?\n4. CHECK: Does any later call UNDO a state change from an earlier call?\n5. CHECK: Is the FINAL state what the user expects from the button label?\n6. CHECK: Are there race conditions (async calls that resolve in wrong order)?\n```",
+      "zh-Hans": "```\n1. 识别处理函数（onClick、onSubmit、onChange 等）\n2. 按顺序追踪处理函数中的每一个函数调用\n3. 对于每一个函数调用：\n   a. 它读取了哪些状态？\n   b. 它写入了哪些状态？\n   c. 它是否对共享状态产生了副作用？\n   d. 它是否作为副作用重置/清除了任何状态？\n4. 检查：是否有后续调用撤销了先前调用的状态变更？\n5. 检查：最终状态是否符合用户基于按钮标签的预期？\n6. 检查：是否存在竞态条件（异步调用以错误顺序解析）？\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Execution Steps",
+      "zh-Hans": "## 执行步骤"
+    },
+    {
+      "en-US": "### Step 1: Map State Stores",
+      "zh-Hans": "### 步骤 1：映射状态存储"
+    },
+    {
+      "en-US": "Before auditing any touchpoint, build a side-effect map of every state store action:",
+      "zh-Hans": "在审计任何触点之前，构建每个状态存储操作的副作用映射："
+    },
+    {
+      "en-US": "```\nFor each Zustand store / React context in scope:\n  For each action/setter:\n    - What fields does it set?\n    - Does it RESET other fields as a side effect?\n    - Document: actionName → {sets: [...], resets: [...]}\n```",
+      "zh-Hans": "```\n对于每个在作用域内的 Zustand store / React context：\n  对于每个 action/setter：\n    - 它设置哪些字段？\n    - 它是否作为副作用 RESET 其他字段？\n    - 文档记录：actionName → {sets: [...], resets: [...]}\n```"
+    },
+    {
+      "en-US": "This is the critical reference. The \"New Email\" bug was invisible without knowing that `selectThread` resets `composeMode`.",
+      "zh-Hans": "这是关键的参考依据。如果不了解 `selectThread` 会重置 `composeMode`，“新邮件”缺陷将是不可见的。"
+    },
+    {
+      "en-US": "**Output format:**",
+      "zh-Hans": "**输出格式：**"
+    },
+    {
+      "en-US": "```\nSTORE: emailStore\n  setComposeMode(bool) → sets: {composeMode}\n  selectThread(thread|null) → sets: {selectedThread, selectedThreadId, messages, drafts, selectedDraft, summary} RESETS: {composeMode: false, composeData: null, redraftOpen: false}\n  setDraftGenerating(bool) → sets: {draftGenerating}\n  ...\n\nDANGEROUS RESETS (actions that clear state they don't own):\n  selectThread → resets composeMode (owned by setComposeMode)\n  reset → resets everything\n```",
+      "zh-Hans": "```\nSTORE: emailStore\n  setComposeMode(bool) → 设置: {composeMode}\n  selectThread(thread|null) → 设置: {selectedThread, selectedThreadId, messages, drafts, selectedDraft, summary} 重置: {composeMode: false, composeData: null, redraftOpen: false}\n  setDraftGenerating(bool) → 设置: {draftGenerating}\n  ...\n\n危险重置（清除不属于自身状态的操作）:\n  selectThread → 重置 composeMode（由 setComposeMode 拥有）\n  reset → 重置所有状态\n```"
+    },
+    {
+      "en-US": "### Step 2: Audit Each Touchpoint",
+      "zh-Hans": "### 步骤 2：审计每个触点"
+    },
+    {
+      "en-US": "For each button/toggle/form submit in the target area:",
+      "zh-Hans": "针对目标区域内的每个按钮/开关/表单提交："
+    },
+    {
+      "en-US": "```\nTOUCHPOINT: [Button label] in [Component:line]\n  HANDLER: onClick → {\n    call 1: functionA() → sets {X: true}\n    call 2: functionB() → sets {Y: null} RESETS {X: false}  ← CONFLICT\n  }\n  EXPECTED: User sees [description of what button label promises]\n  ACTUAL: X is false because functionB reset it\n  VERDICT: BUG — [description]\n```",
+      "zh-Hans": "```\n接触点: [按钮标签] 位于 [组件:行]\n  处理程序: onClick → {\n    调用 1: functionA() → 设置 {X: true}\n    调用 2: functionB() → 设置 {Y: null} 重置 {X: false}  ← 冲突\n  }\n  预期: 用户看到 [按钮标签承诺的描述]\n  实际: X 为 false，因为 functionB 重置了它\n  判定: BUG — [描述]\n```"
+    },
+    {
+      "en-US": "**Check each of these bug patterns:**",
+      "zh-Hans": "**检查以下每种缺陷模式：**"
+    },
+    {
+      "en-US": "#### Pattern 1: Sequential Undo",
+      "zh-Hans": "#### 模式 1：顺序撤销"
+    },
+    {
+      "en-US": "```\nhandler() {\n  setState_A(true)     // sets X = true\n  setState_B(null)     // side effect: resets X = false\n}\n// Result: X is false. First call was pointless.\n```",
+      "zh-Hans": "```\nhandler() {\n  setState_A(true)     // 设置 X = true\n  setState_B(null)     // 副作用：重置 X = false\n}\n// 结果：X 为 false。第一次调用毫无意义。\n```"
+    },
+    {
+      "en-US": "#### Pattern 2: Async Race",
+      "zh-Hans": "#### 模式 2：异步竞态"
+    },
+    {
+      "en-US": "```\nhandler() {\n  fetchA().then(() => setState({ loading: false }))\n  fetchB().then(() => setState({ loading: true }))\n}\n// Result: final loading state depends on which resolves first\n```",
+      "zh-Hans": "```\nhandler() {\n  fetchA().then(() => setState({ loading: false }))\n  fetchB().then(() => setState({ loading: true }))\n}\n// 结果：最终的加载状态取决于哪个先解析完成\n```"
+    },
+    {
+      "en-US": "#### Pattern 3: Stale Closure",
+      "zh-Hans": "#### 模式 3：过时闭包"
+    },
+    {
+      "en-US": "```\nconst [count, setCount] = useState(0)\nconst handler = useCallback(() => {\n  setCount(count + 1)  // captures stale count\n  setCount(count + 1)  // same stale count — increments by 1, not 2\n}, [count])\n```",
+      "zh-Hans": "```\nconst [count, setCount] = useState(0)\nconst handler = useCallback(() => {\n  setCount(count + 1)  // 捕获了过时的 count 值\n  setCount(count + 1)  // 相同的过时 count 值 — 只增加 1，而不是 2\n}, [count])\n```"
+    },
+    {
+      "en-US": "#### Pattern 4: Missing State Transition",
+      "zh-Hans": "#### 模式 4：缺失状态转换"
+    },
+    {
+      "en-US": "```\n// Button says \"Save\" but handler only validates, never actually saves\n// Button says \"Delete\" but handler sets a flag without calling the API\n// Button says \"Send\" but the API endpoint is removed/broken\n```",
+      "zh-Hans": "```\n// 按钮显示为“保存”，但处理程序仅进行验证，从未实际保存\n// 按钮显示为“删除”，但处理程序仅设置标志而不调用 API\n// 按钮显示为“发送”，但 API 端点已被移除或损坏\n```"
+    },
+    {
+      "en-US": "#### Pattern 5: Conditional Dead Path",
+      "zh-Hans": "#### 模式 5：条件死路径"
+    },
+    {
+      "en-US": "```\nhandler() {\n  if (someState) {        // someState is ALWAYS false at this point\n    doTheActualThing()    // never reached\n  }\n}\n```",
+      "zh-Hans": "```\nhandler() {\n  if (someState) {        // 此时 someState 始终为 false\n    doTheActualThing()    // 永远不会执行\n  }\n}\n```"
+    },
+    {
+      "en-US": "#### Pattern 6: useEffect Interference",
+      "zh-Hans": "#### 模式 6：useEffect 干扰"
+    },
+    {
+      "en-US": "```\n// Button sets stateX = true\n// A useEffect watches stateX and resets it to false\n// User sees nothing happen\n```",
+      "zh-Hans": "```\n// 按钮设置 stateX = true\n// useEffect 监听 stateX 并将其重置为 false\n// 用户看不到任何变化\n```"
+    },
+    {
+      "en-US": "### Step 3: Report",
+      "zh-Hans": "### 步骤 3：报告"
+    },
+    {
+      "en-US": "For each bug found:",
+      "zh-Hans": "针对发现的每个缺陷："
+    },
+    {
+      "en-US": "```\nCLICK-PATH-NNN: [severity: CRITICAL/HIGH/MEDIUM/LOW]\n  Touchpoint: [Button label] in [file:line]\n  Pattern: [Sequential Undo / Async Race / Stale Closure / Missing Transition / Dead Path / useEffect Interference]\n  Handler: [function name or inline]\n  Trace:\n    1. [call] → sets {field: value}\n    2. [call] → RESETS {field: value}  ← CONFLICT\n  Expected: [what user expects]\n  Actual: [what actually happens]\n  Fix: [specific fix]\n```",
+      "zh-Hans": "```\nCLICK-PATH-NNN: [严重性: 严重/高/中/低]\n  接触点: [按钮标签] 位于 [文件:行号]\n  模式: [顺序撤销 / 异步竞争 / 陈旧闭包 / 缺失过渡 / 死路径 / useEffect 干扰]\n  处理程序: [函数名或内联]\n  追踪:\n    1. [调用] → 设置 {字段: 值}\n    2. [调用] → 重置 {字段: 值}  ← 冲突\n  预期: [用户期望的结果]\n  实际: [实际发生的情况]\n  修复: [具体修复方案]\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Scope Control",
+      "zh-Hans": "## 范围控制"
+    },
+    {
+      "en-US": "This audit is expensive. Scope it appropriately:",
+      "zh-Hans": "此审计成本较高。请适当限定范围："
+    },
+    {
+      "en-US": "- **Full app audit:** Use when launching or after major refactor. Launch parallel agents per page.\n- **Single page audit:** Use after building a new page or after a user reports a broken button.\n- **Store-focused audit:** Use after modifying a Zustand store — audit all consumers of the changed actions.",
+      "zh-Hans": "* **完整应用审计：** 在发布时或重大重构后使用。为每个页面启动并行代理。\n* **单页审计：** 在构建新页面后或用户报告按钮失效后使用。\n* **存储聚焦审计：** 在修改 Zustand 存储后使用——审计所有已更改操作的消费者。"
+    },
+    {
+      "en-US": "### Recommended agent split for full app:",
+      "zh-Hans": "### 完整应用推荐的代理拆分："
+    },
+    {
+      "en-US": "```\nAgent 1: Map ALL state stores (Step 1) — this is shared context for all other agents\nAgent 2: Dashboard (Tasks, Notes, Journal, Ideas)\nAgent 3: Chat (DanteChatColumn, JustChatPage)\nAgent 4: Emails (ThreadList, DraftArea, EmailsPage)\nAgent 5: Projects (ProjectsPage, ProjectOverviewTab, NewProjectWizard)\nAgent 6: CRM (all sub-tabs)\nAgent 7: Profile, Settings, Vault, Notifications\nAgent 8: Management Suite (all pages)\n```",
+      "zh-Hans": "```\nAgent 1: 映射所有状态存储（步骤 1）——这是所有其他代理的共享上下文\nAgent 2: 仪表板（任务、笔记、日志、想法）\nAgent 3: 聊天（DanteChatColumn、JustChatPage）\nAgent 4: 电子邮件（ThreadList、DraftArea、EmailsPage）\nAgent 5: 项目（ProjectsPage、ProjectOverviewTab、NewProjectWizard）\nAgent 6: CRM（所有子标签页）\nAgent 7: 个人资料、设置、保险库、通知\nAgent 8: 管理套件（所有页面）\n```"
+    },
+    {
+      "en-US": "Agent 1 MUST complete first. Its output is input for all other agents.",
+      "zh-Hans": "代理 1 必须首先完成。其输出是所有其他代理的输入。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- After systematic debugging finds \"no bugs\" but users report broken UI\n- After modifying any Zustand store action (check all callers)\n- After any refactor that touches shared state\n- Before release, on critical user flows\n- When a button \"does nothing\" — this is THE tool for that",
+      "zh-Hans": "* 当系统化调试发现“无缺陷”但用户报告 UI 失效时\n* 在修改任何 Zustand 存储操作后（检查所有调用者）\n* 在任何涉及共享状态的重构之后\n* 发布前，针对关键用户流程\n* 当按钮“无反应”时——这是解决此问题的专用工具"
+    },
+    {
+      "en-US": "## When NOT to Use",
+      "zh-Hans": "## 何时不使用"
+    },
+    {
+      "en-US": "- For API-level bugs (wrong response shape, missing endpoint) — use systematic-debugging\n- For styling/layout issues — visual inspection\n- For performance issues — profiling tools",
+      "zh-Hans": "* 针对 API 级别缺陷（错误的响应结构、缺少端点）——使用系统化调试\n* 针对样式/布局问题——视觉检查\n* 针对性能问题——性能分析工具"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Integration with Other Skills",
+      "zh-Hans": "## 与其他技能的集成"
+    },
+    {
+      "en-US": "- Run AFTER `/superpowers:systematic-debugging` (which finds the other 54 bug types)\n- Run BEFORE `/superpowers:verification-before-completion` (which verifies fixes work)\n- Feeds into `/superpowers:test-driven-development` — every bug found here should get a test",
+      "zh-Hans": "* 在 `/superpowers:systematic-debugging` 之后运行（该技能发现其他 54 种缺陷类型）\n* 在 `/superpowers:verification-before-completion` 之前运行（该技能验证修复是否有效）\n* 为 `/superpowers:test-driven-development` 提供输入——此处发现的每个缺陷都应获得一个测试"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Example: The Bug That Inspired This Skill",
+      "zh-Hans": "## 示例：启发此技能的缺陷"
+    },
+    {
+      "en-US": "**ThreadList.tsx \"New Email\" button:**",
+      "zh-Hans": "**ThreadList.tsx 中的“新邮件”按钮：**"
+    },
+    {
+      "en-US": "```\nonClick={() => {\n  useEmailStore.getState().setComposeMode(true)   // ✓ sets composeMode = true\n  useEmailStore.getState().selectThread(null)      // ✗ RESETS composeMode = false\n}}\n```",
+      "zh-Hans": "```\nonClick={() => {\n  useEmailStore.getState().setComposeMode(true)   // ✓ 设置 composeMode = true\n  useEmailStore.getState().selectThread(null)      // ✗ 重置 composeMode = false\n}}\n```"
+    },
+    {
+      "en-US": "Store definition:",
+      "zh-Hans": "存储定义："
+    },
+    {
+      "en-US": "```\nselectThread: (thread) => set({\n  selectedThread: thread,\n  selectedThreadId: thread?.id ?? null,\n  messages: [],\n  drafts: [],\n  selectedDraft: null,\n  summary: null,\n  composeMode: false,     // ← THIS silent reset killed the button\n  composeData: null,\n  redraftOpen: false,\n})\n```",
+      "zh-Hans": "```\nselectThread: (thread) => set({\n  selectedThread: thread,\n  selectedThreadId: thread?.id ?? null,\n  messages: [],\n  drafts: [],\n  selectedDraft: null,\n  summary: null,\n  composeMode: false,     // ← 这个静默重置导致了按钮失效\n  composeData: null,\n  redraftOpen: false,\n})\n```"
+    },
+    {
+      "en-US": "**Systematic debugging missed it** because:",
+      "zh-Hans": "**系统化调试遗漏了它**，因为："
+    },
+    {
+      "en-US": "- The button has an onClick handler (not dead)\n- Both functions exist (no missing wiring)\n- Neither function crashes (no runtime error)\n- The data types are correct (no type mismatch)",
+      "zh-Hans": "* 按钮有 onClick 处理函数（非死代码）\n* 两个函数都存在（无缺失连接）\n* 两个函数均未崩溃（无运行时错误）\n* 数据类型正确（无类型不匹配）"
+    },
+    {
+      "en-US": "**Click-path audit catches it** because:",
+      "zh-Hans": "**点击路径审计捕获了它**，因为："
+    },
+    {
+      "en-US": "- Step 1 maps `selectThread` resets `composeMode`\n- Step 2 traces the handler: call 1 sets true, call 2 resets false\n- Verdict: Sequential Undo — final state contradicts button intent",
+      "zh-Hans": "* 步骤 1 映射出 `selectThread` 会重置 `composeMode`\n* 步骤 2 追踪处理函数：调用 1 设为 true，调用 2 重置为 false\n* 结论：顺序撤销——最终状态与按钮意图相矛盾"
+    }
+  ]
+}

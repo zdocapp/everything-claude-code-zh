@@ -6,21 +6,21 @@ origin: ECC
 
 # PyTorch 开发模式
 
-构建稳健、高效和可复现深度学习应用的 PyTorch 惯用模式与最佳实践。
+构建稳健、高效且可复现的深度学习应用的 PyTorch 惯用模式和最佳实践。
 
-## 何时使用
+## 何时启用
 
 * 编写新的 PyTorch 模型或训练脚本时
-* 评审深度学习代码时
+* 审查深度学习代码时
 * 调试训练循环或数据管道时
 * 优化 GPU 内存使用或训练速度时
-* 设置可复现实验时
+* 设置可复现的实验时
 
 ## 核心原则
 
 ### 1. 设备无关代码
 
-始终编写能在 CPU 和 GPU 上运行且不硬编码设备的代码。
+始终编写能在 CPU 和 GPU 上工作且不硬编码设备的代码。
 
 ```python
 # Good: Device-agnostic
@@ -225,7 +225,7 @@ class ImageDataset(Dataset):
         return img, label
 ```
 
-### 高效的数据加载器配置
+### 高效 DataLoader 配置
 
 ```python
 # Good: Optimized DataLoader
@@ -243,7 +243,7 @@ dataloader = DataLoader(
 dataloader = DataLoader(dataset, batch_size=32)  # num_workers=0, no pin_memory
 ```
 
-### 针对变长数据的自定义整理函数
+### 用于可变长度数据的自定义整理函数
 
 ```python
 # Good: Pad sequences in collate_fn
@@ -308,7 +308,7 @@ for data, target in dataloader:
     optimizer.zero_grad(set_to_none=True)
 ```
 
-### 大模型的梯度检查点
+### 用于大型模型的梯度检查点
 
 ```python
 # Good: Trade compute for memory
@@ -336,16 +336,16 @@ model = torch.compile(model, mode="reduce-overhead")
 
 | 惯用法 | 描述 |
 |-------|-------------|
-| `model.train()` / `model.eval()` | 训练/评估前始终设置模式 |
-| `torch.no_grad()` | 推理时禁用梯度 |
+| `model.train()` / `model.eval()` | 在训练/评估前始终设置模式 |
+| `torch.no_grad()` | 在推理时禁用梯度 |
 | `optimizer.zero_grad(set_to_none=True)` | 更高效的梯度清零 |
 | `.to(device)` | 设备无关的张量/模型放置 |
 | `torch.amp.autocast` | 混合精度以获得 2 倍速度 |
 | `pin_memory=True` | 更快的 CPU→GPU 数据传输 |
-| `torch.compile` | JIT 编译加速 (2.0+) |
+| `torch.compile` | JIT 编译以加速（2.0+） |
 | `weights_only=True` | 安全的模型加载 |
 | `torch.manual_seed` | 可复现的实验 |
-| `gradient_checkpointing` | 以计算换取内存 |
+| `gradient_checkpointing` | 用计算换取内存 |
 
 ## 应避免的反模式
 
@@ -393,4 +393,4 @@ torch.save(model, "model.pt")  # Saves entire model (fragile, not portable)
 torch.save(model.state_dict(), "model.pt")
 ```
 
-**请记住**：PyTorch 代码应做到设备无关、可复现且内存意识强。如有疑问，请使用 `torch.profiler` 进行分析，并使用 `torch.cuda.memory_summary()` 检查 GPU 内存。
+**请记住**：PyTorch 代码应具备设备无关性、可复现性且内存意识。如有疑问，请使用 `torch.profiler` 进行分析，并使用 `torch.cuda.memory_summary()` 检查 GPU 内存。

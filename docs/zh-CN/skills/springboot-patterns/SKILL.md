@@ -1,19 +1,19 @@
 ---
 name: springboot-patterns
-description: Spring Boot架构模式、REST API设计、分层服务、数据访问、缓存、异步处理和日志记录。用于Java Spring Boot后端工作。
+description: Spring Boot 架构模式、REST API 设计、分层服务、数据访问、缓存、异步处理和日志记录。适用于 Java Spring Boot 后端开发。
 origin: ECC
 ---
 
 # Spring Boot 开发模式
 
-用于可扩展、生产级服务的 Spring Boot 架构和 API 模式。
+适用于可扩展、生产级服务的 Spring Boot 架构与 API 模式。
 
-## 何时激活
+## 何时启用
 
 * 使用 Spring MVC 或 WebFlux 构建 REST API
 * 构建控制器 → 服务 → 仓库层结构
 * 配置 Spring Data JPA、缓存或异步处理
-* 添加验证、异常处理或分页
+* 添加验证、异常处理或分页功能
 * 为开发/预发布/生产环境设置配置文件
 * 使用 Spring Events 或 Kafka 实现事件驱动模式
 
@@ -75,7 +75,7 @@ public class MarketService {
 }
 ```
 
-## DTO 和验证
+## DTO 与验证
 
 ```java
 public record CreateMarketRequest(
@@ -120,7 +120,7 @@ class GlobalExceptionHandler {
 
 ## 缓存
 
-需要在配置类上使用 `@EnableCaching`。
+需要在配置类上添加 `@EnableCaching`。
 
 ```java
 @Service
@@ -145,7 +145,7 @@ public class MarketCacheService {
 
 ## 异步处理
 
-需要在配置类上使用 `@EnableAsync`。
+需要在配置类上添加 `@EnableAsync`。
 
 ```java
 @Service
@@ -200,7 +200,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 }
 ```
 
-## 分页和排序
+## 分页与排序
 
 ```java
 PageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
@@ -233,16 +233,15 @@ public <T> T withRetry(Supplier<T> supplier, int maxRetries) {
 
 ## 速率限制 (过滤器 + Bucket4j)
 
-**安全须知**：默认情况下 `X-Forwarded-For` 头是不可信的，因为客户端可以伪造它。
-仅在以下情况下使用转发头：
+**安全须知**：默认情况下，`X-Forwarded-For` 标头是不可信的，因为客户端可以伪造它。
+仅在以下情况下使用转发标头：
 
-1. 您的应用程序位于可信的反向代理（nginx、AWS ALB 等）之后
-2. 您已将 `ForwardedHeaderFilter` 注册为 bean
+1. 您的应用程序位于可信的反向代理（如 nginx、AWS ALB 等）之后
+2. 您已将 `ForwardedHeaderFilter` 注册为 Bean
 3. 您已在应用属性中配置了 `server.forward-headers-strategy=NATIVE` 或 `FRAMEWORK`
-4. 您的代理配置为覆盖（而非追加）`X-Forwarded-For` 头
+4. 您的代理配置为覆盖（而非追加）`X-Forwarded-For` 标头
 
-当 `ForwardedHeaderFilter` 被正确配置时，`request.getRemoteAddr()` 将自动从转发的头中返回正确的客户端 IP。
-没有此配置时，请直接使用 `request.getRemoteAddr()`——它返回的是直接连接的 IP，这是唯一可信的值。
+当 `ForwardedHeaderFilter` 正确配置后，`request.getRemoteAddr()` 将自动从转发标头中返回正确的客户端 IP。若未进行此配置，请直接使用 `request.getRemoteAddr()`——它返回的是直接连接的 IP，这是唯一可信的值。
 
 ```java
 @Component
@@ -292,22 +291,22 @@ public class RateLimitFilter extends OncePerRequestFilter {
 }
 ```
 
-## 后台作业
+## 后台任务
 
-使用 Spring 的 `@Scheduled` 或与队列（如 Kafka、SQS、RabbitMQ）集成。保持处理程序是幂等的和可观察的。
+使用 Spring 的 `@Scheduled` 或与队列（如 Kafka、SQS、RabbitMQ）集成。保持处理程序幂等且可观测。
 
 ## 可观测性
 
-* 通过 Logback 编码器进行结构化日志记录 (JSON)
+* 通过 Logback 编码器实现结构化日志记录（JSON）
 * 指标：Micrometer + Prometheus/OTel
-* 追踪：带有 OpenTelemetry 或 Brave 后端的 Micrometer Tracing
+* 追踪：使用 OpenTelemetry 或 Brave 后端的 Micrometer Tracing
 
 ## 生产环境默认设置
 
 * 优先使用构造函数注入，避免字段注入
-* 启用 `spring.mvc.problemdetails.enabled=true` 以获得 RFC 7807 错误 (Spring Boot 3+)
-* 根据工作负载配置 HikariCP 连接池大小，设置超时
-* 对查询使用 `@Transactional(readOnly = true)`
-* 在适当的地方通过 `@NonNull` 和 `Optional` 强制执行空值安全
+* 启用 `spring.mvc.problemdetails.enabled=true` 以支持 RFC 7807 错误（Spring Boot 3+）
+* 根据工作负载配置 HikariCP 连接池大小，并设置超时
+* 使用 `@Transactional(readOnly = true)` 进行查询
+* 在适当的地方通过 `@NonNull` 和 `Optional` 强制空安全
 
-**记住**：保持控制器精简、服务专注、仓库简单，并集中处理错误。为可维护性和可测试性进行优化。
+**请记住**：保持控制器精简、服务专注、仓库简单，并集中处理错误。优化可维护性和可测试性。

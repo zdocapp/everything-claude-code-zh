@@ -4,20 +4,20 @@ description: 将项目/全局范围的本能导出到文件
 command: /instinct-export
 ---
 
-# 本能导出命令
+# 导出本能命令
 
 将本能导出为可共享的格式。非常适合：
 
 * 与团队成员分享
-* 转移到新机器
-* 贡献给项目约定
+* 迁移到新机器
+* 贡献给项目规范
 
-## 用法
+## 使用方法
 
 ```
 /instinct-export                           # 导出所有个人本能
-/instinct-export --domain testing          # 仅导出测试相关本能
-/instinct-export --min-confidence 0.7      # 仅导出高置信度本能
+/instinct-export --domain testing          # 仅导出测试相关的本能
+/instinct-export --min-confidence 0.7      # 仅导出高置信度的本能
 /instinct-export --output team-instincts.yaml
 /instinct-export --scope project --output project-instincts.yaml
 ```
@@ -26,11 +26,11 @@ command: /instinct-export
 
 1. 检测当前项目上下文
 2. 按选定范围加载本能：
-   * `project`: 仅限当前项目
-   * `global`: 仅限全局
-   * `all`: 项目与全局合并（默认）
-3. 应用过滤器（`--domain`, `--min-confidence`）
-4. 将 YAML 格式的导出写入文件（如果未提供输出路径，则写入标准输出）
+   * `project`：仅当前项目
+   * `global`：仅全局
+   * `all`：项目与全局合并（默认）
+3. 应用过滤器（`--domain`，`--min-confidence`）
+4. 将 YAML 格式的导出内容写入文件（如果未提供输出路径，则输出到标准输出）
 
 ## 输出格式
 
@@ -61,7 +61,7 @@ Use functional patterns over classes.
 
 ## 标志
 
-* `--domain <name>`: 仅导出指定领域
-* `--min-confidence <n>`: 最低置信度阈值
-* `--output <file>`: 输出文件路径（省略时打印到标准输出）
-* `--scope <project|global|all>`: 导出范围（默认：`all`）
+* `--domain <name>`：仅导出指定领域
+* `--min-confidence <n>`：最低置信度阈值
+* `--output <file>`：输出文件路径（省略时打印到标准输出）
+* `--scope <project|global|all>`：导出范围（默认：`all`）

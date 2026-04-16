@@ -1,19 +1,19 @@
 ---
 name: backend-patterns
-description: 后端架构模式、API设计、数据库优化以及适用于Node.js、Express和Next.js API路由的服务器端最佳实践。
+description: 后端架构模式、API设计、数据库优化以及针对Node.js、Express和Next.js API路由的服务器端最佳实践。
 origin: ECC
 ---
 
 # 后端开发模式
 
-用于可扩展服务器端应用程序的后端架构模式和最佳实践。
+适用于可扩展服务器端应用程序的后端架构模式和最佳实践。
 
-## 何时激活
+## 何时启用
 
 * 设计 REST 或 GraphQL API 端点时
-* 实现仓储层、服务层或控制器层时
-* 优化数据库查询（N+1问题、索引、连接池）时
-* 添加缓存（Redis、内存缓存、HTTP 缓存头）时
+* 实现仓储、服务或控制器层时
+* 优化数据库查询（N+1、索引、连接池）时
+* 添加缓存（Redis、内存、HTTP 缓存头）时
 * 设置后台作业或异步处理时
 * 为 API 构建错误处理和验证结构时
 * 构建中间件（认证、日志记录、速率限制）时
@@ -189,7 +189,7 @@ CREATE OR REPLACE FUNCTION create_market_with_position(
 )
 RETURNS jsonb
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
   -- Start transaction automatically
   INSERT INTO markets VALUES (market_data);
@@ -200,7 +200,7 @@ EXCEPTION
     -- Rollback happens automatically
     RETURN jsonb_build_object('success', false, 'error', SQLERRM);
 END;
-$;
+$$;
 ```
 
 ## 缓存策略
@@ -239,7 +239,7 @@ class CachedMarketRepository implements MarketRepository {
 }
 ```
 
-### 旁路缓存模式
+### 缓存-Aside 模式
 
 ```typescript
 async function getMarketWithCache(id: string): Promise<Market> {
@@ -263,7 +263,7 @@ async function getMarketWithCache(id: string): Promise<Market> {
 
 ## 错误处理模式
 
-### 集中式错误处理程序
+### 集中式错误处理器
 
 ```typescript
 class ApiError extends Error {
@@ -430,7 +430,7 @@ export const DELETE = requirePermission('delete')(
 
 ## 速率限制
 
-### 简单的内存速率限制器
+### 简单内存速率限制器
 
 ```typescript
 class RateLimiter {
@@ -595,4 +595,4 @@ export async function GET(request: Request) {
 }
 ```
 
-**记住**：后端模式支持可扩展、可维护的服务器端应用程序。选择适合你复杂程度的模式。
+**请记住**：后端模式支持可扩展、可维护的服务器端应用程序。请选择适合您复杂度的模式。

@@ -1,0 +1,330 @@
+{
+  "sourceFile": "skills/customs-trade-compliance/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: customs-trade-compliance\ndescription: >\n  Codified expertise for customs documentation, tariff classification, duty\n  optimization, restricted party screening, and regulatory compliance across\n  multiple jurisdictions. Informed by trade compliance specialists with 15+\n  years experience. Includes HS classification logic, Incoterms application,\n  FTA utilization, and penalty mitigation. Use when handling customs clearance,\n  tariff classification, trade compliance, import/export documentation, or\n  duty optimization.\nlicense: Apache-2.0\nversion: 1.0.0\nhomepage: https://github.com/affaan-m/everything-claude-code\norigin: ECC\nmetadata:\n  author: evos\n  clawdbot:\n    emoji: \"\"\n---",
+      "zh-Hans": "---\nname: customs-trade-compliance\ndescription: 针对海关文件、关税分类、关税优化、受限方筛查以及多司法管辖区法规合规的编码化专业知识。由拥有15年以上经验的贸易合规专家提供信息支持。包括HS分类逻辑、Incoterms应用、FTA利用以及罚款缓解。适用于处理海关清关、关税分类、贸易合规、进出口文件或关税优化时使用。license: Apache-2.0\nversion: 1.0.0\nhomepage: https://github.com/affaan-m/everything-claude-code\norigin: ECC\nmetadata:\n  author: evos\n  clawdbot:\n    emoji: \"\"\n---"
+    },
+    {
+      "en-US": "# Customs & Trade Compliance",
+      "zh-Hans": "# 海关与贸易合规"
+    },
+    {
+      "en-US": "## Role and Context",
+      "zh-Hans": "## 角色与背景"
+    },
+    {
+      "en-US": "You are a senior trade compliance specialist with 15+ years managing customs operations across US, EU, UK, and Asia-Pacific jurisdictions. You sit at the intersection of importers, exporters, customs brokers, freight forwarders, government agencies, and legal counsel. Your systems include ACE (Automated Commercial Environment), CHIEF/CDS (UK), ATLAS (DE), customs broker portals, denied party screening platforms, and ERP trade management modules. Your job is to ensure lawful, cost-optimized movement of goods across borders while protecting the organization from penalties, seizures, and debarment.",
+      "zh-Hans": "您是一位拥有超过15年经验的高级贸易合规专家，负责管理美国、欧盟、英国和亚太地区多个司法管辖区的海关业务。您处于进口商、出口商、海关经纪人、货运代理、政府机构和法律顾问的交汇点。您使用的系统包括ACE（自动化商业环境）、CHIEF/CDS（英国）、ATLAS（德国）、海关经纪人门户、受限制方筛查平台以及ERP贸易管理模块。您的工作是确保货物合法、成本优化的跨境流动，同时保护组织免受罚款、扣押和禁止交易的处罚。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Classifying goods under HS/HTS tariff codes for import or export\n- Preparing customs documentation (commercial invoices, certificates of origin, ISF filings)\n- Screening parties against denied/restricted entity lists (SDN, Entity List, EU sanctions)\n- Evaluating FTA qualification and duty savings opportunities\n- Responding to customs audits, CF-28/CF-29 requests, or penalty notices",
+      "zh-Hans": "* 为进口或出口货物进行HS/HTS税则号列归类\n* 准备海关单证（商业发票、原产地证书、ISF申报）\n* 根据受限制/禁止实体名单（SDN、实体清单、欧盟制裁）筛查交易方\n* 评估自由贸易协定资格和关税节省机会\n* 应对海关审计、CF-28/CF-29要求或罚款通知"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 运作方式"
+    },
+    {
+      "en-US": "1. Classify products using GRI rules and chapter/heading/subheading analysis\n2. Determine applicable duty rates, preferential programs (FTZs, drawback, FTAs), and trade remedies\n3. Screen all transaction parties against consolidated denied-party lists before shipment\n4. Prepare and validate entry documentation per jurisdiction requirements\n5. Monitor regulatory changes (tariff modifications, new sanctions, trade agreement updates)\n6. Respond to government inquiries with proper prior disclosure and penalty mitigation strategies",
+      "zh-Hans": "1. 使用GRI规则和章/品目/子目分析对产品进行归类\n2. 确定适用的关税税率、优惠计划（对外贸易区、退税、自由贸易协定）和贸易救济措施\n3. 在发货前，根据整合的受限制方名单筛查所有交易方\n4. 根据司法管辖区要求准备并验证报关单证\n5. 监控法规变化（关税调整、新制裁、贸易协定更新）\n6. 通过适当的主动披露和罚款减免策略回应政府问询"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "- **HS classification dispute**: CBP reclassifies your electronic component from 8542 (integrated circuits, 0% duty) to 8543 (electrical machines, 2.6%). Build the argument using GRI 1 and 3(a) with technical specifications, binding rulings, and EN commentary.\n- **FTA qualification**: Evaluate whether a product assembled in Mexico qualifies for USMCA preferential treatment. Trace BOM components to determine regional value content and tariff shift eligibility.\n- **Denied party screening hit**: Automated screening flags a customer as a potential match on OFAC's SDN list. Walk through false-positive resolution, escalation procedures, and documentation requirements.",
+      "zh-Hans": "* **HS归类争议**：CBP将您的电子元件从8542（集成电路，0%关税）重新归类为8543（电机，2.6%）。使用GRI 1和3(a)结合技术规格、约束性预裁定和EN注释来构建论证。\n* **FTA资格认定**：评估在墨西哥组装的产品是否符合USMCA优惠待遇。追溯物料清单组件以确定区域价值成分和税则归类改变资格。\n* **受限制方筛查命中**：自动筛查将某客户标记为OFAC的SDN名单上的潜在匹配项。演练误报解决、上报程序和文件要求。"
+    },
+    {
+      "en-US": "## Core Knowledge",
+      "zh-Hans": "## 核心知识"
+    },
+    {
+      "en-US": "### HS Tariff Classification",
+      "zh-Hans": "### HS税则归类"
+    },
+    {
+      "en-US": "The Harmonized System is a 6-digit international nomenclature maintained by the WCO. The first 2 digits identify the chapter, 4 digits the heading, 6 digits the subheading. National extensions add further digits: the US uses 10-digit HTS numbers (Schedule B for exports), the EU uses 10-digit TARIC codes, the UK uses 10-digit commodity codes via the UK Global Tariff.",
+      "zh-Hans": "协调制度是由WCO维护的6位数字国际商品分类目录。前2位数字代表章，4位数字代表品目，6位数字代表子目。国家扩展会添加更多数字：美国使用10位数字的HTS编码（出口使用Schedule B），欧盟使用10位数字的TARIC编码，英国通过UK Global Tariff使用10位数字的商品编码。"
+    },
+    {
+      "en-US": "Classification follows the General Rules of Interpretation (GRI) in strict order — you never invoke GRI 3 unless GRI 1 fails, never GRI 4 unless 1-3 fail:",
+      "zh-Hans": "归类严格遵循《归类总规则》的顺序——除非GRI 1失败，否则绝不援引GRI 3；除非GRI 1-3失败，否则绝不援引GRI 4："
+    },
+    {
+      "en-US": "- **GRI 1:** Classification is determined by the terms of the headings and Section/Chapter notes. This resolves ~90% of classifications. Read the heading text literally and check every relevant Section and Chapter note before moving on.\n- **GRI 2(a):** Incomplete or unfinished articles are classified as the complete article if they have the essential character of the complete article. A car body without the engine is still classified as a motor vehicle.\n- **GRI 2(b):** Mixtures and combinations of materials. A steel-and-plastic composite is classified by reference to the material giving essential character.\n- **GRI 3(a):** When goods are prima facie classifiable under two or more headings, prefer the most specific heading. \"Surgical gloves of rubber\" is more specific than \"articles of rubber.\"\n- **GRI 3(b):** Composite goods, sets — classify by the component giving essential character. A gift set with a $40 perfume and a $5 pouch classifies as perfume.\n- **GRI 3(c):** When 3(a) and 3(b) fail, use the heading that occurs last in numerical order.\n- **GRI 4:** Goods that cannot be classified by GRI 1-3 are classified under the heading for the most analogous goods.\n- **GRI 5:** Cases, containers, and packing materials follow specific rules for classification with or separately from their contents.\n- **GRI 6:** Classification at the subheading level follows the same principles, applied within the relevant heading. Subheading notes take precedence at this level.",
+      "zh-Hans": "* **GRI 1：** 归类由品目条文和类注/章注决定。这解决了约90%的归类。在继续之前，逐字阅读品目条文并核对所有相关的类注和章注。\n* **GRI 2(a)：** 不完整或未制成的物品，如果具有完整品的基本特征，则按完整品归类。没有发动机的汽车车身仍按机动车辆归类。\n* **GRI 2(b)：** 材料混合物和组合物。钢塑复合材料按赋予基本特征的材料归类。\n* **GRI 3(a)：** 当货物看起来可归入两个或更多品目时，优先选择最具体的品目。\"橡胶制外科手套\"比\"橡胶制品\"更具体。\n* **GRI 3(b)：** 组合物品、成套物品——按赋予基本特征的部件归类。包含40美元香水和5美元小袋的礼品套装按香水归类。\n* **GRI 3(c)：** 当3(a)和3(b)均无法适用时，按品目号列顺序归入其可归入的最后一个品目。\n* **GRI 4：** 无法按GRI 1-3归类的货物，归入与其最相类似的货物的品目。\n* **GRI 5：** 箱、盒、容器及包装材料遵循与其所装货物一同或分别归类的特定规则。\n* **GRI 6：** 子目级别的归类遵循相同原则，在相关品目内应用。子目注释在此级别优先。"
+    },
+    {
+      "en-US": "**Common misclassification pitfalls:** Multi-function devices (classify by primary function per GRI 3(b), not by the most expensive component). Food preparations vs ingredients (Chapter 21 vs Chapters 7-12 — check whether the product has been \"prepared\" beyond simple preservation). Textile composites (weight percentage of fibres determines classification, not surface area). Parts vs accessories (Section XVI Note 2 determines whether a part classifies with the machine or separately). Software on physical media (the medium, not the software, determines classification under most tariff schedules).",
+      "zh-Hans": "**常见的错误归类陷阱**：多功能设备（根据GRI 3(b)按主要功能归类，而非按最昂贵的部件归类）。食品制品与配料（第21章 vs 第7-12章——检查产品是否经过超出简单保存的\"制备\"）。纺织复合材料（纤维的重量百分比决定归类，而非表面积）。零件与附件（第十六类注释2决定零件是与机器一同归类还是单独归类）。物理介质上的软件（在大多数税则目录下，由介质而非软件决定归类）。"
+    },
+    {
+      "en-US": "### Documentation Requirements",
+      "zh-Hans": "### 单证要求"
+    },
+    {
+      "en-US": "**Commercial Invoice:** Must include seller/buyer names and addresses, description of goods sufficient for classification, quantity, unit price, total value, currency, Incoterms, country of origin, and payment terms. US CBP requires the invoice conform to 19 CFR § 141.86. Undervaluation triggers penalties per 19 USC § 1592.",
+      "zh-Hans": "**商业发票：** 必须包含卖方/买方名称和地址、足以用于归类的货物描述、数量、单价、总价值、币种、贸易术语、原产国和付款条件。美国CBP要求发票符合19 CFR § 141.86。低报价格会触发19 USC § 1592规定的罚款。"
+    },
+    {
+      "en-US": "**Packing List:** Weight and dimensions per package, marks and numbers matching the BOL, piece count. Discrepancies between the packing list and physical count trigger examination.",
+      "zh-Hans": "**装箱单：** 每件包装的重量和尺寸、与提单匹配的唛头和编号、件数。装箱单与实物数量之间的差异会触发查验。"
+    },
+    {
+      "en-US": "**Certificate of Origin:** Varies by FTA. USMCA uses a certification (no prescribed form) that must include nine data elements per Article 5.2. EUR.1 movement certificates for EU preferential trade. Form A for GSP claims. UK uses \"origin declarations\" on invoices for UK-EU TCA claims.",
+      "zh-Hans": "**原产地证书：** 因FTA而异。USMCA使用证明书（无规定格式），必须包含第5.2条规定的九个数据要素。欧盟优惠贸易使用EUR.1流动证书。普惠制使用Form A。英国对UK-EU TCA索赔使用发票上的\"原产地声明\"。"
+    },
+    {
+      "en-US": "**Bill of Lading / Air Waybill:** Ocean BOL serves as title to goods, contract of carriage, and receipt. Air waybill is non-negotiable. Both must match the commercial invoice details — carrier-added notations (\"said to contain,\" \"shipper's load and count\") limit carrier liability and affect customs risk scoring.",
+      "zh-Hans": "**提单/空运单：** 海运提单是货物所有权凭证、运输合同和收据。空运单不可转让。两者都必须与商业发票细节一致——承运人添加的批注（\"据称内装\"、\"托运人装载和计数\"）限制了承运人责任并影响海关风险评分。"
+    },
+    {
+      "en-US": "**ISF 10+2 (US):** Importer Security Filing must be submitted 24 hours before vessel loading at foreign port. Ten data elements from the importer (manufacturer, seller, buyer, ship-to, country of origin, HS-6, container stuffing location, consolidator, importer of record number, consignee number). Two from the carrier. Late or inaccurate ISF triggers $5,000 per violation liquidated damages. CBP uses ISF data for targeting — errors increase examination probability.",
+      "zh-Hans": "**ISF 10+2（美国）：** 进口商安全申报必须在外国港口装船前24小时提交。进口商提供十个数据要素（制造商、卖方、买方、收货方、原产国、HS-6位、集装箱装箱地点、集运商、进口商记录号、收货人号）。承运人提供两个。延迟或不准确的ISF会触发每项违规5,000美元的定额损害赔偿。CBP使用ISF数据进行布控——错误会增加查验概率。"
+    },
+    {
+      "en-US": "**Entry Summary (CBP 7501):** Filed within 10 business days of entry. Contains classification, value, duty rate, country of origin, and preferential program claims. This is the legal declaration — errors here create penalty exposure under 19 USC § 1592.",
+      "zh-Hans": "**报关单摘要（CBP 7501）：** 在报关后10个工作日内提交。包含归类、价值、关税税率、原产国和优惠计划声明。这是法律声明——此处的错误会依据19 USC § 1592产生罚款风险。"
+    },
+    {
+      "en-US": "### Incoterms 2020",
+      "zh-Hans": "### 贸易术语解释通则 2020"
+    },
+    {
+      "en-US": "Incoterms define the transfer of costs, risk, and responsibility between buyer and seller. They are not law — they are contractual terms that must be explicitly incorporated. Critical compliance implications:",
+      "zh-Hans": "贸易术语解释通则定义了买卖双方之间成本、风险和责任的转移。它们不是法律——它们是必须明确纳入的合同条款。关键的合规影响："
+    },
+    {
+      "en-US": "- **EXW (Ex Works):** Seller's minimum obligation. Buyer arranges everything. Problem: the buyer is the exporter of record in the seller's country, which creates export compliance obligations the buyer may not be equipped to handle. Rarely appropriate for international trade.\n- **FCA (Free Carrier):** Seller delivers to carrier at named place. Seller handles export clearance. The 2020 revision allows the buyer to instruct their carrier to issue an on-board BOL to the seller — critical for letter of credit transactions.\n- **CPT/CIP (Carriage Paid To / Carriage & Insurance Paid To):** Risk transfers at first carrier, but seller pays freight to destination. CIP now requires Institute Cargo Clauses (A) — all-risks coverage, a significant change from Incoterms 2010.\n- **DAP (Delivered at Place):** Seller bears all risk and cost to the destination, excluding import clearance and duties. The seller does not clear customs in the destination country.\n- **DDP (Delivered Duty Paid):** Seller bears everything including import duties and taxes. The seller must be registered as an importer of record or use a non-resident importer arrangement. Customs valuation is based on the DDP price minus duties (deductive method) — if the seller includes duty in the invoice price, it creates a circular valuation problem.\n- **Valuation impact:** Incoterms affect the invoice structure, but customs valuation still follows the importing regime's rules. In the U.S., CBP transaction value generally excludes international freight and insurance; in the EU, customs value generally includes transport and insurance costs up to the place of entry into the Union. Getting this wrong changes the duty calculation even when the commercial term is clear.\n- **Common misunderstandings:** Incoterms do not transfer title to goods — that is governed by the sale contract and applicable law. Incoterms do not apply to domestic-only transactions by default — they must be explicitly invoked. Using FOB for containerised ocean freight is technically incorrect (FCA is preferred) because risk transfers at the ship's rail under FOB but at the container yard under FCA.",
+      "zh-Hans": "* **EXW（工厂交货）：** 卖方最低义务。买方安排一切。问题：买方是卖方国家的出口商，这产生了买方可能无法处理的出口合规义务。很少适用于国际贸易。\n* **FCA（货交承运人）：** 卖方在指定地点将货物交付给承运人。卖方负责出口清关。2020年修订版允许买方指示其承运人向卖方签发已装船提单——这对信用证交易至关重要。\n* **CPT/CIP（运费付至/运费和保险费付至）：** 风险在第一个承运人处转移，但卖方支付至目的地的运费。CIP现在要求协会货物条款(A)——一切险，这是与2010年贸易术语解释通则相比的重大变化。\n* **DAP（目的地交货）：** 卖方承担至目的地的所有风险和成本，不包括进口清关和关税。卖方不在目的国办理海关清关。\n* **DDP（完税后交货）：** 卖方承担一切，包括进口关税和税费。卖方必须注册为进口商记录或使用非居民进口商安排。海关估价基于DDP价格减去关税（倒扣法）——如果卖方将关税包含在发票价格中，会产生循环估价问题。\n* **估价影响：** 贸易术语影响发票结构，但海关估价仍遵循进口制度的规则。在美国，CBP成交价格通常不包括国际运费和保险费；在欧盟，海关完税价格通常包括至货物进入欧盟关境地的运输和保险成本。弄错这一点会改变关税计算，即使商业条款是明确的。\n* **常见误解：** 贸易术语不转移货物所有权——这由销售合同和适用法律管辖。贸易术语默认不适用于纯国内交易——必须明确援引。对集装箱海运使用FOB在技术上是错误的（首选FCA），因为FOB下风险在船舷转移，而FCA下风险在集装箱堆场转移。"
+    },
+    {
+      "en-US": "### Duty Optimization",
+      "zh-Hans": "### 关税优化"
+    },
+    {
+      "en-US": "**FTA Utilisation:** Every preferential trade agreement has specific rules of origin that goods must satisfy. USMCA requires product-specific rules (Annex 4-B) including tariff shift, regional value content (RVC), and net cost methods. EU-UK TCA uses \"wholly obtained\" and \"sufficient processing\" rules with product-specific list rules in Annex ORIG-2. RCEP has uniform rules for 15 Asia-Pacific nations with cumulation provisions. AfCFTA allows 60% cumulation across member states.",
+      "zh-Hans": "**FTA利用：** 每个优惠贸易协定都有货物必须满足的特定原产地规则。USMCA要求产品特定规则（附件4-B），包括税则归类改变、区域价值成分和净成本方法。EU-UK TCA使用\"完全获得\"和\"充分加工\"规则，产品特定清单规则在附件ORIG-2中。RCEP对15个亚太国家有统一规则，并包含累积条款。AfCFTA允许成员国之间60%的累积。"
+    },
+    {
+      "en-US": "**RVC calculation matters:** USMCA offers two methods — transaction value (TV) method: RVC = ((TV - VNM) / TV) × 100, and net cost (NC) method: RVC = ((NC - VNM) / NC) × 100. The net cost method excludes sales promotion, royalties, and shipping costs from the denominator, often yielding a higher RVC when margins are thin.",
+      "zh-Hans": "**RVC计算事项：** USMCA提供两种方法——成交价格法：RVC = ((TV - VNM) / TV) × 100，和净成本法：RVC = ((NC - VNM) / NC) × 100。净成本法从分母中排除销售推广、特许权使用费和运输成本，在利润率较低时通常能产生更高的RVC。"
+    },
+    {
+      "en-US": "**Foreign Trade Zones (FTZs):** Goods admitted to an FTZ are not in US customs territory. Benefits: duty deferral until goods enter commerce, inverted tariff relief (pay duty on the finished product rate if lower than component rates), no duty on waste/scrap, no duty on re-exports. Zone-to-zone transfers maintain privileged foreign status.",
+      "zh-Hans": "**对外贸易区：** 进入FTZ的货物不在美国海关关境内。好处：关税递延至货物进入商业流通时缴纳、倒置关税减免（如果成品税率低于零部件税率，则按成品税率缴纳关税）、废料/边角料无需缴纳关税、复出口无需缴纳关税。区与区之间的转移保持特权外国地位。"
+    },
+    {
+      "en-US": "**Temporary Import Bonds (TIBs):** ATA Carnet for professional equipment, samples, exhibition goods — duty-free entry into 78+ countries. US temporary importation under bond (TIB) per 19 USC § 1202, Chapter 98 — goods must be exported within 1 year (extendable to 3 years). Failure to export triggers liquidation at full duty plus bond premium.",
+      "zh-Hans": "**临时进口保证金：** ATA单证册适用于专业设备、样品、展览品——免税进入78个以上国家。美国临时进口保证金依据19 USC § 1202，第98章——货物必须在1年内出口（可延长至3年）。未能出口将导致按全额关税加保证金溢价清算。"
+    },
+    {
+      "en-US": "**Duty Drawback:** Refund of 99% of duties paid on imported goods that are subsequently exported. Three types: manufacturing drawback (imported materials used in US-manufactured exports), unused merchandise drawback (imported goods exported in same condition), and substitution drawback (commercially interchangeable goods). Claims must be filed within 5 years of import. TFTEA simplified drawback significantly — no longer requires matching specific import entries to specific export entries for substitution claims.",
+      "zh-Hans": "**关税退税：** 退还已缴纳进口关税的99%，适用于随后出口的进口货物。三种类型：制造退税（进口材料用于在美国制造的出口产品）、未使用货物退税（进口货物以相同状态出口）和替代退税（商业上可互换的货物）。索赔必须在进口后5年内提交。TFTEA简化了退税流程——对于替代索赔，不再要求将特定进口报关单与特定出口报关单匹配。"
+    },
+    {
+      "en-US": "### Restricted Party Screening",
+      "zh-Hans": "### 受限制方筛查"
+    },
+    {
+      "en-US": "**Mandatory lists (US):** SDN (OFAC — Specially Designated Nationals), Entity List (BIS — export control), Denied Persons List (BIS — export privilege denied), Unverified List (BIS — cannot verify end use), Military End User List (BIS), Non-SDN Menu-Based Sanctions (OFAC). Screening must cover all parties in the transaction: buyer, seller, consignee, end user, freight forwarder, banks, and intermediate consignees.",
+      "zh-Hans": "**强制性名单（美国）：** SDN（OFAC——特别指定国民）、实体清单（BIS——出口管制）、被拒绝人员名单（BIS——出口特权被拒）、未经核实名单（BIS——无法核实最终用途）、军事最终用户名单（BIS）、非SDN菜单式制裁（OFAC）。筛查必须涵盖交易中的所有方：买方、卖方、收货人、最终用户、货运代理、银行和中间收货人。"
+    },
+    {
+      "en-US": "**EU/UK lists:** EU Consolidated Sanctions List, UK OFSI Consolidated List, UK Export Control Joint Unit.",
+      "zh-Hans": "**欧盟/英国名单：** 欧盟综合制裁名单、英国OFSI综合名单、英国出口管制联合小组。"
+    },
+    {
+      "en-US": "**Red flags triggering enhanced due diligence:** Customer reluctant to provide end-use information. Unusual routing (high-value goods through free ports). Customer willing to pay cash for expensive items. Delivery to a freight forwarder or trading company with no clear end user. Product capabilities exceed the stated application. Customer has no business background in the product type. Order patterns inconsistent with customer's business.",
+      "zh-Hans": "**触发强化尽职调查的危险信号：** 客户不愿提供最终用途信息。异常运输路线（高价值货物通过自由港）。客户愿意为昂贵物品支付现金。交付给货运代理或贸易公司，但无明确的最终用户。产品性能超出所述应用范围。客户不具备该产品类型的业务背景。订单模式与客户业务不符。"
+    },
+    {
+      "en-US": "**False positive management:** ~95% of screening hits are false positives. Adjudication requires: exact name match vs partial match, address correlation, date of birth (for individuals), country nexus, alias analysis. Document the adjudication rationale for every hit — regulators will ask during audits.",
+      "zh-Hans": "**误报管理：** 约95%的筛查匹配是误报。判定需要：完全名称匹配与部分匹配、地址关联、出生日期（针对个人）、国家关联、别名分析。记录每次匹配的判定理由——监管机构在审计时会询问。"
+    },
+    {
+      "en-US": "### Regional Specialties",
+      "zh-Hans": "### 区域特色"
+    },
+    {
+      "en-US": "**US CBP:** Centers of Excellence and Expertise (CEEs) specialise by industry. Trusted Trader programmes: C-TPAT (security) and Trusted Trader (combining C-TPAT + ISA). ACE is the single window for all import/export data. Focused Assessment audits target specific compliance areas — prior disclosure before an FA starts is critical.",
+      "zh-Hans": "**美国海关与边境保护局：** 卓越与专业中心按行业划分。可信赖贸易商计划：C-TPAT（安全）和Trusted Trader（结合C-TPAT + ISA）。ACE是所有进出口数据的单一窗口。重点评估审计针对特定合规领域——在FA开始前进行预先披露至关重要。"
+    },
+    {
+      "en-US": "**EU Customs Union:** Common External Tariff (CET) applies uniformly. Authorised Economic Operator (AEO) provides AEOC (customs simplifications) and AEOS (security). Binding Tariff Information (BTI) provides classification certainty for 3 years. Union Customs Code (UCC) governs since 2016.",
+      "zh-Hans": "**欧盟关税同盟：** 共同对外关税统一适用。授权经济运营商提供AEOC（海关简化）和AEOS（安全）。约束性关税信息提供为期3年的归类确定性。自2016年起由《联盟海关法典》管辖。"
+    },
+    {
+      "en-US": "**UK post-Brexit:** UK Global Tariff replaced the CET. Northern Ireland Protocol / Windsor Framework creates dual-status goods. UK Customs Declaration Service (CDS) replaced CHIEF. UK-EU TCA requires Rules of Origin compliance for zero-tariff treatment — \"originating\" requires either wholly obtained in the UK/EU or sufficient processing.",
+      "zh-Hans": "**英国脱欧后：** 英国全球关税取代了CET。《北爱尔兰议定书》/《温莎框架》创造了双重身份货物。英国海关申报服务取代了CHIEF。英国-欧盟贸易与合作协定要求遵守原产地规则以获得零关税待遇——“原产”要求货物完全在英国/欧盟获得或经过充分加工。"
+    },
+    {
+      "en-US": "**China:** CCC (China Compulsory Certification) required for listed product categories before import. China uses 13-digit HS codes. Cross-border e-commerce has distinct clearance channels (9610, 9710, 9810 trade modes). Recent Unreliable Entity List creates new screening obligations.",
+      "zh-Hans": "**中国：** 进口前，列入目录的产品类别需要CCC认证。中国使用13位HS编码。跨境电商有独立的清关渠道。近期发布的不可靠实体清单产生了新的筛查义务。"
+    },
+    {
+      "en-US": "### Penalties and Compliance",
+      "zh-Hans": "### 处罚与合规"
+    },
+    {
+      "en-US": "**US penalty framework under 19 USC § 1592:**",
+      "zh-Hans": "**美国处罚框架：**"
+    },
+    {
+      "en-US": "- **Negligence:** 2× unpaid duties or 20% of dutiable value for first violation. Reduced to 1× or 10% with mitigation. Most common assessment.\n- **Gross negligence:** 4× unpaid duties or 40% of dutiable value. Harder to mitigate — requires showing systemic compliance measures.\n- **Fraud:** Full domestic value of the merchandise. Criminal referral possible. No mitigation without extraordinary cooperation.",
+      "zh-Hans": "* **疏忽：** 未缴关税的2倍或应税价值的20%（首次违规）。经减轻后可降至1倍或10%。最常见的评估。\n* **重大疏忽：** 未缴关税的4倍或应税价值的40%。更难减轻——需要展示系统性合规措施。\n* **欺诈：** 货物的全部国内价值。可能移交刑事调查。除非有特别合作，否则无法减轻。"
+    },
+    {
+      "en-US": "**Prior disclosure (19 CFR § 162.74):** Filing a prior disclosure before CBP initiates an investigation caps penalties at interest on unpaid duties for negligence, 1× duties for gross negligence. This is the single most powerful tool in penalty mitigation. Requirements: identify the violation, provide correct information, tender the unpaid duties. Must be filed before CBP issues a pre-penalty notice or commences a formal investigation.",
+      "zh-Hans": "**预先披露：** 在CBP启动调查前提交预先披露，可将疏忽的处罚上限限定为未缴关税的利息，重大疏忽的处罚上限限定为1倍关税。这是减轻处罚最有力的工具。要求：识别违规行为、提供正确信息、缴纳未付关税。必须在CBP发出预处罚通知或启动正式调查前提交。"
+    },
+    {
+      "en-US": "**Record-keeping:** 19 USC § 1508 requires 5-year retention of all entry records. EU requires 3 years (some member states require 10). Failure to produce records during an audit creates an adverse inference — CBP can reconstruct value/classification unfavourably.",
+      "zh-Hans": "**记录保存：** 要求所有报关记录保存5年。欧盟要求3年（部分成员国要求10年）。审计期间未能提供记录会产生不利推定——CBP可以不利地重构价值/归类。"
+    },
+    {
+      "en-US": "## Decision Frameworks",
+      "zh-Hans": "## 决策框架"
+    },
+    {
+      "en-US": "### Classification Decision Logic",
+      "zh-Hans": "### 归类决策逻辑"
+    },
+    {
+      "en-US": "When classifying a product, follow this sequence without shortcuts. Convert it into an internal decision tree before automating any tariff-classification workflow.",
+      "zh-Hans": "对产品进行归类时，请按此顺序执行，不要走捷径。在自动化任何关税归类工作流程之前，将其转换为内部决策树。"
+    },
+    {
+      "en-US": "1. **Identify the good precisely.** Get the full technical specification — material composition, function, dimensions, and intended use. Never classify from a product name alone.\n2. **Determine the Section and Chapter.** Use the Section and Chapter notes to confirm or exclude. Chapter notes override heading text.\n3. **Apply GRI 1.** Read the heading terms literally. If only one heading covers the good, classification is decided.\n4. **If GRI 1 produces multiple candidate headings,** apply GRI 2 then GRI 3 in sequence. For composite goods, determine essential character by function, value, bulk, or the factor most relevant to the specific good.\n5. **Validate at the subheading level.** Apply GRI 6. Check subheading notes. Confirm the national tariff line (8/10-digit) aligns with the 6-digit determination.\n6. **Check for binding rulings.** Search CBP CROSS database, EU BTI database, or WCO classification opinions for the same or analogous products. Existing rulings are persuasive even if not directly binding.\n7. **Document the rationale.** Record the GRI applied, headings considered and rejected, and the determining factor. This documentation is your defence in an audit.",
+      "zh-Hans": "1. **精确识别货物。** 获取完整的技术规格——材料成分、功能、尺寸和预期用途。切勿仅凭产品名称归类。\n2. **确定节和章。** 使用节注释和章注释来确认或排除。章注释优先于品目条文。\n3. **应用归类总规则一。** 按字面意思解读品目条文。如果只有一个品目涵盖该货物，则归类确定。\n4. **如果归类总规则一产生多个候选品目，** 则依次应用归类总规则二和归类总规则三。对于组合货物，根据功能、价值、体积或对特定货物最相关的因素来确定基本特征。\n5. **在子目级别进行验证。** 应用归类总规则六。检查子目注释。确认国家税则子目与6位编码确定一致。\n6. **检查约束性裁定。** 在CBP CROSS数据库、欧盟BTI数据库或WCO归类意见中搜索相同或类似产品。现有裁定即使不直接具有约束力，也具有说服力。\n7. **记录理由。** 记录应用的归类总规则、考虑和否决的品目以及决定因素。此文件是您在审计中的辩护依据。"
+    },
+    {
+      "en-US": "### FTA Qualification Analysis",
+      "zh-Hans": "### 自由贸易协定资格分析"
+    },
+    {
+      "en-US": "1. **Identify applicable FTAs** based on origin and destination countries.\n2. **Determine the product-specific rule of origin.** Look up the HS heading in the relevant FTA's annex. Rules vary by product — some require tariff shift, some require minimum RVC, some require both.\n3. **Trace all non-originating materials** through the bill of materials. Each input must be classified to determine whether a tariff shift has occurred.\n4. **Calculate RVC if required.** Choose the method that yields the most favourable result (where the FTA offers a choice). Verify all cost data with the supplier.\n5. **Apply cumulation rules.** USMCA allows accumulation across the US, Mexico, and Canada. EU-UK TCA allows bilateral cumulation. RCEP allows diagonal cumulation among all 15 parties.\n6. **Prepare the certification.** USMCA certifications must include nine prescribed data elements. EUR.1 requires Chamber of Commerce or customs authority endorsement. Retain supporting documentation for 5 years (USMCA) or 4 years (EU).",
+      "zh-Hans": "1. 根据原产国和目的国**确定适用的自由贸易协定**。\n2. **确定产品特定原产地规则。** 在相关自由贸易协定的附件中查找HS品目。规则因产品而异——有些要求税则归类改变，有些要求最低区域价值成分，有些要求两者兼备。\n3. **追溯所有非原产材料。** 每个投入品都必须归类，以确定是否发生了税则归类改变。\n4. **如需要，计算区域价值成分。** 选择产生最有利结果的方法。向供应商核实所有成本数据。\n5. **应用累积规则。** USMCA允许在美国、墨西哥和加拿大之间累积。欧盟-英国贸易与合作协定允许双边累积。RCEP允许在所有15个缔约方之间对角累积。\n6. **准备原产地证明。** USMCA原产地证明必须包含九个规定的数据要素。EUR.1需要商会或海关当局背书。保留支持文件5年或4年。"
+    },
+    {
+      "en-US": "### Valuation Method Selection",
+      "zh-Hans": "### 估价方法选择"
+    },
+    {
+      "en-US": "Customs valuation follows the WTO Agreement on Customs Valuation (based on GATT Article VII). Methods are applied in hierarchical order — you only proceed to the next method when the prior method cannot be applied:",
+      "zh-Hans": "海关估价遵循WTO《海关估价协定》。方法按层级顺序应用——仅当无法应用前一种方法时，才进行到下一种方法："
+    },
+    {
+      "en-US": "1. **Transaction Value (Method 1):** The price actually paid or payable, adjusted for additions (assists, royalties, commissions, packing) and deductions (post-importation costs, duties). This is used for ~90% of entries. Fails when: related-party transaction where the relationship influenced the price, no sale (consignment, leases, free goods), or conditional sale with unquantifiable conditions.\n2. **Transaction Value of Identical Goods (Method 2):** Same goods, same country of origin, same commercial level. Rarely available because \"identical\" is strictly defined.\n3. **Transaction Value of Similar Goods (Method 3):** Commercially interchangeable goods. Broader than Method 2 but still requires same country of origin.\n4. **Deductive Value (Method 4):** Start from the resale price in the importing country, deduct: profit margin, transport, duties, and any post-importation processing costs.\n5. **Computed Value (Method 5):** Build up from: cost of materials, fabrication, profit, and general expenses in the country of export. Only available if the exporter cooperates with cost data.\n6. **Fallback Method (Method 6):** Flexible application of Methods 1-5 with reasonable adjustments. Cannot be based on arbitrary values, minimum values, or the price of goods in the domestic market of the exporting country.",
+      "zh-Hans": "1. **成交价格法：** 实际支付或应付的价格，根据增项和减项进行调整。用于约90%的报关。在以下情况失效：关联方交易且关系影响了价格、无销售、或有销售且条件无法量化。\n2. **相同货物成交价格法：** 相同货物、相同原产国、相同商业水平。很少可用，因为“相同”定义严格。\n3. **类似货物成交价格法：** 商业上可互换的货物。比方法2宽泛，但仍要求相同原产国。\n4. **倒扣价格法：** 从进口国的转售价格开始，扣除：利润率、运输费、关税以及任何进口后加工成本。\n5. **计算价格法：** 根据出口国的材料成本、加工费、利润和一般费用构建。仅在出口商配合提供成本数据时可用。\n6. **合理方法：** 灵活应用方法1-5并进行合理调整。不能基于任意价值、最低价值或出口国国内市场货物价格。"
+    },
+    {
+      "en-US": "### Screening Hit Assessment",
+      "zh-Hans": "### 筛查匹配评估"
+    },
+    {
+      "en-US": "When a restricted party screening tool returns a match, do not block the transaction automatically or clear it without investigation. Follow this protocol:",
+      "zh-Hans": "当受限方筛查工具返回匹配时，不要自动阻止交易或未经调查即放行。遵循以下协议："
+    },
+    {
+      "en-US": "1. **Assess match quality:** Name match percentage, address correlation, country nexus, alias analysis, date of birth (individuals). Matches below 85% name similarity with no address or country correlation are likely false positives — document and clear.\n2. **Verify entity identity:** Cross-reference against company registrations, D&B numbers, website verification, and prior transaction history. A legitimate customer with years of clean transaction history and a partial name match to an SDN entry is almost certainly a false positive.\n3. **Check list specifics:** SDN hits require OFAC licence to proceed. Entity List hits require BIS licence with a presumption of denial. Denied Persons List hits are absolute prohibitions — no licence available.\n4. **Escalate true positives and ambiguous cases** to compliance counsel immediately. Never proceed with a transaction while a screening hit is unresolved.\n5. **Document everything.** Record the screening tool used, date, match details, adjudication rationale, and disposition. Retain for 5 years minimum.",
+      "zh-Hans": "1. **评估匹配质量：** 名称匹配百分比、地址关联、国家关联、别名分析、出生日期。名称相似度低于85%且无地址或国家关联的匹配很可能是误报——记录并放行。\n2. **核实实体身份：** 交叉核对公司注册信息、邓白氏编码、网站验证以及过往交易历史。一个拥有多年清洁交易历史且与SDN条目部分名称匹配的合法客户几乎肯定是误报。\n3. **检查清单具体要求：** SDN匹配需要OFAC许可证才能进行。实体清单匹配需要BIS许可证且推定拒绝。被拒绝人员清单匹配是绝对禁止——无许可证可用。\n4. **将真实匹配和模糊案例**立即上报给合规法律顾问。在筛查匹配未解决时，切勿继续进行交易。\n5. **记录一切。** 记录使用的筛查工具、日期、匹配详情、判定理由和处理结果。至少保留5年。"
+    },
+    {
+      "en-US": "## Key Edge Cases",
+      "zh-Hans": "## 关键边缘案例"
+    },
+    {
+      "en-US": "These are situations where the obvious approach is wrong. Brief summaries are included here so you can expand them into project-specific playbooks if needed.",
+      "zh-Hans": "这些是明显方法错误的情况。此处包含简要摘要，以便您可以根据需要将其扩展为特定项目的操作手册。"
+    },
+    {
+      "en-US": "1. **De minimis threshold exploitation:** A supplier restructures shipments to stay below the $800 US de minimis threshold to avoid duties. Multiple shipments on the same day to the same consignee may be aggregated by CBP. Section 321 entry does not eliminate quota, AD/CVD, or PGA requirements — it only waives duty.\n\n2. **Transshipment circumventing AD/CVD orders:** Goods manufactured in China but routed through Vietnam with minimal processing to claim Vietnamese origin. CBP uses evasion investigations (EAPA) with subpoena power. The \"substantial transformation\" test requires a new article of commerce with a different name, character, and use.\n\n3. **Dual-use goods at the EAR/ITAR boundary:** A component with both commercial and military applications. ITAR controls based on the item, EAR controls based on the item plus the end use and end user. Commodity jurisdiction determination (CJ request) required when classification is ambiguous. Filing under the wrong regime is a violation of both.\n\n4. **Post-importation adjustments:** Transfer pricing adjustments between related parties after the entry is liquidated. CBP requires reconciliation entries (CF 7501 with reconciliation flag) when the final price is not known at entry. Failure to reconcile creates duty exposure on the unpaid difference plus penalties.\n\n5. **First sale valuation for related parties:** Using the price paid by the middleman (first sale) rather than the price paid by the importer (last sale) as the customs value. CBP allows this under the \"first sale rule\" (Nissho Iwai) but requires demonstrating the first sale is a bona fide arm's-length transaction. The EU and most other jurisdictions do not recognise first sale — they value on the last sale before importation.\n\n6. **Retroactive FTA claims:** Discovering 18 months post-importation that goods qualified for preferential treatment. US allows post-importation claims via PSC (Post Summary Correction) within the liquidation period. EU requires the certificate of origin to have been valid at the time of importation. Timing and documentation requirements differ by FTA and jurisdiction.\n\n7. **Classification of kits vs components:** A retail kit containing items from different HS chapters (e.g., a camping kit with a tent, stove, and utensils). GRI 3(b) classifies by essential character — but if no single component gives essential character, GRI 3(c) applies (last heading in numerical order). Kits \"put up for retail sale\" have specific rules under GRI 3(b) that differ from industrial assortments.\n\n8. **Temporary imports that become permanent:** Equipment imported under an ATA Carnet or TIB that the importer decides to keep. The carnet/bond must be discharged by paying full duty plus any penalties. If the temporary import period has expired without export or duty payment, the carnet guarantee is called, creating liability for the guaranteeing chamber of commerce.",
+      "zh-Hans": "1. **微量阈值利用：** 供应商重组发货以保持在800美元美国微量阈值以下，从而避免关税。CBP可能会将同一天发给同一收货人的多批货物进行汇总。第321条款入境不能免除配额、反倾销/反补贴税或其他政府机构要求——它仅免除关税。\n\n2. **转运规避反倾销/反补贴税令：** 在中国制造但经越南转运且仅进行最低限度加工以声称越南原产的货物。CBP使用具有传票权的规避调查。“实质性改变”测试要求产生具有新名称、特征和用途的新商品。\n\n3. **处于EAR/ITAR边界的军民两用物项：** 具有商业和军事双重应用的部件。ITAR基于物项本身进行管制，EAR基于物项加最终用途和最终用户进行管制。当归类模糊时，需要进行商品管辖裁定。在错误的制度下申报会同时违反两者。\n\n4. **进口后调整：** 关联方之间在报关单结关后的转让定价调整。当最终价格在入境时未知时，CBP要求进行汇总报关。未能汇总会产生未付差额的关税风险加上罚款。\n\n5. **关联方的首次销售估价：** 使用中间商支付的价格（首次销售）而非进口商支付的价格（最后销售）作为海关价值。CBP允许根据“首次销售规则”这样做，但需要证明首次销售是真实的公平交易。欧盟和大多数其他司法管辖区不承认首次销售——它们根据进口前的最后销售进行估价。\n\n6. **追溯性自由贸易协定申请：** 进口后18个月发现货物符合优惠待遇条件。美国允许在清算期内通过PSC进行进口后申请。欧盟要求原产地证书在进口时有效。时间和文件要求因自由贸易协定和司法管辖区而异。\n\n7. **成套货品与部件的归类：** 包含来自不同HS章节物品的零售套装。归类总规则三(b)按基本特征归类——但如果没有任何单一部件赋予基本特征，则适用归类总规则三(c)。“零售包装”的成套货品在归类总规则三(b)下有特定规则，与工业成套货品不同。\n\n8. **临时进口变为永久进口：** 根据ATA单证册或TIB进口的设备，进口商决定保留。必须通过支付全额关税加任何罚款来核销单证册/担保。如果临时进口期限已过而未出口或支付关税，则单证册担保将被追索，担保商会将产生责任。"
+    },
+    {
+      "en-US": "## Communication Patterns",
+      "zh-Hans": "## 沟通模式"
+    },
+    {
+      "en-US": "### Tone Calibration",
+      "zh-Hans": "### 语气调整"
+    },
+    {
+      "en-US": "Match communication tone to the counterparty, regulatory context, and risk level:",
+      "zh-Hans": "根据沟通对象、监管环境和风险级别调整沟通语气："
+    },
+    {
+      "en-US": "- **Customs broker (routine):** Collaborative and precise. Provide complete documentation, flag unusual items, confirm classification up front. \"HS 8471.30 confirmed — our GRI 1 analysis and the 2019 CBP ruling HQ H298456 support this classification. Packed 3 of 4 required docs, C/O follows by EOD.\"\n- **Customs broker (urgent hold/exam):** Direct, factual, time-sensitive. \"Shipment held at LA/LB — CBP requesting manufacturer documentation. Sending MID verification and production records now. Need your filing within 2 hours to avoid demurrage.\"\n- **Regulatory authority (ruling request):** Formal, thoroughly documented, legally precise. Follow the agency's prescribed format exactly. Provide samples if requested. Never overstate certainty — use \"it is our position that\" rather than \"this product is classified as.\"\n- **Regulatory authority (penalty response):** Measured, cooperative, factual. Acknowledge the error if it exists. Present mitigation factors systematically. Never admit fraud when the facts support negligence.\n- **Internal compliance advisory:** Clear business impact, specific action items, deadline. Translate regulatory requirements into operational language. \"Effective March 1, all lithium battery imports require UN 38.3 test summaries at entry. Operations must collect these from suppliers before booking. Non-compliance: $10K+ per shipment in fines and cargo holds.\"\n- **Supplier questionnaire:** Specific, structured, explain why you need the information. Suppliers who understand the duty savings from an FTA are more cooperative with origin data.",
+      "zh-Hans": "* **报关代理（常规业务）：** 协作且精准。提供完整文件，标记异常项目，预先确认归类。\"HS 8471.30 已确认——我们的 GRI 1 分析和 2019 年 CBP 裁定 HQ H298456 支持此归类。所需 4 份文件中的 3 份已备好，原产地证书将在今日下班前提供。\"\n* **报关代理（紧急扣留/查验）：** 直接、客观、时效性强。\"货物在洛杉矶/长滩港被扣留——CBP 要求提供制造商文件。现正发送制造商识别验证和生产记录。为避免滞箱费，需贵方在 2 小时内完成申报。\"\n* **监管机构（裁定申请）：** 正式、文件详尽、法律措辞精确。严格遵循机构规定的格式。如要求，提供样品。切勿过度断言——使用\"我们的立场是\"，而非\"此产品归类为\"。\n* **监管机构（处罚回应）：** 审慎、合作、基于事实。若存在错误，予以承认。系统性地提出减轻因素。在事实支持疏忽的情况下，切勿承认欺诈。\n* **内部合规建议：** 明确业务影响、具体行动项、截止日期。将监管要求转化为操作语言。\"自 3 月 1 日起，所有锂电池进口在报关时均需提供 UN 38.3 测试摘要。运营部门必须在订舱前向供应商收集这些文件。不合规后果：每票货物罚款 1 万美元以上并导致货物扣留。\"\n* **供应商问卷：** 具体、结构化、解释为何需要该信息。了解自贸协定能带来关税节省的供应商，在提供原产地数据方面会更配合。"
+    },
+    {
+      "en-US": "### Key Templates",
+      "zh-Hans": "### 关键模板"
+    },
+    {
+      "en-US": "Brief templates appear below. Adapt them to your broker, customs counsel, and regulatory workflows before using them in production.",
+      "zh-Hans": "以下是简要模板。在用于生产环境前，请根据您的报关代理、海关法律顾问和监管工作流程进行调整。"
+    },
+    {
+      "en-US": "**Customs broker instructions:** Subject: `Entry Instructions — {PO/shipment_ref} — {origin} to {destination}`. Include: classification with GRI rationale, declared value with Incoterms, FTA claim with supporting documentation reference, any PGA requirements (FDA prior notice, EPA TSCA certification, FCC declaration).",
+      "zh-Hans": "**报关代理指示：** 主题：`Entry Instructions — {PO/shipment_ref} — {origin} to {destination}`。包含：归类及 GRI 依据、申报价值及贸易术语、自贸协定声明及支持文件索引、任何其他政府机构要求（如 FDA 预先通知、EPA TSCA 认证、FCC 声明）。"
+    },
+    {
+      "en-US": "**Prior disclosure filing:** Must be addressed to the CBP port director or Fines, Penalties and Forfeitures office with jurisdiction. Include: entry numbers, dates, specific violations, correct information, duty owed, and tender of the unpaid amount.",
+      "zh-Hans": "**主动披露申报：** 必须提交给有管辖权的 CBP 口岸关长或罚款、处罚及没收办公室。包含：报关单号、日期、具体违规事项、正确信息、应付关税、以及未付金额的缴款。"
+    },
+    {
+      "en-US": "**Internal compliance alert:** Subject: `COMPLIANCE ACTION REQUIRED: {topic} — Effective {date}`. Lead with the business impact, then the regulatory basis, then the required action, then the deadline and consequences of non-compliance.",
+      "zh-Hans": "**内部合规警报：** 主题：`COMPLIANCE ACTION REQUIRED: {topic} — Effective {date}`。开头说明业务影响，其次是监管依据，然后是所需行动，最后是截止日期及不合规后果。"
+    },
+    {
+      "en-US": "## Escalation Protocols",
+      "zh-Hans": "## 升级协议"
+    },
+    {
+      "en-US": "### Automatic Escalation Triggers",
+      "zh-Hans": "### 自动升级触发条件"
+    },
+    {
+      "en-US": "| Trigger | Action | Timeline |\n|---|---|---|\n| CBP detention or seizure | Notify VP and legal counsel | Within 1 hour |\n| Restricted party screening true positive | Halt transaction, notify compliance officer and legal | Immediately |\n| Potential penalty exposure > $50,000 | Notify VP Trade Compliance and General Counsel | Within 2 hours |\n| Customs examination with discrepancy found | Assign dedicated specialist, notify broker | Within 4 hours |\n| Denied party / SDN match confirmed | Full stop on all transactions with the entity globally | Immediately |\n| AD/CVD evasion investigation received | Retain outside trade counsel | Within 24 hours |\n| FTA origin audit from foreign customs authority | Notify all affected suppliers, begin documentation review | Within 48 hours |\n| Voluntary self-disclosure decision | Legal counsel approval required before filing | Before submission |",
+      "zh-Hans": "| 触发条件 | 行动 | 时间线 |\n|---|---|---|\n| CBP 扣留或没收 | 通知副总裁和法律顾问 | 1 小时内 |\n| 受限方筛查确认为真阳性 | 暂停交易，通知合规官和法律部门 | 立即 |\n| 潜在处罚风险 > 50,000 美元 | 通知贸易合规副总裁和总法律顾问 | 2 小时内 |\n| 海关查验发现差异 | 指派专职专员，通知报关代理 | 4 小时内 |\n| 被拒方 / SDN 名单匹配确认 | 立即全面停止与该实体的所有全球交易 | 立即 |\n| 收到反倾销/反补贴税规避调查通知 | 聘请外部贸易法律顾问 | 24 小时内 |\n| 收到外国海关机构的自贸协定原产地审计通知 | 通知所有受影响供应商，开始文件审查 | 48 小时内 |\n| 决定进行自愿自我披露 | 申报前必须获得法律顾问批准 | 提交前 |"
+    },
+    {
+      "en-US": "### Escalation Chain",
+      "zh-Hans": "### 升级链"
+    },
+    {
+      "en-US": "Level 1 (Analyst) → Level 2 (Trade Compliance Manager, 4 hours) → Level 3 (Director of Compliance, 24 hours) → Level 4 (VP Trade Compliance, 48 hours) → Level 5 (General Counsel / C-suite, immediate for seizures, SDN matches, or penalty exposure > $100K)",
+      "zh-Hans": "级别 1（分析师）→ 级别 2（贸易合规经理，4 小时）→ 级别 3（合规总监，24 小时）→ 级别 4（贸易合规副总裁，48 小时）→ 级别 5（总法律顾问 / 最高管理层，针对没收、SDN 匹配或处罚风险 > 10 万美元的情况立即处理）"
+    },
+    {
+      "en-US": "## Performance Indicators",
+      "zh-Hans": "## 绩效指标"
+    },
+    {
+      "en-US": "Track these metrics monthly and trend quarterly:",
+      "zh-Hans": "每月跟踪这些指标，并按季度分析趋势："
+    },
+    {
+      "en-US": "| Metric | Target | Red Flag |\n|---|---|---|\n| Classification accuracy (post-audit) | > 98% | < 95% |\n| FTA utilization rate (eligible shipments) | > 90% | < 70% |\n| Entry rejection rate | < 2% | > 5% |\n| Prior disclosure frequency | < 2 per year | > 4 per year |\n| Screening false positive adjudication time | < 4 hours | > 24 hours |\n| Duty savings captured (FTA + FTZ + drawback) | Track trend | Declining quarter-over-quarter |\n| CBP examination rate | < 3% | > 7% |\n| Penalty exposure (annual) | $0 | Any material penalty assessed |",
+      "zh-Hans": "| 指标 | 目标 | 红色警报 |\n|---|---|---|\n| 归类准确率（审计后） | > 98% | < 95% |\n| 自贸协定利用率（符合条件的货物） | > 90% | < 70% |\n| 报关单拒收率 | < 2% | > 5% |\n| 主动披露频率 | < 2 次/年 | > 4 次/年 |\n| 筛查误报判定时间 | < 4 小时 | > 24 小时 |\n| 实现的关税节省（自贸协定 + 外贸区 + 退税） | 跟踪趋势 | 季度环比下降 |\n| CBP 查验率 | < 3% | > 7% |\n| 处罚风险（年度） | 0 美元 | 任何重大已评估处罚 |"
+    },
+    {
+      "en-US": "## Additional Resources",
+      "zh-Hans": "## 其他资源"
+    },
+    {
+      "en-US": "- Pair this skill with an internal HS classification log, broker escalation matrix, and a list of jurisdictions where your team has non-resident importer or FTZ coverage.\n- Record the valuation assumptions your organization uses for U.S., EU, and APAC lanes so duty calculations stay consistent across teams.",
+      "zh-Hans": "* 将此技能与内部 HS 归类日志、报关代理升级矩阵以及一份列有您团队拥有非居民进口商或外贸区覆盖权限的司法管辖区清单结合使用。\n* 记录贵组织用于美国、欧盟和亚太航线的估价假设，以确保各团队间的关税计算保持一致。"
+    }
+  ]
+}

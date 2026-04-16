@@ -1,30 +1,47 @@
 # 钩子
 
-钩子是事件驱动的自动化程序，在 Claude Code 工具执行前后触发。它们用于强制执行代码质量、及早发现错误以及自动化重复性检查。
+钩子是事件驱动的自动化程序，在 Claude Code 工具执行前后触发。它们用于强制执行代码质量、及早发现错误并自动化重复性检查。
 
-## 钩子如何工作
+## 钩子工作原理
 
 ```
 用户请求 → Claude 选择工具 → PreToolUse 钩子运行 → 工具执行 → PostToolUse 钩子运行
 ```
 
-* **PreToolUse** 钩子在工具执行前运行。它们可以**阻止**（退出码 2）或**警告**（stderr 输出但不阻止）。
-* **PostToolUse** 钩子在工具完成后运行。它们可以分析输出但不能阻止执行。
+* **PreToolUse** 钩子在工具执行前运行。它们可以**阻止**（退出码 2）或**警告**（标准错误输出但不阻止）。
+* **PostToolUse** 钩子在工具完成后运行。它们可以分析输出但无法阻止执行。
 * **Stop** 钩子在每次 Claude 响应后运行。
-* **SessionStart/SessionEnd** 钩子在会话生命周期的边界处运行。
+* **SessionStart/SessionEnd** 钩子在会话生命周期边界运行。
 * **PreCompact** 钩子在上下文压缩前运行，适用于保存状态。
 
 ## 本插件中的钩子
+
+## 手动安装这些钩子
+
+对于 Claude Code 手动安装，**不要**将原始仓库的 `hooks.json` 粘贴到 `~/.claude/settings.json` 中，或直接复制到 `~/.claude/hooks/hooks.json`。已检入的文件是面向插件/仓库的，旨在通过 ECC 安装程序安装或作为插件加载。
+
+请改用安装程序，以便钩子命令能根据您实际的 Claude 根目录进行重写：
+
+```bash
+bash ./install.sh --target claude --modules hooks-runtime
+```
+
+```powershell
+pwsh -File .\install.ps1 --target claude --modules hooks-runtime
+```
+
+这将安装解析后的钩子到 `~/.claude/hooks/hooks.json`。在 Windows 上，Claude 配置根目录是 `%USERPROFILE%\\.claude`。
 
 ### PreToolUse 钩子
 
 | 钩子 | 匹配器 | 行为 | 退出码 |
 |------|---------|----------|-----------|
-| **开发服务器拦截器** | `Bash` | 在 tmux 外阻止 `npm run dev` 等命令 — 确保日志可访问 | 2 (拦截) |
-| **Tmux 提醒器** | `Bash` | 对长时间运行命令（npm test、cargo build、docker）建议使用 tmux | 0 (警告) |
-| **Git 推送提醒器** | `Bash` | 在 `git push` 前提醒检查变更 | 0 (警告) |
-| **文档文件警告器** | `Write` | 对非标准 `.md`/`.txt` 文件发出警告（允许 README、CLAUDE、CONTRIBUTING、CHANGELOG、LICENSE、SKILL、docs/、skills/）；跨平台路径处理 | 0 (警告) |
-| **策略性压缩提醒器** | `Edit\|Write` | 建议在逻辑间隔（约每 50 次工具调用）手动执行 `/compact` | 0 (警告) |
+| **开发服务器阻止器** | `Bash` | 在 tmux 外部阻止 `npm run dev` 等命令 — 确保日志可访问 | 2 (阻止) |
+| **Tmux 提醒** | `Bash` | 建议对长时间运行的命令（npm test、cargo build、docker）使用 tmux | 0 (警告) |
+| **Git 推送提醒** | `Bash` | 在 `git push` 前提醒检查更改 | 0 (警告) |
+| **提交前质量检查** | `Bash` | 在 `git commit` 前运行质量检查：对暂存文件进行 lint 检查，当通过 `-m/--message` 提供时验证提交消息格式，检测 console.log/debugger/敏感信息 | 2 (阻止关键问题) / 0 (警告) |
+| **文档文件警告** | `Write` | 警告非标准的 `.md`/`.txt` 文件（允许 README、CLAUDE、CONTRIBUTING、CHANGELOG、LICENSE、SKILL、docs/、skills/）；跨平台路径处理 | 0 (警告) |
+| **策略性压缩** | `Edit\|Write` | 在逻辑间隔（约每 50 次工具调用）建议手动 `/compact` | 0 (警告) |
 
 ### PostToolUse 钩子
 
@@ -32,9 +49,10 @@
 |------|---------|-------------|
 | **PR 记录器** | `Bash` | 在 `gh pr create` 后记录 PR URL 和审查命令 |
 | **构建分析** | `Bash` | 构建命令后的后台分析（异步，非阻塞） |
-| **质量门** | `Edit\|Write\|MultiEdit` | 在编辑后运行快速质量检查 |
+| **质量门禁** | `Edit\|Write\|MultiEdit` | 编辑后运行快速质量检查 |
+| **设计质量检查** | `Edit\|Write\|MultiEdit` | 当前端编辑趋向于通用模板式 UI 时发出警告 |
 | **Prettier 格式化** | `Edit` | 编辑后使用 Prettier 自动格式化 JS/TS 文件 |
-| **TypeScript 检查** | `Edit` | 在编辑 `.ts`/`.tsx` 文件后运行 `tsc --noEmit` |
+| **TypeScript 检查** | `Edit` | 编辑 `tsc --noEmit`/`.ts` 文件后运行 `.tsx` |
 | **console.log 警告** | `Edit` | 警告编辑的文件中存在 `console.log` 语句 |
 
 ### 生命周期钩子
@@ -42,18 +60,19 @@
 | 钩子 | 事件 | 功能 |
 |------|-------|-------------|
 | **会话开始** | `SessionStart` | 加载先前上下文并检测包管理器 |
-| **预压缩** | `PreCompact` | 在上下文压缩前保存状态 |
-| **Console.log 审计** | `Stop` | 每次响应后检查所有修改的文件是否有 `console.log` |
+| **压缩前** | `PreCompact` | 在上下文压缩前保存状态 |
+| **Console.log 审计** | `Stop` | 每次响应后检查所有修改的文件中是否有 `console.log` |
 | **会话摘要** | `Stop` | 当转录路径可用时持久化会话状态 |
-| **模式提取** | `Stop` | 评估会话以提取可抽取的模式（持续学习） |
-| **成本追踪器** | `Stop` | 发出轻量级的运行成本遥测标记 |
+| **模式提取** | `Stop` | 评估会话以提取可学习的模式（持续学习） |
+| **成本跟踪器** | `Stop` | 发出轻量级的运行成本遥测标记 |
+| **桌面通知** | `Stop` | 发送 macOS 桌面通知，附带任务摘要（标准+） |
 | **会话结束标记** | `SessionEnd` | 生命周期标记和清理日志 |
 
 ## 自定义钩子
 
 ### 禁用钩子
 
-在 `hooks.json` 中移除或注释掉钩子条目。如果作为插件安装，请在您的 `~/.claude/settings.json` 中覆盖：
+移除或注释掉 `hooks.json` 中的钩子条目。如果作为插件安装，请在您的 `~/.claude/settings.json` 中覆盖：
 
 ```json
 {
@@ -83,13 +102,13 @@ export ECC_DISABLED_HOOKS="pre:bash:tmux-reminder,post:edit:typecheck"
 
 配置文件：
 
-* `minimal` —— 仅保留必要的生命周期和安全钩子。
-* `standard` —— 默认；平衡的质量 + 安全检查。
-* `strict` —— 启用额外的提醒和更严格的防护措施。
+* `minimal` — 仅保留必要的生命周期和安全钩子。
+* `standard` — 默认；平衡的质量 + 安全检查。
+* `strict` — 启用额外的提醒和更严格的防护。
 
-### 编写你自己的钩子
+### 编写您自己的钩子
 
-钩子是 shell 命令，通过 stdin 接收 JSON 格式的工具输入，并且必须在 stdout 上输出 JSON。
+钩子是接收 JSON 格式工具输入（通过标准输入）并必须在标准输出上输出 JSON 的 shell 命令。
 
 **基本结构：**
 
@@ -118,9 +137,9 @@ process.stdin.on('end', () => {
 
 **退出码：**
 
-* `0` —— 成功（继续执行）
-* `2` —— 阻止工具调用（仅限 PreToolUse）
-* 其他非零值 —— 错误（记录日志但不阻止）
+* `0` — 成功（继续执行）
+* `2` — 阻止工具调用（仅限 PreToolUse）
+* 其他非零值 — 错误（记录但不阻止）
 
 ### 钩子输入模式
 
@@ -153,9 +172,9 @@ interface HookInput {
 }
 ```
 
-异步钩子在后台运行。它们不能阻止工具执行。
+异步钩子在后台运行。它们无法阻止工具执行。
 
-## 常用钩子配方
+## 常见钩子示例
 
 ### 警告 TODO 注释
 
@@ -209,12 +228,12 @@ interface HookInput {
 }
 ```
 
-## 跨平台注意事项
+## 跨平台说明
 
-钩子逻辑在 Node.js 脚本中实现，以便在 Windows、macOS 和 Linux 上具有跨平台行为。保留了少量 shell 包装器用于持续学习的观察者钩子；这些包装器受配置文件控制，并具有 Windows 安全的回退行为。
+钩子逻辑在 Node.js 脚本中实现，以确保在 Windows、macOS 和 Linux 上的跨平台行为。保留了少量 shell 包装器用于持续学习的观察者钩子；这些包装器受配置文件控制，并具有 Windows 安全的回退行为。
 
 ## 相关
 
-* [rules/common/hooks.md](../rules/common/hooks.md) —— 钩子架构指南
-* [skills/strategic-compact/](../../../skills/strategic-compact) —— 策略性压缩技能
-* [scripts/hooks/](../../../scripts/hooks) —— 钩子脚本实现
+* [rules/common/hooks.md](../rules/common/hooks.md) — 钩子架构指南
+* [skills/strategic-compact/](../../../skills/strategic-compact) — 策略性压缩技能
+* [scripts/hooks/](../../../scripts/hooks) — 钩子脚本实现

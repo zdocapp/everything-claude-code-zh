@@ -1,0 +1,30 @@
+{
+  "sourceFile": "rules/kotlin/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n  - \"**/build.gradle.kts\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n  - \"**/build.gradle.kts\"\n---"
+    },
+    {
+      "en-US": "# Kotlin Hooks",
+      "zh-Hans": "# Kotlin Hooks"
+    },
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with Kotlin-specific content.",
+      "zh-Hans": "> 此文件扩展了 [common/hooks.md](../common/hooks.md)，添加了 Kotlin 特定的内容。"
+    },
+    {
+      "en-US": "## PostToolUse Hooks",
+      "zh-Hans": "## PostToolUse Hooks"
+    },
+    {
+      "en-US": "Configure in `~/.claude/settings.json`:",
+      "zh-Hans": "在 `~/.claude/settings.json` 中配置："
+    },
+    {
+      "en-US": "- **ktfmt/ktlint**: Auto-format `.kt` and `.kts` files after edit\n- **detekt**: Run static analysis after editing Kotlin files\n- **./gradlew build**: Verify compilation after changes",
+      "zh-Hans": "* **ktfmt/ktlint**：编辑后自动格式化 `.kt` 和 `.kts` 文件\n* **detekt**：编辑 Kotlin 文件后运行静态分析\n* **./gradlew build**：更改后验证编译"
+    }
+  ]
+}

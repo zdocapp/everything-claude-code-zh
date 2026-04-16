@@ -1,0 +1,242 @@
+{
+  "sourceFile": "skills/santa-method/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: santa-method\ndescription: \"Multi-agent adversarial verification with convergence loop. Two independent review agents must both pass before output ships.\"\norigin: \"Ronald Skelton - Founder, RapportScore.ai\"\n---",
+      "zh-Hans": "---\nname: santa-method\ndescription: \"多智能体对抗验证与收敛循环。两个独立的审查智能体必须都通过后才能输出结果。\"\norigin: \"Ronald Skelton - Founder, RapportScore.ai\"\n---"
+    },
+    {
+      "en-US": "# Santa Method",
+      "zh-Hans": "# 圣诞老人方法"
+    },
+    {
+      "en-US": "Multi-agent adversarial verification framework. Make a list, check it twice. If it's naughty, fix it until it's nice.",
+      "zh-Hans": "多智能体对抗性验证框架。列个清单，检查两遍。如果是顽皮的，就修复它直到它变好。"
+    },
+    {
+      "en-US": "The core insight: a single agent reviewing its own output shares the same biases, knowledge gaps, and systematic errors that produced the output. Two independent reviewers with no shared context break this failure mode.",
+      "zh-Hans": "核心洞察：单个智能体审查自己的输出，会带有产生该输出时相同的偏见、知识缺口和系统性错误。两个没有共享上下文、独立的审查者可以打破这种失败模式。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "Invoke this skill when:",
+      "zh-Hans": "在以下情况调用此技能："
+    },
+    {
+      "en-US": "- Output will be published, deployed, or consumed by end users\n- Compliance, regulatory, or brand constraints must be enforced\n- Code ships to production without human review\n- Content accuracy matters (technical docs, educational material, customer-facing copy)\n- Batch generation at scale where spot-checking misses systemic patterns\n- Hallucination risk is elevated (claims, statistics, API references, legal language)",
+      "zh-Hans": "* 输出将被发布、部署或由最终用户消费\n* 必须强制执行合规性、监管或品牌约束\n* 代码未经人工审查即投入生产\n* 内容准确性很重要（技术文档、教育材料、面向客户的文案）\n* 大规模批量生成，其中抽查会遗漏系统性模式\n* 幻觉风险较高（声明、统计数据、API 引用、法律语言）"
+    },
+    {
+      "en-US": "Do NOT use for internal drafts, exploratory research, or tasks with deterministic verification (use build/test/lint pipelines for those).",
+      "zh-Hans": "**不要**用于内部草稿、探索性研究或具有确定性验证的任务（对这些任务使用构建/测试/代码检查流水线）。"
+    },
+    {
+      "en-US": "## Architecture",
+      "zh-Hans": "## 架构"
+    },
+    {
+      "en-US": "```\n┌─────────────┐\n│  GENERATOR   │  Phase 1: Make a List\n│  (Agent A)   │  Produce the deliverable\n└──────┬───────┘\n       │ output\n       ▼\n┌──────────────────────────────┐\n│     DUAL INDEPENDENT REVIEW   │  Phase 2: Check It Twice\n│                                │\n│  ┌───────────┐ ┌───────────┐  │  Two agents, same rubric,\n│  │ Reviewer B │ │ Reviewer C │  │  no shared context\n│  └─────┬─────┘ └─────┬─────┘  │\n│        │              │        │\n└────────┼──────────────┼────────┘\n         │              │\n         ▼              ▼\n┌──────────────────────────────┐\n│        VERDICT GATE           │  Phase 3: Naughty or Nice\n│                                │\n│  B passes AND C passes → NICE  │  Both must pass.\n│  Otherwise → NAUGHTY           │  No exceptions.\n└──────┬──────────────┬─────────┘\n       │              │\n    NICE           NAUGHTY\n       │              │\n       ▼              ▼\n   [ SHIP ]    ┌─────────────┐\n               │  FIX CYCLE   │  Phase 4: Fix Until Nice\n               │              │\n               │ iteration++  │  Collect all flags.\n               │ if i > MAX:  │  Fix all issues.\n               │   escalate   │  Re-run both reviewers.\n               │ else:        │  Loop until convergence.\n               │   goto Ph.2  │\n               └──────────────┘\n```",
+      "zh-Hans": "```\n┌─────────────┐\n│   生成器     │  阶段一：制定清单\n│  (代理 A)   │  产出交付物\n└──────┬───────┘\n       │ 输出\n       ▼\n┌──────────────────────────────┐\n│     双重独立评审              │  阶段二：双重核查\n│                                │\n│  ┌───────────┐ ┌───────────┐  │  两位代理，同一标准，\n│  │ 评审员 B  │ │ 评审员 C  │  │  无共享上下文\n│  └─────┬─────┘ └─────┬─────┘  │\n│        │              │        │\n└────────┼──────────────┼────────┘\n         │              │\n         ▼              ▼\n┌──────────────────────────────┐\n│        裁决门                 │  阶段三：通过与否\n│                                │\n│  B 通过 且 C 通过 → 通过      │  两者必须均通过。\n│  否则 → 不通过                │  无例外情况。\n└──────┬──────────────┬─────────┘\n       │              │\n      通过          不通过\n       │              │\n       ▼              ▼\n   [ 发布 ]    ┌─────────────┐\n               │   修复循环   │  阶段四：修复直至通过\n               │              │\n               │ 迭代次数++   │  收集所有标记。\n               │ 若 i > 最大值:│  修复所有问题。\n               │   升级处理   │  重新运行两位评审员。\n               │ 否则:        │  循环直至收敛。\n               │   跳转至阶段二│\n               └──────────────┘\n```"
+    },
+    {
+      "en-US": "## Phase Details",
+      "zh-Hans": "## 阶段详情"
+    },
+    {
+      "en-US": "### Phase 1: Make a List (Generate)",
+      "zh-Hans": "### 阶段 1：列清单（生成）"
+    },
+    {
+      "en-US": "Execute the primary task. No changes to your normal generation workflow. Santa Method is a post-generation verification layer, not a generation strategy.",
+      "zh-Hans": "执行主要任务。无需改变你正常的生成工作流程。圣诞老人方法是一个生成后验证层，而非生成策略。"
+    },
+    {
+      "en-US": "```python\n# The generator runs as normal\noutput = generate(task_spec)\n```",
+      "zh-Hans": "```python\n# The generator runs as normal\noutput = generate(task_spec)\n```"
+    },
+    {
+      "en-US": "### Phase 2: Check It Twice (Independent Dual Review)",
+      "zh-Hans": "### 阶段 2：检查两遍（独立双重审查）"
+    },
+    {
+      "en-US": "Spawn two review agents in parallel. Critical invariants:",
+      "zh-Hans": "并行启动两个审查智能体。关键的不变条件："
+    },
+    {
+      "en-US": "1. **Context isolation** — neither reviewer sees the other's assessment\n2. **Identical rubric** — both receive the same evaluation criteria\n3. **Same inputs** — both receive the original spec AND the generated output\n4. **Structured output** — each returns a typed verdict, not prose",
+      "zh-Hans": "1. **上下文隔离** — 任一审查者都看不到另一方的评估\n2. **相同评估标准** — 双方收到相同的评估准则\n3. **相同输入** — 双方都收到原始规格说明**和**生成的输出\n4. **结构化输出** — 每个返回一个类型化的裁决，而非散文"
+    },
+    {
+      "en-US": "```python\nREVIEWER_PROMPT = \"\"\"\nYou are an independent quality reviewer. You have NOT seen any other review of this output.\n\n## Task Specification\n{task_spec}\n\n## Output Under Review\n{output}\n\n## Evaluation Rubric\n{rubric}\n\n## Instructions\nEvaluate the output against EACH rubric criterion. For each:\n- PASS: criterion fully met, no issues\n- FAIL: specific issue found (cite the exact problem)\n\nReturn your assessment as structured JSON:\n{\n  \"verdict\": \"PASS\" | \"FAIL\",\n  \"checks\": [\n    {\"criterion\": \"...\", \"result\": \"PASS|FAIL\", \"detail\": \"...\"}\n  ],\n  \"critical_issues\": [\"...\"],   // blockers that must be fixed\n  \"suggestions\": [\"...\"]         // non-blocking improvements\n}\n\nBe rigorous. Your job is to find problems, not to approve.\n\"\"\"\n```",
+      "zh-Hans": "```python\nREVIEWER_PROMPT = \"\"\"\nYou are an independent quality reviewer. You have NOT seen any other review of this output.\n\n## Task Specification\n{task_spec}\n\n## Output Under Review\n{output}\n\n## Evaluation Rubric\n{rubric}\n\n## Instructions\nEvaluate the output against EACH rubric criterion. For each:\n- PASS: criterion fully met, no issues\n- FAIL: specific issue found (cite the exact problem)\n\nReturn your assessment as structured JSON:\n{\n  \"verdict\": \"PASS\" | \"FAIL\",\n  \"checks\": [\n    {\"criterion\": \"...\", \"result\": \"PASS|FAIL\", \"detail\": \"...\"}\n  ],\n  \"critical_issues\": [\"...\"],   // blockers that must be fixed\n  \"suggestions\": [\"...\"]         // non-blocking improvements\n}\n\nBe rigorous. Your job is to find problems, not to approve.\n\"\"\"\n```"
+    },
+    {
+      "en-US": "```python\n# Spawn reviewers in parallel (Claude Code subagents)\nreview_b = Agent(prompt=REVIEWER_PROMPT.format(...), description=\"Santa Reviewer B\")\nreview_c = Agent(prompt=REVIEWER_PROMPT.format(...), description=\"Santa Reviewer C\")\n\n# Both run concurrently — neither sees the other\n```",
+      "zh-Hans": "```python\n# Spawn reviewers in parallel (Claude Code subagents)\nreview_b = Agent(prompt=REVIEWER_PROMPT.format(...), description=\"Santa Reviewer B\")\nreview_c = Agent(prompt=REVIEWER_PROMPT.format(...), description=\"Santa Reviewer C\")\n\n# Both run concurrently — neither sees the other\n```"
+    },
+    {
+      "en-US": "### Rubric Design",
+      "zh-Hans": "### 评估标准设计"
+    },
+    {
+      "en-US": "The rubric is the most important input. Vague rubrics produce vague reviews. Every criterion must have an objective pass/fail condition.",
+      "zh-Hans": "评估标准是最重要的输入。模糊的标准会产生模糊的审查。每个标准都必须有一个客观的通过/失败条件。"
+    },
+    {
+      "en-US": "| Criterion | Pass Condition | Failure Signal |\n|-----------|---------------|----------------|\n| Factual accuracy | All claims verifiable against source material or common knowledge | Invented statistics, wrong version numbers, nonexistent APIs |\n| Hallucination-free | No fabricated entities, quotes, URLs, or references | Links to pages that don't exist, attributed quotes with no source |\n| Completeness | Every requirement in the spec is addressed | Missing sections, skipped edge cases, incomplete coverage |\n| Compliance | Passes all project-specific constraints | Banned terms used, tone violations, regulatory non-compliance |\n| Internal consistency | No contradictions within the output | Section A says X, section B says not-X |\n| Technical correctness | Code compiles/runs, algorithms are sound | Syntax errors, logic bugs, wrong complexity claims |",
+      "zh-Hans": "| 标准 | 通过条件 | 失败信号 |\n|-----------|---------------|----------------|\n| 事实准确性 | 所有声明均可根据源材料或常识验证 | 捏造的统计数据、错误的版本号、不存在的 API |\n| 无幻觉 | 没有捏造的实体、引用、URL 或参考文献 | 指向不存在的页面的链接、无来源的引用 |\n| 完整性 | 规格说明中的每个要求都已处理 | 缺失部分、跳过的边缘情况、覆盖不完整 |\n| 合规性 | 通过所有项目特定的约束 | 使用了禁用术语、语气违规、不合规 |\n| 内部一致性 | 输出内部没有矛盾 | A 部分说 X，B 部分说非 X |\n| 技术正确性 | 代码编译/运行，算法合理 | 语法错误、逻辑错误、错误的复杂度声明 |"
+    },
+    {
+      "en-US": "#### Domain-Specific Rubric Extensions",
+      "zh-Hans": "#### 领域特定的评估标准扩展"
+    },
+    {
+      "en-US": "**Content/Marketing:**",
+      "zh-Hans": "**内容/营销：**"
+    },
+    {
+      "en-US": "- Brand voice adherence\n- SEO requirements met (keyword density, meta tags, structure)\n- No competitor trademark misuse\n- CTA present and correctly linked",
+      "zh-Hans": "* 品牌声音遵循度\n* SEO 要求满足（关键词密度、元标签、结构）\n* 无竞争对手商标滥用\n* 存在 CTA 且链接正确"
+    },
+    {
+      "en-US": "**Code:**",
+      "zh-Hans": "**代码：**"
+    },
+    {
+      "en-US": "- Type safety (no `any` leaks, proper null handling)\n- Error handling coverage\n- Security (no secrets in code, input validation, injection prevention)\n- Test coverage for new paths",
+      "zh-Hans": "* 类型安全（无 `any` 泄漏，正确的空值处理）\n* 错误处理覆盖\n* 安全性（代码中无秘密、输入验证、注入预防）\n* 新路径的测试覆盖"
+    },
+    {
+      "en-US": "**Compliance-Sensitive (regulated, legal, financial):**",
+      "zh-Hans": "**合规敏感（受监管、法律、金融）：**"
+    },
+    {
+      "en-US": "- No outcome guarantees or unsubstantiated claims\n- Required disclaimers present\n- Approved terminology only\n- Jurisdiction-appropriate language",
+      "zh-Hans": "* 无结果保证或无根据的声明\n* 必要的免责声明存在\n* 仅使用批准的术语\n* 符合管辖区域的语言"
+    },
+    {
+      "en-US": "### Phase 3: Naughty or Nice (Verdict Gate)",
+      "zh-Hans": "### 阶段 3：顽皮还是好（裁决门）"
+    },
+    {
+      "en-US": "```python\ndef santa_verdict(review_b, review_c):\n    \"\"\"Both reviewers must pass. No partial credit.\"\"\"\n    if review_b.verdict == \"PASS\" and review_c.verdict == \"PASS\":\n        return \"NICE\"  # Ship it\n\n    # Merge flags from both reviewers, deduplicate\n    all_issues = dedupe(review_b.critical_issues + review_c.critical_issues)\n    all_suggestions = dedupe(review_b.suggestions + review_c.suggestions)\n\n    return \"NAUGHTY\", all_issues, all_suggestions\n```",
+      "zh-Hans": "```python\ndef santa_verdict(review_b, review_c):\n    \"\"\"Both reviewers must pass. No partial credit.\"\"\"\n    if review_b.verdict == \"PASS\" and review_c.verdict == \"PASS\":\n        return \"NICE\"  # Ship it\n\n    # Merge flags from both reviewers, deduplicate\n    all_issues = dedupe(review_b.critical_issues + review_c.critical_issues)\n    all_suggestions = dedupe(review_b.suggestions + review_c.suggestions)\n\n    return \"NAUGHTY\", all_issues, all_suggestions\n```"
+    },
+    {
+      "en-US": "Why both must pass: if only one reviewer catches an issue, that issue is real. The other reviewer's blind spot is exactly the failure mode Santa Method exists to eliminate.",
+      "zh-Hans": "为什么两者都必须通过：如果只有一个审查者发现问题，那么该问题是真实存在的。另一个审查者的盲点正是圣诞老人方法旨在消除的失败模式。"
+    },
+    {
+      "en-US": "### Phase 4: Fix Until Nice (Convergence Loop)",
+      "zh-Hans": "### 阶段 4：修复直到变好（收敛循环）"
+    },
+    {
+      "en-US": "```python\nMAX_ITERATIONS = 3\n\nfor iteration in range(MAX_ITERATIONS):\n    verdict, issues, suggestions = santa_verdict(review_b, review_c)\n\n    if verdict == \"NICE\":\n        log_santa_result(output, iteration, \"passed\")\n        return ship(output)\n\n    # Fix all critical issues (suggestions are optional)\n    output = fix_agent.execute(\n        output=output,\n        issues=issues,\n        instruction=\"Fix ONLY the flagged issues. Do not refactor or add unrequested changes.\"\n    )\n\n    # Re-run BOTH reviewers on fixed output (fresh agents, no memory of previous round)\n    review_b = Agent(prompt=REVIEWER_PROMPT.format(output=output, ...))\n    review_c = Agent(prompt=REVIEWER_PROMPT.format(output=output, ...))\n\n# Exhausted iterations — escalate\nlog_santa_result(output, MAX_ITERATIONS, \"escalated\")\nescalate_to_human(output, issues)\n```",
+      "zh-Hans": "```python\nMAX_ITERATIONS = 3\n\nfor iteration in range(MAX_ITERATIONS):\n    verdict, issues, suggestions = santa_verdict(review_b, review_c)\n\n    if verdict == \"NICE\":\n        log_santa_result(output, iteration, \"passed\")\n        return ship(output)\n\n    # Fix all critical issues (suggestions are optional)\n    output = fix_agent.execute(\n        output=output,\n        issues=issues,\n        instruction=\"Fix ONLY the flagged issues. Do not refactor or add unrequested changes.\"\n    )\n\n    # Re-run BOTH reviewers on fixed output (fresh agents, no memory of previous round)\n    review_b = Agent(prompt=REVIEWER_PROMPT.format(output=output, ...))\n    review_c = Agent(prompt=REVIEWER_PROMPT.format(output=output, ...))\n\n# Exhausted iterations — escalate\nlog_santa_result(output, MAX_ITERATIONS, \"escalated\")\nescalate_to_human(output, issues)\n```"
+    },
+    {
+      "en-US": "Critical: each review round uses **fresh agents**. Reviewers must not carry memory from previous rounds, as prior context creates anchoring bias.",
+      "zh-Hans": "关键点：每一轮审查都使用**新的智能体**。审查者不得携带前几轮的记忆，因为先前的上下文会产生锚定偏见。"
+    },
+    {
+      "en-US": "## Implementation Patterns",
+      "zh-Hans": "## 实现模式"
+    },
+    {
+      "en-US": "### Pattern A: Claude Code Subagents (Recommended)",
+      "zh-Hans": "### 模式 A：Claude 代码子智能体（推荐）"
+    },
+    {
+      "en-US": "Subagents provide true context isolation. Each reviewer is a separate process with no shared state.",
+      "zh-Hans": "子智能体提供真正的上下文隔离。每个审查者都是一个没有共享状态的独立进程。"
+    },
+    {
+      "en-US": "```bash\n# In a Claude Code session, use the Agent tool to spawn reviewers\n# Both agents run in parallel for speed\n```",
+      "zh-Hans": "```bash\n# In a Claude Code session, use the Agent tool to spawn reviewers\n# Both agents run in parallel for speed\n```"
+    },
+    {
+      "en-US": "```python\n# Pseudocode for Agent tool invocation\nreviewer_b = Agent(\n    description=\"Santa Review B\",\n    prompt=f\"Review this output for quality...\\n\\nRUBRIC:\\n{rubric}\\n\\nOUTPUT:\\n{output}\"\n)\nreviewer_c = Agent(\n    description=\"Santa Review C\",\n    prompt=f\"Review this output for quality...\\n\\nRUBRIC:\\n{rubric}\\n\\nOUTPUT:\\n{output}\"\n)\n```",
+      "zh-Hans": "```python\n# Pseudocode for Agent tool invocation\nreviewer_b = Agent(\n    description=\"Santa Review B\",\n    prompt=f\"Review this output for quality...\\n\\nRUBRIC:\\n{rubric}\\n\\nOUTPUT:\\n{output}\"\n)\nreviewer_c = Agent(\n    description=\"Santa Review C\",\n    prompt=f\"Review this output for quality...\\n\\nRUBRIC:\\n{rubric}\\n\\nOUTPUT:\\n{output}\"\n)\n```"
+    },
+    {
+      "en-US": "### Pattern B: Sequential Inline (Fallback)",
+      "zh-Hans": "### 模式 B：顺序内联（备用方案）"
+    },
+    {
+      "en-US": "When subagents aren't available, simulate isolation with explicit context resets:",
+      "zh-Hans": "当子智能体不可用时，通过显式上下文重置来模拟隔离："
+    },
+    {
+      "en-US": "1. Generate output\n2. New context: \"You are Reviewer 1. Evaluate ONLY against this rubric. Find problems.\"\n3. Record findings verbatim\n4. Clear context completely\n5. New context: \"You are Reviewer 2. Evaluate ONLY against this rubric. Find problems.\"\n6. Compare both reviews, fix, repeat",
+      "zh-Hans": "1. 生成输出\n2. 新上下文：\"你是审查者 1。**仅**根据此评估标准进行评估。发现问题。\"\n3. 逐字记录发现的问题\n4. 完全清除上下文\n5. 新上下文：\"你是审查者 2。**仅**根据此评估标准进行评估。发现问题。\"\n6. 比较两次审查结果，修复，重复"
+    },
+    {
+      "en-US": "The subagent pattern is strictly superior — inline simulation risks context bleed between reviewers.",
+      "zh-Hans": "子智能体模式严格更优 — 内联模拟存在审查者之间上下文泄露的风险。"
+    },
+    {
+      "en-US": "### Pattern C: Batch Sampling",
+      "zh-Hans": "### 模式 C：批量抽样"
+    },
+    {
+      "en-US": "For large batches (100+ items), full Santa on every item is cost-prohibitive. Use stratified sampling:",
+      "zh-Hans": "对于大批量（100+ 项），对每一项都运行完整的圣诞老人方法成本过高。使用分层抽样："
+    },
+    {
+      "en-US": "1. Run Santa on a random sample (10-15% of batch, minimum 5 items)\n2. Categorize failures by type (hallucination, compliance, completeness, etc.)\n3. If systematic patterns emerge, apply targeted fixes to the entire batch\n4. Re-sample and re-verify the fixed batch\n5. Continue until a clean sample passes",
+      "zh-Hans": "1. 对随机样本（批次的 10-15%，最少 5 项）运行圣诞老人方法\n2. 按类型（幻觉、合规性、完整性等）对失败进行分类\n3. 如果出现系统性模式，则对整个批次应用针对性修复\n4. 对修复后的批次重新抽样并重新验证\n5. 继续直到干净的样本通过"
+    },
+    {
+      "en-US": "```python\nimport random\n\ndef santa_batch(items, rubric, sample_rate=0.15):\n    sample = random.sample(items, max(5, int(len(items) * sample_rate)))\n\n    for item in sample:\n        result = santa_full(item, rubric)\n        if result.verdict == \"NAUGHTY\":\n            pattern = classify_failure(result.issues)\n            items = batch_fix(items, pattern)  # Fix all items matching pattern\n            return santa_batch(items, rubric)   # Re-sample\n\n    return items  # Clean sample → ship batch\n```",
+      "zh-Hans": "```python\nimport random\n\ndef santa_batch(items, rubric, sample_rate=0.15):\n    sample = random.sample(items, max(5, int(len(items) * sample_rate)))\n\n    for item in sample:\n        result = santa_full(item, rubric)\n        if result.verdict == \"NAUGHTY\":\n            pattern = classify_failure(result.issues)\n            items = batch_fix(items, pattern)  # Fix all items matching pattern\n            return santa_batch(items, rubric)   # Re-sample\n\n    return items  # Clean sample → ship batch\n```"
+    },
+    {
+      "en-US": "## Failure Modes and Mitigations",
+      "zh-Hans": "## 失败模式与缓解措施"
+    },
+    {
+      "en-US": "| Failure Mode | Symptom | Mitigation |\n|-------------|---------|------------|\n| Infinite loop | Reviewers keep finding new issues after fixes | Max iteration cap (3). Escalate. |\n| Rubber stamping | Both reviewers pass everything | Adversarial prompt: \"Your job is to find problems, not approve.\" |\n| Subjective drift | Reviewers flag style preferences, not errors | Tight rubric with objective pass/fail criteria only |\n| Fix regression | Fixing issue A introduces issue B | Fresh reviewers each round catch regressions |\n| Reviewer agreement bias | Both reviewers miss the same thing | Mitigated by independence, not eliminated. For critical output, add a third reviewer or human spot-check. |\n| Cost explosion | Too many iterations on large outputs | Batch sampling pattern. Budget caps per verification cycle. |",
+      "zh-Hans": "| 失败模式 | 症状 | 缓解措施 |\n|-------------|---------|------------|\n| 无限循环 | 修复后审查者不断发现新问题 | 最大迭代次数上限（3）。上报。 |\n| 橡皮图章 | 两个审查者都通过所有内容 | 对抗性提示：\"你的工作是发现问题，而不是批准。\" |\n| 主观漂移 | 审查者标记风格偏好，而非错误 | 仅包含客观通过/失败标准的严格评估标准 |\n| 修复回归 | 修复问题 A 引入了问题 B | 每轮使用新的审查者以捕捉回归 |\n| 审查者一致性偏见 | 两个审查者都遗漏了同一问题 | 通过独立性缓解，但无法消除。对于关键输出，增加第三位审查者或人工抽查。 |\n| 成本爆炸 | 大型输出迭代次数过多 | 批量抽样模式。每个验证周期的预算上限。 |"
+    },
+    {
+      "en-US": "## Integration with Other Skills",
+      "zh-Hans": "## 与其他技能的集成"
+    },
+    {
+      "en-US": "| Skill | Relationship |\n|-------|-------------|\n| Verification Loop | Use for deterministic checks (build, lint, test). Santa for semantic checks (accuracy, hallucinations). Run verification-loop first, Santa second. |\n| Eval Harness | Santa Method results feed eval metrics. Track pass@k across Santa runs to measure generator quality over time. |\n| Continuous Learning v2 | Santa findings become instincts. Repeated failures on the same criterion → learned behavior to avoid the pattern. |\n| Strategic Compact | Run Santa BEFORE compacting. Don't lose review context mid-verification. |",
+      "zh-Hans": "| 技能 | 关系 |\n|-------|-------------|\n| 验证循环 | 用于确定性检查（构建、代码检查、测试）。圣诞老人方法用于语义检查（准确性、幻觉）。先运行验证循环，再运行圣诞老人方法。 |\n| 评估工具 | 圣诞老人方法的结果作为评估指标。跟踪多次圣诞老人运行的 pass@k 以衡量生成器随时间推移的质量。 |\n| 持续学习 v2 | 圣诞老人方法的发现成为本能。同一标准上重复失败 → 学习避免该模式的行为。 |\n| 战略契约 | 在压缩**之前**运行圣诞老人方法。不要在验证中途丢失审查上下文。 |"
+    },
+    {
+      "en-US": "## Metrics",
+      "zh-Hans": "## 指标"
+    },
+    {
+      "en-US": "Track these to measure Santa Method effectiveness:",
+      "zh-Hans": "跟踪这些指标以衡量圣诞老人方法的有效性："
+    },
+    {
+      "en-US": "- **First-pass rate**: % of outputs that pass Santa on round 1 (target: >70%)\n- **Mean iterations to convergence**: average rounds to NICE (target: <1.5)\n- **Issue taxonomy**: distribution of failure types (hallucination vs. completeness vs. compliance)\n- **Reviewer agreement**: % of issues flagged by both reviewers vs. only one (low agreement = rubric needs tightening)\n- **Escape rate**: issues found post-ship that Santa should have caught (target: 0)",
+      "zh-Hans": "* **首次通过率**：第一轮通过圣诞老人方法的输出百分比（目标：>70%）\n* **收敛的平均迭代次数**：达到 NICE 所需的平均轮数（目标：<1.5）\n* **问题分类**：失败类型的分布（幻觉 vs. 完整性 vs. 合规性）\n* **审查者一致性**：被两个审查者标记的问题百分比 vs. 仅被一个审查者标记的问题百分比（一致性低 = 需要收紧评估标准）\n* **逃逸率**：发布后发现但圣诞老人方法本应捕捉到的问题（目标：0）"
+    },
+    {
+      "en-US": "## Cost Analysis",
+      "zh-Hans": "## 成本分析"
+    },
+    {
+      "en-US": "Santa Method costs approximately 2-3x the token cost of generation alone per verification cycle. For most high-stakes output, this is a bargain:",
+      "zh-Hans": "圣诞老人方法的成本大约是每个验证周期单独生成成本的 2-3 倍。对于大多数高风险输出来说，这是划算的："
+    },
+    {
+      "en-US": "```\nCost of Santa = (generation tokens) + 2×(review tokens per round) × (avg rounds)\nCost of NOT Santa = (reputation damage) + (correction effort) + (trust erosion)\n```",
+      "zh-Hans": "```\n圣诞老人的成本 = (生成代币) + 2×(每轮审核代币) × (平均轮数)\n非圣诞老人的成本 = (声誉损害) + (纠正努力) + (信任侵蚀)\n```"
+    },
+    {
+      "en-US": "For batch operations, the sampling pattern reduces cost to ~15-20% of full verification while catching >90% of systematic issues.",
+      "zh-Hans": "对于批量操作，抽样模式将成本降低到完整验证的约 15-20%，同时能捕捉到 >90% 的系统性问题。"
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "sourceFile": "skills/fal-ai-media/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: fal-ai-media\ndescription: Unified media generation via fal.ai MCP — image, video, and audio. Covers text-to-image (Nano Banana), text/image-to-video (Seedance, Kling, Veo 3), text-to-speech (CSM-1B), and video-to-audio (ThinkSound). Use when the user wants to generate images, videos, or audio with AI.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: fal-ai-media\ndescription: 通过 fal.ai MCP 实现统一的媒体生成——图像、视频和音频。涵盖文本到图像（Nano Banana）、文本/图像到视频（Seedance、Kling、Veo 3）、文本到语音（CSM-1B）以及视频到音频（ThinkSound）。当用户想要使用 AI 生成图像、视频或音频时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# fal.ai Media Generation",
+      "zh-Hans": "# fal.ai 媒体生成"
+    },
+    {
+      "en-US": "Generate images, videos, and audio using fal.ai models via MCP.",
+      "zh-Hans": "通过 MCP 使用 fal.ai 模型生成图像、视频和音频。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- User wants to generate images from text prompts\n- Creating videos from text or images\n- Generating speech, music, or sound effects\n- Any media generation task\n- User says \"generate image\", \"create video\", \"text to speech\", \"make a thumbnail\", or similar",
+      "zh-Hans": "* 用户希望根据文本提示生成图像\n* 根据文本或图像创建视频\n* 生成语音、音乐或音效\n* 任何媒体生成任务\n* 用户提及“生成图像”、“创建视频”、“文本转语音”、“制作缩略图”或类似内容"
+    },
+    {
+      "en-US": "## MCP Requirement",
+      "zh-Hans": "## MCP 要求"
+    },
+    {
+      "en-US": "fal.ai MCP server must be configured. Add to `~/.claude.json`:",
+      "zh-Hans": "必须配置 fal.ai MCP 服务器。添加到 `~/.claude.json`："
+    },
+    {
+      "en-US": "```json\n\"fal-ai\": {\n  \"command\": \"npx\",\n  \"args\": [\"-y\", \"fal-ai-mcp-server\"],\n  \"env\": { \"FAL_KEY\": \"YOUR_FAL_KEY_HERE\" }\n}\n```",
+      "zh-Hans": "```json\n\"fal-ai\": {\n  \"command\": \"npx\",\n  \"args\": [\"-y\", \"fal-ai-mcp-server\"],\n  \"env\": { \"FAL_KEY\": \"YOUR_FAL_KEY_HERE\" }\n}\n```"
+    },
+    {
+      "en-US": "Get an API key at [fal.ai](https://fal.ai).",
+      "zh-Hans": "在 [fal.ai](https://fal.ai) 获取 API 密钥。"
+    },
+    {
+      "en-US": "## MCP Tools",
+      "zh-Hans": "## MCP 工具"
+    },
+    {
+      "en-US": "The fal.ai MCP provides these tools:",
+      "zh-Hans": "fal.ai MCP 提供以下工具："
+    },
+    {
+      "en-US": "- `search` — Find available models by keyword\n- `find` — Get model details and parameters\n- `generate` — Run a model with parameters\n- `result` — Check async generation status\n- `status` — Check job status\n- `cancel` — Cancel a running job\n- `estimate_cost` — Estimate generation cost\n- `models` — List popular models\n- `upload` — Upload files for use as inputs",
+      "zh-Hans": "* `search` — 通过关键词查找可用模型\n* `find` — 获取模型详情和参数\n* `generate` — 使用参数运行模型\n* `result` — 检查异步生成状态\n* `status` — 检查任务状态\n* `cancel` — 取消正在运行的任务\n* `estimate_cost` — 估算生成成本\n* `models` — 列出热门模型\n* `upload` — 上传文件以用作输入"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Image Generation",
+      "zh-Hans": "## 图像生成"
+    },
+    {
+      "en-US": "### Nano Banana 2 (Fast)",
+      "zh-Hans": "### Nano Banana 2（快速）"
+    },
+    {
+      "en-US": "Best for: quick iterations, drafts, text-to-image, image editing.",
+      "zh-Hans": "最适合：快速迭代、草稿、文本到图像、图像编辑。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/nano-banana-2\",\n  input_data: {\n    \"prompt\": \"a futuristic cityscape at sunset, cyberpunk style\",\n    \"image_size\": \"landscape_16_9\",\n    \"num_images\": 1,\n    \"seed\": 42\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/nano-banana-2\",\n  input_data: {\n    \"prompt\": \"a futuristic cityscape at sunset, cyberpunk style\",\n    \"image_size\": \"landscape_16_9\",\n    \"num_images\": 1,\n    \"seed\": 42\n  }\n)\n```"
+    },
+    {
+      "en-US": "### Nano Banana Pro (High Fidelity)",
+      "zh-Hans": "### Nano Banana Pro（高保真）"
+    },
+    {
+      "en-US": "Best for: production images, realism, typography, detailed prompts.",
+      "zh-Hans": "最适合：生产级图像、写实感、排版、详细提示。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/nano-banana-pro\",\n  input_data: {\n    \"prompt\": \"professional product photo of wireless headphones on marble surface, studio lighting\",\n    \"image_size\": \"square\",\n    \"num_images\": 1,\n    \"guidance_scale\": 7.5\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/nano-banana-pro\",\n  input_data: {\n    \"prompt\": \"专业产品照片：大理石表面上的无线耳机，影棚灯光\",\n    \"image_size\": \"square\",\n    \"num_images\": 1,\n    \"guidance_scale\": 7.5\n  }\n)\n```"
+    },
+    {
+      "en-US": "### Common Image Parameters",
+      "zh-Hans": "### 常用图像参数"
+    },
+    {
+      "en-US": "| Param | Type | Options | Notes |\n|-------|------|---------|-------|\n| `prompt` | string | required | Describe what you want |\n| `image_size` | string | `square`, `portrait_4_3`, `landscape_16_9`, `portrait_16_9`, `landscape_4_3` | Aspect ratio |\n| `num_images` | number | 1-4 | How many to generate |\n| `seed` | number | any integer | Reproducibility |\n| `guidance_scale` | number | 1-20 | How closely to follow the prompt (higher = more literal) |",
+      "zh-Hans": "| 参数 | 类型 | 选项 | 说明 |\n|-------|------|---------|-------|\n| `prompt` | 字符串 | 必需 | 描述您想要的内容 |\n| `image_size` | 字符串 | `square`, `portrait_4_3`, `landscape_16_9`, `portrait_16_9`, `landscape_4_3` | 宽高比 |\n| `num_images` | 数字 | 1-4 | 生成数量 |\n| `seed` | 数字 | 任意整数 | 可复现性 |\n| `guidance_scale` | 数字 | 1-20 | 遵循提示的紧密程度（值越高越字面） |"
+    },
+    {
+      "en-US": "### Image Editing",
+      "zh-Hans": "### 图像编辑"
+    },
+    {
+      "en-US": "Use Nano Banana 2 with an input image for inpainting, outpainting, or style transfer:",
+      "zh-Hans": "使用 Nano Banana 2 并输入图像进行修复、扩展或风格迁移："
+    },
+    {
+      "en-US": "```\n# First upload the source image\nupload(file_path: \"/path/to/image.png\")\n\n# Then generate with image input\ngenerate(\n  app_id: \"fal-ai/nano-banana-2\",\n  input_data: {\n    \"prompt\": \"same scene but in watercolor style\",\n    \"image_url\": \"<uploaded_url>\",\n    \"image_size\": \"landscape_16_9\"\n  }\n)\n```",
+      "zh-Hans": "```\n# 首先上传源图像\nupload(file_path: \"/path/to/image.png\")\n\n# 然后使用图像输入进行生成\ngenerate(\n  app_id: \"fal-ai/nano-banana-2\",\n  input_data: {\n    \"prompt\": \"相同场景但采用水彩风格\",\n    \"image_url\": \"<uploaded_url>\",\n    \"image_size\": \"landscape_16_9\"\n  }\n)\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Video Generation",
+      "zh-Hans": "## 视频生成"
+    },
+    {
+      "en-US": "### Seedance 1.0 Pro (ByteDance)",
+      "zh-Hans": "### Seedance 1.0 Pro（字节跳动）"
+    },
+    {
+      "en-US": "Best for: text-to-video, image-to-video with high motion quality.",
+      "zh-Hans": "最适合：文本到视频、图像到视频，具有高运动质量。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/seedance-1-0-pro\",\n  input_data: {\n    \"prompt\": \"a drone flyover of a mountain lake at golden hour, cinematic\",\n    \"duration\": \"5s\",\n    \"aspect_ratio\": \"16:9\",\n    \"seed\": 42\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/seedance-1-0-pro\",\n  input_data: {\n    \"prompt\": \"一架无人机在黄金时段飞越山间湖泊，电影感画面\",\n    \"duration\": \"5s\",\n    \"aspect_ratio\": \"16:9\",\n    \"seed\": 42\n  }\n)\n```"
+    },
+    {
+      "en-US": "### Kling Video v3 Pro",
+      "zh-Hans": "### Kling Video v3 Pro"
+    },
+    {
+      "en-US": "Best for: text/image-to-video with native audio generation.",
+      "zh-Hans": "最适合：文本/图像到视频，带原生音频生成。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/kling-video/v3/pro\",\n  input_data: {\n    \"prompt\": \"ocean waves crashing on a rocky coast, dramatic clouds\",\n    \"duration\": \"5s\",\n    \"aspect_ratio\": \"16:9\"\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/kling-video/v3/pro\",\n  input_data: {\n    \"prompt\": \"海浪拍打着岩石海岸，戏剧性的云层\",\n    \"duration\": \"5s\",\n    \"aspect_ratio\": \"16:9\"\n  }\n)\n```"
+    },
+    {
+      "en-US": "### Veo 3 (Google DeepMind)",
+      "zh-Hans": "### Veo 3（Google DeepMind）"
+    },
+    {
+      "en-US": "Best for: video with generated sound, high visual quality.",
+      "zh-Hans": "最适合：带生成声音的视频，高视觉质量。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/veo-3\",\n  input_data: {\n    \"prompt\": \"a bustling Tokyo street market at night, neon signs, crowd noise\",\n    \"aspect_ratio\": \"16:9\"\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/veo-3\",\n  input_data: {\n    \"prompt\": \"夜晚繁华的东京街头市场，霓虹灯招牌，人群喧闹声\",\n    \"aspect_ratio\": \"16:9\"\n  }\n)\n```"
+    },
+    {
+      "en-US": "### Image-to-Video",
+      "zh-Hans": "### 图像到视频"
+    },
+    {
+      "en-US": "Start from an existing image:",
+      "zh-Hans": "从现有图像开始："
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/seedance-1-0-pro\",\n  input_data: {\n    \"prompt\": \"camera slowly zooms out, gentle wind moves the trees\",\n    \"image_url\": \"<uploaded_image_url>\",\n    \"duration\": \"5s\"\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/seedance-1-0-pro\",\n  input_data: {\n    \"prompt\": \"镜头缓慢拉远，微风轻拂树梢\",\n    \"image_url\": \"<uploaded_image_url>\",\n    \"duration\": \"5s\"\n  }\n)\n```"
+    },
+    {
+      "en-US": "### Video Parameters",
+      "zh-Hans": "### 视频参数"
+    },
+    {
+      "en-US": "| Param | Type | Options | Notes |\n|-------|------|---------|-------|\n| `prompt` | string | required | Describe the video |\n| `duration` | string | `\"5s\"`, `\"10s\"` | Video length |\n| `aspect_ratio` | string | `\"16:9\"`, `\"9:16\"`, `\"1:1\"` | Frame ratio |\n| `seed` | number | any integer | Reproducibility |\n| `image_url` | string | URL | Source image for image-to-video |",
+      "zh-Hans": "| 参数 | 类型 | 选项 | 说明 |\n|-------|------|---------|-------|\n| `prompt` | 字符串 | 必需 | 描述视频内容 |\n| `duration` | 字符串 | `\"5s\"`, `\"10s\"` | 视频长度 |\n| `aspect_ratio` | 字符串 | `\"16:9\"`, `\"9:16\"`, `\"1:1\"` | 帧比例 |\n| `seed` | 数字 | 任意整数 | 可复现性 |\n| `image_url` | 字符串 | URL | 用于图像到视频的源图像 |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Audio Generation",
+      "zh-Hans": "## 音频生成"
+    },
+    {
+      "en-US": "### CSM-1B (Conversational Speech)",
+      "zh-Hans": "### CSM-1B（对话式语音）"
+    },
+    {
+      "en-US": "Text-to-speech with natural, conversational quality.",
+      "zh-Hans": "文本转语音，具有自然、对话式的音质。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/csm-1b\",\n  input_data: {\n    \"text\": \"Hello, welcome to the demo. Let me show you how this works.\",\n    \"speaker_id\": 0\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/csm-1b\",\n  input_data: {\n    \"text\": \"你好，欢迎来到演示。让我向你展示这是如何工作的。\",\n    \"speaker_id\": 0\n  }\n)\n```"
+    },
+    {
+      "en-US": "### ThinkSound (Video-to-Audio)",
+      "zh-Hans": "### ThinkSound（视频到音频）"
+    },
+    {
+      "en-US": "Generate matching audio from video content.",
+      "zh-Hans": "根据视频内容生成匹配的音频。"
+    },
+    {
+      "en-US": "```\ngenerate(\n  app_id: \"fal-ai/thinksound\",\n  input_data: {\n    \"video_url\": \"<video_url>\",\n    \"prompt\": \"ambient forest sounds with birds chirping\"\n  }\n)\n```",
+      "zh-Hans": "```\ngenerate(\n  app_id: \"fal-ai/thinksound\",\n  input_data: {\n    \"video_url\": \"<video_url>\",\n    \"prompt\": \"带有鸟鸣的环境森林声音\"\n  }\n)\n```"
+    },
+    {
+      "en-US": "### ElevenLabs (via API, no MCP)",
+      "zh-Hans": "### ElevenLabs（通过 API，无 MCP）"
+    },
+    {
+      "en-US": "For professional voice synthesis, use ElevenLabs directly:",
+      "zh-Hans": "如需专业语音合成，请直接使用 ElevenLabs："
+    },
+    {
+      "en-US": "```python\nimport os\nimport requests\n\nresp = requests.post(\n    \"https://api.elevenlabs.io/v1/text-to-speech/<voice_id>\",\n    headers={\n        \"xi-api-key\": os.environ[\"ELEVENLABS_API_KEY\"],\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"text\": \"Your text here\",\n        \"model_id\": \"eleven_turbo_v2_5\",\n        \"voice_settings\": {\"stability\": 0.5, \"similarity_boost\": 0.75}\n    }\n)\nwith open(\"output.mp3\", \"wb\") as f:\n    f.write(resp.content)\n```",
+      "zh-Hans": "```python\nimport os\nimport requests\n\nresp = requests.post(\n    \"https://api.elevenlabs.io/v1/text-to-speech/<voice_id>\",\n    headers={\n        \"xi-api-key\": os.environ[\"ELEVENLABS_API_KEY\"],\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"text\": \"Your text here\",\n        \"model_id\": \"eleven_turbo_v2_5\",\n        \"voice_settings\": {\"stability\": 0.5, \"similarity_boost\": 0.75}\n    }\n)\nwith open(\"output.mp3\", \"wb\") as f:\n    f.write(resp.content)\n```"
+    },
+    {
+      "en-US": "### VideoDB Generative Audio",
+      "zh-Hans": "### VideoDB 生成式音频"
+    },
+    {
+      "en-US": "If VideoDB is configured, use its generative audio:",
+      "zh-Hans": "如果配置了 VideoDB，可使用其生成式音频："
+    },
+    {
+      "en-US": "```python\n# Voice generation\naudio = coll.generate_voice(text=\"Your narration here\", voice=\"alloy\")\n\n# Music generation\nmusic = coll.generate_music(prompt=\"upbeat electronic background music\", duration=30)\n\n# Sound effects\nsfx = coll.generate_sound_effect(prompt=\"thunder crack followed by rain\")\n```",
+      "zh-Hans": "```python\n# Voice generation\naudio = coll.generate_voice(text=\"Your narration here\", voice=\"alloy\")\n\n# Music generation\nmusic = coll.generate_music(prompt=\"upbeat electronic background music\", duration=30)\n\n# Sound effects\nsfx = coll.generate_sound_effect(prompt=\"thunder crack followed by rain\")\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Cost Estimation",
+      "zh-Hans": "## 成本估算"
+    },
+    {
+      "en-US": "Before generating, check estimated cost:",
+      "zh-Hans": "生成前，检查估算成本："
+    },
+    {
+      "en-US": "```\nestimate_cost(\n  estimate_type: \"unit_price\",\n  endpoints: {\n    \"fal-ai/nano-banana-pro\": {\n      \"unit_quantity\": 1\n    }\n  }\n)\n```",
+      "zh-Hans": "```\nestimate_cost(\n  estimate_type: \"unit_price\",\n  endpoints: {\n    \"fal-ai/nano-banana-pro\": {\n      \"unit_quantity\": 1\n    }\n  }\n)\n```"
+    },
+    {
+      "en-US": "## Model Discovery",
+      "zh-Hans": "## 模型发现"
+    },
+    {
+      "en-US": "Find models for specific tasks:",
+      "zh-Hans": "查找特定任务的模型："
+    },
+    {
+      "en-US": "```\nsearch(query: \"text to video\")\nfind(endpoint_ids: [\"fal-ai/seedance-1-0-pro\"])\nmodels()\n```",
+      "zh-Hans": "```\nsearch(query: \"文本转视频\")\nfind(endpoint_ids: [\"fal-ai/seedance-1-0-pro\"])\nmodels()\n```"
+    },
+    {
+      "en-US": "## Tips",
+      "zh-Hans": "## 提示"
+    },
+    {
+      "en-US": "- Use `seed` for reproducible results when iterating on prompts\n- Start with lower-cost models (Nano Banana 2) for prompt iteration, then switch to Pro for finals\n- For video, keep prompts descriptive but concise — focus on motion and scene\n- Image-to-video produces more controlled results than pure text-to-video\n- Check `estimate_cost` before running expensive video generations",
+      "zh-Hans": "* 在迭代提示时，使用 `seed` 以获得可复现的结果\n* 从低成本模型（Nano Banana 2）开始进行提示迭代，然后切换到 Pro 模型进行最终生成\n* 对于视频，保持提示描述性但简洁——聚焦于运动和场景\n* 图像到视频比纯文本到视频能产生更可控的结果\n* 在运行昂贵的视频生成前，检查 `estimate_cost`"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `videodb` — Video processing, editing, and streaming\n- `video-editing` — AI-powered video editing workflows\n- `content-engine` — Content creation for social platforms",
+      "zh-Hans": "* `videodb` — 视频处理、编辑和流媒体\n* `video-editing` — AI 驱动的视频编辑工作流\n* `content-engine` — 社交媒体平台的内容创作"
+    }
+  ]
+}

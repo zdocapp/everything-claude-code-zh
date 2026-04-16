@@ -1,0 +1,282 @@
+{
+  "sourceFile": "skills/videodb/reference/editor.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Timeline Editing Guide",
+      "zh-Hans": "# 时间线编辑指南"
+    },
+    {
+      "en-US": "VideoDB provides a non-destructive timeline editor for composing videos from multiple assets, adding text and image overlays, mixing audio tracks, and trimming clips — all server-side without re-encoding or local tools. Use this for trimming, combining clips, overlaying audio/music on video, adding subtitles, and layering text or images.",
+      "zh-Hans": "VideoDB 提供了一个非破坏性的时间线编辑器，用于从多个素材合成视频、添加文本和图像叠加、混合音轨以及剪辑片段——所有这些都在服务器端完成，无需重新编码或本地工具。可用于剪辑、组合片段、在视频上叠加音频/音乐、添加字幕以及叠加文本或图像。"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 前提条件"
+    },
+    {
+      "en-US": "Videos, audio, and images **must be uploaded** to a collection before they can be used as timeline assets. For caption overlays, the video must also be **indexed for spoken words**.",
+      "zh-Hans": "视频、音频和图像**必须上传**到集合中，才能用作时间线素材。对于字幕叠加，视频还必须**为口语单词建立索引**。"
+    },
+    {
+      "en-US": "## Core Concepts",
+      "zh-Hans": "## 核心概念"
+    },
+    {
+      "en-US": "### Timeline",
+      "zh-Hans": "### 时间线"
+    },
+    {
+      "en-US": "A `Timeline` is a virtual composition layer. Assets are placed on it either **inline** (sequentially on the main track) or as **overlays** (layered at a specific timestamp). Nothing modifies the original media; the final stream is compiled on demand.",
+      "zh-Hans": "`Timeline` 是一个虚拟合成层。素材可以**内联**（在主轨道上顺序排列）或作为**叠加层**（在特定时间戳分层放置）放置在其上。原始媒体不会被修改；最终流是按需编译的。"
+    },
+    {
+      "en-US": "```python\nfrom videodb.timeline import Timeline\n\ntimeline = Timeline(conn)\n```",
+      "zh-Hans": "```python\nfrom videodb.timeline import Timeline\n\ntimeline = Timeline(conn)\n```"
+    },
+    {
+      "en-US": "### Assets",
+      "zh-Hans": "### 素材"
+    },
+    {
+      "en-US": "Every element on a timeline is an **asset**. VideoDB provides five asset types:",
+      "zh-Hans": "时间线上的每个元素都是一个**素材**。VideoDB 提供五种素材类型："
+    },
+    {
+      "en-US": "| Asset | Import | Primary Use |\n|-------|--------|-------------|\n| `VideoAsset` | `from videodb.asset import VideoAsset` | Video clips (trim, sequencing) |\n| `AudioAsset` | `from videodb.asset import AudioAsset` | Music, SFX, narration |\n| `ImageAsset` | `from videodb.asset import ImageAsset` | Logos, thumbnails, overlays |\n| `TextAsset` | `from videodb.asset import TextAsset, TextStyle` | Titles, captions, lower-thirds |\n| `CaptionAsset` | `from videodb.editor import CaptionAsset` | Auto-rendered subtitles (Editor API) |",
+      "zh-Hans": "| 素材 | 导入 | 主要用途 |\n|-------|--------|-------------|\n| `VideoAsset` | `from videodb.asset import VideoAsset` | 视频片段（剪辑、排序） |\n| `AudioAsset` | `from videodb.asset import AudioAsset` | 音乐、音效、旁白 |\n| `ImageAsset` | `from videodb.asset import ImageAsset` | 徽标、缩略图、叠加层 |\n| `TextAsset` | `from videodb.asset import TextAsset, TextStyle` | 标题、字幕、下三分之一字幕 |\n| `CaptionAsset` | `from videodb.editor import CaptionAsset` | 自动渲染的字幕（编辑器 API） |"
+    },
+    {
+      "en-US": "## Building a Timeline",
+      "zh-Hans": "## 构建时间线"
+    },
+    {
+      "en-US": "### Add Video Clips Inline",
+      "zh-Hans": "### 内联添加视频片段"
+    },
+    {
+      "en-US": "Inline assets play one after another on the main video track. The `add_inline` method only accepts `VideoAsset`:",
+      "zh-Hans": "内联素材在主视频轨道上一个接一个地播放。`add_inline` 方法只接受 `VideoAsset`："
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import VideoAsset\n\nvideo_a = coll.get_video(video_id_a)\nvideo_b = coll.get_video(video_id_b)\n\ntimeline = Timeline(conn)\ntimeline.add_inline(VideoAsset(asset_id=video_a.id))\ntimeline.add_inline(VideoAsset(asset_id=video_b.id))\n\nstream_url = timeline.generate_stream()\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import VideoAsset\n\nvideo_a = coll.get_video(video_id_a)\nvideo_b = coll.get_video(video_id_b)\n\ntimeline = Timeline(conn)\ntimeline.add_inline(VideoAsset(asset_id=video_a.id))\ntimeline.add_inline(VideoAsset(asset_id=video_b.id))\n\nstream_url = timeline.generate_stream()\n```"
+    },
+    {
+      "en-US": "### Trim / Sub-clip",
+      "zh-Hans": "### 剪辑 / 子片段"
+    },
+    {
+      "en-US": "Use `start` and `end` on a `VideoAsset` to extract a portion:",
+      "zh-Hans": "在 `VideoAsset` 上使用 `start` 和 `end` 来提取一部分："
+    },
+    {
+      "en-US": "```python\n# Take only seconds 10–30 from the source video\nclip = VideoAsset(asset_id=video.id, start=10, end=30)\ntimeline.add_inline(clip)\n```",
+      "zh-Hans": "```python\n# Take only seconds 10–30 from the source video\nclip = VideoAsset(asset_id=video.id, start=10, end=30)\ntimeline.add_inline(clip)\n```"
+    },
+    {
+      "en-US": "### VideoAsset Parameters",
+      "zh-Hans": "### VideoAsset 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `asset_id` | `str` | required | Video media ID |\n| `start` | `float` | `0` | Trim start (seconds) |\n| `end` | `float\\|None` | `None` | Trim end (`None` = full) |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `asset_id` | `str` | 必需 | 视频媒体 ID |\n| `start` | `float` | `0` | 剪辑开始时间（秒） |\n| `end` | `float\\|None` | `None` | 剪辑结束时间（`None` = 完整） |"
+    },
+    {
+      "en-US": "> **Warning:** The SDK does not validate negative timestamps. Passing `start=-5` is silently accepted but produces broken or unexpected output. Always ensure `start >= 0`, `start < end`, and `end <= video.length` before creating a `VideoAsset`.",
+      "zh-Hans": "> **警告：** SDK 不验证负时间戳。传递 `start=-5` 会被静默接受，但会产生损坏或意外的输出。在创建 `VideoAsset` 之前，请始终确保 `start >= 0`、`start < end` 和 `end <= video.length`。"
+    },
+    {
+      "en-US": "## Text Overlays",
+      "zh-Hans": "## 文本叠加"
+    },
+    {
+      "en-US": "Add titles, lower-thirds, or captions at any point on the timeline:",
+      "zh-Hans": "在时间线上的任意点添加标题、下三分之一字幕或字幕："
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import TextAsset, TextStyle\n\ntitle = TextAsset(\n    text=\"Welcome to the Demo\",\n    duration=5,\n    style=TextStyle(\n        fontsize=36,\n        fontcolor=\"white\",\n        boxcolor=\"black\",\n        alpha=0.8,\n        font=\"Sans\",\n    ),\n)\n\n# Overlay the title at the very start (t=0)\ntimeline.add_overlay(0, title)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import TextAsset, TextStyle\n\ntitle = TextAsset(\n    text=\"Welcome to the Demo\",\n    duration=5,\n    style=TextStyle(\n        fontsize=36,\n        fontcolor=\"white\",\n        boxcolor=\"black\",\n        alpha=0.8,\n        font=\"Sans\",\n    ),\n)\n\n# Overlay the title at the very start (t=0)\ntimeline.add_overlay(0, title)\n```"
+    },
+    {
+      "en-US": "### TextStyle Parameters",
+      "zh-Hans": "### TextStyle 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `fontsize` | `int` | `24` | Font size in pixels |\n| `fontcolor` | `str` | `\"black\"` | CSS colour name or hex |\n| `fontcolor_expr` | `str` | `\"\"` | Dynamic font colour expression |\n| `alpha` | `float` | `1.0` | Text opacity (0.0–1.0) |\n| `font` | `str` | `\"Sans\"` | Font family |\n| `box` | `bool` | `True` | Enable background box |\n| `boxcolor` | `str` | `\"white\"` | Background box colour |\n| `boxborderw` | `str` | `\"10\"` | Box border width |\n| `boxw` | `int` | `0` | Box width override |\n| `boxh` | `int` | `0` | Box height override |\n| `line_spacing` | `int` | `0` | Line spacing |\n| `text_align` | `str` | `\"T\"` | Text alignment within the box |\n| `y_align` | `str` | `\"text\"` | Vertical alignment reference |\n| `borderw` | `int` | `0` | Text border width |\n| `bordercolor` | `str` | `\"black\"` | Text border colour |\n| `expansion` | `str` | `\"normal\"` | Text expansion mode |\n| `basetime` | `int` | `0` | Base time for time-based expressions |\n| `fix_bounds` | `bool` | `False` | Fix text bounds |\n| `text_shaping` | `bool` | `True` | Enable text shaping |\n| `shadowcolor` | `str` | `\"black\"` | Shadow colour |\n| `shadowx` | `int` | `0` | Shadow X offset |\n| `shadowy` | `int` | `0` | Shadow Y offset |\n| `tabsize` | `int` | `4` | Tab size in spaces |\n| `x` | `str` | `\"(main_w-text_w)/2\"` | Horizontal position expression |\n| `y` | `str` | `\"(main_h-text_h)/2\"` | Vertical position expression |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `fontsize` | `int` | `24` | 字体大小（像素） |\n| `fontcolor` | `str` | `\"black\"` | CSS 颜色名称或十六进制值 |\n| `fontcolor_expr` | `str` | `\"\"` | 动态字体颜色表达式 |\n| `alpha` | `float` | `1.0` | 文本不透明度（0.0–1.0） |\n| `font` | `str` | `\"Sans\"` | 字体系列 |\n| `box` | `bool` | `True` | 启用背景框 |\n| `boxcolor` | `str` | `\"white\"` | 背景框颜色 |\n| `boxborderw` | `str` | `\"10\"` | 框边框宽度 |\n| `boxw` | `int` | `0` | 框宽度覆盖 |\n| `boxh` | `int` | `0` | 框高度覆盖 |\n| `line_spacing` | `int` | `0` | 行间距 |\n| `text_align` | `str` | `\"T\"` | 框内文本对齐方式 |\n| `y_align` | `str` | `\"text\"` | 垂直对齐参考 |\n| `borderw` | `int` | `0` | 文本边框宽度 |\n| `bordercolor` | `str` | `\"black\"` | 文本边框颜色 |\n| `expansion` | `str` | `\"normal\"` | 文本扩展模式 |\n| `basetime` | `int` | `0` | 基于时间的表达式的基础时间 |\n| `fix_bounds` | `bool` | `False` | 固定文本边界 |\n| `text_shaping` | `bool` | `True` | 启用文本整形 |\n| `shadowcolor` | `str` | `\"black\"` | 阴影颜色 |\n| `shadowx` | `int` | `0` | 阴影 X 偏移 |\n| `shadowy` | `int` | `0` | 阴影 Y 偏移 |\n| `tabsize` | `int` | `4` | 制表符大小（空格数） |\n| `x` | `str` | `\"(main_w-text_w)/2\"` | 水平位置表达式 |\n| `y` | `str` | `\"(main_h-text_h)/2\"` | 垂直位置表达式 |"
+    },
+    {
+      "en-US": "## Audio Overlays",
+      "zh-Hans": "## 音频叠加"
+    },
+    {
+      "en-US": "Layer background music, sound effects, or voiceover on top of the video track:",
+      "zh-Hans": "在视频轨道上叠加背景音乐、音效或旁白："
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import AudioAsset\n\nmusic = coll.get_audio(music_id)\n\naudio_layer = AudioAsset(\n    asset_id=music.id,\n    disable_other_tracks=False,\n    fade_in_duration=2,\n    fade_out_duration=2,\n)\n\n# Start the music at t=0, overlaid on the video track\ntimeline.add_overlay(0, audio_layer)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import AudioAsset\n\nmusic = coll.get_audio(music_id)\n\naudio_layer = AudioAsset(\n    asset_id=music.id,\n    disable_other_tracks=False,\n    fade_in_duration=2,\n    fade_out_duration=2,\n)\n\n# Start the music at t=0, overlaid on the video track\ntimeline.add_overlay(0, audio_layer)\n```"
+    },
+    {
+      "en-US": "### AudioAsset Parameters",
+      "zh-Hans": "### AudioAsset 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `asset_id` | `str` | required | Audio media ID |\n| `start` | `float` | `0` | Trim start (seconds) |\n| `end` | `float\\|None` | `None` | Trim end (`None` = full) |\n| `disable_other_tracks` | `bool` | `True` | When True, mutes other audio tracks |\n| `fade_in_duration` | `float` | `0` | Fade-in seconds (max 5) |\n| `fade_out_duration` | `float` | `0` | Fade-out seconds (max 5) |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `asset_id` | `str` | 必需 | 音频媒体 ID |\n| `start` | `float` | `0` | 剪辑开始时间（秒） |\n| `end` | `float\\|None` | `None` | 剪辑结束时间（`None` = 完整） |\n| `disable_other_tracks` | `bool` | `True` | 为 True 时，静音其他音轨 |\n| `fade_in_duration` | `float` | `0` | 淡入秒数（最大 5） |\n| `fade_out_duration` | `float` | `0` | 淡出秒数（最大 5） |"
+    },
+    {
+      "en-US": "## Image Overlays",
+      "zh-Hans": "## 图像叠加"
+    },
+    {
+      "en-US": "Add logos, watermarks, or generated images as overlays:",
+      "zh-Hans": "添加徽标、水印或生成的图像作为叠加层："
+    },
+    {
+      "en-US": "```python\nfrom videodb.asset import ImageAsset\n\nlogo = coll.get_image(logo_id)\n\nlogo_overlay = ImageAsset(\n    asset_id=logo.id,\n    duration=10,\n    width=120,\n    height=60,\n    x=20,\n    y=20,\n)\n\ntimeline.add_overlay(0, logo_overlay)\n```",
+      "zh-Hans": "```python\nfrom videodb.asset import ImageAsset\n\nlogo = coll.get_image(logo_id)\n\nlogo_overlay = ImageAsset(\n    asset_id=logo.id,\n    duration=10,\n    width=120,\n    height=60,\n    x=20,\n    y=20,\n)\n\ntimeline.add_overlay(0, logo_overlay)\n```"
+    },
+    {
+      "en-US": "### ImageAsset Parameters",
+      "zh-Hans": "### ImageAsset 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `asset_id` | `str` | required | Image media ID |\n| `width` | `int\\|str` | `100` | Display width |\n| `height` | `int\\|str` | `100` | Display height |\n| `x` | `int` | `80` | Horizontal position (px from left) |\n| `y` | `int` | `20` | Vertical position (px from top) |\n| `duration` | `float\\|None` | `None` | Display duration (seconds) |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `asset_id` | `str` | 必需 | 图像媒体 ID |\n| `width` | `int\\|str` | `100` | 显示宽度 |\n| `height` | `int\\|str` | `100` | 显示高度 |\n| `x` | `int` | `80` | 水平位置（距左侧的像素） |\n| `y` | `int` | `20` | 垂直位置（距顶部的像素） |\n| `duration` | `float\\|None` | `None` | 显示持续时间（秒） |"
+    },
+    {
+      "en-US": "## Caption Overlays",
+      "zh-Hans": "## 字幕叠加"
+    },
+    {
+      "en-US": "There are two ways to add captions to video.",
+      "zh-Hans": "有两种方法可以为视频添加字幕。"
+    },
+    {
+      "en-US": "### Method 1: Subtitle Workflow (simplest)",
+      "zh-Hans": "### 方法 1：字幕工作流（最简单）"
+    },
+    {
+      "en-US": "Use `video.add_subtitle()` to burn subtitles directly onto a video stream. This uses the `videodb.timeline.Timeline` internally:",
+      "zh-Hans": "使用 `video.add_subtitle()` 将字幕直接烧录到视频流中。这在内部使用 `videodb.timeline.Timeline`："
+    },
+    {
+      "en-US": "```python\nfrom videodb import SubtitleStyle\n\n# Video must have spoken words indexed first (force=True skips if already done)\nvideo.index_spoken_words(force=True)\n\n# Add subtitles with default styling\nstream_url = video.add_subtitle()\n\n# Or customise the subtitle style\nstream_url = video.add_subtitle(style=SubtitleStyle(\n    font_name=\"Arial\",\n    font_size=22,\n    primary_colour=\"&H00FFFFFF\",\n    bold=True,\n))\n```",
+      "zh-Hans": "```python\nfrom videodb import SubtitleStyle\n\n# Video must have spoken words indexed first (force=True skips if already done)\nvideo.index_spoken_words(force=True)\n\n# Add subtitles with default styling\nstream_url = video.add_subtitle()\n\n# Or customise the subtitle style\nstream_url = video.add_subtitle(style=SubtitleStyle(\n    font_name=\"Arial\",\n    font_size=22,\n    primary_colour=\"&H00FFFFFF\",\n    bold=True,\n))\n```"
+    },
+    {
+      "en-US": "### Method 2: Editor API (advanced)",
+      "zh-Hans": "### 方法 2：编辑器 API（高级）"
+    },
+    {
+      "en-US": "The Editor API (`videodb.editor`) provides a track-based composition system with `CaptionAsset`, `Clip`, `Track`, and its own `Timeline`. This is a separate API from the `videodb.timeline.Timeline` used above.",
+      "zh-Hans": "编辑器 API (`videodb.editor`) 提供了一个基于轨道的合成系统，包含 `CaptionAsset`、`Clip`、`Track` 及其自身的 `Timeline`。这是一个与上面使用的 `videodb.timeline.Timeline` 分开的 API。"
+    },
+    {
+      "en-US": "```python\nfrom videodb.editor import (\n    CaptionAsset,\n    Clip,\n    Track,\n    Timeline as EditorTimeline,\n    FontStyling,\n    BorderAndShadow,\n    Positioning,\n    CaptionAnimation,\n)\n\n# Video must have spoken words indexed first (force=True skips if already done)\nvideo.index_spoken_words(force=True)\n\n# Create a caption asset\ncaption = CaptionAsset(\n    src=\"auto\",\n    font=FontStyling(name=\"Clear Sans\", size=30),\n    primary_color=\"&H00FFFFFF\",\n    back_color=\"&H00000000\",\n    border=BorderAndShadow(outline=1),\n    position=Positioning(margin_v=30),\n    animation=CaptionAnimation.box_highlight,\n)\n\n# Build an editor timeline with tracks and clips\neditor_tl = EditorTimeline(conn)\ntrack = Track()\ntrack.add_clip(start=0, clip=Clip(asset=caption, duration=video.length))\neditor_tl.add_track(track)\nstream_url = editor_tl.generate_stream()\n```",
+      "zh-Hans": "```python\nfrom videodb.editor import (\n    CaptionAsset,\n    Clip,\n    Track,\n    Timeline as EditorTimeline,\n    FontStyling,\n    BorderAndShadow,\n    Positioning,\n    CaptionAnimation,\n)\n\n# Video must have spoken words indexed first (force=True skips if already done)\nvideo.index_spoken_words(force=True)\n\n# Create a caption asset\ncaption = CaptionAsset(\n    src=\"auto\",\n    font=FontStyling(name=\"Clear Sans\", size=30),\n    primary_color=\"&H00FFFFFF\",\n    back_color=\"&H00000000\",\n    border=BorderAndShadow(outline=1),\n    position=Positioning(margin_v=30),\n    animation=CaptionAnimation.box_highlight,\n)\n\n# Build an editor timeline with tracks and clips\neditor_tl = EditorTimeline(conn)\ntrack = Track()\ntrack.add_clip(start=0, clip=Clip(asset=caption, duration=video.length))\neditor_tl.add_track(track)\nstream_url = editor_tl.generate_stream()\n```"
+    },
+    {
+      "en-US": "### CaptionAsset Parameters",
+      "zh-Hans": "### CaptionAsset 参数"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `src` | `str` | `\"auto\"` | Caption source (`\"auto\"` or base64 ASS string) |\n| `font` | `FontStyling\\|None` | `FontStyling()` | Font styling (name, size, bold, italic, etc.) |\n| `primary_color` | `str` | `\"&H00FFFFFF\"` | Primary text colour (ASS format) |\n| `secondary_color` | `str` | `\"&H000000FF\"` | Secondary text colour (ASS format) |\n| `back_color` | `str` | `\"&H00000000\"` | Background colour (ASS format) |\n| `border` | `BorderAndShadow\\|None` | `BorderAndShadow()` | Border and shadow styling |\n| `position` | `Positioning\\|None` | `Positioning()` | Caption alignment and margins |\n| `animation` | `CaptionAnimation\\|None` | `None` | Animation effect (e.g., `box_highlight`, `reveal`, `karaoke`) |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `src` | `str` | `\"auto\"` | 字幕来源（`\"auto\"` 或 base64 ASS 字符串） |\n| `font` | `FontStyling\\|None` | `FontStyling()` | 字体样式（名称、大小、粗体、斜体等） |\n| `primary_color` | `str` | `\"&H00FFFFFF\"` | 主要文本颜色（ASS 格式） |\n| `secondary_color` | `str` | `\"&H000000FF\"` | 次要文本颜色（ASS 格式） |\n| `back_color` | `str` | `\"&H00000000\"` | 背景颜色（ASS 格式） |\n| `border` | `BorderAndShadow\\|None` | `BorderAndShadow()` | 边框和阴影样式 |\n| `position` | `Positioning\\|None` | `Positioning()` | 字幕对齐方式和边距 |\n| `animation` | `CaptionAnimation\\|None` | `None` | 动画效果（例如，`box_highlight`、`reveal`、`karaoke`） |"
+    },
+    {
+      "en-US": "## Compiling & Streaming",
+      "zh-Hans": "## 编译与流式传输"
+    },
+    {
+      "en-US": "After assembling a timeline, compile it into a streamable URL. Streams are generated instantly - no render wait times.",
+      "zh-Hans": "组装好时间线后，将其编译成可流式传输的 URL。流是即时生成的——无需等待渲染时间。"
+    },
+    {
+      "en-US": "```python\nstream_url = timeline.generate_stream()\nprint(f\"Stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\nstream_url = timeline.generate_stream()\nprint(f\"Stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "For more streaming options (segment streams, search-to-stream, audio playback), see [streaming.md](streaming.md).",
+      "zh-Hans": "有关更多流式传输选项（分段流、搜索到流、音频播放），请参阅 [streaming.md](streaming.md)。"
+    },
+    {
+      "en-US": "## Complete Workflow Examples",
+      "zh-Hans": "## 完整工作流示例"
+    },
+    {
+      "en-US": "### Highlight Reel with Title Card",
+      "zh-Hans": "### 带标题卡的高光集锦"
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\n# 1. Search for key moments\nvideo.index_spoken_words(force=True)\ntry:\n    results = video.search(\"product announcement\", search_type=SearchType.semantic)\n    shots = results.get_shots()\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        shots = []\n    else:\n        raise\n\n# 2. Build timeline\ntimeline = Timeline(conn)\n\n# Title card\ntitle = TextAsset(\n    text=\"Product Launch Highlights\",\n    duration=4,\n    style=TextStyle(fontsize=48, fontcolor=\"white\", boxcolor=\"#1a1a2e\", alpha=0.95),\n)\ntimeline.add_overlay(0, title)\n\n# Append each matching clip\nfor shot in shots:\n    asset = VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n    timeline.add_inline(asset)\n\n# 3. Generate stream\nstream_url = timeline.generate_stream()\nprint(f\"Highlight reel: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\n# 1. Search for key moments\nvideo.index_spoken_words(force=True)\ntry:\n    results = video.search(\"product announcement\", search_type=SearchType.semantic)\n    shots = results.get_shots()\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        shots = []\n    else:\n        raise\n\n# 2. Build timeline\ntimeline = Timeline(conn)\n\n# Title card\ntitle = TextAsset(\n    text=\"Product Launch Highlights\",\n    duration=4,\n    style=TextStyle(fontsize=48, fontcolor=\"white\", boxcolor=\"#1a1a2e\", alpha=0.95),\n)\ntimeline.add_overlay(0, title)\n\n# Append each matching clip\nfor shot in shots:\n    asset = VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n    timeline.add_inline(asset)\n\n# 3. Generate stream\nstream_url = timeline.generate_stream()\nprint(f\"Highlight reel: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "### Logo Overlay with Background Music",
+      "zh-Hans": "### 带背景音乐的徽标叠加"
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, AudioAsset, ImageAsset\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nmain_video = coll.get_video(main_video_id)\nmusic = coll.get_audio(music_id)\nlogo = coll.get_image(logo_id)\n\ntimeline = Timeline(conn)\n\n# Main video track\ntimeline.add_inline(VideoAsset(asset_id=main_video.id))\n\n# Background music — disable_other_tracks=False to mix with video audio\ntimeline.add_overlay(\n    0,\n    AudioAsset(asset_id=music.id, disable_other_tracks=False, fade_in_duration=3),\n)\n\n# Logo in top-right corner for first 10 seconds\ntimeline.add_overlay(\n    0,\n    ImageAsset(asset_id=logo.id, duration=10, x=1140, y=20, width=120, height=60),\n)\n\nstream_url = timeline.generate_stream()\nprint(f\"Final video: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, AudioAsset, ImageAsset\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nmain_video = coll.get_video(main_video_id)\nmusic = coll.get_audio(music_id)\nlogo = coll.get_image(logo_id)\n\ntimeline = Timeline(conn)\n\n# Main video track\ntimeline.add_inline(VideoAsset(asset_id=main_video.id))\n\n# Background music — disable_other_tracks=False to mix with video audio\ntimeline.add_overlay(\n    0,\n    AudioAsset(asset_id=music.id, disable_other_tracks=False, fade_in_duration=3),\n)\n\n# Logo in top-right corner for first 10 seconds\ntimeline.add_overlay(\n    0,\n    ImageAsset(asset_id=logo.id, duration=10, x=1140, y=20, width=120, height=60),\n)\n\nstream_url = timeline.generate_stream()\nprint(f\"Final video: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "### Multi-Clip Montage from Multiple Videos",
+      "zh-Hans": "### 来自多个视频的多片段蒙太奇"
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nclips = [\n    {\"video_id\": \"vid_001\", \"start\": 5, \"end\": 15, \"label\": \"Scene 1\"},\n    {\"video_id\": \"vid_002\", \"start\": 0, \"end\": 20, \"label\": \"Scene 2\"},\n    {\"video_id\": \"vid_003\", \"start\": 30, \"end\": 45, \"label\": \"Scene 3\"},\n]\n\ntimeline = Timeline(conn)\ntimeline_offset = 0.0\n\nfor clip in clips:\n    # Add a label as an overlay on each clip\n    label = TextAsset(\n        text=clip[\"label\"],\n        duration=2,\n        style=TextStyle(fontsize=32, fontcolor=\"white\", boxcolor=\"#333333\"),\n    )\n    timeline.add_inline(\n        VideoAsset(asset_id=clip[\"video_id\"], start=clip[\"start\"], end=clip[\"end\"])\n    )\n    timeline.add_overlay(timeline_offset, label)\n    timeline_offset += clip[\"end\"] - clip[\"start\"]\n\nstream_url = timeline.generate_stream()\nprint(f\"Montage: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nclips = [\n    {\"video_id\": \"vid_001\", \"start\": 5, \"end\": 15, \"label\": \"Scene 1\"},\n    {\"video_id\": \"vid_002\", \"start\": 0, \"end\": 20, \"label\": \"Scene 2\"},\n    {\"video_id\": \"vid_003\", \"start\": 30, \"end\": 45, \"label\": \"Scene 3\"},\n]\n\ntimeline = Timeline(conn)\ntimeline_offset = 0.0\n\nfor clip in clips:\n    # Add a label as an overlay on each clip\n    label = TextAsset(\n        text=clip[\"label\"],\n        duration=2,\n        style=TextStyle(fontsize=32, fontcolor=\"white\", boxcolor=\"#333333\"),\n    )\n    timeline.add_inline(\n        VideoAsset(asset_id=clip[\"video_id\"], start=clip[\"start\"], end=clip[\"end\"])\n    )\n    timeline.add_overlay(timeline_offset, label)\n    timeline_offset += clip[\"end\"] - clip[\"start\"]\n\nstream_url = timeline.generate_stream()\nprint(f\"Montage: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "## Two Timeline APIs",
+      "zh-Hans": "## 两个时间线 API"
+    },
+    {
+      "en-US": "VideoDB has two separate timeline systems. They are **not interchangeable**:",
+      "zh-Hans": "VideoDB 有两个独立的时间线系统。它们**不可互换**："
+    },
+    {
+      "en-US": "| | `videodb.timeline.Timeline` | `videodb.editor.Timeline` (Editor API) |\n|---|---|---|\n| **Import** | `from videodb.timeline import Timeline` | `from videodb.editor import Timeline as EditorTimeline` |\n| **Assets** | `VideoAsset`, `AudioAsset`, `ImageAsset`, `TextAsset` | `CaptionAsset`, `Clip`, `Track` |\n| **Methods** | `add_inline()`, `add_overlay()` | `add_track()` with `Track` / `Clip` |\n| **Best for** | Video composition, overlays, multi-clip editing | Caption/subtitle styling with animations |",
+      "zh-Hans": "| | `videodb.timeline.Timeline` | `videodb.editor.Timeline`（编辑器 API） |\n|---|---|---|\n| **导入** | `from videodb.timeline import Timeline` | `from videodb.editor import Timeline as EditorTimeline` |\n| **素材** | `VideoAsset`、`AudioAsset`、`ImageAsset`、`TextAsset` | `CaptionAsset`、`Clip`、`Track` |\n| **方法** | `add_inline()`、`add_overlay()` | `add_track()` 与 `Track` / `Clip` |\n| **最适合** | 视频合成、叠加、多片段编辑 | 带动画的字幕/字幕样式 |"
+    },
+    {
+      "en-US": "Do not mix assets from one API into the other. `CaptionAsset` only works with the Editor API. `VideoAsset` / `AudioAsset` / `ImageAsset` / `TextAsset` only work with `videodb.timeline.Timeline`.",
+      "zh-Hans": "不要将一个 API 的素材混入另一个 API。`CaptionAsset` 仅适用于编辑器 API。`VideoAsset` / `AudioAsset` / `ImageAsset` / `TextAsset` 仅适用于 `videodb.timeline.Timeline`。"
+    },
+    {
+      "en-US": "## Limitations & Constraints",
+      "zh-Hans": "## 限制与约束"
+    },
+    {
+      "en-US": "The timeline editor is designed for **non-destructive linear composition**. The following operations are **not supported**:",
+      "zh-Hans": "时间线编辑器专为**非破坏性线性合成**而设计。**不支持**以下操作："
+    },
+    {
+      "en-US": "### Not Possible",
+      "zh-Hans": "### 不可行的操作"
+    },
+    {
+      "en-US": "| Limitation | Detail |\n|---|---|\n| **No transitions or effects** | No crossfades, wipes, dissolves, or transitions between clips. All cuts are hard cuts. |\n| **No video-on-video (picture-in-picture)** | `add_inline()` only accepts `VideoAsset`. You cannot overlay one video stream on top of another. Image overlays can approximate static PiP but not live video. |\n| **No speed or playback control** | No slow-motion, fast-forward, reverse playback, or time remapping. `VideoAsset` has no `speed` parameter. |\n| **No crop, zoom, or pan** | Cannot crop a region of a video frame, apply zoom effects, or pan across a frame. `video.reframe()` is for aspect-ratio conversion only. |\n| **No video filters or color grading** | No brightness, contrast, saturation, hue, or color correction adjustments. |\n| **No animated text** | `TextAsset` is static for its full duration. No fade-in/out, movement, or animation. For animated captions, use `CaptionAsset` with the Editor API. |\n| **No mixed text styling** | A single `TextAsset` has one `TextStyle`. Cannot mix bold, italic, or colors within a single text block. |\n| **No blank or solid-color clips** | Cannot create a solid color frame, black screen, or standalone title card. Text and image overlays require a `VideoAsset` beneath them on the inline track. |\n| **No audio volume control** | `AudioAsset` has no `volume` parameter. Audio is either full volume or muted via `disable_other_tracks`. Cannot mix at a reduced level. |\n| **No keyframe animation** | Cannot change overlay properties over time (e.g., move an image from position A to B). |",
+      "zh-Hans": "| 限制 | 详情 |\n|---|---|\n| **无过渡或效果** | 片段之间没有交叉淡入淡出、划像、溶解或过渡。所有剪切都是硬切。 |\n| **无视频叠加视频（画中画）** | `add_inline()` 只接受 `VideoAsset`。无法将一个视频流叠加在另一个之上。图像叠加可以近似静态画中画，但不能是实时视频。 |\n| **无速度或播放控制** | 无慢动作、快进、反向播放或时间重映射。`VideoAsset` 没有 `speed` 参数。 |\n| **无裁剪、缩放或平移** | 无法裁剪视频帧的区域、应用缩放效果或平移帧。`video.reframe()` 仅用于宽高比转换。 |\n| **无视频滤镜或色彩分级** | 无亮度、对比度、饱和度、色调或色彩校正调整。 |\n| **无动画文本** | `TextAsset` 在其整个持续时间内是静态的。没有淡入/淡出、移动或动画。对于动画字幕，请使用带有编辑器 API 的 `CaptionAsset`。 |\n| **无混合文本样式** | 单个 `TextAsset` 有一个 `TextStyle`。无法在单个文本块内混合粗体、斜体或颜色。 |\n| **无空白或纯色片段** | 无法创建纯色帧、黑屏或独立标题卡。文本和图像叠加需要内联轨道上有 `VideoAsset` 在其下方。 |\n| **无音频音量控制** | `AudioAsset` 没有 `volume` 参数。音频要么是全音量，要么通过 `disable_other_tracks` 静音。无法以降低的音量混合。 |\n| **无关键帧动画** | 无法随时间更改叠加属性（例如，将图像从位置 A 移动到 B）。 |"
+    },
+    {
+      "en-US": "### Constraints",
+      "zh-Hans": "### 约束"
+    },
+    {
+      "en-US": "| Constraint | Detail |\n|---|---|\n| **Audio fade max 5 seconds** | `fade_in_duration` and `fade_out_duration` are capped at 5 seconds each. |\n| **Overlay positioning is absolute** | Overlays use absolute timestamps from the timeline start. Rearranging inline clips does not move their overlays. |\n| **Inline track is video only** | `add_inline()` only accepts `VideoAsset`. Audio, image, and text must use `add_overlay()`. |\n| **No overlay-to-clip binding** | Overlays are placed at a fixed timeline timestamp. There is no way to attach an overlay to a specific inline clip so it moves with it. |",
+      "zh-Hans": "| 约束 | 详情 |\n|---|---|\n| **音频淡入淡出最长 5 秒** | `fade_in_duration` 和 `fade_out_duration` 各自上限为 5 秒。 |\n| **叠加层定位是绝对的** | 叠加层使用时间线起始的绝对时间戳。重新排列内联片段不会移动其叠加层。 |\n| **内联轨道仅限视频** | `add_inline()` 仅接受 `VideoAsset`。音频、图像和文本必须使用 `add_overlay()`。 |\n| **无叠加层到片段的绑定** | 叠加层放置在固定的时间线时间戳上。无法将叠加层附加到特定的内联片段以使其随之移动。 |"
+    },
+    {
+      "en-US": "## Tips",
+      "zh-Hans": "## 提示"
+    },
+    {
+      "en-US": "- **Non-destructive**: Timelines never modify source media. You can create multiple timelines from the same assets.\n- **Overlay stacking**: Multiple overlays can start at the same timestamp. Audio overlays mix together; image/text overlays layer in add-order.\n- **Inline is VideoAsset only**: `add_inline()` only accepts `VideoAsset`. Use `add_overlay()` for `AudioAsset`, `ImageAsset`, and `TextAsset`.\n- **Trim precision**: `start`/`end` on `VideoAsset` and `AudioAsset` are in seconds.\n- **Muting video audio**: Set `disable_other_tracks=True` on `AudioAsset` to mute the original video audio when overlaying music or narration.\n- **Fade limits**: `fade_in_duration` and `fade_out_duration` on `AudioAsset` have a maximum of 5 seconds.\n- **Generated media**: Use `coll.generate_music()`, `coll.generate_sound_effect()`, `coll.generate_voice()`, and `coll.generate_image()` to create media that can be used as timeline assets immediately.",
+      "zh-Hans": "* **非破坏性**：时间线从不修改源媒体。您可以从相同的素材创建多个时间线。\n* **叠加层堆叠**：多个叠加层可以在同一时间戳开始。音频叠加层会混合在一起；图像/文本叠加层按添加顺序分层。\n* **内联轨道仅限 VideoAsset**：`add_inline()` 仅接受 `VideoAsset`。对于 `AudioAsset`、`ImageAsset` 和 `TextAsset`，请使用 `add_overlay()`。\n* **修剪精度**：`start`/`end` 在 `VideoAsset` 和 `AudioAsset` 上以秒为单位。\n* **静音视频音频**：在 `AudioAsset` 上设置 `disable_other_tracks=True`，以便在叠加音乐或旁白时静音原始视频音频。\n* **淡入淡出限制**：`fade_in_duration` 和 `fade_out_duration` 在 `AudioAsset` 上最长 5 秒。\n* **生成媒体**：使用 `coll.generate_music()`、`coll.generate_sound_effect()`、`coll.generate_voice()` 和 `coll.generate_image()` 创建可立即用作时间线素材的媒体。"
+    }
+  ]
+}

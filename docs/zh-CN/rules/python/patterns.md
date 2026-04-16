@@ -6,7 +6,7 @@ paths:
 
 # Python 模式
 
-> 本文档扩展了 [common/patterns.md](../common/patterns.md)，补充了 Python 特定的内容。
+> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 Python 特有的内容。
 
 ## 协议（鸭子类型）
 
@@ -33,8 +33,8 @@ class CreateUserRequest:
 ## 上下文管理器与生成器
 
 * 使用上下文管理器（`with` 语句）进行资源管理
-* 使用生成器进行惰性求值和内存高效迭代
+* 使用生成器实现惰性求值和内存高效的迭代
 
 ## 参考
 
-查看技能：`python-patterns`，了解包括装饰器、并发和包组织在内的综合模式。
+有关全面的模式（包括装饰器、并发和包组织），请参阅技能：`python-patterns`。

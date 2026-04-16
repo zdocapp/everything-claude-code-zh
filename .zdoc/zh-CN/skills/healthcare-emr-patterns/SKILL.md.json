@@ -1,0 +1,154 @@
+{
+  "sourceFile": "skills/healthcare-emr-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: healthcare-emr-patterns\ndescription: EMR/EHR development patterns for healthcare applications. Clinical safety, encounter workflows, prescription generation, clinical decision support integration, and accessibility-first UI for medical data entry.\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: healthcare-emr-patterns\ndescription: 医疗应用中的EMR/EHR开发模式。临床安全性、就诊工作流程、处方生成、临床决策支持集成，以及医疗数据录入的无障碍优先用户界面。\norigin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Healthcare EMR Development Patterns",
+      "zh-Hans": "# 医疗电子病历开发模式"
+    },
+    {
+      "en-US": "Patterns for building Electronic Medical Record (EMR) and Electronic Health Record (EHR) systems. Prioritizes patient safety, clinical accuracy, and practitioner efficiency.",
+      "zh-Hans": "构建电子病历（EMR）和电子健康档案（EHR）系统的模式。优先考虑患者安全、临床准确性和从业者效率。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用场景"
+    },
+    {
+      "en-US": "- Building patient encounter workflows (complaint, exam, diagnosis, prescription)\n- Implementing clinical note-taking (structured + free text + voice-to-text)\n- Designing prescription/medication modules with drug interaction checking\n- Integrating Clinical Decision Support Systems (CDSS)\n- Building lab result displays with reference range highlighting\n- Implementing audit trails for clinical data\n- Designing healthcare-accessible UIs for clinical data entry",
+      "zh-Hans": "* 构建患者就诊工作流（主诉、检查、诊断、处方）\n* 实施临床记录（结构化 + 自由文本 + 语音转文本）\n* 设计包含药物相互作用检查的处方/用药模块\n* 集成临床决策支持系统（CDSS）\n* 构建带有参考范围高亮显示的化验结果展示\n* 为临床数据实施审计追踪\n* 为临床数据录入设计医疗可访问性用户界面"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Patient Safety First",
+      "zh-Hans": "### 患者安全第一"
+    },
+    {
+      "en-US": "Every design decision must be evaluated against: \"Could this harm a patient?\"",
+      "zh-Hans": "每个设计决策都必须依据以下原则进行评估：“这可能会伤害患者吗？”"
+    },
+    {
+      "en-US": "- Drug interactions MUST alert, not silently pass\n- Abnormal lab values MUST be visually flagged\n- Critical vitals MUST trigger escalation workflows\n- No clinical data modification without audit trail",
+      "zh-Hans": "* 药物相互作用**必须**发出警报，而非静默通过\n* 异常化验值**必须**进行视觉标记\n* 关键生命体征**必须**触发升级工作流\n* 没有审计追踪，不得修改临床数据"
+    },
+    {
+      "en-US": "### Single-Page Encounter Flow",
+      "zh-Hans": "### 单页就诊流程"
+    },
+    {
+      "en-US": "Clinical encounters should flow vertically on a single page — no tab switching:",
+      "zh-Hans": "临床就诊应在单个页面上垂直流动——无需切换标签页："
+    },
+    {
+      "en-US": "```\nPatient Header (sticky — always visible)\n├── Demographics, allergies, active medications\n│\nEncounter Flow (vertical scroll)\n├── 1. Chief Complaint (structured templates + free text)\n├── 2. History of Present Illness\n├── 3. Physical Examination (system-wise)\n├── 4. Vitals (auto-trigger clinical scoring)\n├── 5. Diagnosis (ICD-10/SNOMED search)\n├── 6. Medications (drug DB + interaction check)\n├── 7. Investigations (lab/radiology orders)\n├── 8. Plan & Follow-up\n└── 9. Sign / Lock / Print\n```",
+      "zh-Hans": "```\n患者头部（置顶显示 — 始终可见）\n├── 人口统计信息、过敏史、当前用药\n│\n就诊流程（垂直滚动）\n├── 1. 主诉（结构化模板 + 自由文本）\n├── 2. 现病史\n├── 3. 体格检查（按系统分类）\n├── 4. 生命体征（自动触发临床评分）\n├── 5. 诊断（ICD-10/SNOMED 搜索）\n├── 6. 用药（药品数据库 + 相互作用检查）\n├── 7. 检查（检验/放射学医嘱）\n├── 8. 计划与随访\n└── 9. 签名 / 锁定 / 打印\n```"
+    },
+    {
+      "en-US": "### Smart Template System",
+      "zh-Hans": "### 智能模板系统"
+    },
+    {
+      "en-US": "```typescript\ninterface ClinicalTemplate {\n  id: string;\n  name: string;             // e.g., \"Chest Pain\"\n  chips: string[];          // clickable symptom chips\n  requiredFields: string[]; // mandatory data points\n  redFlags: string[];       // triggers non-dismissable alert\n  icdSuggestions: string[]; // pre-mapped diagnosis codes\n}\n```",
+      "zh-Hans": "```typescript\ninterface ClinicalTemplate {\n  id: string;\n  name: string;             // e.g., \"Chest Pain\"\n  chips: string[];          // clickable symptom chips\n  requiredFields: string[]; // mandatory data points\n  redFlags: string[];       // triggers non-dismissable alert\n  icdSuggestions: string[]; // pre-mapped diagnosis codes\n}\n```"
+    },
+    {
+      "en-US": "Red flags in any template must trigger a visible, non-dismissable alert — NOT a toast notification.",
+      "zh-Hans": "任何模板中的危险信号都必须触发一个可见的、不可关闭的警报——**不是**一个短暂通知。"
+    },
+    {
+      "en-US": "### Medication Safety Pattern",
+      "zh-Hans": "### 用药安全模式"
+    },
+    {
+      "en-US": "```\nUser selects drug\n  → Check current medications for interactions\n  → Check encounter medications for interactions\n  → Check patient allergies\n  → Validate dose against weight/age/renal function\n  → If CRITICAL interaction: BLOCK prescribing entirely\n  → Clinician must document override reason to proceed past a block\n  → If MAJOR interaction: display warning, require acknowledgment\n  → Log all alerts and override reasons in audit trail\n```",
+      "zh-Hans": "```\n用户选择药物\n  → 检查当前用药是否存在相互作用\n  → 检查就诊用药是否存在相互作用\n  → 检查患者过敏史\n  → 根据体重/年龄/肾功能验证剂量\n  → 如果存在 CRITICAL 相互作用：完全阻止处方开具\n  → 临床医生必须记录覆盖原因才能绕过阻止\n  → 如果存在 MAJOR 相互作用：显示警告，需要确认\n  → 将所有警报和覆盖原因记录在审计追踪中\n```"
+    },
+    {
+      "en-US": "Critical interactions **block prescribing by default**. The clinician must explicitly override with a documented reason stored in the audit trail. The system never silently allows a critical interaction.",
+      "zh-Hans": "关键相互作用**默认阻止处方开具**。临床医生必须明确覆盖，并提供记录在审计追踪中的理由。系统绝不允许静默通过关键相互作用。"
+    },
+    {
+      "en-US": "### Locked Encounter Pattern",
+      "zh-Hans": "### 锁定就诊模式"
+    },
+    {
+      "en-US": "Once a clinical encounter is signed:",
+      "zh-Hans": "一旦临床就诊被签署："
+    },
+    {
+      "en-US": "- No edits allowed — only an addendum (a separate linked record)\n- Both original and addendum appear in the patient timeline\n- Audit trail captures who signed, when, and any addendum records",
+      "zh-Hans": "* 不允许编辑——只能添加附录（一个单独的链接记录）\n* 原始记录和附录都显示在患者时间线中\n* 审计追踪记录签署者、签署时间以及任何附录记录"
+    },
+    {
+      "en-US": "### UI Patterns for Clinical Data",
+      "zh-Hans": "### 临床数据的用户界面模式"
+    },
+    {
+      "en-US": "**Vitals Display:** Current values with normal range highlighting (green/yellow/red), trend arrows vs previous, clinical scoring auto-calculated (NEWS2, qSOFA), escalation guidance inline.",
+      "zh-Hans": "**生命体征显示：** 当前值附带正常范围高亮（绿色/黄色/红色），与先前值的趋势箭头对比，自动计算的临床评分（NEWS2，qSOFA），内联的升级指导。"
+    },
+    {
+      "en-US": "**Lab Results Display:** Normal range highlighting, previous value comparison, critical values with non-dismissable alert, collection/analysis timestamps, pending orders with expected turnaround.",
+      "zh-Hans": "**化验结果显示：** 正常范围高亮，与先前值对比，关键值附带不可关闭的警报，采集/分析时间戳，待处理订单附带预期周转时间。"
+    },
+    {
+      "en-US": "**Prescription PDF:** One-click generation with patient demographics, allergies, diagnosis, drug details (generic + brand, dose, route, frequency, duration), clinician signature block.",
+      "zh-Hans": "**处方PDF：** 一键生成，包含患者人口统计信息、过敏史、诊断、药物详情（通用名 + 商品名、剂量、给药途径、频率、持续时间）、临床医生签名栏。"
+    },
+    {
+      "en-US": "### Accessibility for Healthcare",
+      "zh-Hans": "### 医疗可访问性"
+    },
+    {
+      "en-US": "Healthcare UIs have stricter requirements than typical web apps:",
+      "zh-Hans": "医疗用户界面比典型的网络应用有更严格的要求："
+    },
+    {
+      "en-US": "- 4.5:1 minimum contrast (WCAG AA) — clinicians work in varied lighting\n- Large touch targets (44x44px minimum) — for gloved/rushed interaction\n- Keyboard navigation — for power users entering data rapidly\n- No color-only indicators — always pair color with text/icon (colorblind clinicians)\n- Screen reader labels on all form fields\n- No auto-dismissing toasts for clinical alerts — clinician must actively acknowledge",
+      "zh-Hans": "* 4.5:1 最低对比度（WCAG AA）——临床医生在各种光照条件下工作\n* 大的触摸目标（最小 44x44 像素）——适用于戴手套/匆忙的交互\n* 键盘导航——供快速录入数据的熟练用户使用\n* 无纯颜色指示器——始终将颜色与文本/图标配对（色盲临床医生）\n* 所有表单字段都有屏幕阅读器标签\n* 临床警报不使用自动关闭的短暂通知——临床医生必须主动确认"
+    },
+    {
+      "en-US": "### Anti-Patterns",
+      "zh-Hans": "### 反模式"
+    },
+    {
+      "en-US": "- Storing clinical data in browser localStorage\n- Silent failures in drug interaction checking\n- Dismissable toasts for critical clinical alerts\n- Tab-based encounter UIs that fragment the clinical workflow\n- Allowing edits to signed/locked encounters\n- Displaying clinical data without audit trail\n- Using `any` type for clinical data structures",
+      "zh-Hans": "* 将临床数据存储在浏览器 localStorage 中\n* 药物相互作用检查中的静默失败\n* 关键临床警报使用可关闭的短暂通知\n* 基于标签页的就诊用户界面，割裂了临床工作流\n* 允许编辑已签署/锁定的就诊记录\n* 显示没有审计追踪的临床数据\n* 对临床数据结构使用 `any` 类型"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### Example 1: Patient Encounter Flow",
+      "zh-Hans": "### 示例 1：患者就诊流程"
+    },
+    {
+      "en-US": "```\nDoctor opens encounter for Patient #4521\n  → Sticky header shows: \"Rajesh M, 58M, Allergies: Penicillin, Active Meds: Metformin 500mg\"\n  → Chief Complaint: selects \"Chest Pain\" template\n    → Clicks chips: \"substernal\", \"radiating to left arm\", \"crushing\"\n    → Red flag \"crushing substernal chest pain\" triggers non-dismissable alert\n  → Examination: CVS system — \"S1 S2 normal, no murmur\"\n  → Vitals: HR 110, BP 90/60, SpO2 94%\n    → NEWS2 auto-calculates: score 8, risk HIGH, escalation alert shown\n  → Diagnosis: searches \"ACS\" → selects ICD-10 I21.9\n  → Medications: selects Aspirin 300mg\n    → CDSS checks against Metformin: no interaction\n  → Signs encounter → locked, addendum-only from this point\n```",
+      "zh-Hans": "```\nDoctor opens encounter for Patient #4521\n  → 粘性标题显示：\"Rajesh M, 58M, 过敏史：青霉素，当前用药：二甲双胍 500mg\"\n  → 主诉：选择\"胸痛\"模板\n    → 点击标签：\"胸骨后\"、\"向左臂放射\"、\"压榨性\"\n    → 红色标志\"压榨性胸骨后胸痛\"触发不可关闭的警报\n  → 体格检查：心血管系统 — \"S1 S2 正常，无杂音\"\n  → 生命体征：心率 110，血压 90/60，血氧饱和度 94%\n    → NEWS2 自动计算：评分 8，风险 高，显示升级警报\n  → 诊断：搜索\"ACS\" → 选择 ICD-10 I21.9\n  → 药物：选择阿司匹林 300mg\n    → 临床决策支持系统检查与二甲双胍的相互作用：无相互作用\n  → 签署病历 → 锁定，此后仅可添加附录\n```"
+    },
+    {
+      "en-US": "### Example 2: Medication Safety Workflow",
+      "zh-Hans": "### 示例 2：用药安全工作流"
+    },
+    {
+      "en-US": "```\nDoctor prescribes Warfarin for Patient #4521\n  → CDSS detects: Warfarin + Aspirin = CRITICAL interaction\n  → UI: red non-dismissable modal blocks prescribing\n  → Doctor clicks \"Override with reason\"\n  → Types: \"Benefits outweigh risks — monitored INR protocol\"\n  → Override reason + alert stored in audit trail\n  → Prescription proceeds with documented override\n```",
+      "zh-Hans": "```\n医生为患者 #4521 开具华法林处方\n  → CDSS 检测到：华法林 + 阿司匹林 = 严重相互作用\n  → 用户界面：红色不可关闭模态框阻止处方开具\n  → 医生点击\"说明理由后覆盖\"\n  → 输入：\"获益大于风险 — 已监测 INR 方案\"\n  → 覆盖理由 + 警报存储在审计追踪中\n  → 处方在记录覆盖后继续进行\n```"
+    },
+    {
+      "en-US": "### Example 3: Locked Encounter + Addendum",
+      "zh-Hans": "### 示例 3：锁定就诊 + 附录"
+    },
+    {
+      "en-US": "```\nEncounter #E-2024-0891 signed by Dr. Shah at 14:30\n  → All fields locked — no edit buttons visible\n  → \"Add Addendum\" button available\n  → Dr. Shah clicks addendum, adds: \"Lab results received — Troponin elevated\"\n  → New record E-2024-0891-A1 linked to original\n  → Timeline shows both: original encounter + addendum with timestamps\n```",
+      "zh-Hans": "```\nEncounter #E-2024-0891 signed by Dr. Shah at 14:30\n  → All fields locked — no edit buttons visible\n  → \"Add Addendum\" button available\n  → Dr. Shah clicks addendum, adds: \"Lab results received — Troponin elevated\"\n  → New record E-2024-0891-A1 linked to original\n  → Timeline shows both: original encounter + addendum with timestamps\n```"
+    }
+  ]
+}

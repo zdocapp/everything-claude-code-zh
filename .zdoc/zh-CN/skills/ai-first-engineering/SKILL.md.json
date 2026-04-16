@@ -1,0 +1,82 @@
+{
+  "sourceFile": "skills/ai-first-engineering/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: ai-first-engineering\ndescription: Engineering operating model for teams where AI agents generate a large share of implementation output.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: ai-first-engineering\ndescription: 工程运营模式，适用于AI代理生成大部分实施输出的团队。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# AI-First Engineering",
+      "zh-Hans": "# AI 优先工程"
+    },
+    {
+      "en-US": "Use this skill when designing process, reviews, and architecture for teams shipping with AI-assisted code generation.",
+      "zh-Hans": "在为由 AI 辅助代码生成的团队设计流程、评审和架构时，使用此技能。"
+    },
+    {
+      "en-US": "## Process Shifts",
+      "zh-Hans": "## 流程转变"
+    },
+    {
+      "en-US": "1. Planning quality matters more than typing speed.\n2. Eval coverage matters more than anecdotal confidence.\n3. Review focus shifts from syntax to system behavior.",
+      "zh-Hans": "1. 规划质量比打字速度更重要。\n2. 评估覆盖率比主观信心更重要。\n3. 评审重点从语法转向系统行为。"
+    },
+    {
+      "en-US": "## Architecture Requirements",
+      "zh-Hans": "## 架构要求"
+    },
+    {
+      "en-US": "Prefer architectures that are agent-friendly:",
+      "zh-Hans": "优先选择对智能体友好的架构："
+    },
+    {
+      "en-US": "- explicit boundaries\n- stable contracts\n- typed interfaces\n- deterministic tests",
+      "zh-Hans": "* 明确的边界\n* 稳定的契约\n* 类型化的接口\n* 确定性的测试"
+    },
+    {
+      "en-US": "Avoid implicit behavior spread across hidden conventions.",
+      "zh-Hans": "避免隐含行为分散在隐藏的约定中。"
+    },
+    {
+      "en-US": "## Code Review in AI-First Teams",
+      "zh-Hans": "## AI 优先团队中的代码评审"
+    },
+    {
+      "en-US": "Review for:",
+      "zh-Hans": "评审关注："
+    },
+    {
+      "en-US": "- behavior regressions\n- security assumptions\n- data integrity\n- failure handling\n- rollout safety",
+      "zh-Hans": "* 行为回归\n* 安全假设\n* 数据完整性\n* 故障处理\n* 发布安全性"
+    },
+    {
+      "en-US": "Minimize time spent on style issues already covered by automation.",
+      "zh-Hans": "尽量减少在自动化已覆盖的风格问题上花费的时间。"
+    },
+    {
+      "en-US": "## Hiring and Evaluation Signals",
+      "zh-Hans": "## 招聘与评估信号"
+    },
+    {
+      "en-US": "Strong AI-first engineers:",
+      "zh-Hans": "优秀的 AI 优先工程师："
+    },
+    {
+      "en-US": "- decompose ambiguous work cleanly\n- define measurable acceptance criteria\n- produce high-signal prompts and evals\n- enforce risk controls under delivery pressure",
+      "zh-Hans": "* 清晰地分解模糊的工作\n* 定义可衡量的验收标准\n* 生成高价值的提示和评估\n* 在交付压力下执行风险控制"
+    },
+    {
+      "en-US": "## Testing Standard",
+      "zh-Hans": "## 测试标准"
+    },
+    {
+      "en-US": "Raise testing bar for generated code:",
+      "zh-Hans": "提高生成代码的测试标准："
+    },
+    {
+      "en-US": "- required regression coverage for touched domains\n- explicit edge-case assertions\n- integration checks for interface boundaries",
+      "zh-Hans": "* 对涉及领域要求回归测试覆盖率\n* 明确的边界情况断言\n* 接口边界的集成检查"
+    }
+  ]
+}

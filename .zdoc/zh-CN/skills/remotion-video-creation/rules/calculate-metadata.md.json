@@ -1,0 +1,90 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/calculate-metadata.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: calculate-metadata\ndescription: Dynamically set composition duration, dimensions, and props\nmetadata:\n  tags: calculateMetadata, duration, dimensions, props, dynamic\n---",
+      "zh-Hans": "---\nname: calculate-metadata\ndescription: 动态设置组合持续时间、尺寸和属性\nmetadata:\n  tags: calculateMetadata, duration, dimensions, props, dynamic\n---"
+    },
+    {
+      "en-US": "# Using calculateMetadata",
+      "zh-Hans": "# 使用 calculateMetadata"
+    },
+    {
+      "en-US": "Use `calculateMetadata` on a `<Composition>` to dynamically set duration, dimensions, and transform props before rendering.",
+      "zh-Hans": "在 `<Composition>` 上使用 `calculateMetadata`，以在渲染前动态设置时长、尺寸和转换属性。"
+    },
+    {
+      "en-US": "```tsx\n<Composition id=\"MyComp\" component={MyComponent} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{videoSrc: 'https://remotion.media/video.mp4'}} calculateMetadata={calculateMetadata} />\n```",
+      "zh-Hans": "```tsx\n<Composition id=\"MyComp\" component={MyComponent} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{videoSrc: 'https://remotion.media/video.mp4'}} calculateMetadata={calculateMetadata} />\n```"
+    },
+    {
+      "en-US": "## Setting duration based on a video",
+      "zh-Hans": "## 基于视频设置时长"
+    },
+    {
+      "en-US": "Use the `getMediaMetadata()` function from the mediabunny/metadata skill to get the video duration:",
+      "zh-Hans": "使用 mediabunny/metadata 技能中的 `getMediaMetadata()` 函数来获取视频时长："
+    },
+    {
+      "en-US": "```tsx\nimport {CalculateMetadataFunction} from 'remotion';\nimport {getMediaMetadata} from '../get-media-metadata';\n\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  const {durationInSeconds} = await getMediaMetadata(props.videoSrc);\n\n  return {\n    durationInFrames: Math.ceil(durationInSeconds * 30),\n  };\n};\n```",
+      "zh-Hans": "```tsx\nimport {CalculateMetadataFunction} from 'remotion';\nimport {getMediaMetadata} from '../get-media-metadata';\n\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  const {durationInSeconds} = await getMediaMetadata(props.videoSrc);\n\n  return {\n    durationInFrames: Math.ceil(durationInSeconds * 30),\n  };\n};\n```"
+    },
+    {
+      "en-US": "## Matching dimensions of a video",
+      "zh-Hans": "## 匹配视频的尺寸"
+    },
+    {
+      "en-US": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  const {durationInSeconds, dimensions} = await getMediaMetadata(props.videoSrc);\n\n  return {\n    durationInFrames: Math.ceil(durationInSeconds * 30),\n    width: dimensions?.width ?? 1920,\n    height: dimensions?.height ?? 1080,\n  };\n};\n```",
+      "zh-Hans": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  const {durationInSeconds, dimensions} = await getMediaMetadata(props.videoSrc);\n\n  return {\n    durationInFrames: Math.ceil(durationInSeconds * 30),\n    width: dimensions?.width ?? 1920,\n    height: dimensions?.height ?? 1080,\n  };\n};\n```"
+    },
+    {
+      "en-US": "## Setting duration based on multiple videos",
+      "zh-Hans": "## 基于多个视频设置时长"
+    },
+    {
+      "en-US": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  const metadataPromises = props.videos.map((video) => getMediaMetadata(video.src));\n  const allMetadata = await Promise.all(metadataPromises);\n\n  const totalDuration = allMetadata.reduce((sum, meta) => sum + meta.durationInSeconds, 0);\n\n  return {\n    durationInFrames: Math.ceil(totalDuration * 30),\n  };\n};\n```",
+      "zh-Hans": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  const metadataPromises = props.videos.map((video) => getMediaMetadata(video.src));\n  const allMetadata = await Promise.all(metadataPromises);\n\n  const totalDuration = allMetadata.reduce((sum, meta) => sum + meta.durationInSeconds, 0);\n\n  return {\n    durationInFrames: Math.ceil(totalDuration * 30),\n  };\n};\n```"
+    },
+    {
+      "en-US": "## Setting a default outName",
+      "zh-Hans": "## 设置默认的 outName"
+    },
+    {
+      "en-US": "Set the default output filename based on props:",
+      "zh-Hans": "基于属性设置默认的输出文件名："
+    },
+    {
+      "en-US": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  return {\n    defaultOutName: `video-${props.id}.mp4`,\n  };\n};\n```",
+      "zh-Hans": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props}) => {\n  return {\n    defaultOutName: `video-${props.id}.mp4`,\n  };\n};\n```"
+    },
+    {
+      "en-US": "## Transforming props",
+      "zh-Hans": "## 转换属性"
+    },
+    {
+      "en-US": "Fetch data or transform props before rendering:",
+      "zh-Hans": "在渲染前获取数据或转换属性："
+    },
+    {
+      "en-US": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props, abortSignal}) => {\n  const response = await fetch(props.dataUrl, {signal: abortSignal});\n  const data = await response.json();\n\n  return {\n    props: {\n      ...props,\n      fetchedData: data,\n    },\n  };\n};\n```",
+      "zh-Hans": "```tsx\nconst calculateMetadata: CalculateMetadataFunction<Props> = async ({props, abortSignal}) => {\n  const response = await fetch(props.dataUrl, {signal: abortSignal});\n  const data = await response.json();\n\n  return {\n    props: {\n      ...props,\n      fetchedData: data,\n    },\n  };\n};\n```"
+    },
+    {
+      "en-US": "The `abortSignal` cancels stale requests when props change in the Studio.",
+      "zh-Hans": "当 Studio 中的属性发生变化时，`abortSignal` 会取消过时的请求。"
+    },
+    {
+      "en-US": "## Return value",
+      "zh-Hans": "## 返回值"
+    },
+    {
+      "en-US": "All fields are optional. Returned values override the `<Composition>` props:",
+      "zh-Hans": "所有字段都是可选的。返回的值会覆盖 `<Composition>` 属性："
+    },
+    {
+      "en-US": "- `durationInFrames`: Number of frames\n- `width`: Composition width in pixels\n- `height`: Composition height in pixels\n- `fps`: Frames per second\n- `props`: Transformed props passed to the component\n- `defaultOutName`: Default output filename\n- `defaultCodec`: Default codec for rendering",
+      "zh-Hans": "* `durationInFrames`：帧数\n* `width`：合成宽度（像素）\n* `height`：合成高度（像素）\n* `fps`：每秒帧数\n* `props`：传递给组件的转换后属性\n* `defaultOutName`：默认输出文件名\n* `defaultCodec`：渲染的默认编解码器"
+    }
+  ]
+}

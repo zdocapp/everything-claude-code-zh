@@ -1,0 +1,78 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/3d.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: 3d\ndescription: 3D content in Remotion using Three.js and React Three Fiber.\nmetadata:\n  tags: 3d, three, threejs\n---",
+      "zh-Hans": "---\nname: 3d\ndescription: 使用 Three.js 和 React Three Fiber 在 Remotion 中创建 3D 内容。\nmetadata:\n  tags: 3d, three, threejs\n---"
+    },
+    {
+      "en-US": "# Using Three.js and React Three Fiber in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用 Three.js 和 React Three Fiber"
+    },
+    {
+      "en-US": "Follow React Three Fiber and Three.js best practices.\nOnly the following Remotion-specific rules need to be followed:",
+      "zh-Hans": "遵循 React Three Fiber 和 Three.js 的最佳实践。\n只需遵循以下 Remotion 特定的规则："
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "First, the `@remotion/three` package needs to be installed.\nIf it is not, use the following command:",
+      "zh-Hans": "首先，需要安装 `@remotion/three` 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/three # If project uses npm\nbunx remotion add @remotion/three # If project uses bun\nyarn remotion add @remotion/three # If project uses yarn\npnpm exec remotion add @remotion/three # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/three # If project uses npm\nbunx remotion add @remotion/three # If project uses bun\nyarn remotion add @remotion/three # If project uses yarn\npnpm exec remotion add @remotion/three # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "## Using ThreeCanvas",
+      "zh-Hans": "## 使用 ThreeCanvas"
+    },
+    {
+      "en-US": "You MUST wrap 3D content in `<ThreeCanvas>` and include proper lighting.\n`<ThreeCanvas>` MUST have a `width` and `height` prop.",
+      "zh-Hans": "您**必须**将 3D 内容包裹在 `<ThreeCanvas>` 中，并包含适当的照明。\n`<ThreeCanvas>` **必须**具有 `width` 和 `height` 属性。"
+    },
+    {
+      "en-US": "```tsx\nimport { ThreeCanvas } from \"@remotion/three\";\nimport { useVideoConfig } from \"remotion\";\n\nconst { width, height } = useVideoConfig();\n\n<ThreeCanvas width={width} height={height}>\n  <ambientLight intensity={0.4} />\n  <directionalLight position={[5, 5, 5]} intensity={0.8} />\n  <mesh>\n    <sphereGeometry args={[1, 32, 32]} />\n    <meshStandardMaterial color=\"red\" />\n  </mesh>\n</ThreeCanvas>\n```",
+      "zh-Hans": "```tsx\nimport { ThreeCanvas } from \"@remotion/three\";\nimport { useVideoConfig } from \"remotion\";\n\nconst { width, height } = useVideoConfig();\n\n<ThreeCanvas width={width} height={height}>\n  <ambientLight intensity={0.4} />\n  <directionalLight position={[5, 5, 5]} intensity={0.8} />\n  <mesh>\n    <sphereGeometry args={[1, 32, 32]} />\n    <meshStandardMaterial color=\"red\" />\n  </mesh>\n</ThreeCanvas>\n```"
+    },
+    {
+      "en-US": "## No animations not driven by `useCurrentFrame()`",
+      "zh-Hans": "## 禁止非由 `useCurrentFrame()` 驱动的动画"
+    },
+    {
+      "en-US": "Shaders, models etc MUST NOT animate by themselves.\nNo animations are allowed unless they are driven by `useCurrentFrame()`.\nOtherwise, it will cause flickering during rendering.",
+      "zh-Hans": "着色器、模型等**不得**自行动画。\n除非动画由 `useCurrentFrame()` 驱动，否则不允许任何动画。\n否则，在渲染过程中会导致闪烁。"
+    },
+    {
+      "en-US": "Using `useFrame()` from `@react-three/fiber` is forbidden.",
+      "zh-Hans": "禁止使用来自 `@react-three/fiber` 的 `useFrame()`。"
+    },
+    {
+      "en-US": "## Animate using `useCurrentFrame()`",
+      "zh-Hans": "## 使用 `useCurrentFrame()` 进行动画"
+    },
+    {
+      "en-US": "Use `useCurrentFrame()` to perform animations.",
+      "zh-Hans": "使用 `useCurrentFrame()` 来执行动画。"
+    },
+    {
+      "en-US": "```tsx\nconst frame = useCurrentFrame();\nconst rotationY = frame * 0.02;\n\n<mesh rotation={[0, rotationY, 0]}>\n  <boxGeometry args={[2, 2, 2]} />\n  <meshStandardMaterial color=\"#4a9eff\" />\n</mesh>\n```",
+      "zh-Hans": "```tsx\nconst frame = useCurrentFrame();\nconst rotationY = frame * 0.02;\n\n<mesh rotation={[0, rotationY, 0]}>\n  <boxGeometry args={[2, 2, 2]} />\n  <meshStandardMaterial color=\"#4a9eff\" />\n</mesh>\n```"
+    },
+    {
+      "en-US": "## Using `<Sequence>` inside `<ThreeCanvas>`",
+      "zh-Hans": "## 在 `<ThreeCanvas>` 内部使用 `<Sequence>`"
+    },
+    {
+      "en-US": "The `layout` prop of any `<Sequence>` inside a `<ThreeCanvas>` must be set to `none`.",
+      "zh-Hans": "任何位于 `<ThreeCanvas>` 内部的 `<Sequence>`，其 `layout` 属性必须设置为 `none`。"
+    },
+    {
+      "en-US": "```tsx\nimport { Sequence } from \"remotion\";\nimport { ThreeCanvas } from \"@remotion/three\";\n\nconst { width, height } = useVideoConfig();\n\n<ThreeCanvas width={width} height={height}>\n  <Sequence layout=\"none\">\n    <mesh>\n      <boxGeometry args={[2, 2, 2]} />\n      <meshStandardMaterial color=\"#4a9eff\" />\n    </mesh>\n  </Sequence>\n</ThreeCanvas>\n```",
+      "zh-Hans": "```tsx\nimport { Sequence } from \"remotion\";\nimport { ThreeCanvas } from \"@remotion/three\";\n\nconst { width, height } = useVideoConfig();\n\n<ThreeCanvas width={width} height={height}>\n  <Sequence layout=\"none\">\n    <mesh>\n      <boxGeometry args={[2, 2, 2]} />\n      <meshStandardMaterial color=\"#4a9eff\" />\n    </mesh>\n  </Sequence>\n</ThreeCanvas>\n```"
+    }
+  ]
+}

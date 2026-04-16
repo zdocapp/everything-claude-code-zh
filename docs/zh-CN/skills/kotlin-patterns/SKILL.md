@@ -1,28 +1,28 @@
 ---
 name: kotlin-patterns
-description: 惯用的Kotlin模式、最佳实践和约定，用于构建健壮、高效且可维护的Kotlin应用程序，包括协程、空安全和DSL构建器。
+description: 构建健壮、高效且可维护的Kotlin应用程序的惯用Kotlin模式、最佳实践和约定，包括协程、空安全和DSL构建器。
 origin: ECC
 ---
 
 # Kotlin 开发模式
 
-适用于构建健壮、高效、可维护应用程序的惯用 Kotlin 模式与最佳实践。
+用于构建健壮、高效和可维护应用程序的惯用 Kotlin 模式与最佳实践。
 
 ## 使用时机
 
 * 编写新的 Kotlin 代码
-* 审查 Kotlin 代码
+* 评审 Kotlin 代码
 * 重构现有的 Kotlin 代码
 * 设计 Kotlin 模块或库
 * 配置 Gradle Kotlin DSL 构建
 
 ## 工作原理
 
-本技能在七个关键领域强制执行惯用的 Kotlin 约定：使用类型系统和安全调用运算符实现空安全；通过数据类的 `val` 和 `copy()` 实现不可变性；使用密封类和接口实现穷举类型层次结构；使用协程和 `Flow` 实现结构化并发；使用扩展函数在不使用继承的情况下添加行为；使用 `@DslMarker` 和 lambda 接收器构建类型安全的 DSL；以及使用 Gradle Kotlin DSL 进行构建配置。
+此技能在七个关键领域强制执行惯用的 Kotlin 约定：使用类型系统和安全调用操作符实现空安全；通过数据类的 `val` 和 `copy()` 实现不可变性；使用密封类和接口实现详尽的类型层次结构；使用协程和 `Flow` 实现结构化并发；使用扩展函数在不继承的情况下添加行为；使用 `@DslMarker` 和 lambda 接收者实现类型安全的 DSL 构建器；以及使用 Gradle Kotlin DSL 进行构建配置。
 
 ## 示例
 
-**使用 Elvis 运算符实现空安全：**
+**使用 Elvis 操作符实现空安全：**
 
 ```kotlin
 fun getUserEmail(userId: String): String {
@@ -31,7 +31,7 @@ fun getUserEmail(userId: String): String {
 }
 ```
 
-**使用密封类处理穷举结果：**
+**用于详尽结果的密封类：**
 
 ```kotlin
 sealed class Result<out T> {
@@ -103,7 +103,7 @@ var currentUser: User? = null // Avoid mutable global state
 val mutableUsers = mutableListOf<User>() // Avoid unless truly needed
 ```
 
-### 3. 表达式体和单表达式函数
+### 3. 表达式体与单表达式函数
 
 使用表达式体编写简洁、可读的函数。
 
@@ -131,9 +131,9 @@ fun isAdult(age: Int): Boolean {
 }
 ```
 
-### 4. 数据类用于值对象
+### 4. 用于值对象的数据类
 
-使用数据类表示主要包含数据的类型。
+对于主要持有数据的类型，使用数据类。
 
 ```kotlin
 // Good: Data class with copy, equals, hashCode, toString
@@ -161,9 +161,9 @@ value class Email(val value: String) {
 fun getUser(id: UserId): User = userRepository.findById(id)
 ```
 
-## 密封类和接口
+## 密封类与接口
 
-### 建模受限的层次结构
+### 建模受限层次结构
 
 ```kotlin
 // Good: Sealed class for exhaustive when
@@ -214,7 +214,7 @@ fun ApiError.toStatusCode(): Int = when (this) {
 
 ## 作用域函数
 
-### 何时使用各个函数
+### 何时使用每个函数
 
 ```kotlin
 // let: Transform nullable or scoped result
@@ -262,7 +262,7 @@ city?.let { println(it) }
 
 ## 扩展函数
 
-### 在不使用继承的情况下添加功能
+### 在不继承的情况下添加功能
 
 ```kotlin
 // Good: Domain-specific extensions
@@ -333,7 +333,7 @@ suspend fun fetchDashboard(userId: String): Dashboard =
     }
 ```
 
-### Flow 用于响应式流
+### 用于响应式流的 Flow
 
 ```kotlin
 // Good: Cold flow with proper error handling
@@ -657,17 +657,17 @@ val (active, inactive) = users.partition { it.isActive }
 | `data class` | 用于具有 equals/hashCode/copy 的值对象 |
 | `sealed class/interface` | 用于受限的类型层次结构 |
 | `value class` | 用于零开销的类型安全包装器 |
-| 表达式 `when` | 穷举模式匹配 |
+| 表达式 `when` | 详尽的模式匹配 |
 | 安全调用 `?.` | 空安全的成员访问 |
-| Elvis `?:` | 为可空类型提供默认值 |
-| `let`/`apply`/`also`/`run`/`with` | 用于编写简洁代码的作用域函数 |
-| 扩展函数 | 在不使用继承的情况下添加行为 |
+| Elvis `?:` | 可空类型的默认值 |
+| `let`/`apply`/`also`/`run`/`with` | 用于编写清晰代码的作用域函数 |
+| 扩展函数 | 在不继承的情况下添加行为 |
 | `copy()` | 数据类上的不可变更新 |
 | `require`/`check` | 前置条件断言 |
-| 协程 `async`/`await` | 结构化并发执行 |
+| 协程 `async`/`await` | 结构化的并发执行 |
 | `Flow` | 冷响应式流 |
 | `sequence` | 惰性求值 |
-| 委托 `by` | 在不使用继承的情况下重用实现 |
+| 委托 `by` | 在不继承的情况下重用实现 |
 
 ## 应避免的反模式
 

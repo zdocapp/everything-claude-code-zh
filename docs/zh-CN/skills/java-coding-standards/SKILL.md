@@ -1,6 +1,6 @@
 ---
 name: java-coding-standards
-description: "Spring Boot服务的Java编码标准：命名、不可变性、Optional用法、流、异常、泛型和项目布局。"
+description: "Spring Boot 服务的 Java 编码标准：命名、不可变性、Optional 使用、流、异常、泛型和项目布局。"
 origin: ECC
 ---
 
@@ -8,19 +8,19 @@ origin: ECC
 
 适用于 Spring Boot 服务中可读、可维护的 Java (17+) 代码的规范。
 
-## 何时激活
+## 何时启用
 
-* 在 Spring Boot 项目中编写或审查 Java 代码时
+* 在 Spring Boot 项目中编写或评审 Java 代码时
 * 强制执行命名、不可变性或异常处理约定时
-* 使用记录类、密封类或模式匹配（Java 17+）时
-* 审查 Optional、流或泛型的使用时
+* 使用记录类、密封类或模式匹配 (Java 17+) 时
+* 评审 Optional、流或泛型的使用时
 * 构建包和项目布局时
 
 ## 核心原则
 
 * 清晰优于巧妙
 * 默认不可变；最小化共享可变状态
-* 快速失败并提供有意义的异常
+* 通过有意义的异常快速失败
 * 一致的命名和包结构
 
 ## 命名
@@ -63,7 +63,7 @@ return market
     .orElseThrow(() -> new EntityNotFoundException("Market not found"));
 ```
 
-## Streams 最佳实践
+## 流的最佳实践
 
 ```java
 // PASS: Use streams for transformations, keep pipelines short
@@ -77,9 +77,9 @@ List<String> names = markets.stream()
 
 ## 异常
 
-* 领域错误使用非受检异常；包装技术异常时提供上下文
-* 创建特定领域的异常（例如，`MarketNotFoundException`）
-* 避免宽泛的 `catch (Exception ex)`，除非在中心位置重新抛出/记录
+* 对领域错误使用非受检异常；用上下文包装技术异常
+* 创建领域特定的异常 (例如 `MarketNotFoundException`)
+* 除非在中心位置重新抛出/记录，否则避免宽泛的 `catch (Exception ex)`
 
 ```java
 throw new MarketNotFoundException(slug);
@@ -88,7 +88,7 @@ throw new MarketNotFoundException(slug);
 ## 泛型和类型安全
 
 * 避免原始类型；声明泛型参数
-* 对于可复用的工具类，优先使用有界泛型
+* 对于可重用的工具类，优先使用有界泛型
 
 ```java
 public <T extends Identifiable> Map<Long, T> indexById(Collection<T> items) { ... }
@@ -110,20 +110,20 @@ src/main/resources/
 src/test/java/... (mirrors main)
 ```
 
-## 格式化和风格
+## 格式与风格
 
-* 一致地使用 2 或 4 个空格（项目标准）
+* 一致地使用 2 或 4 个空格 (项目标准)
 * 每个文件一个公共顶级类型
 * 保持方法简短且专注；提取辅助方法
 * 成员顺序：常量、字段、构造函数、公共方法、受保护方法、私有方法
 
-## 需要避免的代码坏味道
+## 应避免的代码异味
 
 * 长参数列表 → 使用 DTO/构建器
-* 深度嵌套 → 提前返回
+* 深层嵌套 → 提前返回
 * 魔法数字 → 命名常量
 * 静态可变状态 → 优先使用依赖注入
-* 静默捕获块 → 记录日志并处理或重新抛出
+* 静默捕获块 → 记录并处理或重新抛出
 
 ## 日志记录
 
@@ -133,15 +133,15 @@ log.info("fetch_market slug={}", slug);
 log.error("failed_fetch_market slug={}", slug, ex);
 ```
 
-## Null 处理
+## 空值处理
 
 * 仅在不可避免时接受 `@Nullable`；否则使用 `@NonNull`
-* 在输入上使用 Bean 验证（`@NotNull`, `@NotBlank`）
+* 对输入使用 Bean 验证 (`@NotNull`, `@NotBlank`)
 
 ## 测试期望
 
-* 使用 JUnit 5 + AssertJ 进行流畅的断言
+* 使用 JUnit 5 + AssertJ 进行流畅断言
 * 使用 Mockito 进行模拟；尽可能避免部分模拟
 * 倾向于确定性测试；没有隐藏的休眠
 
-**记住**：保持代码意图明确、类型安全且可观察。除非证明有必要，否则优先考虑可维护性而非微优化。
+**请记住**：保持代码意图明确、类型安全且可观察。优先考虑可维护性，而非微优化，除非证明有必要。

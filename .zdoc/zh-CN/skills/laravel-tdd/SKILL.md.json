@@ -1,0 +1,218 @@
+{
+  "sourceFile": "skills/laravel-tdd/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: laravel-tdd\ndescription: Test-driven development for Laravel with PHPUnit and Pest, factories, database testing, fakes, and coverage targets.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: laravel-tdd\ndescription: 使用PHPUnit和Pest进行Laravel的测试驱动开发，包括工厂、数据库测试、模拟和覆盖率目标。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Laravel TDD Workflow",
+      "zh-Hans": "# Laravel TDD 工作流"
+    },
+    {
+      "en-US": "Test-driven development for Laravel applications using PHPUnit and Pest with 80%+ coverage (unit + feature).",
+      "zh-Hans": "使用 PHPUnit 和 Pest 为 Laravel 应用程序进行测试驱动开发，实现 80% 以上的覆盖率（单元测试 + 功能测试）。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- New features or endpoints in Laravel\n- Bug fixes or refactors\n- Testing Eloquent models, policies, jobs, and notifications\n- Prefer Pest for new tests unless the project already standardizes on PHPUnit",
+      "zh-Hans": "* Laravel 中的新功能或端点\n* 错误修复或重构\n* 测试 Eloquent 模型、策略、任务和通知\n* 除非项目已标准化使用 PHPUnit，否则新测试优先使用 Pest"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Red-Green-Refactor Cycle",
+      "zh-Hans": "### 红-绿-重构循环"
+    },
+    {
+      "en-US": "1) Write a failing test\n2) Implement the minimal change to pass\n3) Refactor while keeping tests green",
+      "zh-Hans": "1. 编写一个失败的测试\n2. 实现最小的更改以通过测试\n3. 在保持测试通过的同时进行重构"
+    },
+    {
+      "en-US": "### Test Layers",
+      "zh-Hans": "### 测试层级"
+    },
+    {
+      "en-US": "- **Unit**: pure PHP classes, value objects, services\n- **Feature**: HTTP endpoints, auth, validation, policies\n- **Integration**: database + queue + external boundaries",
+      "zh-Hans": "* **单元测试**：纯 PHP 类、值对象、服务\n* **功能测试**：HTTP 端点、身份验证、验证、策略\n* **集成测试**：数据库 + 队列 + 外部边界"
+    },
+    {
+      "en-US": "Choose layers based on scope:",
+      "zh-Hans": "根据范围选择层级："
+    },
+    {
+      "en-US": "- Use **Unit** tests for pure business logic and services.\n- Use **Feature** tests for HTTP, auth, validation, and response shape.\n- Use **Integration** tests when validating DB/queues/external services together.",
+      "zh-Hans": "* 对纯业务逻辑和服务使用**单元**测试。\n* 对 HTTP、身份验证、验证和响应结构使用**功能**测试。\n* 当需要验证数据库/队列/外部服务协同工作时使用**集成**测试。"
+    },
+    {
+      "en-US": "### Database Strategy",
+      "zh-Hans": "### 数据库策略"
+    },
+    {
+      "en-US": "- `RefreshDatabase` for most feature/integration tests (runs migrations once per test run, then wraps each test in a transaction when supported; in-memory databases may re-migrate per test)\n- `DatabaseTransactions` when the schema is already migrated and you only need per-test rollback\n- `DatabaseMigrations` when you need a full migrate/fresh for every test and can afford the cost",
+      "zh-Hans": "* 对于大多数功能/集成测试使用 `RefreshDatabase`（每次测试运行运行一次迁移，然后在支持时将每个测试包装在事务中；内存数据库可能每次测试都重新迁移）\n* 当模式已迁移且仅需要每次测试回滚时使用 `DatabaseTransactions`\n* 当每次测试都需要完整的迁移/刷新并且可以承受其开销时使用 `DatabaseMigrations`"
+    },
+    {
+      "en-US": "Use `RefreshDatabase` as the default for tests that touch the database: for databases with transaction support, it runs migrations once per test run (via a static flag) and wraps each test in a transaction; for `:memory:` SQLite or connections without transactions, it migrates before each test. Use `DatabaseTransactions` when the schema is already migrated and you only need per-test rollbacks.",
+      "zh-Hans": "对于涉及数据库的测试，默认使用 `RefreshDatabase`：对于支持事务的数据库，它每次测试运行运行一次迁移（通过静态标志），并将每个测试包装在事务中；对于 `:memory:` SQLite 或不支持事务的连接，它会在每次测试前迁移。当模式已迁移且仅需要每次测试回滚时使用 `DatabaseTransactions`。"
+    },
+    {
+      "en-US": "### Testing Framework Choice",
+      "zh-Hans": "### 测试框架选择"
+    },
+    {
+      "en-US": "- Default to **Pest** for new tests when available.\n- Use **PHPUnit** only if the project already standardizes on it or requires PHPUnit-specific tooling.",
+      "zh-Hans": "* 当可用时，新测试默认使用 **Pest**。\n* 仅当项目已标准化使用它或需要 PHPUnit 特定工具时才使用 **PHPUnit**。"
+    },
+    {
+      "en-US": "## Examples",
+      "zh-Hans": "## 示例"
+    },
+    {
+      "en-US": "### PHPUnit Example",
+      "zh-Hans": "### PHPUnit 示例"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class ProjectControllerTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_owner_can_create_project(): void\n    {\n        $user = User::factory()->create();\n\n        $response = $this->actingAs($user)->postJson('/api/projects', [\n            'name' => 'New Project',\n        ]);\n\n        $response->assertCreated();\n        $this->assertDatabaseHas('projects', ['name' => 'New Project']);\n    }\n}\n```",
+      "zh-Hans": "```php\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class ProjectControllerTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_owner_can_create_project(): void\n    {\n        $user = User::factory()->create();\n\n        $response = $this->actingAs($user)->postJson('/api/projects', [\n            'name' => 'New Project',\n        ]);\n\n        $response->assertCreated();\n        $this->assertDatabaseHas('projects', ['name' => 'New Project']);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Feature Test Example (HTTP Layer)",
+      "zh-Hans": "### 功能测试示例（HTTP 层）"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\Project;\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class ProjectIndexTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_projects_index_returns_paginated_results(): void\n    {\n        $user = User::factory()->create();\n        Project::factory()->count(3)->for($user)->create();\n\n        $response = $this->actingAs($user)->getJson('/api/projects');\n\n        $response->assertOk();\n        $response->assertJsonStructure(['success', 'data', 'error', 'meta']);\n    }\n}\n```",
+      "zh-Hans": "```php\nuse App\\Models\\Project;\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class ProjectIndexTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_projects_index_returns_paginated_results(): void\n    {\n        $user = User::factory()->create();\n        Project::factory()->count(3)->for($user)->create();\n\n        $response = $this->actingAs($user)->getJson('/api/projects');\n\n        $response->assertOk();\n        $response->assertJsonStructure(['success', 'data', 'error', 'meta']);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Pest Example",
+      "zh-Hans": "### Pest 示例"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\n\nuse function Pest\\Laravel\\actingAs;\nuse function Pest\\Laravel\\assertDatabaseHas;\n\nuses(RefreshDatabase::class);\n\ntest('owner can create project', function () {\n    $user = User::factory()->create();\n\n    $response = actingAs($user)->postJson('/api/projects', [\n        'name' => 'New Project',\n    ]);\n\n    $response->assertCreated();\n    assertDatabaseHas('projects', ['name' => 'New Project']);\n});\n```",
+      "zh-Hans": "```php\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\n\nuse function Pest\\Laravel\\actingAs;\nuse function Pest\\Laravel\\assertDatabaseHas;\n\nuses(RefreshDatabase::class);\n\ntest('owner can create project', function () {\n    $user = User::factory()->create();\n\n    $response = actingAs($user)->postJson('/api/projects', [\n        'name' => 'New Project',\n    ]);\n\n    $response->assertCreated();\n    assertDatabaseHas('projects', ['name' => 'New Project']);\n});\n```"
+    },
+    {
+      "en-US": "### Feature Test Pest Example (HTTP Layer)",
+      "zh-Hans": "### 功能测试 Pest 示例（HTTP 层）"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\Project;\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\n\nuse function Pest\\Laravel\\actingAs;\n\nuses(RefreshDatabase::class);\n\ntest('projects index returns paginated results', function () {\n    $user = User::factory()->create();\n    Project::factory()->count(3)->for($user)->create();\n\n    $response = actingAs($user)->getJson('/api/projects');\n\n    $response->assertOk();\n    $response->assertJsonStructure(['success', 'data', 'error', 'meta']);\n});\n```",
+      "zh-Hans": "```php\nuse App\\Models\\Project;\nuse App\\Models\\User;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\n\nuse function Pest\\Laravel\\actingAs;\n\nuses(RefreshDatabase::class);\n\ntest('projects index returns paginated results', function () {\n    $user = User::factory()->create();\n    Project::factory()->count(3)->for($user)->create();\n\n    $response = actingAs($user)->getJson('/api/projects');\n\n    $response->assertOk();\n    $response->assertJsonStructure(['success', 'data', 'error', 'meta']);\n});\n```"
+    },
+    {
+      "en-US": "### Factories and States",
+      "zh-Hans": "### 工厂和状态"
+    },
+    {
+      "en-US": "- Use factories for test data\n- Define states for edge cases (archived, admin, trial)",
+      "zh-Hans": "* 使用工厂生成测试数据\n* 为边界情况定义状态（已归档、管理员、试用期）"
+    },
+    {
+      "en-US": "```php\n$user = User::factory()->state(['role' => 'admin'])->create();\n```",
+      "zh-Hans": "```php\n$user = User::factory()->state(['role' => 'admin'])->create();\n```"
+    },
+    {
+      "en-US": "### Database Testing",
+      "zh-Hans": "### 数据库测试"
+    },
+    {
+      "en-US": "- Use `RefreshDatabase` for clean state\n- Keep tests isolated and deterministic\n- Prefer `assertDatabaseHas` over manual queries",
+      "zh-Hans": "* 使用 `RefreshDatabase` 保持状态清洁\n* 保持测试隔离和确定性\n* 优先使用 `assertDatabaseHas` 而非手动查询"
+    },
+    {
+      "en-US": "### Persistence Test Example",
+      "zh-Hans": "### 持久化测试示例"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\Project;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class ProjectRepositoryTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_project_can_be_retrieved_by_slug(): void\n    {\n        $project = Project::factory()->create(['slug' => 'alpha']);\n\n        $found = Project::query()->where('slug', 'alpha')->firstOrFail();\n\n        $this->assertSame($project->id, $found->id);\n    }\n}\n```",
+      "zh-Hans": "```php\nuse App\\Models\\Project;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class ProjectRepositoryTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_project_can_be_retrieved_by_slug(): void\n    {\n        $project = Project::factory()->create(['slug' => 'alpha']);\n\n        $found = Project::query()->where('slug', 'alpha')->firstOrFail();\n\n        $this->assertSame($project->id, $found->id);\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Fakes for Side Effects",
+      "zh-Hans": "### 用于副作用的伪造对象"
+    },
+    {
+      "en-US": "- `Bus::fake()` for jobs\n- `Queue::fake()` for queued work\n- `Mail::fake()` and `Notification::fake()` for notifications\n- `Event::fake()` for domain events",
+      "zh-Hans": "* 对任务使用 `Bus::fake()`\n* 对队列工作使用 `Queue::fake()`\n* 对通知使用 `Mail::fake()` 和 `Notification::fake()`\n* 对领域事件使用 `Event::fake()`"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Queue;\n\nQueue::fake();\n\ndispatch(new SendOrderConfirmation($order->id));\n\nQueue::assertPushed(SendOrderConfirmation::class);\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Queue;\n\nQueue::fake();\n\ndispatch(new SendOrderConfirmation($order->id));\n\nQueue::assertPushed(SendOrderConfirmation::class);\n```"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Notification;\n\nNotification::fake();\n\n$user->notify(new InvoiceReady($invoice));\n\nNotification::assertSentTo($user, InvoiceReady::class);\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Notification;\n\nNotification::fake();\n\n$user->notify(new InvoiceReady($invoice));\n\nNotification::assertSentTo($user, InvoiceReady::class);\n```"
+    },
+    {
+      "en-US": "### Auth Testing (Sanctum)",
+      "zh-Hans": "### 身份验证测试（Sanctum）"
+    },
+    {
+      "en-US": "```php\nuse Laravel\\Sanctum\\Sanctum;\n\nSanctum::actingAs($user);\n\n$response = $this->getJson('/api/projects');\n$response->assertOk();\n```",
+      "zh-Hans": "```php\nuse Laravel\\Sanctum\\Sanctum;\n\nSanctum::actingAs($user);\n\n$response = $this->getJson('/api/projects');\n$response->assertOk();\n```"
+    },
+    {
+      "en-US": "### HTTP and External Services",
+      "zh-Hans": "### HTTP 和外部服务"
+    },
+    {
+      "en-US": "- Use `Http::fake()` to isolate external APIs\n- Assert outbound payloads with `Http::assertSent()`",
+      "zh-Hans": "* 使用 `Http::fake()` 隔离外部 API\n* 使用 `Http::assertSent()` 断言出站负载"
+    },
+    {
+      "en-US": "### Coverage Targets",
+      "zh-Hans": "### 覆盖率目标"
+    },
+    {
+      "en-US": "- Enforce 80%+ coverage for unit + feature tests\n- Use `pcov` or `XDEBUG_MODE=coverage` in CI",
+      "zh-Hans": "* 强制执行单元测试 + 功能测试 80% 以上的覆盖率\n* 在 CI 中使用 `pcov` 或 `XDEBUG_MODE=coverage`"
+    },
+    {
+      "en-US": "### Test Commands",
+      "zh-Hans": "### 测试命令"
+    },
+    {
+      "en-US": "- `php artisan test`\n- `vendor/bin/phpunit`\n- `vendor/bin/pest`",
+      "zh-Hans": "* `php artisan test`\n* `vendor/bin/phpunit`\n* `vendor/bin/pest`"
+    },
+    {
+      "en-US": "### Test Configuration",
+      "zh-Hans": "### 测试配置"
+    },
+    {
+      "en-US": "- Use `phpunit.xml` to set `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` for fast tests\n- Keep separate env for tests to avoid touching dev/prod data",
+      "zh-Hans": "* 使用 `phpunit.xml` 设置 `DB_CONNECTION=sqlite` 和 `DB_DATABASE=:memory:` 以进行快速测试\n* 为测试保持独立的环境，避免触及开发/生产数据"
+    },
+    {
+      "en-US": "### Authorization Tests",
+      "zh-Hans": "### 授权测试"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Gate;\n\n$this->assertTrue(Gate::forUser($user)->allows('update', $project));\n$this->assertFalse(Gate::forUser($otherUser)->allows('update', $project));\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Gate;\n\n$this->assertTrue(Gate::forUser($user)->allows('update', $project));\n$this->assertFalse(Gate::forUser($otherUser)->allows('update', $project));\n```"
+    },
+    {
+      "en-US": "### Inertia Feature Tests",
+      "zh-Hans": "### Inertia 功能测试"
+    },
+    {
+      "en-US": "When using Inertia.js, assert on the component name and props with the Inertia testing helpers.",
+      "zh-Hans": "当使用 Inertia.js 时，使用 Inertia 测试辅助函数断言组件名称和属性。"
+    },
+    {
+      "en-US": "```php\nuse App\\Models\\User;\nuse Inertia\\Testing\\AssertableInertia;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class DashboardInertiaTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_dashboard_inertia_props(): void\n    {\n        $user = User::factory()->create();\n\n        $response = $this->actingAs($user)->get('/dashboard');\n\n        $response->assertOk();\n        $response->assertInertia(fn (AssertableInertia $page) => $page\n            ->component('Dashboard')\n            ->where('user.id', $user->id)\n            ->has('projects')\n        );\n    }\n}\n```",
+      "zh-Hans": "```php\nuse App\\Models\\User;\nuse Inertia\\Testing\\AssertableInertia;\nuse Illuminate\\Foundation\\Testing\\RefreshDatabase;\nuse Tests\\TestCase;\n\nfinal class DashboardInertiaTest extends TestCase\n{\n    use RefreshDatabase;\n\n    public function test_dashboard_inertia_props(): void\n    {\n        $user = User::factory()->create();\n\n        $response = $this->actingAs($user)->get('/dashboard');\n\n        $response->assertOk();\n        $response->assertInertia(fn (AssertableInertia $page) => $page\n            ->component('Dashboard')\n            ->where('user.id', $user->id)\n            ->has('projects')\n        );\n    }\n}\n```"
+    },
+    {
+      "en-US": "Prefer `assertInertia` over raw JSON assertions to keep tests aligned with Inertia responses.",
+      "zh-Hans": "优先使用 `assertInertia` 而非原始 JSON 断言，以保持测试与 Inertia 响应一致。"
+    }
+  ]
+}

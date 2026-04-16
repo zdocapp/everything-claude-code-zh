@@ -5,11 +5,11 @@ paths:
 
 # Rust 测试
 
-> 本文件扩展了 [common/testing.md](../common/testing.md) 中关于 Rust 的特定内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Rust 相关的内容。
 
 ## 测试框架
 
-* **`#[test]`** 配合 `#[cfg(test)]` 模块进行单元测试
+* **`#[test]`** 配合 `#[cfg(test)]` 模块用于单元测试
 * **rstest** 用于参数化测试和夹具
 * **proptest** 用于基于属性的测试
 * **mockall** 用于基于特征的模拟
@@ -20,7 +20,7 @@ paths:
 ```text
 my_crate/
 ├── src/
-│   ├── lib.rs           # 位于 #[cfg(test)] 模块中的单元测试
+│   ├── lib.rs           # 单元测试位于 #[cfg(test)] 模块中
 │   ├── auth/
 │   │   └── mod.rs       # #[cfg(test)] mod tests { ... }
 │   └── orders/
@@ -85,7 +85,7 @@ async fn fetches_data_successfully() {
 
 ## 使用 mockall 进行模拟
 
-在生产代码中定义特征；在测试模块中生成模拟对象：
+在生产代码中定义特征；在测试模块中生成模拟：
 
 ```rust
 // Production trait — pub so integration tests can import it
@@ -130,7 +130,7 @@ mod tests {
 
 ## 覆盖率
 
-* 目标为 80%+ 的行覆盖率
+* 目标达到 80%+ 的行覆盖率
 * 使用 **cargo-llvm-cov** 生成覆盖率报告
 * 关注业务逻辑 —— 排除生成的代码和 FFI 绑定
 
@@ -151,6 +151,6 @@ cargo test --test api_test       # Specific integration test (tests/api_test.rs)
 cargo test --doc                 # Doc tests only
 ```
 
-## 参考
+## 参考资料
 
-有关全面的测试模式（包括基于属性的测试、夹具以及使用 Criterion 进行基准测试），请参阅技能：`rust-testing`。
+有关全面的测试模式，包括基于属性的测试、夹具以及使用 Criterion 进行基准测试，请参阅技能：`rust-testing`。

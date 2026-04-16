@@ -1,0 +1,122 @@
+{
+  "sourceFile": "commands/cpp-review.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Comprehensive C++ code review for memory safety, modern C++ idioms, concurrency, and security. Invokes the cpp-reviewer agent.\n---",
+      "zh-Hans": "---\ndescription: 全面的C++代码审查，涵盖内存安全、现代C++惯用法、并发性和安全性。调用cpp-reviewer代理。\n---"
+    },
+    {
+      "en-US": "# C++ Code Review",
+      "zh-Hans": "# C++ 代码审查"
+    },
+    {
+      "en-US": "This command invokes the **cpp-reviewer** agent for comprehensive C++-specific code review.",
+      "zh-Hans": "此命令调用 **cpp-reviewer** 代理进行全面的 C++ 专项代码审查。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的功能"
+    },
+    {
+      "en-US": "1. **Identify C++ Changes**: Find modified `.cpp`, `.hpp`, `.cc`, `.h` files via `git diff`\n2. **Run Static Analysis**: Execute `clang-tidy` and `cppcheck`\n3. **Memory Safety Scan**: Check for raw new/delete, buffer overflows, use-after-free\n4. **Concurrency Review**: Analyze thread safety, mutex usage, data races\n5. **Modern C++ Check**: Verify code follows C++17/20 conventions and best practices\n6. **Generate Report**: Categorize issues by severity",
+      "zh-Hans": "1. **识别 C++ 变更**：通过 `git diff` 查找修改过的 `.cpp`、`.hpp`、`.cc`、`.h` 文件\n2. **运行静态分析**：执行 `clang-tidy` 和 `cppcheck`\n3. **内存安全检查**：检查原始 new/delete、缓冲区溢出、释放后使用\n4. **并发审查**：分析线程安全性、互斥锁使用、数据竞争\n5. **现代 C++ 检查**：验证代码是否遵循 C++17/20 规范和最佳实践\n6. **生成报告**：按严重程度对问题进行归类"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "Use `/cpp-review` when:",
+      "zh-Hans": "在以下情况使用 `/cpp-review`："
+    },
+    {
+      "en-US": "- After writing or modifying C++ code\n- Before committing C++ changes\n- Reviewing pull requests with C++ code\n- Onboarding to a new C++ codebase\n- Checking for memory safety issues",
+      "zh-Hans": "* 编写或修改 C++ 代码后\n* 提交 C++ 变更前\n* 审查包含 C++ 代码的拉取请求时\n* 接手新的 C++ 代码库时\n* 检查内存安全问题"
+    },
+    {
+      "en-US": "## Review Categories",
+      "zh-Hans": "## 审查类别"
+    },
+    {
+      "en-US": "### CRITICAL (Must Fix)",
+      "zh-Hans": "### 严重（必须修复）"
+    },
+    {
+      "en-US": "- Raw `new`/`delete` without RAII\n- Buffer overflows and use-after-free\n- Data races without synchronization\n- Command injection via `system()`\n- Uninitialized variable reads\n- Null pointer dereferences",
+      "zh-Hans": "* 未使用 RAII 的原始 `new`/`delete`\n* 缓冲区溢出和释放后使用\n* 无同步的数据竞争\n* 通过 `system()` 导致的命令注入\n* 读取未初始化的变量\n* 空指针解引用"
+    },
+    {
+      "en-US": "### HIGH (Should Fix)",
+      "zh-Hans": "### 高（应该修复）"
+    },
+    {
+      "en-US": "- Rule of Five violations\n- Missing `std::lock_guard` / `std::scoped_lock`\n- Detached threads without proper lifetime management\n- C-style casts instead of `static_cast`/`dynamic_cast`\n- Missing `const` correctness",
+      "zh-Hans": "* 五法则违规\n* 缺少 `std::lock_guard` / `std::scoped_lock`\n* 分离的线程没有正确的生命周期管理\n* 使用 C 风格强制转换而非 `static_cast`/`dynamic_cast`\n* 缺少 `const` 正确性"
+    },
+    {
+      "en-US": "### MEDIUM (Consider)",
+      "zh-Hans": "### 中（考虑修复）"
+    },
+    {
+      "en-US": "- Unnecessary copies (pass by value instead of `const&`)\n- Missing `reserve()` on known-size containers\n- `using namespace std;` in headers\n- Missing `[[nodiscard]]` on important return values\n- Overly complex template metaprogramming",
+      "zh-Hans": "* 不必要的拷贝（按值传递而非 `const&`）\n* 已知大小的容器缺少 `reserve()`\n* 头文件中的 `using namespace std;`\n* 重要的返回值缺少 `[[nodiscard]]`\n* 过于复杂的模板元编程"
+    },
+    {
+      "en-US": "## Automated Checks Run",
+      "zh-Hans": "## 运行的自动化检查"
+    },
+    {
+      "en-US": "```bash\n# Static analysis\nclang-tidy --checks='*,-llvmlibc-*' src/*.cpp -- -std=c++17\n\n# Additional analysis\ncppcheck --enable=all --suppress=missingIncludeSystem src/\n\n# Build with warnings\ncmake --build build -- -Wall -Wextra -Wpedantic\n```",
+      "zh-Hans": "```bash\n# Static analysis\nclang-tidy --checks='*,-llvmlibc-*' src/*.cpp -- -std=c++17\n\n# Additional analysis\ncppcheck --enable=all --suppress=missingIncludeSystem src/\n\n# Build with warnings\ncmake --build build -- -Wall -Wextra -Wpedantic\n```"
+    },
+    {
+      "en-US": "## Example Usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```text\nUser: /cpp-review\n\nAgent:\n# C++ Code Review Report\n\n## Files Reviewed\n- src/handler/user.cpp (modified)\n- src/service/auth.cpp (modified)\n\n## Static Analysis Results\n✓ clang-tidy: 2 warnings\n✓ cppcheck: No issues\n\n## Issues Found\n\n[CRITICAL] Memory Leak\nFile: src/service/auth.cpp:45\nIssue: Raw `new` without matching `delete`\n```cpp\nauto* session = new Session(userId);  // Memory leak!\ncache[userId] = session;\n```",
+      "zh-Hans": "````text\nUser: /cpp-review\n\nAgent:\n# C++ 代码审查报告\n\n## 已审查文件\n- src/handler/user.cpp (已修改)\n- src/service/auth.cpp (已修改)\n\n## 静态分析结果\n✓ clang-tidy: 2 个警告\n✓ cppcheck: 无问题\n\n## 发现的问题\n\n[严重] 内存泄漏\n文件: src/service/auth.cpp:45\n问题: 使用了原始的 `new` 而没有匹配的 `delete`\n```cpp\nauto* session = new Session(userId);  // 内存泄漏！\ncache[userId] = session;\n````"
+    },
+    {
+      "en-US": "Fix: Use `std::unique_ptr`",
+      "zh-Hans": "修复：使用 `std::unique_ptr`"
+    },
+    {
+      "en-US": "```cpp\nauto session = std::make_unique<Session>(userId);\ncache[userId] = std::move(session);\n```",
+      "zh-Hans": "```cpp\nauto session = std::make_unique<Session>(userId);\ncache[userId] = std::move(session);\n```"
+    },
+    {
+      "en-US": "[HIGH] Missing const Reference\nFile: src/handler/user.cpp:28\nIssue: Large object passed by value",
+      "zh-Hans": "\\[高] 缺少常量引用\n文件：src/handler/user.cpp:28\n问题：大型对象按值传递"
+    },
+    {
+      "en-US": "```cpp\nvoid processUser(User user) {  // Unnecessary copy\n```",
+      "zh-Hans": "```cpp\nvoid processUser(User user) {  // Unnecessary copy\n```"
+    },
+    {
+      "en-US": "Fix: Pass by const reference",
+      "zh-Hans": "修复：通过常量引用传递"
+    },
+    {
+      "en-US": "```cpp\nvoid processUser(const User& user) {\n```",
+      "zh-Hans": "```cpp\nvoid processUser(const User& user) {\n```"
+    },
+    {
+      "en-US": "## Summary",
+      "zh-Hans": "## 总结"
+    },
+    {
+      "en-US": "- CRITICAL: 1\n- HIGH: 1\n- MEDIUM: 0",
+      "zh-Hans": "* 严重：1\n* 高：1\n* 中：0"
+    },
+    {
+      "en-US": "Recommendation: FAIL: Block merge until CRITICAL issue is fixed",
+      "zh-Hans": "建议：失败：在严重问题修复前阻止合并"
+    },
+    {
+      "en-US": "```\n\n## Approval Criteria\n\n| Status | Condition |\n|--------|-----------|\n| PASS: Approve | No CRITICAL or HIGH issues |\n| WARNING: Warning | Only MEDIUM issues (merge with caution) |\n| FAIL: Block | CRITICAL or HIGH issues found |\n\n## Integration with Other Commands\n\n- Use `/cpp-test` first to ensure tests pass\n- Use `/cpp-build` if build errors occur\n- Use `/cpp-review` before committing\n- Use `/code-review` for non-C++ specific concerns\n\n## Related\n\n- Agent: `agents/cpp-reviewer.md`\n- Skills: `skills/cpp-coding-standards/`, `skills/cpp-testing/`\n",
+      "zh-Hans": "```\n\n## 批准标准\n\n| 状态 | 条件 |\n|--------|-----------|\n| PASS: 批准 | 无 CRITICAL 或 HIGH 级别问题 |\n| WARNING: 警告 | 仅存在 MEDIUM 级别问题（谨慎合并） |\n| FAIL: 阻止 | 发现 CRITICAL 或 HIGH 级别问题 |\n\n## 与其他命令的集成\n\n- 首先使用 `/cpp-test` 以确保测试通过\n- 如果出现构建错误，请使用 `/cpp-build`\n- 在提交前使用 `/cpp-review`\n- 对于非 C++ 特定问题，请使用 `/code-review`\n\n## 相关\n\n- Agent: `agents/cpp-reviewer.md`\n- Skills: `skills/cpp-coding-standards/`, `skills/cpp-testing/`\n```"
+    }
+  ]
+}

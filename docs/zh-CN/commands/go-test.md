@@ -1,61 +1,61 @@
 ---
-description: 为Go强制执行TDD工作流程。首先编写表驱动测试，然后实现。使用go test -cover验证80%以上的覆盖率。
+description: 为Go强制执行TDD工作流。首先编写表格驱动测试，然后实现。使用go test -cover验证80%以上的覆盖率。
 ---
 
 # Go TDD 命令
 
-此命令使用惯用的 Go 测试模式，为 Go 代码强制执行测试驱动开发方法。
+此命令使用惯用的 Go 测试模式，强制实施 Go 代码的测试驱动开发方法。
 
 ## 此命令的作用
 
 1. **定义类型/接口**：首先搭建函数签名
-2. **编写表驱动测试**：创建全面的测试用例（RED 阶段）
+2. **编写表驱动测试**：创建全面的测试用例（RED）
 3. **运行测试**：验证测试因正确原因而失败
-4. **实现代码**：编写最少的代码以通过测试（GREEN 阶段）
-5. **重构**：改进代码，同时保持测试通过
-6. **检查覆盖率**：确保 80% 以上的覆盖率
+4. **实现代码**：编写最少的代码以通过测试（GREEN）
+5. **重构**：在保持测试通过的同时进行改进
+6. **检查覆盖率**：确保 80%+ 的覆盖率
 
 ## 何时使用
 
-在以下情况下使用 `/go-test`：
+在以下情况使用 `/go-test`：
 
-* 实现新的 Go 函数时
-* 为现有代码添加测试覆盖率时
-* 修复 bug 时（先编写失败的测试）
-* 构建关键业务逻辑时
-* 学习 Go 中的 TDD 工作流程时
+* 实现新的 Go 函数
+* 为现有代码添加测试覆盖率
+* 修复错误（首先编写失败的测试）
+* 构建关键业务逻辑
+* 学习 Go 中的 TDD 工作流程
 
 ## TDD 循环
 
 ```
-RED     → 编写失败的表格驱动测试
+RED     → 编写失败的表驱动测试
 GREEN   → 实现最小化代码以通过测试
-REFACTOR → 改进代码，保持测试通过
+REFACTOR → 改进代码，测试保持通过
 REPEAT  → 下一个测试用例
 ```
 
 ## 示例会话
 
 ````
-用户: /go-test 我需要一个验证电子邮箱地址的函数
+用户：/go-test 我需要一个验证电子邮件地址的函数
 
-代理:
-# TDD 会话: 电子邮件验证器
+代理：
+# TDD 会话：电子邮件验证器
 
-## 步骤 1: 定义接口
+## 步骤 1：定义接口
 
 ```go
 // validator/email.go
 package validator
 
-// ValidateEmail 检查给定的字符串是否为有效的电子邮件地址。
+// ValidateEmail 检查给定字符串是否为有效的电子邮件地址。
 // 如果有效则返回 nil，否则返回描述问题的错误。
 func ValidateEmail(email string) error {
     panic("not implemented")
 }
 ```
 
-## 步骤 2: 编写表驱动测试 (RED)
+## 步骤 2：编写表驱动测试（红色）
 
 ```go
 // validator/email_test.go
@@ -71,13 +71,13 @@ func TestValidateEmail(t *testing.T) {
         email   string
         wantErr bool
     }{
-        // 有效邮箱
+        // 有效的电子邮件
         {"simple email", "user@example.com", false},
         {"with subdomain", "user@mail.example.com", false},
         {"with plus", "user+tag@example.com", false},
         {"with dots", "first.last@example.com", false},
 
-        // 无效邮箱
+        // 无效的电子邮件
         {"empty string", "", true},
         {"no at sign", "userexample.com", true},
         {"no domain", "user@", true},
@@ -101,7 +101,7 @@ func TestValidateEmail(t *testing.T) {
 }
 ```
 
-## 步骤 3: 运行测试 - 验证失败
+## 步骤 3：运行测试 - 验证失败
 
 ```bash
 $ go test ./validator/...
@@ -113,9 +113,9 @@ $ go test ./validator/...
 FAIL
 ```
 
-✓ 测试按预期失败 (panic)。
+✓ 测试按预期失败（panic）。
 
-## 步骤 4: 实现最小化代码 (GREEN)
+## 步骤 4：实现最小代码（绿色）
 
 ```go
 // validator/email.go
@@ -144,7 +144,7 @@ func ValidateEmail(email string) error {
 }
 ```
 
-## 步骤 5: 运行测试 - 验证通过
+## 步骤 5：运行测试 - 验证通过
 
 ```bash
 $ go test ./validator/...
@@ -155,7 +155,7 @@ ok      project/validator    0.003s
 
 ✓ 所有测试通过！
 
-## 步骤 6: 检查覆盖率
+## 步骤 6：检查覆盖率
 
 ```bash
 $ go test -cover ./validator/...
@@ -165,7 +165,7 @@ coverage: 100.0% of statements
 ok      project/validator    0.003s
 ```
 
-✓ 覆盖率: 100%
+✓ 覆盖率：100%
 
 ## TDD 完成！
 ````
@@ -246,17 +246,17 @@ go test -race -cover ./...
 
 ## TDD 最佳实践
 
-**应该做：**
+**应做：**
 
-* 先编写测试，再编写任何实现
+* 首先编写测试，在任何实现之前
 * 每次更改后运行测试
 * 使用表驱动测试以获得全面的覆盖率
 * 测试行为，而非实现细节
 * 包含边界情况（空值、nil、最大值）
 
-**不应该做：**
+**不应做：**
 
-* 在编写测试之前编写实现
+* 在测试之前编写实现
 * 跳过 RED 阶段
 * 直接测试私有函数
 * 在测试中使用 `time.Sleep`
@@ -265,7 +265,7 @@ go test -race -cover ./...
 ## 相关命令
 
 * `/go-build` - 修复构建错误
-* `/go-review` - 在实现后审查代码
+* `/go-review` - 实现后审查代码
 * `/verify` - 运行完整的验证循环
 
 ## 相关

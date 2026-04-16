@@ -1,6 +1,6 @@
 ---
 name: e2e-testing
-description: Playwright E2E 测试模式、页面对象模型、配置、CI/CD 集成、工件管理和不稳定测试策略。
+description: Playwright端到端测试模式、页面对象模型、配置、CI/CD集成、工件管理和不稳定测试策略。
 origin: ECC
 ---
 
@@ -203,7 +203,7 @@ await page.screenshot({ path: 'artifacts/full-page.png', fullPage: true })
 await page.locator('[data-testid="chart"]').screenshot({ path: 'artifacts/chart.png' })
 ```
 
-### 跟踪记录
+### 追踪
 
 ```typescript
 await browser.startTracing(page, {
@@ -262,14 +262,14 @@ jobs:
 **持续时间：** Xm Ys
 **状态：** 通过 / 失败
 
-## 概要
+## 摘要
 - 总计：X | 通过：Y (Z%) | 失败：A | 不稳定：B | 跳过：C
 
-## 失败的测试
+## 失败测试
 
 ### test-name
 **文件：** `tests/e2e/feature.spec.ts:45`
-**错误：** 期望元素可见
+**错误：** 预期元素可见
 **截图：** artifacts/failed.png
 **建议修复：** [description]
 

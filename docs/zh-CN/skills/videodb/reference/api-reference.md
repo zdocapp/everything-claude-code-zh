@@ -1,6 +1,6 @@
 # 完整 API 参考
 
-VideoDB 技能参考材料。关于使用指南和工作流选择，请从 [../SKILL.md](../SKILL.md) 开始。
+VideoDB 技能的参考材料。关于使用指南和工作流选择，请从 [../SKILL.md](../SKILL.md) 开始。
 
 ## 连接
 
@@ -13,7 +13,7 @@ conn = videodb.connect(
 )
 ```
 
-**返回:** `Connection` 对象
+**返回：** `Connection` 对象
 
 ### 连接方法
 
@@ -26,11 +26,11 @@ conn = videodb.connect(
 | `conn.check_usage()` | `dict` | 获取账户使用统计 |
 | `conn.upload(source, media_type, name, ...)` | `Video\|Audio\|Image` | 上传到默认集合 |
 | `conn.record_meeting(meeting_url, bot_name, ...)` | `Meeting` | 录制会议 |
-| `conn.create_capture_session(...)` | `CaptureSession` | 创建捕获会话（见 [capture-reference.md](capture-reference.md)） |
+| `conn.create_capture_session(...)` | `CaptureSession` | 创建捕获会话（参见 [capture-reference.md](capture-reference.md)） |
 | `conn.youtube_search(query, result_threshold, duration)` | `list[dict]` | 搜索 YouTube |
-| `conn.transcode(source, callback_url, mode, ...)` | `str` | 转码视频（返回作业 ID） |
-| `conn.get_transcode_details(job_id)` | `dict` | 获取转码作业状态和详情 |
-| `conn.connect_websocket(collection_id)` | `WebSocketConnection` | 连接到 WebSocket（见 [capture-reference.md](capture-reference.md)） |
+| `conn.transcode(source, callback_url, mode, ...)` | `str` | 转码视频（返回任务 ID） |
+| `conn.get_transcode_details(job_id)` | `dict` | 获取转码任务状态和详情 |
+| `conn.connect_websocket(collection_id)` | `WebSocketConnection` | 连接到 WebSocket（参见 [capture-reference.md](capture-reference.md)） |
 
 ### 转码
 
@@ -58,7 +58,7 @@ job_id = conn.transcode(
 | `video_config` | `VideoConfig` | `VideoConfig()` | 视频编码设置 |
 | `audio_config` | `AudioConfig` | `AudioConfig()` | 音频编码设置 |
 
-返回一个作业 ID (`str`)。使用 `conn.get_transcode_details(job_id)` 来检查作业状态。
+返回一个任务 ID (`str`)。使用 `conn.get_transcode_details(job_id)` 来检查任务状态。
 
 ```python
 details = conn.get_transcode_details(job_id)
@@ -81,10 +81,10 @@ config = VideoConfig(
 | 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
 | `resolution` | `int\|None` | `None` | 目标分辨率高度（像素） |
-| `quality` | `int` | `23` | 编码质量（值越低，质量越高） |
+| `quality` | `int` | `23` | 编码质量（数值越低，质量越高） |
 | `framerate` | `int\|None` | `None` | 目标帧率 |
-| `aspect_ratio` | `str\|None` | `None` | 目标宽高比（例如 `"16:9"`, `"9:16"`） |
-| `resize_mode` | `str` | `ResizeMode.crop` | 调整大小策略：`crop`, `fit`, 或 `pad` |
+| `aspect_ratio` | `str\|None` | `None` | 目标宽高比（例如 `"16:9"`、`"9:16"`） |
+| `resize_mode` | `str` | `ResizeMode.crop` | 调整大小策略：`crop`、`fit` 或 `pad` |
 
 #### AudioConfig
 
@@ -96,7 +96,7 @@ config = AudioConfig(mute=False)
 
 | 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `mute` | `bool` | `False` | 静音音轨 |
+| `mute` | `bool` | `False` | 静音音频轨道 |
 
 ## 集合
 
@@ -115,7 +115,7 @@ coll = conn.get_collection()
 | `coll.get_images()` | `list[Image]` | 列出所有图像 |
 | `coll.get_image(image_id)` | `Image` | 获取特定图像 |
 | `coll.upload(url=None, file_path=None, media_type=None, name=None)` | `Video\|Audio\|Image` | 上传媒体 |
-| `coll.search(query, search_type, index_type, score_threshold, namespace, scene_index_id, ...)` | `SearchResult` | 在集合中搜索（仅语义搜索；关键词和场景搜索会引发 `NotImplementedError`） |
+| `coll.search(query, search_type, index_type, score_threshold, namespace, scene_index_id, ...)` | `SearchResult` | 跨集合搜索（仅语义搜索；关键词和场景搜索会引发 `NotImplementedError`） |
 | `coll.generate_image(prompt, aspect_ratio="1:1")` | `Image` | 使用 AI 生成图像 |
 | `coll.generate_video(prompt, duration=5)` | `Video` | 使用 AI 生成视频 |
 | `coll.generate_music(prompt, duration=5)` | `Audio` | 使用 AI 生成音乐 |
@@ -124,11 +124,11 @@ coll = conn.get_collection()
 | `coll.generate_text(prompt, model_name="basic", response_type="text")` | `dict` | LLM 文本生成——通过 `["output"]` 访问结果 |
 | `coll.dub_video(video_id, language_code)` | `Video` | 将视频配音为另一种语言 |
 | `coll.record_meeting(meeting_url, bot_name, ...)` | `Meeting` | 录制实时会议 |
-| `coll.create_capture_session(...)` | `CaptureSession` | 创建捕获会话（见 [capture-reference.md](capture-reference.md)） |
-| `coll.get_capture_session(...)` | `CaptureSession` | 检索捕获会话（见 [capture-reference.md](capture-reference.md)） |
-| `coll.connect_rtstream(url, name, ...)` | `RTStream` | 连接到实时流（见 [rtstream-reference.md](rtstream-reference.md)） |
-| `coll.make_public()` | `None` | 使集合公开 |
-| `coll.make_private()` | `None` | 使集合私有 |
+| `coll.create_capture_session(...)` | `CaptureSession` | 创建捕获会话（参见 [capture-reference.md](capture-reference.md)） |
+| `coll.get_capture_session(...)` | `CaptureSession` | 检索捕获会话（参见 [capture-reference.md](capture-reference.md)） |
+| `coll.connect_rtstream(url, name, ...)` | `RTStream` | 连接到实时流（参见 [rtstream-reference.md](rtstream-reference.md)） |
+| `coll.make_public()` | `None` | 将集合设为公开 |
+| `coll.make_private()` | `None` | 将集合设为私有 |
 | `coll.delete_video(video_id)` | `None` | 删除视频 |
 | `coll.delete_audio(audio_id)` | `None` | 删除音频 |
 | `coll.delete_image(image_id)` | `None` | 删除图像 |
@@ -172,14 +172,14 @@ video = coll.get_video(video_id)
 |--------|---------|-------------|
 | `video.generate_stream(timeline=None)` | `str` | 生成流 URL（可选的 `[(start, end)]` 元组时间线） |
 | `video.play()` | `str` | 在浏览器中打开流，返回播放器 URL |
-| `video.index_spoken_words(language_code=None, force=False)` | `None` | 为语音搜索建立索引。使用 `force=True` 在已建立索引时跳过。 |
+| `video.index_spoken_words(language_code=None, force=False)` | `None` | 为搜索索引语音。使用 `force=True` 跳过已索引的部分。 |
 | `video.index_scenes(extraction_type, prompt, extraction_config, metadata, model_name, name, scenes, callback_url)` | `str` | 索引视觉场景（返回 scene\_index\_id） |
 | `video.index_visuals(prompt, batch_config, ...)` | `str` | 索引视觉内容（返回 scene\_index\_id） |
 | `video.index_audio(prompt, model_name, ...)` | `str` | 使用 LLM 索引音频（返回 scene\_index\_id） |
-| `video.get_transcript(start=None, end=None)` | `list[dict]` | 获取带时间戳的转录稿 |
+| `video.get_transcript(start=None, end=None)` | `list[dict]` | 获取带时间戳的转录文本 |
 | `video.get_transcript_text(start=None, end=None)` | `str` | 获取完整转录文本 |
-| `video.generate_transcript(force=None)` | `dict` | 生成转录稿 |
-| `video.translate_transcript(language, additional_notes)` | `list[dict]` | 翻译转录稿 |
+| `video.generate_transcript(force=None)` | `dict` | 生成转录文本 |
+| `video.translate_transcript(language, additional_notes)` | `list[dict]` | 翻译转录文本 |
 | `video.search(query, search_type, index_type, filter, **kwargs)` | `SearchResult` | 在视频内搜索 |
 | `video.add_subtitle(style=SubtitleStyle())` | `str` | 添加字幕（返回流 URL） |
 | `video.generate_thumbnail(time=None)` | `str\|Image` | 生成缩略图 |
@@ -195,7 +195,7 @@ video = coll.get_video(video_id)
 
 将视频转换为不同的宽高比，可选智能对象跟踪。处理在服务器端进行。
 
-> **警告：** 调整宽高比是缓慢的服务器端操作。对于长视频可能需要几分钟，并可能超时。始终使用 `start`/`end` 来限制片段，或传递 `callback_url` 进行异步处理。
+> **警告：** 调整宽高比是缓慢的服务器端操作。对于长视频可能需要几分钟，并可能超时。务必使用 `start`/`end` 来限制片段，或传递 `callback_url` 进行异步处理。
 
 ```python
 from videodb import ReframeMode
@@ -214,11 +214,11 @@ reframed = video.reframe(start=0, end=60, target={"width": 1080, "height": 1080}
 
 | 参数 | 类型 | 默认值 | 描述 |
 |-----------|------|---------|-------------|
-| `start` | `float\|None` | `None` | 开始时间（秒）（None = 开始） |
-| `end` | `float\|None` | `None` | 结束时间（秒）（None = 视频结束） |
-| `target` | `str\|dict` | `"vertical"` | 预设字符串（`"vertical"`, `"square"`, `"landscape"`）或 `{"width": int, "height": int}` |
+| `start` | `float\|None` | `None` | 开始时间（秒）（None = 开头） |
+| `end` | `float\|None` | `None` | 结束时间（秒）（None = 视频结尾） |
+| `target` | `str\|dict` | `"vertical"` | 预设字符串（`"vertical"`、`"square"`、`"landscape"`）或 `{"width": int, "height": int}` |
 | `mode` | `str` | `ReframeMode.smart` | `"simple"`（中心裁剪）或 `"smart"`（对象跟踪） |
-| `callback_url` | `str\|None` | `None` | 异步通知的 Webhook URL |
+| `callback_url` | `str\|None` | `None` | 用于异步通知的 Webhook URL |
 
 当未提供 `callback_url` 时返回 `Video` 对象，否则返回 `None`。
 
@@ -242,9 +242,9 @@ audio = coll.get_audio(audio_id)
 | 方法 | 返回 | 描述 |
 |--------|---------|-------------|
 | `audio.generate_url()` | `str` | 生成用于播放的签名 URL |
-| `audio.get_transcript(start=None, end=None)` | `list[dict]` | 获取带时间戳的转录稿 |
+| `audio.get_transcript(start=None, end=None)` | `list[dict]` | 获取带时间戳的转录文本 |
 | `audio.get_transcript_text(start=None, end=None)` | `str` | 获取完整转录文本 |
-| `audio.generate_transcript(force=None)` | `dict` | 生成转录稿 |
+| `audio.generate_transcript(force=None)` | `dict` | 生成转录文本 |
 | `audio.delete()` | `None` | 删除音频 |
 
 ## 图像对象
@@ -362,7 +362,7 @@ asset = CaptionAsset(
 )
 ```
 
-完整的 CaptionAsset 用法请见 [editor.md](../../../../../skills/videodb/reference/editor.md#caption-overlays) 中的编辑器 API。
+有关 CaptionAsset 与编辑器 API 的完整用法，请参见 [editor.md](../../../../../skills/videodb/reference/editor.md#caption-overlays)。
 
 ## 视频搜索参数
 
@@ -381,9 +381,9 @@ results = video.search(
 
 > **注意：** `filter` 是 `video.search()` 中的一个显式命名参数。`scene_index_id` 通过 `**kwargs` 传递给 API。
 >
-> **重要：** `video.search()` 在没有匹配项时会引发 `InvalidRequestError`，并附带消息 `"No results found"`。请始终将搜索调用包装在 try/except 中。对于场景搜索，请使用 `score_threshold=0.3` 或更高值来过滤低相关性的噪声。
+> **重要：** 当没有匹配项时，`video.search()` 会引发 `InvalidRequestError` 异常，并附带消息 `"No results found"`。请务必将搜索调用包装在 try/except 中。对于场景搜索，请使用 `score_threshold=0.3` 或更高值来过滤低相关性的噪声。
 
-对于场景搜索，请使用 `search_type=SearchType.semantic` 并设置 `index_type=IndexType.scene`。当针对特定场景索引时，传递 `scene_index_id`。详情请参阅 [search.md](search.md)。
+对于场景搜索，请使用 `search_type=SearchType.semantic` 并配合 `index_type=IndexType.scene`。当针对特定场景索引时，传递 `scene_index_id`。详情请参阅 [search.md](search.md)。
 
 ## SearchResult 对象
 
@@ -391,10 +391,10 @@ results = video.search(
 results = video.search("query", search_type=SearchType.semantic)
 ```
 
-| 方法 | 返回值 | 描述 |
+| 方法 | 返回 | 描述 |
 |--------|---------|-------------|
-| `results.get_shots()` | `list[Shot]` | 获取匹配的片段列表 |
-| `results.compile()` | `str` | 将所有镜头编译为流 URL |
+| `results.get_shots()` | `list[Shot]` | 获取匹配片段列表 |
+| `results.compile()` | `str` | 将所有镜头编译成一个流 URL |
 | `results.play()` | `str` | 在浏览器中打开编译后的流 |
 
 ### Shot 属性
@@ -409,7 +409,7 @@ results = video.search("query", search_type=SearchType.semantic)
 | `shot.text` | `str` | 匹配的文本内容 |
 | `shot.search_score` | `float` | 搜索相关性分数 |
 
-| 方法 | 返回值 | 描述 |
+| 方法 | 返回 | 描述 |
 |--------|---------|-------------|
 | `shot.generate_stream()` | `str` | 流式传输此特定镜头 |
 | `shot.play()` | `str` | 在浏览器中打开镜头流 |
@@ -437,13 +437,13 @@ meeting = coll.record_meeting(
 | `meeting.bot_name` | `str` | 机器人名称 |
 | `meeting.meeting_title` | `str` | 会议标题 |
 | `meeting.meeting_url` | `str` | 会议 URL |
-| `meeting.speaker_timeline` | `dict` | 发言人时间线数据 |
-| `meeting.is_active` | `bool` | 如果正在初始化或处理中则为真 |
-| `meeting.is_completed` | `bool` | 如果已完成则为真 |
+| `meeting.speaker_timeline` | `dict` | 发言者时间线数据 |
+| `meeting.is_active` | `bool` | 如果正在初始化或处理中则为 True |
+| `meeting.is_completed` | `bool` | 如果已完成则为 True |
 
 ### Meeting 方法
 
-| 方法 | 返回值 | 描述 |
+| 方法 | 返回 | 描述 |
 |--------|---------|-------------|
 | `meeting.refresh()` | `Meeting` | 从服务器刷新数据 |
 | `meeting.wait_for_status(target_status, timeout=14400, interval=120)` | `bool` | 轮询直到达到指定状态 |
@@ -544,7 +544,7 @@ from videodb.exceptions import (
 | 异常 | 常见原因 |
 |-----------|-------------|
 | `AuthenticationError` | 缺少或无效的 `VIDEO_DB_API_KEY` |
-| `InvalidRequestError` | 无效 URL、不支持的格式、错误参数 |
+| `InvalidRequestError` | 无效 URL、不支持的格式、错误的参数 |
 | `RequestTimeoutError` | 服务器响应时间过长 |
-| `SearchError` | 在索引前进行搜索、无效的搜索类型 |
-| `VideodbError` | 服务器错误、网络问题、通用故障 |
+| `SearchError` | 在索引前搜索、无效的搜索类型 |
+| `VideodbError` | 服务器错误、网络问题、一般性故障 |

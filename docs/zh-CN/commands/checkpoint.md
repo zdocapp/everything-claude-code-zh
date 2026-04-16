@@ -1,6 +1,6 @@
 # 检查点命令
 
-在你的工作流中创建或验证一个检查点。
+在您的工作流程中创建或验证一个检查点。
 
 ## 用法
 
@@ -22,25 +22,25 @@ echo "$(date +%Y-%m-%d-%H:%M) | $CHECKPOINT_NAME | $(git rev-parse --short HEAD)
 
 ## 验证检查点
 
-根据检查点进行验证时：
+针对某个检查点进行验证时：
 
 1. 从日志中读取检查点
 
 2. 将当前状态与检查点进行比较：
    * 自检查点以来新增的文件
    * 自检查点以来修改的文件
-   * 现在的测试通过率与当时对比
-   * 现在的覆盖率与当时对比
+   * 当前与当时的测试通过率
+   * 当前与当时的覆盖率
 
 3. 报告：
 
 ```
-检查点对比：$NAME
+CHECKPOINT COMPARISON: $NAME
 ============================
-文件更改数：X
-测试结果：通过数 +Y / 失败数 -Z
-覆盖率：+X% / -Y%
-构建状态：[通过/失败]
+文件更改数: X
+测试: +Y 通过 / -Z 失败
+覆盖率: +X% / -Y%
+构建: [通过/失败]
 ```
 
 ## 列出检查点
@@ -52,18 +52,18 @@ echo "$(date +%Y-%m-%d-%H:%M) | $CHECKPOINT_NAME | $(git rev-parse --short HEAD)
 * Git SHA
 * 状态（当前、落后、超前）
 
-## 工作流
+## 工作流程
 
 典型的检查点流程：
 
 ```
-[Start] --> /checkpoint create "feature-start"
+[开始] --> /checkpoint create "feature-start"
    |
-[Implement] --> /checkpoint create "core-done"
+[实现] --> /checkpoint create "core-done"
    |
-[Test] --> /checkpoint verify "core-done"
+[测试] --> /checkpoint verify "core-done"
    |
-[Refactor] --> /checkpoint create "refactor-done"
+[重构] --> /checkpoint create "refactor-done"
    |
 [PR] --> /checkpoint verify "feature-start"
 ```
@@ -73,6 +73,6 @@ echo "$(date +%Y-%m-%d-%H:%M) | $CHECKPOINT_NAME | $(git rev-parse --short HEAD)
 $ARGUMENTS:
 
 * `create <name>` - 创建指定名称的检查点
-* `verify <name>` - 根据指定名称的检查点进行验证
+* `verify <name>` - 针对指定名称的检查点进行验证
 * `list` - 显示所有检查点
-* `clear` - 删除旧的检查点（保留最后5个）
+* `clear` - 移除旧的检查点（保留最近5个）

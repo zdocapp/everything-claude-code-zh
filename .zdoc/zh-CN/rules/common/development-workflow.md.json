@@ -1,0 +1,26 @@
+{
+  "sourceFile": "rules/common/development-workflow.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Development Workflow",
+      "zh-Hans": "# 开发工作流程"
+    },
+    {
+      "en-US": "> This file extends [common/git-workflow.md](./git-workflow.md) with the full feature development process that happens before git operations.",
+      "zh-Hans": "> 本文档在 [common/git-workflow.md](./git-workflow.md) 的基础上，补充了 Git 操作之前的完整功能开发流程。"
+    },
+    {
+      "en-US": "The Feature Implementation Workflow describes the development pipeline: research, planning, TDD, code review, and then committing to git.",
+      "zh-Hans": "功能实现工作流程描述了开发流水线：研究、规划、测试驱动开发、代码审查，然后提交到 Git。"
+    },
+    {
+      "en-US": "## Feature Implementation Workflow",
+      "zh-Hans": "## 功能实现工作流程"
+    },
+    {
+      "en-US": "0. **Research & Reuse** _(mandatory before any new implementation)_\n   - **GitHub code search first:** Run `gh search repos` and `gh search code` to find existing implementations, templates, and patterns before writing anything new.\n   - **Library docs second:** Use Context7 or primary vendor docs to confirm API behavior, package usage, and version-specific details before implementing.\n   - **Exa only when the first two are insufficient:** Use Exa for broader web research or discovery after GitHub search and primary docs.\n   - **Check package registries:** Search npm, PyPI, crates.io, and other registries before writing utility code. Prefer battle-tested libraries over hand-rolled solutions.\n   - **Search for adaptable implementations:** Look for open-source projects that solve 80%+ of the problem and can be forked, ported, or wrapped.\n   - Prefer adopting or porting a proven approach over writing net-new code when it meets the requirement.\n\n1. **Plan First**\n   - Use **planner** agent to create implementation plan\n   - Generate planning docs before coding: PRD, architecture, system_design, tech_doc, task_list\n   - Identify dependencies and risks\n   - Break down into phases\n\n2. **TDD Approach**\n   - Use **tdd-guide** agent\n   - Write tests first (RED)\n   - Implement to pass tests (GREEN)\n   - Refactor (IMPROVE)\n   - Verify 80%+ coverage\n\n3. **Code Review**\n   - Use **code-reviewer** agent immediately after writing code\n   - Address CRITICAL and HIGH issues\n   - Fix MEDIUM issues when possible\n\n4. **Commit & Push**\n   - Detailed commit messages\n   - Follow conventional commits format\n   - See [git-workflow.md](./git-workflow.md) for commit message format and PR process\n\n5. **Pre-Review Checks**\n   - Verify all automated checks (CI/CD) are passing\n   - Resolve any merge conflicts\n   - Ensure branch is up to date with target branch\n   - Only request review after these checks pass",
+      "zh-Hans": "0. **研究与复用** *(任何新实现前的强制步骤)*\n   * **优先进行 GitHub 代码搜索：** 在编写任何新代码之前，运行 `gh search repos` 和 `gh search code` 来查找现有的实现、模板和模式。\n   * **其次查阅库文档：** 在实现之前，使用 Context7 或主要供应商文档来确认 API 行为、包的使用方法以及版本特定的细节。\n   * **仅在前两者不足时使用 Exa：** 在 GitHub 搜索和主要文档之后，使用 Exa 进行更广泛的网络研究或探索。\n   * **检查包注册表：** 在编写工具代码之前，搜索 npm、PyPI、crates.io 和其他注册表。优先选择经过实战检验的库，而非手动编写的解决方案。\n   * **寻找可适配的实现：** 寻找能解决 80% 以上问题、可以分叉、移植或包装的开源项目。\n   * 当现有方案满足需求时，优先采用或移植经过验证的方法，而非编写全新的代码。\n\n1. **先规划**\n   * 使用 **planner** 智能体来创建实现计划\n   * 编码前生成规划文档：PRD、架构、系统设计、技术文档、任务列表\n   * 识别依赖项和风险\n   * 分解为多个阶段\n\n2. **测试驱动开发方法**\n   * 使用 **tdd-guide** 智能体\n   * 先写测试（RED）\n   * 实现代码以通过测试（GREEN）\n   * 重构（IMPROVE）\n   * 验证 80% 以上的覆盖率\n\n3. **代码审查**\n   * 编写代码后立即使用 **code-reviewer** 智能体\n   * 解决 CRITICAL 和 HIGH 级别的问题\n   * 尽可能修复 MEDIUM 级别的问题\n\n4. **提交与推送**\n   * 详细的提交信息\n   * 遵循约定式提交格式\n   * 提交信息格式和 PR 流程请参阅 [git-workflow.md](./git-workflow.md)\n\n5. **审查前检查**\n   * 验证所有自动化检查（CI/CD）均已通过\n   * 解决任何合并冲突\n   * 确保分支与目标分支保持同步\n   * 仅在这些检查通过后才请求审查"
+    }
+  ]
+}

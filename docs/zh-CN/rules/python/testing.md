@@ -6,7 +6,7 @@ paths:
 
 # Python 测试
 
-> 本文件在 [通用/测试.md](../common/testing.md) 的基础上扩展了 Python 特定的内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Python 相关的内容。
 
 ## 框架
 

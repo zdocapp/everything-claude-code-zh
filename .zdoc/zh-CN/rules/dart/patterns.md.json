@@ -1,0 +1,106 @@
+{
+  "sourceFile": "rules/dart/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n---"
+    },
+    {
+      "en-US": "# Dart/Flutter Patterns",
+      "zh-Hans": "# Dart/Flutter 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Dart, Flutter, and common ecosystem-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 Dart、Flutter 及常见生态系统特定的内容。"
+    },
+    {
+      "en-US": "## Repository Pattern",
+      "zh-Hans": "## 仓库模式"
+    },
+    {
+      "en-US": "```dart\nabstract interface class UserRepository {\n  Future<User?> getById(String id);\n  Future<List<User>> getAll();\n  Stream<List<User>> watchAll();\n  Future<void> save(User user);\n  Future<void> delete(String id);\n}\n\nclass UserRepositoryImpl implements UserRepository {\n  const UserRepositoryImpl(this._remote, this._local);\n\n  final UserRemoteDataSource _remote;\n  final UserLocalDataSource _local;\n\n  @override\n  Future<User?> getById(String id) async {\n    final local = await _local.getById(id);\n    if (local != null) return local;\n    final remote = await _remote.getById(id);\n    if (remote != null) await _local.save(remote);\n    return remote;\n  }\n\n  @override\n  Future<List<User>> getAll() async {\n    final remote = await _remote.getAll();\n    for (final user in remote) {\n      await _local.save(user);\n    }\n    return remote;\n  }\n\n  @override\n  Stream<List<User>> watchAll() => _local.watchAll();\n\n  @override\n  Future<void> save(User user) => _local.save(user);\n\n  @override\n  Future<void> delete(String id) async {\n    await _remote.delete(id);\n    await _local.delete(id);\n  }\n}\n```",
+      "zh-Hans": "```dart\nabstract interface class UserRepository {\n  Future<User?> getById(String id);\n  Future<List<User>> getAll();\n  Stream<List<User>> watchAll();\n  Future<void> save(User user);\n  Future<void> delete(String id);\n}\n\nclass UserRepositoryImpl implements UserRepository {\n  const UserRepositoryImpl(this._remote, this._local);\n\n  final UserRemoteDataSource _remote;\n  final UserLocalDataSource _local;\n\n  @override\n  Future<User?> getById(String id) async {\n    final local = await _local.getById(id);\n    if (local != null) return local;\n    final remote = await _remote.getById(id);\n    if (remote != null) await _local.save(remote);\n    return remote;\n  }\n\n  @override\n  Future<List<User>> getAll() async {\n    final remote = await _remote.getAll();\n    for (final user in remote) {\n      await _local.save(user);\n    }\n    return remote;\n  }\n\n  @override\n  Stream<List<User>> watchAll() => _local.watchAll();\n\n  @override\n  Future<void> save(User user) => _local.save(user);\n\n  @override\n  Future<void> delete(String id) async {\n    await _remote.delete(id);\n    await _local.delete(id);\n  }\n}\n```"
+    },
+    {
+      "en-US": "## State Management: BLoC/Cubit",
+      "zh-Hans": "## 状态管理：BLoC/Cubit"
+    },
+    {
+      "en-US": "```dart\n// Cubit — simple state transitions\nclass CounterCubit extends Cubit<int> {\n  CounterCubit() : super(0);\n\n  void increment() => emit(state + 1);\n  void decrement() => emit(state - 1);\n}\n\n// BLoC — event-driven\n@immutable\nsealed class CartEvent {}\nclass CartItemAdded extends CartEvent { CartItemAdded(this.item); final Item item; }\nclass CartItemRemoved extends CartEvent { CartItemRemoved(this.id); final String id; }\nclass CartCleared extends CartEvent {}\n\n@immutable\nclass CartState {\n  const CartState({this.items = const []});\n  final List<Item> items;\n  CartState copyWith({List<Item>? items}) => CartState(items: items ?? this.items);\n}\n\nclass CartBloc extends Bloc<CartEvent, CartState> {\n  CartBloc() : super(const CartState()) {\n    on<CartItemAdded>((event, emit) =>\n        emit(state.copyWith(items: [...state.items, event.item])));\n    on<CartItemRemoved>((event, emit) =>\n        emit(state.copyWith(items: state.items.where((i) => i.id != event.id).toList())));\n    on<CartCleared>((_, emit) => emit(const CartState()));\n  }\n}\n```",
+      "zh-Hans": "```dart\n// Cubit — simple state transitions\nclass CounterCubit extends Cubit<int> {\n  CounterCubit() : super(0);\n\n  void increment() => emit(state + 1);\n  void decrement() => emit(state - 1);\n}\n\n// BLoC — event-driven\n@immutable\nsealed class CartEvent {}\nclass CartItemAdded extends CartEvent { CartItemAdded(this.item); final Item item; }\nclass CartItemRemoved extends CartEvent { CartItemRemoved(this.id); final String id; }\nclass CartCleared extends CartEvent {}\n\n@immutable\nclass CartState {\n  const CartState({this.items = const []});\n  final List<Item> items;\n  CartState copyWith({List<Item>? items}) => CartState(items: items ?? this.items);\n}\n\nclass CartBloc extends Bloc<CartEvent, CartState> {\n  CartBloc() : super(const CartState()) {\n    on<CartItemAdded>((event, emit) =>\n        emit(state.copyWith(items: [...state.items, event.item])));\n    on<CartItemRemoved>((event, emit) =>\n        emit(state.copyWith(items: state.items.where((i) => i.id != event.id).toList())));\n    on<CartCleared>((_, emit) => emit(const CartState()));\n  }\n}\n```"
+    },
+    {
+      "en-US": "## State Management: Riverpod",
+      "zh-Hans": "## 状态管理：Riverpod"
+    },
+    {
+      "en-US": "```dart\n// Simple provider\n@riverpod\nFuture<List<User>> users(Ref ref) async {\n  final repo = ref.watch(userRepositoryProvider);\n  return repo.getAll();\n}\n\n// Notifier for mutable state\n@riverpod\nclass CartNotifier extends _$CartNotifier {\n  @override\n  List<Item> build() => [];\n\n  void add(Item item) => state = [...state, item];\n  void remove(String id) => state = state.where((i) => i.id != id).toList();\n  void clear() => state = [];\n}\n\n// ConsumerWidget\nclass CartPage extends ConsumerWidget {\n  const CartPage({super.key});\n\n  @override\n  Widget build(BuildContext context, WidgetRef ref) {\n    final items = ref.watch(cartNotifierProvider);\n    return ListView(\n      children: items.map((item) => CartItemTile(item: item)).toList(),\n    );\n  }\n}\n```",
+      "zh-Hans": "```dart\n// Simple provider\n@riverpod\nFuture<List<User>> users(Ref ref) async {\n  final repo = ref.watch(userRepositoryProvider);\n  return repo.getAll();\n}\n\n// Notifier for mutable state\n@riverpod\nclass CartNotifier extends _$CartNotifier {\n  @override\n  List<Item> build() => [];\n\n  void add(Item item) => state = [...state, item];\n  void remove(String id) => state = state.where((i) => i.id != id).toList();\n  void clear() => state = [];\n}\n\n// ConsumerWidget\nclass CartPage extends ConsumerWidget {\n  const CartPage({super.key});\n\n  @override\n  Widget build(BuildContext context, WidgetRef ref) {\n    final items = ref.watch(cartNotifierProvider);\n    return ListView(\n      children: items.map((item) => CartItemTile(item: item)).toList(),\n    );\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Dependency Injection",
+      "zh-Hans": "## 依赖注入"
+    },
+    {
+      "en-US": "Constructor injection is preferred. Use `get_it` or Riverpod providers at composition root:",
+      "zh-Hans": "首选构造函数注入。在组合根目录使用 `get_it` 或 Riverpod 提供者："
+    },
+    {
+      "en-US": "```dart\n// get_it registration (in a setup file)\nvoid setupDependencies() {\n  final di = GetIt.instance;\n  di.registerSingleton<ApiClient>(ApiClient(baseUrl: Env.apiUrl));\n  di.registerSingleton<UserRepository>(\n    UserRepositoryImpl(di<ApiClient>(), di<LocalDatabase>()),\n  );\n  di.registerFactory(() => UserListViewModel(di<UserRepository>()));\n}\n```",
+      "zh-Hans": "```dart\n// get_it registration (in a setup file)\nvoid setupDependencies() {\n  final di = GetIt.instance;\n  di.registerSingleton<ApiClient>(ApiClient(baseUrl: Env.apiUrl));\n  di.registerSingleton<UserRepository>(\n    UserRepositoryImpl(di<ApiClient>(), di<LocalDatabase>()),\n  );\n  di.registerFactory(() => UserListViewModel(di<UserRepository>()));\n}\n```"
+    },
+    {
+      "en-US": "## ViewModel Pattern (without BLoC/Riverpod)",
+      "zh-Hans": "## ViewModel 模式（不使用 BLoC/Riverpod）"
+    },
+    {
+      "en-US": "```dart\nclass UserListViewModel extends ChangeNotifier {\n  UserListViewModel(this._repository);\n\n  final UserRepository _repository;\n\n  AsyncState<List<User>> _state = const Loading();\n  AsyncState<List<User>> get state => _state;\n\n  Future<void> load() async {\n    _state = const Loading();\n    notifyListeners();\n    try {\n      final users = await _repository.getAll();\n      _state = Success(users);\n    } on Exception catch (e) {\n      _state = Failure(e);\n    }\n    notifyListeners();\n  }\n}\n```",
+      "zh-Hans": "```dart\nclass UserListViewModel extends ChangeNotifier {\n  UserListViewModel(this._repository);\n\n  final UserRepository _repository;\n\n  AsyncState<List<User>> _state = const Loading();\n  AsyncState<List<User>> get state => _state;\n\n  Future<void> load() async {\n    _state = const Loading();\n    notifyListeners();\n    try {\n      final users = await _repository.getAll();\n      _state = Success(users);\n    } on Exception catch (e) {\n      _state = Failure(e);\n    }\n    notifyListeners();\n  }\n}\n```"
+    },
+    {
+      "en-US": "## UseCase Pattern",
+      "zh-Hans": "## UseCase 模式"
+    },
+    {
+      "en-US": "```dart\nclass GetUserUseCase {\n  const GetUserUseCase(this._repository);\n  final UserRepository _repository;\n\n  Future<User?> call(String id) => _repository.getById(id);\n}\n\nclass CreateUserUseCase {\n  const CreateUserUseCase(this._repository, this._idGenerator);\n  final UserRepository _repository;\n  final IdGenerator _idGenerator; // injected — domain layer must not depend on uuid package directly\n\n  Future<void> call(CreateUserInput input) async {\n    // Validate, apply business rules, then persist\n    final user = User(id: _idGenerator.generate(), name: input.name, email: input.email);\n    await _repository.save(user);\n  }\n}\n```",
+      "zh-Hans": "```dart\nclass GetUserUseCase {\n  const GetUserUseCase(this._repository);\n  final UserRepository _repository;\n\n  Future<User?> call(String id) => _repository.getById(id);\n}\n\nclass CreateUserUseCase {\n  const CreateUserUseCase(this._repository, this._idGenerator);\n  final UserRepository _repository;\n  final IdGenerator _idGenerator; // injected — domain layer must not depend on uuid package directly\n\n  Future<void> call(CreateUserInput input) async {\n    // Validate, apply business rules, then persist\n    final user = User(id: _idGenerator.generate(), name: input.name, email: input.email);\n    await _repository.save(user);\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Immutable State with freezed",
+      "zh-Hans": "## 使用 freezed 实现不可变状态"
+    },
+    {
+      "en-US": "```dart\n@freezed\nclass UserState with _$UserState {\n  const factory UserState({\n    @Default([]) List<User> users,\n    @Default(false) bool isLoading,\n    String? errorMessage,\n  }) = _UserState;\n}\n```",
+      "zh-Hans": "```dart\n@freezed\nclass UserState with _$UserState {\n  const factory UserState({\n    @Default([]) List<User> users,\n    @Default(false) bool isLoading,\n    String? errorMessage,\n  }) = _UserState;\n}\n```"
+    },
+    {
+      "en-US": "## Clean Architecture Layer Boundaries",
+      "zh-Hans": "## 整洁架构层边界"
+    },
+    {
+      "en-US": "```\nlib/\n├── domain/              # Pure Dart — no Flutter, no external packages\n│   ├── entities/\n│   ├── repositories/    # Abstract interfaces\n│   └── usecases/\n├── data/                # Implements domain interfaces\n│   ├── datasources/\n│   ├── models/          # DTOs with fromJson/toJson\n│   └── repositories/\n└── presentation/        # Flutter widgets + state management\n    ├── pages/\n    ├── widgets/\n    └── providers/ (or blocs/ or viewmodels/)\n```",
+      "zh-Hans": "```\nlib/\n├── domain/              # 纯 Dart — 无 Flutter，无外部包\n│   ├── entities/\n│   ├── repositories/    # 抽象接口\n│   └── usecases/\n├── data/                # 实现领域层接口\n│   ├── datasources/\n│   ├── models/          # 包含 fromJson/toJson 的 DTOs\n│   └── repositories/\n└── presentation/        # Flutter 组件 + 状态管理\n    ├── pages/\n    ├── widgets/\n    └── providers/ (或 blocs/ 或 viewmodels/)\n```"
+    },
+    {
+      "en-US": "- Domain must not import `package:flutter` or any data-layer package\n- Data layer maps DTOs to domain entities at repository boundaries\n- Presentation calls use cases, not repositories directly",
+      "zh-Hans": "* 领域层不得导入 `package:flutter` 或任何数据层包\n* 数据层在仓库边界将 DTO 映射到领域实体\n* 表示层调用用例，而非直接调用仓库"
+    },
+    {
+      "en-US": "## Navigation (GoRouter)",
+      "zh-Hans": "## 导航 (GoRouter)"
+    },
+    {
+      "en-US": "```dart\nfinal router = GoRouter(\n  routes: [\n    GoRoute(\n      path: '/',\n      builder: (context, state) => const HomePage(),\n    ),\n    GoRoute(\n      path: '/users/:id',\n      builder: (context, state) {\n        final id = state.pathParameters['id']!;\n        return UserDetailPage(userId: id);\n      },\n    ),\n  ],\n  // refreshListenable re-evaluates redirect whenever auth state changes\n  refreshListenable: GoRouterRefreshStream(authCubit.stream),\n  redirect: (context, state) {\n    final isLoggedIn = context.read<AuthCubit>().state is AuthAuthenticated;\n    if (!isLoggedIn && !state.matchedLocation.startsWith('/login')) {\n      return '/login';\n    }\n    return null;\n  },\n);\n```",
+      "zh-Hans": "```dart\nfinal router = GoRouter(\n  routes: [\n    GoRoute(\n      path: '/',\n      builder: (context, state) => const HomePage(),\n    ),\n    GoRoute(\n      path: '/users/:id',\n      builder: (context, state) {\n        final id = state.pathParameters['id']!;\n        return UserDetailPage(userId: id);\n      },\n    ),\n  ],\n  // refreshListenable re-evaluates redirect whenever auth state changes\n  refreshListenable: GoRouterRefreshStream(authCubit.stream),\n  redirect: (context, state) {\n    final isLoggedIn = context.read<AuthCubit>().state is AuthAuthenticated;\n    if (!isLoggedIn && !state.matchedLocation.startsWith('/login')) {\n      return '/login';\n    }\n    return null;\n  },\n);\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "See skill: `flutter-dart-code-review` for the comprehensive review checklist.\nSee skill: `compose-multiplatform-patterns` for Kotlin Multiplatform/Flutter interop patterns.",
+      "zh-Hans": "查看技能：`flutter-dart-code-review` 以获取全面的审查清单。\n查看技能：`compose-multiplatform-patterns` 以了解 Kotlin 多平台/Flutter 互操作模式。"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ paths:
 
 # TypeScript/JavaScript 模式
 
-> 此文件在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 TypeScript/JavaScript 特定的内容。
+> 本文档扩展了 [common/patterns.md](../common/patterns.md) 中关于 TypeScript/JavaScript 的特定内容。
 
 ## API 响应格式
 

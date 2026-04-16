@@ -1,0 +1,134 @@
+{
+  "sourceFile": "commands/cpp-test.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Enforce TDD workflow for C++. Write GoogleTest tests first, then implement. Verify coverage with gcov/lcov.\n---",
+      "zh-Hans": "---\ndescription: 为C++强制执行TDD工作流程。首先编写GoogleTest测试，然后实现。使用gcov/lcov验证覆盖率。\n---"
+    },
+    {
+      "en-US": "# C++ TDD Command",
+      "zh-Hans": "# C++ TDD 命令"
+    },
+    {
+      "en-US": "This command enforces test-driven development methodology for C++ code using GoogleTest/GoogleMock with CMake/CTest.",
+      "zh-Hans": "此命令使用 GoogleTest/GoogleMock 与 CMake/CTest，强制实施 C++ 代码的测试驱动开发方法。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的作用"
+    },
+    {
+      "en-US": "1. **Define Interfaces**: Scaffold class/function signatures first\n2. **Write Tests**: Create comprehensive GoogleTest test cases (RED)\n3. **Run Tests**: Verify tests fail for the right reason\n4. **Implement Code**: Write minimal code to pass (GREEN)\n5. **Refactor**: Improve while keeping tests green\n6. **Check Coverage**: Ensure 80%+ coverage",
+      "zh-Hans": "1. **定义接口**：首先搭建类/函数签名\n2. **编写测试**：创建全面的 GoogleTest 测试用例（红色阶段）\n3. **运行测试**：验证测试因正确原因而失败\n4. **实现代码**：编写最少的代码以通过测试（绿色阶段）\n5. **重构**：在保持测试通过的同时改进代码\n6. **检查覆盖率**：确保 80% 以上的覆盖率"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use `/cpp-test` when:",
+      "zh-Hans": "在以下情况使用 `/cpp-test`："
+    },
+    {
+      "en-US": "- Implementing new C++ functions or classes\n- Adding test coverage to existing code\n- Fixing bugs (write failing test first)\n- Building critical business logic\n- Learning TDD workflow in C++",
+      "zh-Hans": "* 实现新的 C++ 函数或类\n* 为现有代码增加测试覆盖率\n* 修复错误（首先编写失败的测试）\n* 构建关键业务逻辑\n* 学习 C++ 中的 TDD 工作流程"
+    },
+    {
+      "en-US": "## TDD Cycle",
+      "zh-Hans": "## TDD 循环"
+    },
+    {
+      "en-US": "```\nRED     → Write failing GoogleTest test\nGREEN   → Implement minimal code to pass\nREFACTOR → Improve code, tests stay green\nREPEAT  → Next test case\n```",
+      "zh-Hans": "```\nRED     → 编写失败的 GoogleTest 测试\nGREEN   → 实现最小化代码以通过测试\nREFACTOR → 改进代码，测试保持通过状态\nREPEAT  → 下一个测试用例\n```"
+    },
+    {
+      "en-US": "## Example Session",
+      "zh-Hans": "## 示例会话"
+    },
+    {
+      "en-US": "````\nUser: /cpp-test I need a function to validate email addresses\n\nAgent:\n# TDD Session: Email Validator\n\n## Step 1: Define Interface\n\n```cpp\n// validator/email.hpp\n#pragma once\n#include <string>\n#include <expected>\n\nenum class EmailError {\n    Empty,\n    InvalidFormat\n};\n\nstd::expected<void, EmailError> validate_email(const std::string& email);\n```\n\n## Step 2: Write Tests (RED)\n\n```cpp\n// validator/email_test.cpp\n#include <gtest/gtest.h>\n#include \"email.hpp\"\n\nTEST(ValidateEmail, AcceptsSimpleEmail) {\n    auto result = validate_email(\"user@example.com\");\n    EXPECT_TRUE(result.has_value());\n}\n\nTEST(ValidateEmail, AcceptsSubdomain) {\n    EXPECT_TRUE(validate_email(\"user@mail.example.com\").has_value());\n}\n\nTEST(ValidateEmail, AcceptsPlus) {\n    EXPECT_TRUE(validate_email(\"user+tag@example.com\").has_value());\n}\n\nTEST(ValidateEmail, RejectsEmpty) {\n    auto result = validate_email(\"\");\n    ASSERT_FALSE(result.has_value());\n    EXPECT_EQ(result.error(), EmailError::Empty);\n}\n\nTEST(ValidateEmail, RejectsNoAtSign) {\n    EXPECT_FALSE(validate_email(\"userexample.com\").has_value());\n}\n\nTEST(ValidateEmail, RejectsNoDomain) {\n    EXPECT_FALSE(validate_email(\"user@\").has_value());\n}\n\nTEST(ValidateEmail, RejectsNoLocalPart) {\n    EXPECT_FALSE(validate_email(\"@example.com\").has_value());\n}\n```\n\n## Step 3: Run Tests - Verify FAIL\n\n```bash\n$ cmake --build build && ctest --test-dir build --output-on-failure\n\n1/1 Test #1: email_validator_test .....***Failed\n    --- undefined reference to `validate_email`\n\nFAIL\n```\n\n✓ Tests fail as expected (unimplemented).\n\n## Step 4: Implement Minimal Code (GREEN)\n\n```cpp\n// validator/email.cpp\n#include \"email.hpp\"\n#include <regex>\n\nstd::expected<void, EmailError> validate_email(const std::string& email) {\n    if (email.empty()) {\n        return std::unexpected(EmailError::Empty);\n    }\n    static const std::regex pattern(R\"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\");\n    if (!std::regex_match(email, pattern)) {\n        return std::unexpected(EmailError::InvalidFormat);\n    }\n    return {};\n}\n```\n\n## Step 5: Run Tests - Verify PASS\n\n```bash\n$ cmake --build build && ctest --test-dir build --output-on-failure\n\n1/1 Test #1: email_validator_test .....   Passed    0.01 sec\n\n100% tests passed.\n```\n\n✓ All tests passing!\n\n## Step 6: Check Coverage\n\n```bash\n$ cmake -DCMAKE_CXX_FLAGS=\"--coverage\" -B build && cmake --build build\n$ ctest --test-dir build\n$ lcov --capture --directory build --output-file coverage.info\n$ lcov --list coverage.info\n\nvalidator/email.cpp     | 100%\n```\n\n✓ Coverage: 100%\n\n## TDD Complete!\n````",
+      "zh-Hans": "````\n用户：/cpp-test 我需要一个验证电子邮件地址的函数\n\n代理：\n# TDD 会话：电子邮件验证器\n\n## 步骤 1：定义接口\n\n```cpp\n// validator/email.hpp\n#pragma once\n#include <string>\n#include <expected>\n\nenum class EmailError {\n    Empty,\n    InvalidFormat\n};\n\nstd::expected<void, EmailError> validate_email(const std::string& email);\n```\n\n## 步骤 2：编写测试（红色）\n\n```cpp\n// validator/email_test.cpp\n#include <gtest/gtest.h>\n#include \"email.hpp\"\n\nTEST(ValidateEmail, AcceptsSimpleEmail) {\n    auto result = validate_email(\"user@example.com\");\n    EXPECT_TRUE(result.has_value());\n}\n\nTEST(ValidateEmail, AcceptsSubdomain) {\n    EXPECT_TRUE(validate_email(\"user@mail.example.com\").has_value());\n}\n\nTEST(ValidateEmail, AcceptsPlus) {\n    EXPECT_TRUE(validate_email(\"user+tag@example.com\").has_value());\n}\n\nTEST(ValidateEmail, RejectsEmpty) {\n    auto result = validate_email(\"\");\n    ASSERT_FALSE(result.has_value());\n    EXPECT_EQ(result.error(), EmailError::Empty);\n}\n\nTEST(ValidateEmail, RejectsNoAtSign) {\n    EXPECT_FALSE(validate_email(\"userexample.com\").has_value());\n}\n\nTEST(ValidateEmail, RejectsNoDomain) {\n    EXPECT_FALSE(validate_email(\"user@\").has_value());\n}\n\nTEST(ValidateEmail, RejectsNoLocalPart) {\n    EXPECT_FALSE(validate_email(\"@example.com\").has_value());\n}\n```\n\n## 步骤 3：运行测试 - 验证失败\n\n```bash\n$ cmake --build build && ctest --test-dir build --output-on-failure\n\n1/1 Test #1: email_validator_test .....***Failed\n    --- undefined reference to `validate_email`\n\nFAIL\n```\n\n✓ 测试按预期失败（未实现）。\n\n## 步骤 4：实现最小代码（绿色）\n\n```cpp\n// validator/email.cpp\n#include \"email.hpp\"\n#include <regex>\n\nstd::expected<void, EmailError> validate_email(const std::string& email) {\n    if (email.empty()) {\n        return std::unexpected(EmailError::Empty);\n    }\n    static const std::regex pattern(R\"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\");\n    if (!std::regex_match(email, pattern)) {\n        return std::unexpected(EmailError::InvalidFormat);\n    }\n    return {};\n}\n```\n\n## 步骤 5：运行测试 - 验证通过\n\n```bash\n$ cmake --build build && ctest --test-dir build --output-on-failure\n\n1/1 Test #1: email_validator_test .....   Passed    0.01 sec\n\n100% tests passed.\n```\n\n✓ 所有测试通过！\n\n## 步骤 6：检查覆盖率\n\n```bash\n$ cmake -DCMAKE_CXX_FLAGS=\"--coverage\" -B build && cmake --build build\n$ ctest --test-dir build\n$ lcov --capture --directory build --output-file coverage.info\n$ lcov --list coverage.info\n\nvalidator/email.cpp     | 100%\n```\n\n✓ 覆盖率：100%\n\n## TDD 完成！\n````"
+    },
+    {
+      "en-US": "## Test Patterns",
+      "zh-Hans": "## 测试模式"
+    },
+    {
+      "en-US": "### Basic Tests",
+      "zh-Hans": "### 基础测试"
+    },
+    {
+      "en-US": "```cpp\nTEST(SuiteName, TestName) {\n    EXPECT_EQ(add(2, 3), 5);\n    EXPECT_NE(result, nullptr);\n    EXPECT_TRUE(is_valid);\n    EXPECT_THROW(func(), std::invalid_argument);\n}\n```",
+      "zh-Hans": "```cpp\nTEST(SuiteName, TestName) {\n    EXPECT_EQ(add(2, 3), 5);\n    EXPECT_NE(result, nullptr);\n    EXPECT_TRUE(is_valid);\n    EXPECT_THROW(func(), std::invalid_argument);\n}\n```"
+    },
+    {
+      "en-US": "### Fixtures",
+      "zh-Hans": "### 测试夹具"
+    },
+    {
+      "en-US": "```cpp\nclass DatabaseTest : public ::testing::Test {\nprotected:\n    void SetUp() override { db_ = create_test_db(); }\n    void TearDown() override { db_.reset(); }\n    std::unique_ptr<Database> db_;\n};\n\nTEST_F(DatabaseTest, InsertsRecord) {\n    db_->insert(\"key\", \"value\");\n    EXPECT_EQ(db_->get(\"key\"), \"value\");\n}\n```",
+      "zh-Hans": "```cpp\nclass DatabaseTest : public ::testing::Test {\nprotected:\n    void SetUp() override { db_ = create_test_db(); }\n    void TearDown() override { db_.reset(); }\n    std::unique_ptr<Database> db_;\n};\n\nTEST_F(DatabaseTest, InsertsRecord) {\n    db_->insert(\"key\", \"value\");\n    EXPECT_EQ(db_->get(\"key\"), \"value\");\n}\n```"
+    },
+    {
+      "en-US": "### Parameterized Tests",
+      "zh-Hans": "### 参数化测试"
+    },
+    {
+      "en-US": "```cpp\nclass PrimeTest : public ::testing::TestWithParam<std::pair<int, bool>> {};\n\nTEST_P(PrimeTest, ChecksPrimality) {\n    auto [input, expected] = GetParam();\n    EXPECT_EQ(is_prime(input), expected);\n}\n\nINSTANTIATE_TEST_SUITE_P(Primes, PrimeTest, ::testing::Values(\n    std::make_pair(2, true),\n    std::make_pair(4, false),\n    std::make_pair(7, true)\n));\n```",
+      "zh-Hans": "```cpp\nclass PrimeTest : public ::testing::TestWithParam<std::pair<int, bool>> {};\n\nTEST_P(PrimeTest, ChecksPrimality) {\n    auto [input, expected] = GetParam();\n    EXPECT_EQ(is_prime(input), expected);\n}\n\nINSTANTIATE_TEST_SUITE_P(Primes, PrimeTest, ::testing::Values(\n    std::make_pair(2, true),\n    std::make_pair(4, false),\n    std::make_pair(7, true)\n));\n```"
+    },
+    {
+      "en-US": "## Coverage Commands",
+      "zh-Hans": "## 覆盖率命令"
+    },
+    {
+      "en-US": "```bash\n# Build with coverage\ncmake -DCMAKE_CXX_FLAGS=\"--coverage\" -DCMAKE_EXE_LINKER_FLAGS=\"--coverage\" -B build\n\n# Run tests\ncmake --build build && ctest --test-dir build\n\n# Generate coverage report\nlcov --capture --directory build --output-file coverage.info\nlcov --remove coverage.info '/usr/*' --output-file coverage.info\ngenhtml coverage.info --output-directory coverage_html\n```",
+      "zh-Hans": "```bash\n# Build with coverage\ncmake -DCMAKE_CXX_FLAGS=\"--coverage\" -DCMAKE_EXE_LINKER_FLAGS=\"--coverage\" -B build\n\n# Run tests\ncmake --build build && ctest --test-dir build\n\n# Generate coverage report\nlcov --capture --directory build --output-file coverage.info\nlcov --remove coverage.info '/usr/*' --output-file coverage.info\ngenhtml coverage.info --output-directory coverage_html\n```"
+    },
+    {
+      "en-US": "## Coverage Targets",
+      "zh-Hans": "## 覆盖率目标"
+    },
+    {
+      "en-US": "| Code Type | Target |\n|-----------|--------|\n| Critical business logic | 100% |\n| Public APIs | 90%+ |\n| General code | 80%+ |\n| Generated code | Exclude |",
+      "zh-Hans": "| 代码类型 | 目标 |\n|-----------|--------|\n| 关键业务逻辑 | 100% |\n| 公共 API | 90%+ |\n| 通用代码 | 80%+ |\n| 生成的代码 | 排除 |"
+    },
+    {
+      "en-US": "## TDD Best Practices",
+      "zh-Hans": "## TDD 最佳实践"
+    },
+    {
+      "en-US": "**DO:**",
+      "zh-Hans": "**应做：**"
+    },
+    {
+      "en-US": "- Write test FIRST, before any implementation\n- Run tests after each change\n- Use `EXPECT_*` (continues) over `ASSERT_*` (stops) when appropriate\n- Test behavior, not implementation details\n- Include edge cases (empty, null, max values, boundary conditions)",
+      "zh-Hans": "* 首先编写测试，在任何实现之前\n* 每次更改后运行测试\n* 在适当时使用 `EXPECT_*`（继续）而非 `ASSERT_*`（停止）\n* 测试行为，而非实现细节\n* 包含边界情况（空值、null、最大值、边界条件）"
+    },
+    {
+      "en-US": "**DON'T:**",
+      "zh-Hans": "**不应做：**"
+    },
+    {
+      "en-US": "- Write implementation before tests\n- Skip the RED phase\n- Test private methods directly (test through public API)\n- Use `sleep` in tests\n- Ignore flaky tests",
+      "zh-Hans": "* 在测试之前编写实现\n* 跳过红色阶段\n* 直接测试私有方法（通过公共 API 进行测试）\n* 在测试中使用 `sleep`\n* 忽略不稳定的测试"
+    },
+    {
+      "en-US": "## Related Commands",
+      "zh-Hans": "## 相关命令"
+    },
+    {
+      "en-US": "- `/cpp-build` - Fix build errors\n- `/cpp-review` - Review code after implementation\n- `/verify` - Run full verification loop",
+      "zh-Hans": "* `/cpp-build` - 修复构建错误\n* `/cpp-review` - 实现后审查代码\n* `/verify` - 运行完整验证循环"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- Skill: `skills/cpp-testing/`\n- Skill: `skills/tdd-workflow/`",
+      "zh-Hans": "* 技能：`skills/cpp-testing/`\n* 技能：`skills/tdd-workflow/`"
+    }
+  ]
+}

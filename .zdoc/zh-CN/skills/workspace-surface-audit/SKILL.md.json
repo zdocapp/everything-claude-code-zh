@@ -1,0 +1,138 @@
+{
+  "sourceFile": "skills/workspace-surface-audit/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: workspace-surface-audit\ndescription: Audit the active repo, MCP servers, plugins, connectors, env surfaces, and harness setup, then recommend the highest-value ECC-native skills, hooks, agents, and operator workflows. Use when the user wants help setting up Claude Code or understanding what capabilities are actually available in their environment.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: workspace-surface-audit\ndescription: 审核活跃仓库、MCP服务器、插件、连接器、环境表面和工具设置，然后推荐最高价值的ECC原生技能、钩子、代理和操作员工作流。当用户需要帮助设置Claude Code或了解其环境中实际可用的功能时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Workspace Surface Audit",
+      "zh-Hans": "# 工作区表面审计"
+    },
+    {
+      "en-US": "Read-only audit skill for answering the question \"what can this workspace and machine actually do right now, and what should we add or enable next?\"",
+      "zh-Hans": "用于回答“这个工作区和机器现在实际能做什么，接下来我们应该添加或启用什么？”的只读审计技能。"
+    },
+    {
+      "en-US": "This is the ECC-native answer to setup-audit plugins. It does not modify files unless the user explicitly asks for follow-up implementation.",
+      "zh-Hans": "这是 ECC 原生的 setup-audit 插件替代方案。除非用户明确要求后续实现，否则它不会修改文件。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- User says \"set up Claude Code\", \"recommend automations\", \"what plugins or MCPs should I use?\", or \"what am I missing?\"\n- Auditing a machine or repo before installing more skills, hooks, or connectors\n- Comparing official marketplace plugins against ECC-native coverage\n- Reviewing `.env`, `.mcp.json`, plugin settings, or connected-app surfaces to find missing workflow layers\n- Deciding whether a capability should be a skill, hook, agent, MCP, or external connector",
+      "zh-Hans": "* 用户说“设置 Claude Code”、“推荐自动化”、“我应该使用什么插件或 MCP？”或“我缺少什么？”\n* 在安装更多技能、钩子或连接器之前，审计机器或代码库\n* 将官方市场插件与 ECC 原生覆盖范围进行比较\n* 审查 `.env`、`.mcp.json`、插件设置或已连接应用表面，以查找缺失的工作流层\n* 决定某个功能应该是技能、钩子、代理、MCP 还是外部连接器"
+    },
+    {
+      "en-US": "## Non-Negotiable Rules",
+      "zh-Hans": "## 不可协商的规则"
+    },
+    {
+      "en-US": "- Never print secret values. Surface only provider names, capability names, file paths, and whether a key or config exists.\n- Prefer ECC-native workflows over generic \"install another plugin\" advice when ECC can reasonably own the surface.\n- Treat external plugins as benchmarks and inspiration, not authoritative product boundaries.\n- Separate three things clearly:\n  - already available now\n  - available but not wrapped well in ECC\n  - not available and would require a new integration",
+      "zh-Hans": "* 绝不打印密钥值。仅展示提供商名称、功能名称、文件路径以及密钥或配置是否存在。\n* 当 ECC 可以合理拥有该表面时，优先选择 ECC 原生工作流，而非通用的“安装另一个插件”建议。\n* 将外部插件视为基准和灵感来源，而非权威的产品边界。\n* 清晰区分三件事：\n  * 现已可用\n  * 可用但未在 ECC 中良好封装\n  * 不可用，需要新的集成"
+    },
+    {
+      "en-US": "## Audit Inputs",
+      "zh-Hans": "## 审计输入"
+    },
+    {
+      "en-US": "Inspect only the files and settings needed to answer the question well:",
+      "zh-Hans": "仅检查为良好回答问题所需的文件和设置："
+    },
+    {
+      "en-US": "1. Repo surface\n   - `package.json`, lockfiles, language markers, framework config, `README.md`\n   - `.mcp.json`, `.lsp.json`, `.claude/settings*.json`, `.codex/*`\n   - `AGENTS.md`, `CLAUDE.md`, install manifests, hook configs\n2. Environment surface\n   - `.env*` files in the active repo and obvious adjacent ECC workspaces\n   - Surface only key names such as `STRIPE_API_KEY`, `TWILIO_AUTH_TOKEN`, `FAL_KEY`\n3. Connected tool surface\n   - Installed plugins, enabled connectors, MCP servers, LSPs, and app integrations\n4. ECC surface\n   - Existing skills, commands, hooks, agents, and install modules that already cover the need",
+      "zh-Hans": "1. 代码库表面\n   * `package.json`、锁文件、语言标记、框架配置、`README.md`\n   * `.mcp.json`、`.lsp.json`、`.claude/settings*.json`、`.codex/*`\n   * `AGENTS.md`、`CLAUDE.md`、安装清单、钩子配置\n2. 环境表面\n   * 活动代码库及明显相邻 ECC 工作区中的 `.env*` 文件\n   * 仅展示密钥名称，例如 `STRIPE_API_KEY`、`TWILIO_AUTH_TOKEN`、`FAL_KEY`\n3. 已连接工具表面\n   * 已安装的插件、启用的连接器、MCP 服务器、LSP 和应用集成\n4. ECC 表面\n   * 已覆盖需求的现有技能、命令、钩子、代理和安装模块"
+    },
+    {
+      "en-US": "## Audit Process",
+      "zh-Hans": "## 审计流程"
+    },
+    {
+      "en-US": "### Phase 1: Inventory What Exists",
+      "zh-Hans": "### 阶段 1：盘点现有内容"
+    },
+    {
+      "en-US": "Produce a compact inventory:",
+      "zh-Hans": "生成简洁的清单："
+    },
+    {
+      "en-US": "- active harness targets\n- installed plugins and connected apps\n- configured MCP servers\n- configured LSP servers\n- env-backed services implied by key names\n- existing ECC skills already relevant to the workspace",
+      "zh-Hans": "* 活动的 harness 目标\n* 已安装的插件和已连接的应用\n* 已配置的 MCP 服务器\n* 已配置的 LSP 服务器\n* 由密钥名称暗示的环境支持服务\n* 与工作区相关的现有 ECC 技能"
+    },
+    {
+      "en-US": "If a surface exists only as a primitive, call that out. Example:",
+      "zh-Hans": "如果某个表面仅作为原始功能存在，请明确指出。例如："
+    },
+    {
+      "en-US": "- \"Stripe is available via connected app, but ECC lacks a billing-operator skill\"\n- \"Google Drive is connected, but there is no ECC-native Google Workspace operator workflow\"",
+      "zh-Hans": "* “Stripe 可通过已连接应用使用，但 ECC 缺少 billing-operator 技能”\n* “Google Drive 已连接，但没有 ECC 原生的 Google Workspace 操作员工作流”"
+    },
+    {
+      "en-US": "### Phase 2: Benchmark Against Official and Installed Surfaces",
+      "zh-Hans": "### 阶段 2：与官方及已安装表面进行基准比较"
+    },
+    {
+      "en-US": "Compare the workspace against:",
+      "zh-Hans": "将工作区与以下内容进行比较："
+    },
+    {
+      "en-US": "- official Claude plugins that overlap with setup, review, docs, design, or workflow quality\n- locally installed plugins in Claude or Codex\n- the user's currently connected app surfaces",
+      "zh-Hans": "* 与设置、审查、文档、设计或工作流质量重叠的官方 Claude 插件\n* Claude 或 Codex 中本地安装的插件\n* 用户当前已连接的应用表面"
+    },
+    {
+      "en-US": "Do not just list names. For each comparison, answer:",
+      "zh-Hans": "不要仅仅列出名称。对于每个比较，回答："
+    },
+    {
+      "en-US": "1. what they actually do\n2. whether ECC already has parity\n3. whether ECC only has primitives\n4. whether ECC is missing the workflow entirely",
+      "zh-Hans": "1. 它们实际做什么\n2. ECC 是否已具备同等功能\n3. ECC 是否仅具备原始功能\n4. ECC 是否完全缺失该工作流"
+    },
+    {
+      "en-US": "### Phase 3: Turn Gaps Into ECC Decisions",
+      "zh-Hans": "### 阶段 3：将差距转化为 ECC 决策"
+    },
+    {
+      "en-US": "For every real gap, recommend the correct ECC-native shape:",
+      "zh-Hans": "对于每个真正的差距，推荐正确的 ECC 原生形态："
+    },
+    {
+      "en-US": "| Gap Type | Preferred ECC Shape |\n|----------|---------------------|\n| Repeatable operator workflow | Skill |\n| Automatic enforcement or side-effect | Hook |\n| Specialized delegated role | Agent |\n| External tool bridge | MCP server or connector |\n| Install/bootstrap guidance | Setup or audit skill |",
+      "zh-Hans": "| 差距类型 | 首选的 ECC 形态 |\n|----------|---------------------|\n| 可重复的操作员工作流 | 技能 |\n| 自动强制执行或副作用 | 钩子 |\n| 专业化的委托角色 | 代理 |\n| 外部工具桥接 | MCP 服务器或连接器 |\n| 安装/引导指南 | 设置或审计技能 |"
+    },
+    {
+      "en-US": "Default to user-facing skills that orchestrate existing tools when the need is operational rather than infrastructural.",
+      "zh-Hans": "当需求是操作性的而非基础架构性的时，默认选择编排现有工具的面向用户的技能。"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Return five sections in this order:",
+      "zh-Hans": "按顺序返回五个部分："
+    },
+    {
+      "en-US": "1. **Current surface**\n   - what is already usable right now\n2. **Parity**\n   - where ECC already matches or exceeds the benchmark\n3. **Primitive-only gaps**\n   - tools exist, but ECC lacks a clean operator skill\n4. **Missing integrations**\n   - capability not available yet\n5. **Top 3-5 next moves**\n   - concrete ECC-native additions, ordered by impact",
+      "zh-Hans": "1. **当前表面**\n   * 现已可用的内容\n2. **同等功能**\n   * ECC 已匹配或超越基准的地方\n3. **仅原始功能的差距**\n   * 工具存在，但 ECC 缺少清晰的操作员技能\n4. **缺失的集成**\n   * 尚不可用的功能\n5. **接下来 3-5 个最佳行动**\n   * 具体的 ECC 原生添加项，按影响力排序"
+    },
+    {
+      "en-US": "## Recommendation Rules",
+      "zh-Hans": "## 推荐规则"
+    },
+    {
+      "en-US": "- Recommend at most 1-2 highest-value ideas per category.\n- Favor skills with obvious user intent and business value:\n  - setup audit\n  - billing/customer ops\n  - issue/program ops\n  - Google Workspace ops\n  - deployment/ops control\n- If a connector is company-specific, recommend it only when it is genuinely available or clearly useful to the user's workflow.\n- If ECC already has a strong primitive, propose a wrapper skill instead of inventing a brand-new subsystem.",
+      "zh-Hans": "* 每个类别最多推荐 1-2 个最高价值的想法。\n* 优先选择具有明显用户意图和业务价值的技能：\n  * 设置审计\n  * 计费/客户运营\n  * 问题/项目运营\n  * Google Workspace 运营\n  * 部署/运营控制\n* 如果连接器是公司特定的，仅在其真正可用或对用户工作流明显有用时才推荐。\n* 如果 ECC 已具备强大的原始功能，建议封装技能，而非发明全新的子系统。"
+    },
+    {
+      "en-US": "## Good Outcomes",
+      "zh-Hans": "## 良好结果"
+    },
+    {
+      "en-US": "- The user can immediately see what is connected, what is missing, and what ECC should own next.\n- Recommendations are specific enough to implement in the repo without another discovery pass.\n- The final answer is organized around workflows, not API brands.",
+      "zh-Hans": "* 用户可以立即看到已连接的内容、缺失的内容以及 ECC 接下来应拥有的内容。\n* 推荐足够具体，无需另一次发现过程即可在代码库中实现。\n* 最终答案围绕工作流组织，而非 API 品牌。"
+    }
+  ]
+}

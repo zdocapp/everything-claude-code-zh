@@ -1,0 +1,70 @@
+{
+  "sourceFile": "commands/skill-health.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: skill-health\ndescription: Show skill portfolio health dashboard with charts and analytics\ncommand: true\n---",
+      "zh-Hans": "---\nname: skill-health\ndescription: 显示技能组合健康仪表板，包含图表和分析\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Skill Health Dashboard",
+      "zh-Hans": "# 技能健康仪表板"
+    },
+    {
+      "en-US": "Shows a comprehensive health dashboard for all skills in the portfolio with success rate sparklines, failure pattern clustering, pending amendments, and version history.",
+      "zh-Hans": "展示投资组合中所有技能的综合健康仪表板，包含成功率走势图、故障模式聚类、待处理修订和版本历史。"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现方式"
+    },
+    {
+      "en-US": "Run the skill health CLI in dashboard mode:",
+      "zh-Hans": "在仪表板模式下运行技能健康 CLI："
+    },
+    {
+      "en-US": "```bash\nECC_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node -e \"var r=(()=>{var e=process.env.CLAUDE_PLUGIN_ROOT;if(e&&e.trim())return e.trim();var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h,'.claude'),q=p.join('scripts','lib','utils.js');if(f.existsSync(p.join(d,q)))return d;for(var s of [['ecc'],['ecc@ecc'],['marketplace','ecc'],['everything-claude-code'],['everything-claude-code@everything-claude-code'],['marketplace','everything-claude-code']]){var l=p.join(d,'plugins',...s);if(f.existsSync(p.join(l,q)))return l}try{for(var g of ['ecc','everything-claude-code']){var b=p.join(d,'plugins','cache',g);for(var o of f.readdirSync(b,{withFileTypes:true})){if(!o.isDirectory())continue;for(var v of f.readdirSync(p.join(b,o.name),{withFileTypes:true})){if(!v.isDirectory())continue;var c=p.join(b,o.name,v.name);if(f.existsSync(p.join(c,q)))return c}}}}catch(x){}return d})();console.log(r)\")}\"\nnode \"$ECC_ROOT/scripts/skills-health.js\" --dashboard\n```",
+      "zh-Hans": "```bash\nECC_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node -e \"var r=(()=>{var e=process.env.CLAUDE_PLUGIN_ROOT;if(e&&e.trim())return e.trim();var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h,'.claude'),q=p.join('scripts','lib','utils.js');if(f.existsSync(p.join(d,q)))return d;for(var s of [['ecc'],['ecc@ecc'],['marketplace','ecc'],['everything-claude-code'],['everything-claude-code@everything-claude-code'],['marketplace','everything-claude-code']]){var l=p.join(d,'plugins',...s);if(f.existsSync(p.join(l,q)))return l}try{for(var g of ['ecc','everything-claude-code']){var b=p.join(d,'plugins','cache',g);for(var o of f.readdirSync(b,{withFileTypes:true})){if(!o.isDirectory())continue;for(var v of f.readdirSync(p.join(b,o.name),{withFileTypes:true})){if(!v.isDirectory())continue;var c=p.join(b,o.name,v.name);if(f.existsSync(p.join(c,q)))return c}}}}catch(x){}return d})();console.log(r)\")}\"\nnode \"$ECC_ROOT/scripts/skills-health.js\" --dashboard\n```"
+    },
+    {
+      "en-US": "For a specific panel only:",
+      "zh-Hans": "仅查看特定面板："
+    },
+    {
+      "en-US": "```bash\nECC_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node -e \"var r=(()=>{var e=process.env.CLAUDE_PLUGIN_ROOT;if(e&&e.trim())return e.trim();var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h,'.claude'),q=p.join('scripts','lib','utils.js');if(f.existsSync(p.join(d,q)))return d;for(var s of [['ecc'],['ecc@ecc'],['marketplace','ecc'],['everything-claude-code'],['everything-claude-code@everything-claude-code'],['marketplace','everything-claude-code']]){var l=p.join(d,'plugins',...s);if(f.existsSync(p.join(l,q)))return l}try{for(var g of ['ecc','everything-claude-code']){var b=p.join(d,'plugins','cache',g);for(var o of f.readdirSync(b,{withFileTypes:true})){if(!o.isDirectory())continue;for(var v of f.readdirSync(p.join(b,o.name),{withFileTypes:true})){if(!v.isDirectory())continue;var c=p.join(b,o.name,v.name);if(f.existsSync(p.join(c,q)))return c}}}}catch(x){}return d})();console.log(r)\")}\"\nnode \"$ECC_ROOT/scripts/skills-health.js\" --dashboard --panel failures\n```",
+      "zh-Hans": "```bash\nECC_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node -e \"var r=(()=>{var e=process.env.CLAUDE_PLUGIN_ROOT;if(e&&e.trim())return e.trim();var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h,'.claude'),q=p.join('scripts','lib','utils.js');if(f.existsSync(p.join(d,q)))return d;for(var s of [['ecc'],['ecc@ecc'],['marketplace','ecc'],['everything-claude-code'],['everything-claude-code@everything-claude-code'],['marketplace','everything-claude-code']]){var l=p.join(d,'plugins',...s);if(f.existsSync(p.join(l,q)))return l}try{for(var g of ['ecc','everything-claude-code']){var b=p.join(d,'plugins','cache',g);for(var o of f.readdirSync(b,{withFileTypes:true})){if(!o.isDirectory())continue;for(var v of f.readdirSync(p.join(b,o.name),{withFileTypes:true})){if(!v.isDirectory())continue;var c=p.join(b,o.name,v.name);if(f.existsSync(p.join(c,q)))return c}}}}catch(x){}return d})();console.log(r)\")}\"\nnode \"$ECC_ROOT/scripts/skills-health.js\" --dashboard --panel failures\n```"
+    },
+    {
+      "en-US": "For machine-readable output:",
+      "zh-Hans": "获取机器可读输出："
+    },
+    {
+      "en-US": "```bash\nECC_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node -e \"var r=(()=>{var e=process.env.CLAUDE_PLUGIN_ROOT;if(e&&e.trim())return e.trim();var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h,'.claude'),q=p.join('scripts','lib','utils.js');if(f.existsSync(p.join(d,q)))return d;for(var s of [['ecc'],['ecc@ecc'],['marketplace','ecc'],['everything-claude-code'],['everything-claude-code@everything-claude-code'],['marketplace','everything-claude-code']]){var l=p.join(d,'plugins',...s);if(f.existsSync(p.join(l,q)))return l}try{for(var g of ['ecc','everything-claude-code']){var b=p.join(d,'plugins','cache',g);for(var o of f.readdirSync(b,{withFileTypes:true})){if(!o.isDirectory())continue;for(var v of f.readdirSync(p.join(b,o.name),{withFileTypes:true})){if(!v.isDirectory())continue;var c=p.join(b,o.name,v.name);if(f.existsSync(p.join(c,q)))return c}}}}catch(x){}return d})();console.log(r)\")}\"\nnode \"$ECC_ROOT/scripts/skills-health.js\" --dashboard --json\n```",
+      "zh-Hans": "```bash\nECC_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$(node -e \"var r=(()=>{var e=process.env.CLAUDE_PLUGIN_ROOT;if(e&&e.trim())return e.trim();var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h,'.claude'),q=p.join('scripts','lib','utils.js');if(f.existsSync(p.join(d,q)))return d;for(var s of [['ecc'],['ecc@ecc'],['marketplace','ecc'],['everything-claude-code'],['everything-claude-code@everything-claude-code'],['marketplace','everything-claude-code']]){var l=p.join(d,'plugins',...s);if(f.existsSync(p.join(l,q)))return l}try{for(var g of ['ecc','everything-claude-code']){var b=p.join(d,'plugins','cache',g);for(var o of f.readdirSync(b,{withFileTypes:true})){if(!o.isDirectory())continue;for(var v of f.readdirSync(p.join(b,o.name),{withFileTypes:true})){if(!v.isDirectory())continue;var c=p.join(b,o.name,v.name);if(f.existsSync(p.join(c,q)))return c}}}}catch(x){}return d})();console.log(r)\")}\"\nnode \"$ECC_ROOT/scripts/skills-health.js\" --dashboard --json\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/skill-health                    # Full dashboard view\n/skill-health --panel failures   # Only failure clustering panel\n/skill-health --json             # Machine-readable JSON output\n```",
+      "zh-Hans": "```\n/skill-health                    # 完整仪表板视图\n/skill-health --panel failures   # 仅显示故障聚类面板\n/skill-health --json             # 机器可读的 JSON 输出\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 操作步骤"
+    },
+    {
+      "en-US": "1. Run the skills-health.js script with --dashboard flag\n2. Display the output to the user\n3. If any skills are declining, highlight them and suggest running /evolve\n4. If there are pending amendments, suggest reviewing them",
+      "zh-Hans": "1. 使用 --dashboard 标志运行 skills-health.js 脚本\n2. 向用户显示输出\n3. 如果有任何技能表现下降，高亮显示它们并建议运行 /evolve\n4. 如果有待处理的修订，建议进行审查"
+    },
+    {
+      "en-US": "## Panels",
+      "zh-Hans": "## 面板"
+    },
+    {
+      "en-US": "- **Success Rate (30d)** — Sparkline charts showing daily success rates per skill\n- **Failure Patterns** — Clustered failure reasons with horizontal bar chart\n- **Pending Amendments** — Amendment proposals awaiting review\n- **Version History** — Timeline of version snapshots per skill",
+      "zh-Hans": "* **成功率 (30天)** — 显示每个技能每日成功率的走势图\n* **故障模式** — 按水平条形图聚类的故障原因\n* **待处理修订** — 等待审查的修订提案\n* **版本历史** — 每个技能的版本快照时间线"
+    }
+  ]
+}

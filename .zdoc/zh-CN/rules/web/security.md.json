@@ -1,0 +1,70 @@
+{
+  "sourceFile": "rules/web/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with web-specific security content.",
+      "zh-Hans": "> 此文件在 [common/security.md](../common/security.md) 的基础上扩展了特定于 Web 的安全内容。"
+    },
+    {
+      "en-US": "# Web Security Rules",
+      "zh-Hans": "# Web 安全规则"
+    },
+    {
+      "en-US": "## Content Security Policy",
+      "zh-Hans": "## 内容安全策略"
+    },
+    {
+      "en-US": "Always configure a production CSP.",
+      "zh-Hans": "始终为生产环境配置 CSP。"
+    },
+    {
+      "en-US": "### Nonce-Based CSP",
+      "zh-Hans": "### 基于 Nonce 的 CSP"
+    },
+    {
+      "en-US": "Use a per-request nonce for scripts instead of `'unsafe-inline'`.",
+      "zh-Hans": "对脚本使用每次请求唯一的 nonce，而不是 `'unsafe-inline'`。"
+    },
+    {
+      "en-US": "```text\nContent-Security-Policy:\n  default-src 'self';\n  script-src 'self' 'nonce-{RANDOM}' https://cdn.jsdelivr.net;\n  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;\n  img-src 'self' data: https:;\n  font-src 'self' https://fonts.gstatic.com;\n  connect-src 'self' https://*.example.com;\n  frame-src 'none';\n  object-src 'none';\n  base-uri 'self';\n```",
+      "zh-Hans": "```text\n内容安全策略：\n  默认来源 'self';\n  脚本来源 'self' 'nonce-{RANDOM}' https://cdn.jsdelivr.net;\n  样式来源 'self' 'unsafe-inline' https://fonts.googleapis.com;\n  图片来源 'self' data: https:;\n  字体来源 'self' https://fonts.gstatic.com;\n  连接来源 'self' https://*.example.com;\n  框架来源 'none';\n  对象来源 'none';\n  基础URI 'self';\n```"
+    },
+    {
+      "en-US": "Adjust origins to the project. Do not cargo-cult this block unchanged.",
+      "zh-Hans": "根据项目调整来源。不要原封不动地照搬此代码块。"
+    },
+    {
+      "en-US": "## XSS Prevention",
+      "zh-Hans": "## XSS 防护"
+    },
+    {
+      "en-US": "- Never inject unsanitized HTML\n- Avoid `innerHTML` / `dangerouslySetInnerHTML` unless sanitized first\n- Escape dynamic template values\n- Sanitize user HTML with a vetted local sanitizer when absolutely necessary",
+      "zh-Hans": "* 切勿注入未净化的 HTML\n* 避免使用 `innerHTML` / `dangerouslySetInnerHTML`，除非事先已净化\n* 对动态模板值进行转义\n* 在绝对必要时，使用经过验证的本地净化器来净化用户 HTML"
+    },
+    {
+      "en-US": "## Third-Party Scripts",
+      "zh-Hans": "## 第三方脚本"
+    },
+    {
+      "en-US": "- Load asynchronously\n- Use SRI when serving from a CDN\n- Audit quarterly\n- Prefer self-hosting for critical dependencies when practical",
+      "zh-Hans": "* 异步加载\n* 从 CDN 提供服务时使用 SRI\n* 每季度审计一次\n* 在可行的情况下，对关键依赖项优先选择自托管"
+    },
+    {
+      "en-US": "## HTTPS and Headers",
+      "zh-Hans": "## HTTPS 与头部"
+    },
+    {
+      "en-US": "```text\nStrict-Transport-Security: max-age=31536000; includeSubDomains; preload\nX-Content-Type-Options: nosniff\nX-Frame-Options: DENY\nReferrer-Policy: strict-origin-when-cross-origin\nPermissions-Policy: camera=(), microphone=(), geolocation=()\n```",
+      "zh-Hans": "```text\nStrict-Transport-Security: max-age=31536000; includeSubDomains; preload\nX-Content-Type-Options: nosniff\nX-Frame-Options: DENY\nReferrer-Policy: strict-origin-when-cross-origin\nPermissions-Policy: camera=(), microphone=(), geolocation=()\n```"
+    },
+    {
+      "en-US": "## Forms",
+      "zh-Hans": "## 表单"
+    },
+    {
+      "en-US": "- CSRF protection on state-changing forms\n- Rate limiting on submission endpoints\n- Validate client and server side\n- Prefer honeypots or light anti-abuse controls over heavy-handed CAPTCHA defaults",
+      "zh-Hans": "* 在状态变更的表单上启用 CSRF 保护\n* 在提交端点实施速率限制\n* 在客户端和服务器端都进行验证\n* 优先选择蜜罐或轻量级防滥用控制，而非默认的重度验证码"
+    }
+  ]
+}

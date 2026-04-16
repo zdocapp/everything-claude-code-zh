@@ -1,48 +1,48 @@
 ---
-description: 为 C++ 强制执行 TDD 工作流程。先编写 GoogleTest 测试，然后实现。使用 gcov/lcov 验证覆盖率。
+description: 为C++强制执行TDD工作流程。首先编写GoogleTest测试，然后实现。使用gcov/lcov验证覆盖率。
 ---
 
 # C++ TDD 命令
 
-此命令使用 GoogleTest/GoogleMock 与 CMake/CTest，为 C++ 代码强制执行测试驱动开发方法。
+此命令使用 GoogleTest/GoogleMock 与 CMake/CTest，强制实施 C++ 代码的测试驱动开发方法。
 
 ## 此命令的作用
 
 1. **定义接口**：首先搭建类/函数签名
-2. **编写测试**：创建全面的 GoogleTest 测试用例（RED 阶段）
-3. **运行测试**：验证测试因正确原因失败
-4. **实现代码**：编写最少代码以通过测试（GREEN 阶段）
+2. **编写测试**：创建全面的 GoogleTest 测试用例（红色阶段）
+3. **运行测试**：验证测试因正确原因而失败
+4. **实现代码**：编写最少的代码以通过测试（绿色阶段）
 5. **重构**：在保持测试通过的同时改进代码
-6. **检查覆盖率**：确保覆盖率在 80% 以上
+6. **检查覆盖率**：确保 80% 以上的覆盖率
 
 ## 何时使用
 
 在以下情况使用 `/cpp-test`：
 
-* 实现新的 C++ 函数或类时
-* 为现有代码增加测试覆盖率时
-* 修复错误时（先编写失败的测试）
-* 构建关键业务逻辑时
-* 学习 C++ 中的 TDD 工作流时
+* 实现新的 C++ 函数或类
+* 为现有代码增加测试覆盖率
+* 修复错误（首先编写失败的测试）
+* 构建关键业务逻辑
+* 学习 C++ 中的 TDD 工作流程
 
 ## TDD 循环
 
 ```
 RED     → 编写失败的 GoogleTest 测试
 GREEN   → 实现最小化代码以通过测试
-REFACTOR → 改进代码，测试保持通过
+REFACTOR → 改进代码，测试保持通过状态
 REPEAT  → 下一个测试用例
 ```
 
 ## 示例会话
 
 ````
-User: /cpp-test I need a function to validate email addresses
+用户：/cpp-test 我需要一个验证电子邮件地址的函数
 
-Agent:
-# TDD Session: Email Validator
+代理：
+# TDD 会话：电子邮件验证器
 
-## Step 1: Define Interface
+## 步骤 1：定义接口
 
 ```cpp
 // validator/email.hpp
@@ -58,7 +58,7 @@ enum class EmailError {
 std::expected<void, EmailError> validate_email(const std::string& email);
 ```
 
-## Step 2: Write Tests (RED)
+## 步骤 2：编写测试（红色）
 
 ```cpp
 // validator/email_test.cpp
@@ -97,7 +97,7 @@ TEST(ValidateEmail, RejectsNoLocalPart) {
 }
 ```
 
-## Step 3: Run Tests - Verify FAIL
+## 步骤 3：运行测试 - 验证失败
 
 ```bash
 $ cmake --build build && ctest --test-dir build --output-on-failure
@@ -108,9 +108,9 @@ $ cmake --build build && ctest --test-dir build --output-on-failure
 FAIL
 ```
 
-✓ Tests fail as expected (unimplemented).
+✓ 测试按预期失败（未实现）。
 
-## Step 4: Implement Minimal Code (GREEN)
+## 步骤 4：实现最小代码（绿色）
 
 ```cpp
 // validator/email.cpp
@@ -129,7 +129,7 @@ std::expected<void, EmailError> validate_email(const std::string& email) {
 }
 ```
 
-## Step 5: Run Tests - Verify PASS
+## 步骤 5：运行测试 - 验证通过
 
 ```bash
 $ cmake --build build && ctest --test-dir build --output-on-failure
@@ -139,9 +139,9 @@ $ cmake --build build && ctest --test-dir build --output-on-failure
 100% tests passed.
 ```
 
-✓ All tests passing!
+✓ 所有测试通过！
 
-## Step 6: Check Coverage
+## 步骤 6：检查覆盖率
 
 ```bash
 $ cmake -DCMAKE_CXX_FLAGS="--coverage" -B build && cmake --build build
@@ -152,9 +152,9 @@ $ lcov --list coverage.info
 validator/email.cpp     | 100%
 ```
 
-✓ Coverage: 100%
+✓ 覆盖率：100%
 
-## TDD Complete!
+## TDD 完成！
 ````
 
 ## 测试模式
@@ -231,7 +231,7 @@ genhtml coverage.info --output-directory coverage_html
 
 **应做：**
 
-* 先编写测试，再进行任何实现
+* 首先编写测试，在任何实现之前
 * 每次更改后运行测试
 * 在适当时使用 `EXPECT_*`（继续）而非 `ASSERT_*`（停止）
 * 测试行为，而非实现细节
@@ -239,8 +239,8 @@ genhtml coverage.info --output-directory coverage_html
 
 **不应做：**
 
-* 在编写测试之前实现代码
-* 跳过 RED 阶段
+* 在测试之前编写实现
+* 跳过红色阶段
 * 直接测试私有方法（通过公共 API 进行测试）
 * 在测试中使用 `sleep`
 * 忽略不稳定的测试
@@ -248,8 +248,8 @@ genhtml coverage.info --output-directory coverage_html
 ## 相关命令
 
 * `/cpp-build` - 修复构建错误
-* `/cpp-review` - 在实现后审查代码
-* `/verify` - 运行完整的验证循环
+* `/cpp-review` - 实现后审查代码
+* `/verify` - 运行完整验证循环
 
 ## 相关
 

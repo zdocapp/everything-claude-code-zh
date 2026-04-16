@@ -6,13 +6,13 @@ paths:
 
 # C# 编码风格
 
-> 本文档扩展了 [common/coding-style.md](../common/coding-style.md) 中关于 C# 的特定内容。
+> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 C# 相关的内容。
 
 ## 标准
 
-* 遵循当前的 .NET 约定并启用可为空引用类型
+* 遵循当前的 .NET 约定并启用可为空的引用类型
 * 在公共和内部 API 上优先使用显式访问修饰符
-* 保持文件与其定义的主要类型对齐
+* 保持文件与其定义的主要类型一致
 
 ## 类型与模型
 
@@ -44,7 +44,7 @@ public static UserProfile Rename(UserProfile profile, string name) =>
 
 ## 异步与错误处理
 
-* 优先使用 `async`/`await`，而非阻塞调用如 `.Result` 或 `.Wait()`
+* 优先使用 `async`/`await`，而非像 `.Result` 或 `.Wait()` 这样的阻塞调用
 * 通过公共异步 API 传递 `CancellationToken`
 * 抛出特定异常并使用结构化属性进行日志记录
 
@@ -69,5 +69,5 @@ public async Task<Order> LoadOrderAsync(
 ## 格式化
 
 * 使用 `dotnet format` 进行格式化和分析器修复
-* 保持 `using` 指令有序，并移除未使用的导入
-* 仅当表达式体成员保持可读性时才优先使用
+* 保持 `using` 指令有序并移除未使用的导入
+* 仅当表达式体成员保持可读性时才优先使用它们

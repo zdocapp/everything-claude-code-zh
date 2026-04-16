@@ -11,7 +11,7 @@ paths:
 
 # C++ 测试
 
-> 本文档扩展了 [common/testing.md](../common/testing.md) 中关于 C++ 的特定内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 C++ 相关内容。
 
 ## 框架
 
@@ -32,9 +32,9 @@ ctest --output-on-failure
 lcov --capture --directory . --output-file coverage.info
 ```
 
-## 内存消毒工具
+## 内存消毒器
 
-在 CI 中应始终使用内存消毒工具运行测试：
+在 CI 中始终使用内存消毒器运行测试：
 
 ```bash
 cmake -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined" ..
@@ -42,4 +42,4 @@ cmake -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined" ..
 
 ## 参考
 
-查看技能：`cpp-testing` 以获取详细的 C++ 测试模式、TDD 工作流以及 GoogleTest/GMock 使用指南。
+有关详细的 C++ 测试模式、TDD 工作流以及 GoogleTest/GMock 用法，请参阅技能：`cpp-testing`。

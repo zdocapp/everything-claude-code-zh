@@ -1,0 +1,170 @@
+{
+  "sourceFile": "skills/strategic-compact/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: strategic-compact\ndescription: Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: strategic-compact\ndescription: 建议在逻辑间隔进行手动上下文压缩，以通过任务阶段保留上下文，而非任意的自动压缩。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Strategic Compact Skill",
+      "zh-Hans": "# 战略压缩技能"
+    },
+    {
+      "en-US": "Suggests manual `/compact` at strategic points in your workflow rather than relying on arbitrary auto-compaction.",
+      "zh-Hans": "建议在您工作流中的战略节点手动执行 `/compact`，而非依赖任意的自动压缩。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Running long sessions that approach context limits (200K+ tokens)\n- Working on multi-phase tasks (research → plan → implement → test)\n- Switching between unrelated tasks within the same session\n- After completing a major milestone and starting new work\n- When responses slow down or become less coherent (context pressure)",
+      "zh-Hans": "* 运行长时间会话，接近上下文限制时（20万+词元）\n* 处理多阶段任务时（研究 → 计划 → 实施 → 测试）\n* 在同一会话中切换不相关的任务时\n* 完成一个主要里程碑并开始新工作时\n* 当响应变慢或连贯性下降时（上下文压力）"
+    },
+    {
+      "en-US": "## Why Strategic Compaction?",
+      "zh-Hans": "## 为何选择战略压缩？"
+    },
+    {
+      "en-US": "Auto-compaction triggers at arbitrary points:",
+      "zh-Hans": "自动压缩在任意时间点触发："
+    },
+    {
+      "en-US": "- Often mid-task, losing important context\n- No awareness of logical task boundaries\n- Can interrupt complex multi-step operations",
+      "zh-Hans": "* 经常在任务中途，丢失重要上下文\n* 无法感知逻辑任务边界\n* 可能中断复杂的多步骤操作"
+    },
+    {
+      "en-US": "Strategic compaction at logical boundaries:",
+      "zh-Hans": "在逻辑边界进行战略压缩："
+    },
+    {
+      "en-US": "- **After exploration, before execution** — Compact research context, keep implementation plan\n- **After completing a milestone** — Fresh start for next phase\n- **Before major context shifts** — Clear exploration context before different task",
+      "zh-Hans": "* **探索之后，执行之前** — 压缩研究上下文，保留实施计划\n* **完成里程碑之后** — 为下一阶段全新开始\n* **重大上下文切换之前** — 在不同任务开始前清理探索上下文"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "The `suggest-compact.js` script runs on PreToolUse (Edit/Write) and:",
+      "zh-Hans": "`suggest-compact.js` 脚本在 PreToolUse（编辑/写入）时运行，并："
+    },
+    {
+      "en-US": "1. **Tracks tool calls** — Counts tool invocations in session\n2. **Threshold detection** — Suggests at configurable threshold (default: 50 calls)\n3. **Periodic reminders** — Reminds every 25 calls after threshold",
+      "zh-Hans": "1. **跟踪工具调用** — 统计会话中的工具调用次数\n2. **阈值检测** — 在可配置的阈值（默认：50次调用）时建议压缩\n3. **定期提醒** — 达到阈值后，每25次调用提醒一次"
+    },
+    {
+      "en-US": "## Hook Setup",
+      "zh-Hans": "## 钩子设置"
+    },
+    {
+      "en-US": "Add to your `~/.claude/settings.json`:",
+      "zh-Hans": "添加到您的 `~/.claude/settings.json`："
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Edit\",\n        \"hooks\": [{ \"type\": \"command\", \"command\": \"node ~/.claude/skills/strategic-compact/suggest-compact.js\" }]\n      },\n      {\n        \"matcher\": \"Write\",\n        \"hooks\": [{ \"type\": \"command\", \"command\": \"node ~/.claude/skills/strategic-compact/suggest-compact.js\" }]\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Edit\",\n        \"hooks\": [{ \"type\": \"command\", \"command\": \"node ~/.claude/skills/strategic-compact/suggest-compact.js\" }]\n      },\n      {\n        \"matcher\": \"Write\",\n        \"hooks\": [{ \"type\": \"command\", \"command\": \"node ~/.claude/skills/strategic-compact/suggest-compact.js\" }]\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Configuration",
+      "zh-Hans": "## 配置"
+    },
+    {
+      "en-US": "Environment variables:",
+      "zh-Hans": "环境变量："
+    },
+    {
+      "en-US": "- `COMPACT_THRESHOLD` — Tool calls before first suggestion (default: 50)",
+      "zh-Hans": "* `COMPACT_THRESHOLD` — 首次建议前的工具调用次数（默认：50）"
+    },
+    {
+      "en-US": "## Compaction Decision Guide",
+      "zh-Hans": "## 压缩决策指南"
+    },
+    {
+      "en-US": "Use this table to decide when to compact:",
+      "zh-Hans": "使用此表决定何时压缩："
+    },
+    {
+      "en-US": "| Phase Transition | Compact? | Why |\n|-----------------|----------|-----|\n| Research → Planning | Yes | Research context is bulky; plan is the distilled output |\n| Planning → Implementation | Yes | Plan is in TodoWrite or a file; free up context for code |\n| Implementation → Testing | Maybe | Keep if tests reference recent code; compact if switching focus |\n| Debugging → Next feature | Yes | Debug traces pollute context for unrelated work |\n| Mid-implementation | No | Losing variable names, file paths, and partial state is costly |\n| After a failed approach | Yes | Clear the dead-end reasoning before trying a new approach |",
+      "zh-Hans": "| 阶段转换 | 压缩？ | 原因 |\n| :--- | :--- | :--- |\n| 研究 → 规划 | 是 | 研究上下文庞大；计划是提炼后的输出 |\n| 规划 → 实施 | 是 | 计划已在 TodoWrite 或文件中；释放上下文用于代码 |\n| 实施 → 测试 | 可能 | 如果测试引用近期代码则保留；如果切换焦点则压缩 |\n| 调试 → 下一个功能 | 是 | 调试痕迹会污染不相关工作的上下文 |\n| 实施中途 | 否 | 丢失变量名、文件路径和部分状态的代价很高 |\n| 尝试失败的方法后 | 是 | 在尝试新方法前清理死胡同的推理过程 |"
+    },
+    {
+      "en-US": "## What Survives Compaction",
+      "zh-Hans": "## 压缩后保留的内容"
+    },
+    {
+      "en-US": "Understanding what persists helps you compact with confidence:",
+      "zh-Hans": "了解哪些内容会保留有助于您自信地进行压缩："
+    },
+    {
+      "en-US": "| Persists | Lost |\n|----------|------|\n| CLAUDE.md instructions | Intermediate reasoning and analysis |\n| TodoWrite task list | File contents you previously read |\n| Memory files (`~/.claude/memory/`) | Multi-step conversation context |\n| Git state (commits, branches) | Tool call history and counts |\n| Files on disk | Nuanced user preferences stated verbally |",
+      "zh-Hans": "| 保留 | 丢失 |\n| :--- | :--- |\n| CLAUDE.md 指令 | 中间推理和分析 |\n| TodoWrite 任务列表 | 您之前读取的文件内容 |\n| 记忆文件 (`~/.claude/memory/`) | 多轮对话上下文 |\n| Git 状态（提交、分支） | 工具调用历史记录和计数 |\n| 磁盘上的文件 | 口头陈述的细微用户偏好 |"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "1. **Compact after planning** — Once plan is finalized in TodoWrite, compact to start fresh\n2. **Compact after debugging** — Clear error-resolution context before continuing\n3. **Don't compact mid-implementation** — Preserve context for related changes\n4. **Read the suggestion** — The hook tells you *when*, you decide *if*\n5. **Write before compacting** — Save important context to files or memory before compacting\n6. **Use `/compact` with a summary** — Add a custom message: `/compact Focus on implementing auth middleware next`",
+      "zh-Hans": "1. **规划后压缩** — 一旦计划在 TodoWrite 中定稿，压缩以全新开始\n2. **调试后压缩** — 在继续之前清理错误解决上下文\n3. **不要在实施中途压缩** — 为相关更改保留上下文\n4. **阅读建议** — 钩子告诉您*何时*，您决定*是否*\n5. **压缩前写入** — 在压缩前将重要上下文保存到文件或记忆中\n6. **使用带摘要的 `/compact`** — 添加自定义消息：`/compact Focus on implementing auth middleware next`"
+    },
+    {
+      "en-US": "## Token Optimization Patterns",
+      "zh-Hans": "## 词元优化模式"
+    },
+    {
+      "en-US": "### Trigger-Table Lazy Loading",
+      "zh-Hans": "### 触发器表懒加载"
+    },
+    {
+      "en-US": "Instead of loading full skill content at session start, use a trigger table that maps keywords to skill paths. Skills load only when triggered, reducing baseline context by 50%+:",
+      "zh-Hans": "不要在会话开始时加载完整的技能内容，而是使用一个将关键词映射到技能路径的触发器表。技能仅在触发时加载，可将基线上下文减少 50% 以上："
+    },
+    {
+      "en-US": "| Trigger | Skill | Load When |\n|---------|-------|-----------|\n| \"test\", \"tdd\", \"coverage\" | tdd-workflow | User mentions testing |\n| \"security\", \"auth\", \"xss\" | security-review | Security-related work |\n| \"deploy\", \"ci/cd\" | deployment-patterns | Deployment context |",
+      "zh-Hans": "| 触发器 | 技能 | 加载时机 |\n| :--- | :--- | :--- |\n| \"test\", \"tdd\", \"coverage\" | tdd-workflow | 用户提及测试时 |\n| \"security\", \"auth\", \"xss\" | security-review | 安全相关工作时 |\n| \"deploy\", \"ci/cd\" | deployment-patterns | 部署上下文时 |"
+    },
+    {
+      "en-US": "### Context Composition Awareness",
+      "zh-Hans": "### 上下文构成感知"
+    },
+    {
+      "en-US": "Monitor what's consuming your context window:",
+      "zh-Hans": "监控哪些内容在消耗您的上下文窗口："
+    },
+    {
+      "en-US": "- **CLAUDE.md files** — Always loaded, keep lean\n- **Loaded skills** — Each skill adds 1-5K tokens\n- **Conversation history** — Grows with each exchange\n- **Tool results** — File reads, search results add bulk",
+      "zh-Hans": "* **CLAUDE.md 文件** — 始终加载，保持精简\n* **已加载的技能** — 每个技能增加 1-5K 词元\n* **对话历史** — 随每次交流增长\n* **工具结果** — 文件读取、搜索结果会增加体积"
+    },
+    {
+      "en-US": "### Duplicate Instruction Detection",
+      "zh-Hans": "### 重复指令检测"
+    },
+    {
+      "en-US": "Common sources of duplicate context:",
+      "zh-Hans": "重复上下文的常见来源："
+    },
+    {
+      "en-US": "- Same rules in both `~/.claude/rules/` and project `.claude/rules/`\n- Skills that repeat CLAUDE.md instructions\n- Multiple skills covering overlapping domains",
+      "zh-Hans": "* 相同的规则同时出现在 `~/.claude/rules/` 和项目 `.claude/rules/` 中\n* 重复 CLAUDE.md 指令的技能\n* 覆盖重叠领域的多个技能"
+    },
+    {
+      "en-US": "### Context Optimization Tools",
+      "zh-Hans": "### 上下文优化工具"
+    },
+    {
+      "en-US": "- `token-optimizer` MCP — Automated 95%+ token reduction via content deduplication\n- `context-mode` — Context virtualization (315KB to 5.4KB demonstrated)",
+      "zh-Hans": "* `token-optimizer` MCP — 通过内容去重实现 95%+ 的自动词元减少\n* `context-mode` — 上下文虚拟化（已演示从 315KB 减少到 5.4KB）"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) — Token optimization section\n- Memory persistence hooks — For state that survives compaction\n- `continuous-learning` skill — Extracts patterns before session ends",
+      "zh-Hans": "* [长篇指南](https://x.com/affaanmustafa/status/2014040193557471352) — 词元优化部分\n* 记忆持久化钩子 — 用于在压缩后保留状态\n* `continuous-learning` 技能 — 在会话结束前提取模式"
+    }
+  ]
+}

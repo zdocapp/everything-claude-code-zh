@@ -1,12 +1,12 @@
 ---
 name: kotlin-exposed-patterns
-description: JetBrains Exposed ORM 模式，包括 DSL 查询、DAO 模式、事务、HikariCP 连接池、Flyway 迁移和仓库模式。
+description: JetBrains Exposed ORM 模式包括 DSL 查询、DAO 模式、事务、HikariCP 连接池、Flyway 迁移和仓库模式。
 origin: ECC
 ---
 
 # Kotlin Exposed 模式
 
-使用 JetBrains Exposed ORM 进行数据库访问的全面模式，包括 DSL 查询、DAO、事务以及生产就绪的配置。
+使用 JetBrains Exposed ORM 进行数据库访问的全面模式，包括 DSL 查询、DAO、事务和生产就绪配置。
 
 ## 何时使用
 
@@ -14,12 +14,12 @@ origin: ECC
 * 使用 Exposed DSL 或 DAO 编写 SQL 查询
 * 使用 HikariCP 配置连接池
 * 使用 Flyway 创建数据库迁移
-* 使用 Exposed 实现仓储模式
+* 使用 Exposed 实现仓库模式
 * 处理 JSON 列和复杂查询
 
 ## 工作原理
 
-Exposed 提供两种查询风格：用于直接类似 SQL 表达式的 DSL 和用于实体生命周期管理的 DAO。HikariCP 通过 `HikariConfig` 配置来管理可重用的数据库连接池。Flyway 在启动时运行版本化的 SQL 迁移脚本以保持模式同步。所有数据库操作都在 `newSuspendedTransaction` 块内运行，以确保协程安全和原子性。仓储模式将 Exposed 查询包装在接口之后，使业务逻辑与数据层解耦，并且测试可以使用内存中的 H2 数据库。
+Exposed 提供两种查询风格：用于直接类 SQL 表达式的 DSL 和用于实体生命周期管理的 DAO。HikariCP 管理通过 `HikariConfig` 配置的可重用数据库连接池。Flyway 在启动时运行版本化的 SQL 迁移脚本以保持模式同步。所有数据库操作都在 `newSuspendedTransaction` 块内运行，以确保协程安全性和原子性。仓库模式将 Exposed 查询包装在接口后面，使业务逻辑与数据层解耦，并且测试可以使用内存中的 H2 数据库。
 
 ## 示例
 
@@ -35,7 +35,7 @@ suspend fun findUserById(id: UUID): UserRow? =
     }
 ```
 
-### DAO 实体用法
+### DAO 实体使用
 
 ```kotlin
 suspend fun createUser(request: CreateUserRequest): User =
@@ -456,7 +456,7 @@ suspend fun transferFunds(fromId: UUID, toId: UUID, amount: Long) {
 }
 ```
 
-### 事务隔离级别
+### 事务隔离
 
 ```kotlin
 suspend fun readCommittedQuery(): List<User> =
@@ -471,7 +471,7 @@ suspend fun serializableOperation() {
 }
 ```
 
-## 仓储模式
+## 仓库模式
 
 ### 接口定义
 
@@ -616,7 +616,7 @@ object UsersTable : UUIDTable("users") {
 }
 ```
 
-## 使用 Exposed 进行测试
+## 使用 Exposed 测试
 
 ### 用于测试的内存数据库
 
@@ -716,4 +716,4 @@ dependencies {
 | `orderBy` / `limit` / `offset` | 排序和分页 |
 | `count()` / `sum()` / `avg()` | 聚合函数 |
 
-**记住**：对于简单查询使用 DSL 风格，当需要实体生命周期管理时使用 DAO 风格。始终使用 `newSuspendedTransaction` 以获得协程支持，并将数据库操作包装在仓储接口之后以提高可测试性。
+**记住**：简单查询使用 DSL 风格，需要实体生命周期管理时使用 DAO 风格。始终使用 `newSuspendedTransaction` 以获得协程支持，并将数据库操作包装在仓库接口后面以提高可测试性。

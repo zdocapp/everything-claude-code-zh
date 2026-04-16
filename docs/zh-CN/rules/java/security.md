@@ -5,14 +5,14 @@ paths:
 
 # Java 安全
 
-> 本文档在 [common/security.md](../common/security.md) 的基础上，补充了 Java 相关的内容。
+> 本文档在 [common/security.md](../common/security.md) 的基础上扩展了 Java 相关的内容。
 
 ## 密钥管理
 
-* 切勿在源代码中硬编码 API 密钥、令牌或凭据
+* 切勿在源代码中硬编码 API 密钥、令牌或凭证
 * 使用环境变量：`System.getenv("API_KEY")`
-* 生产环境密钥请使用密钥管理器（如 Vault、AWS Secrets Manager）
-* 包含密钥的本地配置文件应放在 `.gitignore` 中
+* 对于生产环境密钥，请使用密钥管理器（如 Vault、AWS Secrets Manager）
+* 将包含密钥的本地配置文件置于 `.gitignore` 中
 
 ```java
 // BAD
@@ -25,8 +25,8 @@ Objects.requireNonNull(apiKey, "PAYMENT_API_KEY must be set");
 
 ## SQL 注入防护
 
-* 始终使用参数化查询——切勿将用户输入拼接到 SQL 语句中
-* 使用 `PreparedStatement` 或你所使用框架的参数化查询 API
+* 始终使用参数化查询——切勿将用户输入直接拼接到 SQL 语句中
+* 使用 `PreparedStatement` 或您所用框架的参数化查询 API
 * 对用于原生查询的任何输入进行验证和清理
 
 ```java
@@ -46,9 +46,9 @@ jdbcTemplate.query("SELECT * FROM orders WHERE name = ?", mapper, name);
 ## 输入验证
 
 * 在处理前，于系统边界处验证所有用户输入
-* 使用验证框架时，在 DTO 上使用 Bean 验证（`@NotNull`, `@NotBlank`, `@Size`）
-* 在使用文件路径和用户提供的字符串前，对其进行清理
-* 对于验证失败的输入，应拒绝并提供清晰的错误信息
+* 使用验证框架时，在 DTO 上应用 Bean 验证（`@NotNull`、`@NotBlank`、`@Size`）
+* 在使用前，清理文件路径和用户提供的字符串
+* 对于验证失败的输入，应予以拒绝并返回清晰的错误信息
 
 ```java
 // Validate manually in plain Java
@@ -68,11 +68,11 @@ public Order createOrder(String customerName, BigDecimal amount) {
 * 切勿自行实现认证加密逻辑——请使用成熟的库
 * 使用 bcrypt 或 Argon2 存储密码，切勿使用 MD5/SHA1
 * 在服务边界强制执行授权检查
-* 清理日志中的敏感数据——切勿记录密码、令牌或个人身份信息
+* 从日志中清除敏感数据——切勿记录密码、令牌或个人身份信息
 
 ## 依赖项安全
 
-* 运行 `mvn dependency:tree` 或 `./gradlew dependencies` 来审计传递依赖项
+* 运行 `mvn dependency:tree` 或 `./gradlew dependencies` 以审计传递依赖项
 * 使用 OWASP Dependency-Check 或 Snyk 扫描已知的 CVE
 * 保持依赖项更新——设置 Dependabot 或 Renovate
 
@@ -97,5 +97,5 @@ try {
 
 ## 参考
 
-关于 Spring Security 认证与授权模式，请参见技能：`springboot-security`。
-关于通用安全检查清单，请参见技能：`security-review`。
+关于 Spring Security 认证与授权模式，请参阅技能：`springboot-security`。
+关于通用安全检查清单，请参阅技能：`security-review`。

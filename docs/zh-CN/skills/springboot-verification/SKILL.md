@@ -1,6 +1,6 @@
 ---
 name: springboot-verification
-description: "Spring Boot项目验证循环：构建、静态分析、测试覆盖、安全扫描，以及发布或PR前的差异审查。"
+description: "Spring Boot项目的验证循环：构建、静态分析、带覆盖率的测试、安全扫描，以及在发布或PR前的差异审查。"
 origin: ECC
 ---
 
@@ -10,11 +10,11 @@ origin: ECC
 
 ## 何时激活
 
-* 为 Spring Boot 服务开启拉取请求之前
-* 在重大重构或依赖项升级之后
-* 用于暂存或生产环境的部署前验证
+* 在为一个 Spring Boot 服务开启拉取请求之前
+* 在重大重构或依赖升级之后
+* 为预发布或生产环境进行部署前验证
 * 运行完整的构建 → 代码检查 → 测试 → 安全扫描流水线
-* 验证测试覆盖率是否满足阈值
+* 验证测试覆盖率是否达到阈值
 
 ## 阶段 1：构建
 
@@ -51,12 +51,12 @@ mvn jacoco:report   # verify 80%+ coverage
 
 报告：
 
-* 总测试数，通过/失败
-* 覆盖率百分比（行/分支）
+* 测试总数，通过/失败数
+* 覆盖率 %（行/分支）
 
 ### 单元测试
 
-使用模拟的依赖项来隔离测试服务逻辑：
+使用模拟依赖项隔离测试服务逻辑：
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -90,7 +90,7 @@ class UserServiceTest {
 
 ### 使用 Testcontainers 进行集成测试
 
-针对真实数据库（而非 H2）进行测试：
+针对真实数据库进行测试，而非 H2：
 
 ```java
 @SpringBootTest
@@ -184,7 +184,7 @@ grep -rn "System\.out\.print" src/main/ --include="*.java"
 # 检查响应中的原始异常消息
 grep -rn "e\.getMessage()" src/main/ --include="*.java"
 
-# 检查通配符 CORS 配置
+# 检查通配符 CORS
 grep -rn "allowedOrigins.*\*" src/main/ --include="*.java"
 ```
 
@@ -206,7 +206,7 @@ git diff
 
 * 没有遗留调试日志（`System.out`、`log.debug` 没有防护）
 * 有意义的错误信息和 HTTP 状态码
-* 在需要的地方有事务和验证
+* 在需要的地方存在事务和验证
 * 配置变更已记录
 
 ## 输出模板
@@ -217,7 +217,7 @@ git diff
 构建:     [通过/失败]
 静态分析:    [通过/失败] (spotbugs/pmd/checkstyle)
 测试:     [通过/失败] (X/Y 通过, Z% 覆盖率)
-安全性:  [通过/失败] (CVE 发现数: N)
+安全:  [通过/失败] (CVE 发现: N)
 差异:      [X 个文件变更]
 
 总体:   [就绪 / 未就绪]
@@ -229,7 +229,7 @@ git diff
 
 ## 持续模式
 
-* 在重大变更时或长时间会话中每 30–60 分钟重新运行各阶段
+* 在发生重大变更时或长时间会话中每 30–60 分钟重新运行各阶段
 * 保持短循环：`mvn -T 4 test` + spotbugs 以获取快速反馈
 
-**记住**：快速反馈胜过意外惊喜。保持关卡严格——将警告视为生产系统中的缺陷。
+**记住**：快速反馈胜过后期意外。保持关卡严格——在生产系统中将警告视为缺陷。

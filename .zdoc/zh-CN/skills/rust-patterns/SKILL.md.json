@@ -1,0 +1,266 @@
+{
+  "sourceFile": "skills/rust-patterns/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: rust-patterns\ndescription: Idiomatic Rust patterns, ownership, error handling, traits, concurrency, and best practices for building safe, performant applications.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: rust-patterns\ndescription: 惯用的Rust模式、所有权、错误处理、特质、并发性，以及构建安全、高性能应用程序的最佳实践。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Rust Development Patterns",
+      "zh-Hans": "# Rust 开发模式"
+    },
+    {
+      "en-US": "Idiomatic Rust patterns and best practices for building safe, performant, and maintainable applications.",
+      "zh-Hans": "用于构建安全、高性能和可维护应用程序的惯用 Rust 模式与最佳实践。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Writing new Rust code\n- Reviewing Rust code\n- Refactoring existing Rust code\n- Designing crate structure and module layout",
+      "zh-Hans": "* 编写新的 Rust 代码\n* 审查 Rust 代码\n* 重构现有 Rust 代码\n* 设计 crate 结构和模块布局"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "This skill enforces idiomatic Rust conventions across six key areas: ownership and borrowing to prevent data races at compile time, `Result`/`?` error propagation with `thiserror` for libraries and `anyhow` for applications, enums and exhaustive pattern matching to make illegal states unrepresentable, traits and generics for zero-cost abstraction, safe concurrency via `Arc<Mutex<T>>`, channels, and async/await, and minimal `pub` surfaces organized by domain.",
+      "zh-Hans": "此技能在六个关键领域强制执行惯用的 Rust 约定：所有权和借用以在编译时防止数据竞争、`Result`/`?` 错误传播（库使用 `thiserror`，应用程序使用 `anyhow`）、枚举和穷尽模式匹配以使非法状态无法表示、用于零成本抽象的 trait 和泛型、通过 `Arc<Mutex<T>>`、通道和 async/await 实现的安全并发，以及按领域组织的最小化 `pub` 接口。"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "### 1. Ownership and Borrowing",
+      "zh-Hans": "### 1. 所有权和借用"
+    },
+    {
+      "en-US": "Rust's ownership system prevents data races and memory bugs at compile time.",
+      "zh-Hans": "Rust 的所有权系统在编译时防止数据竞争和内存错误。"
+    },
+    {
+      "en-US": "```rust\n// Good: Pass references when you don't need ownership\nfn process(data: &[u8]) -> usize {\n    data.len()\n}\n\n// Good: Take ownership only when you need to store or consume\nfn store(data: Vec<u8>) -> Record {\n    Record { payload: data }\n}\n\n// Bad: Cloning unnecessarily to avoid borrow checker\nfn process_bad(data: &Vec<u8>) -> usize {\n    let cloned = data.clone(); // Wasteful — just borrow\n    cloned.len()\n}\n```",
+      "zh-Hans": "```rust\n// Good: Pass references when you don't need ownership\nfn process(data: &[u8]) -> usize {\n    data.len()\n}\n\n// Good: Take ownership only when you need to store or consume\nfn store(data: Vec<u8>) -> Record {\n    Record { payload: data }\n}\n\n// Bad: Cloning unnecessarily to avoid borrow checker\nfn process_bad(data: &Vec<u8>) -> usize {\n    let cloned = data.clone(); // Wasteful — just borrow\n    cloned.len()\n}\n```"
+    },
+    {
+      "en-US": "### Use `Cow` for Flexible Ownership",
+      "zh-Hans": "### 使用 `Cow` 实现灵活的所有权"
+    },
+    {
+      "en-US": "```rust\nuse std::borrow::Cow;\n\nfn normalize(input: &str) -> Cow<'_, str> {\n    if input.contains(' ') {\n        Cow::Owned(input.replace(' ', \"_\"))\n    } else {\n        Cow::Borrowed(input) // Zero-cost when no mutation needed\n    }\n}\n```",
+      "zh-Hans": "```rust\nuse std::borrow::Cow;\n\nfn normalize(input: &str) -> Cow<'_, str> {\n    if input.contains(' ') {\n        Cow::Owned(input.replace(' ', \"_\"))\n    } else {\n        Cow::Borrowed(input) // Zero-cost when no mutation needed\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "### Use `Result` and `?` — Never `unwrap()` in Production",
+      "zh-Hans": "### 使用 `Result` 和 `?` —— 生产环境中绝不使用 `unwrap()`"
+    },
+    {
+      "en-US": "```rust\n// Good: Propagate errors with context\nuse anyhow::{Context, Result};\n\nfn load_config(path: &str) -> Result<Config> {\n    let content = std::fs::read_to_string(path)\n        .with_context(|| format!(\"failed to read config from {path}\"))?;\n    let config: Config = toml::from_str(&content)\n        .with_context(|| format!(\"failed to parse config from {path}\"))?;\n    Ok(config)\n}\n\n// Bad: Panics on error\nfn load_config_bad(path: &str) -> Config {\n    let content = std::fs::read_to_string(path).unwrap(); // Panics!\n    toml::from_str(&content).unwrap()\n}\n```",
+      "zh-Hans": "```rust\n// Good: Propagate errors with context\nuse anyhow::{Context, Result};\n\nfn load_config(path: &str) -> Result<Config> {\n    let content = std::fs::read_to_string(path)\n        .with_context(|| format!(\"failed to read config from {path}\"))?;\n    let config: Config = toml::from_str(&content)\n        .with_context(|| format!(\"failed to parse config from {path}\"))?;\n    Ok(config)\n}\n\n// Bad: Panics on error\nfn load_config_bad(path: &str) -> Config {\n    let content = std::fs::read_to_string(path).unwrap(); // Panics!\n    toml::from_str(&content).unwrap()\n}\n```"
+    },
+    {
+      "en-US": "### Library Errors with `thiserror`, Application Errors with `anyhow`",
+      "zh-Hans": "### 库错误使用 `thiserror`，应用程序错误使用 `anyhow`"
+    },
+    {
+      "en-US": "```rust\n// Library code: structured, typed errors\nuse thiserror::Error;\n\n#[derive(Debug, Error)]\npub enum StorageError {\n    #[error(\"record not found: {id}\")]\n    NotFound { id: String },\n    #[error(\"connection failed\")]\n    Connection(#[from] std::io::Error),\n    #[error(\"invalid data: {0}\")]\n    InvalidData(String),\n}\n\n// Application code: flexible error handling\nuse anyhow::{bail, Result};\n\nfn run() -> Result<()> {\n    let config = load_config(\"app.toml\")?;\n    if config.workers == 0 {\n        bail!(\"worker count must be > 0\");\n    }\n    Ok(())\n}\n```",
+      "zh-Hans": "```rust\n// Library code: structured, typed errors\nuse thiserror::Error;\n\n#[derive(Debug, Error)]\npub enum StorageError {\n    #[error(\"record not found: {id}\")]\n    NotFound { id: String },\n    #[error(\"connection failed\")]\n    Connection(#[from] std::io::Error),\n    #[error(\"invalid data: {0}\")]\n    InvalidData(String),\n}\n\n// Application code: flexible error handling\nuse anyhow::{bail, Result};\n\nfn run() -> Result<()> {\n    let config = load_config(\"app.toml\")?;\n    if config.workers == 0 {\n        bail!(\"worker count must be > 0\");\n    }\n    Ok(())\n}\n```"
+    },
+    {
+      "en-US": "### `Option` Combinators Over Nested Matching",
+      "zh-Hans": "### 使用 `Option` 组合子替代嵌套匹配"
+    },
+    {
+      "en-US": "```rust\n// Good: Combinator chain\nfn find_user_email(users: &[User], id: u64) -> Option<String> {\n    users.iter()\n        .find(|u| u.id == id)\n        .map(|u| u.email.clone())\n}\n\n// Bad: Deeply nested matching\nfn find_user_email_bad(users: &[User], id: u64) -> Option<String> {\n    match users.iter().find(|u| u.id == id) {\n        Some(user) => match &user.email {\n            email => Some(email.clone()),\n        },\n        None => None,\n    }\n}\n```",
+      "zh-Hans": "```rust\n// Good: Combinator chain\nfn find_user_email(users: &[User], id: u64) -> Option<String> {\n    users.iter()\n        .find(|u| u.id == id)\n        .map(|u| u.email.clone())\n}\n\n// Bad: Deeply nested matching\nfn find_user_email_bad(users: &[User], id: u64) -> Option<String> {\n    match users.iter().find(|u| u.id == id) {\n        Some(user) => match &user.email {\n            email => Some(email.clone()),\n        },\n        None => None,\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Enums and Pattern Matching",
+      "zh-Hans": "## 枚举和模式匹配"
+    },
+    {
+      "en-US": "### Model States as Enums",
+      "zh-Hans": "### 将状态建模为枚举"
+    },
+    {
+      "en-US": "```rust\n// Good: Impossible states are unrepresentable\nenum ConnectionState {\n    Disconnected,\n    Connecting { attempt: u32 },\n    Connected { session_id: String },\n    Failed { reason: String, retries: u32 },\n}\n\nfn handle(state: &ConnectionState) {\n    match state {\n        ConnectionState::Disconnected => connect(),\n        ConnectionState::Connecting { attempt } if *attempt > 3 => abort(),\n        ConnectionState::Connecting { .. } => wait(),\n        ConnectionState::Connected { session_id } => use_session(session_id),\n        ConnectionState::Failed { retries, .. } if *retries < 5 => retry(),\n        ConnectionState::Failed { reason, .. } => log_failure(reason),\n    }\n}\n```",
+      "zh-Hans": "```rust\n// Good: Impossible states are unrepresentable\nenum ConnectionState {\n    Disconnected,\n    Connecting { attempt: u32 },\n    Connected { session_id: String },\n    Failed { reason: String, retries: u32 },\n}\n\nfn handle(state: &ConnectionState) {\n    match state {\n        ConnectionState::Disconnected => connect(),\n        ConnectionState::Connecting { attempt } if *attempt > 3 => abort(),\n        ConnectionState::Connecting { .. } => wait(),\n        ConnectionState::Connected { session_id } => use_session(session_id),\n        ConnectionState::Failed { retries, .. } if *retries < 5 => retry(),\n        ConnectionState::Failed { reason, .. } => log_failure(reason),\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Exhaustive Matching — No Catch-All for Business Logic",
+      "zh-Hans": "### 穷尽匹配 —— 业务逻辑中不使用通配符"
+    },
+    {
+      "en-US": "```rust\n// Good: Handle every variant explicitly\nmatch command {\n    Command::Start => start_service(),\n    Command::Stop => stop_service(),\n    Command::Restart => restart_service(),\n    // Adding a new variant forces handling here\n}\n\n// Bad: Wildcard hides new variants\nmatch command {\n    Command::Start => start_service(),\n    _ => {} // Silently ignores Stop, Restart, and future variants\n}\n```",
+      "zh-Hans": "```rust\n// Good: Handle every variant explicitly\nmatch command {\n    Command::Start => start_service(),\n    Command::Stop => stop_service(),\n    Command::Restart => restart_service(),\n    // Adding a new variant forces handling here\n}\n\n// Bad: Wildcard hides new variants\nmatch command {\n    Command::Start => start_service(),\n    _ => {} // Silently ignores Stop, Restart, and future variants\n}\n```"
+    },
+    {
+      "en-US": "## Traits and Generics",
+      "zh-Hans": "## Trait 和泛型"
+    },
+    {
+      "en-US": "### Accept Generics, Return Concrete Types",
+      "zh-Hans": "### 接受泛型，返回具体类型"
+    },
+    {
+      "en-US": "```rust\n// Good: Generic input, concrete output\nfn read_all(reader: &mut impl Read) -> std::io::Result<Vec<u8>> {\n    let mut buf = Vec::new();\n    reader.read_to_end(&mut buf)?;\n    Ok(buf)\n}\n\n// Good: Trait bounds for multiple constraints\nfn process<T: Display + Send + 'static>(item: T) -> String {\n    format!(\"processed: {item}\")\n}\n```",
+      "zh-Hans": "```rust\n// Good: Generic input, concrete output\nfn read_all(reader: &mut impl Read) -> std::io::Result<Vec<u8>> {\n    let mut buf = Vec::new();\n    reader.read_to_end(&mut buf)?;\n    Ok(buf)\n}\n\n// Good: Trait bounds for multiple constraints\nfn process<T: Display + Send + 'static>(item: T) -> String {\n    format!(\"processed: {item}\")\n}\n```"
+    },
+    {
+      "en-US": "### Trait Objects for Dynamic Dispatch",
+      "zh-Hans": "### 使用 Trait 对象进行动态分发"
+    },
+    {
+      "en-US": "```rust\n// Use when you need heterogeneous collections or plugin systems\ntrait Handler: Send + Sync {\n    fn handle(&self, request: &Request) -> Response;\n}\n\nstruct Router {\n    handlers: Vec<Box<dyn Handler>>,\n}\n\n// Use generics when you need performance (monomorphization)\nfn fast_process<H: Handler>(handler: &H, request: &Request) -> Response {\n    handler.handle(request)\n}\n```",
+      "zh-Hans": "```rust\n// Use when you need heterogeneous collections or plugin systems\ntrait Handler: Send + Sync {\n    fn handle(&self, request: &Request) -> Response;\n}\n\nstruct Router {\n    handlers: Vec<Box<dyn Handler>>,\n}\n\n// Use generics when you need performance (monomorphization)\nfn fast_process<H: Handler>(handler: &H, request: &Request) -> Response {\n    handler.handle(request)\n}\n```"
+    },
+    {
+      "en-US": "### Newtype Pattern for Type Safety",
+      "zh-Hans": "### 使用 Newtype 模式确保类型安全"
+    },
+    {
+      "en-US": "```rust\n// Good: Distinct types prevent mixing up arguments\nstruct UserId(u64);\nstruct OrderId(u64);\n\nfn get_order(user: UserId, order: OrderId) -> Result<Order> {\n    // Can't accidentally swap user and order IDs\n    todo!()\n}\n\n// Bad: Easy to swap arguments\nfn get_order_bad(user_id: u64, order_id: u64) -> Result<Order> {\n    todo!()\n}\n```",
+      "zh-Hans": "```rust\n// Good: Distinct types prevent mixing up arguments\nstruct UserId(u64);\nstruct OrderId(u64);\n\nfn get_order(user: UserId, order: OrderId) -> Result<Order> {\n    // Can't accidentally swap user and order IDs\n    todo!()\n}\n\n// Bad: Easy to swap arguments\nfn get_order_bad(user_id: u64, order_id: u64) -> Result<Order> {\n    todo!()\n}\n```"
+    },
+    {
+      "en-US": "## Structs and Data Modeling",
+      "zh-Hans": "## 结构体和数据建模"
+    },
+    {
+      "en-US": "### Builder Pattern for Complex Construction",
+      "zh-Hans": "### 使用构建器模式进行复杂构造"
+    },
+    {
+      "en-US": "```rust\nstruct ServerConfig {\n    host: String,\n    port: u16,\n    max_connections: usize,\n}\n\nimpl ServerConfig {\n    fn builder(host: impl Into<String>, port: u16) -> ServerConfigBuilder {\n        ServerConfigBuilder { host: host.into(), port, max_connections: 100 }\n    }\n}\n\nstruct ServerConfigBuilder { host: String, port: u16, max_connections: usize }\n\nimpl ServerConfigBuilder {\n    fn max_connections(mut self, n: usize) -> Self { self.max_connections = n; self }\n    fn build(self) -> ServerConfig {\n        ServerConfig { host: self.host, port: self.port, max_connections: self.max_connections }\n    }\n}\n\n// Usage: ServerConfig::builder(\"localhost\", 8080).max_connections(200).build()\n```",
+      "zh-Hans": "```rust\nstruct ServerConfig {\n    host: String,\n    port: u16,\n    max_connections: usize,\n}\n\nimpl ServerConfig {\n    fn builder(host: impl Into<String>, port: u16) -> ServerConfigBuilder {\n        ServerConfigBuilder { host: host.into(), port, max_connections: 100 }\n    }\n}\n\nstruct ServerConfigBuilder { host: String, port: u16, max_connections: usize }\n\nimpl ServerConfigBuilder {\n    fn max_connections(mut self, n: usize) -> Self { self.max_connections = n; self }\n    fn build(self) -> ServerConfig {\n        ServerConfig { host: self.host, port: self.port, max_connections: self.max_connections }\n    }\n}\n\n// Usage: ServerConfig::builder(\"localhost\", 8080).max_connections(200).build()\n```"
+    },
+    {
+      "en-US": "## Iterators and Closures",
+      "zh-Hans": "## 迭代器和闭包"
+    },
+    {
+      "en-US": "### Prefer Iterator Chains Over Manual Loops",
+      "zh-Hans": "### 优先使用迭代器链而非手动循环"
+    },
+    {
+      "en-US": "```rust\n// Good: Declarative, lazy, composable\nlet active_emails: Vec<String> = users.iter()\n    .filter(|u| u.is_active)\n    .map(|u| u.email.clone())\n    .collect();\n\n// Bad: Imperative accumulation\nlet mut active_emails = Vec::new();\nfor user in &users {\n    if user.is_active {\n        active_emails.push(user.email.clone());\n    }\n}\n```",
+      "zh-Hans": "```rust\n// Good: Declarative, lazy, composable\nlet active_emails: Vec<String> = users.iter()\n    .filter(|u| u.is_active)\n    .map(|u| u.email.clone())\n    .collect();\n\n// Bad: Imperative accumulation\nlet mut active_emails = Vec::new();\nfor user in &users {\n    if user.is_active {\n        active_emails.push(user.email.clone());\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Use `collect()` with Type Annotation",
+      "zh-Hans": "### 使用带类型注解的 `collect()`"
+    },
+    {
+      "en-US": "```rust\n// Collect into different types\nlet names: Vec<_> = items.iter().map(|i| &i.name).collect();\nlet lookup: HashMap<_, _> = items.iter().map(|i| (i.id, i)).collect();\nlet combined: String = parts.iter().copied().collect();\n\n// Collect Results — short-circuits on first error\nlet parsed: Result<Vec<i32>, _> = strings.iter().map(|s| s.parse()).collect();\n```",
+      "zh-Hans": "```rust\n// Collect into different types\nlet names: Vec<_> = items.iter().map(|i| &i.name).collect();\nlet lookup: HashMap<_, _> = items.iter().map(|i| (i.id, i)).collect();\nlet combined: String = parts.iter().copied().collect();\n\n// Collect Results — short-circuits on first error\nlet parsed: Result<Vec<i32>, _> = strings.iter().map(|s| s.parse()).collect();\n```"
+    },
+    {
+      "en-US": "## Concurrency",
+      "zh-Hans": "## 并发"
+    },
+    {
+      "en-US": "### `Arc<Mutex<T>>` for Shared Mutable State",
+      "zh-Hans": "### 使用 `Arc<Mutex<T>>` 处理共享可变状态"
+    },
+    {
+      "en-US": "```rust\nuse std::sync::{Arc, Mutex};\n\nlet counter = Arc::new(Mutex::new(0));\nlet handles: Vec<_> = (0..10).map(|_| {\n    let counter = Arc::clone(&counter);\n    std::thread::spawn(move || {\n        let mut num = counter.lock().expect(\"mutex poisoned\");\n        *num += 1;\n    })\n}).collect();\n\nfor handle in handles {\n    handle.join().expect(\"worker thread panicked\");\n}\n```",
+      "zh-Hans": "```rust\nuse std::sync::{Arc, Mutex};\n\nlet counter = Arc::new(Mutex::new(0));\nlet handles: Vec<_> = (0..10).map(|_| {\n    let counter = Arc::clone(&counter);\n    std::thread::spawn(move || {\n        let mut num = counter.lock().expect(\"mutex poisoned\");\n        *num += 1;\n    })\n}).collect();\n\nfor handle in handles {\n    handle.join().expect(\"worker thread panicked\");\n}\n```"
+    },
+    {
+      "en-US": "### Channels for Message Passing",
+      "zh-Hans": "### 使用通道进行消息传递"
+    },
+    {
+      "en-US": "```rust\nuse std::sync::mpsc;\n\nlet (tx, rx) = mpsc::sync_channel(16); // Bounded channel with backpressure\n\nfor i in 0..5 {\n    let tx = tx.clone();\n    std::thread::spawn(move || {\n        tx.send(format!(\"message {i}\")).expect(\"receiver disconnected\");\n    });\n}\ndrop(tx); // Close sender so rx iterator terminates\n\nfor msg in rx {\n    println!(\"{msg}\");\n}\n```",
+      "zh-Hans": "```rust\nuse std::sync::mpsc;\n\nlet (tx, rx) = mpsc::sync_channel(16); // Bounded channel with backpressure\n\nfor i in 0..5 {\n    let tx = tx.clone();\n    std::thread::spawn(move || {\n        tx.send(format!(\"message {i}\")).expect(\"receiver disconnected\");\n    });\n}\ndrop(tx); // Close sender so rx iterator terminates\n\nfor msg in rx {\n    println!(\"{msg}\");\n}\n```"
+    },
+    {
+      "en-US": "### Async with Tokio",
+      "zh-Hans": "### 使用 Tokio 进行异步编程"
+    },
+    {
+      "en-US": "```rust\nuse tokio::time::Duration;\n\nasync fn fetch_with_timeout(url: &str) -> Result<String> {\n    let response = tokio::time::timeout(\n        Duration::from_secs(5),\n        reqwest::get(url),\n    )\n    .await\n    .context(\"request timed out\")?\n    .context(\"request failed\")?;\n\n    response.text().await.context(\"failed to read body\")\n}\n\n// Spawn concurrent tasks\nasync fn fetch_all(urls: Vec<String>) -> Vec<Result<String>> {\n    let handles: Vec<_> = urls.into_iter()\n        .map(|url| tokio::spawn(async move {\n            fetch_with_timeout(&url).await\n        }))\n        .collect();\n\n    let mut results = Vec::with_capacity(handles.len());\n    for handle in handles {\n        results.push(handle.await.unwrap_or_else(|e| panic!(\"spawned task panicked: {e}\")));\n    }\n    results\n}\n```",
+      "zh-Hans": "```rust\nuse tokio::time::Duration;\n\nasync fn fetch_with_timeout(url: &str) -> Result<String> {\n    let response = tokio::time::timeout(\n        Duration::from_secs(5),\n        reqwest::get(url),\n    )\n    .await\n    .context(\"request timed out\")?\n    .context(\"request failed\")?;\n\n    response.text().await.context(\"failed to read body\")\n}\n\n// Spawn concurrent tasks\nasync fn fetch_all(urls: Vec<String>) -> Vec<Result<String>> {\n    let handles: Vec<_> = urls.into_iter()\n        .map(|url| tokio::spawn(async move {\n            fetch_with_timeout(&url).await\n        }))\n        .collect();\n\n    let mut results = Vec::with_capacity(handles.len());\n    for handle in handles {\n        results.push(handle.await.unwrap_or_else(|e| panic!(\"spawned task panicked: {e}\")));\n    }\n    results\n}\n```"
+    },
+    {
+      "en-US": "## Unsafe Code",
+      "zh-Hans": "## 不安全代码"
+    },
+    {
+      "en-US": "### When Unsafe Is Acceptable",
+      "zh-Hans": "### 何时可以使用不安全代码"
+    },
+    {
+      "en-US": "```rust\n// Acceptable: FFI boundary with documented invariants (Rust 2024+)\n/// # Safety\n/// `ptr` must be a valid, aligned pointer to an initialized `Widget`.\nunsafe fn widget_from_raw<'a>(ptr: *const Widget) -> &'a Widget {\n    // SAFETY: caller guarantees ptr is valid and aligned\n    unsafe { &*ptr }\n}\n\n// Acceptable: Performance-critical path with proof of correctness\n// SAFETY: index is always < len due to the loop bound\nunsafe { slice.get_unchecked(index) }\n```",
+      "zh-Hans": "```rust\n// Acceptable: FFI boundary with documented invariants (Rust 2024+)\n/// # Safety\n/// `ptr` must be a valid, aligned pointer to an initialized `Widget`.\nunsafe fn widget_from_raw<'a>(ptr: *const Widget) -> &'a Widget {\n    // SAFETY: caller guarantees ptr is valid and aligned\n    unsafe { &*ptr }\n}\n\n// Acceptable: Performance-critical path with proof of correctness\n// SAFETY: index is always < len due to the loop bound\nunsafe { slice.get_unchecked(index) }\n```"
+    },
+    {
+      "en-US": "### When Unsafe Is NOT Acceptable",
+      "zh-Hans": "### 何时不应使用不安全代码"
+    },
+    {
+      "en-US": "```rust\n// Bad: Using unsafe to bypass borrow checker\n// Bad: Using unsafe for convenience\n// Bad: Using unsafe without a Safety comment\n// Bad: Transmuting between unrelated types\n```",
+      "zh-Hans": "```rust\n// Bad: Using unsafe to bypass borrow checker\n// Bad: Using unsafe for convenience\n// Bad: Using unsafe without a Safety comment\n// Bad: Transmuting between unrelated types\n```"
+    },
+    {
+      "en-US": "## Module System and Crate Structure",
+      "zh-Hans": "## 模块系统和 Crate 结构"
+    },
+    {
+      "en-US": "### Organize by Domain, Not by Type",
+      "zh-Hans": "### 按领域组织，而非按类型"
+    },
+    {
+      "en-US": "```text\nmy_app/\n├── src/\n│   ├── main.rs\n│   ├── lib.rs\n│   ├── auth/          # Domain module\n│   │   ├── mod.rs\n│   │   ├── token.rs\n│   │   └── middleware.rs\n│   ├── orders/        # Domain module\n│   │   ├── mod.rs\n│   │   ├── model.rs\n│   │   └── service.rs\n│   └── db/            # Infrastructure\n│       ├── mod.rs\n│       └── pool.rs\n├── tests/             # Integration tests\n├── benches/           # Benchmarks\n└── Cargo.toml\n```",
+      "zh-Hans": "```text\nmy_app/\n├── src/\n│   ├── main.rs\n│   ├── lib.rs\n│   ├── auth/          # 领域模块\n│   │   ├── mod.rs\n│   │   ├── token.rs\n│   │   └── middleware.rs\n│   ├── orders/        # 领域模块\n│   │   ├── mod.rs\n│   │   ├── model.rs\n│   │   └── service.rs\n│   └── db/            # 基础设施\n│       ├── mod.rs\n│       └── pool.rs\n├── tests/             # 集成测试\n├── benches/           # 基准测试\n└── Cargo.toml\n```"
+    },
+    {
+      "en-US": "### Visibility — Expose Minimally",
+      "zh-Hans": "### 可见性 —— 最小化暴露"
+    },
+    {
+      "en-US": "```rust\n// Good: pub(crate) for internal sharing\npub(crate) fn validate_input(input: &str) -> bool {\n    !input.is_empty()\n}\n\n// Good: Re-export public API from lib.rs\npub mod auth;\npub use auth::AuthMiddleware;\n\n// Bad: Making everything pub\npub fn internal_helper() {} // Should be pub(crate) or private\n```",
+      "zh-Hans": "```rust\n// Good: pub(crate) for internal sharing\npub(crate) fn validate_input(input: &str) -> bool {\n    !input.is_empty()\n}\n\n// Good: Re-export public API from lib.rs\npub mod auth;\npub use auth::AuthMiddleware;\n\n// Bad: Making everything pub\npub fn internal_helper() {} // Should be pub(crate) or private\n```"
+    },
+    {
+      "en-US": "## Tooling Integration",
+      "zh-Hans": "## 工具集成"
+    },
+    {
+      "en-US": "### Essential Commands",
+      "zh-Hans": "### 基本命令"
+    },
+    {
+      "en-US": "```bash\n# Build and check\ncargo build\ncargo check              # Fast type checking without codegen\ncargo clippy             # Lints and suggestions\ncargo fmt                # Format code\n\n# Testing\ncargo test\ncargo test -- --nocapture    # Show println output\ncargo test --lib             # Unit tests only\ncargo test --test integration # Integration tests only\n\n# Dependencies\ncargo audit              # Security audit\ncargo tree               # Dependency tree\ncargo update             # Update dependencies\n\n# Performance\ncargo bench              # Run benchmarks\n```",
+      "zh-Hans": "```bash\n# Build and check\ncargo build\ncargo check              # Fast type checking without codegen\ncargo clippy             # Lints and suggestions\ncargo fmt                # Format code\n\n# Testing\ncargo test\ncargo test -- --nocapture    # Show println output\ncargo test --lib             # Unit tests only\ncargo test --test integration # Integration tests only\n\n# Dependencies\ncargo audit              # Security audit\ncargo tree               # Dependency tree\ncargo update             # Update dependencies\n\n# Performance\ncargo bench              # Run benchmarks\n```"
+    },
+    {
+      "en-US": "## Quick Reference: Rust Idioms",
+      "zh-Hans": "## 快速参考：Rust 惯用法"
+    },
+    {
+      "en-US": "| Idiom | Description |\n|-------|-------------|\n| Borrow, don't clone | Pass `&T` instead of cloning unless ownership is needed |\n| Make illegal states unrepresentable | Use enums to model valid states only |\n| `?` over `unwrap()` | Propagate errors, never panic in library/production code |\n| Parse, don't validate | Convert unstructured data to typed structs at the boundary |\n| Newtype for type safety | Wrap primitives in newtypes to prevent argument swaps |\n| Prefer iterators over loops | Declarative chains are clearer and often faster |\n| `#[must_use]` on Results | Ensure callers handle return values |\n| `Cow` for flexible ownership | Avoid allocations when borrowing suffices |\n| Exhaustive matching | No wildcard `_` for business-critical enums |\n| Minimal `pub` surface | Use `pub(crate)` for internal APIs |",
+      "zh-Hans": "| 惯用法 | 描述 |\n|-------|-------------|\n| 借用，而非克隆 | 传递 `&T` 而非克隆，除非需要所有权 |\n| 使非法状态无法表示 | 使用枚举仅对有效状态进行建模 |\n| `?` 优于 `unwrap()` | 传播错误，绝不在库/生产代码中恐慌 |\n| 解析，而非验证 | 在边界处将非结构化数据转换为类型化结构体 |\n| 使用 Newtype 确保类型安全 | 将基本类型包装在 newtype 中以防止参数交换 |\n| 优先使用迭代器而非循环 | 声明式链更清晰且通常更快 |\n| 对 Results 使用 `#[must_use]` | 确保调用者处理返回值 |\n| 使用 `Cow` 实现灵活的所有权 | 当借用足够时避免分配 |\n| 穷尽匹配 | 业务关键枚举不使用通配符 `_` |\n| 最小化 `pub` 接口 | 内部 API 使用 `pub(crate)` |"
+    },
+    {
+      "en-US": "## Anti-Patterns to Avoid",
+      "zh-Hans": "## 应避免的反模式"
+    },
+    {
+      "en-US": "```rust\n// Bad: .unwrap() in production code\nlet value = map.get(\"key\").unwrap();\n\n// Bad: .clone() to satisfy borrow checker without understanding why\nlet data = expensive_data.clone();\nprocess(&original, &data);\n\n// Bad: Using String when &str suffices\nfn greet(name: String) { /* should be &str */ }\n\n// Bad: Box<dyn Error> in libraries (use thiserror instead)\nfn parse(input: &str) -> Result<Data, Box<dyn std::error::Error>> { todo!() }\n\n// Bad: Ignoring must_use warnings\nlet _ = validate(input); // Silently discarding a Result\n\n// Bad: Blocking in async context\nasync fn bad_async() {\n    std::thread::sleep(Duration::from_secs(1)); // Blocks the executor!\n    // Use: tokio::time::sleep(Duration::from_secs(1)).await;\n}\n```",
+      "zh-Hans": "```rust\n// Bad: .unwrap() in production code\nlet value = map.get(\"key\").unwrap();\n\n// Bad: .clone() to satisfy borrow checker without understanding why\nlet data = expensive_data.clone();\nprocess(&original, &data);\n\n// Bad: Using String when &str suffices\nfn greet(name: String) { /* should be &str */ }\n\n// Bad: Box<dyn Error> in libraries (use thiserror instead)\nfn parse(input: &str) -> Result<Data, Box<dyn std::error::Error>> { todo!() }\n\n// Bad: Ignoring must_use warnings\nlet _ = validate(input); // Silently discarding a Result\n\n// Bad: Blocking in async context\nasync fn bad_async() {\n    std::thread::sleep(Duration::from_secs(1)); // Blocks the executor!\n    // Use: tokio::time::sleep(Duration::from_secs(1)).await;\n}\n```"
+    },
+    {
+      "en-US": "**Remember**: If it compiles, it's probably correct — but only if you avoid `unwrap()`, minimize `unsafe`, and let the type system work for you.",
+      "zh-Hans": "**请记住**：如果它能编译，那它很可能是正确的 —— 但前提是你避免 `unwrap()`，最小化 `unsafe`，并让类型系统为你工作。"
+    }
+  ]
+}
