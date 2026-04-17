@@ -1,0 +1,290 @@
+{
+  "sourceFile": "REPO-ASSESSMENT.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Repo & Fork Assessment + Setup Recommendations",
+      "zh-Hans": "# 仓库与分支评估 + 设置建议"
+    },
+    {
+      "en-US": "**Date:** 2026-03-21",
+      "zh-Hans": "**日期：** 2026-03-21"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## What's Available",
+      "zh-Hans": "## 可用内容"
+    },
+    {
+      "en-US": "### Repo: `Infiniteyieldai/everything-claude-code`",
+      "zh-Hans": "### 仓库：`Infiniteyieldai/everything-claude-code`"
+    },
+    {
+      "en-US": "This is a **fork of `affaan-m/everything-claude-code`** (the upstream project with 50K+ stars, 6K+ forks).",
+      "zh-Hans": "这是一个 **`affaan-m/everything-claude-code` 的分支**（上游项目拥有 50K+ stars，6K+ forks）。"
+    },
+    {
+      "en-US": "| Attribute | Value |\n|-----------|-------|\n| Version | 1.9.0 (current) |\n| Status | Clean fork — 1 commit ahead of upstream `main` (the EVALUATION.md doc added in this session) |\n| Remote branches | `main`, `claude/evaluate-repo-comparison-ASZ9Y` |\n| Upstream sync | Fully synced — last upstream commit merged was the zh-CN docs PR (#728) |\n| License | MIT |",
+      "zh-Hans": "| 属性 | 值 |\n|-----------|-------|\n| 版本 | 1.9.0 (当前) |\n| 状态 | 干净的分支 — 领先上游 `main` 1 次提交（本次会话中添加的 EVALUATION.md 文档） |\n| 远程分支 | `main`, `claude/evaluate-repo-comparison-ASZ9Y` |\n| 上游同步 | 完全同步 — 最后合并的上游提交是 zh-CN 文档 PR (#728) |\n| 许可证 | MIT |"
+    },
+    {
+      "en-US": "**This is the right repo to work from.** It's the latest upstream version with no divergence or merge conflicts.",
+      "zh-Hans": "**这是适合开始工作的仓库。** 它是最新的上游版本，没有分歧或合并冲突。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### Current `~/.claude/` Installation",
+      "zh-Hans": "### 当前 `~/.claude/` 安装情况"
+    },
+    {
+      "en-US": "| Component | Installed | Available in Repo |\n|-----------|-----------|-------------------|\n| Agents | 0 | 28 |\n| Skills | 0 | 116 |\n| Commands | 0 | 59 |\n| Rules | 0 | 60+ files (12 languages) |\n| Hooks | 1 (git Stop check) | Full PreToolUse/PostToolUse matrix |\n| MCP configs | 0 | 1 (Context7) |",
+      "zh-Hans": "| 组件 | 已安装 | 仓库中可用 |\n|-----------|-----------|-------------------|\n| 代理 | 0 | 28 |\n| 技能 | 0 | 116 |\n| 命令 | 0 | 59 |\n| 规则 | 0 | 60+ 文件 (12 种语言) |\n| 钩子 | 1 (git Stop 检查) | 完整的 PreToolUse/PostToolUse 矩阵 |\n| MCP 配置 | 0 | 1 (Context7) |"
+    },
+    {
+      "en-US": "The existing Stop hook (`stop-hook-git-check.sh`) is solid — blocks session end on uncommitted/unpushed work. Keep it.",
+      "zh-Hans": "现有的 Stop 钩子 (`stop-hook-git-check.sh`) 很可靠 — 阻止在未提交/未推送工作时结束会话。保留它。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Install Profile Recommendations",
+      "zh-Hans": "## 安装配置文件建议"
+    },
+    {
+      "en-US": "The repo ships 5 install profiles. Choose based on your primary use case:",
+      "zh-Hans": "仓库提供了 5 个安装配置文件。根据你的主要用例选择："
+    },
+    {
+      "en-US": "### Profile: `core` (Minimum viable setup)",
+      "zh-Hans": "### 配置文件：`core` (最小可行设置)"
+    },
+    {
+      "en-US": "> Fastest to install. Gets you commands, core agents, hooks runtime, and quality workflow.",
+      "zh-Hans": "> 安装最快。为你提供命令、核心代理、钩子运行时和质量工作流。"
+    },
+    {
+      "en-US": "**Best for:** Trying ECC out, minimal footprint, or a constrained environment.",
+      "zh-Hans": "**最适合：** 尝试 ECC，占用空间最小，或环境受限的情况。"
+    },
+    {
+      "en-US": "```bash\nnode scripts/install-plan.js --profile core\nnode scripts/install-apply.js\n```",
+      "zh-Hans": "```bash\nnode scripts/install-plan.js --profile core\nnode scripts/install-apply.js\n```"
+    },
+    {
+      "en-US": "**Installs:** rules-core, agents-core, commands-core, hooks-runtime, platform-configs, workflow-quality",
+      "zh-Hans": "**安装内容：** rules-core, agents-core, commands-core, hooks-runtime, platform-configs, workflow-quality"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### Profile: `developer` (Recommended for daily dev work)",
+      "zh-Hans": "### 配置文件：`developer` (日常开发工作推荐)"
+    },
+    {
+      "en-US": "> The default engineering profile for most ECC users.",
+      "zh-Hans": "> 大多数 ECC 用户的默认工程配置文件。"
+    },
+    {
+      "en-US": "**Best for:** General software development across app codebases.",
+      "zh-Hans": "**最适合：** 跨应用代码库的通用软件开发。"
+    },
+    {
+      "en-US": "```bash\nnode scripts/install-plan.js --profile developer\nnode scripts/install-apply.js\n```",
+      "zh-Hans": "```bash\nnode scripts/install-plan.js --profile developer\nnode scripts/install-apply.js\n```"
+    },
+    {
+      "en-US": "**Adds over core:** framework-language skills, database patterns, orchestration commands",
+      "zh-Hans": "**在核心基础上增加：** 框架语言技能、数据库模式、编排命令"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### Profile: `security`",
+      "zh-Hans": "### 配置文件：`security`"
+    },
+    {
+      "en-US": "> Baseline runtime + security-specific agents and rules.",
+      "zh-Hans": "> 基础运行时 + 安全特定的代理和规则。"
+    },
+    {
+      "en-US": "**Best for:** Security-focused workflows, code audits, vulnerability reviews.",
+      "zh-Hans": "**最适合：** 注重安全的工作流、代码审计、漏洞审查。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### Profile: `research`",
+      "zh-Hans": "### 配置文件：`research`"
+    },
+    {
+      "en-US": "> Investigation, synthesis, and publishing workflows.",
+      "zh-Hans": "> 调查、综合和发布工作流。"
+    },
+    {
+      "en-US": "**Best for:** Content creation, investor materials, market research, cross-posting.",
+      "zh-Hans": "**最适合：** 内容创作、投资者材料、市场研究、交叉发布。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "### Profile: `full`",
+      "zh-Hans": "### 配置文件：`full`"
+    },
+    {
+      "en-US": "> Everything — all 18 modules.",
+      "zh-Hans": "> 全部内容 — 所有 18 个模块。"
+    },
+    {
+      "en-US": "**Best for:** Power users who want the complete toolkit.",
+      "zh-Hans": "**最适合：** 想要完整工具包的高级用户。"
+    },
+    {
+      "en-US": "```bash\nnode scripts/install-plan.js --profile full\nnode scripts/install-apply.js\n```",
+      "zh-Hans": "```bash\nnode scripts/install-plan.js --profile full\nnode scripts/install-apply.js\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Priority Additions (High Value, Low Risk)",
+      "zh-Hans": "## 优先添加项 (高价值，低风险)"
+    },
+    {
+      "en-US": "Regardless of profile, these components add immediate value:",
+      "zh-Hans": "无论选择哪个配置文件，这些组件都能立即增加价值："
+    },
+    {
+      "en-US": "### 1. Core Agents (highest ROI)",
+      "zh-Hans": "### 1. 核心代理 (最高投资回报率)"
+    },
+    {
+      "en-US": "| Agent | Why it matters |\n|-------|----------------|\n| `planner.md` | Breaks complex tasks into implementation plans |\n| `code-reviewer.md` | Quality and maintainability review |\n| `tdd-guide.md` | TDD workflow (RED→GREEN→IMPROVE) |\n| `security-reviewer.md` | Vulnerability detection |\n| `architect.md` | System design & scalability decisions |",
+      "zh-Hans": "| 代理 | 重要性 |\n|-------|----------------|\n| `planner.md` | 将复杂任务分解为实施计划 |\n| `code-reviewer.md` | 质量和可维护性审查 |\n| `tdd-guide.md` | TDD 工作流 (RED→GREEN→IMPROVE) |\n| `security-reviewer.md` | 漏洞检测 |\n| `architect.md` | 系统设计和可扩展性决策 |"
+    },
+    {
+      "en-US": "### 2. Key Commands",
+      "zh-Hans": "### 2. 关键命令"
+    },
+    {
+      "en-US": "| Command | Why it matters |\n|---------|----------------|\n| `/plan` | Implementation planning before coding |\n| `/tdd` | Test-driven workflow |\n| `/code-review` | On-demand review |\n| `/build-fix` | Automated build error resolution |\n| `/learn` | Extract patterns from current session |",
+      "zh-Hans": "| 命令 | 重要性 |\n|---------|----------------|\n| `/plan` | 编码前的实施计划 |\n| `/tdd` | 测试驱动的工作流 |\n| `/code-review` | 按需审查 |\n| `/build-fix` | 自动化构建错误解决 |\n| `/learn` | 从当前会话中提取模式 |"
+    },
+    {
+      "en-US": "### 3. Hook Upgrades (from `hooks/hooks.json`)",
+      "zh-Hans": "### 3. 钩子升级 (从 `hooks/hooks.json`)"
+    },
+    {
+      "en-US": "The repo's hook system adds these over the current single Stop hook:",
+      "zh-Hans": "仓库的钩子系统在当前单个 Stop 钩子基础上增加了这些："
+    },
+    {
+      "en-US": "| Hook | Trigger | Value |\n|------|---------|-------|\n| `block-no-verify` | PreToolUse: Bash | Blocks `--no-verify` git flag abuse |\n| `pre-bash-git-push-reminder` | PreToolUse: Bash | Pre-push review reminder |\n| `doc-file-warning` | PreToolUse: Write | Warns on non-standard doc files |\n| `suggest-compact` | PreToolUse: Edit/Write | Suggests compaction at logical intervals |\n| Continuous learning observer | PreToolUse: * | Captures tool use patterns for skill improvement |",
+      "zh-Hans": "| 钩子 | 触发器 | 价值 |\n|------|---------|-------|\n| `block-no-verify` | PreToolUse: Bash | 阻止 `--no-verify` git 标志滥用 |\n| `pre-bash-git-push-reminder` | PreToolUse: Bash | 推送前审查提醒 |\n| `doc-file-warning` | PreToolUse: Write | 对非标准文档文件发出警告 |\n| `suggest-compact` | PreToolUse: Edit/Write | 在逻辑间隔建议压缩 |\n| 持续学习观察器 | PreToolUse: \\* | 捕获工具使用模式以改进技能 |"
+    },
+    {
+      "en-US": "### 4. Rules (Always-on guidelines)",
+      "zh-Hans": "### 4. 规则 (始终启用的指导原则)"
+    },
+    {
+      "en-US": "The `rules/common/` directory provides baseline guidelines that fire on every session:",
+      "zh-Hans": "`rules/common/` 目录提供了在每次会话中生效的基础指导原则："
+    },
+    {
+      "en-US": "- `security.md` — Security guardrails\n- `testing.md` — 80%+ coverage requirement\n- `git-workflow.md` — Conventional commits, branch strategy\n- `coding-style.md` — Cross-language style standards",
+      "zh-Hans": "* `security.md` — 安全护栏\n* `testing.md` — 80%+ 覆盖率要求\n* `git-workflow.md` — 约定式提交、分支策略\n* `coding-style.md` — 跨语言风格标准"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## What to Do With the Fork",
+      "zh-Hans": "## 如何处理这个分支"
+    },
+    {
+      "en-US": "### Option A: Use as upstream tracker (current state)",
+      "zh-Hans": "### 选项 A：用作上游跟踪器 (当前状态)"
+    },
+    {
+      "en-US": "Keep the fork synced with `affaan-m/everything-claude-code` upstream. Periodically merge upstream changes:",
+      "zh-Hans": "保持分支与 `affaan-m/everything-claude-code` 上游同步。定期合并上游更改："
+    },
+    {
+      "en-US": "```bash\ngit fetch upstream\ngit merge upstream/main\n```",
+      "zh-Hans": "```bash\ngit fetch upstream\ngit merge upstream/main\n```"
+    },
+    {
+      "en-US": "Install from the local clone. This is clean and maintainable.",
+      "zh-Hans": "从本地克隆安装。这很干净且易于维护。"
+    },
+    {
+      "en-US": "### Option B: Customize the fork",
+      "zh-Hans": "### 选项 B：自定义分支"
+    },
+    {
+      "en-US": "Add personal skills, agents, or commands to the fork. Good for:",
+      "zh-Hans": "向分支添加个人技能、代理或命令。适用于："
+    },
+    {
+      "en-US": "- Business-specific domain skills (your vertical)\n- Team-specific coding conventions\n- Custom hooks for your stack",
+      "zh-Hans": "* 业务特定的领域技能（你的垂直领域）\n* 团队特定的编码约定\n* 针对你的技术栈的自定义钩子"
+    },
+    {
+      "en-US": "The fork already has the EVALUATION.md and REPO-ASSESSMENT.md docs — that's fine for a working fork.",
+      "zh-Hans": "分支已经包含 EVALUATION.md 和 REPO-ASSESSMENT.md 文档 — 这对于一个工作分支来说没问题。"
+    },
+    {
+      "en-US": "### Option C: Install from npm (simplest for fresh machines)",
+      "zh-Hans": "### 选项 C：从 npm 安装 (新机器最简单的方法)"
+    },
+    {
+      "en-US": "```bash\nnpx ecc-universal install --profile developer\n```",
+      "zh-Hans": "```bash\nnpx ecc-universal install --profile developer\n```"
+    },
+    {
+      "en-US": "No need to clone the repo. This is the recommended install method for most users.",
+      "zh-Hans": "无需克隆仓库。这是大多数用户推荐的安装方法。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Recommended Setup Steps",
+      "zh-Hans": "## 推荐设置步骤"
+    },
+    {
+      "en-US": "1. **Keep the existing Stop hook** — it's doing its job\n2. **Run the developer profile install** from the local fork:\n   ```bash\n   cd /path/to/everything-claude-code\n   node scripts/install-plan.js --profile developer\n   node scripts/install-apply.js\n   ```\n3. **Add language rules** for your primary stack (TypeScript, Python, Go, etc.):\n   ```bash\n   node scripts/install-plan.js --add rules/typescript\n   node scripts/install-apply.js\n   ```\n4. **Enable MCP Context7** for live documentation lookup:\n   - Copy `mcp-configs/mcp-servers.json` into your project's `.claude/` dir\n5. **Review hooks** — enable the `hooks/hooks.json` additions selectively, starting with `block-no-verify` and `pre-bash-git-push-reminder`",
+      "zh-Hans": "1. **保留现有的 Stop 钩子** — 它正在发挥作用\n2. **从本地分支运行开发者配置文件安装：**\n   ```bash\n   cd /path/to/everything-claude-code\n   node scripts/install-plan.js --profile developer\n   node scripts/install-apply.js\n   ```\n3. **为你主要的技术栈添加语言规则** (TypeScript, Python, Go 等)：\n   ```bash\n   node scripts/install-plan.js --add rules/typescript\n   node scripts/install-apply.js\n   ```\n4. **启用 MCP Context7** 以进行实时文档查找：\n   * 将 `mcp-configs/mcp-servers.json` 复制到你项目的 `.claude/` 目录中\n5. **审查钩子** — 有选择地启用 `hooks/hooks.json` 的添加项，从 `block-no-verify` 和 `pre-bash-git-push-reminder` 开始"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Summary",
+      "zh-Hans": "## 总结"
+    },
+    {
+      "en-US": "| Question | Answer |\n|----------|--------|\n| Is the fork healthy? | Yes — fully synced with upstream v1.9.0 |\n| Other forks to consider? | None visible in this environment; upstream `affaan-m/everything-claude-code` is the source of truth |\n| Best install profile? | `developer` for day-to-day dev work |\n| Biggest gap in current setup? | 0 agents installed — add at minimum: planner, code-reviewer, tdd-guide, security-reviewer |\n| Quickest win? | Run `node scripts/install-plan.js --profile core && node scripts/install-apply.js` |",
+      "zh-Hans": "| 问题 | 答案 |\n|----------|--------|\n| 分支健康吗？ | 是 — 与上游 v1.9.0 完全同步 |\n| 需要考虑其他分支吗？ | 在此环境中未见；上游 `affaan-m/everything-claude-code` 是事实来源 |\n| 最佳安装配置文件？ | `developer` 用于日常开发工作 |\n| 当前设置的最大差距？ | 安装了 0 个代理 — 至少添加：planner, code-reviewer, tdd-guide, security-reviewer |\n| 最快的收获？ | 运行 `node scripts/install-plan.js --profile core && node scripts/install-apply.js` |"
+    }
+  ]
+}
