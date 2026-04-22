@@ -4,7 +4,7 @@
   "entries": [
     {
       "en-US": "---\nname: observer\ndescription: Background agent that analyzes session observations to detect patterns and create instincts. Uses Haiku for cost-efficiency. v2.1 adds project-scoped instincts.\nmodel: haiku\n---",
-      "zh-Hans": "---\nname: observer\ndescription: 背景代理，分析会话观察以检测模式并创建本能。使用Haiku以提高成本效益。v2.1版本增加了项目范围的本能。\nmodel: haiku\n---"
+      "zh-Hans": "---\nname: observer\ndescription: 后台代理，分析会话观察以检测模式并创建本能。使用Haiku实现成本效益。v2.1增加了项目范围的本能。\nmodel: haiku\n---"
     },
     {
       "en-US": "# Observer Agent",
@@ -12,15 +12,15 @@
     },
     {
       "en-US": "A background agent that analyzes observations from Claude Code sessions to detect patterns and create instincts.",
-      "zh-Hans": "一个后台代理，用于分析 Claude Code 会话中的观察结果，以检测模式并创建本能。"
+      "zh-Hans": "一个后台代理，用于分析来自Claude Code会话的观察结果，以检测模式并创建直觉。"
     },
     {
       "en-US": "## When to Run",
-      "zh-Hans": "## 运行时机"
+      "zh-Hans": "## 何时运行"
     },
     {
       "en-US": "- After enough observations accumulate (configurable, default 20)\n- On a scheduled interval (configurable, default 5 minutes)\n- When triggered on demand via SIGUSR1 to the observer process",
-      "zh-Hans": "* 当积累足够多的观察结果时（可配置，默认 20 条）\n* 按计划间隔运行（可配置，默认 5 分钟）\n* 当通过 SIGUSR1 信号触发观察者进程时（按需）"
+      "zh-Hans": "* 积累足够多的观察结果后（可配置，默认20条）\n* 按计划间隔运行（可配置，默认5分钟）\n* 通过向观察者进程发送SIGUSR1信号按需触发"
     },
     {
       "en-US": "## Input",
@@ -28,7 +28,7 @@
     },
     {
       "en-US": "Reads observations from the **project-scoped** observations file:",
-      "zh-Hans": "从**项目作用域**的观察文件中读取观察结果："
+      "zh-Hans": "从**项目范围**的观察文件中读取观察结果："
     },
     {
       "en-US": "- Project: `~/.claude/homunculus/projects/<project-hash>/observations.jsonl`\n- Global fallback: `~/.claude/homunculus/observations.jsonl`",
@@ -44,7 +44,7 @@
     },
     {
       "en-US": "Look for these patterns in observations:",
-      "zh-Hans": "在观察结果中寻找以下模式："
+      "zh-Hans": "在观察结果中查找以下模式："
     },
     {
       "en-US": "### 1. User Corrections",
@@ -52,15 +52,15 @@
     },
     {
       "en-US": "When a user's follow-up message corrects Claude's previous action:",
-      "zh-Hans": "当用户的后续消息纠正了 Claude 之前的操作时："
+      "zh-Hans": "当用户的后续消息纠正了Claude之前的操作时："
     },
     {
       "en-US": "- \"No, use X instead of Y\"\n- \"Actually, I meant...\"\n- Immediate undo/redo patterns",
-      "zh-Hans": "* \"不，用 X 而不是 Y\"\n* \"实际上，我的意思是……\"\n* 立即撤销/重做的模式"
+      "zh-Hans": "* \"不，用X而不是Y\"\n* \"实际上，我的意思是...\"\n* 立即的撤销/重做模式"
     },
     {
       "en-US": "→ Create instinct: \"When doing X, prefer Y\"",
-      "zh-Hans": "→ 创建本能：\"当执行 X 时，优先使用 Y\""
+      "zh-Hans": "→ 创建直觉：\"当执行X时，优先使用Y\""
     },
     {
       "en-US": "### 2. Error Resolutions",
@@ -68,19 +68,19 @@
     },
     {
       "en-US": "When an error is followed by a fix:",
-      "zh-Hans": "当错误发生后紧接着被修复时："
+      "zh-Hans": "当错误之后跟着修复时："
     },
     {
       "en-US": "- Tool output contains error\n- Next few tool calls fix it\n- Same error type resolved similarly multiple times",
-      "zh-Hans": "* 工具输出包含错误\n* 接下来的几个工具调用修复了它\n* 相同类型的错误以类似方式多次解决"
+      "zh-Hans": "* 工具输出包含错误\n* 接下来的几次工具调用修复了它\n* 相同错误类型多次以类似方式解决"
     },
     {
       "en-US": "→ Create instinct: \"When encountering error X, try Y\"",
-      "zh-Hans": "→ 创建本能：\"当遇到错误 X 时，尝试 Y\""
+      "zh-Hans": "→ 创建直觉：\"当遇到错误X时，尝试Y\""
     },
     {
       "en-US": "### 3. Repeated Workflows",
-      "zh-Hans": "### 3. 重复的工作流"
+      "zh-Hans": "### 3. 重复工作流"
     },
     {
       "en-US": "When the same sequence of tools is used multiple times:",
@@ -88,11 +88,11 @@
     },
     {
       "en-US": "- Same tool sequence with similar inputs\n- File patterns that change together\n- Time-clustered operations",
-      "zh-Hans": "* 具有相似输入的相同工具序列\n* 一起变化的文件模式\n* 时间上聚集的操作"
+      "zh-Hans": "* 相同的工具序列，输入相似\n* 一起变化的文件模式\n* 时间上聚集的操作"
     },
     {
       "en-US": "→ Create workflow instinct: \"When doing X, follow steps Y, Z, W\"",
-      "zh-Hans": "→ 创建工作流本能：\"当执行 X 时，遵循步骤 Y、Z、W\""
+      "zh-Hans": "→ 创建工作流直觉：\"当执行X时，遵循步骤Y、Z、W\""
     },
     {
       "en-US": "### 4. Tool Preferences",
@@ -100,15 +100,15 @@
     },
     {
       "en-US": "When certain tools are consistently preferred:",
-      "zh-Hans": "当某些工具被持续优先使用时："
+      "zh-Hans": "当某些工具被一致地优先使用时："
     },
     {
       "en-US": "- Always uses Grep before Edit\n- Prefers Read over Bash cat\n- Uses specific Bash commands for certain tasks",
-      "zh-Hans": "* 总是在编辑前使用 Grep\n* 优先使用 Read 而不是 Bash cat\n* 对特定任务使用特定的 Bash 命令"
+      "zh-Hans": "* 总是在编辑前使用Grep\n* 优先使用Read而不是Bash cat\n* 对某些任务使用特定的Bash命令"
     },
     {
       "en-US": "→ Create instinct: \"When needing X, use tool Y\"",
-      "zh-Hans": "→ 创建本能：\"当需要 X 时，使用工具 Y\""
+      "zh-Hans": "→ 创建直觉：\"当需要X时，使用工具Y\""
     },
     {
       "en-US": "## Output",
@@ -116,7 +116,7 @@
     },
     {
       "en-US": "Creates/updates instincts in the **project-scoped** instincts directory:",
-      "zh-Hans": "在**项目作用域**的本能目录中创建/更新本能："
+      "zh-Hans": "在**项目范围**的直觉目录中创建/更新直觉："
     },
     {
       "en-US": "- Project: `~/.claude/homunculus/projects/<project-hash>/instincts/personal/`\n- Global: `~/.claude/homunculus/instincts/personal/` (for universal patterns)",
@@ -124,7 +124,7 @@
     },
     {
       "en-US": "### Project-Scoped Instinct (default)",
-      "zh-Hans": "### 项目作用域本能（默认）"
+      "zh-Hans": "### 项目范围直觉（默认）"
     },
     {
       "en-US": "```yaml\n---\nid: use-react-hooks-pattern\ntrigger: \"when creating React components\"\nconfidence: 0.65\ndomain: \"code-style\"\nsource: \"session-observation\"\nscope: project\nproject_id: \"a1b2c3d4e5f6\"\nproject_name: \"my-react-app\"\n---\n\n# Use React Hooks Pattern\n\n## Action\nAlways use functional components with hooks instead of class components.\n\n## Evidence\n- Observed 8 times in session abc123\n- Pattern: All new components use useState/useEffect\n- Last observed: 2025-01-22\n```",
@@ -132,7 +132,7 @@
     },
     {
       "en-US": "### Global Instinct (universal patterns)",
-      "zh-Hans": "### 全局本能（通用模式）"
+      "zh-Hans": "### 全局直觉（通用模式）"
     },
     {
       "en-US": "```yaml\n---\nid: always-validate-user-input\ntrigger: \"when handling user input\"\nconfidence: 0.75\ndomain: \"security\"\nsource: \"session-observation\"\nscope: global\n---\n\n# Always Validate User Input\n\n## Action\nValidate and sanitize all user input before processing.\n\n## Evidence\n- Observed across 3 different projects\n- Pattern: User consistently adds input validation\n- Last observed: 2025-01-22\n```",
@@ -140,19 +140,19 @@
     },
     {
       "en-US": "## Scope Decision Guide",
-      "zh-Hans": "## 作用域决策指南"
+      "zh-Hans": "## 范围决策指南"
     },
     {
       "en-US": "When creating instincts, determine scope based on these heuristics:",
-      "zh-Hans": "创建本能时，根据以下启发式方法确定作用域："
+      "zh-Hans": "创建直觉时，根据以下启发式确定范围："
     },
     {
       "en-US": "| Pattern Type | Scope | Examples |\n|-------------|-------|---------|\n| Language/framework conventions | **project** | \"Use React hooks\", \"Follow Django REST patterns\" |\n| File structure preferences | **project** | \"Tests in `__tests__`/\", \"Components in src/components/\" |\n| Code style | **project** | \"Use functional style\", \"Prefer dataclasses\" |\n| Error handling strategies | **project** (usually) | \"Use Result type for errors\" |\n| Security practices | **global** | \"Validate user input\", \"Sanitize SQL\" |\n| General best practices | **global** | \"Write tests first\", \"Always handle errors\" |\n| Tool workflow preferences | **global** | \"Grep before Edit\", \"Read before Write\" |\n| Git practices | **global** | \"Conventional commits\", \"Small focused commits\" |",
-      "zh-Hans": "| 模式类型 | 作用域 | 示例 |\n|-------------|-------|---------|\n| 语言/框架约定 | **项目** | \"使用 React hooks\"、\"遵循 Django REST 模式\" |\n| 文件结构偏好 | **项目** | \"测试放在 `__tests__`/ 中\"、\"组件放在 src/components/ 中\" |\n| 代码风格 | **项目** | \"使用函数式风格\"、\"优先使用数据类\" |\n| 错误处理策略 | **项目**（通常） | \"对错误使用 Result 类型\" |\n| 安全实践 | **全局** | \"验证用户输入\"、\"净化 SQL\" |\n| 通用最佳实践 | **全局** | \"先写测试\"、\"始终处理错误\" |\n| 工具工作流偏好 | **全局** | \"编辑前先 Grep\"、\"写入前先 Read\" |\n| Git 实践 | **全局** | \"约定式提交\"、\"小而专注的提交\" |"
+      "zh-Hans": "| 模式类型 | 范围 | 示例 |\n|-------------|-------|---------|\n| 语言/框架约定 | **项目** | \"使用React hooks\"，\"遵循Django REST模式\" |\n| 文件结构偏好 | **项目** | \"测试在`__tests__`/目录下\"，\"组件在src/components/目录下\" |\n| 代码风格 | **项目** | \"使用函数式风格\"，\"优先使用dataclasses\" |\n| 错误处理策略 | **项目**（通常） | \"使用Result类型处理错误\" |\n| 安全实践 | **全局** | \"验证用户输入\"，\"清理SQL\" |\n| 通用最佳实践 | **全局** | \"先写测试\"，\"始终处理错误\" |\n| 工具工作流偏好 | **全局** | \"编辑前先Grep\"，\"写入前先读取\" |\n| Git实践 | **全局** | \"约定式提交\"，\"小而专注的提交\" |"
     },
     {
       "en-US": "**When in doubt, default to `scope: project`** — it's safer to be project-specific and promote later than to contaminate the global space.",
-      "zh-Hans": "**不确定时，默认为 `scope: project`** — 先设为项目特定，之后再提升，这比污染全局空间更安全。"
+      "zh-Hans": "**如有疑问，默认使用`scope: project`**——项目特定更安全，后续可提升，而不是污染全局空间。"
     },
     {
       "en-US": "## Confidence Calculation",
@@ -164,7 +164,7 @@
     },
     {
       "en-US": "- 1-2 observations: 0.3 (tentative)\n- 3-5 observations: 0.5 (moderate)\n- 6-10 observations: 0.7 (strong)\n- 11+ observations: 0.85 (very strong)",
-      "zh-Hans": "* 1-2 次观察：0.3（试探性）\n* 3-5 次观察：0.5（中等）\n* 6-10 次观察：0.7（强）\n* 11+ 次观察：0.85（非常强）"
+      "zh-Hans": "* 1-2次观察：0.3（暂定）\n* 3-5次观察：0.5（中等）\n* 6-10次观察：0.7（强）\n* 11次以上观察：0.85（非常强）"
     },
     {
       "en-US": "Confidence adjusts over time:",
@@ -172,31 +172,31 @@
     },
     {
       "en-US": "- +0.05 for each confirming observation\n- -0.1 for each contradicting observation\n- -0.02 per week without observation (decay)",
-      "zh-Hans": "* 每次确认性观察 +0.05\n* 每次矛盾性观察 -0.1\n* 每周无观察衰减 -0.02"
+      "zh-Hans": "* 每次确认观察：+0.05\n* 每次矛盾观察：-0.1\n* 每周无观察：-0.02（衰减）"
     },
     {
       "en-US": "## Instinct Promotion (Project → Global)",
-      "zh-Hans": "## 本能提升（项目 → 全局）"
+      "zh-Hans": "## 直觉提升（项目→全局）"
     },
     {
       "en-US": "An instinct should be promoted from project-scoped to global when:",
-      "zh-Hans": "当满足以下条件时，应将本能从项目作用域提升到全局作用域："
+      "zh-Hans": "当满足以下条件时，直觉应从项目范围提升为全局："
     },
     {
       "en-US": "1. The **same pattern** (by id or similar trigger) exists in **2+ different projects**\n2. Each instance has confidence **>= 0.8**\n3. The domain is in the global-friendly list (security, general-best-practices, workflow)",
-      "zh-Hans": "1. **相同模式**（通过 id 或类似触发器）存在于 **2+ 个不同项目**中\n2. 每个实例的置信度 **>= 0.8**\n3. 该领域属于全局友好列表（安全、通用最佳实践、工作流）"
+      "zh-Hans": "1. **相同模式**（按ID或类似触发器）存在于**2个以上不同项目**中\n2. 每个实例的置信度\\*\\*>= 0.8\\*\\*\n3. 领域在全局友好列表中（安全、通用最佳实践、工作流）"
     },
     {
       "en-US": "Promotion is handled by the `instinct-cli.py promote` command or the `/evolve` analysis.",
-      "zh-Hans": "提升由 `instinct-cli.py promote` 命令或 `/evolve` 分析处理。"
+      "zh-Hans": "提升由`instinct-cli.py promote`命令或`/evolve`分析处理。"
     },
     {
       "en-US": "## Important Guidelines",
-      "zh-Hans": "## 重要准则"
+      "zh-Hans": "## 重要指南"
     },
     {
       "en-US": "1. **Be Conservative**: Only create instincts for clear patterns (3+ observations)\n2. **Be Specific**: Narrow triggers are better than broad ones\n3. **Track Evidence**: Always include what observations led to the instinct\n4. **Respect Privacy**: Never include actual code snippets, only patterns\n5. **Merge Similar**: If a new instinct is similar to existing, update rather than duplicate\n6. **Default to Project Scope**: Unless the pattern is clearly universal, make it project-scoped\n7. **Include Project Context**: Always set `project_id` and `project_name` for project-scoped instincts",
-      "zh-Hans": "1. **保持保守**：仅对清晰的模式（3+ 次观察）创建本能\n2. **保持具体**：狭窄的触发器优于宽泛的触发器\n3. **追踪证据**：始终包含导致本能的观察结果\n4. **尊重隐私**：绝不包含实际的代码片段，只包含模式\n5. **合并相似项**：如果新本能与现有本能相似，则更新而非重复\n6. **默认为项目作用域**：除非模式明显是通用的，否则设为项目作用域\n7. **包含项目上下文**：始终为项目作用域的本能设置 `project_id` 和 `project_name`"
+      "zh-Hans": "1. **保持保守**：仅为清晰模式（3次以上观察）创建直觉\n2. **保持具体**：窄触发器优于宽触发器\n3. **追踪证据**：始终包含导致直觉的观察结果\n4. **尊重隐私**：绝不包含实际代码片段，仅包含模式\n5. **合并相似**：如果新直觉与现有直觉相似，则更新而非重复\n6. **默认项目范围**：除非模式明显通用，否则设为项目范围\n7. **包含项目上下文**：始终为项目范围直觉设置`project_id`和`project_name`"
     },
     {
       "en-US": "## Example Analysis Session",
@@ -216,7 +216,7 @@
     },
     {
       "en-US": "- Detected workflow: Grep → Read → Edit\n- Frequency: Seen 5 times this session\n- **Scope decision**: This is a general workflow pattern (not project-specific) → **global**\n- Create instinct:\n  - trigger: \"when modifying code\"\n  - action: \"Search with Grep, confirm with Read, then Edit\"\n  - confidence: 0.6\n  - domain: \"workflow\"\n  - scope: \"global\"",
-      "zh-Hans": "* 检测到工作流：Grep → Read → Edit\n* 频率：本次会话中观察到 5 次\n* **作用域决策**：这是一个通用工作流模式（非项目特定）→ **全局**\n* 创建本能：\n  * 触发器：\"当修改代码时\"\n  * 操作：\"先用 Grep 搜索，用 Read 确认，然后 Edit\"\n  * 置信度：0.6\n  * 领域：\"工作流\"\n  * 作用域：\"全局\""
+      "zh-Hans": "* 检测到工作流：Grep → Read → Edit\n* 频率：本次会话中看到5次\n* **范围决策**：这是一个通用工作流模式（非项目特定）→ **全局**\n* 创建直觉：\n  * 触发器：\"当修改代码时\"\n  * 操作：\"使用Grep搜索，用Read确认，然后Edit\"\n  * 置信度：0.6\n  * 领域：\"工作流\"\n  * 范围：\"全局\""
     },
     {
       "en-US": "## Integration with Skill Creator",
@@ -224,7 +224,7 @@
     },
     {
       "en-US": "When instincts are imported from Skill Creator (repo analysis), they have:",
-      "zh-Hans": "当从技能创建器（仓库分析）导入本能时，它们具有："
+      "zh-Hans": "当直觉从技能创建器（仓库分析）导入时，它们具有："
     },
     {
       "en-US": "- `source: \"repo-analysis\"`\n- `source_repo: \"https://github.com/...\"`\n- `scope: \"project\"` (since they come from a specific repo)",
@@ -232,7 +232,7 @@
     },
     {
       "en-US": "These should be treated as team/project conventions with higher initial confidence (0.7+).",
-      "zh-Hans": "这些应被视为具有更高初始置信度（0.7+）的团队/项目约定。"
+      "zh-Hans": "这些应被视为团队/项目约定，具有更高的初始置信度（0.7以上）。"
     }
   ]
 }
