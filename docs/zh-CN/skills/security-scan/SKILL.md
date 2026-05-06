@@ -1,12 +1,12 @@
 ---
 name: security-scan
-description: 使用AgentShield扫描您的Claude代码配置（.claude/目录），以发现安全漏洞、配置错误和注入风险。检查CLAUDE.md、settings.json、MCP服务器、钩子和代理定义。
+description: 使用AgentShield扫描您的Claude Code配置（.claude/目录）以查找安全漏洞、配置错误和注入风险。检查CLAUDE.md、settings.json、MCP服务器、钩子和代理定义。
 origin: ECC
 ---
 
 # 安全扫描技能
 
-使用 [AgentShield](https://github.com/affaan-m/agentshield) 审计您的 Claude Code 配置中的安全问题。
+使用 [AgentShield](https://github.com/affaan-m/agentshield) 审计您的 Claude Code 配置以发现安全问题。
 
 ## 何时激活
 
@@ -14,7 +14,7 @@ origin: ECC
 * 修改 `.claude/settings.json`、`CLAUDE.md` 或 MCP 配置后
 * 提交配置更改前
 * 加入具有现有 Claude Code 配置的新代码库时
-* 定期进行安全卫生检查时
+* 定期进行安全卫生检查
 
 ## 扫描内容
 
@@ -43,7 +43,7 @@ npx ecc-agentshield scan .
 
 ## 使用方法
 
-### 基础扫描
+### 基本扫描
 
 针对当前项目的 `.claude/` 目录运行：
 
@@ -76,7 +76,7 @@ npx ecc-agentshield scan --format html > security-report.html
 
 ### 自动修复
 
-自动应用安全的修复（仅修复标记为可自动修复的问题）：
+自动应用安全修复（仅修复标记为可自动修复的问题）：
 
 ```bash
 npx ecc-agentshield scan --fix
@@ -84,13 +84,13 @@ npx ecc-agentshield scan --fix
 
 这将：
 
-* 用环境变量引用替换硬编码的密钥
-* 将通配符权限收紧为作用域明确的替代方案
-* 绝不修改仅限手动修复的建议
+* 将硬编码的密钥替换为环境变量引用
+* 将通配符权限收紧为限定范围的替代方案
+* 绝不修改仅限手动处理的建议
 
 ### Opus 4.6 深度分析
 
-运行对抗性的三智能体流程以进行更深入的分析：
+运行对抗性三智能体管道进行更深入的分析：
 
 ```bash
 # Requires ANTHROPIC_API_KEY
@@ -101,7 +101,7 @@ npx ecc-agentshield scan --opus --stream
 这将运行：
 
 1. **攻击者（红队）** — 寻找攻击向量
-2. **防御者（蓝队）** — 建议加固措施
+2. **防御者（蓝队）** — 推荐加固措施
 3. **审计员（最终裁决）** — 综合双方观点
 
 ### 初始化安全配置
@@ -114,7 +114,7 @@ npx ecc-agentshield init
 
 创建：
 
-* 具有作用域权限和拒绝列表的 `settings.json`
+* 具有限定范围权限和拒绝列表的 `settings.json`
 * 遵循安全最佳实践的 `CLAUDE.md`
 * `mcp.json` 占位符
 
@@ -140,30 +140,30 @@ npx ecc-agentshield init
 | D | 40-59 | 显著风险 |
 | F | 0-39 | 严重漏洞 |
 
-## 结果解读
+## 解读结果
 
 ### 关键发现（立即修复）
 
-* 配置文件中硬编码的 API 密钥或令牌
-* 允许列表中存在 `Bash(*)`（无限制的 shell 访问）
-* 钩子中通过 `${file}` 插值导致的命令注入
+* 配置文件中的硬编码 API 密钥或令牌
+* 允许列表中的 `Bash(*)`（无限制的 shell 访问）
+* 通过 `${file}` 插值在钩子中导致的命令注入
 * 运行 shell 的 MCP 服务器
 
 ### 高优先级发现（生产前修复）
 
 * CLAUDE.md 中的自动运行指令（提示词注入向量）
-* 权限配置中缺少拒绝列表
-* 具有不必要 Bash 访问权限的代理
+* 权限中缺失拒绝列表
+* 具有不必要 Bash 访问权限的智能体
 
-### 中优先级发现（建议修复）
+### 中优先级发现（推荐修复）
 
 * 钩子中的静默错误抑制（`2>/dev/null`、`|| true`）
-* 缺少 PreToolUse 安全钩子
+* 缺失 PreToolUse 安全钩子
 * MCP 服务器配置中的 `npx -y` 自动安装
 
-### 信息性发现（了解情况）
+### 信息性发现（需知悉）
 
-* MCP 服务器缺少描述信息
+* MCP 服务器上缺失描述
 * 正确标记为良好实践的限制性指令
 
 ## 链接

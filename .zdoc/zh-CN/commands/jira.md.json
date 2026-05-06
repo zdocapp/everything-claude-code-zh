@@ -1,0 +1,118 @@
+{
+  "sourceFile": "commands/jira.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Retrieve a Jira ticket, analyze requirements, update status, or add comments. Uses the jira-integration skill and MCP or REST API.\n---",
+      "zh-Hans": "---\ndescription: 检索Jira工单、分析需求、更新状态或添加评论。使用jira-integration技能和MCP或REST API。\n---"
+    },
+    {
+      "en-US": "# Jira Command",
+      "zh-Hans": "# Jira 命令"
+    },
+    {
+      "en-US": "Interact with Jira tickets directly from your workflow — fetch tickets, analyze requirements, add comments, and transition status.",
+      "zh-Hans": "直接从您的工作流程与 Jira 工单交互——获取工单、分析需求、添加评论和转换状态。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/jira get <TICKET-KEY>          # Fetch and analyze a ticket\n/jira comment <TICKET-KEY>      # Add a progress comment\n/jira transition <TICKET-KEY>   # Change ticket status\n/jira search <JQL>              # Search issues with JQL\n```",
+      "zh-Hans": "```\n/jira get <TICKET-KEY>          # 获取并分析工单\n/jira comment <TICKET-KEY>      # 添加进度评论\n/jira transition <TICKET-KEY>   # 更改工单状态\n/jira search <JQL>              # 使用 JQL 搜索问题\n```"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的功能"
+    },
+    {
+      "en-US": "1. **Get & Analyze** — Fetch a Jira ticket and extract requirements, acceptance criteria, test scenarios, and dependencies\n2. **Comment** — Add structured progress updates to a ticket\n3. **Transition** — Move a ticket through workflow states (To Do → In Progress → Done)\n4. **Search** — Find issues using JQL queries",
+      "zh-Hans": "1. **获取与分析** — 获取 Jira 工单并提取需求、验收标准、测试场景和依赖项\n2. **评论** — 向工单添加结构化的进度更新\n3. **状态转换** — 在工作流状态间移动工单（待办 → 进行中 → 已完成）\n4. **搜索** — 使用 JQL 查询查找问题"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### `/jira get <TICKET-KEY>`",
+      "zh-Hans": "### `/jira get <TICKET-KEY>`"
+    },
+    {
+      "en-US": "1. Fetch the ticket from Jira (via MCP `jira_get_issue` or REST API)\n2. Extract all fields: summary, description, acceptance criteria, priority, labels, linked issues\n3. Optionally fetch comments for additional context\n4. Produce a structured analysis:",
+      "zh-Hans": "1. 从 Jira 获取工单（通过 MCP `jira_get_issue` 或 REST API）\n2. 提取所有字段：摘要、描述、验收标准、优先级、标签、关联问题\n3. 可选择获取评论以获取额外上下文\n4. 生成结构化分析："
+    },
+    {
+      "en-US": "```\nTicket: PROJ-1234\nSummary: [title]\nStatus: [status]\nPriority: [priority]\nType: [Story/Bug/Task]\n\nRequirements:\n1. [extracted requirement]\n2. [extracted requirement]\n\nAcceptance Criteria:\n- [ ] [criterion from ticket]\n\nTest Scenarios:\n- Happy Path: [description]\n- Error Case: [description]\n- Edge Case: [description]\n\nDependencies:\n- [linked issues, APIs, services]\n\nRecommended Next Steps:\n- /plan to create implementation plan\n- `tdd-workflow` skill to implement with tests first\n```",
+      "zh-Hans": "```\nTicket: PROJ-1234\nSummary: [标题]\nStatus: [状态]\nPriority: [优先级]\nType: [故事/缺陷/任务]\n\nRequirements:\n1. [提取的需求]\n2. [提取的需求]\n\nAcceptance Criteria:\n- [ ] [工单中的验收标准]\n\nTest Scenarios:\n- Happy Path: [描述]\n- Error Case: [描述]\n- Edge Case: [描述]\n\nDependencies:\n- [关联的问题、API、服务]\n\nRecommended Next Steps:\n- /plan 创建实施计划\n- `tdd-workflow` 技能以测试驱动开发方式实现\n```"
+    },
+    {
+      "en-US": "### `/jira comment <TICKET-KEY>`",
+      "zh-Hans": "### `/jira comment <TICKET-KEY>`"
+    },
+    {
+      "en-US": "1. Summarize current session progress (what was built, tested, committed)\n2. Format as a structured comment\n3. Post to the Jira ticket",
+      "zh-Hans": "1. 总结当前会话进度（构建、测试、提交了哪些内容）\n2. 格式化为结构化评论\n3. 发布到 Jira 工单"
+    },
+    {
+      "en-US": "### `/jira transition <TICKET-KEY>`",
+      "zh-Hans": "### `/jira transition <TICKET-KEY>`"
+    },
+    {
+      "en-US": "1. Fetch available transitions for the ticket\n2. Show options to user\n3. Execute the selected transition",
+      "zh-Hans": "1. 获取工单的可用状态转换\n2. 向用户显示选项\n3. 执行选定的转换"
+    },
+    {
+      "en-US": "### `/jira search <JQL>`",
+      "zh-Hans": "### `/jira search <JQL>`"
+    },
+    {
+      "en-US": "1. Execute the JQL query against Jira\n2. Return a summary table of matching issues",
+      "zh-Hans": "1. 针对 Jira 执行 JQL 查询\n2. 返回匹配问题的摘要表格"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "This command requires Jira credentials. Choose one:",
+      "zh-Hans": "此命令需要 Jira 凭据。选择一种方式："
+    },
+    {
+      "en-US": "**Option A — MCP Server (recommended):**\nAdd `jira` to your `mcpServers` config (see `mcp-configs/mcp-servers.json` for the template).",
+      "zh-Hans": "**选项 A — MCP 服务器（推荐）：**\n将 `jira` 添加到您的 `mcpServers` 配置中（模板请参见 `mcp-configs/mcp-servers.json`）。"
+    },
+    {
+      "en-US": "**Option B — Environment variables:**",
+      "zh-Hans": "**选项 B — 环境变量：**"
+    },
+    {
+      "en-US": "```bash\nexport JIRA_URL=\"https://yourorg.atlassian.net\"\nexport JIRA_EMAIL=\"your.email@example.com\"\nexport JIRA_API_TOKEN=\"your-api-token\"\n```",
+      "zh-Hans": "```bash\nexport JIRA_URL=\"https://yourorg.atlassian.net\"\nexport JIRA_EMAIL=\"your.email@example.com\"\nexport JIRA_API_TOKEN=\"your-api-token\"\n```"
+    },
+    {
+      "en-US": "If credentials are missing, stop and direct the user to set them up.",
+      "zh-Hans": "如果缺少凭据，请停止并引导用户进行设置。"
+    },
+    {
+      "en-US": "## Integration with Other Commands",
+      "zh-Hans": "## 与其他命令的集成"
+    },
+    {
+      "en-US": "After analyzing a ticket:",
+      "zh-Hans": "分析工单后："
+    },
+    {
+      "en-US": "- Use `/plan` to create an implementation plan from the requirements\n- Use the `tdd-workflow` skill to implement with test-driven development\n- Use `/code-review` after implementation\n- Use `/jira comment` to post progress back to the ticket\n- Use `/jira transition` to move the ticket when work is complete",
+      "zh-Hans": "* 使用 `/plan` 根据需求创建实施计划\n* 运用 `tdd-workflow` 技能通过测试驱动开发进行实施\n* 实施完成后使用 `/code-review`\n* 使用 `/jira comment` 将进度更新回工单\n* 工作完成后使用 `/jira transition` 移动工单"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- **Skill:** `skills/jira-integration/`\n- **MCP config:** `mcp-configs/mcp-servers.json` → `jira`",
+      "zh-Hans": "* **技能：** `skills/jira-integration/`\n* **MCP 配置：** `mcp-configs/mcp-servers.json` → `jira`"
+    }
+  ]
+}

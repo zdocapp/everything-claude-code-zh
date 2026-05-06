@@ -1,0 +1,130 @@
+{
+  "sourceFile": "skills/investor-outreach/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: investor-outreach\ndescription: Draft cold emails, warm intro blurbs, follow-ups, update emails, and investor communications for fundraising. Use when the user wants outreach to angels, VCs, strategic investors, or accelerators and needs concise, personalized, investor-facing messaging.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: investor-outreach\ndescription: 草拟冷邮件、暖介绍语、跟进邮件、更新邮件以及投资者沟通内容，用于筹款。当用户希望向天使投资人、风险投资机构、战略投资者或加速器进行推广，并需要简洁、个性化、面向投资者的信息时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Investor Outreach",
+      "zh-Hans": "# 投资者沟通"
+    },
+    {
+      "en-US": "Write investor communication that is short, concrete, and easy to act on.",
+      "zh-Hans": "撰写简短、具体且易于执行的投资者沟通内容。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- writing a cold email to an investor\n- drafting a warm intro request\n- sending follow-ups after a meeting or no response\n- writing investor updates during a process\n- tailoring outreach based on fund thesis or partner fit",
+      "zh-Hans": "* 向投资者撰写冷邮件时\n* 起草熟人引荐请求时\n* 会议后或无回复时发送跟进邮件\n* 在融资过程中撰写投资者更新\n* 根据基金投资主题或合伙人匹配度定制沟通内容"
+    },
+    {
+      "en-US": "## Core Rules",
+      "zh-Hans": "## 核心规则"
+    },
+    {
+      "en-US": "1. Personalize every outbound message.\n2. Keep the ask low-friction.\n3. Use proof instead of adjectives.\n4. Stay concise.\n5. Never send copy that could go to any investor.",
+      "zh-Hans": "1. 个性化每一封外发信息。\n2. 保持请求低门槛。\n3. 使用证据而非形容词。\n4. 保持简洁。\n5. 绝不发送可以发给任何投资者的通用文案。"
+    },
+    {
+      "en-US": "## Voice Handling",
+      "zh-Hans": "## 语气处理"
+    },
+    {
+      "en-US": "If the user's voice matters, run `brand-voice` first and reuse its `VOICE PROFILE`.\nThis skill should keep the investor-specific structure and ask discipline, not recreate its own parallel voice system.",
+      "zh-Hans": "如果用户的语气很重要，请先运行 `brand-voice` 并复用其 `VOICE PROFILE`。\n此技能应保持针对投资者的特定结构和请求规范，而非重建其自身的平行语气系统。"
+    },
+    {
+      "en-US": "## Hard Bans",
+      "zh-Hans": "## 严格禁止"
+    },
+    {
+      "en-US": "Delete and rewrite any of these:",
+      "zh-Hans": "删除并重写任何包含以下内容的信息："
+    },
+    {
+      "en-US": "- \"I'd love to connect\"\n- \"excited to share\"\n- generic thesis praise without a real tie-in\n- vague founder adjectives\n- begging language\n- soft closing questions when a direct ask is clearer",
+      "zh-Hans": "* \"我很乐意联系\"\n* \"很高兴分享\"\n* 没有实际关联的通用主题赞美\n* 模糊的创始人形容词\n* 乞求式语言\n* 当直接请求更清晰时使用软性结束问题"
+    },
+    {
+      "en-US": "## Cold Email Structure",
+      "zh-Hans": "## 冷邮件结构"
+    },
+    {
+      "en-US": "1. subject line: short and specific\n2. opener: why this investor specifically\n3. pitch: what the company does, why now, and what proof matters\n4. ask: one concrete next step\n5. sign-off: name, role, and one credibility anchor if needed",
+      "zh-Hans": "1. 主题行：简短且具体\n2. 开场白：为什么是这位特定投资者\n3. 推介：公司做什么、为什么是现在、以及哪些证据重要\n4. 请求：一个具体的下一步行动\n5. 结尾：姓名、职位，以及一个可信度锚点（如果需要）"
+    },
+    {
+      "en-US": "## Personalization Sources",
+      "zh-Hans": "## 个性化来源"
+    },
+    {
+      "en-US": "Reference one or more of:",
+      "zh-Hans": "参考以下一项或多项："
+    },
+    {
+      "en-US": "- relevant portfolio companies\n- a public thesis, talk, post, or article\n- a mutual connection\n- a clear market or product fit with the investor's focus",
+      "zh-Hans": "* 相关的投资组合公司\n* 公开的投资主题、演讲、帖子或文章\n* 共同的联系人\n* 与投资者关注点明确匹配的市场或产品契合度"
+    },
+    {
+      "en-US": "If that context is missing, state that the draft still needs personalization instead of pretending it is finished.",
+      "zh-Hans": "如果缺少这些背景信息，请说明草稿仍需个性化，而不是假装已完成。"
+    },
+    {
+      "en-US": "## Follow-Up Cadence",
+      "zh-Hans": "## 跟进节奏"
+    },
+    {
+      "en-US": "Default:",
+      "zh-Hans": "默认节奏："
+    },
+    {
+      "en-US": "- day 0: initial outbound\n- day 4 or 5: short follow-up with one new data point\n- day 10 to 12: final follow-up with a clean close",
+      "zh-Hans": "* 第0天：初次外发\n* 第4或5天：简短跟进，附带一个新数据点\n* 第10至12天：最终跟进，附带清晰的结束语"
+    },
+    {
+      "en-US": "Do not keep nudging after that unless the user wants a longer sequence.",
+      "zh-Hans": "除非用户希望更长的序列，否则之后不再继续跟进。"
+    },
+    {
+      "en-US": "## Warm Intro Requests",
+      "zh-Hans": "## 熟人引荐请求"
+    },
+    {
+      "en-US": "Make life easy for the connector:",
+      "zh-Hans": "为引荐人提供便利："
+    },
+    {
+      "en-US": "- explain why the intro is a fit\n- include a forwardable blurb\n- keep the forwardable blurb under 100 words",
+      "zh-Hans": "* 解释为什么这次引荐是合适的\n* 包含可转发的简介\n* 保持可转发简介在100字以内"
+    },
+    {
+      "en-US": "## Post-Meeting Updates",
+      "zh-Hans": "## 会后更新"
+    },
+    {
+      "en-US": "Include:",
+      "zh-Hans": "包含："
+    },
+    {
+      "en-US": "- the specific thing discussed\n- the answer or update promised\n- one new proof point if available\n- the next step",
+      "zh-Hans": "* 讨论的具体事项\n* 承诺的答复或更新\n* 一个新的证据点（如果有）\n* 下一步行动"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量检查"
+    },
+    {
+      "en-US": "Before delivering:",
+      "zh-Hans": "在交付前确保："
+    },
+    {
+      "en-US": "- the message is genuinely personalized\n- the ask is explicit\n- the proof point is concrete\n- filler praise and softener language are gone\n- word count stays tight",
+      "zh-Hans": "* 信息是真正个性化的\n* 请求是明确的\n* 证据点是具体的\n* 填充性赞美和软化性语言已删除\n* 字数保持紧凑"
+    }
+  ]
+}

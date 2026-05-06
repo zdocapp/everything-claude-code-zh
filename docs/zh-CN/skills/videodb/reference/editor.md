@@ -1,6 +1,6 @@
 # 时间线编辑指南
 
-VideoDB 提供了一个非破坏性的时间线编辑器，用于从多个素材合成视频、添加文本和图像叠加、混合音轨以及修剪片段——所有这些都在服务器端完成，无需重新编码或本地工具。可用于修剪、合并片段、在视频上叠加音频/音乐、添加字幕以及叠加文本或图像。
+VideoDB 提供了一个非破坏性的时间线编辑器，用于从多个素材合成视频、添加文本和图像叠加、混合音轨以及剪辑片段——所有这些都在服务器端完成，无需重新编码或本地工具。可用于剪辑、组合片段、在视频上叠加音频/音乐、添加字幕以及叠加文本或图像。
 
 ## 前提条件
 
@@ -10,7 +10,7 @@ VideoDB 提供了一个非破坏性的时间线编辑器，用于从多个素材
 
 ### 时间线
 
-`Timeline` 是一个虚拟合成层。素材可以**内联**（在主轨道上顺序放置）或作为**叠加层**（在特定时间戳分层放置）放置在时间线上。不会修改原始媒体；最终流是按需编译的。
+`Timeline` 是一个虚拟合成层。素材可以**内联**（在主轨道上顺序排列）或作为**叠加层**（在特定时间戳分层放置）放置在其上。原始媒体不会被修改；最终流是按需编译的。
 
 ```python
 from videodb.timeline import Timeline
@@ -24,7 +24,7 @@ timeline = Timeline(conn)
 
 | 素材 | 导入 | 主要用途 |
 |-------|--------|-------------|
-| `VideoAsset` | `from videodb.asset import VideoAsset` | 视频片段（修剪、排序） |
+| `VideoAsset` | `from videodb.asset import VideoAsset` | 视频片段（剪辑、排序） |
 | `AudioAsset` | `from videodb.asset import AudioAsset` | 音乐、音效、旁白 |
 | `ImageAsset` | `from videodb.asset import ImageAsset` | 徽标、缩略图、叠加层 |
 | `TextAsset` | `from videodb.asset import TextAsset, TextStyle` | 标题、字幕、下三分之一字幕 |
@@ -34,7 +34,7 @@ timeline = Timeline(conn)
 
 ### 内联添加视频片段
 
-内联素材在主视频轨道上一个接一个播放。`add_inline` 方法只接受 `VideoAsset`：
+内联素材在主视频轨道上一个接一个地播放。`add_inline` 方法只接受 `VideoAsset`：
 
 ```python
 from videodb.asset import VideoAsset
@@ -49,7 +49,7 @@ timeline.add_inline(VideoAsset(asset_id=video_b.id))
 stream_url = timeline.generate_stream()
 ```
 
-### 修剪 / 子片段
+### 剪辑 / 子片段
 
 在 `VideoAsset` 上使用 `start` 和 `end` 来提取一部分：
 
@@ -63,15 +63,15 @@ timeline.add_inline(clip)
 
 | 参数 | 类型 | 默认值 | 描述 |
 |-----------|------|---------|-------------|
-| `asset_id` | `str` | 必填 | 视频媒体 ID |
-| `start` | `float` | `0` | 修剪开始时间（秒） |
-| `end` | `float\|None` | `None` | 修剪结束时间（`None` = 完整视频） |
+| `asset_id` | `str` | 必需 | 视频媒体 ID |
+| `start` | `float` | `0` | 剪辑开始时间（秒） |
+| `end` | `float\|None` | `None` | 剪辑结束时间（`None` = 完整） |
 
-> **警告：** SDK 不会验证负时间戳。传递 `start=-5` 会被静默接受，但会产生损坏或意外的输出。在创建 `VideoAsset` 之前，请始终确保 `start >= 0`、`start < end` 和 `end <= video.length`。
+> **警告：** SDK 不验证负时间戳。传递 `start=-5` 会被静默接受，但会产生损坏或意外的输出。在创建 `VideoAsset` 之前，请始终确保 `start >= 0`、`start < end` 和 `end <= video.length`。
 
 ## 文本叠加
 
-在时间线的任意点添加标题、下三分之一字幕或说明文字：
+在时间线上的任意点添加标题、下三分之一字幕或字幕：
 
 ```python
 from videodb.asset import TextAsset, TextStyle
@@ -124,7 +124,7 @@ timeline.add_overlay(0, title)
 
 ## 音频叠加
 
-在主视频轨道上叠加背景音乐、音效或旁白：
+在视频轨道上叠加背景音乐、音效或旁白：
 
 ```python
 from videodb.asset import AudioAsset
@@ -146,9 +146,9 @@ timeline.add_overlay(0, audio_layer)
 
 | 参数 | 类型 | 默认值 | 描述 |
 |-----------|------|---------|-------------|
-| `asset_id` | `str` | 必填 | 音频媒体 ID |
-| `start` | `float` | `0` | 修剪开始时间（秒） |
-| `end` | `float\|None` | `None` | 修剪结束时间（`None` = 完整音频） |
+| `asset_id` | `str` | 必需 | 音频媒体 ID |
+| `start` | `float` | `0` | 剪辑开始时间（秒） |
+| `end` | `float\|None` | `None` | 剪辑结束时间（`None` = 完整） |
 | `disable_other_tracks` | `bool` | `True` | 为 True 时，静音其他音轨 |
 | `fade_in_duration` | `float` | `0` | 淡入秒数（最大 5） |
 | `fade_out_duration` | `float` | `0` | 淡出秒数（最大 5） |
@@ -178,16 +178,16 @@ timeline.add_overlay(0, logo_overlay)
 
 | 参数 | 类型 | 默认值 | 描述 |
 |-----------|------|---------|-------------|
-| `asset_id` | `str` | 必填 | 图像媒体 ID |
+| `asset_id` | `str` | 必需 | 图像媒体 ID |
 | `width` | `int\|str` | `100` | 显示宽度 |
 | `height` | `int\|str` | `100` | 显示高度 |
-| `x` | `int` | `80` | 水平位置（距离左侧的像素） |
-| `y` | `int` | `20` | 垂直位置（距离顶部的像素） |
-| `duration` | `float\|None` | `None` | 显示时长（秒） |
+| `x` | `int` | `80` | 水平位置（距左侧的像素） |
+| `y` | `int` | `20` | 垂直位置（距顶部的像素） |
+| `duration` | `float\|None` | `None` | 显示持续时间（秒） |
 
 ## 字幕叠加
 
-有两种方式可以为视频添加字幕。
+有两种方法可以为视频添加字幕。
 
 ### 方法 1：字幕工作流（最简单）
 
@@ -213,7 +213,7 @@ stream_url = video.add_subtitle(style=SubtitleStyle(
 
 ### 方法 2：编辑器 API（高级）
 
-编辑器 API（`videodb.editor`）提供了一个基于轨道的合成系统，包含 `CaptionAsset`、`Clip`、`Track` 及其自身的 `Timeline`。这是一个与上述使用的 `videodb.timeline.Timeline` 独立的 API。
+编辑器 API (`videodb.editor`) 提供了一个基于轨道的合成系统，包含 `CaptionAsset`、`Clip`、`Track` 及其自身的 `Timeline`。这是一个与上面使用的 `videodb.timeline.Timeline` 分开的 API。
 
 ```python
 from videodb.editor import (
@@ -255,8 +255,8 @@ stream_url = editor_tl.generate_stream()
 |-----------|------|---------|-------------|
 | `src` | `str` | `"auto"` | 字幕来源（`"auto"` 或 base64 ASS 字符串） |
 | `font` | `FontStyling\|None` | `FontStyling()` | 字体样式（名称、大小、粗体、斜体等） |
-| `primary_color` | `str` | `"&H00FFFFFF"` | 主文本颜色（ASS 格式） |
-| `secondary_color` | `str` | `"&H000000FF"` | 次文本颜色（ASS 格式） |
+| `primary_color` | `str` | `"&H00FFFFFF"` | 主要文本颜色（ASS 格式） |
+| `secondary_color` | `str` | `"&H000000FF"` | 次要文本颜色（ASS 格式） |
 | `back_color` | `str` | `"&H00000000"` | 背景颜色（ASS 格式） |
 | `border` | `BorderAndShadow\|None` | `BorderAndShadow()` | 边框和阴影样式 |
 | `position` | `Positioning\|None` | `Positioning()` | 字幕对齐方式和边距 |
@@ -264,7 +264,7 @@ stream_url = editor_tl.generate_stream()
 
 ## 编译与流式传输
 
-组装好时间线后，将其编译成可流式传输的 URL。流是即时生成的——无需渲染等待时间。
+组装好时间线后，将其编译成可流式传输的 URL。流是即时生成的——无需等待渲染时间。
 
 ```python
 stream_url = timeline.generate_stream()
@@ -399,8 +399,8 @@ VideoDB 有两个独立的时间线系统。它们**不可互换**：
 |---|---|---|
 | **导入** | `from videodb.timeline import Timeline` | `from videodb.editor import Timeline as EditorTimeline` |
 | **素材** | `VideoAsset`、`AudioAsset`、`ImageAsset`、`TextAsset` | `CaptionAsset`、`Clip`、`Track` |
-| **方法** | `add_inline()`、`add_overlay()` | `add_track()` 配合 `Track` / `Clip` |
-| **最适合** | 视频合成、叠加、多片段编辑 | 带动画的字幕/字幕样式设计 |
+| **方法** | `add_inline()`、`add_overlay()` | `add_track()` 与 `Track` / `Clip` |
+| **最适合** | 视频合成、叠加、多片段编辑 | 带动画的字幕/字幕样式 |
 
 不要将一个 API 的素材混入另一个 API。`CaptionAsset` 仅适用于编辑器 API。`VideoAsset` / `AudioAsset` / `ImageAsset` / `TextAsset` 仅适用于 `videodb.timeline.Timeline`。
 
@@ -408,36 +408,36 @@ VideoDB 有两个独立的时间线系统。它们**不可互换**：
 
 时间线编辑器专为**非破坏性线性合成**而设计。**不支持**以下操作：
 
-### 不支持的操作
+### 不可行的操作
 
 | 限制 | 详情 |
 |---|---|
-| **无过渡或效果** | 片段之间没有交叉淡入淡出、划像、溶解或过渡。所有剪辑都是硬切。 |
+| **无过渡或效果** | 片段之间没有交叉淡入淡出、划像、溶解或过渡。所有剪切都是硬切。 |
 | **无视频叠加视频（画中画）** | `add_inline()` 只接受 `VideoAsset`。无法将一个视频流叠加在另一个之上。图像叠加可以近似静态画中画，但不能是实时视频。 |
-| **无速度或播放控制** | 没有慢动作、快进、倒放或时间重映射。`VideoAsset` 没有 `speed` 参数。 |
-| **无裁剪、缩放或平移** | 无法裁剪视频帧的区域、应用缩放效果或在帧上平移。`video.reframe()` 仅用于宽高比转换。 |
-| **无视频滤镜或色彩分级** | 没有亮度、对比度、饱和度、色调或色彩校正调整。 |
+| **无速度或播放控制** | 无慢动作、快进、反向播放或时间重映射。`VideoAsset` 没有 `speed` 参数。 |
+| **无裁剪、缩放或平移** | 无法裁剪视频帧的区域、应用缩放效果或平移帧。`video.reframe()` 仅用于宽高比转换。 |
+| **无视频滤镜或色彩分级** | 无亮度、对比度、饱和度、色调或色彩校正调整。 |
 | **无动画文本** | `TextAsset` 在其整个持续时间内是静态的。没有淡入/淡出、移动或动画。对于动画字幕，请使用带有编辑器 API 的 `CaptionAsset`。 |
-| **无混合文本样式** | 单个 `TextAsset` 只有一个 `TextStyle`。无法在单个文本块内混合粗体、斜体或颜色。 |
-| **无空白或纯色片段** | 无法创建纯色帧、黑屏或独立的标题卡。文本和图像叠加需要在内联轨道上有 `VideoAsset` 作为底层。 |
+| **无混合文本样式** | 单个 `TextAsset` 有一个 `TextStyle`。无法在单个文本块内混合粗体、斜体或颜色。 |
+| **无空白或纯色片段** | 无法创建纯色帧、黑屏或独立标题卡。文本和图像叠加需要内联轨道上有 `VideoAsset` 在其下方。 |
 | **无音频音量控制** | `AudioAsset` 没有 `volume` 参数。音频要么是全音量，要么通过 `disable_other_tracks` 静音。无法以降低的音量混合。 |
-| **无关键帧动画** | 无法随时间改变叠加属性（例如，将图像从位置 A 移动到 B）。 |
+| **无关键帧动画** | 无法随时间更改叠加属性（例如，将图像从位置 A 移动到 B）。 |
 
 ### 约束
 
 | 约束 | 详情 |
 |---|---|
 | **音频淡入淡出最长 5 秒** | `fade_in_duration` 和 `fade_out_duration` 各自上限为 5 秒。 |
-| **叠加层定位为绝对定位** | 叠加层使用时间轴起始点的绝对时间戳。重新排列内联片段不会移动其叠加层。 |
-| **内联轨道仅支持视频** | `add_inline()` 仅接受 `VideoAsset`。音频、图像和文本必须使用 `add_overlay()`。 |
-| **叠加层与片段无绑定关系** | 叠加层被放置在固定的时间轴时间戳上。无法将叠加层附加到特定的内联片段以使其随之移动。 |
+| **叠加层定位是绝对的** | 叠加层使用时间线起始的绝对时间戳。重新排列内联片段不会移动其叠加层。 |
+| **内联轨道仅限视频** | `add_inline()` 仅接受 `VideoAsset`。音频、图像和文本必须使用 `add_overlay()`。 |
+| **无叠加层到片段的绑定** | 叠加层放置在固定的时间线时间戳上。无法将叠加层附加到特定的内联片段以使其随之移动。 |
 
 ## 提示
 
-* **非破坏性**：时间轴从不修改源媒体。您可以使用相同的素材创建多个时间轴。
-* **叠加层堆叠**：多个叠加层可以在同一时间戳开始。音频叠加层会混合在一起；图像/文本叠加层按添加顺序分层叠加。
-* **内联轨道仅支持 VideoAsset**：`add_inline()` 仅接受 `VideoAsset`。对于 `AudioAsset`、`ImageAsset` 和 `TextAsset`，请使用 `add_overlay()`。
-* **裁剪精度**：`start`/`end` 在 `VideoAsset` 和 `AudioAsset` 上以秒为单位。
+* **非破坏性**：时间线从不修改源媒体。您可以从相同的素材创建多个时间线。
+* **叠加层堆叠**：多个叠加层可以在同一时间戳开始。音频叠加层会混合在一起；图像/文本叠加层按添加顺序分层。
+* **内联轨道仅限 VideoAsset**：`add_inline()` 仅接受 `VideoAsset`。对于 `AudioAsset`、`ImageAsset` 和 `TextAsset`，请使用 `add_overlay()`。
+* **修剪精度**：`start`/`end` 在 `VideoAsset` 和 `AudioAsset` 上以秒为单位。
 * **静音视频音频**：在 `AudioAsset` 上设置 `disable_other_tracks=True`，以便在叠加音乐或旁白时静音原始视频音频。
-* **淡入淡出限制**：`fade_in_duration` 和 `fade_out_duration` 在 `AudioAsset` 上最长不超过 5 秒。
-* **生成媒体**：使用 `coll.generate_music()`、`coll.generate_sound_effect()`、`coll.generate_voice()` 和 `coll.generate_image()` 创建可立即用作时间轴素材的媒体。
+* **淡入淡出限制**：`fade_in_duration` 和 `fade_out_duration` 在 `AudioAsset` 上最长 5 秒。
+* **生成媒体**：使用 `coll.generate_music()`、`coll.generate_sound_effect()`、`coll.generate_voice()` 和 `coll.generate_image()` 创建可立即用作时间线素材的媒体。

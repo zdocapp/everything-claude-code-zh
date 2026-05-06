@@ -1,6 +1,6 @@
 # 插件与市场
 
-插件扩展了 Claude Code 的功能，为其添加新工具和能力。本指南仅涵盖安装部分 - 关于何时以及为何使用插件，请参阅[完整文章](https://x.com/affaanmustafa/status/2012378465664745795)。
+插件扩展了 Claude Code 的功能，为其增添了新的工具和能力。本指南仅涵盖安装部分——关于何时以及为何使用插件，请参阅[完整文章](https://x.com/affaanmustafa/status/2012378465664745795)。
 
 ***
 
@@ -42,7 +42,7 @@ claude plugin install typescript-lsp@claude-plugins-official
 
 **开发：**
 
-* `typescript-lsp` - TypeScript 智能支持
+* `typescript-lsp` - TypeScript 智能辅助
 * `pyright-lsp` - Python 类型检查
 * `hookify` - 通过对话创建钩子
 * `code-simplifier` - 代码重构

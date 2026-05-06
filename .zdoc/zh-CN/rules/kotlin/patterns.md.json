@@ -1,0 +1,102 @@
+{
+  "sourceFile": "rules/kotlin/patterns.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.kt\"\n  - \"**/*.kts\"\n---"
+    },
+    {
+      "en-US": "# Kotlin Patterns",
+      "zh-Hans": "# Kotlin 模式"
+    },
+    {
+      "en-US": "> This file extends [common/patterns.md](../common/patterns.md) with Kotlin and Android/KMP-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 Kotlin 和 Android/KMP 特有的部分。"
+    },
+    {
+      "en-US": "## Dependency Injection",
+      "zh-Hans": "## 依赖注入"
+    },
+    {
+      "en-US": "Prefer constructor injection. Use Koin (KMP) or Hilt (Android-only):",
+      "zh-Hans": "优先使用构造函数注入。使用 Koin（KMP）或 Hilt（仅限 Android）："
+    },
+    {
+      "en-US": "```kotlin\n// Koin — declare modules\nval dataModule = module {\n    single<ItemRepository> { ItemRepositoryImpl(get(), get()) }\n    factory { GetItemsUseCase(get()) }\n    viewModelOf(::ItemListViewModel)\n}\n\n// Hilt — annotations\n@HiltViewModel\nclass ItemListViewModel @Inject constructor(\n    private val getItems: GetItemsUseCase\n) : ViewModel()\n```",
+      "zh-Hans": "```kotlin\n// Koin — declare modules\nval dataModule = module {\n    single<ItemRepository> { ItemRepositoryImpl(get(), get()) }\n    factory { GetItemsUseCase(get()) }\n    viewModelOf(::ItemListViewModel)\n}\n\n// Hilt — annotations\n@HiltViewModel\nclass ItemListViewModel @Inject constructor(\n    private val getItems: GetItemsUseCase\n) : ViewModel()\n```"
+    },
+    {
+      "en-US": "## ViewModel Pattern",
+      "zh-Hans": "## ViewModel 模式"
+    },
+    {
+      "en-US": "Single state object, event sink, one-way data flow:",
+      "zh-Hans": "单一状态对象、事件接收器、单向数据流："
+    },
+    {
+      "en-US": "```kotlin\ndata class ScreenState(\n    val items: List<Item> = emptyList(),\n    val isLoading: Boolean = false\n)\n\nclass ScreenViewModel(private val useCase: GetItemsUseCase) : ViewModel() {\n    private val _state = MutableStateFlow(ScreenState())\n    val state = _state.asStateFlow()\n\n    fun onEvent(event: ScreenEvent) {\n        when (event) {\n            is ScreenEvent.Load -> load()\n            is ScreenEvent.Delete -> delete(event.id)\n        }\n    }\n}\n```",
+      "zh-Hans": "```kotlin\ndata class ScreenState(\n    val items: List<Item> = emptyList(),\n    val isLoading: Boolean = false\n)\n\nclass ScreenViewModel(private val useCase: GetItemsUseCase) : ViewModel() {\n    private val _state = MutableStateFlow(ScreenState())\n    val state = _state.asStateFlow()\n\n    fun onEvent(event: ScreenEvent) {\n        when (event) {\n            is ScreenEvent.Load -> load()\n            is ScreenEvent.Delete -> delete(event.id)\n        }\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Repository Pattern",
+      "zh-Hans": "## 仓库模式"
+    },
+    {
+      "en-US": "- `suspend` functions return `Result<T>` or custom error type\n- `Flow` for reactive streams\n- Coordinate local + remote data sources",
+      "zh-Hans": "* `suspend` 函数返回 `Result<T>` 或自定义错误类型\n* 使用 `Flow` 处理响应式流\n* 协调本地和远程数据源"
+    },
+    {
+      "en-US": "```kotlin\ninterface ItemRepository {\n    suspend fun getById(id: String): Result<Item>\n    suspend fun getAll(): Result<List<Item>>\n    fun observeAll(): Flow<List<Item>>\n}\n```",
+      "zh-Hans": "```kotlin\ninterface ItemRepository {\n    suspend fun getById(id: String): Result<Item>\n    suspend fun getAll(): Result<List<Item>>\n    fun observeAll(): Flow<List<Item>>\n}\n```"
+    },
+    {
+      "en-US": "## UseCase Pattern",
+      "zh-Hans": "## 用例模式"
+    },
+    {
+      "en-US": "Single responsibility, `operator fun invoke`:",
+      "zh-Hans": "单一职责，`operator fun invoke`："
+    },
+    {
+      "en-US": "```kotlin\nclass GetItemUseCase(private val repository: ItemRepository) {\n    suspend operator fun invoke(id: String): Result<Item> {\n        return repository.getById(id)\n    }\n}\n\nclass GetItemsUseCase(private val repository: ItemRepository) {\n    suspend operator fun invoke(): Result<List<Item>> {\n        return repository.getAll()\n    }\n}\n```",
+      "zh-Hans": "```kotlin\nclass GetItemUseCase(private val repository: ItemRepository) {\n    suspend operator fun invoke(id: String): Result<Item> {\n        return repository.getById(id)\n    }\n}\n\nclass GetItemsUseCase(private val repository: ItemRepository) {\n    suspend operator fun invoke(): Result<List<Item>> {\n        return repository.getAll()\n    }\n}\n```"
+    },
+    {
+      "en-US": "## expect/actual (KMP)",
+      "zh-Hans": "## expect/actual（KMP）"
+    },
+    {
+      "en-US": "Use for platform-specific implementations:",
+      "zh-Hans": "用于平台特定的实现："
+    },
+    {
+      "en-US": "```kotlin\n// commonMain\nexpect fun platformName(): String\nexpect class SecureStorage {\n    fun save(key: String, value: String)\n    fun get(key: String): String?\n}\n\n// androidMain\nactual fun platformName(): String = \"Android\"\nactual class SecureStorage {\n    actual fun save(key: String, value: String) { /* EncryptedSharedPreferences */ }\n    actual fun get(key: String): String? = null /* ... */\n}\n\n// iosMain\nactual fun platformName(): String = \"iOS\"\nactual class SecureStorage {\n    actual fun save(key: String, value: String) { /* Keychain */ }\n    actual fun get(key: String): String? = null /* ... */\n}\n```",
+      "zh-Hans": "```kotlin\n// commonMain\nexpect fun platformName(): String\nexpect class SecureStorage {\n    fun save(key: String, value: String)\n    fun get(key: String): String?\n}\n\n// androidMain\nactual fun platformName(): String = \"Android\"\nactual class SecureStorage {\n    actual fun save(key: String, value: String) { /* EncryptedSharedPreferences */ }\n    actual fun get(key: String): String? = null /* ... */\n}\n\n// iosMain\nactual fun platformName(): String = \"iOS\"\nactual class SecureStorage {\n    actual fun save(key: String, value: String) { /* Keychain */ }\n    actual fun get(key: String): String? = null /* ... */\n}\n```"
+    },
+    {
+      "en-US": "## Coroutine Patterns",
+      "zh-Hans": "## 协程模式"
+    },
+    {
+      "en-US": "- Use `viewModelScope` in ViewModels, `coroutineScope` for structured child work\n- Use `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialValue)` for StateFlow from cold Flows\n- Use `supervisorScope` when child failures should be independent",
+      "zh-Hans": "* 在 ViewModels 中使用 `viewModelScope`，对于结构化的子任务使用 `coroutineScope`\n* 使用 `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialValue)` 从冷流创建 StateFlow\n* 当子任务失败应独立处理时，使用 `supervisorScope`"
+    },
+    {
+      "en-US": "## Builder Pattern with DSL",
+      "zh-Hans": "## 使用 DSL 的构建器模式"
+    },
+    {
+      "en-US": "```kotlin\nclass HttpClientConfig {\n    var baseUrl: String = \"\"\n    var timeout: Long = 30_000\n    private val interceptors = mutableListOf<Interceptor>()\n\n    fun interceptor(block: () -> Interceptor) {\n        interceptors.add(block())\n    }\n}\n\nfun httpClient(block: HttpClientConfig.() -> Unit): HttpClient {\n    val config = HttpClientConfig().apply(block)\n    return HttpClient(config)\n}\n\n// Usage\nval client = httpClient {\n    baseUrl = \"https://api.example.com\"\n    timeout = 15_000\n    interceptor { AuthInterceptor(tokenProvider) }\n}\n```",
+      "zh-Hans": "```kotlin\nclass HttpClientConfig {\n    var baseUrl: String = \"\"\n    var timeout: Long = 30_000\n    private val interceptors = mutableListOf<Interceptor>()\n\n    fun interceptor(block: () -> Interceptor) {\n        interceptors.add(block())\n    }\n}\n\nfun httpClient(block: HttpClientConfig.() -> Unit): HttpClient {\n    val config = HttpClientConfig().apply(block)\n    return HttpClient(config)\n}\n\n// Usage\nval client = httpClient {\n    baseUrl = \"https://api.example.com\"\n    timeout = 15_000\n    interceptor { AuthInterceptor(tokenProvider) }\n}\n```"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "See skill: `kotlin-coroutines-flows` for detailed coroutine patterns.\nSee skill: `android-clean-architecture` for module and layer patterns.",
+      "zh-Hans": "详细协程模式请参见技能：`kotlin-coroutines-flows`。\n模块和分层模式请参见技能：`android-clean-architecture`。"
+    }
+  ]
+}

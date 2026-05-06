@@ -1,0 +1,102 @@
+{
+  "sourceFile": "skills/security-bounty-hunter/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: security-bounty-hunter\ndescription: Hunt for exploitable, bounty-worthy security issues in repositories. Focuses on remotely reachable vulnerabilities that qualify for real reports instead of noisy local-only findings.\norigin: ECC direct-port adaptation\nversion: \"1.0.0\"\n---",
+      "zh-Hans": "---\nname: security-bounty-hunter\ndescription: 在代码仓库中搜寻可利用、值得赏金的安全问题。专注于远程可访问的漏洞，这些漏洞符合真实报告的要求，而非仅限本地发现的噪音。\norigin: ECC direct-port adaptation\nversion: \"1.0.0\"\n---"
+    },
+    {
+      "en-US": "# Security Bounty Hunter",
+      "zh-Hans": "# 安全赏金猎人"
+    },
+    {
+      "en-US": "Use this when the goal is practical vulnerability discovery for responsible disclosure or bounty submission, not a broad best-practices review.",
+      "zh-Hans": "当目标是进行实际漏洞发现以进行负责任披露或赏金提交时使用此方法，而非进行宽泛的最佳实践审查。"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- Scanning a repository for exploitable vulnerabilities\n- Preparing a Huntr, HackerOne, or similar bounty submission\n- Triage where the question is \"does this actually pay?\" rather than \"is this theoretically unsafe?\"",
+      "zh-Hans": "* 扫描代码库以寻找可利用的漏洞\n* 准备 Huntr、HackerOne 或类似赏金平台的提交\n* 进行问题分类，此时的问题是\"这实际上能获得赏金吗？\"而非\"这在理论上是否不安全？\""
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "Bias toward remotely reachable, user-controlled attack paths and throw away patterns that platforms routinely reject as informative or out of scope.",
+      "zh-Hans": "偏向于远程可访问、用户可控的攻击路径，并丢弃那些平台通常会以信息性不足或超出范围为由拒绝的模式。"
+    },
+    {
+      "en-US": "## In-Scope Patterns",
+      "zh-Hans": "## 范围内模式"
+    },
+    {
+      "en-US": "These are the kinds of issues that consistently matter:",
+      "zh-Hans": "以下是通常具有重要意义的漏洞类型："
+    },
+    {
+      "en-US": "| Pattern | CWE | Typical impact |\n| --- | --- | --- |\n| SSRF through user-controlled URLs | CWE-918 | internal network access, cloud metadata theft |\n| Auth bypass in middleware or API guards | CWE-287 | unauthorized account or data access |\n| Remote deserialization or upload-to-RCE paths | CWE-502 | code execution |\n| SQL injection in reachable endpoints | CWE-89 | data exfiltration, auth bypass, data destruction |\n| Command injection in request handlers | CWE-78 | code execution |\n| Path traversal in file-serving paths | CWE-22 | arbitrary file read or write |\n| Auto-triggered XSS | CWE-79 | session theft, admin compromise |",
+      "zh-Hans": "| 模式 | CWE | 典型影响 |\n| --- | --- | --- |\n| 通过用户可控 URL 的 SSRF | CWE-918 | 内部网络访问、云元数据窃取 |\n| 中间件或 API 防护中的身份验证绕过 | CWE-287 | 未经授权的账户或数据访问 |\n| 远程反序列化或上传到 RCE 的路径 | CWE-502 | 代码执行 |\n| 可访问端点中的 SQL 注入 | CWE-89 | 数据泄露、身份验证绕过、数据破坏 |\n| 请求处理器中的命令注入 | CWE-78 | 代码执行 |\n| 文件服务路径中的路径遍历 | CWE-22 | 任意文件读取或写入 |\n| 自动触发的 XSS | CWE-79 | 会话窃取、管理员账户被攻陷 |"
+    },
+    {
+      "en-US": "## Skip These",
+      "zh-Hans": "## 跳过这些"
+    },
+    {
+      "en-US": "These are usually low-signal or out of bounty scope unless the program says otherwise:",
+      "zh-Hans": "除非项目另有说明，否则这些通常是低价值或超出赏金范围的："
+    },
+    {
+      "en-US": "- Local-only `pickle.loads`, `torch.load`, or equivalent with no remote path\n- `eval()` or `exec()` in CLI-only tooling\n- `shell=True` on fully hardcoded commands\n- Missing security headers by themselves\n- Generic rate-limiting complaints without exploit impact\n- Self-XSS requiring the victim to paste code manually\n- CI/CD injection that is not part of the target program scope\n- Demo, example, or test-only code",
+      "zh-Hans": "* 仅限本地的 `pickle.loads`、`torch.load` 或等效情况，且没有远程路径\n* 仅在 CLI 工具中的 `eval()` 或 `exec()`\n* 完全硬编码命令上的 `shell=True`\n* 单独存在的缺少安全标头问题\n* 没有实际利用影响的通用速率限制投诉\n* 需要受害者手动粘贴代码的 Self-XSS\n* 不属于目标项目范围的 CI/CD 注入\n* 演示、示例或仅用于测试的代码"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "1. Check scope first: program rules, SECURITY.md, disclosure channel, and exclusions.\n2. Find real entrypoints: HTTP handlers, uploads, background jobs, webhooks, parsers, and integration endpoints.\n3. Run static tooling where it helps, but treat it as triage input only.\n4. Read the real code path end to end.\n5. Prove user control reaches a meaningful sink.\n6. Confirm exploitability and impact with the smallest safe PoC possible.\n7. Check for duplicates before drafting a report.",
+      "zh-Hans": "1. 首先检查范围：项目规则、SECURITY.md、披露渠道和排除项。\n2. 寻找真实的入口点：HTTP 处理器、上传功能、后台作业、Webhook、解析器和集成端点。\n3. 在有用时运行静态分析工具，但仅将其视为分类输入。\n4. 从头到尾阅读真实的代码路径。\n5. 证明用户控制能够到达一个有意义的接收点。\n6. 用尽可能小的安全 PoC 确认可利用性和影响。\n7. 在起草报告前检查重复项。"
+    },
+    {
+      "en-US": "## Example Triage Loop",
+      "zh-Hans": "## 示例分类循环"
+    },
+    {
+      "en-US": "```bash\nsemgrep --config=auto --severity=ERROR --severity=WARNING --json\n```",
+      "zh-Hans": "```bash\nsemgrep --config=auto --severity=ERROR --severity=WARNING --json\n```"
+    },
+    {
+      "en-US": "Then manually filter:",
+      "zh-Hans": "然后手动筛选："
+    },
+    {
+      "en-US": "- drop tests, demos, fixtures, vendored code\n- drop local-only or non-reachable paths\n- keep only findings with a clear network or user-controlled route",
+      "zh-Hans": "* 丢弃测试、演示、固定装置、供应商代码\n* 丢弃仅限本地或不可访问的路径\n* 仅保留具有明确网络或用户可控路径的发现"
+    },
+    {
+      "en-US": "## Report Structure",
+      "zh-Hans": "## 报告结构"
+    },
+    {
+      "en-US": "```markdown\n## Description\n[What the vulnerability is and why it matters]\n\n## Vulnerable Code\n[File path, line range, and a small snippet]\n\n## Proof of Concept\n[Minimal working request or script]\n\n## Impact\n[What the attacker can achieve]\n\n## Affected Version\n[Version, commit, or deployment target tested]\n```",
+      "zh-Hans": "```markdown\n## 描述\n[漏洞是什么以及为何重要]\n\n## 漏洞代码\n[文件路径、行号范围及简短代码片段]\n\n## 验证步骤\n[最小可复现的请求或脚本]\n\n## 影响\n[攻击者能实现什么]\n\n## 受影响版本\n[测试的版本、提交或部署目标]\n```"
+    },
+    {
+      "en-US": "## Quality Gate",
+      "zh-Hans": "## 质量关卡"
+    },
+    {
+      "en-US": "Before submitting:",
+      "zh-Hans": "提交前请确认："
+    },
+    {
+      "en-US": "- The code path is reachable from a real user or network boundary\n- The input is genuinely user-controlled\n- The sink is meaningful and exploitable\n- The PoC works\n- The issue is not already covered by an advisory, CVE, or open ticket\n- The target is actually in scope for the bounty program",
+      "zh-Hans": "* 代码路径可以从真实用户或网络边界访问\n* 输入确实是用户可控的\n* 接收点有意义且可利用\n* PoC 有效\n* 该问题尚未被安全公告、CVE 或开放工单覆盖\n* 目标确实在赏金项目的范围内"
+    }
+  ]
+}

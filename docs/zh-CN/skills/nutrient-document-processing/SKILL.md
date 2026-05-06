@@ -1,22 +1,24 @@
 ---
 name: nutrient-document-processing
-description: 使用Nutrient DWS API处理、转换、OCR识别、提取、编辑、签名和填写文档。支持PDF、DOCX、XLSX、PPTX、HTML和图像格式。
+description: 使用Nutrient DWS API处理、转换、OCR识别、提取、编辑、签署和填写文档。支持PDF、DOCX、XLSX、PPTX、HTML和图像格式。
 origin: ECC
 ---
 
-# 文档处理
+# 文档处理技能
 
-使用 [Nutrient DWS Processor API](https://www.nutrient.io/api/) 处理文档。转换格式、提取文本和表格、对扫描文档进行 OCR、编辑 PII、添加水印、数字签名以及填写 PDF 表单。
+> **注意：** 此技能集成了 Nutrient 商业 API。使用前请查阅其条款。
+
+使用 [Nutrient DWS 处理器 API](https://www.nutrient.io/api/) 处理文档。转换格式、提取文本和表格、对扫描文档进行 OCR、编辑 PII、添加水印、数字签名以及填写 PDF 表单。
 
 ## 设置
 
-在 **[nutrient.io](https://dashboard.nutrient.io/sign_up/?product=processor)** 获取一个免费的 API 密钥
+在 **[nutrient.io](https://dashboard.nutrient.io/sign_up/?product=processor)** 获取免费 API 密钥。
 
 ```bash
 export NUTRIENT_API_KEY="pdf_live_..."
 ```
 
-所有请求都以 multipart POST 形式发送到 `https://api.nutrient.io/build`，并附带一个 `instructions` JSON 字段。
+所有请求都发送到 `https://api.nutrient.io/build`，作为带有 `instructions` JSON 字段的多部分 POST 请求。
 
 ## 操作
 
@@ -65,7 +67,7 @@ curl -X POST https://api.nutrient.io/build \
   -o tables.xlsx
 ```
 
-### OCR 扫描文档
+### 对扫描文档进行 OCR
 
 ```bash
 # OCR to searchable PDF (supports 100+ languages)
@@ -76,7 +78,7 @@ curl -X POST https://api.nutrient.io/build \
   -o searchable.pdf
 ```
 
-支持语言：通过 ISO 639-2 代码支持 100 多种语言（例如，`eng`, `deu`, `fra`, `spa`, `jpn`, `kor`, `chi_sim`, `chi_tra`, `ara`, `hin`, `rus`）。完整的语言名称如 `english` 或 `german` 也适用。查看 [完整的 OCR 语言表](https://www.nutrient.io/guides/document-engine/ocr/language-support/) 以获取所有支持的代码。
+支持语言：通过 ISO 639-2 代码支持 100 多种语言（例如 `eng`, `deu`, `fra`, `spa`, `jpn`, `kor`, `chi_sim`, `chi_tra`, `ara`, `hin`, `rus`）。完整的语言名称如 `english` 或 `german` 也适用。查看 [完整的 OCR 语言表](https://www.nutrient.io/guides/document-engine/ocr/language-support/) 以获取所有支持的代码。
 
 ### 编辑敏感信息
 
@@ -155,11 +157,11 @@ curl -X POST https://api.nutrient.io/build \
 * 对扫描文档或图像进行 OCR
 * 在共享文档前编辑 PII
 * 为草稿或机密文档添加水印
-* 数字签署合同或协议
+* 对合同或协议进行数字签名
 * 以编程方式填写 PDF 表单
 
 ## 链接
 
-* [API 游乐场](https://dashboard.nutrient.io/processor-api/playground/)
+* [API 演练场](https://dashboard.nutrient.io/processor-api/playground/)
 * [完整 API 文档](https://www.nutrient.io/guides/dws-processor/)
 * [npm MCP 服务器](https://www.npmjs.com/package/@nutrient-sdk/dws-mcp-server)

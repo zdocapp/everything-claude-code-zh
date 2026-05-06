@@ -1,0 +1,114 @@
+{
+  "sourceFile": "skills/csharp-testing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: csharp-testing\ndescription: C# and .NET testing patterns with xUnit, FluentAssertions, mocking, integration tests, and test organization best practices.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: csharp-testing\ndescription: C# 和 .NET 测试模式，包括 xUnit、FluentAssertions、模拟、集成测试以及测试组织最佳实践。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# C# Testing Patterns",
+      "zh-Hans": "# C# 测试模式"
+    },
+    {
+      "en-US": "Comprehensive testing patterns for .NET applications using xUnit, FluentAssertions, and modern testing practices.",
+      "zh-Hans": "使用 xUnit、FluentAssertions 和现代测试实践的 .NET 应用程序综合测试模式。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Writing new tests for C# code\n- Reviewing test quality and coverage\n- Setting up test infrastructure for .NET projects\n- Debugging flaky or slow tests",
+      "zh-Hans": "* 为 C# 代码编写新测试时\n* 审查测试质量和覆盖率时\n* 为 .NET 项目设置测试基础设施时\n* 调试不稳定或缓慢的测试时"
+    },
+    {
+      "en-US": "## Test Framework Stack",
+      "zh-Hans": "## 测试框架栈"
+    },
+    {
+      "en-US": "| Tool | Purpose |\n|---|---|\n| **xUnit** | Test framework (preferred for .NET) |\n| **FluentAssertions** | Readable assertion syntax |\n| **NSubstitute** or **Moq** | Mocking dependencies |\n| **Testcontainers** | Real infrastructure in integration tests |\n| **WebApplicationFactory** | ASP.NET Core integration tests |\n| **Bogus** | Realistic test data generation |",
+      "zh-Hans": "| 工具 | 用途 |\n|---|---|\n| **xUnit** | 测试框架（.NET 首选） |\n| **FluentAssertions** | 可读的断言语法 |\n| **NSubstitute** 或 **Moq** | 模拟依赖项 |\n| **Testcontainers** | 集成测试中的真实基础设施 |\n| **WebApplicationFactory** | ASP.NET Core 集成测试 |\n| **Bogus** | 逼真的测试数据生成 |"
+    },
+    {
+      "en-US": "## Unit Test Structure",
+      "zh-Hans": "## 单元测试结构"
+    },
+    {
+      "en-US": "### Arrange-Act-Assert",
+      "zh-Hans": "### 准备-执行-断言"
+    },
+    {
+      "en-US": "```csharp\npublic sealed class OrderServiceTests\n{\n    private readonly IOrderRepository _repository = Substitute.For<IOrderRepository>();\n    private readonly ILogger<OrderService> _logger = Substitute.For<ILogger<OrderService>>();\n    private readonly OrderService _sut;\n\n    public OrderServiceTests()\n    {\n        _sut = new OrderService(_repository, _logger);\n    }\n\n    [Fact]\n    public async Task PlaceOrderAsync_ReturnsSuccess_WhenRequestIsValid()\n    {\n        // Arrange\n        var request = new CreateOrderRequest\n        {\n            CustomerId = \"cust-123\",\n            Items = [new OrderItem(\"SKU-001\", 2, 29.99m)]\n        };\n\n        // Act\n        var result = await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n        // Assert\n        result.IsSuccess.Should().BeTrue();\n        result.Value.Should().NotBeNull();\n        result.Value!.CustomerId.Should().Be(\"cust-123\");\n    }\n\n    [Fact]\n    public async Task PlaceOrderAsync_ReturnsFailure_WhenNoItems()\n    {\n        // Arrange\n        var request = new CreateOrderRequest\n        {\n            CustomerId = \"cust-123\",\n            Items = []\n        };\n\n        // Act\n        var result = await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n        // Assert\n        result.IsSuccess.Should().BeFalse();\n        result.Error.Should().Contain(\"at least one item\");\n    }\n}\n```",
+      "zh-Hans": "```csharp\npublic sealed class OrderServiceTests\n{\n    private readonly IOrderRepository _repository = Substitute.For<IOrderRepository>();\n    private readonly ILogger<OrderService> _logger = Substitute.For<ILogger<OrderService>>();\n    private readonly OrderService _sut;\n\n    public OrderServiceTests()\n    {\n        _sut = new OrderService(_repository, _logger);\n    }\n\n    [Fact]\n    public async Task PlaceOrderAsync_ReturnsSuccess_WhenRequestIsValid()\n    {\n        // Arrange\n        var request = new CreateOrderRequest\n        {\n            CustomerId = \"cust-123\",\n            Items = [new OrderItem(\"SKU-001\", 2, 29.99m)]\n        };\n\n        // Act\n        var result = await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n        // Assert\n        result.IsSuccess.Should().BeTrue();\n        result.Value.Should().NotBeNull();\n        result.Value!.CustomerId.Should().Be(\"cust-123\");\n    }\n\n    [Fact]\n    public async Task PlaceOrderAsync_ReturnsFailure_WhenNoItems()\n    {\n        // Arrange\n        var request = new CreateOrderRequest\n        {\n            CustomerId = \"cust-123\",\n            Items = []\n        };\n\n        // Act\n        var result = await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n        // Assert\n        result.IsSuccess.Should().BeFalse();\n        result.Error.Should().Contain(\"at least one item\");\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Parameterized Tests with Theory",
+      "zh-Hans": "### 使用 Theory 的参数化测试"
+    },
+    {
+      "en-US": "```csharp\n[Theory]\n[InlineData(\"\", false)]\n[InlineData(\"a\", false)]\n[InlineData(\"ab@c.d\", false)]\n[InlineData(\"user@example.com\", true)]\n[InlineData(\"user+tag@example.co.uk\", true)]\npublic void IsValidEmail_ReturnsExpected(string email, bool expected)\n{\n    EmailValidator.IsValid(email).Should().Be(expected);\n}\n\n[Theory]\n[MemberData(nameof(InvalidOrderCases))]\npublic async Task PlaceOrderAsync_RejectsInvalidOrders(CreateOrderRequest request, string expectedError)\n{\n    var result = await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n    result.IsSuccess.Should().BeFalse();\n    result.Error.Should().Contain(expectedError);\n}\n\npublic static TheoryData<CreateOrderRequest, string> InvalidOrderCases => new()\n{\n    { new() { CustomerId = \"\", Items = [ValidItem()] }, \"CustomerId\" },\n    { new() { CustomerId = \"c1\", Items = [] }, \"at least one item\" },\n    { new() { CustomerId = \"c1\", Items = [new(\"\", 1, 10m)] }, \"SKU\" },\n};\n```",
+      "zh-Hans": "```csharp\n[Theory]\n[InlineData(\"\", false)]\n[InlineData(\"a\", false)]\n[InlineData(\"ab@c.d\", false)]\n[InlineData(\"user@example.com\", true)]\n[InlineData(\"user+tag@example.co.uk\", true)]\npublic void IsValidEmail_ReturnsExpected(string email, bool expected)\n{\n    EmailValidator.IsValid(email).Should().Be(expected);\n}\n\n[Theory]\n[MemberData(nameof(InvalidOrderCases))]\npublic async Task PlaceOrderAsync_RejectsInvalidOrders(CreateOrderRequest request, string expectedError)\n{\n    var result = await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n    result.IsSuccess.Should().BeFalse();\n    result.Error.Should().Contain(expectedError);\n}\n\npublic static TheoryData<CreateOrderRequest, string> InvalidOrderCases => new()\n{\n    { new() { CustomerId = \"\", Items = [ValidItem()] }, \"CustomerId\" },\n    { new() { CustomerId = \"c1\", Items = [] }, \"at least one item\" },\n    { new() { CustomerId = \"c1\", Items = [new(\"\", 1, 10m)] }, \"SKU\" },\n};\n```"
+    },
+    {
+      "en-US": "## Mocking with NSubstitute",
+      "zh-Hans": "## 使用 NSubstitute 进行模拟"
+    },
+    {
+      "en-US": "```csharp\n[Fact]\npublic async Task GetOrderAsync_ReturnsNull_WhenNotFound()\n{\n    // Arrange\n    var orderId = Guid.NewGuid();\n    _repository.FindByIdAsync(orderId, Arg.Any<CancellationToken>())\n        .Returns((Order?)null);\n\n    // Act\n    var result = await _sut.GetOrderAsync(orderId, CancellationToken.None);\n\n    // Assert\n    result.Should().BeNull();\n}\n\n[Fact]\npublic async Task PlaceOrderAsync_PersistsOrder()\n{\n    // Arrange\n    var request = ValidOrderRequest();\n\n    // Act\n    await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n    // Assert — verify the repository was called\n    await _repository.Received(1).AddAsync(\n        Arg.Is<Order>(o => o.CustomerId == request.CustomerId),\n        Arg.Any<CancellationToken>());\n}\n```",
+      "zh-Hans": "```csharp\n[Fact]\npublic async Task GetOrderAsync_ReturnsNull_WhenNotFound()\n{\n    // Arrange\n    var orderId = Guid.NewGuid();\n    _repository.FindByIdAsync(orderId, Arg.Any<CancellationToken>())\n        .Returns((Order?)null);\n\n    // Act\n    var result = await _sut.GetOrderAsync(orderId, CancellationToken.None);\n\n    // Assert\n    result.Should().BeNull();\n}\n\n[Fact]\npublic async Task PlaceOrderAsync_PersistsOrder()\n{\n    // Arrange\n    var request = ValidOrderRequest();\n\n    // Act\n    await _sut.PlaceOrderAsync(request, CancellationToken.None);\n\n    // Assert — verify the repository was called\n    await _repository.Received(1).AddAsync(\n        Arg.Is<Order>(o => o.CustomerId == request.CustomerId),\n        Arg.Any<CancellationToken>());\n}\n```"
+    },
+    {
+      "en-US": "## ASP.NET Core Integration Tests",
+      "zh-Hans": "## ASP.NET Core 集成测试"
+    },
+    {
+      "en-US": "### WebApplicationFactory Setup",
+      "zh-Hans": "### WebApplicationFactory 设置"
+    },
+    {
+      "en-US": "```csharp\npublic sealed class OrderApiTests : IClassFixture<WebApplicationFactory<Program>>\n{\n    private readonly HttpClient _client;\n\n    public OrderApiTests(WebApplicationFactory<Program> factory)\n    {\n        _client = factory.WithWebHostBuilder(builder =>\n        {\n            builder.ConfigureServices(services =>\n            {\n                // Replace real DB with in-memory for tests\n                services.RemoveAll<DbContextOptions<AppDbContext>>();\n                services.AddDbContext<AppDbContext>(options =>\n                    options.UseInMemoryDatabase(\"TestDb\"));\n            });\n        }).CreateClient();\n    }\n\n    [Fact]\n    public async Task GetOrder_Returns404_WhenNotFound()\n    {\n        var response = await _client.GetAsync($\"/api/orders/{Guid.NewGuid()}\");\n\n        response.StatusCode.Should().Be(HttpStatusCode.NotFound);\n    }\n\n    [Fact]\n    public async Task CreateOrder_Returns201_WithValidRequest()\n    {\n        var request = new CreateOrderRequest\n        {\n            CustomerId = \"cust-1\",\n            Items = [new(\"SKU-001\", 1, 19.99m)]\n        };\n\n        var response = await _client.PostAsJsonAsync(\"/api/orders\", request);\n\n        response.StatusCode.Should().Be(HttpStatusCode.Created);\n        response.Headers.Location.Should().NotBeNull();\n    }\n}\n```",
+      "zh-Hans": "```csharp\npublic sealed class OrderApiTests : IClassFixture<WebApplicationFactory<Program>>\n{\n    private readonly HttpClient _client;\n\n    public OrderApiTests(WebApplicationFactory<Program> factory)\n    {\n        _client = factory.WithWebHostBuilder(builder =>\n        {\n            builder.ConfigureServices(services =>\n            {\n                // Replace real DB with in-memory for tests\n                services.RemoveAll<DbContextOptions<AppDbContext>>();\n                services.AddDbContext<AppDbContext>(options =>\n                    options.UseInMemoryDatabase(\"TestDb\"));\n            });\n        }).CreateClient();\n    }\n\n    [Fact]\n    public async Task GetOrder_Returns404_WhenNotFound()\n    {\n        var response = await _client.GetAsync($\"/api/orders/{Guid.NewGuid()}\");\n\n        response.StatusCode.Should().Be(HttpStatusCode.NotFound);\n    }\n\n    [Fact]\n    public async Task CreateOrder_Returns201_WithValidRequest()\n    {\n        var request = new CreateOrderRequest\n        {\n            CustomerId = \"cust-1\",\n            Items = [new(\"SKU-001\", 1, 19.99m)]\n        };\n\n        var response = await _client.PostAsJsonAsync(\"/api/orders\", request);\n\n        response.StatusCode.Should().Be(HttpStatusCode.Created);\n        response.Headers.Location.Should().NotBeNull();\n    }\n}\n```"
+    },
+    {
+      "en-US": "### Testing with Testcontainers",
+      "zh-Hans": "### 使用 Testcontainers 进行测试"
+    },
+    {
+      "en-US": "```csharp\npublic sealed class PostgresOrderRepositoryTests : IAsyncLifetime\n{\n    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()\n        .WithImage(\"postgres:16-alpine\")\n        .Build();\n\n    private AppDbContext _db = null!;\n\n    public async Task InitializeAsync()\n    {\n        await _postgres.StartAsync();\n        var options = new DbContextOptionsBuilder<AppDbContext>()\n            .UseNpgsql(_postgres.GetConnectionString())\n            .Options;\n        _db = new AppDbContext(options);\n        await _db.Database.MigrateAsync();\n    }\n\n    public async Task DisposeAsync()\n    {\n        await _db.DisposeAsync();\n        await _postgres.DisposeAsync();\n    }\n\n    [Fact]\n    public async Task AddAsync_PersistsOrder()\n    {\n        var repo = new SqlOrderRepository(_db);\n        var order = Order.Create(\"cust-1\", [new OrderItem(\"SKU-001\", 2, 10m)]);\n\n        await repo.AddAsync(order, CancellationToken.None);\n\n        var found = await repo.FindByIdAsync(order.Id, CancellationToken.None);\n        found.Should().NotBeNull();\n        found!.Items.Should().HaveCount(1);\n    }\n}\n```",
+      "zh-Hans": "```csharp\npublic sealed class PostgresOrderRepositoryTests : IAsyncLifetime\n{\n    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()\n        .WithImage(\"postgres:16-alpine\")\n        .Build();\n\n    private AppDbContext _db = null!;\n\n    public async Task InitializeAsync()\n    {\n        await _postgres.StartAsync();\n        var options = new DbContextOptionsBuilder<AppDbContext>()\n            .UseNpgsql(_postgres.GetConnectionString())\n            .Options;\n        _db = new AppDbContext(options);\n        await _db.Database.MigrateAsync();\n    }\n\n    public async Task DisposeAsync()\n    {\n        await _db.DisposeAsync();\n        await _postgres.DisposeAsync();\n    }\n\n    [Fact]\n    public async Task AddAsync_PersistsOrder()\n    {\n        var repo = new SqlOrderRepository(_db);\n        var order = Order.Create(\"cust-1\", [new OrderItem(\"SKU-001\", 2, 10m)]);\n\n        await repo.AddAsync(order, CancellationToken.None);\n\n        var found = await repo.FindByIdAsync(order.Id, CancellationToken.None);\n        found.Should().NotBeNull();\n        found!.Items.Should().HaveCount(1);\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Test Organization",
+      "zh-Hans": "## 测试组织"
+    },
+    {
+      "en-US": "```\ntests/\n  MyApp.UnitTests/\n    Services/\n      OrderServiceTests.cs\n      PaymentServiceTests.cs\n    Validators/\n      EmailValidatorTests.cs\n  MyApp.IntegrationTests/\n    Api/\n      OrderApiTests.cs\n    Repositories/\n      OrderRepositoryTests.cs\n  MyApp.TestHelpers/\n    Builders/\n      OrderBuilder.cs\n    Fixtures/\n      DatabaseFixture.cs\n```",
+      "zh-Hans": "```\ntests/\n  MyApp.UnitTests/\n    Services/\n      OrderServiceTests.cs\n      PaymentServiceTests.cs\n    Validators/\n      EmailValidatorTests.cs\n  MyApp.IntegrationTests/\n    Api/\n      OrderApiTests.cs\n    Repositories/\n      OrderRepositoryTests.cs\n  MyApp.TestHelpers/\n    Builders/\n      OrderBuilder.cs\n    Fixtures/\n      DatabaseFixture.cs\n```"
+    },
+    {
+      "en-US": "## Test Data Builders",
+      "zh-Hans": "## 测试数据构建器"
+    },
+    {
+      "en-US": "```csharp\npublic sealed class OrderBuilder\n{\n    private string _customerId = \"cust-default\";\n    private readonly List<OrderItem> _items = [new(\"SKU-001\", 1, 10m)];\n\n    public OrderBuilder WithCustomer(string customerId)\n    {\n        _customerId = customerId;\n        return this;\n    }\n\n    public OrderBuilder WithItem(string sku, int quantity, decimal price)\n    {\n        _items.Add(new OrderItem(sku, quantity, price));\n        return this;\n    }\n\n    public Order Build() => Order.Create(_customerId, _items);\n}\n\n// Usage in tests\nvar order = new OrderBuilder()\n    .WithCustomer(\"cust-vip\")\n    .WithItem(\"SKU-PREMIUM\", 3, 99.99m)\n    .Build();\n```",
+      "zh-Hans": "```csharp\npublic sealed class OrderBuilder\n{\n    private string _customerId = \"cust-default\";\n    private readonly List<OrderItem> _items = [new(\"SKU-001\", 1, 10m)];\n\n    public OrderBuilder WithCustomer(string customerId)\n    {\n        _customerId = customerId;\n        return this;\n    }\n\n    public OrderBuilder WithItem(string sku, int quantity, decimal price)\n    {\n        _items.Add(new OrderItem(sku, quantity, price));\n        return this;\n    }\n\n    public Order Build() => Order.Create(_customerId, _items);\n}\n\n// Usage in tests\nvar order = new OrderBuilder()\n    .WithCustomer(\"cust-vip\")\n    .WithItem(\"SKU-PREMIUM\", 3, 99.99m)\n    .Build();\n```"
+    },
+    {
+      "en-US": "## Common Anti-Patterns",
+      "zh-Hans": "## 常见反模式"
+    },
+    {
+      "en-US": "| Anti-Pattern | Fix |\n|---|---|\n| Testing implementation details | Test behavior and outcomes |\n| Shared mutable test state | Fresh instance per test (xUnit does this via constructors) |\n| `Thread.Sleep` in async tests | Use `Task.Delay` with timeout, or polling helpers |\n| Asserting on `ToString()` output | Assert on typed properties |\n| One giant assertion per test | One logical assertion per test |\n| Test names describing implementation | Name by behavior: `Method_ExpectedResult_WhenCondition` |\n| Ignoring `CancellationToken` | Always pass and verify cancellation |",
+      "zh-Hans": "| 反模式 | 修复方法 |\n|---|---|\n| 测试实现细节 | 测试行为和结果 |\n| 共享可变测试状态 | 每个测试使用新实例（xUnit 通过构造函数实现） |\n| 在异步测试中使用 `Thread.Sleep` | 使用带超时的 `Task.Delay`，或轮询辅助工具 |\n| 断言 `ToString()` 输出 | 断言类型化属性 |\n| 每个测试一个巨型断言 | 每个测试一个逻辑断言 |\n| 测试名称描述实现 | 按行为命名：`Method_ExpectedResult_WhenCondition` |\n| 忽略 `CancellationToken` | 始终传递并验证取消 |"
+    },
+    {
+      "en-US": "## Running Tests",
+      "zh-Hans": "## 运行测试"
+    },
+    {
+      "en-US": "```bash\n# Run all tests\ndotnet test\n\n# Run with coverage\ndotnet test --collect:\"XPlat Code Coverage\"\n\n# Run specific project\ndotnet test tests/MyApp.UnitTests/\n\n# Filter by test name\ndotnet test --filter \"FullyQualifiedName~OrderService\"\n\n# Watch mode during development\ndotnet watch test --project tests/MyApp.UnitTests/\n```",
+      "zh-Hans": "```bash\n# Run all tests\ndotnet test\n\n# Run with coverage\ndotnet test --collect:\"XPlat Code Coverage\"\n\n# Run specific project\ndotnet test tests/MyApp.UnitTests/\n\n# Filter by test name\ndotnet test --filter \"FullyQualifiedName~OrderService\"\n\n# Watch mode during development\ndotnet watch test --project tests/MyApp.UnitTests/\n```"
+    }
+  ]
+}

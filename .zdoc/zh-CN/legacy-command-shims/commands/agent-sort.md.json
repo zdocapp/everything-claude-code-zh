@@ -1,0 +1,46 @@
+{
+  "sourceFile": "legacy-command-shims/commands/agent-sort.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the agent-sort skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于 agent-sort 技能的旧版斜杠入口填充。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Agent Sort (Legacy Shim)",
+      "zh-Hans": "# 代理分类（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/agent-sort`. The maintained workflow lives in `skills/agent-sort/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/agent-sort` 时使用此功能。维护的工作流位于 `skills/agent-sort/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 标准接口"
+    },
+    {
+      "en-US": "- Prefer the `agent-sort` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 优先直接使用 `agent-sort` 技能。\n* 保留此文件仅作为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委派"
+    },
+    {
+      "en-US": "Apply the `agent-sort` skill.",
+      "zh-Hans": "应用 `agent-sort` 技能。"
+    },
+    {
+      "en-US": "- Classify ECC surfaces with concrete repo evidence.\n- Keep the result to DAILY vs LIBRARY.\n- If an install change is needed afterward, hand off to `configure-ecc` instead of re-implementing install logic here.",
+      "zh-Hans": "* 使用具体仓库证据对 ECC 表面进行分类。\n* 将结果限定为 DAILY 或 LIBRARY。\n* 若后续需要安装变更，请转交至 `configure-ecc`，而非在此重新实现安装逻辑。"
+    }
+  ]
+}

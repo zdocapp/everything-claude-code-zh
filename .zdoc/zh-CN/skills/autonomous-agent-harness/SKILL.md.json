@@ -1,0 +1,246 @@
+{
+  "sourceFile": "skills/autonomous-agent-harness/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: autonomous-agent-harness\ndescription: Transform Claude Code into a fully autonomous agent system with persistent memory, scheduled operations, computer use, and task queuing. Replaces standalone agent frameworks (Hermes, AutoGPT) by leveraging Claude Code's native crons, dispatch, MCP tools, and memory. Use when the user wants continuous autonomous operation, scheduled tasks, or a self-directing agent loop.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: autonomous-agent-harness\ndescription: 将Claude Code转换为一个具有持久记忆、计划操作、计算机使用和任务队列的全自主代理系统。通过利用Claude Code的原生crons、dispatch、MCP工具和记忆，取代独立的代理框架（如Hermes、AutoGPT）。适用于用户需要持续自主操作、计划任务或自引导代理循环的场景。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Autonomous Agent Harness",
+      "zh-Hans": "# 自主代理框架"
+    },
+    {
+      "en-US": "Turn Claude Code into a persistent, self-directing agent system using only native features and MCP servers.",
+      "zh-Hans": "仅使用原生功能和 MCP 服务器，将 Claude Code 转变为持久、自我导向的代理系统。"
+    },
+    {
+      "en-US": "## Consent and Safety Boundaries",
+      "zh-Hans": "## 同意与安全边界"
+    },
+    {
+      "en-US": "Autonomous operation must be explicitly requested and scoped by the user. Do not create schedules, dispatch remote agents, write persistent memory, use computer control, post externally, modify third-party resources, or act on private communications unless the user has approved that capability and the target workspace for the current setup.",
+      "zh-Hans": "自主操作必须由用户明确请求并限定范围。除非用户已批准该能力且当前设置的目标工作区已获授权，否则不得创建计划、调度远程代理、写入持久内存、使用计算机控制、对外发布、修改第三方资源或对私人通信采取行动。"
+    },
+    {
+      "en-US": "Prefer dry-run plans and local queue files before enabling recurring or event-driven actions. Keep credentials, private workspace exports, personal datasets, and account-specific automations out of reusable ECC artifacts.",
+      "zh-Hans": "在启用定期或事件驱动操作前，优先使用模拟运行计划和本地队列文件。请将凭证、私有工作区导出文件、个人数据集及账户特定自动化内容排除在可复用的ECC制品之外。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- User wants an agent that runs continuously or on a schedule\n- Setting up automated workflows that trigger periodically\n- Building a personal AI assistant that remembers context across sessions\n- User says \"run this every day\", \"check on this regularly\", \"keep monitoring\"\n- Wants to replicate functionality from Hermes, AutoGPT, or similar autonomous agent frameworks\n- Needs computer use combined with scheduled execution",
+      "zh-Hans": "* 用户需要一个持续运行或按计划运行的代理\n* 设置定期触发的自动化工作流\n* 构建一个能在不同会话间记住上下文的个人 AI 助手\n* 用户说“每天运行这个”、“定期检查这个”、“持续监控”\n* 想要复制 Hermes、AutoGPT 或类似自主代理框架的功能\n* 需要结合计划执行的计算机使用"
+    },
+    {
+      "en-US": "## Architecture",
+      "zh-Hans": "## 架构"
+    },
+    {
+      "en-US": "```\n┌──────────────────────────────────────────────────────────────┐\n│                    Claude Code Runtime                        │\n│                                                              │\n│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────────┐ │\n│  │  Crons   │  │ Dispatch │  │ Memory   │  │ Computer    │ │\n│  │ Schedule │  │ Remote   │  │ Store    │  │ Use         │ │\n│  │ Tasks    │  │ Agents   │  │          │  │             │ │\n│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬──────┘ │\n│       │              │             │                │        │\n│       ▼              ▼             ▼                ▼        │\n│  ┌──────────────────────────────────────────────────────┐    │\n│  │              ECC Skill + Agent Layer                  │    │\n│  │                                                      │    │\n│  │  skills/     agents/     commands/     hooks/        │    │\n│  └──────────────────────────────────────────────────────┘    │\n│       │              │             │                │        │\n│       ▼              ▼             ▼                ▼        │\n│  ┌──────────────────────────────────────────────────────┐    │\n│  │              MCP Server Layer                        │    │\n│  │                                                      │    │\n│  │  memory    github    exa    supabase    browser-use  │    │\n│  └──────────────────────────────────────────────────────┘    │\n└──────────────────────────────────────────────────────────────┘\n```",
+      "zh-Hans": "```\n┌──────────────────────────────────────────────────────────────┐\n│                    Claude 代码运行时                          │\n│                                                              │\n│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────────┐ │\n│  │  定时任务 │  │  调度    │  │  内存    │  │   计算机    │ │\n│  │  计划任务 │  │  远程    │  │  存储    │  │   使用      │ │\n│  │          │  │  代理    │  │          │  │             │ │\n│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬──────┘ │\n│       │              │             │                │        │\n│       ▼              ▼             ▼                ▼        │\n│  ┌──────────────────────────────────────────────────────┐    │\n│  │              ECC 技能 + 代理层                        │    │\n│  │                                                      │    │\n│  │  skills/     agents/     commands/     hooks/        │    │\n│  └──────────────────────────────────────────────────────┘    │\n│       │              │             │                │        │\n│       ▼              ▼             ▼                ▼        │\n│  ┌──────────────────────────────────────────────────────┐    │\n│  │              MCP 服务器层                            │    │\n│  │                                                      │    │\n│  │  memory    github    exa    supabase    browser-use  │    │\n│  └──────────────────────────────────────────────────────┘    │\n└──────────────────────────────────────────────────────────────┘\n```"
+    },
+    {
+      "en-US": "## Core Components",
+      "zh-Hans": "## 核心组件"
+    },
+    {
+      "en-US": "### 1. Persistent Memory",
+      "zh-Hans": "### 1. 持久化内存"
+    },
+    {
+      "en-US": "Use Claude Code's built-in memory system enhanced with MCP memory server for structured data.",
+      "zh-Hans": "使用 Claude Code 的内置内存系统，并通过 MCP 内存服务器增强以处理结构化数据。"
+    },
+    {
+      "en-US": "**Built-in memory** (`~/.claude/projects/*/memory/`):",
+      "zh-Hans": "**内置内存** (`~/.claude/projects/*/memory/`)："
+    },
+    {
+      "en-US": "- User preferences, feedback, project context\n- Stored as markdown files with frontmatter\n- Automatically loaded at session start",
+      "zh-Hans": "* 用户偏好、反馈、项目上下文\n* 存储为带有 frontmatter 的 markdown 文件\n* 在会话开始时自动加载"
+    },
+    {
+      "en-US": "**MCP memory server** (structured knowledge graph):",
+      "zh-Hans": "**MCP 内存服务器**（结构化知识图谱）："
+    },
+    {
+      "en-US": "- Entities, relations, observations\n- Queryable graph structure\n- Cross-session persistence",
+      "zh-Hans": "* 实体、关系、观察结果\n* 可查询的图结构\n* 跨会话持久化"
+    },
+    {
+      "en-US": "**Memory patterns:**",
+      "zh-Hans": "**内存模式：**"
+    },
+    {
+      "en-US": "```\n# Short-term: current session context\nUse TodoWrite for in-session task tracking\n\n# Medium-term: project memory files\nWrite to ~/.claude/projects/*/memory/ for cross-session recall\n\n# Long-term: MCP knowledge graph\nUse mcp__memory__create_entities for permanent structured data\nUse mcp__memory__create_relations for relationship mapping\nUse mcp__memory__add_observations for new facts about known entities\n```",
+      "zh-Hans": "```\n# 短期：当前会话上下文\n使用 TodoWrite 进行会话内任务跟踪\n\n# 中期：项目记忆文件\n写入 ~/.claude/projects/*/memory/ 以实现跨会话回忆\n\n# 长期：MCP 知识图谱\n使用 mcp__memory__create_entities 创建永久结构化数据\n使用 mcp__memory__create_relations 进行关系映射\n使用 mcp__memory__add_observations 为已知实体添加新事实\n```"
+    },
+    {
+      "en-US": "### 2. Scheduled Operations (Crons)",
+      "zh-Hans": "### 2. 计划操作（Cron）"
+    },
+    {
+      "en-US": "Use Claude Code's scheduled tasks to create recurring agent operations.",
+      "zh-Hans": "使用 Claude Code 的计划任务来创建循环执行的代理操作。"
+    },
+    {
+      "en-US": "**Setting up a cron:**",
+      "zh-Hans": "**设置 cron：**"
+    },
+    {
+      "en-US": "```\n# Via MCP tool\nmcp__scheduled-tasks__create_scheduled_task({\n  name: \"daily-pr-review\",\n  schedule: \"0 9 * * 1-5\",  # 9 AM weekdays\n  prompt: \"Review all open PRs in affaan-m/everything-claude-code. For each: check CI status, review changes, flag issues. Post summary to memory.\",\n  project_dir: \"/path/to/repo\"\n})\n\n# Via claude -p (programmatic mode)\necho \"Review open PRs and summarize\" | claude -p --project /path/to/repo\n```",
+      "zh-Hans": "```\n# 通过 MCP 工具\nmcp__scheduled-tasks__create_scheduled_task({\n  name: \"daily-pr-review\",\n  schedule: \"0 9 * * 1-5\",  # 工作日 9 点\n  prompt: \"Review all open PRs in affaan-m/everything-claude-code. For each: check CI status, review changes, flag issues. Post summary to memory.\",\n  project_dir: \"/path/to/repo\"\n})\n\n# 通过 claude -p (编程模式)\necho \"Review open PRs and summarize\" | claude -p --project /path/to/repo\n```"
+    },
+    {
+      "en-US": "**Useful cron patterns:**",
+      "zh-Hans": "**有用的 cron 模式：**"
+    },
+    {
+      "en-US": "| Pattern | Schedule | Use Case |\n|---------|----------|----------|\n| Daily standup | `0 9 * * 1-5` | Review PRs, issues, deploy status |\n| Weekly review | `0 10 * * 1` | Code quality metrics, test coverage |\n| Hourly monitor | `0 * * * *` | Production health, error rate checks |\n| Nightly build | `0 2 * * *` | Run full test suite, security scan |\n| Pre-meeting | `*/30 * * * *` | Prepare context for upcoming meetings |",
+      "zh-Hans": "| 模式 | 计划 | 用例 |\n|---------|----------|----------|\n| 每日站会 | `0 9 * * 1-5` | 审查 PR、问题、部署状态 |\n| 每周回顾 | `0 10 * * 1` | 代码质量指标、测试覆盖率 |\n| 每小时监控 | `0 * * * *` | 生产环境健康状态、错误率检查 |\n| 夜间构建 | `0 2 * * *` | 运行完整测试套件、安全扫描 |\n| 会前准备 | `*/30 * * * *` | 为即将召开的会议准备上下文 |"
+    },
+    {
+      "en-US": "### 3. Dispatch / Remote Agents",
+      "zh-Hans": "### 3. 调度 / 远程代理"
+    },
+    {
+      "en-US": "Trigger Claude Code agents remotely for event-driven workflows.",
+      "zh-Hans": "远程触发 Claude Code 代理以实现事件驱动的工作流。"
+    },
+    {
+      "en-US": "**Dispatch patterns:**",
+      "zh-Hans": "**调度模式：**"
+    },
+    {
+      "en-US": "```bash\n# Trigger from CI/CD\ncurl -X POST \"https://api.anthropic.com/dispatch\" \\\n  -H \"Authorization: Bearer $ANTHROPIC_API_KEY\" \\\n  -d '{\"prompt\": \"Build failed on main. Diagnose and fix.\", \"project\": \"/repo\"}'\n\n# Trigger from webhook\n# GitHub webhook → dispatch → Claude agent → fix → PR\n\n# Trigger from another agent\nclaude -p \"Analyze the output of the security scan and create issues for findings\"\n```",
+      "zh-Hans": "```bash\n# Trigger from CI/CD\ncurl -X POST \"https://api.anthropic.com/dispatch\" \\\n  -H \"Authorization: Bearer $ANTHROPIC_API_KEY\" \\\n  -d '{\"prompt\": \"Build failed on main. Diagnose and fix.\", \"project\": \"/repo\"}'\n\n# Trigger from webhook\n# GitHub webhook → dispatch → Claude agent → fix → PR\n\n# Trigger from another agent\nclaude -p \"Analyze the output of the security scan and create issues for findings\"\n```"
+    },
+    {
+      "en-US": "### 4. Computer Use",
+      "zh-Hans": "### 4. 计算机使用"
+    },
+    {
+      "en-US": "Leverage Claude's computer-use MCP for physical world interaction.",
+      "zh-Hans": "利用 Claude 的 computer-use MCP 进行物理世界交互。"
+    },
+    {
+      "en-US": "**Capabilities:**",
+      "zh-Hans": "**能力：**"
+    },
+    {
+      "en-US": "- Browser automation (navigate, click, fill forms, screenshot)\n- Desktop control (open apps, type, mouse control)\n- File system operations beyond CLI",
+      "zh-Hans": "* 浏览器自动化（导航、点击、填写表单、截图）\n* 桌面控制（打开应用、输入、鼠标控制）\n* 超越 CLI 的文件系统操作"
+    },
+    {
+      "en-US": "**Use cases within the harness:**",
+      "zh-Hans": "**在框架内的用例：**"
+    },
+    {
+      "en-US": "- Automated testing of web UIs\n- Form filling and data entry\n- Screenshot-based monitoring\n- Multi-app workflows",
+      "zh-Hans": "* Web UI 的自动化测试\n* 表单填写和数据录入\n* 基于截图的监控\n* 多应用工作流"
+    },
+    {
+      "en-US": "### 5. Task Queue",
+      "zh-Hans": "### 5. 任务队列"
+    },
+    {
+      "en-US": "Manage a persistent queue of tasks that survive session boundaries.",
+      "zh-Hans": "管理一个能跨越会话边界持久存在的任务队列。"
+    },
+    {
+      "en-US": "**Implementation:**",
+      "zh-Hans": "**实现：**"
+    },
+    {
+      "en-US": "```\n# Task persistence via memory\nWrite task queue to ~/.claude/projects/*/memory/task-queue.md\n\n# Task format\n---\nname: task-queue\ntype: project\ndescription: Persistent task queue for autonomous operation\n---\n\n## Active Tasks\n- [ ] PR #123: Review and approve if CI green\n- [ ] Monitor deploy: check /health every 30 min for 2 hours\n- [ ] Research: Find 5 leads in AI tooling space\n\n## Completed\n- [x] Daily standup: reviewed 3 PRs, 2 issues\n```",
+      "zh-Hans": "```\n# 通过记忆实现任务持久化\n将任务队列写入 ~/.claude/projects/*/memory/task-queue.md\n\n# 任务格式\n---\nname: task-queue\ntype: project\ndescription: 用于自主操作的持久化任务队列\n---\n\n## 进行中的任务\n- [ ] PR #123: 如果 CI 通过则审查并批准\n- [ ] 监控部署：在 2 小时内每 30 分钟检查一次 /health\n- [ ] 调研：在 AI 工具领域寻找 5 个潜在客户\n\n## 已完成\n- [x] 每日站会：审查了 3 个 PR，2 个 issue\n```"
+    },
+    {
+      "en-US": "## Replacing Hermes",
+      "zh-Hans": "## 替代 Hermes"
+    },
+    {
+      "en-US": "| Hermes Component | ECC Equivalent | How |\n|------------------|---------------|-----|\n| Gateway/Router | Claude Code dispatch + crons | Scheduled tasks trigger agent sessions |\n| Memory System | Claude memory + MCP memory server | Built-in persistence + knowledge graph |\n| Tool Registry | MCP servers | Dynamically loaded tool providers |\n| Orchestration | ECC skills + agents | Skill definitions direct agent behavior |\n| Computer Use | computer-use MCP | Native browser and desktop control |\n| Context Manager | Session management + memory | ECC 2.0 session lifecycle |\n| Task Queue | Memory-persisted task list | TodoWrite + memory files |",
+      "zh-Hans": "| Hermes 组件 | ECC 等效方案 | 如何实现 |\n|------------------|---------------|-----|\n| 网关/路由器 | Claude Code 调度 + crons | 计划任务触发代理会话 |\n| 内存系统 | Claude 内存 + MCP 内存服务器 | 内置持久化 + 知识图谱 |\n| 工具注册表 | MCP 服务器 | 动态加载的工具提供者 |\n| 编排 | ECC 技能 + 代理 | 技能定义指导代理行为 |\n| 计算机使用 | computer-use MCP | 原生浏览器和桌面控制 |\n| 上下文管理器 | 会话管理 + 内存 | ECC 2.0 会话生命周期 |\n| 任务队列 | 内存持久化的任务列表 | TodoWrite + 内存文件 |"
+    },
+    {
+      "en-US": "## Setup Guide",
+      "zh-Hans": "## 设置指南"
+    },
+    {
+      "en-US": "### Step 1: Configure MCP Servers",
+      "zh-Hans": "### 步骤 1：配置 MCP 服务器"
+    },
+    {
+      "en-US": "Ensure these are in `~/.claude.json`:",
+      "zh-Hans": "确保 `~/.claude.json` 中包含以下内容："
+    },
+    {
+      "en-US": "```json\n{\n  \"mcpServers\": {\n    \"memory\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@anthropic/memory-mcp-server\"]\n    },\n    \"scheduled-tasks\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@anthropic/scheduled-tasks-mcp-server\"]\n    },\n    \"computer-use\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@anthropic/computer-use-mcp-server\"]\n    }\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"mcpServers\": {\n    \"memory\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@anthropic/memory-mcp-server\"]\n    },\n    \"scheduled-tasks\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@anthropic/scheduled-tasks-mcp-server\"]\n    },\n    \"computer-use\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@anthropic/computer-use-mcp-server\"]\n    }\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Step 2: Create Base Crons",
+      "zh-Hans": "### 步骤 2：创建基础 Crons"
+    },
+    {
+      "en-US": "```bash\n# Daily morning briefing\nclaude -p \"Create a scheduled task: every weekday at 9am, review my GitHub notifications, open PRs, and calendar. Write a morning briefing to memory.\"\n\n# Continuous learning\nclaude -p \"Create a scheduled task: every Sunday at 8pm, extract patterns from this week's sessions and update the learned skills.\"\n```",
+      "zh-Hans": "```bash\n# Daily morning briefing\nclaude -p \"Create a scheduled task: every weekday at 9am, review my GitHub notifications, open PRs, and calendar. Write a morning briefing to memory.\"\n\n# Continuous learning\nclaude -p \"Create a scheduled task: every Sunday at 8pm, extract patterns from this week's sessions and update the learned skills.\"\n```"
+    },
+    {
+      "en-US": "### Step 3: Initialize Memory Graph",
+      "zh-Hans": "### 步骤 3：初始化内存图谱"
+    },
+    {
+      "en-US": "```bash\n# Bootstrap your identity and context\nclaude -p \"Create memory entities for: me (user profile), my projects, my key contacts. Add observations about current priorities.\"\n```",
+      "zh-Hans": "```bash\n# Bootstrap your identity and context\nclaude -p \"Create memory entities for: me (user profile), my projects, my key contacts. Add observations about current priorities.\"\n```"
+    },
+    {
+      "en-US": "### Step 4: Enable Computer Use (Optional)",
+      "zh-Hans": "### 步骤 4：启用计算机使用（可选）"
+    },
+    {
+      "en-US": "Grant computer-use MCP the necessary permissions for browser and desktop control.",
+      "zh-Hans": "授予 computer-use MCP 必要的权限以进行浏览器和桌面控制。"
+    },
+    {
+      "en-US": "## Example Workflows",
+      "zh-Hans": "## 示例工作流"
+    },
+    {
+      "en-US": "### Autonomous PR Reviewer",
+      "zh-Hans": "### 自主 PR 审查器"
+    },
+    {
+      "en-US": "```\nCron: every 30 min during work hours\n1. Check for new PRs on watched repos\n2. For each new PR:\n   - Pull branch locally\n   - Run tests\n   - Review changes with code-reviewer agent\n   - Post review comments via GitHub MCP\n3. Update memory with review status\n```",
+      "zh-Hans": "```\nCron: 工作时间内每30分钟执行一次\n1. 检查关注仓库的新PR\n2. 对于每个新PR：\n   - 本地拉取分支\n   - 运行测试\n   - 与代码审查代理一起审查变更\n   - 通过GitHub MCP发布审查评论\n3. 更新审查状态到记忆库\n```"
+    },
+    {
+      "en-US": "### Personal Research Agent",
+      "zh-Hans": "### 个人研究代理"
+    },
+    {
+      "en-US": "```\nCron: daily at 6 AM\n1. Check saved search queries in memory\n2. Run Exa searches for each query\n3. Summarize new findings\n4. Compare against yesterday's results\n5. Write digest to memory\n6. Flag high-priority items for morning review\n```",
+      "zh-Hans": "```\nCron: 每天上午 6 点\n1. 检查内存中保存的搜索查询\n2. 为每个查询运行 Exa 搜索\n3. 总结新发现\n4. 与昨天的结果进行比较\n5. 将摘要写入内存\n6. 标记高优先级项目以供早晨审查\n```"
+    },
+    {
+      "en-US": "### Meeting Prep Agent",
+      "zh-Hans": "### 会议准备代理"
+    },
+    {
+      "en-US": "```\nTrigger: 30 min before each calendar event\n1. Read calendar event details\n2. Search memory for context on attendees\n3. Pull recent email/Slack threads with attendees\n4. Prepare talking points and agenda suggestions\n5. Write prep doc to memory\n```",
+      "zh-Hans": "```\n触发条件：每个日历事件开始前 30 分钟\n1. 读取日历事件详情\n2. 在记忆中搜索与会者的背景信息\n3. 拉取最近与与会者的电子邮件/Slack 对话\n4. 准备讨论要点和议程建议\n5. 将准备文档写入记忆\n```"
+    },
+    {
+      "en-US": "## Constraints",
+      "zh-Hans": "## 约束"
+    },
+    {
+      "en-US": "- Cron tasks run in isolated sessions — they don't share context with interactive sessions unless through memory.\n- Computer use requires explicit permission grants. Don't assume access.\n- Remote dispatch may have rate limits. Design crons with appropriate intervals.\n- Memory files should be kept concise. Archive old data rather than letting files grow unbounded.\n- Always verify that scheduled tasks completed successfully. Add error handling to cron prompts.",
+      "zh-Hans": "* Cron 任务在隔离的会话中运行——除非通过内存，否则它们不与交互式会话共享上下文。\n* 计算机使用需要明确的权限授予。不要假设拥有访问权限。\n* 远程调度可能存在速率限制。设计 cron 时应采用适当的间隔。\n* 内存文件应保持简洁。归档旧数据，而不是让文件无限增长。\n* 始终验证计划任务是否成功完成。在 cron 提示中添加错误处理。"
+    }
+  ]
+}

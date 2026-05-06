@@ -1,29 +1,29 @@
 ---
 name: laravel-verification
-description: Verification loop for Laravel projects: env checks, linting, static analysis, tests with coverage, security scans, and deployment readiness.
+description: "Laravel项目的验证循环：环境检查、代码检查、静态分析、带覆盖率的测试、安全扫描和部署准备。"
 origin: ECC
 ---
 
 # Laravel 验证循环
 
-在发起 PR 前、进行重大更改后以及部署前运行。
+在发起 PR 前、重大变更后以及部署前运行。
 
-## 使用时机
+## 何时使用
 
 * 在为一个 Laravel 项目开启拉取请求之前
 * 在重大重构或依赖升级之后
-* 为预生产或生产环境进行部署前验证
-* 运行完整的 代码检查 -> 测试 -> 安全检查 -> 部署就绪 流水线
+* 为预发布或生产环境进行部署前验证
+* 运行完整的 代码检查 -> 测试 -> 安全检查 -> 部署就绪性 流水线
 
 ## 工作原理
 
-* 按顺序运行从环境检查到部署就绪的各个阶段，每一层都建立在前一层的基础上。
+* 按顺序运行从环境检查到部署就绪性的各个阶段，使每一层都建立在前一层的基础上。
 * 环境和 Composer 检查是所有其他步骤的关卡；如果它们失败，立即停止。
-* 代码检查/静态分析应在运行完整测试和覆盖率检查前确保通过。
-* 安全性和迁移审查在测试之后进行，以便在涉及数据或发布步骤之前验证行为。
-* 构建/部署就绪以及队列/调度器检查是最后的关卡；任何失败都会阻止发布。
+* 在运行完整测试和覆盖率检查之前，代码检查和静态分析应该是干净的。
+* 安全性和迁移审查在测试之后进行，以便在数据或发布步骤之前验证行为。
+* 构建/部署就绪性以及队列/调度器检查是最后的关卡；任何失败都会阻止发布。
 
-## 第一阶段：环境检查
+## 阶段 1：环境检查
 
 ```bash
 php -v
@@ -31,8 +31,8 @@ composer --version
 php artisan --version
 ```
 
-* 验证 `.env` 文件存在且包含必需的键
-* 确认生产环境已设置 `APP_DEBUG=false`
+* 验证 `.env` 存在且必需的键存在
+* 确认生产环境的 `APP_DEBUG=false`
 * 确认 `APP_ENV` 与目标部署环境匹配（`production`、`staging`）
 
 如果在本地使用 Laravel Sail：
@@ -42,14 +42,14 @@ php artisan --version
 ./vendor/bin/sail artisan --version
 ```
 
-## 第一阶段补充：Composer 和自动加载
+## 阶段 1.5：Composer 和自动加载
 
 ```bash
 composer validate
 composer dump-autoload -o
 ```
 
-## 第二阶段：代码检查和静态分析
+## 阶段 2：代码检查和静态分析
 
 ```bash
 vendor/bin/pint --test
@@ -62,13 +62,13 @@ vendor/bin/phpstan analyse
 vendor/bin/psalm
 ```
 
-## 第三阶段：测试和覆盖率
+## 阶段 3：测试和覆盖率
 
 ```bash
 php artisan test
 ```
 
-覆盖率（CI 环境）：
+覆盖率（CI）：
 
 ```bash
 XDEBUG_MODE=coverage php artisan test --coverage
@@ -82,13 +82,13 @@ vendor/bin/phpstan analyse
 XDEBUG_MODE=coverage php artisan test --coverage
 ```
 
-## 第四阶段：安全和依赖项检查
+## 阶段 4：安全性和依赖检查
 
 ```bash
 composer audit
 ```
 
-## 第五阶段：数据库和迁移
+## 阶段 5：数据库和迁移
 
 ```bash
 php artisan migrate --pretend
@@ -96,11 +96,11 @@ php artisan migrate:status
 ```
 
 * 仔细审查破坏性迁移
-* 确保迁移文件名遵循 `Y_m_d_His_*` 格式（例如，`2025_03_14_154210_create_orders_table.php`）并清晰地描述变更
-* 确保可以执行回滚
+* 确保迁移文件名遵循 `Y_m_d_His_*`（例如，`2025_03_14_154210_create_orders_table.php`）并清晰地描述变更
+* 确保可以回滚
 * 验证 `down()` 方法，避免在没有明确备份的情况下造成不可逆的数据丢失
 
-## 第六阶段：构建和部署就绪
+## 阶段 6：构建和部署就绪性
 
 ```bash
 php artisan optimize:clear
@@ -110,29 +110,29 @@ php artisan view:cache
 ```
 
 * 确保在生产配置下缓存预热成功
-* 验证队列工作者和调度器已配置
-* 确认在目标环境中 `storage/` 和 `bootstrap/cache/` 目录可写
+* 验证队列工作器和调度器已配置
+* 确认在目标环境中 `storage/` 和 `bootstrap/cache/` 可写
 
-## 第七阶段：队列和调度器检查
+## 阶段 7：队列和调度器检查
 
 ```bash
 php artisan schedule:list
 php artisan queue:failed
 ```
 
-如果使用了 Horizon：
+如果使用 Horizon：
 
 ```bash
 php artisan horizon:status
 ```
 
-如果 `queue:monitor` 命令可用，可以用它来检查积压作业而无需处理它们：
+如果 `queue:monitor` 可用，使用它来检查积压而不处理作业：
 
 ```bash
 php artisan queue:monitor default --max=100
 ```
 
-主动验证（仅限预生产环境）：向一个专用队列分发一个无操作作业，并运行一个单独的工作者来处理它（确保配置了一个非 `sync` 的队列连接）。
+主动验证（仅限预发布环境）：向专用队列分发一个无操作作业，并运行一个工作器来处理它（确保配置了非 `sync` 的队列连接）。
 
 ```bash
 php artisan tinker --execute="dispatch((new App\\Jobs\\QueueHealthcheck())->onQueue('healthcheck'))"
@@ -141,7 +141,7 @@ php artisan queue:work --once --queue=healthcheck
 
 验证该作业产生了预期的副作用（日志条目、健康检查表行或指标）。
 
-仅在处理测试作业是安全的非生产环境中运行此检查。
+仅在处理测试作业是安全的非生产环境中运行此操作。
 
 ## 示例
 

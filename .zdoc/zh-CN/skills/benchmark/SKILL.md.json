@@ -1,0 +1,98 @@
+{
+  "sourceFile": "skills/benchmark/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: benchmark\ndescription: Use this skill to measure performance baselines, detect regressions before/after PRs, and compare stack alternatives.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: benchmark\ndescription: 使用此技能来测量性能基准，在PR前后检测回归，并比较堆栈替代方案。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Benchmark — Performance Baseline & Regression Detection",
+      "zh-Hans": "# 基准测试 — 性能基线 & 回归检测"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- Before and after a PR to measure performance impact\n- Setting up performance baselines for a project\n- When users report \"it feels slow\"\n- Before a launch — ensure you meet performance targets\n- Comparing your stack against alternatives",
+      "zh-Hans": "* 在 PR 前后，用于衡量性能影响\n* 为项目建立性能基线\n* 当用户报告“感觉变慢”时\n* 在发布前 — 确保达到性能目标\n* 将你的技术栈与替代方案进行比较"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "### Mode 1: Page Performance",
+      "zh-Hans": "### 模式 1：页面性能"
+    },
+    {
+      "en-US": "Measures real browser metrics via browser MCP:",
+      "zh-Hans": "通过浏览器 MCP 测量真实的浏览器指标："
+    },
+    {
+      "en-US": "```\n1. Navigate to each target URL\n2. Measure Core Web Vitals:\n   - LCP (Largest Contentful Paint) — target < 2.5s\n   - CLS (Cumulative Layout Shift) — target < 0.1\n   - INP (Interaction to Next Paint) — target < 200ms\n   - FCP (First Contentful Paint) — target < 1.8s\n   - TTFB (Time to First Byte) — target < 800ms\n3. Measure resource sizes:\n   - Total page weight (target < 1MB)\n   - JS bundle size (target < 200KB gzipped)\n   - CSS size\n   - Image weight\n   - Third-party script weight\n4. Count network requests\n5. Check for render-blocking resources\n```",
+      "zh-Hans": "```\n1. 访问每个目标 URL\n2. 测量核心 Web 指标：\n   - LCP (最大内容绘制) — 目标 < 2.5 秒\n   - CLS (累积布局偏移) — 目标 < 0.1\n   - INP (下一次绘制交互) — 目标 < 200 毫秒\n   - FCP (首次内容绘制) — 目标 < 1.8 秒\n   - TTFB (首字节时间) — 目标 < 800 毫秒\n3. 测量资源大小：\n   - 总页面大小 (目标 < 1MB)\n   - JS 包大小 (目标 < 200KB gzipped)\n   - CSS 大小\n   - 图片大小\n   - 第三方脚本大小\n4. 统计网络请求数量\n5. 检查是否存在渲染阻塞资源\n```"
+    },
+    {
+      "en-US": "### Mode 2: API Performance",
+      "zh-Hans": "### 模式 2：API 性能"
+    },
+    {
+      "en-US": "Benchmarks API endpoints:",
+      "zh-Hans": "对 API 端点进行基准测试："
+    },
+    {
+      "en-US": "```\n1. Hit each endpoint 100 times\n2. Measure: p50, p95, p99 latency\n3. Track: response size, status codes\n4. Test under load: 10 concurrent requests\n5. Compare against SLA targets\n```",
+      "zh-Hans": "```\n1. 对每个端点进行 100 次请求\n2. 测量：p50、p95、p99 延迟\n3. 跟踪：响应大小、状态码\n4. 负载测试：10 个并发请求\n5. 与 SLA 目标进行对比\n```"
+    },
+    {
+      "en-US": "### Mode 3: Build Performance",
+      "zh-Hans": "### 模式 3：构建性能"
+    },
+    {
+      "en-US": "Measures development feedback loop:",
+      "zh-Hans": "测量开发反馈循环："
+    },
+    {
+      "en-US": "```\n1. Cold build time\n2. Hot reload time (HMR)\n3. Test suite duration\n4. TypeScript check time\n5. Lint time\n6. Docker build time\n```",
+      "zh-Hans": "```\n1. 冷构建时间\n2. 热重载时间 (HMR)\n3. 测试套件持续时间\n4. TypeScript 检查时间\n5. 代码检查时间\n6. Docker 构建时间\n```"
+    },
+    {
+      "en-US": "### Mode 4: Before/After Comparison",
+      "zh-Hans": "### 模式 4：前后对比"
+    },
+    {
+      "en-US": "Run before and after a change to measure impact:",
+      "zh-Hans": "在变更前后运行以衡量影响："
+    },
+    {
+      "en-US": "```\n/benchmark baseline    # saves current metrics\n# ... make changes ...\n/benchmark compare     # compares against baseline\n```",
+      "zh-Hans": "```\n/benchmark baseline    # 保存当前指标\n# ... 进行更改 ...\n/benchmark compare     # 与基线进行比较\n```"
+    },
+    {
+      "en-US": "Output:",
+      "zh-Hans": "输出："
+    },
+    {
+      "en-US": "```\n| Metric | Before | After | Delta | Verdict |\n|--------|--------|-------|-------|---------|\n| LCP | 1.2s | 1.4s | +200ms | WARNING: WARN |\n| Bundle | 180KB | 175KB | -5KB | ✓ BETTER |\n| Build | 12s | 14s | +2s | WARNING: WARN |\n```",
+      "zh-Hans": "```\n| Metric | Before | After | Delta | Verdict |\n|--------|--------|-------|-------|---------|\n| LCP | 1.2s | 1.4s | +200ms | WARNING: WARN |\n| Bundle | 180KB | 175KB | -5KB | ✓ BETTER |\n| Build | 12s | 14s | +2s | WARNING: WARN |\n```"
+    },
+    {
+      "en-US": "## Output",
+      "zh-Hans": "## 输出"
+    },
+    {
+      "en-US": "Stores baselines in `.ecc/benchmarks/` as JSON. Git-tracked so the team shares baselines.",
+      "zh-Hans": "将基线以 JSON 格式存储在 `.ecc/benchmarks/` 中。通过 Git 跟踪，以便团队共享基线。"
+    },
+    {
+      "en-US": "## Integration",
+      "zh-Hans": "## 集成"
+    },
+    {
+      "en-US": "- CI: run `/benchmark compare` on every PR\n- Pair with `/canary-watch` for post-deploy monitoring\n- Pair with `/browser-qa` for full pre-ship checklist",
+      "zh-Hans": "* CI：在每个 PR 上运行 `/benchmark compare`\n* 与 `/canary-watch` 搭配，用于部署后监控\n* 与 `/browser-qa` 搭配，用于完整的发布前检查清单"
+    }
+  ]
+}

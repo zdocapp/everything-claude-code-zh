@@ -1,0 +1,46 @@
+{
+  "sourceFile": "commands/prune.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: prune\ndescription: Delete pending instincts older than 30 days that were never promoted\ncommand: true\n---",
+      "zh-Hans": "---\nname: prune\ndescription: 删除超过30天且从未被提升的待处理本能\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Prune Pending Instincts",
+      "zh-Hans": "# 清理待处理本能"
+    },
+    {
+      "en-US": "Remove expired pending instincts that were auto-generated but never reviewed or promoted.",
+      "zh-Hans": "移除已过期的待处理本能，这些本能是自动生成但从未被审核或提升的。"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现方式"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行本能 CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" prune\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" prune\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):",
+      "zh-Hans": "或者如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装）："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py prune\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py prune\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/prune                    # Delete instincts older than 30 days\n/prune --max-age 60      # Custom age threshold (days)\n/prune --dry-run         # Preview without deleting\n```",
+      "zh-Hans": "```\n/prune                    # 删除超过 30 天的本能记录\n/prune --max-age 60      # 自定义时间阈值（天）\n/prune --dry-run         # 预览而不删除\n```"
+    }
+  ]
+}

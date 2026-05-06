@@ -1,0 +1,98 @@
+{
+  "sourceFile": "commands/kotlin-build.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Fix Kotlin/Gradle build errors, compiler warnings, and dependency issues incrementally. Invokes the kotlin-build-resolver agent for minimal, surgical fixes.\n---",
+      "zh-Hans": "---\ndescription: 逐步修复 Kotlin/Gradle 构建错误、编译器警告和依赖问题。调用 kotlin-build-resolver 代理进行最小化、精准的修复。\n---"
+    },
+    {
+      "en-US": "# Kotlin Build and Fix",
+      "zh-Hans": "# Kotlin 构建与修复"
+    },
+    {
+      "en-US": "This command invokes the **kotlin-build-resolver** agent to incrementally fix Kotlin build errors with minimal changes.",
+      "zh-Hans": "此命令调用 **kotlin-build-resolver** 代理，以最小的更改增量修复 Kotlin 构建错误。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的作用"
+    },
+    {
+      "en-US": "1. **Run Diagnostics**: Execute `./gradlew build`, `detekt`, `ktlintCheck`\n2. **Parse Errors**: Group by file and sort by severity\n3. **Fix Incrementally**: One error at a time\n4. **Verify Each Fix**: Re-run build after each change\n5. **Report Summary**: Show what was fixed and what remains",
+      "zh-Hans": "1. **运行诊断**：执行 `./gradlew build`、`detekt`、`ktlintCheck`\n2. **解析错误**：按文件分组并按严重性排序\n3. **增量修复**：一次修复一个错误\n4. **验证每个修复**：每次更改后重新运行构建\n5. **报告摘要**：显示已修复的内容和剩余问题"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use `/kotlin-build` when:",
+      "zh-Hans": "在以下情况使用 `/kotlin-build`："
+    },
+    {
+      "en-US": "- `./gradlew build` fails with errors\n- Kotlin compiler reports errors\n- `./gradlew detekt` reports violations\n- Gradle dependency resolution fails\n- After pulling changes that break the build",
+      "zh-Hans": "* `./gradlew build` 因错误而失败\n* Kotlin 编译器报告错误\n* `./gradlew detekt` 报告违规\n* Gradle 依赖项解析失败\n* 拉取更改后导致构建失败"
+    },
+    {
+      "en-US": "## Diagnostic Commands Run",
+      "zh-Hans": "## 运行的诊断命令"
+    },
+    {
+      "en-US": "```bash\n# Primary build check\n./gradlew build 2>&1\n\n# Static analysis\n./gradlew detekt 2>&1 || echo \"detekt not configured\"\n./gradlew ktlintCheck 2>&1 || echo \"ktlint not configured\"\n\n# Dependency issues\n./gradlew dependencies --configuration runtimeClasspath 2>&1 | head -100\n\n# Optional deep refresh when caches or dependency metadata are suspect\n./gradlew build --refresh-dependencies\n```",
+      "zh-Hans": "```bash\n# Primary build check\n./gradlew build 2>&1\n\n# Static analysis\n./gradlew detekt 2>&1 || echo \"detekt not configured\"\n./gradlew ktlintCheck 2>&1 || echo \"ktlint not configured\"\n\n# Dependency issues\n./gradlew dependencies --configuration runtimeClasspath 2>&1 | head -100\n\n# Optional deep refresh when caches or dependency metadata are suspect\n./gradlew build --refresh-dependencies\n```"
+    },
+    {
+      "en-US": "## Example Session",
+      "zh-Hans": "## 示例会话"
+    },
+    {
+      "en-US": "````text\nUser: /kotlin-build\n\nAgent:\n# Kotlin Build Resolution\n\n## Initial Diagnostics\n\n```bash\n$ ./gradlew build\ne: src/main/kotlin/com/example/service/UserService.kt:25:15 Unresolved reference: UserRepository\ne: src/main/kotlin/com/example/routes/UserRoutes.kt:42:9 Type mismatch: inferred type is String but Int was expected\ne: src/main/kotlin/com/example/routes/UserRoutes.kt:58:5 'when' expression must be exhaustive\n```\n\nErrors found: 3\n\n## Fix 1: Unresolved Reference\n\nFile: src/main/kotlin/com/example/service/UserService.kt:25\nError: Unresolved reference: UserRepository\nCause: Missing import\n\n```kotlin\n// Added import\nimport com.example.repository.UserRepository\n```\n\n```bash\n$ ./gradlew build\n# 2 errors remaining\n```\n\n## Fix 2: Type Mismatch\n\nFile: src/main/kotlin/com/example/routes/UserRoutes.kt:42\nError: Type mismatch: inferred type is String but Int was expected\n\n```kotlin\n// Changed\nval count = call.parameters[\"count\"]\n// To\nval count = call.parameters[\"count\"]?.toIntOrNull()\n    ?: return@get call.respond(HttpStatusCode.BadRequest, \"Invalid count\")\n```\n\n```bash\n$ ./gradlew build\n# 1 error remaining\n```\n\n## Fix 3: Non-Exhaustive When\n\nFile: src/main/kotlin/com/example/routes/UserRoutes.kt:58\nError: 'when' expression must be exhaustive\n\n```kotlin\n// Added missing branch\nwhen (user.role) {\n    Role.ADMIN -> handleAdmin(user)\n    Role.USER -> handleUser(user)\n    Role.MODERATOR -> handleModerator(user) // Added\n}\n```\n\n```bash\n$ ./gradlew build\n# Build successful!\n```\n\n## Final Verification\n\n```bash\n$ ./gradlew detekt\n# No issues\n\n$ ./gradlew test\n# All tests passed\n```\n\n## Summary\n\n| Metric | Count |\n|--------|-------|\n| Build errors fixed | 3 |\n| Detekt issues fixed | 0 |\n| Files modified | 2 |\n| Remaining issues | 0 |\n\nBuild Status: PASS: SUCCESS\n````",
+      "zh-Hans": "````text\nUser: /kotlin-build\n\nAgent:\n# Kotlin 构建问题解决\n\n## 初始诊断\n\n```bash\n$ ./gradlew build\ne: src/main/kotlin/com/example/service/UserService.kt:25:15 Unresolved reference: UserRepository\ne: src/main/kotlin/com/example/routes/UserRoutes.kt:42:9 Type mismatch: inferred type is String but Int was expected\ne: src/main/kotlin/com/example/routes/UserRoutes.kt:58:5 'when' expression must be exhaustive\n```\n\n发现错误：3\n\n## 修复 1: 未解析的引用\n\n文件: src/main/kotlin/com/example/service/UserService.kt:25\n错误: Unresolved reference: UserRepository\n原因: 缺少导入\n\n```kotlin\n// 添加了导入\nimport com.example.repository.UserRepository\n```\n\n```bash\n$ ./gradlew build\n# 剩余 2 个错误\n```\n\n## 修复 2: 类型不匹配\n\n文件: src/main/kotlin/com/example/routes/UserRoutes.kt:42\n错误: Type mismatch: inferred type is String but Int was expected\n\n```kotlin\n// 将\nval count = call.parameters[\"count\"]\n// 改为\nval count = call.parameters[\"count\"]?.toIntOrNull()\n    ?: return@get call.respond(HttpStatusCode.BadRequest, \"Invalid count\")\n```\n\n```bash\n$ ./gradlew build\n# 剩余 1 个错误\n```\n\n## 修复 3: 非穷尽的 When 表达式\n\n文件: src/main/kotlin/com/example/routes/UserRoutes.kt:58\n错误: 'when' expression must be exhaustive\n\n```kotlin\n// 添加了缺失的分支\nwhen (user.role) {\n    Role.ADMIN -> handleAdmin(user)\n    Role.USER -> handleUser(user)\n    Role.MODERATOR -> handleModerator(user) // 已添加\n}\n```\n\n```bash\n$ ./gradlew build\n# 构建成功！\n```\n\n## 最终验证\n\n```bash\n$ ./gradlew detekt\n# 无问题\n\n$ ./gradlew test\n# 所有测试通过\n```\n\n## 总结\n\n| 指标 | 数量 |\n|--------|-------|\n| 已修复的构建错误 | 3 |\n| 已修复的 Detekt 问题 | 0 |\n| 已修改的文件 | 2 |\n| 剩余问题 | 0 |\n\n构建状态: PASS: SUCCESS\n````"
+    },
+    {
+      "en-US": "## Common Errors Fixed",
+      "zh-Hans": "## 常见的修复错误"
+    },
+    {
+      "en-US": "| Error | Typical Fix |\n|-------|-------------|\n| `Unresolved reference: X` | Add import or dependency |\n| `Type mismatch` | Fix type conversion or assignment |\n| `'when' must be exhaustive` | Add missing sealed class branches |\n| `Suspend function can only be called from coroutine` | Add `suspend` modifier |\n| `Smart cast impossible` | Use local `val` or `let` |\n| `None of the following candidates is applicable` | Fix argument types |\n| `Could not resolve dependency` | Fix version or add repository |",
+      "zh-Hans": "| 错误 | 典型修复 |\n|-------|-------------|\n| `Unresolved reference: X` | 添加导入或依赖项 |\n| `Type mismatch` | 修复类型转换或赋值 |\n| `'when' must be exhaustive` | 添加缺失的密封类分支 |\n| `Suspend function can only be called from coroutine` | 添加 `suspend` 修饰符 |\n| `Smart cast impossible` | 使用局部 `val` 或 `let` |\n| `None of the following candidates is applicable` | 修复参数类型 |\n| `Could not resolve dependency` | 修复版本或添加仓库 |"
+    },
+    {
+      "en-US": "## Fix Strategy",
+      "zh-Hans": "## 修复策略"
+    },
+    {
+      "en-US": "1. **Build errors first** - Code must compile\n2. **Detekt violations second** - Fix code quality issues\n3. **ktlint warnings third** - Fix formatting\n4. **One fix at a time** - Verify each change\n5. **Minimal changes** - Don't refactor, just fix",
+      "zh-Hans": "1. **优先处理构建错误** - 代码必须能够编译\n2. **其次处理 Detekt 违规** - 修复代码质量问题\n3. **再次处理 ktlint 警告** - 修复格式问题\n4. **一次修复一个** - 验证每次更改\n5. **最小化更改** - 不进行重构，仅修复问题"
+    },
+    {
+      "en-US": "## Stop Conditions",
+      "zh-Hans": "## 停止条件"
+    },
+    {
+      "en-US": "The agent will stop and report if:",
+      "zh-Hans": "代理将在以下情况停止并报告："
+    },
+    {
+      "en-US": "- Same error persists after 3 attempts\n- Fix introduces more errors\n- Requires architectural changes\n- Missing external dependencies",
+      "zh-Hans": "* 同一错误在 3 次尝试后仍然存在\n* 修复引入了更多错误\n* 需要架构更改\n* 缺少外部依赖项"
+    },
+    {
+      "en-US": "## Related Commands",
+      "zh-Hans": "## 相关命令"
+    },
+    {
+      "en-US": "- `/kotlin-test` - Run tests after build succeeds\n- `/kotlin-review` - Review code quality\n- `verification-loop` skill - Full verification loop",
+      "zh-Hans": "* `/kotlin-test` - 构建成功后运行测试\n* `/kotlin-review` - 审查代码质量\n* `verification-loop` 技能 - 完整验证循环"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- Agent: `agents/kotlin-build-resolver.md`\n- Skill: `skills/kotlin-patterns/`",
+      "zh-Hans": "* 代理：`agents/kotlin-build-resolver.md`\n* 技能：`skills/kotlin-patterns/`"
+    }
+  ]
+}

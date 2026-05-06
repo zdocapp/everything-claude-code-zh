@@ -6,11 +6,11 @@ paths:
 
 # Kotlin 测试
 
-> 本文档扩展了 [common/testing.md](../common/testing.md)，补充了 Kotlin 和 Android/KMP 特有的内容。
+> 本文档扩展了 [common/testing.md](../common/testing.md)，补充了 Kotlin 和 Android/KMP 相关内容。
 
 ## 测试框架
 
-* **kotlin.test** 用于跨平台 (KMP) — `@Test`, `assertEquals`, `assertTrue`
+* **kotlin.test** 用于多平台 (KMP) — `@Test`, `assertEquals`, `assertTrue`
 * **JUnit 4/5** 用于 Android 特定测试
 * **Turbine** 用于测试 Flow 和 StateFlow
 * **kotlinx-coroutines-test** 用于协程测试 (`runTest`, `TestDispatcher`)
@@ -89,7 +89,7 @@ val client = HttpClient(mockEngine) {
 ## Room/SQLDelight 测试
 
 * Room: 使用 `Room.inMemoryDatabaseBuilder()` 进行内存测试
-* SQLDelight: 在 JVM 测试中使用 `JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)`
+* SQLDelight: 使用 `JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)` 进行 JVM 测试
 
 ```kotlin
 @Test
@@ -122,8 +122,8 @@ fun `delete item emits updated list without deleted item`() = runTest { }
 src/
 ├── commonTest/kotlin/     # 共享测试（ViewModel、UseCase、Repository）
 ├── androidUnitTest/kotlin/ # Android 单元测试（JUnit）
-├── androidInstrumentedTest/kotlin/  # 仪器化测试（Room、UI）
-└── iosTest/kotlin/        # iOS 专用测试
+├── androidInstrumentedTest/kotlin/  # 插桩测试（Room、UI）
+└── iosTest/kotlin/        # iOS 特定测试
 ```
 
-最低测试覆盖率：每个功能都需要覆盖 ViewModel + UseCase。
+最低测试覆盖率：每个功能的 ViewModel + UseCase。

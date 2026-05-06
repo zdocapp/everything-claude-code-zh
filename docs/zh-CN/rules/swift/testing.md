@@ -6,11 +6,11 @@ paths:
 
 # Swift 测试
 
-> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Swift 特定的内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Swift 相关的内容。
 
-## 框架
+## 测试框架
 
-对于新测试，使用 **Swift Testing** (`import Testing`)。使用 `@Test` 和 `#expect`：
+对于新测试，请使用 **Swift Testing** (`import Testing`)。使用 `@Test` 和 `#expect`：
 
 ```swift
 @Test("User creation validates email")
@@ -23,7 +23,7 @@ func userCreationValidatesEmail() throws {
 
 ## 测试隔离
 
-每个测试都会获得一个全新的实例 —— 在 `init` 中设置，在 `deinit` 中拆卸。测试之间没有共享的可变状态。
+每个测试都会获得一个全新的实例 —— 在 `init` 中设置，在 `deinit` 中清理。测试之间没有共享的可变状态。
 
 ## 参数化测试
 

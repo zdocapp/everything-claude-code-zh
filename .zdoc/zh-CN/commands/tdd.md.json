@@ -1,0 +1,110 @@
+{
+  "sourceFile": "commands/tdd.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the tdd-workflow skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于tdd-workflow技能的旧版斜杠入口垫片。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# TDD Command (Legacy Shim)",
+      "zh-Hans": "# TDD 命令（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/tdd`. The maintained workflow lives in `skills/tdd-workflow/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/tdd` 时使用此命令。维护中的工作流程位于 `skills/tdd-workflow/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范使用方式"
+    },
+    {
+      "en-US": "- Prefer the `tdd-workflow` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 首选直接使用 `tdd-workflow` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托执行"
+    },
+    {
+      "en-US": "Apply the `tdd-workflow` skill.",
+      "zh-Hans": "应用 `tdd-workflow` 技能。"
+    },
+    {
+      "en-US": "- Stay strict on RED -> GREEN -> REFACTOR.\n- Keep tests first, coverage explicit, and checkpoint evidence clear.\n- Use the skill as the maintained TDD body instead of duplicating the playbook here.\n})",
+      "zh-Hans": "* 严格遵守 RED -> GREEN -> REFACTOR 流程。\n* 保持测试优先、覆盖率明确、检查点证据清晰。\n* 使用该技能作为维护中的 TDD 主体，而非在此处重复编写操作手册。\n  })"
+    },
+    {
+      "en-US": "```\n\n## Step 3: Run Tests - Verify FAIL\n\n```bash\nnpm test lib/liquidity.test.ts\n\nFAIL lib/liquidity.test.ts\n  ✕ should return high score for liquid market (2 ms)\n    Error: Not implemented\n\n1 test failed, 0 passed\n```",
+      "zh-Hans": "````\n\n## Step 3: 运行测试 - 验证失败\n\n```bash\nnpm test lib/liquidity.test.ts\n\nFAIL lib/liquidity.test.ts\n  ✕ should return high score for liquid market (2 ms)\n    Error: Not implemented\n\n1 test failed, 0 passed\n````"
+    },
+    {
+      "en-US": "PASS: Tests fail as expected. Ready to implement.",
+      "zh-Hans": "通过：测试按预期失败。准备实施。"
+    },
+    {
+      "en-US": "## Step 4: Implement Minimal Code (GREEN)",
+      "zh-Hans": "## 步骤 4：实现最小化代码（GREEN）"
+    },
+    {
+      "en-US": "```typescript\n// lib/liquidity.ts\nexport function calculateLiquidityScore(market: MarketData): number {\n  // Handle zero volume edge case\n  if (market.totalVolume === 0) {\n    return 0\n  }\n\n  // Calculate component scores (0-100 scale)\n  const volumeScore = Math.min(market.totalVolume / 1000, 100)\n  const spreadScore = Math.max(100 - (market.bidAskSpread * 1000), 0)\n  const traderScore = Math.min(market.activeTraders / 10, 100)\n\n  // Recent activity bonus\n  const hoursSinceLastTrade = (Date.now() - market.lastTradeTime.getTime()) / (1000 * 60 * 60)\n  const recencyScore = Math.max(100 - (hoursSinceLastTrade * 10), 0)\n\n  // Weighted average\n  const score = (\n    volumeScore * 0.4 +\n    spreadScore * 0.3 +\n    traderScore * 0.2 +\n    recencyScore * 0.1\n  )\n\n  return Math.min(Math.max(score, 0), 100) // Clamp to 0-100\n}\n```",
+      "zh-Hans": "```typescript\n// lib/liquidity.ts\nexport function calculateLiquidityScore(market: MarketData): number {\n  // Handle zero volume edge case\n  if (market.totalVolume === 0) {\n    return 0\n  }\n\n  // Calculate component scores (0-100 scale)\n  const volumeScore = Math.min(market.totalVolume / 1000, 100)\n  const spreadScore = Math.max(100 - (market.bidAskSpread * 1000), 0)\n  const traderScore = Math.min(market.activeTraders / 10, 100)\n\n  // Recent activity bonus\n  const hoursSinceLastTrade = (Date.now() - market.lastTradeTime.getTime()) / (1000 * 60 * 60)\n  const recencyScore = Math.max(100 - (hoursSinceLastTrade * 10), 0)\n\n  // Weighted average\n  const score = (\n    volumeScore * 0.4 +\n    spreadScore * 0.3 +\n    traderScore * 0.2 +\n    recencyScore * 0.1\n  )\n\n  return Math.min(Math.max(score, 0), 100) // Clamp to 0-100\n}\n```"
+    },
+    {
+      "en-US": "## Step 5: Run Tests - Verify PASS",
+      "zh-Hans": "## 步骤 5：运行测试 - 验证通过"
+    },
+    {
+      "en-US": "```bash\nnpm test lib/liquidity.test.ts\n\nPASS lib/liquidity.test.ts\n  ✓ should return high score for liquid market (3 ms)\n  ✓ should return low score for illiquid market (2 ms)\n  ✓ should handle edge case: zero volume (1 ms)\n\n3 tests passed\n```",
+      "zh-Hans": "```bash\nnpm test lib/liquidity.test.ts\n\nPASS lib/liquidity.test.ts\n  ✓ should return high score for liquid market (3 ms)\n  ✓ should return low score for illiquid market (2 ms)\n  ✓ should handle edge case: zero volume (1 ms)\n\n3 tests passed\n```"
+    },
+    {
+      "en-US": "PASS: All tests passing!",
+      "zh-Hans": "通过：所有测试通过！"
+    },
+    {
+      "en-US": "## Step 6: Refactor (IMPROVE)",
+      "zh-Hans": "## 步骤 6：重构（改进）"
+    },
+    {
+      "en-US": "```typescript\n// lib/liquidity.ts - Refactored with constants and better readability\nconst WEIGHTS = {\n  VOLUME: 0.4,\n  SPREAD: 0.3,\n  TRADERS: 0.2,\n  RECENCY: 0.1,\n} as const\n\nconst SCALE_FACTORS = {\n  VOLUME: 1000,\n  SPREAD: 1000,\n  TRADERS: 10,\n  RECENCY_PENALTY: 10,\n} as const\n\nfunction clamp(value: number, min: number, max: number): number {\n  return Math.min(Math.max(value, min), max)\n}\n\nexport function calculateLiquidityScore(market: MarketData): number {\n  if (market.totalVolume === 0) return 0\n\n  const volumeScore = Math.min(market.totalVolume / SCALE_FACTORS.VOLUME, 100)\n  const spreadScore = clamp(100 - (market.bidAskSpread * SCALE_FACTORS.SPREAD), 0, 100)\n  const traderScore = Math.min(market.activeTraders / SCALE_FACTORS.TRADERS, 100)\n\n  const hoursSinceLastTrade = (Date.now() - market.lastTradeTime.getTime()) / (1000 * 60 * 60)\n  const recencyScore = clamp(100 - (hoursSinceLastTrade * SCALE_FACTORS.RECENCY_PENALTY), 0, 100)\n\n  const weightedScore =\n    volumeScore * WEIGHTS.VOLUME +\n    spreadScore * WEIGHTS.SPREAD +\n    traderScore * WEIGHTS.TRADERS +\n    recencyScore * WEIGHTS.RECENCY\n\n  return clamp(weightedScore, 0, 100)\n}\n```",
+      "zh-Hans": "```typescript\n// lib/liquidity.ts - Refactored with constants and better readability\nconst WEIGHTS = {\n  VOLUME: 0.4,\n  SPREAD: 0.3,\n  TRADERS: 0.2,\n  RECENCY: 0.1,\n} as const\n\nconst SCALE_FACTORS = {\n  VOLUME: 1000,\n  SPREAD: 1000,\n  TRADERS: 10,\n  RECENCY_PENALTY: 10,\n} as const\n\nfunction clamp(value: number, min: number, max: number): number {\n  return Math.min(Math.max(value, min), max)\n}\n\nexport function calculateLiquidityScore(market: MarketData): number {\n  if (market.totalVolume === 0) return 0\n\n  const volumeScore = Math.min(market.totalVolume / SCALE_FACTORS.VOLUME, 100)\n  const spreadScore = clamp(100 - (market.bidAskSpread * SCALE_FACTORS.SPREAD), 0, 100)\n  const traderScore = Math.min(market.activeTraders / SCALE_FACTORS.TRADERS, 100)\n\n  const hoursSinceLastTrade = (Date.now() - market.lastTradeTime.getTime()) / (1000 * 60 * 60)\n  const recencyScore = clamp(100 - (hoursSinceLastTrade * SCALE_FACTORS.RECENCY_PENALTY), 0, 100)\n\n  const weightedScore =\n    volumeScore * WEIGHTS.VOLUME +\n    spreadScore * WEIGHTS.SPREAD +\n    traderScore * WEIGHTS.TRADERS +\n    recencyScore * WEIGHTS.RECENCY\n\n  return clamp(weightedScore, 0, 100)\n}\n```"
+    },
+    {
+      "en-US": "## Step 7: Verify Tests Still Pass",
+      "zh-Hans": "## 步骤 7：验证测试仍通过"
+    },
+    {
+      "en-US": "```bash\nnpm test lib/liquidity.test.ts\n\nPASS lib/liquidity.test.ts\n  ✓ should return high score for liquid market (3 ms)\n  ✓ should return low score for illiquid market (2 ms)\n  ✓ should handle edge case: zero volume (1 ms)\n\n3 tests passed\n```",
+      "zh-Hans": "```bash\nnpm test lib/liquidity.test.ts\n\nPASS lib/liquidity.test.ts\n  ✓ should return high score for liquid market (3 ms)\n  ✓ should return low score for illiquid market (2 ms)\n  ✓ should handle edge case: zero volume (1 ms)\n\n3 tests passed\n```"
+    },
+    {
+      "en-US": "PASS: Refactoring complete, tests still passing!",
+      "zh-Hans": "通过：重构完成，测试仍通过！"
+    },
+    {
+      "en-US": "## Step 8: Check Coverage",
+      "zh-Hans": "## 步骤 8：检查覆盖率"
+    },
+    {
+      "en-US": "```bash\nnpm test -- --coverage lib/liquidity.test.ts\n\nFile           | % Stmts | % Branch | % Funcs | % Lines\n---------------|---------|----------|---------|--------\nliquidity.ts   |   100   |   100    |   100   |   100\n\nCoverage: 100% PASS: (Target: 80%)\n```",
+      "zh-Hans": "```bash\nnpm test -- --coverage lib/liquidity.test.ts\n\nFile           | % Stmts | % Branch | % Funcs | % Lines\n---------------|---------|----------|---------|--------\nliquidity.ts   |   100   |   100    |   100   |   100\n\nCoverage: 100% PASS: (Target: 80%)\n```"
+    },
+    {
+      "en-US": "PASS: TDD session complete!",
+      "zh-Hans": "通过：TDD 会话完成！"
+    },
+    {
+      "en-US": "```\n\n## TDD Best Practices\n\n**DO:**\n- PASS: Write the test FIRST, before any implementation\n- PASS: Run tests and verify they FAIL before implementing\n- PASS: Write minimal code to make tests pass\n- PASS: Refactor only after tests are green\n- PASS: Add edge cases and error scenarios\n- PASS: Aim for 80%+ coverage (100% for critical code)\n\n**DON'T:**\n- FAIL: Write implementation before tests\n- FAIL: Skip running tests after each change\n- FAIL: Write too much code at once\n- FAIL: Ignore failing tests\n- FAIL: Test implementation details (test behavior)\n- FAIL: Mock everything (prefer integration tests)\n\n## Test Types to Include\n\n**Unit Tests** (Function-level):\n- Happy path scenarios\n- Edge cases (empty, null, max values)\n- Error conditions\n- Boundary values\n\n**Integration Tests** (Component-level):\n- API endpoints\n- Database operations\n- External service calls\n- React components with hooks\n\n**E2E Tests** (use `/e2e` command):\n- Critical user flows\n- Multi-step processes\n- Full stack integration\n\n## Coverage Requirements\n\n- **80% minimum** for all code\n- **100% required** for:\n  - Financial calculations\n  - Authentication logic\n  - Security-critical code\n  - Core business logic\n\n## Important Notes\n\n**MANDATORY**: Tests must be written BEFORE implementation. The TDD cycle is:\n\n1. **RED** - Write failing test\n2. **GREEN** - Implement to pass\n3. **REFACTOR** - Improve code\n\nNever skip the RED phase. Never write code before tests.\n\n## Integration with Other Commands\n\n- Use `/plan` first to understand what to build\n- Use `/tdd` to implement with tests\n- Use `/build-fix` if build errors occur\n- Use `/code-review` to review implementation\n- Use `/test-coverage` to verify coverage\n\n## Related Agents\n\nThis command invokes the `tdd-guide` agent provided by ECC.\n\nThe related `tdd-workflow` skill is also bundled with ECC.\n\nFor manual installs, the source files live at:\n- `agents/tdd-guide.md`\n- `skills/tdd-workflow/SKILL.md`\n",
+      "zh-Hans": "```\n\n## TDD 最佳实践\n\n**应做事项：**\n- 通过：先编写测试，再实现功能\n- 通过：在实现前运行测试并确认其失败\n- 通过：编写最少的代码使测试通过\n- 通过：仅在测试通过后进行重构\n- 通过：添加边界情况和错误场景\n- 通过：目标覆盖率 80% 以上（关键代码需 100%）\n\n**禁止事项：**\n- 失败：先实现功能再编写测试\n- 失败：每次更改后跳过运行测试\n- 失败：一次性编写过多代码\n- 失败：忽略失败的测试\n- 失败：测试实现细节（应测试行为）\n- 失败：过度使用模拟（优先集成测试）\n\n## 应包含的测试类型\n\n**单元测试**（函数级别）：\n- 正常路径场景\n- 边界情况（空值、null、最大值）\n- 错误条件\n- 边界值\n\n**集成测试**（组件级别）：\n- API 端点\n- 数据库操作\n- 外部服务调用\n- 使用钩子的 React 组件\n\n**端到端测试**（使用 `/e2e` 命令）：\n- 关键用户流程\n- 多步骤流程\n- 全栈集成\n\n## 覆盖率要求\n\n- 所有代码**最低 80%**\n- **必须达到 100%** 的代码：\n  - 财务计算\n  - 认证逻辑\n  - 安全关键代码\n  - 核心业务逻辑\n\n## 重要说明\n\n**强制要求**：必须在实现前编写测试。TDD 循环如下：\n\n1. **红** - 编写失败的测试\n2. **绿** - 实现功能使其通过\n3. **重构** - 改进代码\n\n切勿跳过红阶段。切勿在测试前编写代码。\n\n## 与其他命令的集成\n\n- 首先使用 `/plan` 了解要构建的内容\n- 使用 `/tdd` 进行带测试的实现\n- 如果出现构建错误，使用 `/build-fix`\n- 使用 `/code-review` 审查实现\n- 使用 `/test-coverage` 验证覆盖率\n\n## 相关代理\n\n此命令调用由 ECC 提供的 `tdd-guide` 代理。\n\n相关的 `tdd-workflow` 技能也随 ECC 捆绑。\n\n对于手动安装，源文件位于：\n- `agents/tdd-guide.md`\n- `skills/tdd-workflow/SKILL.md`\n```"
+    }
+  ]
+}

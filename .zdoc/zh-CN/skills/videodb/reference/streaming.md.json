@@ -1,0 +1,186 @@
+{
+  "sourceFile": "skills/videodb/reference/streaming.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Streaming & Playback",
+      "zh-Hans": "# 流媒体与播放"
+    },
+    {
+      "en-US": "VideoDB generates streams on-demand, returning HLS-compatible URLs that play instantly in any standard video player. No render times or export waits - edits, searches, and compositions stream immediately.",
+      "zh-Hans": "VideoDB 按需生成流，返回 HLS 兼容的 URL，可在任何标准视频播放器中即时播放。无需渲染时间或导出等待——编辑、搜索和组合内容可立即流式传输。"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 先决条件"
+    },
+    {
+      "en-US": "Videos **must be uploaded** to a collection before streams can be generated. For search-based streams, the video must also be **indexed** (spoken words and/or scenes). See [search.md](search.md) for indexing details.",
+      "zh-Hans": "视频**必须上传**到集合中，才能生成流。对于基于搜索的流，视频还必须**已建立索引**（口语单词和/或场景）。有关索引的详细信息，请参阅 [search.md](search.md)。"
+    },
+    {
+      "en-US": "## Core Concepts",
+      "zh-Hans": "## 核心概念"
+    },
+    {
+      "en-US": "### Stream Generation",
+      "zh-Hans": "### 流生成"
+    },
+    {
+      "en-US": "Every video, search result, and timeline in VideoDB can produce a **stream URL**. This URL points to an HLS (HTTP Live Streaming) manifest that is compiled on demand.",
+      "zh-Hans": "VideoDB 中的每个视频、搜索结果和时间线都可以生成一个**流 URL**。此 URL 指向一个按需编译的 HLS（HTTP 实时流）清单。"
+    },
+    {
+      "en-US": "```python\n# From a video\nstream_url = video.generate_stream()\n\n# From a timeline\nstream_url = timeline.generate_stream()\n\n# From search results\nstream_url = results.compile()\n```",
+      "zh-Hans": "```python\n# From a video\nstream_url = video.generate_stream()\n\n# From a timeline\nstream_url = timeline.generate_stream()\n\n# From search results\nstream_url = results.compile()\n```"
+    },
+    {
+      "en-US": "## Streaming a Single Video",
+      "zh-Hans": "## 流式传输单个视频"
+    },
+    {
+      "en-US": "### Basic Playback",
+      "zh-Hans": "### 基本播放"
+    },
+    {
+      "en-US": "```python\nimport videodb\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\n# Generate stream URL\nstream_url = video.generate_stream()\nprint(f\"Stream: {stream_url}\")\n\n# Open in default browser\nvideo.play()\n```",
+      "zh-Hans": "```python\nimport videodb\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\n# Generate stream URL\nstream_url = video.generate_stream()\nprint(f\"Stream: {stream_url}\")\n\n# Open in default browser\nvideo.play()\n```"
+    },
+    {
+      "en-US": "### With Subtitles",
+      "zh-Hans": "### 带字幕"
+    },
+    {
+      "en-US": "```python\n# Index and add subtitles first\nvideo.index_spoken_words(force=True)\nstream_url = video.add_subtitle()\n\n# Returned URL already includes subtitles\nprint(f\"Subtitled stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\n# Index and add subtitles first\nvideo.index_spoken_words(force=True)\nstream_url = video.add_subtitle()\n\n# Returned URL already includes subtitles\nprint(f\"Subtitled stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "### Specific Segments",
+      "zh-Hans": "### 特定片段"
+    },
+    {
+      "en-US": "Stream only a portion of a video by passing a timeline of timestamp ranges:",
+      "zh-Hans": "通过传递时间戳范围的时间线，仅流式传输视频的一部分："
+    },
+    {
+      "en-US": "```python\n# Stream seconds 10-30 and 60-90\nstream_url = video.generate_stream(timeline=[(10, 30), (60, 90)])\nprint(f\"Segment stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\n# Stream seconds 10-30 and 60-90\nstream_url = video.generate_stream(timeline=[(10, 30), (60, 90)])\nprint(f\"Segment stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "## Streaming Timeline Compositions",
+      "zh-Hans": "## 流式传输时间线组合"
+    },
+    {
+      "en-US": "Build a multi-asset composition and stream it in real time:",
+      "zh-Hans": "构建多资产组合并实时流式传输："
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, AudioAsset, ImageAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nvideo = coll.get_video(video_id)\nmusic = coll.get_audio(music_id)\n\ntimeline = Timeline(conn)\n\n# Main video content\ntimeline.add_inline(VideoAsset(asset_id=video.id))\n\n# Background music overlay (starts at second 0)\ntimeline.add_overlay(0, AudioAsset(asset_id=music.id))\n\n# Text overlay at the beginning\ntimeline.add_overlay(0, TextAsset(\n    text=\"Live Demo\",\n    duration=3,\n    style=TextStyle(fontsize=48, fontcolor=\"white\", boxcolor=\"#000000\"),\n))\n\n# Generate the composed stream\nstream_url = timeline.generate_stream()\nprint(f\"Composed stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, AudioAsset, ImageAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nvideo = coll.get_video(video_id)\nmusic = coll.get_audio(music_id)\n\ntimeline = Timeline(conn)\n\n# Main video content\ntimeline.add_inline(VideoAsset(asset_id=video.id))\n\n# Background music overlay (starts at second 0)\ntimeline.add_overlay(0, AudioAsset(asset_id=music.id))\n\n# Text overlay at the beginning\ntimeline.add_overlay(0, TextAsset(\n    text=\"Live Demo\",\n    duration=3,\n    style=TextStyle(fontsize=48, fontcolor=\"white\", boxcolor=\"#000000\"),\n))\n\n# Generate the composed stream\nstream_url = timeline.generate_stream()\nprint(f\"Composed stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "**Important:** `add_inline()` only accepts `VideoAsset`. Use `add_overlay()` for `AudioAsset`, `ImageAsset`, and `TextAsset`.",
+      "zh-Hans": "**重要提示：** `add_inline()` 仅接受 `VideoAsset`。对于 `AudioAsset`、`ImageAsset` 和 `TextAsset`，请使用 `add_overlay()`。"
+    },
+    {
+      "en-US": "For detailed timeline editing, see [editor.md](editor.md).",
+      "zh-Hans": "有关详细的时间线编辑，请参阅 [editor.md](editor.md)。"
+    },
+    {
+      "en-US": "## Streaming Search Results",
+      "zh-Hans": "## 流式传输搜索结果"
+    },
+    {
+      "en-US": "Compile search results into a single stream of all matching segments:",
+      "zh-Hans": "将搜索结果编译成包含所有匹配片段的单一流："
+    },
+    {
+      "en-US": "```python\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\n\nvideo.index_spoken_words(force=True)\ntry:\n    results = video.search(\"key announcement\", search_type=SearchType.semantic)\n\n    # Compile all matching shots into one stream\n    stream_url = results.compile()\n    print(f\"Search results stream: {stream_url}\")\n\n    # Or play directly\n    results.play()\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        print(\"No matching announcement segments were found.\")\n    else:\n        raise\n```",
+      "zh-Hans": "```python\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\n\nvideo.index_spoken_words(force=True)\ntry:\n    results = video.search(\"key announcement\", search_type=SearchType.semantic)\n\n    # Compile all matching shots into one stream\n    stream_url = results.compile()\n    print(f\"Search results stream: {stream_url}\")\n\n    # Or play directly\n    results.play()\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        print(\"No matching announcement segments were found.\")\n    else:\n        raise\n```"
+    },
+    {
+      "en-US": "### Stream Individual Search Hits",
+      "zh-Hans": "### 流式传输单个搜索结果命中项"
+    },
+    {
+      "en-US": "```python\nfrom videodb.exceptions import InvalidRequestError\n\ntry:\n    results = video.search(\"product demo\", search_type=SearchType.semantic)\n    for i, shot in enumerate(results.get_shots()):\n        stream_url = shot.generate_stream()\n        print(f\"Hit {i+1} [{shot.start:.1f}s-{shot.end:.1f}s]: {stream_url}\")\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        print(\"No product demo segments matched the query.\")\n    else:\n        raise\n```",
+      "zh-Hans": "```python\nfrom videodb.exceptions import InvalidRequestError\n\ntry:\n    results = video.search(\"product demo\", search_type=SearchType.semantic)\n    for i, shot in enumerate(results.get_shots()):\n        stream_url = shot.generate_stream()\n        print(f\"Hit {i+1} [{shot.start:.1f}s-{shot.end:.1f}s]: {stream_url}\")\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        print(\"No product demo segments matched the query.\")\n    else:\n        raise\n```"
+    },
+    {
+      "en-US": "## Audio Playback",
+      "zh-Hans": "## 音频播放"
+    },
+    {
+      "en-US": "Get a signed playback URL for audio content:",
+      "zh-Hans": "获取音频内容的签名播放 URL："
+    },
+    {
+      "en-US": "```python\naudio = coll.get_audio(audio_id)\nplayback_url = audio.generate_url()\nprint(f\"Audio URL: {playback_url}\")\n```",
+      "zh-Hans": "```python\naudio = coll.get_audio(audio_id)\nplayback_url = audio.generate_url()\nprint(f\"Audio URL: {playback_url}\")\n```"
+    },
+    {
+      "en-US": "## Complete Workflow Examples",
+      "zh-Hans": "## 完整工作流程示例"
+    },
+    {
+      "en-US": "### Search-to-Stream Pipeline",
+      "zh-Hans": "### 搜索到流式传输的流水线"
+    },
+    {
+      "en-US": "Combine search, timeline composition, and streaming in one workflow:",
+      "zh-Hans": "在一个工作流程中结合搜索、时间线组合和流式传输："
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\nvideo.index_spoken_words(force=True)\n\n# Search for key moments\nqueries = [\"introduction\", \"main demo\", \"Q&A\"]\ntimeline = Timeline(conn)\ntimeline_offset = 0.0\n\nfor query in queries:\n    try:\n        results = video.search(query, search_type=SearchType.semantic)\n        shots = results.get_shots()\n    except InvalidRequestError as exc:\n        if \"No results found\" in str(exc):\n            shots = []\n        else:\n            raise\n\n    if not shots:\n        continue\n\n    # Add the section label where this batch starts in the compiled timeline\n    timeline.add_overlay(timeline_offset, TextAsset(\n        text=query.title(),\n        duration=2,\n        style=TextStyle(fontsize=36, fontcolor=\"white\", boxcolor=\"#222222\"),\n    ))\n\n    for shot in shots:\n        timeline.add_inline(\n            VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n        )\n        timeline_offset += shot.end - shot.start\n\nstream_url = timeline.generate_stream()\nprint(f\"Dynamic compilation: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\nvideo.index_spoken_words(force=True)\n\n# Search for key moments\nqueries = [\"introduction\", \"main demo\", \"Q&A\"]\ntimeline = Timeline(conn)\ntimeline_offset = 0.0\n\nfor query in queries:\n    try:\n        results = video.search(query, search_type=SearchType.semantic)\n        shots = results.get_shots()\n    except InvalidRequestError as exc:\n        if \"No results found\" in str(exc):\n            shots = []\n        else:\n            raise\n\n    if not shots:\n        continue\n\n    # Add the section label where this batch starts in the compiled timeline\n    timeline.add_overlay(timeline_offset, TextAsset(\n        text=query.title(),\n        duration=2,\n        style=TextStyle(fontsize=36, fontcolor=\"white\", boxcolor=\"#222222\"),\n    ))\n\n    for shot in shots:\n        timeline.add_inline(\n            VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n        )\n        timeline_offset += shot.end - shot.start\n\nstream_url = timeline.generate_stream()\nprint(f\"Dynamic compilation: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "### Multi-Video Stream",
+      "zh-Hans": "### 多视频流"
+    },
+    {
+      "en-US": "Combine clips from different videos into a single stream:",
+      "zh-Hans": "将来自不同视频的片段组合成单一流："
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nvideo_clips = [\n    {\"id\": \"vid_001\", \"start\": 0, \"end\": 15},\n    {\"id\": \"vid_002\", \"start\": 10, \"end\": 30},\n    {\"id\": \"vid_003\", \"start\": 5, \"end\": 25},\n]\n\ntimeline = Timeline(conn)\nfor clip in video_clips:\n    timeline.add_inline(\n        VideoAsset(asset_id=clip[\"id\"], start=clip[\"start\"], end=clip[\"end\"])\n    )\n\nstream_url = timeline.generate_stream()\nprint(f\"Multi-video stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\nvideo_clips = [\n    {\"id\": \"vid_001\", \"start\": 0, \"end\": 15},\n    {\"id\": \"vid_002\", \"start\": 10, \"end\": 30},\n    {\"id\": \"vid_003\", \"start\": 5, \"end\": 25},\n]\n\ntimeline = Timeline(conn)\nfor clip in video_clips:\n    timeline.add_inline(\n        VideoAsset(asset_id=clip[\"id\"], start=clip[\"start\"], end=clip[\"end\"])\n    )\n\nstream_url = timeline.generate_stream()\nprint(f\"Multi-video stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "### Conditional Stream Assembly",
+      "zh-Hans": "### 条件流组装"
+    },
+    {
+      "en-US": "Build a stream dynamically based on search availability:",
+      "zh-Hans": "根据搜索可用性动态构建流："
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\nvideo.index_spoken_words(force=True)\n\ntimeline = Timeline(conn)\n\n# Try to find specific content; fall back to full video\ntopics = [\"opening remarks\", \"technical deep dive\", \"closing\"]\n\nfound_any = False\ntimeline_offset = 0.0\nfor topic in topics:\n    try:\n        results = video.search(topic, search_type=SearchType.semantic)\n        shots = results.get_shots()\n    except InvalidRequestError as exc:\n        if \"No results found\" in str(exc):\n            shots = []\n        else:\n            raise\n\n    if shots:\n        found_any = True\n        timeline.add_overlay(timeline_offset, TextAsset(\n            text=topic.title(),\n            duration=2,\n            style=TextStyle(fontsize=32, fontcolor=\"white\", boxcolor=\"#1a1a2e\"),\n        ))\n        for shot in shots:\n            timeline.add_inline(\n                VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n            )\n            timeline_offset += shot.end - shot.start\n\nif found_any:\n    stream_url = timeline.generate_stream()\n    print(f\"Curated stream: {stream_url}\")\nelse:\n    # Fall back to full video stream\n    stream_url = video.generate_stream()\n    print(f\"Full video stream: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\nvideo = coll.get_video(\"your-video-id\")\n\nvideo.index_spoken_words(force=True)\n\ntimeline = Timeline(conn)\n\n# Try to find specific content; fall back to full video\ntopics = [\"opening remarks\", \"technical deep dive\", \"closing\"]\n\nfound_any = False\ntimeline_offset = 0.0\nfor topic in topics:\n    try:\n        results = video.search(topic, search_type=SearchType.semantic)\n        shots = results.get_shots()\n    except InvalidRequestError as exc:\n        if \"No results found\" in str(exc):\n            shots = []\n        else:\n            raise\n\n    if shots:\n        found_any = True\n        timeline.add_overlay(timeline_offset, TextAsset(\n            text=topic.title(),\n            duration=2,\n            style=TextStyle(fontsize=32, fontcolor=\"white\", boxcolor=\"#1a1a2e\"),\n        ))\n        for shot in shots:\n            timeline.add_inline(\n                VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n            )\n            timeline_offset += shot.end - shot.start\n\nif found_any:\n    stream_url = timeline.generate_stream()\n    print(f\"Curated stream: {stream_url}\")\nelse:\n    # Fall back to full video stream\n    stream_url = video.generate_stream()\n    print(f\"Full video stream: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "### Live Event Recap",
+      "zh-Hans": "### 直播活动回顾"
+    },
+    {
+      "en-US": "Process an event recording into a streamable recap with multiple sections:",
+      "zh-Hans": "将活动录制内容处理成包含多个部分的可流式传输回顾："
+    },
+    {
+      "en-US": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, AudioAsset, ImageAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\n# Upload event recording\nevent = coll.upload(url=\"https://example.com/event-recording.mp4\")\nevent.index_spoken_words(force=True)\n\n# Generate background music\nmusic = coll.generate_music(\n    prompt=\"upbeat corporate background music\",\n    duration=120,\n)\n\n# Generate title image\ntitle_img = coll.generate_image(\n    prompt=\"modern event recap title card, dark background, professional\",\n    aspect_ratio=\"16:9\",\n)\n\n# Build the recap timeline\ntimeline = Timeline(conn)\ntimeline_offset = 0.0\n\n# Main video segments from search\ntry:\n    keynote = event.search(\"keynote announcement\", search_type=SearchType.semantic)\n    keynote_shots = keynote.get_shots()[:5]\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        keynote_shots = []\n    else:\n        raise\nif keynote_shots:\n    keynote_start = timeline_offset\n    for shot in keynote_shots:\n        timeline.add_inline(\n            VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n        )\n        timeline_offset += shot.end - shot.start\nelse:\n    keynote_start = None\n\ntry:\n    demo = event.search(\"product demo\", search_type=SearchType.semantic)\n    demo_shots = demo.get_shots()[:5]\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        demo_shots = []\n    else:\n        raise\nif demo_shots:\n    demo_start = timeline_offset\n    for shot in demo_shots:\n        timeline.add_inline(\n            VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n        )\n        timeline_offset += shot.end - shot.start\nelse:\n    demo_start = None\n\n# Overlay title card image\ntimeline.add_overlay(0, ImageAsset(\n    asset_id=title_img.id, width=100, height=100, x=80, y=20, duration=5\n))\n\n# Overlay section labels at the correct timeline offsets\nif keynote_start is not None:\n    timeline.add_overlay(max(5, keynote_start), TextAsset(\n        text=\"Keynote Highlights\",\n        duration=3,\n        style=TextStyle(fontsize=40, fontcolor=\"white\", boxcolor=\"#0d1117\"),\n    ))\nif demo_start is not None:\n    timeline.add_overlay(max(5, demo_start), TextAsset(\n        text=\"Demo Highlights\",\n        duration=3,\n        style=TextStyle(fontsize=36, fontcolor=\"white\", boxcolor=\"#0d1117\"),\n    ))\n\n# Overlay background music\ntimeline.add_overlay(0, AudioAsset(\n    asset_id=music.id, fade_in_duration=3\n))\n\n# Stream the final recap\nstream_url = timeline.generate_stream()\nprint(f\"Event recap: {stream_url}\")\n```",
+      "zh-Hans": "```python\nimport videodb\nfrom videodb import SearchType\nfrom videodb.exceptions import InvalidRequestError\nfrom videodb.timeline import Timeline\nfrom videodb.asset import VideoAsset, AudioAsset, ImageAsset, TextAsset, TextStyle\n\nconn = videodb.connect()\ncoll = conn.get_collection()\n\n# Upload event recording\nevent = coll.upload(url=\"https://example.com/event-recording.mp4\")\nevent.index_spoken_words(force=True)\n\n# Generate background music\nmusic = coll.generate_music(\n    prompt=\"upbeat corporate background music\",\n    duration=120,\n)\n\n# Generate title image\ntitle_img = coll.generate_image(\n    prompt=\"modern event recap title card, dark background, professional\",\n    aspect_ratio=\"16:9\",\n)\n\n# Build the recap timeline\ntimeline = Timeline(conn)\ntimeline_offset = 0.0\n\n# Main video segments from search\ntry:\n    keynote = event.search(\"keynote announcement\", search_type=SearchType.semantic)\n    keynote_shots = keynote.get_shots()[:5]\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        keynote_shots = []\n    else:\n        raise\nif keynote_shots:\n    keynote_start = timeline_offset\n    for shot in keynote_shots:\n        timeline.add_inline(\n            VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n        )\n        timeline_offset += shot.end - shot.start\nelse:\n    keynote_start = None\n\ntry:\n    demo = event.search(\"product demo\", search_type=SearchType.semantic)\n    demo_shots = demo.get_shots()[:5]\nexcept InvalidRequestError as exc:\n    if \"No results found\" in str(exc):\n        demo_shots = []\n    else:\n        raise\nif demo_shots:\n    demo_start = timeline_offset\n    for shot in demo_shots:\n        timeline.add_inline(\n            VideoAsset(asset_id=shot.video_id, start=shot.start, end=shot.end)\n        )\n        timeline_offset += shot.end - shot.start\nelse:\n    demo_start = None\n\n# Overlay title card image\ntimeline.add_overlay(0, ImageAsset(\n    asset_id=title_img.id, width=100, height=100, x=80, y=20, duration=5\n))\n\n# Overlay section labels at the correct timeline offsets\nif keynote_start is not None:\n    timeline.add_overlay(max(5, keynote_start), TextAsset(\n        text=\"Keynote Highlights\",\n        duration=3,\n        style=TextStyle(fontsize=40, fontcolor=\"white\", boxcolor=\"#0d1117\"),\n    ))\nif demo_start is not None:\n    timeline.add_overlay(max(5, demo_start), TextAsset(\n        text=\"Demo Highlights\",\n        duration=3,\n        style=TextStyle(fontsize=36, fontcolor=\"white\", boxcolor=\"#0d1117\"),\n    ))\n\n# Overlay background music\ntimeline.add_overlay(0, AudioAsset(\n    asset_id=music.id, fade_in_duration=3\n))\n\n# Stream the final recap\nstream_url = timeline.generate_stream()\nprint(f\"Event recap: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Tips",
+      "zh-Hans": "## 提示"
+    },
+    {
+      "en-US": "- **HLS compatibility**: Stream URLs return HLS manifests (`.m3u8`). They work in Safari natively, and in other browsers via hls.js or similar libraries.\n- **On-demand compilation**: Streams are compiled server-side when requested. The first play may have a brief compilation delay; subsequent plays of the same composition are cached.\n- **Caching**: Calling `video.generate_stream()` a second time without arguments returns the cached stream URL rather than recompiling.\n- **Segment streams**: `video.generate_stream(timeline=[(start, end)])` is the fastest way to stream a specific clip without building a full `Timeline` object.\n- **Inline vs overlay**: `add_inline()` only accepts `VideoAsset` and places assets sequentially on the main track. `add_overlay()` accepts `AudioAsset`, `ImageAsset`, and `TextAsset` and layers them on top at a given start time.\n- **TextStyle defaults**: `TextStyle` defaults to `font='Sans'`, `fontcolor='black'`. Use `boxcolor` (not `bgcolor`) for background color on text.\n- **Combine with generation**: Use `coll.generate_music(prompt, duration)` and `coll.generate_image(prompt, aspect_ratio)` to create assets for timeline compositions.\n- **Playback**: `.play()` opens the stream URL in the default system browser. For programmatic use, work with the URL string directly.",
+      "zh-Hans": "* **HLS 兼容性**：流 URL 返回 HLS 清单（`.m3u8`）。它们在 Safari 中原生工作，在其他浏览器中通过 hls.js 或类似库工作。\n* **按需编译**：流在请求时在服务器端编译。首次播放可能会有短暂的编译延迟；同一组合的后续播放会被缓存。\n* **缓存**：第二次调用 `video.generate_stream()` 而不带参数将返回缓存的流 URL，而不是重新编译。\n* **片段流**：`video.generate_stream(timeline=[(start, end)])` 是流式传输特定剪辑的最快方式，无需构建完整的 `Timeline` 对象。\n* **内联与覆盖**：`add_inline()` 仅接受 `VideoAsset` 并将资产按顺序放置在主轨道上。`add_overlay()` 接受 `AudioAsset`、`ImageAsset` 和 `TextAsset`，并在给定开始时间将它们分层放置在顶部。\n* **TextStyle 默认值**：`TextStyle` 默认为 `font='Sans'`、`fontcolor='black'`。对于文本的背景颜色，请使用 `boxcolor`（而不是 `bgcolor`）。\n* **与生成结合使用**：使用 `coll.generate_music(prompt, duration)` 和 `coll.generate_image(prompt, aspect_ratio)` 为时间线组合创建资产。\n* **播放**：`.play()` 在默认系统浏览器中打开流 URL。对于编程使用，请直接使用 URL 字符串。"
+    }
+  ]
+}

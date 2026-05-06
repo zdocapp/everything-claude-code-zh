@@ -6,22 +6,22 @@ origin: ECC
 
 # X API
 
-以编程方式与 X（Twitter）交互，用于发布、读取、搜索和分析。
+通过编程方式与 X（Twitter）进行交互，用于发帖、阅读、搜索和分析。
 
 ## 何时激活
 
-* 用户希望以编程方式发布推文或帖子串
+* 用户希望以编程方式发布推文或推文串
 * 从 X 读取时间线、提及或用户数据
 * 在 X 上搜索内容、趋势或对话
 * 构建 X 集成或机器人
-* 分析和参与度跟踪
-* 用户提及"发布到 X"、"发推"、"X API"或"Twitter API"
+* 分析和互动追踪
+* 用户提及“发布到 X”、“发推文”、“X API”或“Twitter API”
 
 ## 认证
 
-### OAuth 2.0 Bearer 令牌（仅应用）
+### OAuth 2.0 Bearer Token（仅应用）
 
-最佳适用场景：读取密集型操作、搜索、公开数据。
+最适合：读取密集型操作、搜索、公开数据。
 
 ```bash
 # Environment setup
@@ -46,25 +46,27 @@ tweets = resp.json()
 
 ### OAuth 1.0a（用户上下文）
 
-必需用于：发布推文、管理账户、私信。
+必需用于：发布推文、管理账户、私信以及任何写入流程。
 
 ```bash
 # Environment setup — source before use
-export X_API_KEY="your-api-key"
-export X_API_SECRET="your-api-secret"
+export X_CONSUMER_KEY="your-consumer-key"
+export X_CONSUMER_SECRET="your-consumer-secret"
 export X_ACCESS_TOKEN="your-access-token"
-export X_ACCESS_SECRET="your-access-secret"
+export X_ACCESS_TOKEN_SECRET="your-access-token-secret"
 ```
+
+在较旧的设置中可能存在诸如 `X_API_KEY`、`X_API_SECRET` 和 `X_ACCESS_SECRET` 等遗留别名。在记录或连接新流程时，建议使用 `X_CONSUMER_*` 和 `X_ACCESS_TOKEN_SECRET` 这些名称。
 
 ```python
 import os
 from requests_oauthlib import OAuth1Session
 
 oauth = OAuth1Session(
-    os.environ["X_API_KEY"],
-    client_secret=os.environ["X_API_SECRET"],
+    os.environ["X_CONSUMER_KEY"],
+    client_secret=os.environ["X_CONSUMER_SECRET"],
     resource_owner_key=os.environ["X_ACCESS_TOKEN"],
-    resource_owner_secret=os.environ["X_ACCESS_SECRET"],
+    resource_owner_secret=os.environ["X_ACCESS_TOKEN_SECRET"],
 )
 ```
 
@@ -81,7 +83,7 @@ resp.raise_for_status()
 tweet_id = resp.json()["data"]["id"]
 ```
 
-### 发布一个帖子串
+### 发布一个推文串
 
 ```python
 def post_thread(oauth, tweets: list[str]) -> list[str]:
@@ -125,7 +127,22 @@ resp = requests.get(
 )
 ```
 
-### 通过用户名获取用户
+### 拉取近期原创帖子用于语音建模
+
+```python
+resp = requests.get(
+    "https://api.x.com/2/tweets/search/recent",
+    headers=headers,
+    params={
+        "query": "from:affaanmustafa -is:retweet -is:reply",
+        "max_results": 25,
+        "tweet.fields": "created_at,public_metrics",
+    }
+)
+voice_samples = resp.json()
+```
+
+### 通过用户名获取用户信息
 
 ```python
 resp = requests.get(
@@ -156,9 +173,9 @@ resp = oauth.post(
 
 ## 速率限制
 
-X API 的速率限制因端点、认证方法和账户等级而异，并且会随时间变化。请始终：
+X API 的速率限制因端点、认证方法和账户等级而异，并且会随时间变化。务必：
 
-* 在硬编码假设之前，查看当前的 X 开发者文档
+* 在硬编码假设之前，查阅当前的 X 开发者文档
 * 在运行时读取 `x-rate-limit-remaining` 和 `x-rate-limit-reset` 头部信息
 * 自动退避，而不是依赖代码中的静态表格
 
@@ -187,24 +204,29 @@ else:
     raise Exception(f"X API error {resp.status_code}: {resp.text}")
 ```
 
-## 安全性
+## 安全
 
 * **切勿硬编码令牌。** 使用环境变量或 `.env` 文件。
 * **切勿提交 `.env` 文件。** 将其添加到 `.gitignore`。
-* **如果令牌暴露，请轮换令牌。** 在 developer.x.com 重新生成。
-* **当不需要写权限时，使用只读令牌。**
-* **安全存储 OAuth 密钥** — 不要存储在源代码或日志中。
+* **如果令牌暴露，请轮换。** 在 developer.x.com 重新生成。
+* **在不需要写入权限时，使用只读令牌。**
+* **安全存储 OAuth 密钥** —— 不要存储在源代码或日志中。
 
 ## 与内容引擎集成
 
-使用 `content-engine` 技能生成平台原生内容，然后通过 X API 发布：
+使用 `brand-voice` 加上 `content-engine` 来生成平台原生内容，然后通过 X API 发布：
 
-1. 使用内容引擎生成内容（X 平台格式）
-2. 验证长度（单条推文 280 字符）
-3. 使用上述模式通过 X API 发布
-4. 通过 public\_metrics 跟踪参与度
+1. 当语音匹配重要时，拉取近期的原创帖子
+2. 构建或复用 `VOICE PROFILE`
+3. 使用 `content-engine` 以 X 原生格式生成内容
+4. 验证长度和推文串结构
+5. 除非用户明确要求立即发布，否则返回草稿以供批准
+6. 仅在批准后通过 X API 发布
+7. 通过 public\_metrics 追踪互动情况
 
 ## 相关技能
 
-* `content-engine` — 为 X 生成平台原生内容
-* `crosspost` — 在 X、LinkedIn 和其他平台分发内容
+* `brand-voice` —— 从真实的 X 和网站/源材料构建可复用的语音配置文件
+* `content-engine` —— 为 X 生成平台原生内容
+* `crosspost` —— 在 X、LinkedIn 和其他平台分发内容
+* `connections-optimizer` —— 在起草基于网络的推广内容前，重组 X 图谱

@@ -1,0 +1,126 @@
+{
+  "sourceFile": "skills/messages-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: messages-ops\ndescription: Evidence-first live messaging workflow for ECC. Use when the user wants to read texts or DMs, recover a recent one-time code, inspect a thread before replying, or prove which message source was actually checked.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: messages-ops\ndescription: 以证据为先的ECC实时消息工作流程。适用于用户想要阅读文本或私信、恢复最近的一次性代码、在回复前检查线程，或证明实际检查了哪个消息来源的情况。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Messages Ops",
+      "zh-Hans": "# 消息操作"
+    },
+    {
+      "en-US": "Use this when the task is live-message retrieval: iMessage, DMs, recent one-time codes, or thread inspection before a follow-up.",
+      "zh-Hans": "当任务是实时消息检索时使用：iMessage、私信、近期一次性验证码，或在后续操作前检查对话线程。"
+    },
+    {
+      "en-US": "This is not email work. If the dominant surface is a mailbox, use `email-ops`.",
+      "zh-Hans": "这不是邮件工作。如果主要操作界面是邮箱，请使用 `email-ops`。"
+    },
+    {
+      "en-US": "## Skill Stack",
+      "zh-Hans": "## 技能栈"
+    },
+    {
+      "en-US": "Pull these ECC-native skills into the workflow when relevant:",
+      "zh-Hans": "在相关时将以下 ECC 原生技能纳入工作流："
+    },
+    {
+      "en-US": "- `email-ops` when the message task is really mailbox work\n- `connections-optimizer` when the DM thread belongs to outbound network work\n- `lead-intelligence` when the live thread should inform targeting or warm-path outreach\n- `knowledge-ops` when the thread contents need to be captured into durable context",
+      "zh-Hans": "* 当消息任务实际上是邮箱工作时，使用 `email-ops`\n* 当私信线程属于外联网络工作时，使用 `connections-optimizer`\n* 当实时线程应通知目标定位或热路径外联时，使用 `lead-intelligence`\n* 当需要将线程内容捕获到持久化上下文中时，使用 `knowledge-ops`"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 使用时机"
+    },
+    {
+      "en-US": "- user says \"read my messages\", \"check texts\", \"look in DMs\", or \"find the code\"\n- the task depends on a live thread or a recent code delivered to a local messaging surface\n- the user wants proof of which source or thread was inspected",
+      "zh-Hans": "* 用户说“阅读我的消息”、“查看短信”、“查看私信”或“查找验证码”\n* 任务依赖于实时线程或近期发送到本地消息界面的验证码\n* 用户需要证明检查了哪个来源或线程"
+    },
+    {
+      "en-US": "## Guardrails",
+      "zh-Hans": "## 防护措施"
+    },
+    {
+      "en-US": "- resolve the source first:\n  - local messages\n  - X / social DM\n  - another browser-gated message surface\n- do not claim a thread was checked without naming the source\n- do not improvise raw database access if a checked helper or standard path exists\n- if auth or MFA blocks the surface, report the exact blocker",
+      "zh-Hans": "* 首先确定来源：\n  * 本地消息\n  * X / 社交媒体私信\n  * 另一个需要浏览器访问的消息界面\n* 未指明来源前，不要声称已检查线程\n* 如果存在已检查的辅助工具或标准路径，不要临时使用原始数据库访问\n* 如果身份验证或多因素认证阻碍访问界面，请报告确切的阻碍"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Resolve the exact thread",
+      "zh-Hans": "### 1. 确定确切线程"
+    },
+    {
+      "en-US": "Before doing anything else, settle:",
+      "zh-Hans": "在进行任何操作之前，先确定："
+    },
+    {
+      "en-US": "- message surface\n- sender / recipient / service\n- time window\n- whether the task is retrieval, inspection, or prep for a reply",
+      "zh-Hans": "* 消息界面\n* 发件人 / 收件人 / 服务\n* 时间窗口\n* 任务是检索、检查还是为回复做准备"
+    },
+    {
+      "en-US": "### 2. Read before drafting",
+      "zh-Hans": "### 2. 起草前先阅读"
+    },
+    {
+      "en-US": "If the task may turn into an outbound follow-up:",
+      "zh-Hans": "如果任务可能转变为外联后续操作："
+    },
+    {
+      "en-US": "- read the latest inbound\n- identify the open loop\n- then hand off to the correct outbound skill if needed",
+      "zh-Hans": "* 阅读最新的接收消息\n* 识别未完成事项\n* 然后根据需要移交至正确的外联技能"
+    },
+    {
+      "en-US": "### 3. Handle codes as a focused retrieval task",
+      "zh-Hans": "### 3. 将验证码作为聚焦检索任务处理"
+    },
+    {
+      "en-US": "For one-time codes:",
+      "zh-Hans": "对于一次性验证码："
+    },
+    {
+      "en-US": "- search the recent local message window first\n- narrow by service or sender when possible\n- stop once the code is found or the focused search is exhausted",
+      "zh-Hans": "* 首先在最近的本地消息窗口中搜索\n* 尽可能按服务或发件人缩小范围\n* 一旦找到验证码或聚焦搜索已穷尽，即停止"
+    },
+    {
+      "en-US": "### 4. Report exact evidence",
+      "zh-Hans": "### 4. 报告确切证据"
+    },
+    {
+      "en-US": "Return:",
+      "zh-Hans": "返回："
+    },
+    {
+      "en-US": "- source used\n- thread or sender when possible\n- time window\n- exact status:\n  - read\n  - code-found\n  - blocked\n  - awaiting reply draft",
+      "zh-Hans": "* 使用的来源\n* 尽可能提供线程或发件人信息\n* 时间窗口\n* 确切状态：\n  * 已读\n  * 已找到验证码\n  * 受阻\n  * 等待回复草稿"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```text\nSOURCE\n- message surface\n- sender / thread / service\n\nRESULT\n- message summary or code\n- time window\n\nSTATUS\n- read / code-found / blocked / awaiting reply draft\n```",
+      "zh-Hans": "```text\n来源\n- 消息表面\n- 发送者 / 线程 / 服务\n\n结果\n- 消息摘要或代码\n- 时间窗口\n\n状态\n- 已读 / 代码已找到 / 已阻止 / 等待回复草稿\n```"
+    },
+    {
+      "en-US": "## Pitfalls",
+      "zh-Hans": "## 常见陷阱"
+    },
+    {
+      "en-US": "- do not blur mailbox work and DM/text work\n- do not claim retrieval without naming the source\n- do not burn time on broad searches when the ask is a recent-code lookup\n- do not keep retrying a blocked auth path without surfacing the blocker",
+      "zh-Hans": "* 不要混淆邮箱工作和私信/短信工作\n* 未指明来源前，不要声称已检索\n* 当要求是查找近期验证码时，不要在广泛搜索上浪费时间\n* 不要在不暴露阻碍的情况下，反复重试受阻的身份验证路径"
+    },
+    {
+      "en-US": "## Verification",
+      "zh-Hans": "## 验证"
+    },
+    {
+      "en-US": "- the response names the message source\n- the response includes a sender, service, thread, or clear blocker\n- the final state is explicit and bounded",
+      "zh-Hans": "* 响应中指明了消息来源\n* 响应包含了发件人、服务、线程或明确的阻碍\n* 最终状态是明确且有限的"
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 ---
 name: golang-testing
-description: Go测试模式包括表格驱动测试、子测试、基准测试、模糊测试和测试覆盖率。遵循TDD方法论，采用地道的Go实践。
+description: Go测试模式包括表格驱动测试、子测试、基准测试、模糊测试和测试覆盖率。遵循TDD方法论，采用惯用的Go实践。
 origin: ECC
 ---
 
 # Go 测试模式
 
-遵循 TDD 方法论，用于编写可靠、可维护测试的全面 Go 测试模式。
+遵循 TDD 方法论编写可靠、可维护测试的全面 Go 测试模式。
 
-## 何时激活
+## 何时启用
 
 * 编写新的 Go 函数或方法时
 * 为现有代码添加测试覆盖率时
@@ -22,12 +22,12 @@ origin: ECC
 
 ```
 RED     → 首先编写一个失败的测试
-GREEN   → 编写最少的代码来通过测试
-REFACTOR → 改进代码，同时保持测试通过
-REPEAT  → 继续处理下一个需求
+GREEN   → 编写最少的代码使测试通过
+REFACTOR → 在保持测试通过的同时改进代码
+REPEAT  → 继续下一个需求
 ```
 
-### Go 中的分步 TDD
+### Go 中的逐步 TDD
 
 ```go
 // Step 1: Define the interface/signature
@@ -154,7 +154,7 @@ func TestParseConfig(t *testing.T) {
 }
 ```
 
-## 子测试和子基准测试
+## 子测试与子基准测试
 
 ### 组织相关测试
 
@@ -403,7 +403,7 @@ func BenchmarkProcess(b *testing.B) {
 // Output: BenchmarkProcess-8   10000   105234 ns/op   4096 B/op   10 allocs/op
 ```
 
-### 不同大小的基准测试
+### 不同规模的基准测试
 
 ```go
 func BenchmarkSort(b *testing.B) {
@@ -641,7 +641,7 @@ func TestAPIHandler(t *testing.T) {
 }
 ```
 
-## 命令测试
+## 测试命令
 
 ```bash
 # Run all tests
@@ -680,22 +680,22 @@ go test -count=10 ./...
 
 ## 最佳实践
 
-**应该：**
+**应做：**
 
-* **先**写测试 (TDD)
-* 使用表驱动测试以实现全面覆盖
+* **首先**编写测试 (TDD)
+* 使用表驱动测试以获得全面覆盖
 * 测试行为，而非实现
 * 在辅助函数中使用 `t.Helper()`
-* 对于独立的测试使用 `t.Parallel()`
+* 对独立测试使用 `t.Parallel()`
 * 使用 `t.Cleanup()` 清理资源
 * 使用描述场景的有意义的测试名称
 
-**不应该：**
+**不应做：**
 
-* 直接测试私有函数 (通过公共 API 测试)
+* 直接测试私有函数 (通过公共 API 进行测试)
 * 在测试中使用 `time.Sleep()` (使用通道或条件)
 * 忽略不稳定的测试 (修复或移除它们)
-* 模拟所有东西 (在可能的情况下优先使用集成测试)
+* 模拟一切 (尽可能优先使用集成测试)
 * 跳过错误路径测试
 
 ## 与 CI/CD 集成

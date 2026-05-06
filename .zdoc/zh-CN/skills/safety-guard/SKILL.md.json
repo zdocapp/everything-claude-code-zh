@@ -1,0 +1,102 @@
+{
+  "sourceFile": "skills/safety-guard/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: safety-guard\ndescription: Use this skill to prevent destructive operations when working on production systems or running agents autonomously.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: safety-guard\ndescription: 使用此技能可在生产系统上工作或自主运行代理时防止破坏性操作。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Safety Guard — Prevent Destructive Operations",
+      "zh-Hans": "# 安全防护 — 防止破坏性操作"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- When working on production systems\n- When agents are running autonomously (full-auto mode)\n- When you want to restrict edits to a specific directory\n- During sensitive operations (migrations, deploys, data changes)",
+      "zh-Hans": "* 在生产系统上工作时\n* 当代理程序自主运行时（全自动模式）\n* 当您希望将编辑限制在特定目录时\n* 在敏感操作期间（迁移、部署、数据更改）"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "Three modes of protection:",
+      "zh-Hans": "三种保护模式："
+    },
+    {
+      "en-US": "### Mode 1: Careful Mode",
+      "zh-Hans": "### 模式 1：谨慎模式"
+    },
+    {
+      "en-US": "Intercepts destructive commands before execution and warns:",
+      "zh-Hans": "在执行前拦截破坏性命令并发出警告："
+    },
+    {
+      "en-US": "```\nWatched patterns:\n- rm -rf (especially /, ~, or project root)\n- git push --force\n- git reset --hard\n- git checkout . (discard all changes)\n- DROP TABLE / DROP DATABASE\n- docker system prune\n- kubectl delete\n- chmod 777\n- sudo rm\n- npm publish (accidental publishes)\n- Any command with --no-verify\n```",
+      "zh-Hans": "```\n监控模式：\n- rm -rf（特别是 /、~ 或项目根目录）\n- git push --force\n- git reset --hard\n- git checkout .（丢弃所有更改）\n- DROP TABLE / DROP DATABASE\n- docker system prune\n- kubectl delete\n- chmod 777\n- sudo rm\n- npm publish（意外发布）\n- 任何带有 --no-verify 的命令\n```"
+    },
+    {
+      "en-US": "When detected: shows what the command does, asks for confirmation, suggests safer alternative.",
+      "zh-Hans": "检测到时：显示命令的作用，请求确认，建议更安全的替代方案。"
+    },
+    {
+      "en-US": "### Mode 2: Freeze Mode",
+      "zh-Hans": "### 模式 2：冻结模式"
+    },
+    {
+      "en-US": "Locks file edits to a specific directory tree:",
+      "zh-Hans": "将文件编辑锁定到特定的目录树："
+    },
+    {
+      "en-US": "```\n/safety-guard freeze src/components/\n```",
+      "zh-Hans": "```\n/safety-guard freeze src/components/\n```"
+    },
+    {
+      "en-US": "Any Write/Edit outside `src/components/` is blocked with an explanation. Useful when you want an agent to focus on one area without touching unrelated code.",
+      "zh-Hans": "任何在 `src/components/` 之外的写入/编辑操作都会被阻止并给出解释。当您希望代理专注于某个区域而不触及无关代码时非常有用。"
+    },
+    {
+      "en-US": "### Mode 3: Guard Mode (Careful + Freeze combined)",
+      "zh-Hans": "### 模式 3：防护模式（谨慎 + 冻结组合）"
+    },
+    {
+      "en-US": "Both protections active. Maximum safety for autonomous agents.",
+      "zh-Hans": "两种保护同时生效。为自主代理提供最大安全性。"
+    },
+    {
+      "en-US": "```\n/safety-guard guard --dir src/api/ --allow-read-all\n```",
+      "zh-Hans": "```\n/safety-guard guard --dir src/api/ --allow-read-all\n```"
+    },
+    {
+      "en-US": "Agents can read anything but only write to `src/api/`. Destructive commands are blocked everywhere.",
+      "zh-Hans": "代理可以读取任何内容，但只能写入到 `src/api/`。破坏性命令在所有地方都会被阻止。"
+    },
+    {
+      "en-US": "### Unlock",
+      "zh-Hans": "### 解锁"
+    },
+    {
+      "en-US": "```\n/safety-guard off\n```",
+      "zh-Hans": "```\n/safety-guard off\n```"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现"
+    },
+    {
+      "en-US": "Uses PreToolUse hooks to intercept Bash, Write, Edit, and MultiEdit tool calls. Checks the command/path against the active rules before allowing execution.",
+      "zh-Hans": "使用 PreToolUse 钩子来拦截 Bash、Write、Edit 和 MultiEdit 工具调用。在执行前根据活动规则检查命令/路径。"
+    },
+    {
+      "en-US": "## Integration",
+      "zh-Hans": "## 集成"
+    },
+    {
+      "en-US": "- Enable by default for `codex -a never` sessions\n- Pair with observability risk scoring in ECC 2.0\n- Logs all blocked actions to `~/.claude/safety-guard.log`",
+      "zh-Hans": "* 默认情况下为 `codex -a never` 会话启用\n* 与 ECC 2.0 中的可观测性风险评分配对使用\n* 将所有被阻止的操作记录到 `~/.claude/safety-guard.log`"
+    }
+  ]
+}

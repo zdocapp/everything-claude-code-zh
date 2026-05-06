@@ -1,0 +1,22 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/transcribe-captions.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: transcribe-captions\ndescription: Transcribing audio to generate captions in Remotion\nmetadata:\n  tags: captions, transcribe, whisper, audio, speech-to-text\n---",
+      "zh-Hans": "---\nname: transcribe-captions\ndescription: 转录音频以在Remotion中生成字幕\nmetadata:\n  tags: captions, transcribe, whisper, audio, speech-to-text\n---"
+    },
+    {
+      "en-US": "# Transcribing audio",
+      "zh-Hans": "# 音频转录"
+    },
+    {
+      "en-US": "Remotion provides several built-in options for transcribing audio to generate captions:",
+      "zh-Hans": "Remotion 提供了几种内置选项，用于将音频转录生成字幕："
+    },
+    {
+      "en-US": "- `@remotion/install-whisper-cpp` - Transcribe locally on a server using Whisper.cpp. Fast and free, but requires server infrastructure.\n  <https://remotion.dev/docs/install-whisper-cpp>\n\n- `@remotion/whisper-web` - Transcribe in the browser using WebAssembly. No server needed and free, but slower due to WASM overhead.\n  <https://remotion.dev/docs/whisper-web>\n\n- `@remotion/openai-whisper` - Use OpenAI Whisper API for cloud-based transcription. Fast and no server needed, but requires payment.\n  <https://remotion.dev/docs/openai-whisper/openai-whisper-api-to-captions>",
+      "zh-Hans": "* `@remotion/install-whisper-cpp` - 使用 Whisper.cpp 在服务器上本地转录。快速且免费，但需要服务器基础设施。\n  <https://remotion.dev/docs/install-whisper-cpp>\n\n* `@remotion/whisper-web` - 使用 WebAssembly 在浏览器中转录。无需服务器且免费，但由于 WASM 开销，速度较慢。\n  <https://remotion.dev/docs/whisper-web>\n\n* `@remotion/openai-whisper` - 使用 OpenAI Whisper API 进行基于云的转录。快速且无需服务器，但需要付费。\n  <https://remotion.dev/docs/openai-whisper/openai-whisper-api-to-captions>"
+    }
+  ]
+}

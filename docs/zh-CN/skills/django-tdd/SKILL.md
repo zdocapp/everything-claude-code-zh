@@ -1,12 +1,12 @@
 ---
 name: django-tdd
-description: Django 测试策略，包括 pytest-django、TDD 方法、factory_boy、模拟、覆盖率以及测试 Django REST Framework API。
+description: 使用pytest-django进行Django测试策略，TDD方法论，factory_boy，模拟测试，覆盖率，以及测试Django REST Framework API。
 origin: ECC
 ---
 
 # 使用 TDD 进行 Django 测试
 
-使用 pytest、factory\_boy 和 Django REST Framework 进行 Django 应用程序的测试驱动开发。
+使用 pytest、factory\_boy 和 Django REST Framework 为 Django 应用程序进行测试驱动开发。
 
 ## 何时激活
 
@@ -15,7 +15,7 @@ origin: ECC
 * 测试 Django 模型、视图和序列化器时
 * 为 Django 项目设置测试基础设施时
 
-## Django 的 TDD 工作流
+## Django 的 TDD 工作流程
 
 ### 红-绿-重构循环
 
@@ -546,7 +546,7 @@ class TestProductAPI:
         assert response.data['count'] == 1
 ```
 
-## 模拟与打补丁
+## 模拟和打补丁
 
 ### 模拟外部服务
 
@@ -669,8 +669,8 @@ class TestCheckoutFlow:
 
 ### 应该做
 
-* **使用工厂**：而不是手动创建对象
-* **每个测试一个断言**：保持测试聚焦
+* **使用工厂**：代替手动创建对象
+* **每个测试一个断言**：保持测试专注
 * **描述性测试名称**：`test_user_cannot_delete_others_post`
 * **测试边界情况**：空输入、None 值、边界条件
 * **模拟外部服务**：不要依赖外部 API
@@ -680,10 +680,10 @@ class TestCheckoutFlow:
 
 ### 不应该做
 
-* **不要测试 Django 内部**：相信 Django 能正常工作
+* **不要测试 Django 内部机制**：相信 Django 能正常工作
 * **不要测试第三方代码**：相信库能正常工作
 * **不要忽略失败的测试**：所有测试必须通过
-* **不要让测试产生依赖**：测试应该能以任何顺序运行
+* **不要让测试相互依赖**：测试应该能以任何顺序运行
 * **不要过度模拟**：只模拟外部依赖
 * **不要测试私有方法**：测试公共接口
 * **不要使用生产数据库**：始终使用测试数据库
@@ -723,7 +723,7 @@ open htmlcov/index.html
 | `override_settings` | 临时更改设置 |
 | `force_authenticate()` | 在测试中绕过身份验证 |
 | `assertRedirects` | 检查重定向 |
-| `assertTemplateUsed` | 验证模板使用 |
+| `assertTemplateUsed` | 验证模板使用情况 |
 | `mail.outbox` | 检查已发送的邮件 |
 
-记住：测试即文档。好的测试解释了你的代码应如何工作。保持测试简单、可读和可维护。
+记住：测试就是文档。好的测试能解释你的代码应该如何工作。保持测试简单、可读且易于维护。

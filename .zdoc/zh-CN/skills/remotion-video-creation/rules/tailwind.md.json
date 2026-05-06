@@ -1,0 +1,22 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/tailwind.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: tailwind\ndescription: Using TailwindCSS in Remotion.\nmetadata:\n---",
+      "zh-Hans": "---\nname: tailwind\ndescription: 在Remotion中使用TailwindCSS。\nmetadata:\n---"
+    },
+    {
+      "en-US": "You can and should use TailwindCSS in Remotion, if TailwindCSS is installed in the project.",
+      "zh-Hans": "你可以在 Remotion 中使用 TailwindCSS，前提是 TailwindCSS 已安装在项目中。"
+    },
+    {
+      "en-US": "Don't use `transition-*` or `animate-*` classes - always animate using the `useCurrentFrame()` hook.",
+      "zh-Hans": "不要使用 `transition-*` 或 `animate-*` 类——始终使用 `useCurrentFrame()` 钩子进行动画处理。"
+    },
+    {
+      "en-US": "Tailwind must be installed and enabled first in a Remotion project - fetch  <https://www.remotion.dev/docs/tailwind> using WebFetch for instructions.",
+      "zh-Hans": "Tailwind 必须首先在 Remotion 项目中安装并启用——请通过 WebFetch 获取 <https://www.remotion.dev/docs/tailwind> 以获取说明。"
+    }
+  ]
+}

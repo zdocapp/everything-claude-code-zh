@@ -1,24 +1,24 @@
 ---
 name: swift-concurrency-6-2
-description: Swift 6.2 可接近的并发性 — 默认单线程，@concurrent 用于显式后台卸载，隔离一致性用于主 actor 类型。
+description: Swift 6.2 易用的并发性 — 默认单线程，@concurrent 用于显式后台卸载，隔离一致性用于主执行者类型。
 ---
 
-# Swift 6.2 可接近的并发
+# Swift 6.2 易用并发
 
-采用 Swift 6.2 并发模型的模式，其中代码默认在单线程上运行，并发是显式引入的。在无需牺牲性能的情况下消除常见的数据竞争错误。
+采用 Swift 6.2 并发模型的模式，其中代码默认在单线程上运行，并发是显式引入的。在保持性能的同时，消除了常见的数据竞争错误。
 
 ## 何时启用
 
 * 将 Swift 5.x 或 6.0/6.1 项目迁移到 Swift 6.2
-* 解决数据竞争安全编译器错误
+* 解决数据竞争安全性编译器错误
 * 设计基于 MainActor 的应用架构
 * 将 CPU 密集型工作卸载到后台线程
 * 在 MainActor 隔离的类型上实现协议一致性
-* 在 Xcode 26 中启用“可接近的并发”构建设置
+* 在 Xcode 26 中启用"易用并发"构建设置
 
-## 核心问题：隐式的后台卸载
+## 核心问题：隐式后台卸载
 
-在 Swift 6.1 及更早版本中，异步函数可能会被隐式卸载到后台线程，即使在看似安全的代码中也会导致数据竞争错误：
+在 Swift 6.1 及更早版本中，异步函数可能会被隐式卸载到后台线程，导致即使在看似安全的代码中也会出现数据竞争错误：
 
 ```swift
 // Swift 6.1: ERROR
@@ -35,7 +35,7 @@ final class StickerModel {
 }
 ```
 
-Swift 6.2 修复了这个问题：异步函数默认保持在调用者所在的 actor 上。
+Swift 6.2 修复了此问题：异步函数默认保持在调用者所在的 actor 上。
 
 ```swift
 // Swift 6.2: OK — async stays on MainActor, no data race
@@ -50,7 +50,7 @@ final class StickerModel {
 }
 ```
 
-## 核心模式 — 隔离的一致性
+## 核心模式 —— 隔离一致性
 
 MainActor 类型现在可以安全地符合非隔离协议：
 
@@ -91,7 +91,7 @@ nonisolated struct ImageExporter {
 }
 ```
 
-## 核心模式 — 全局和静态变量
+## 核心模式 —— 全局和静态变量
 
 使用 MainActor 保护全局/静态状态：
 
@@ -110,7 +110,7 @@ final class StickerLibrary {
 
 ### MainActor 默认推断模式
 
-Swift 6.2 引入了一种模式，默认推断 MainActor — 无需手动标注：
+Swift 6.2 引入了一种模式，其中 MainActor 默认被推断 —— 无需手动标注：
 
 ```swift
 // With MainActor default inference enabled:
@@ -130,13 +130,13 @@ extension StickerModel: Exportable {  // Implicitly @MainActor conformance
 }
 ```
 
-此模式是选择启用的，推荐用于应用、脚本和其他可执行目标。
+此模式是可选的，推荐用于应用、脚本和其他可执行目标。
 
-## 核心模式 — 使用 @concurrent 进行后台工作
+## 核心模式 —— 使用 @concurrent 进行后台工作
 
-当需要真正的并行性时，使用 `@concurrent` 显式卸载：
+当需要真正的并行时，使用 `@concurrent` 显式卸载：
 
-> **重要：** 此示例需要启用“可接近的并发”构建设置 — SE-0466 (MainActor 默认隔离) 和 SE-0461 (默认非隔离非发送)。启用这些设置后，`extractSticker` 会保持在调用者所在的 actor 上，使得可变状态的访问变得安全。**如果没有这些设置，此代码存在数据竞争** — 编译器会标记它。
+> **重要：** 此示例需要启用"易用并发"构建设置 —— SE-0466（MainActor 默认隔离）和 SE-0461（默认非隔离非发送）。启用这些设置后，`extractSticker` 会保持在调用者所在的 actor 上，使得可变状态访问安全。**没有这些设置，此代码存在数据竞争** —— 编译器会标记它。
 
 ```swift
 nonisolated final class PhotoProcessor {
@@ -166,23 +166,23 @@ processedPhotos[item.id] = await processor.extractSticker(data: data, with: item
 
 1. 将包含类型标记为 `nonisolated`
 2. 向函数添加 `@concurrent`
-3. 如果函数还不是异步的，则添加 `async`
+3. 如果还不是异步的，则添加 `async`
 4. 在调用点添加 `await`
 
 ## 关键设计决策
 
-| 决策 | 原理 |
+| 决策 | 理由 |
 |----------|-----------|
-| 默认单线程 | 最自然的代码是无数据竞争的；并发是选择启用的 |
-| 异步函数保持在调用者所在的 actor 上 | 消除了导致数据竞争错误的隐式卸载 |
-| 隔离的一致性 | MainActor 类型可以符合协议，而无需不安全的变通方法 |
-| `@concurrent` 显式选择启用 | 后台执行是一种有意的性能选择，而非偶然 |
+| 默认单线程 | 大多数自然代码是无数据竞争的；并发是可选的 |
+| 异步保持在调用者所在的 actor 上 | 消除了导致数据竞争错误的隐式卸载 |
+| 隔离一致性 | MainActor 类型可以符合协议，无需不安全的变通方法 |
+| `@concurrent` 显式选择加入 | 后台执行是深思熟虑的性能选择，而非意外 |
 | MainActor 默认推断 | 减少了应用目标中样板化的 `@MainActor` 标注 |
-| 选择启用采用 | 非破坏性的迁移路径 — 逐步启用功能 |
+| 选择采用 | 非破坏性迁移路径 —— 逐步启用功能 |
 
 ## 迁移步骤
 
-1. **在 Xcode 中启用**：构建设置中的 Swift Compiler > Concurrency 部分
+1. **在 Xcode 中启用**：构建设置中的 Swift 编译器 > 并发部分
 2. **在 SPM 中启用**：在包清单中使用 `SwiftSettings` API
 3. **使用迁移工具**：通过 swift.org/migration 进行自动代码更改
 4. **从 MainActor 默认值开始**：为应用目标启用推断模式
@@ -191,27 +191,27 @@ processedPhotos[item.id] = await processor.extractSticker(data: data, with: item
 
 ## 最佳实践
 
-* **从 MainActor 开始** — 先编写单线程代码，稍后再优化
-* **仅对 CPU 密集型工作使用 `@concurrent`** — 图像处理、压缩、复杂计算
+* **从 MainActor 开始** —— 先编写单线程代码，稍后优化
+* **仅对 CPU 密集型工作使用 `@concurrent`** —— 图像处理、压缩、复杂计算
 * **为主要是单线程的应用目标启用 MainActor 推断模式**
-* **在卸载前进行性能分析** — 使用 Instruments 查找实际的瓶颈
-* **使用 MainActor 保护全局变量** — 全局/静态可变状态需要 actor 隔离
-* **使用隔离的一致性**，而不是 `nonisolated` 变通方法或 `@Sendable` 包装器
-* **增量迁移** — 在构建设置中一次启用一个功能
+* **卸载前进行性能分析** —— 使用 Instruments 查找实际瓶颈
+* **使用 MainActor 保护全局变量** —— 全局/静态可变状态需要 actor 隔离
+* **使用隔离一致性**，而不是 `nonisolated` 变通方法或 `@Sendable` 包装器
+* **逐步迁移** —— 在构建设置中一次启用一个功能
 
 ## 应避免的反模式
 
 * 对每个异步函数都应用 `@concurrent`（大多数不需要后台执行）
-* 在不理解隔离的情况下使用 `nonisolated` 来抑制编译器错误
-* 当 actor 提供相同安全性时，仍保留遗留的 `DispatchQueue` 模式
+* 使用 `nonisolated` 来抑制编译器错误而不理解隔离机制
+* 在 actor 提供相同安全性的情况下仍保留旧的 `DispatchQueue` 模式
 * 在并发相关的 Foundation Models 代码中跳过 `model.availability` 检查
-* 与编译器对抗 — 如果它报告数据竞争，代码就存在真正的并发问题
+* 与编译器对抗 —— 如果它报告数据竞争，代码就存在真正的并发问题
 * 假设所有异步代码都在后台运行（Swift 6.2 默认：保持在调用者所在的 actor 上）
 
 ## 何时使用
 
-* 所有新的 Swift 6.2+ 项目（“可接近的并发”是推荐的默认设置）
+* 所有新的 Swift 6.2+ 项目（"易用并发"是推荐的默认设置）
 * 将现有应用从 Swift 5.x 或 6.0/6.1 并发迁移过来
-* 在采用 Xcode 26 期间解决数据竞争安全编译器错误
+* 在采用 Xcode 26 期间解决数据竞争安全性编译器错误
 * 构建以 MainActor 为中心的应用架构（大多数 UI 应用）
-* 性能优化 — 将特定的繁重计算卸载到后台
+* 性能优化 —— 将特定的繁重计算卸载到后台

@@ -9,11 +9,11 @@ paths:
 
 # Perl 测试
 
-> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了针对 Perl 的内容。
+> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Perl 相关的内容。
 
-## 框架
+## 测试框架
 
-在新项目中使用 **Test2::V0**（而非 Test::More）：
+对于新项目，请使用 **Test2::V0**（而非 Test::More）：
 
 ```perl
 use Test2::V0;
@@ -30,11 +30,11 @@ prove -l t/              # adds lib/ to @INC
 prove -lr -j8 t/         # recursive, 8 parallel jobs
 ```
 
-始终使用 `-l` 以确保 `lib/` 位于 `@INC` 上。
+务必使用 `-l` 以确保 `lib/` 位于 `@INC` 上。
 
-## 覆盖率
+## 测试覆盖率
 
-使用 **Devel::Cover** —— 目标覆盖率 80%+：
+使用 **Devel::Cover** —— 覆盖率目标为 80% 以上：
 
 ```bash
 cover -test
@@ -42,13 +42,13 @@ cover -test
 
 ## 模拟
 
-* **Test::MockModule** —— 模拟现有模块上的方法
+* **Test::MockModule** —— 模拟现有模块的方法
 * **Test::MockObject** —— 从头创建测试替身
 
 ## 常见陷阱
 
-* 测试文件末尾始终使用 `done_testing`
-* 使用 `prove` 时切勿忘记 `-l` 标志
+* 测试文件末尾务必加上 `done_testing`
+* 使用 `prove` 时，切勿忘记 `-l` 标志
 
 ## 参考
 

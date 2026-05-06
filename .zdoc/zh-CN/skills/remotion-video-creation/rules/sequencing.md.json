@@ -1,0 +1,90 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/sequencing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: sequencing\ndescription: Sequencing patterns for Remotion - delay, trim, limit duration of items\nmetadata:\n  tags: sequence, series, timing, delay, trim\n---",
+      "zh-Hans": "---\nname: sequencing\ndescription: Remotion 的序列模式 - 延迟、修剪、限制项目持续时间\nmetadata:\n  tags: sequence, series, timing, delay, trim\n---"
+    },
+    {
+      "en-US": "Use `<Sequence>` to delay when an element appears in the timeline.",
+      "zh-Hans": "使用 `<Sequence>` 来延迟元素在时间轴中的出现。"
+    },
+    {
+      "en-US": "```tsx\nimport { Sequence } from \"remotion\";\n\nconst {fps} = useVideoConfig();\n\n<Sequence from={1 * fps} durationInFrames={2 * fps} premountFor={1 * fps}>\n  <Title />\n</Sequence>\n<Sequence from={2 * fps} durationInFrames={2 * fps} premountFor={1 * fps}>\n  <Subtitle />\n</Sequence>\n```",
+      "zh-Hans": "```tsx\nimport { Sequence } from \"remotion\";\n\nconst {fps} = useVideoConfig();\n\n<Sequence from={1 * fps} durationInFrames={2 * fps} premountFor={1 * fps}>\n  <Title />\n</Sequence>\n<Sequence from={2 * fps} durationInFrames={2 * fps} premountFor={1 * fps}>\n  <Subtitle />\n</Sequence>\n```"
+    },
+    {
+      "en-US": "This will by default wrap the component in an absolute fill element.\nIf the items should not be wrapped, use the `layout` prop:",
+      "zh-Hans": "默认情况下，这会将组件包装在一个绝对填充元素中。\n如果不应包装项目，请使用 `layout` 属性："
+    },
+    {
+      "en-US": "```tsx\n<Sequence layout=\"none\">\n  <Title />\n</Sequence>\n```",
+      "zh-Hans": "```tsx\n<Sequence layout=\"none\">\n  <Title />\n</Sequence>\n```"
+    },
+    {
+      "en-US": "## Premounting",
+      "zh-Hans": "## 预加载"
+    },
+    {
+      "en-US": "This loads the component in the timeline before it is actually played.\nAlways premount any `<Sequence>`!",
+      "zh-Hans": "这会在组件实际播放之前，将其加载到时间轴中。\n始终预加载任何 `<Sequence>`！"
+    },
+    {
+      "en-US": "```tsx\n<Sequence premountFor={1 * fps}>\n  <Title />\n</Sequence>\n```",
+      "zh-Hans": "```tsx\n<Sequence premountFor={1 * fps}>\n  <Title />\n</Sequence>\n```"
+    },
+    {
+      "en-US": "## Series",
+      "zh-Hans": "## 序列"
+    },
+    {
+      "en-US": "Use `<Series>` when elements should play one after another without overlap.",
+      "zh-Hans": "当元素需要依次播放且不重叠时，使用 `<Series>`。"
+    },
+    {
+      "en-US": "```tsx\nimport {Series} from 'remotion';\n\n<Series>\n  <Series.Sequence durationInFrames={45}>\n    <Intro />\n  </Series.Sequence>\n  <Series.Sequence durationInFrames={60}>\n    <MainContent />\n  </Series.Sequence>\n  <Series.Sequence durationInFrames={30}>\n    <Outro />\n  </Series.Sequence>\n</Series>;\n```",
+      "zh-Hans": "```tsx\nimport {Series} from 'remotion';\n\n<Series>\n  <Series.Sequence durationInFrames={45}>\n    <Intro />\n  </Series.Sequence>\n  <Series.Sequence durationInFrames={60}>\n    <MainContent />\n  </Series.Sequence>\n  <Series.Sequence durationInFrames={30}>\n    <Outro />\n  </Series.Sequence>\n</Series>;\n```"
+    },
+    {
+      "en-US": "Same as with `<Sequence>`, the items will be wrapped in an absolute fill element by default when using `<Series.Sequence>`, unless the `layout` prop is set to `none`.",
+      "zh-Hans": "与 `<Sequence>` 类似，使用 `<Series.Sequence>` 时，项目默认会被包装在绝对填充元素中，除非 `layout` 属性设置为 `none`。"
+    },
+    {
+      "en-US": "### Series with overlaps",
+      "zh-Hans": "### 带重叠的序列"
+    },
+    {
+      "en-US": "Use negative offset for overlapping sequences:",
+      "zh-Hans": "使用负偏移量来实现重叠序列："
+    },
+    {
+      "en-US": "```tsx\n<Series>\n  <Series.Sequence durationInFrames={60}>\n    <SceneA />\n  </Series.Sequence>\n  <Series.Sequence offset={-15} durationInFrames={60}>\n    {/* Starts 15 frames before SceneA ends */}\n    <SceneB />\n  </Series.Sequence>\n</Series>\n```",
+      "zh-Hans": "```tsx\n<Series>\n  <Series.Sequence durationInFrames={60}>\n    <SceneA />\n  </Series.Sequence>\n  <Series.Sequence offset={-15} durationInFrames={60}>\n    {/* Starts 15 frames before SceneA ends */}\n    <SceneB />\n  </Series.Sequence>\n</Series>\n```"
+    },
+    {
+      "en-US": "## Frame References Inside Sequences",
+      "zh-Hans": "## 序列内的帧引用"
+    },
+    {
+      "en-US": "Inside a Sequence, `useCurrentFrame()` returns the local frame (starting from 0):",
+      "zh-Hans": "在序列内部，`useCurrentFrame()` 返回本地帧（从 0 开始）："
+    },
+    {
+      "en-US": "```tsx\n<Sequence from={60} durationInFrames={30}>\n  <MyComponent />\n  {/* Inside MyComponent, useCurrentFrame() returns 0-29, not 60-89 */}\n</Sequence>\n```",
+      "zh-Hans": "```tsx\n<Sequence from={60} durationInFrames={30}>\n  <MyComponent />\n  {/* Inside MyComponent, useCurrentFrame() returns 0-29, not 60-89 */}\n</Sequence>\n```"
+    },
+    {
+      "en-US": "## Nested Sequences",
+      "zh-Hans": "## 嵌套序列"
+    },
+    {
+      "en-US": "Sequences can be nested for complex timing:",
+      "zh-Hans": "可以嵌套序列以实现复杂的时序："
+    },
+    {
+      "en-US": "```tsx\n<Sequence from={0} durationInFrames={120}>\n  <Background />\n  <Sequence from={15} durationInFrames={90} layout=\"none\">\n    <Title />\n  </Sequence>\n  <Sequence from={45} durationInFrames={60} layout=\"none\">\n    <Subtitle />\n  </Sequence>\n</Sequence>\n```",
+      "zh-Hans": "```tsx\n<Sequence from={0} durationInFrames={120}>\n  <Background />\n  <Sequence from={15} durationInFrames={90} layout=\"none\">\n    <Title />\n  </Sequence>\n  <Sequence from={45} durationInFrames={60} layout=\"none\">\n    <Subtitle />\n  </Sequence>\n</Sequence>\n```"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "sourceFile": "skills/architecture-decision-records/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: architecture-decision-records\ndescription: Capture architectural decisions made during Claude Code sessions as structured ADRs. Auto-detects decision moments, records context, alternatives considered, and rationale. Maintains an ADR log so future developers understand why the codebase is shaped the way it is.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: architecture-decision-records\ndescription: 在Claude Code会话期间，将架构决策作为结构化ADR（架构决策记录）进行捕获。自动检测决策时刻，记录上下文、考虑的替代方案和理由。维护ADR日志，以便未来开发者理解代码库为何以当前方式构建。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Architecture Decision Records",
+      "zh-Hans": "# 架构决策记录"
+    },
+    {
+      "en-US": "Capture architectural decisions as they happen during coding sessions. Instead of decisions living only in Slack threads, PR comments, or someone's memory, this skill produces structured ADR documents that live alongside the code.",
+      "zh-Hans": "在编码会话期间捕获架构决策。与其让决策仅存在于 Slack 线程、PR 评论或某人的记忆中，此技能会生成结构化的 ADR 文档，并与代码共存。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- User explicitly says \"let's record this decision\" or \"ADR this\"\n- User chooses between significant alternatives (framework, library, pattern, database, API design)\n- User says \"we decided to...\" or \"the reason we're doing X instead of Y is...\"\n- User asks \"why did we choose X?\" (read existing ADRs)\n- During planning phases when architectural trade-offs are discussed",
+      "zh-Hans": "* 用户明确表示“让我们记录这个决策”或“为此创建 ADR”\n* 用户在重要备选方案（框架、库、模式、数据库、API 设计）之间做出选择时\n* 用户表示“我们决定...”或“我们选择 X 而不是 Y 的原因是...”\n* 用户询问“我们为什么选择 X？”（读取现有 ADR）\n* 在讨论架构权衡的规划阶段"
+    },
+    {
+      "en-US": "## ADR Format",
+      "zh-Hans": "## ADR 格式"
+    },
+    {
+      "en-US": "Use the lightweight ADR format proposed by Michael Nygard, adapted for AI-assisted development:",
+      "zh-Hans": "使用 Michael Nygard 提出的轻量级 ADR 格式，并针对 AI 辅助开发进行调整："
+    },
+    {
+      "en-US": "```markdown\n# ADR-NNNN: [Decision Title]\n\n**Date**: YYYY-MM-DD\n**Status**: proposed | accepted | deprecated | superseded by ADR-NNNN\n**Deciders**: [who was involved]\n\n## Context\n\nWhat is the issue that we're seeing that is motivating this decision or change?\n\n[2-5 sentences describing the situation, constraints, and forces at play]\n\n## Decision\n\nWhat is the change that we're proposing and/or doing?\n\n[1-3 sentences stating the decision clearly]\n\n## Alternatives Considered\n\n### Alternative 1: [Name]\n- **Pros**: [benefits]\n- **Cons**: [drawbacks]\n- **Why not**: [specific reason this was rejected]\n\n### Alternative 2: [Name]\n- **Pros**: [benefits]\n- **Cons**: [drawbacks]\n- **Why not**: [specific reason this was rejected]\n\n## Consequences\n\nWhat becomes easier or more difficult to do because of this change?\n\n### Positive\n- [benefit 1]\n- [benefit 2]\n\n### Negative\n- [trade-off 1]\n- [trade-off 2]\n\n### Risks\n- [risk and mitigation]\n```",
+      "zh-Hans": "```markdown\n# ADR-NNNN：[决策标题]\n\n**日期**：YYYY-MM-DD\n**状态**：提议中 | 已采纳 | 已弃用 | 被 ADR-NNNN 取代\n**决策者**：[参与人员]\n\n## 背景\n\n我们看到的促使做出此决策或变更的问题是什么？\n\n[用 2-5 句话描述当前情况、约束条件和影响因素]\n\n## 决策\n\n我们提议和/或将要实施的变更是什么？\n\n[用 1-3 句话清晰地陈述决策]\n\n## 考虑的备选方案\n\n### 备选方案 1：[名称]\n- **优点**：[益处]\n- **缺点**：[弊端]\n- **为何不选**：[拒绝此方案的具体原因]\n\n### 备选方案 2：[名称]\n- **优点**：[益处]\n- **缺点**：[弊端]\n- **为何不选**：[拒绝此方案的具体原因]\n\n## 影响\n\n由于此变更，哪些事情会变得更容易或更困难？\n\n### 积极影响\n- [益处 1]\n- [益处 2]\n\n### 消极影响\n- [权衡 1]\n- [权衡 2]\n\n### 风险\n- [风险及缓解措施]\n```"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### Capturing a New ADR",
+      "zh-Hans": "### 捕获新 ADR"
+    },
+    {
+      "en-US": "When a decision moment is detected:",
+      "zh-Hans": "当检测到决策时刻时："
+    },
+    {
+      "en-US": "1. **Initialize (first time only)** — if `docs/adr/` does not exist, ask the user for confirmation before creating the directory, a `README.md` seeded with the index table header (see ADR Index Format below), and a blank `template.md` for manual use. Do not create files without explicit consent.\n2. **Identify the decision** — extract the core architectural choice being made\n3. **Gather context** — what problem prompted this? What constraints exist?\n4. **Document alternatives** — what other options were considered? Why were they rejected?\n5. **State consequences** — what are the trade-offs? What becomes easier/harder?\n6. **Assign a number** — scan existing ADRs in `docs/adr/` and increment\n7. **Confirm and write** — present the draft ADR to the user for review. Only write to `docs/adr/NNNN-decision-title.md` after explicit approval. If the user declines, discard the draft without writing any files.\n8. **Update the index** — append to `docs/adr/README.md`",
+      "zh-Hans": "1. **初始化（仅首次）** — 如果 `docs/adr/` 不存在，在创建目录、一个包含索引表头（见下方 ADR 索引格式）的 `README.md` 以及一个供手动使用的空白 `template.md` 之前，请求用户确认。未经明确同意，不要创建文件。\n2. **识别决策** — 提取正在做出的核心架构选择\n3. **收集背景** — 是什么问题引发了此决策？存在哪些约束？\n4. **记录备选方案** — 考虑了哪些其他选项？为何拒绝它们？\n5. **说明后果** — 有哪些权衡？什么变得更容易/更困难？\n6. **分配编号** — 扫描 `docs/adr/` 中的现有 ADR 并递增编号\n7. **确认并写入** — 将 ADR 草稿呈现给用户审阅。仅在获得明确批准后写入 `docs/adr/NNNN-decision-title.md`。如果用户拒绝，则丢弃草稿，不写入任何文件。\n8. **更新索引** — 追加到 `docs/adr/README.md`"
+    },
+    {
+      "en-US": "### Reading Existing ADRs",
+      "zh-Hans": "### 读取现有 ADR"
+    },
+    {
+      "en-US": "When a user asks \"why did we choose X?\":",
+      "zh-Hans": "当用户询问“我们为什么选择 X？”时："
+    },
+    {
+      "en-US": "1. Check if `docs/adr/` exists — if not, respond: \"No ADRs found in this project. Would you like to start recording architectural decisions?\"\n2. If it exists, scan `docs/adr/README.md` index for relevant entries\n3. Read matching ADR files and present the Context and Decision sections\n4. If no match is found, respond: \"No ADR found for that decision. Would you like to record one now?\"",
+      "zh-Hans": "1. 检查 `docs/adr/` 是否存在 — 如果不存在，则回复：“在此项目中未找到 ADR。您想开始记录架构决策吗？”\n2. 如果存在，则扫描 `docs/adr/README.md` 索引以查找相关条目\n3. 读取匹配的 ADR 文件并呈现其“背景”和“决策”部分\n4. 如果未找到匹配项，则回复：“未找到关于该决策的 ADR。您现在想记录一个吗？”"
+    },
+    {
+      "en-US": "### ADR Directory Structure",
+      "zh-Hans": "### ADR 目录结构"
+    },
+    {
+      "en-US": "```\ndocs/\n└── adr/\n    ├── README.md              ← index of all ADRs\n    ├── 0001-use-nextjs.md\n    ├── 0002-postgres-over-mongo.md\n    ├── 0003-rest-over-graphql.md\n    └── template.md            ← blank template for manual use\n```",
+      "zh-Hans": "```\ndocs/\n└── adr/\n    ├── README.md              ← 所有 ADR 的索引\n    ├── 0001-use-nextjs.md\n    ├── 0002-postgres-over-mongo.md\n    ├── 0003-rest-over-graphql.md\n    └── template.md            ← 供手动使用的空白模板\n```"
+    },
+    {
+      "en-US": "### ADR Index Format",
+      "zh-Hans": "### ADR 索引格式"
+    },
+    {
+      "en-US": "```markdown\n# Architecture Decision Records\n\n| ADR | Title | Status | Date |\n|-----|-------|--------|------|\n| [0001](0001-use-nextjs.md) | Use Next.js as frontend framework | accepted | 2026-01-15 |\n| [0002](0002-postgres-over-mongo.md) | PostgreSQL over MongoDB for primary datastore | accepted | 2026-01-20 |\n| [0003](0003-rest-over-graphql.md) | REST API over GraphQL | accepted | 2026-02-01 |\n```",
+      "zh-Hans": "```markdown\n# 架构决策记录\n\n| ADR | 标题 | 状态 | 日期 |\n|-----|-------|--------|------|\n| [0001](0001-use-nextjs.md) | 采用 Next.js 作为前端框架 | 已接受 | 2026-01-15 |\n| [0002](0002-postgres-over-mongo.md) | 主数据存储选用 PostgreSQL 而非 MongoDB | 已接受 | 2026-01-20 |\n| [0003](0003-rest-over-graphql.md) | 采用 REST API 而非 GraphQL | 已接受 | 2026-02-01 |\n```"
+    },
+    {
+      "en-US": "## Decision Detection Signals",
+      "zh-Hans": "## 决策检测信号"
+    },
+    {
+      "en-US": "Watch for these patterns in conversation that indicate an architectural decision:",
+      "zh-Hans": "关注对话中指示架构决策的以下模式："
+    },
+    {
+      "en-US": "**Explicit signals**",
+      "zh-Hans": "**显式信号**"
+    },
+    {
+      "en-US": "- \"Let's go with X\"\n- \"We should use X instead of Y\"\n- \"The trade-off is worth it because...\"\n- \"Record this as an ADR\"",
+      "zh-Hans": "* “我们选择 X”\n* “我们应该使用 X 而不是 Y”\n* “权衡是值得的，因为...”\n* “将此记录为 ADR”"
+    },
+    {
+      "en-US": "**Implicit signals** (suggest recording an ADR — do not auto-create without user confirmation)",
+      "zh-Hans": "**隐式信号**（建议记录 ADR — 未经用户确认，不要自动创建）"
+    },
+    {
+      "en-US": "- Comparing two frameworks or libraries and reaching a conclusion\n- Making a database schema design choice with stated rationale\n- Choosing between architectural patterns (monolith vs microservices, REST vs GraphQL)\n- Deciding on authentication/authorization strategy\n- Selecting deployment infrastructure after evaluating alternatives",
+      "zh-Hans": "* 比较两个框架或库并得出结论\n* 做出数据库模式设计选择并陈述理由\n* 在架构模式之间选择（单体 vs 微服务，REST vs GraphQL）\n* 决定身份验证/授权策略\n* 评估备选方案后选择部署基础设施"
+    },
+    {
+      "en-US": "## What Makes a Good ADR",
+      "zh-Hans": "## 优秀 ADR 的特点"
+    },
+    {
+      "en-US": "### Do",
+      "zh-Hans": "### 应做事项"
+    },
+    {
+      "en-US": "- **Be specific** — \"Use Prisma ORM\" not \"use an ORM\"\n- **Record the why** — the rationale matters more than the what\n- **Include rejected alternatives** — future developers need to know what was considered\n- **State consequences honestly** — every decision has trade-offs\n- **Keep it short** — an ADR should be readable in 2 minutes\n- **Use present tense** — \"We use X\" not \"We will use X\"",
+      "zh-Hans": "* **具体明确** — “使用 Prisma ORM”，而不是“使用一个 ORM”\n* **记录原因** — 理由比具体内容更重要\n* **包含被拒绝的备选方案** — 未来的开发者需要知道考虑了哪些选项\n* **诚实地说明后果** — 每个决策都有权衡\n* **保持简短** — 一份 ADR 应在 2 分钟内可读完\n* **使用现在时** — “我们使用 X”，而不是“我们将使用 X”"
+    },
+    {
+      "en-US": "### Don't",
+      "zh-Hans": "### 避免事项"
+    },
+    {
+      "en-US": "- Record trivial decisions — variable naming or formatting choices don't need ADRs\n- Write essays — if the context section exceeds 10 lines, it's too long\n- Omit alternatives — \"we just picked it\" is not a valid rationale\n- Backfill without marking it — if recording a past decision, note the original date\n- Let ADRs go stale — superseded decisions should reference their replacement",
+      "zh-Hans": "* 记录琐碎的决策 — 变量命名或格式化选择不需要 ADR\n* 写成论文 — 如果背景部分超过 10 行，就太长了\n* 省略备选方案 — “我们只是选了它”不是有效的理由\n* 追溯记录而不做标记 — 如果记录过去的决策，请注明原始日期\n* 让 ADR 过时 — 被取代的决策应引用其替代方案"
+    },
+    {
+      "en-US": "## ADR Lifecycle",
+      "zh-Hans": "## ADR 生命周期"
+    },
+    {
+      "en-US": "```\nproposed → accepted → [deprecated | superseded by ADR-NNNN]\n```",
+      "zh-Hans": "```\nproposed → accepted → [deprecated | superseded by ADR-NNNN]\n```"
+    },
+    {
+      "en-US": "- **proposed**: decision is under discussion, not yet committed\n- **accepted**: decision is in effect and being followed\n- **deprecated**: decision is no longer relevant (e.g., feature removed)\n- **superseded**: a newer ADR replaces this one (always link the replacement)",
+      "zh-Hans": "* **proposed**：决策正在讨论中，尚未确定\n* **accepted**：决策已生效并正在遵循\n* **deprecated**：决策不再相关（例如，功能已移除）\n* **superseded**：更新的 ADR 取代了此决策（始终链接到替代方案）"
+    },
+    {
+      "en-US": "## Categories of Decisions Worth Recording",
+      "zh-Hans": "## 值得记录的决策类别"
+    },
+    {
+      "en-US": "| Category | Examples |\n|----------|---------|\n| **Technology choices** | Framework, language, database, cloud provider |\n| **Architecture patterns** | Monolith vs microservices, event-driven, CQRS |\n| **API design** | REST vs GraphQL, versioning strategy, auth mechanism |\n| **Data modeling** | Schema design, normalization decisions, caching strategy |\n| **Infrastructure** | Deployment model, CI/CD pipeline, monitoring stack |\n| **Security** | Auth strategy, encryption approach, secret management |\n| **Testing** | Test framework, coverage targets, E2E vs integration balance |\n| **Process** | Branching strategy, review process, release cadence |",
+      "zh-Hans": "| 类别 | 示例 |\n|----------|---------|\n| **技术选择** | 框架、语言、数据库、云提供商 |\n| **架构模式** | 单体 vs 微服务、事件驱动、CQRS |\n| **API 设计** | REST vs GraphQL、版本控制策略、认证机制 |\n| **数据建模** | 模式设计、规范化决策、缓存策略 |\n| **基础设施** | 部署模型、CI/CD 流水线、监控栈 |\n| **安全** | 认证策略、加密方法、密钥管理 |\n| **测试** | 测试框架、覆盖率目标、端到端测试与集成测试的平衡 |\n| **流程** | 分支策略、评审流程、发布节奏 |"
+    },
+    {
+      "en-US": "## Integration with Other Skills",
+      "zh-Hans": "## 与其他技能的集成"
+    },
+    {
+      "en-US": "- **Planner agent**: when the planner proposes architecture changes, suggest creating an ADR\n- **Code reviewer agent**: flag PRs that introduce architectural changes without a corresponding ADR",
+      "zh-Hans": "* **规划代理**：当规划者提出架构变更时，建议创建 ADR\n* **代码审查代理**：标记引入架构变更但未对应 ADR 的 PR"
+    }
+  ]
+}

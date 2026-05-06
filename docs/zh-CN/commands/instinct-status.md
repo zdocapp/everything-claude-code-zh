@@ -1,14 +1,14 @@
 ---
 name: instinct-status
-description: 展示已学习的本能（项目+全局）并充满信心
+description: 展示已学习的本能（项目+全局）并带有信心
 command: true
 ---
 
 # 本能状态命令
 
-显示当前项目学习到的本能以及全局本能，按领域分组。
+显示当前项目已学习的本能以及全局本能，按领域分组。
 
-## 实现
+## 实现方式
 
 使用插件根路径运行本能 CLI：
 
@@ -22,7 +22,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cl
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status
 ```
 
-## 用法
+## 使用方法
 
 ```
 /instinct-status
@@ -30,30 +30,30 @@ python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status
 
 ## 操作步骤
 
-1. 检测当前项目上下文（git remote/路径哈希）
+1. 检测当前项目上下文（git 远程仓库/路径哈希）
 2. 从 `~/.claude/homunculus/projects/<project-id>/instincts/` 读取项目本能
 3. 从 `~/.claude/homunculus/instincts/` 读取全局本能
-4. 合并并应用优先级规则（当ID冲突时，项目本能覆盖全局本能）
+4. 按照优先级规则合并（ID 冲突时，项目本能覆盖全局本能）
 5. 按领域分组显示，包含置信度条和观察统计数据
 
 ## 输出格式
 
 ```
 ============================================================
-  INSTINCT 状态 - 总计 12
+  INSTINCT STATUS - 12 总计
 ============================================================
 
-  项目: my-app (a1b2c3d4e5f6)
-  项目 instincts: 8
-  全局 instincts:  4
+  Project: my-app (a1b2c3d4e5f6)
+  Project instincts: 8
+  Global instincts:  4
 
-## 项目范围内 (my-app)
-  ### 工作流 (3)
+## PROJECT-SCOPED (my-app)
+  ### WORKFLOW (3)
     ███████░░░  70%  grep-before-edit [project]
-              触发条件: 当修改代码时
+              trigger: when modifying code
 
-## 全局 (适用于所有项目)
-  ### 安全 (2)
+## GLOBAL (apply to all projects)
+  ### SECURITY (2)
     █████████░  85%  validate-user-input [global]
-              触发条件: 当处理用户输入时
+              trigger: when handling user input
 ```

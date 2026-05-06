@@ -1,0 +1,58 @@
+{
+  "sourceFile": "commands/instinct-export.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: instinct-export\ndescription: Export instincts from project/global scope to a file\ncommand: /instinct-export\n---",
+      "zh-Hans": "---\nname: instinct-export\ndescription: 将项目/全局范围的本能导出到文件\ncommand: /instinct-export\n---"
+    },
+    {
+      "en-US": "# Instinct Export Command",
+      "zh-Hans": "# 导出本能命令"
+    },
+    {
+      "en-US": "Exports instincts to a shareable format. Perfect for:",
+      "zh-Hans": "将本能导出为可共享的格式。非常适合："
+    },
+    {
+      "en-US": "- Sharing with teammates\n- Transferring to a new machine\n- Contributing to project conventions",
+      "zh-Hans": "* 与团队成员分享\n* 迁移到新机器\n* 贡献给项目规范"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/instinct-export                           # Export all personal instincts\n/instinct-export --domain testing          # Export only testing instincts\n/instinct-export --min-confidence 0.7      # Only export high-confidence instincts\n/instinct-export --output team-instincts.yaml\n/instinct-export --scope project --output project-instincts.yaml\n```",
+      "zh-Hans": "```\n/instinct-export                           # 导出所有个人本能\n/instinct-export --domain testing          # 仅导出测试相关的本能\n/instinct-export --min-confidence 0.7      # 仅导出高置信度的本能\n/instinct-export --output team-instincts.yaml\n/instinct-export --scope project --output project-instincts.yaml\n```"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 操作步骤"
+    },
+    {
+      "en-US": "1. Detect current project context\n2. Load instincts by selected scope:\n   - `project`: current project only\n   - `global`: global only\n   - `all`: project + global merged (default)\n3. Apply filters (`--domain`, `--min-confidence`)\n4. Write YAML-style export to file (or stdout if no output path provided)",
+      "zh-Hans": "1. 检测当前项目上下文\n2. 按选定范围加载本能：\n   * `project`：仅当前项目\n   * `global`：仅全局\n   * `all`：项目与全局合并（默认）\n3. 应用过滤器（`--domain`，`--min-confidence`）\n4. 将 YAML 格式的导出内容写入文件（如果未提供输出路径，则输出到标准输出）"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Creates a YAML file:",
+      "zh-Hans": "创建一个 YAML 文件："
+    },
+    {
+      "en-US": "```yaml\n# Instincts Export\n# Generated: 2025-01-22\n# Source: personal\n# Count: 12 instincts\n\n---\nid: prefer-functional-style\ntrigger: \"when writing new functions\"\nconfidence: 0.8\ndomain: code-style\nsource: session-observation\nscope: project\nproject_id: a1b2c3d4e5f6\nproject_name: my-app\n---\n\n# Prefer Functional Style\n\n## Action\nUse functional patterns over classes.\n```",
+      "zh-Hans": "```yaml\n# Instincts Export\n# Generated: 2025-01-22\n# Source: personal\n# Count: 12 instincts\n\n---\nid: prefer-functional-style\ntrigger: \"when writing new functions\"\nconfidence: 0.8\ndomain: code-style\nsource: session-observation\nscope: project\nproject_id: a1b2c3d4e5f6\nproject_name: my-app\n---\n\n# Prefer Functional Style\n\n## Action\nUse functional patterns over classes.\n```"
+    },
+    {
+      "en-US": "## Flags",
+      "zh-Hans": "## 标志"
+    },
+    {
+      "en-US": "- `--domain <name>`: Export only specified domain\n- `--min-confidence <n>`: Minimum confidence threshold\n- `--output <file>`: Output file path (prints to stdout when omitted)\n- `--scope <project|global|all>`: Export scope (default: `all`)",
+      "zh-Hans": "* `--domain <name>`：仅导出指定领域\n* `--min-confidence <n>`：最低置信度阈值\n* `--output <file>`：输出文件路径（省略时打印到标准输出）\n* `--scope <project|global|all>`：导出范围（默认：`all`）"
+    }
+  ]
+}

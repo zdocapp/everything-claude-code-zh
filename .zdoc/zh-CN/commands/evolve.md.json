@@ -1,0 +1,178 @@
+{
+  "sourceFile": "commands/evolve.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: evolve\ndescription: Analyze instincts and suggest or generate evolved structures\ncommand: true\n---",
+      "zh-Hans": "---\nname: evolve\ndescription: 分析本能并建议或生成进化结构\ncommand: true\n---"
+    },
+    {
+      "en-US": "# Evolve Command",
+      "zh-Hans": "# Evolve 命令"
+    },
+    {
+      "en-US": "## Implementation",
+      "zh-Hans": "## 实现方式"
+    },
+    {
+      "en-US": "Run the instinct CLI using the plugin root path:",
+      "zh-Hans": "使用插件根路径运行 instinct CLI："
+    },
+    {
+      "en-US": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" evolve [--generate]\n```",
+      "zh-Hans": "```bash\npython3 \"${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py\" evolve [--generate]\n```"
+    },
+    {
+      "en-US": "Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):",
+      "zh-Hans": "或者如果 `CLAUDE_PLUGIN_ROOT` 未设置（手动安装）："
+    },
+    {
+      "en-US": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]\n```",
+      "zh-Hans": "```bash\npython3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]\n```"
+    },
+    {
+      "en-US": "Analyzes instincts and clusters related ones into higher-level structures:",
+      "zh-Hans": "分析本能，并将相关的本能聚类成更高级别的结构："
+    },
+    {
+      "en-US": "- **Commands**: When instincts describe user-invoked actions\n- **Skills**: When instincts describe auto-triggered behaviors\n- **Agents**: When instincts describe complex, multi-step processes",
+      "zh-Hans": "* **命令**：当本能描述用户调用的操作时\n* **技能**：当本能描述自动触发的行为时\n* **代理**：当本能描述复杂的多步骤过程时"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```\n/evolve                    # Analyze all instincts and suggest evolutions\n/evolve --generate         # Also generate files under evolved/{skills,commands,agents}\n```",
+      "zh-Hans": "```\n/evolve                    # 分析所有本能并建议进化\n/evolve --generate         # 同时在 evolved/{skills,commands,agents} 下生成文件\n```"
+    },
+    {
+      "en-US": "## Evolution Rules",
+      "zh-Hans": "## 演化规则"
+    },
+    {
+      "en-US": "### → Command (User-Invoked)",
+      "zh-Hans": "### → 命令（用户调用）"
+    },
+    {
+      "en-US": "When instincts describe actions a user would explicitly request:",
+      "zh-Hans": "当本能描述用户会明确请求的操作时："
+    },
+    {
+      "en-US": "- Multiple instincts about \"when user asks to...\"\n- Instincts with triggers like \"when creating a new X\"\n- Instincts that follow a repeatable sequence",
+      "zh-Hans": "* 多个关于“当用户要求...”的本能\n* 触发器类似“当创建新的 X 时”的本能\n* 遵循可重复序列的本能"
+    },
+    {
+      "en-US": "Example:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- `new-table-step1`: \"when adding a database table, create migration\"\n- `new-table-step2`: \"when adding a database table, update schema\"\n- `new-table-step3`: \"when adding a database table, regenerate types\"",
+      "zh-Hans": "* `new-table-step1`：“当添加数据库表时，创建迁移”\n* `new-table-step2`：“当添加数据库表时，更新模式”\n* `new-table-step3`：“当添加数据库表时，重新生成类型”"
+    },
+    {
+      "en-US": "→ Creates: **new-table** command",
+      "zh-Hans": "→ 创建：**new-table** 命令"
+    },
+    {
+      "en-US": "### → Skill (Auto-Triggered)",
+      "zh-Hans": "### → 技能（自动触发）"
+    },
+    {
+      "en-US": "When instincts describe behaviors that should happen automatically:",
+      "zh-Hans": "当本能描述应自动发生的行为时："
+    },
+    {
+      "en-US": "- Pattern-matching triggers\n- Error handling responses\n- Code style enforcement",
+      "zh-Hans": "* 模式匹配触发器\n* 错误处理响应\n* 代码风格强制执行"
+    },
+    {
+      "en-US": "Example:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- `prefer-functional`: \"when writing functions, prefer functional style\"\n- `use-immutable`: \"when modifying state, use immutable patterns\"\n- `avoid-classes`: \"when designing modules, avoid class-based design\"",
+      "zh-Hans": "* `prefer-functional`：“编写函数时，优先使用函数式风格”\n* `use-immutable`：“修改状态时，使用不可变模式”\n* `avoid-classes`：“设计模块时，避免基于类的设计”"
+    },
+    {
+      "en-US": "→ Creates: `functional-patterns` skill",
+      "zh-Hans": "→ 创建：`functional-patterns` 技能"
+    },
+    {
+      "en-US": "### → Agent (Needs Depth/Isolation)",
+      "zh-Hans": "### → 代理（需要深度/隔离）"
+    },
+    {
+      "en-US": "When instincts describe complex, multi-step processes that benefit from isolation:",
+      "zh-Hans": "当本能描述复杂的多步骤过程，且这些过程受益于隔离时："
+    },
+    {
+      "en-US": "- Debugging workflows\n- Refactoring sequences\n- Research tasks",
+      "zh-Hans": "* 调试工作流\n* 重构序列\n* 研究任务"
+    },
+    {
+      "en-US": "Example:",
+      "zh-Hans": "示例："
+    },
+    {
+      "en-US": "- `debug-step1`: \"when debugging, first check logs\"\n- `debug-step2`: \"when debugging, isolate the failing component\"\n- `debug-step3`: \"when debugging, create minimal reproduction\"\n- `debug-step4`: \"when debugging, verify fix with test\"",
+      "zh-Hans": "* `debug-step1`：“调试时，首先检查日志”\n* `debug-step2`：“调试时，隔离故障组件”\n* `debug-step3`：“调试时，创建最小化复现”\n* `debug-step4`：“调试时，用测试验证修复”"
+    },
+    {
+      "en-US": "→ Creates: **debugger** agent",
+      "zh-Hans": "→ 创建：**debugger** 代理"
+    },
+    {
+      "en-US": "## What to Do",
+      "zh-Hans": "## 执行步骤"
+    },
+    {
+      "en-US": "1. Detect current project context\n2. Read project + global instincts (project takes precedence on ID conflicts)\n3. Group instincts by trigger/domain patterns\n4. Identify:\n   - Skill candidates (trigger clusters with 2+ instincts)\n   - Command candidates (high-confidence workflow instincts)\n   - Agent candidates (larger, high-confidence clusters)\n5. Show promotion candidates (project -> global) when applicable\n6. If `--generate` is passed, write files to:\n   - Project scope: `~/.claude/homunculus/projects/<project-id>/evolved/`\n   - Global fallback: `~/.claude/homunculus/evolved/`",
+      "zh-Hans": "1. 检测当前项目上下文\n2. 读取项目 + 全局本能（在 ID 冲突时，项目本能优先）\n3. 按触发器/领域模式对本能进行分组\n4. 识别：\n   * 技能候选（包含 2 个以上本能的触发器集群）\n   * 命令候选（高置信度的工作流本能）\n   * 代理候选（更大、高置信度的集群）\n5. 在适用时显示升级候选（项目 -> 全局）\n6. 如果传递了 `--generate`，则将文件写入：\n   * 项目范围：`~/.claude/homunculus/projects/<project-id>/evolved/`\n   * 全局回退：`~/.claude/homunculus/evolved/`"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```\n============================================================\n  EVOLVE ANALYSIS - 12 instincts\n  Project: my-app (a1b2c3d4e5f6)\n  Project-scoped: 8 | Global: 4\n============================================================\n\nHigh confidence instincts (>=80%): 5\n\n## SKILL CANDIDATES\n1. Cluster: \"adding tests\"\n   Instincts: 3\n   Avg confidence: 82%\n   Domains: testing\n   Scopes: project\n\n## COMMAND CANDIDATES (2)\n  /adding-tests\n    From: test-first-workflow [project]\n    Confidence: 84%\n\n## AGENT CANDIDATES (1)\n  adding-tests-agent\n    Covers 3 instincts\n    Avg confidence: 82%\n```",
+      "zh-Hans": "```\n============================================================\n  EVOLVE 分析 - 12 种本能\n  项目: my-app (a1b2c3d4e5f6)\n  项目范围: 8 | 全局: 4\n============================================================\n\n高置信度本能 (>=80%): 5\n\n## 技能候选\n1. 集群: \"adding tests\"\n   本能: 3\n   平均置信度: 82%\n   领域: testing\n   范围: project\n\n## 命令候选 (2)\n  /adding-tests\n    来源: test-first-workflow [project]\n    置信度: 84%\n\n## 代理候选 (1)\n  adding-tests-agent\n    覆盖 3 种本能\n    平均置信度: 82%\n```"
+    },
+    {
+      "en-US": "## Flags",
+      "zh-Hans": "## 标志"
+    },
+    {
+      "en-US": "- `--generate`: Generate evolved files in addition to analysis output",
+      "zh-Hans": "* `--generate`：除了分析输出外，还生成演化后的文件"
+    },
+    {
+      "en-US": "## Generated File Format",
+      "zh-Hans": "## 生成的文件格式"
+    },
+    {
+      "en-US": "### Command",
+      "zh-Hans": "### 命令"
+    },
+    {
+      "en-US": "```markdown\n---\nname: new-table\ndescription: Create a new database table with migration, schema update, and type generation\ncommand: /new-table\nevolved_from:\n  - new-table-migration\n  - update-schema\n  - regenerate-types\n---\n\n# New Table Command\n\n[Generated content based on clustered instincts]\n\n## Steps\n1. ...\n2. ...\n```",
+      "zh-Hans": "```markdown\n---\nname: new-table\ndescription: Create a new database table with migration, schema update, and type generation\ncommand: /new-table\nevolved_from:\n  - new-table-migration\n  - update-schema\n  - regenerate-types\n---\n\n# 新建表格命令\n\n[基于聚类直觉生成的内容]\n\n## 步骤\n1. ...\n2. ...\n```"
+    },
+    {
+      "en-US": "### Skill",
+      "zh-Hans": "### 技能"
+    },
+    {
+      "en-US": "```markdown\n---\nname: functional-patterns\ndescription: Enforce functional programming patterns\nevolved_from:\n  - prefer-functional\n  - use-immutable\n  - avoid-classes\n---\n\n# Functional Patterns Skill\n\n[Generated content based on clustered instincts]\n```",
+      "zh-Hans": "```markdown\n---\nname: functional-patterns\ndescription: Enforce functional programming patterns\nevolved_from:\n  - prefer-functional\n  - use-immutable\n  - avoid-classes\n---\n\n# 函数式模式技能\n\n[基于聚类本能生成的内容]\n```"
+    },
+    {
+      "en-US": "### Agent",
+      "zh-Hans": "### 代理"
+    },
+    {
+      "en-US": "```markdown\n---\nname: debugger\ndescription: Systematic debugging agent\nmodel: sonnet\nevolved_from:\n  - debug-check-logs\n  - debug-isolate\n  - debug-reproduce\n---\n\n# Debugger Agent\n\n[Generated content based on clustered instincts]\n```",
+      "zh-Hans": "```markdown\n---\nname: debugger\ndescription: Systematic debugging agent\nmodel: sonnet\nevolved_from:\n  - debug-check-logs\n  - debug-isolate\n  - debug-reproduce\n---\n\n# 调试器代理\n\n[基于聚类本能生成的内容]\n```"
+    }
+  ]
+}

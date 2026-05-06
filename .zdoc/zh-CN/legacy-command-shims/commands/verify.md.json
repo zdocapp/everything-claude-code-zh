@@ -1,0 +1,46 @@
+{
+  "sourceFile": "legacy-command-shims/commands/verify.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the verification-loop skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 验证循环技能的旧版斜杠入口填充程序。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Verification Command (Legacy Shim)",
+      "zh-Hans": "# 验证命令（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/verify`. The maintained workflow lives in `skills/verification-loop/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/verify` 时使用此命令。维护的工作流位于 `skills/verification-loop/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范入口"
+    },
+    {
+      "en-US": "- Prefer the `verification-loop` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 优先直接使用 `verification-loop` 技能。\n* 保留此文件仅作为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
+    },
+    {
+      "en-US": "Apply the `verification-loop` skill.",
+      "zh-Hans": "应用 `verification-loop` 技能。"
+    },
+    {
+      "en-US": "- Choose the right verification depth for the user's requested mode.\n- Run build, types, lint, tests, security/log checks, and diff review in the right order for the current repo.\n- Report only the verdicts and blockers instead of maintaining a second verification checklist here.",
+      "zh-Hans": "* 根据用户请求的模式选择适当的验证深度。\n* 按当前仓库的正确顺序执行构建、类型检查、代码检查、测试、安全/日志检查以及差异审查。\n* 仅报告结论和阻塞项，无需在此维护第二份验证清单。"
+    }
+  ]
+}

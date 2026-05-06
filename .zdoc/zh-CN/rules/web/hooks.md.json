@@ -1,0 +1,102 @@
+{
+  "sourceFile": "rules/web/hooks.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "> This file extends [common/hooks.md](../common/hooks.md) with web-specific hook recommendations.",
+      "zh-Hans": "> 此文件扩展了 [common/hooks.md](../common/hooks.md)，提供了针对 Web 的钩子建议。"
+    },
+    {
+      "en-US": "# Web Hooks",
+      "zh-Hans": "# Web 钩子"
+    },
+    {
+      "en-US": "## Recommended PostToolUse Hooks",
+      "zh-Hans": "## 推荐的 PostToolUse 钩子"
+    },
+    {
+      "en-US": "Prefer project-local tooling. Do not wire hooks to remote one-off package execution.",
+      "zh-Hans": "优先使用项目本地工具。不要将钩子连接到远程的一次性包执行。"
+    },
+    {
+      "en-US": "### Format on Save",
+      "zh-Hans": "### 保存时格式化"
+    },
+    {
+      "en-US": "Use the project's existing formatter entrypoint after edits:",
+      "zh-Hans": "在编辑后使用项目现有的格式化程序入口点："
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm prettier --write \\\"$FILE_PATH\\\"\",\n        \"description\": \"Format edited frontend files\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm prettier --write \\\"$FILE_PATH\\\"\",\n        \"description\": \"Format edited frontend files\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine when they use repo-owned dependencies.",
+      "zh-Hans": "通过 `yarn prettier` 或 `npm exec prettier --` 的等效本地命令也可以，只要它们使用仓库拥有的依赖项。"
+    },
+    {
+      "en-US": "### Lint Check",
+      "zh-Hans": "### 代码检查"
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm eslint --fix \\\"$FILE_PATH\\\"\",\n        \"description\": \"Run ESLint on edited frontend files\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm eslint --fix \\\"$FILE_PATH\\\"\",\n        \"description\": \"Run ESLint on edited frontend files\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Type Check",
+      "zh-Hans": "### 类型检查"
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm tsc --noEmit --pretty false\",\n        \"description\": \"Type-check after frontend edits\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm tsc --noEmit --pretty false\",\n        \"description\": \"Type-check after frontend edits\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "### CSS Lint",
+      "zh-Hans": "### CSS 检查"
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm stylelint --fix \\\"$FILE_PATH\\\"\",\n        \"description\": \"Lint edited stylesheets\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Write|Edit\",\n        \"command\": \"pnpm stylelint --fix \\\"$FILE_PATH\\\"\",\n        \"description\": \"Lint edited stylesheets\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "## PreToolUse Hooks",
+      "zh-Hans": "## PreToolUse 钩子"
+    },
+    {
+      "en-US": "### Guard File Size",
+      "zh-Hans": "### 文件大小保护"
+    },
+    {
+      "en-US": "Block oversized writes from tool input content, not from a file that may not exist yet:",
+      "zh-Hans": "阻止来自工具输入内容（而非可能尚不存在的文件）的过大写入："
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write\",\n        \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller modules');process.exit(2)}console.log(d)})\\\"\",\n        \"description\": \"Block writes that exceed 800 lines\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write\",\n        \"command\": \"node -e \\\"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller modules');process.exit(2)}console.log(d)})\\\"\",\n        \"description\": \"Block writes that exceed 800 lines\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Stop Hooks",
+      "zh-Hans": "## Stop 钩子"
+    },
+    {
+      "en-US": "### Final Build Verification",
+      "zh-Hans": "### 最终构建验证"
+    },
+    {
+      "en-US": "```json\n{\n  \"hooks\": {\n    \"Stop\": [\n      {\n        \"command\": \"pnpm build\",\n        \"description\": \"Verify the production build at session end\"\n      }\n    ]\n  }\n}\n```",
+      "zh-Hans": "```json\n{\n  \"hooks\": {\n    \"Stop\": [\n      {\n        \"command\": \"pnpm build\",\n        \"description\": \"Verify the production build at session end\"\n      }\n    ]\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Ordering",
+      "zh-Hans": "## 顺序"
+    },
+    {
+      "en-US": "Recommended order:",
+      "zh-Hans": "推荐顺序："
+    },
+    {
+      "en-US": "1. format\n2. lint\n3. type check\n4. build verification",
+      "zh-Hans": "1. 格式化\n2. 代码检查\n3. 类型检查\n4. 构建验证"
+    }
+  ]
+}

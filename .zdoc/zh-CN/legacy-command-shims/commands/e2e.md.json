@@ -1,0 +1,190 @@
+{
+  "sourceFile": "legacy-command-shims/commands/e2e.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the e2e-testing skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于 e2e 测试技能的旧版斜杠入口填充程序。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# E2E Command (Legacy Shim)",
+      "zh-Hans": "# E2E 命令（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/e2e`. The maintained workflow lives in `skills/e2e-testing/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/e2e` 时使用此命令。维护的工作流位于 `skills/e2e-testing/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范接口"
+    },
+    {
+      "en-US": "- Prefer the `e2e-testing` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 优先直接使用 `e2e-testing` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
+    },
+    {
+      "en-US": "Apply the `e2e-testing` skill.",
+      "zh-Hans": "应用 `e2e-testing` 技能。"
+    },
+    {
+      "en-US": "- Generate or update Playwright coverage for the requested user flow.\n- Run only the relevant tests unless the user explicitly asked for the entire suite.\n- Capture the usual artifacts and report failures, flake risk, and next fixes without duplicating the full skill body here.\n    await marketsPage.searchMarkets('xyznonexistentmarket123456')\n\n    // Verify empty state\n    await expect(page.locator('[data-testid=\"no-results\"]')).toBeVisible()\n    await expect(page.locator('[data-testid=\"no-results\"]')).toContainText(\n      /no.*results|no.*markets/i\n    )\n\n    const marketCount = await marketsPage.marketCards.count()\n    expect(marketCount).toBe(0)\n  })\n\n  test('can clear search and see all markets again', async ({ page }) => {\n    const marketsPage = new MarketsPage(page)\n    await marketsPage.goto()\n\n    // Initial market count\n    const initialCount = await marketsPage.marketCards.count()\n\n    // Perform search\n    await marketsPage.searchMarkets('trump')\n    await page.waitForLoadState('networkidle')\n\n    // Verify filtered results\n    const filteredCount = await marketsPage.marketCards.count()\n    expect(filteredCount).toBeLessThan(initialCount)\n\n    // Clear search\n    await marketsPage.searchInput.clear()\n    await page.waitForLoadState('networkidle')\n\n    // Verify all markets shown again\n    const finalCount = await marketsPage.marketCards.count()\n    expect(finalCount).toBe(initialCount)\n  })\n})",
+      "zh-Hans": "* 为请求的用户流程生成或更新 Playwright 覆盖率。\n* 除非用户明确要求运行整个测试套件，否则仅运行相关测试。\n* 捕获常规工件并报告失败、不稳定风险和后续修复，无需在此处重复完整的技能主体。\n  await marketsPage.searchMarkets('xyznonexistentmarket123456')\n\n  // 验证空状态\n  await expect(page.locator('\\[data-testid=\"no-results\"]')).toBeVisible()\n  await expect(page.locator('\\[data-testid=\"no-results\"]')).toContainText(\n  /no.\\*results|no.\\*markets/i\n  )\n\n  const marketCount = await marketsPage.marketCards.count()\n  expect(marketCount).toBe(0)\n  })\n\n  test('可以清除搜索并再次查看所有市场', async ({ page }) => {\n  const marketsPage = new MarketsPage(page)\n  await marketsPage.goto()\n\n  // 初始市场数量\n  const initialCount = await marketsPage.marketCards.count()\n\n  // 执行搜索\n  await marketsPage.searchMarkets('trump')\n  await page.waitForLoadState('networkidle')\n\n  // 验证过滤结果\n  const filteredCount = await marketsPage.marketCards.count()\n  expect(filteredCount).toBeLessThan(initialCount)\n\n  // 清除搜索\n  await marketsPage.searchInput.clear()\n  await page.waitForLoadState('networkidle')\n\n  // 验证所有市场再次显示\n  const finalCount = await marketsPage.marketCards.count()\n  expect(finalCount).toBe(initialCount)\n  })\n  })"
+    },
+    {
+      "en-US": "```\n\n## Running Tests\n\n```bash\n# Run the generated test\nnpx playwright test tests/e2e/markets/search-and-view.spec.ts\n\nRunning 3 tests using 3 workers\n\n  ✓  [chromium] › search-and-view.spec.ts:5:3 › user can search markets and view details (4.2s)\n  ✓  [chromium] › search-and-view.spec.ts:52:3 › search with no results shows empty state (1.8s)\n  ✓  [chromium] › search-and-view.spec.ts:67:3 › can clear search and see all markets again (2.9s)\n\n  3 passed (9.1s)\n\nArtifacts generated:\n- artifacts/search-results.png\n- artifacts/market-details.png\n- playwright-report/index.html\n```",
+      "zh-Hans": "````\n\n## 运行测试\n\n```bash\n# 运行生成的测试\nnpx playwright test tests/e2e/markets/search-and-view.spec.ts\n\n使用 3 个工作进程运行 3 个测试\n\n  ✓  [chromium] › search-and-view.spec.ts:5:3 › 用户可以搜索市场并查看详情 (4.2秒)\n  ✓  [chromium] › search-and-view.spec.ts:52:3 › 无结果搜索显示空状态 (1.8秒)\n  ✓  [chromium] › search-and-view.spec.ts:67:3 › 可以清除搜索并重新查看所有市场 (2.9秒)\n\n  3 个测试通过 (9.1秒)\n\n生成的产物：\n- artifacts/search-results.png\n- artifacts/market-details.png\n- playwright-report/index.html\n````"
+    },
+    {
+      "en-US": "## Test Report",
+      "zh-Hans": "## 测试报告"
+    },
+    {
+      "en-US": "```\n╔══════════════════════════════════════════════════════════════╗\n║                    E2E Test Results                          ║\n╠══════════════════════════════════════════════════════════════╣\n║ Status:     PASS: ALL TESTS PASSED                              ║\n║ Total:      3 tests                                          ║\n║ Passed:     3 (100%)                                         ║\n║ Failed:     0                                                ║\n║ Flaky:      0                                                ║\n║ Duration:   9.1s                                             ║\n╚══════════════════════════════════════════════════════════════╝\n\nArtifacts:\n Screenshots: 2 files\n Videos: 0 files (only on failure)\n Traces: 0 files (only on failure)\n HTML Report: playwright-report/index.html\n\nView report: npx playwright show-report\n```",
+      "zh-Hans": "```\n╔══════════════════════════════════════════════════════════════╗\n║                    E2E 测试结果                               ║\n╠══════════════════════════════════════════════════════════════╣\n║ 状态:      通过: 所有测试通过                                    ║\n║ 总计:      3 个测试                                           ║\n║ 通过:      3 (100%)                                          ║\n║ 失败:      0                                                 ║\n║ 不稳定:    0                                                 ║\n║ 耗时:      9.1 秒                                            ║\n╚══════════════════════════════════════════════════════════════╝\n\n产物:\n 截图: 2 个文件\n 视频: 0 个文件 (仅在失败时)\n 追踪: 0 个文件 (仅在失败时)\n HTML 报告: playwright-report/index.html\n\n查看报告: npx playwright show-report\n```"
+    },
+    {
+      "en-US": "PASS: E2E test suite ready for CI/CD integration!",
+      "zh-Hans": "通过：E2E 测试套件已准备好进行 CI/CD 集成！"
+    },
+    {
+      "en-US": "```\n\n## Test Artifacts\n\nWhen tests run, the following artifacts are captured:\n\n**On All Tests:**\n- HTML Report with timeline and results\n- JUnit XML for CI integration\n\n**On Failure Only:**\n- Screenshot of the failing state\n- Video recording of the test\n- Trace file for debugging (step-by-step replay)\n- Network logs\n- Console logs\n\n## Viewing Artifacts\n\n```bash\n# View HTML report in browser\nnpx playwright show-report\n\n# View specific trace file\nnpx playwright show-trace artifacts/trace-abc123.zip\n\n# Screenshots are saved in artifacts/ directory\nopen artifacts/search-results.png\n```",
+      "zh-Hans": "````\n\n## 测试产物\n\n运行测试时，会捕获以下产物：\n\n**所有测试：**\n- 包含时间线和结果的 HTML 报告\n- 用于 CI 集成的 JUnit XML\n\n**仅失败时：**\n- 失败状态的截图\n- 测试视频录制\n- 用于调试的跟踪文件（逐步回放）\n- 网络日志\n- 控制台日志\n\n## 查看产物\n\n```bash\n# 在浏览器中查看 HTML 报告\nnpx playwright show-report\n\n# 查看特定跟踪文件\nnpx playwright show-trace artifacts/trace-abc123.zip\n\n# 截图保存在 artifacts/ 目录中\nopen artifacts/search-results.png\n````"
+    },
+    {
+      "en-US": "## Flaky Test Detection",
+      "zh-Hans": "## 不稳定测试检测"
+    },
+    {
+      "en-US": "If a test fails intermittently:",
+      "zh-Hans": "如果测试间歇性失败："
+    },
+    {
+      "en-US": "```\nWARNING:  FLAKY TEST DETECTED: tests/e2e/markets/trade.spec.ts\n\nTest passed 7/10 runs (70% pass rate)\n\nCommon failure:\n\"Timeout waiting for element '[data-testid=\"confirm-btn\"]'\"\n\nRecommended fixes:\n1. Add explicit wait: await page.waitForSelector('[data-testid=\"confirm-btn\"]')\n2. Increase timeout: { timeout: 10000 }\n3. Check for race conditions in component\n4. Verify element is not hidden by animation\n\nQuarantine recommendation: Mark as test.fixme() until fixed\n```",
+      "zh-Hans": "```\n警告：检测到不稳定测试：tests/e2e/markets/trade.spec.ts\n\n测试通过率：7/10 次运行（70% 通过率）\n\n常见失败原因：\n\"等待元素 '[data-testid=\"confirm-btn\"]' 超时\"\n\n推荐修复方案：\n1. 添加显式等待：await page.waitForSelector('[data-testid=\"confirm-btn\"]')\n2. 增加超时时间：{ timeout: 10000 }\n3. 检查组件中的竞态条件\n4. 确认元素未被动画隐藏\n\n隔离建议：在修复前标记为 test.fixme()\n```"
+    },
+    {
+      "en-US": "## Browser Configuration",
+      "zh-Hans": "## 浏览器配置"
+    },
+    {
+      "en-US": "Tests run on multiple browsers by default:",
+      "zh-Hans": "默认情况下，测试在多个浏览器上运行："
+    },
+    {
+      "en-US": "- PASS: Chromium (Desktop Chrome)\n- PASS: Firefox (Desktop)\n- PASS: WebKit (Desktop Safari)\n- PASS: Mobile Chrome (optional)",
+      "zh-Hans": "* 通过：Chromium（桌面版 Chrome）\n* 通过：Firefox（桌面版）\n* 通过：WebKit（桌面版 Safari）\n* 通过：Mobile Chrome（可选）"
+    },
+    {
+      "en-US": "Configure in `playwright.config.ts` to adjust browsers.",
+      "zh-Hans": "在 `playwright.config.ts` 中配置以调整浏览器。"
+    },
+    {
+      "en-US": "## CI/CD Integration",
+      "zh-Hans": "## CI/CD 集成"
+    },
+    {
+      "en-US": "Add to your CI pipeline:",
+      "zh-Hans": "添加到您的 CI 管道："
+    },
+    {
+      "en-US": "```yaml\n# .github/workflows/e2e.yml\n- name: Install Playwright\n  run: npx playwright install --with-deps\n\n- name: Run E2E tests\n  run: npx playwright test\n\n- name: Upload artifacts\n  if: always()\n  uses: actions/upload-artifact@v3\n  with:\n    name: playwright-report\n    path: playwright-report/\n```",
+      "zh-Hans": "```yaml\n# .github/workflows/e2e.yml\n- name: Install Playwright\n  run: npx playwright install --with-deps\n\n- name: Run E2E tests\n  run: npx playwright test\n\n- name: Upload artifacts\n  if: always()\n  uses: actions/upload-artifact@v3\n  with:\n    name: playwright-report\n    path: playwright-report/\n```"
+    },
+    {
+      "en-US": "## PMX-Specific Critical Flows",
+      "zh-Hans": "## PMX 特定关键流程"
+    },
+    {
+      "en-US": "For PMX, prioritize these E2E tests:",
+      "zh-Hans": "对于 PMX，优先考虑这些 E2E 测试："
+    },
+    {
+      "en-US": "**CRITICAL (Must Always Pass):**",
+      "zh-Hans": "**关键（必须始终通过）：**"
+    },
+    {
+      "en-US": "1. User can connect wallet\n2. User can browse markets\n3. User can search markets (semantic search)\n4. User can view market details\n5. User can place trade (with test funds)\n6. Market resolves correctly\n7. User can withdraw funds",
+      "zh-Hans": "1. 用户可以连接钱包\n2. 用户可以浏览市场\n3. 用户可以搜索市场（语义搜索）\n4. 用户可以查看市场详情\n5. 用户可以下订单（使用测试资金）\n6. 市场正确结算\n7. 用户可以提取资金"
+    },
+    {
+      "en-US": "**IMPORTANT:**",
+      "zh-Hans": "**重要：**"
+    },
+    {
+      "en-US": "1. Market creation flow\n2. User profile updates\n3. Real-time price updates\n4. Chart rendering\n5. Filter and sort markets\n6. Mobile responsive layout",
+      "zh-Hans": "1. 市场创建流程\n2. 用户资料更新\n3. 实时价格更新\n4. 图表渲染\n5. 过滤和排序市场\n6. 移动端响应式布局"
+    },
+    {
+      "en-US": "## Best Practices",
+      "zh-Hans": "## 最佳实践"
+    },
+    {
+      "en-US": "**DO:**",
+      "zh-Hans": "**应做：**"
+    },
+    {
+      "en-US": "- PASS: Use Page Object Model for maintainability\n- PASS: Use data-testid attributes for selectors\n- PASS: Wait for API responses, not arbitrary timeouts\n- PASS: Test critical user journeys end-to-end\n- PASS: Run tests before merging to main\n- PASS: Review artifacts when tests fail",
+      "zh-Hans": "* 通过：使用页面对象模型以保持可维护性\n* 通过：使用 data-testid 属性作为选择器\n* 通过：等待 API 响应，而非任意超时\n* 通过：端到端测试关键用户旅程\n* 通过：在合并到主分支前运行测试\n* 通过：测试失败时审查工件"
+    },
+    {
+      "en-US": "**DON'T:**",
+      "zh-Hans": "**不应做：**"
+    },
+    {
+      "en-US": "- FAIL: Use brittle selectors (CSS classes can change)\n- FAIL: Test implementation details\n- FAIL: Run tests against production\n- FAIL: Ignore flaky tests\n- FAIL: Skip artifact review on failures\n- FAIL: Test every edge case with E2E (use unit tests)",
+      "zh-Hans": "* 失败：使用脆弱的选择器（CSS 类可能会更改）\n* 失败：测试实现细节\n* 失败：针对生产环境运行测试\n* 失败：忽略不稳定测试\n* 失败：失败时跳过工件审查\n* 失败：使用 E2E 测试每个边缘情况（应使用单元测试）"
+    },
+    {
+      "en-US": "## Important Notes",
+      "zh-Hans": "## 重要说明"
+    },
+    {
+      "en-US": "**CRITICAL for PMX:**",
+      "zh-Hans": "**PMX 的关键点：**"
+    },
+    {
+      "en-US": "- E2E tests involving real money MUST run on testnet/staging only\n- Never run trading tests against production\n- Set `test.skip(process.env.NODE_ENV === 'production')` for financial tests\n- Use test wallets with small test funds only",
+      "zh-Hans": "* 涉及真实资金的 E2E 测试必须仅在测试网/预发布环境运行\n* 切勿针对生产环境运行交易测试\n* 为财务测试设置 `test.skip(process.env.NODE_ENV === 'production')`\n* 仅使用带有少量测试资金的钱包"
+    },
+    {
+      "en-US": "## Integration with Other Commands",
+      "zh-Hans": "## 与其他命令的集成"
+    },
+    {
+      "en-US": "- Use `/plan` to identify critical journeys to test\n- Use `/tdd` for unit tests (faster, more granular)\n- Use `/e2e` for integration and user journey tests\n- Use `/code-review` to verify test quality",
+      "zh-Hans": "* 使用 `/plan` 识别要测试的关键旅程\n* 使用 `/tdd` 进行单元测试（更快、更精细）\n* 使用 `/e2e` 进行集成和用户旅程测试\n* 使用 `/code-review` 验证测试质量"
+    },
+    {
+      "en-US": "## Related Agents",
+      "zh-Hans": "## 相关代理"
+    },
+    {
+      "en-US": "This command invokes the `e2e-runner` agent provided by ECC.",
+      "zh-Hans": "此命令调用由 ECC 提供的 `e2e-runner` 代理。"
+    },
+    {
+      "en-US": "For manual installs, the source file lives at:\n`agents/e2e-runner.md`",
+      "zh-Hans": "对于手动安装，源文件位于：\n`agents/e2e-runner.md`"
+    },
+    {
+      "en-US": "## Quick Commands",
+      "zh-Hans": "## 快速命令"
+    },
+    {
+      "en-US": "```bash\n# Run all E2E tests\nnpx playwright test\n\n# Run specific test file\nnpx playwright test tests/e2e/markets/search.spec.ts\n\n# Run in headed mode (see browser)\nnpx playwright test --headed\n\n# Debug test\nnpx playwright test --debug\n\n# Generate test code\nnpx playwright codegen http://localhost:3000\n\n# View report\nnpx playwright show-report\n```",
+      "zh-Hans": "```bash\n# Run all E2E tests\nnpx playwright test\n\n# Run specific test file\nnpx playwright test tests/e2e/markets/search.spec.ts\n\n# Run in headed mode (see browser)\nnpx playwright test --headed\n\n# Debug test\nnpx playwright test --debug\n\n# Generate test code\nnpx playwright codegen http://localhost:3000\n\n# View report\nnpx playwright show-report\n```"
+    }
+  ]
+}

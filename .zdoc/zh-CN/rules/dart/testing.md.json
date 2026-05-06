@@ -1,0 +1,122 @@
+{
+  "sourceFile": "rules/dart/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n  - \"**/analysis_options.yaml\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.dart\"\n  - \"**/pubspec.yaml\"\n  - \"**/analysis_options.yaml\"\n---"
+    },
+    {
+      "en-US": "# Dart/Flutter Testing",
+      "zh-Hans": "# Dart/Flutter 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Dart and Flutter-specific content.",
+      "zh-Hans": "> 本文档扩展了 [common/testing.md](../common/testing.md) 的内容，增加了 Dart 和 Flutter 特有的部分。"
+    },
+    {
+      "en-US": "## Test Framework",
+      "zh-Hans": "## 测试框架"
+    },
+    {
+      "en-US": "- **flutter_test** / **dart:test** — built-in test runner\n- **mockito** (with `@GenerateMocks`) or **mocktail** (no codegen) for mocking\n- **bloc_test** for BLoC/Cubit unit tests\n- **fake_async** for controlling time in unit tests\n- **integration_test** for end-to-end device tests",
+      "zh-Hans": "* **flutter\\_test** / **dart:test** — 内置测试运行器\n* **mockito** (配合 `@GenerateMocks`) 或 **mocktail** (无需代码生成) 用于模拟\n* **bloc\\_test** 用于 BLoC/Cubit 单元测试\n* **fake\\_async** 用于在单元测试中控制时间\n* **integration\\_test** 用于端到端设备测试"
+    },
+    {
+      "en-US": "## Test Types",
+      "zh-Hans": "## 测试类型"
+    },
+    {
+      "en-US": "| Type | Tool | Location | When to Write |\n|------|------|----------|---------------|\n| Unit | `dart:test` | `test/unit/` | All domain logic, state managers, repositories |\n| Widget | `flutter_test` | `test/widget/` | All widgets with meaningful behavior |\n| Golden | `flutter_test` | `test/golden/` | Design-critical UI components |\n| Integration | `integration_test` | `integration_test/` | Critical user flows on real device/emulator |",
+      "zh-Hans": "| 类型 | 工具 | 位置 | 何时编写 |\n|------|------|----------|---------------|\n| 单元 | `dart:test` | `test/unit/` | 所有领域逻辑、状态管理器、仓库 |\n| 部件 | `flutter_test` | `test/widget/` | 所有具有有意义行为的部件 |\n| 黄金 | `flutter_test` | `test/golden/` | 设计关键的 UI 组件 |\n| 集成 | `integration_test` | `integration_test/` | 在真实设备/模拟器上的关键用户流程 |"
+    },
+    {
+      "en-US": "## Unit Tests: State Managers",
+      "zh-Hans": "## 单元测试：状态管理器"
+    },
+    {
+      "en-US": "### BLoC with `bloc_test`",
+      "zh-Hans": "### 使用 `bloc_test` 测试 BLoC"
+    },
+    {
+      "en-US": "```dart\ngroup('CartBloc', () {\n  late CartBloc bloc;\n  late MockCartRepository repository;\n\n  setUp(() {\n    repository = MockCartRepository();\n    bloc = CartBloc(repository);\n  });\n\n  tearDown(() => bloc.close());\n\n  blocTest<CartBloc, CartState>(\n    'emits updated items when CartItemAdded',\n    build: () => bloc,\n    act: (b) => b.add(CartItemAdded(testItem)),\n    expect: () => [CartState(items: [testItem])],\n  );\n\n  blocTest<CartBloc, CartState>(\n    'emits empty cart when CartCleared',\n    seed: () => CartState(items: [testItem]),\n    build: () => bloc,\n    act: (b) => b.add(CartCleared()),\n    expect: () => [const CartState()],\n  );\n});\n```",
+      "zh-Hans": "```dart\ngroup('CartBloc', () {\n  late CartBloc bloc;\n  late MockCartRepository repository;\n\n  setUp(() {\n    repository = MockCartRepository();\n    bloc = CartBloc(repository);\n  });\n\n  tearDown(() => bloc.close());\n\n  blocTest<CartBloc, CartState>(\n    'emits updated items when CartItemAdded',\n    build: () => bloc,\n    act: (b) => b.add(CartItemAdded(testItem)),\n    expect: () => [CartState(items: [testItem])],\n  );\n\n  blocTest<CartBloc, CartState>(\n    'emits empty cart when CartCleared',\n    seed: () => CartState(items: [testItem]),\n    build: () => bloc,\n    act: (b) => b.add(CartCleared()),\n    expect: () => [const CartState()],\n  );\n});\n```"
+    },
+    {
+      "en-US": "### Riverpod with `ProviderContainer`",
+      "zh-Hans": "### 使用 `ProviderContainer` 测试 Riverpod"
+    },
+    {
+      "en-US": "```dart\ntest('usersProvider loads users from repository', () async {\n  final container = ProviderContainer(\n    overrides: [userRepositoryProvider.overrideWithValue(FakeUserRepository())],\n  );\n  addTearDown(container.dispose);\n\n  final result = await container.read(usersProvider.future);\n  expect(result, isNotEmpty);\n});\n```",
+      "zh-Hans": "```dart\ntest('usersProvider loads users from repository', () async {\n  final container = ProviderContainer(\n    overrides: [userRepositoryProvider.overrideWithValue(FakeUserRepository())],\n  );\n  addTearDown(container.dispose);\n\n  final result = await container.read(usersProvider.future);\n  expect(result, isNotEmpty);\n});\n```"
+    },
+    {
+      "en-US": "## Widget Tests",
+      "zh-Hans": "## 部件测试"
+    },
+    {
+      "en-US": "```dart\ntestWidgets('CartPage shows item count badge', (tester) async {\n  await tester.pumpWidget(\n    ProviderScope(\n      overrides: [\n        cartNotifierProvider.overrideWith(() => FakeCartNotifier([testItem])),\n      ],\n      child: const MaterialApp(home: CartPage()),\n    ),\n  );\n\n  await tester.pump();\n  expect(find.text('1'), findsOneWidget);\n  expect(find.byType(CartItemTile), findsOneWidget);\n});\n\ntestWidgets('shows empty state when cart is empty', (tester) async {\n  await tester.pumpWidget(\n    ProviderScope(\n      overrides: [cartNotifierProvider.overrideWith(() => FakeCartNotifier([]))],\n      child: const MaterialApp(home: CartPage()),\n    ),\n  );\n\n  await tester.pump();\n  expect(find.text('Your cart is empty'), findsOneWidget);\n});\n```",
+      "zh-Hans": "```dart\ntestWidgets('CartPage shows item count badge', (tester) async {\n  await tester.pumpWidget(\n    ProviderScope(\n      overrides: [\n        cartNotifierProvider.overrideWith(() => FakeCartNotifier([testItem])),\n      ],\n      child: const MaterialApp(home: CartPage()),\n    ),\n  );\n\n  await tester.pump();\n  expect(find.text('1'), findsOneWidget);\n  expect(find.byType(CartItemTile), findsOneWidget);\n});\n\ntestWidgets('shows empty state when cart is empty', (tester) async {\n  await tester.pumpWidget(\n    ProviderScope(\n      overrides: [cartNotifierProvider.overrideWith(() => FakeCartNotifier([]))],\n      child: const MaterialApp(home: CartPage()),\n    ),\n  );\n\n  await tester.pump();\n  expect(find.text('Your cart is empty'), findsOneWidget);\n});\n```"
+    },
+    {
+      "en-US": "## Fakes Over Mocks",
+      "zh-Hans": "## 使用伪造对象而非模拟对象"
+    },
+    {
+      "en-US": "Prefer hand-written fakes for complex dependencies:",
+      "zh-Hans": "对于复杂的依赖项，优先使用手写的伪造对象："
+    },
+    {
+      "en-US": "```dart\nclass FakeUserRepository implements UserRepository {\n  final _users = <String, User>{};\n  Object? fetchError;\n\n  @override\n  Future<User?> getById(String id) async {\n    if (fetchError != null) throw fetchError!;\n    return _users[id];\n  }\n\n  @override\n  Future<List<User>> getAll() async {\n    if (fetchError != null) throw fetchError!;\n    return _users.values.toList();\n  }\n\n  @override\n  Stream<List<User>> watchAll() => Stream.value(_users.values.toList());\n\n  @override\n  Future<void> save(User user) async {\n    _users[user.id] = user;\n  }\n\n  @override\n  Future<void> delete(String id) async {\n    _users.remove(id);\n  }\n\n  void addUser(User user) => _users[user.id] = user;\n}\n```",
+      "zh-Hans": "```dart\nclass FakeUserRepository implements UserRepository {\n  final _users = <String, User>{};\n  Object? fetchError;\n\n  @override\n  Future<User?> getById(String id) async {\n    if (fetchError != null) throw fetchError!;\n    return _users[id];\n  }\n\n  @override\n  Future<List<User>> getAll() async {\n    if (fetchError != null) throw fetchError!;\n    return _users.values.toList();\n  }\n\n  @override\n  Stream<List<User>> watchAll() => Stream.value(_users.values.toList());\n\n  @override\n  Future<void> save(User user) async {\n    _users[user.id] = user;\n  }\n\n  @override\n  Future<void> delete(String id) async {\n    _users.remove(id);\n  }\n\n  void addUser(User user) => _users[user.id] = user;\n}\n```"
+    },
+    {
+      "en-US": "## Async Testing",
+      "zh-Hans": "## 异步测试"
+    },
+    {
+      "en-US": "```dart\n// Use fake_async for controlling timers and Futures\ntest('debounce triggers after 300ms', () {\n  fakeAsync((async) {\n    final debouncer = Debouncer(delay: const Duration(milliseconds: 300));\n    var callCount = 0;\n    debouncer.run(() => callCount++);\n    expect(callCount, 0);\n    async.elapse(const Duration(milliseconds: 200));\n    expect(callCount, 0);\n    async.elapse(const Duration(milliseconds: 200));\n    expect(callCount, 1);\n  });\n});\n```",
+      "zh-Hans": "```dart\n// Use fake_async for controlling timers and Futures\ntest('debounce triggers after 300ms', () {\n  fakeAsync((async) {\n    final debouncer = Debouncer(delay: const Duration(milliseconds: 300));\n    var callCount = 0;\n    debouncer.run(() => callCount++);\n    expect(callCount, 0);\n    async.elapse(const Duration(milliseconds: 200));\n    expect(callCount, 0);\n    async.elapse(const Duration(milliseconds: 200));\n    expect(callCount, 1);\n  });\n});\n```"
+    },
+    {
+      "en-US": "## Golden Tests",
+      "zh-Hans": "## 黄金测试"
+    },
+    {
+      "en-US": "```dart\ntestWidgets('UserCard golden test', (tester) async {\n  await tester.pumpWidget(\n    MaterialApp(home: UserCard(user: testUser)),\n  );\n\n  await expectLater(\n    find.byType(UserCard),\n    matchesGoldenFile('goldens/user_card.png'),\n  );\n});\n```",
+      "zh-Hans": "```dart\ntestWidgets('UserCard golden test', (tester) async {\n  await tester.pumpWidget(\n    MaterialApp(home: UserCard(user: testUser)),\n  );\n\n  await expectLater(\n    find.byType(UserCard),\n    matchesGoldenFile('goldens/user_card.png'),\n  );\n});\n```"
+    },
+    {
+      "en-US": "Run `flutter test --update-goldens` when intentional visual changes are made.",
+      "zh-Hans": "当有意进行视觉更改时，运行 `flutter test --update-goldens`。"
+    },
+    {
+      "en-US": "## Test Naming",
+      "zh-Hans": "## 测试命名"
+    },
+    {
+      "en-US": "Use descriptive, behavior-focused names:",
+      "zh-Hans": "使用描述性的、关注行为的名称："
+    },
+    {
+      "en-US": "```dart\ntest('returns null when user does not exist', () { ... });\ntest('throws NotFoundException when id is empty string', () { ... });\ntestWidgets('disables submit button while form is invalid', (tester) async { ... });\n```",
+      "zh-Hans": "```dart\ntest('returns null when user does not exist', () { ... });\ntest('throws NotFoundException when id is empty string', () { ... });\ntestWidgets('disables submit button while form is invalid', (tester) async { ... });\n```"
+    },
+    {
+      "en-US": "## Test Organization",
+      "zh-Hans": "## 测试组织"
+    },
+    {
+      "en-US": "```\ntest/\n├── unit/\n│   ├── domain/\n│   │   └── usecases/\n│   └── data/\n│       └── repositories/\n├── widget/\n│   └── presentation/\n│       └── pages/\n└── golden/\n    └── widgets/\n\nintegration_test/\n└── flows/\n    ├── login_flow_test.dart\n    └── checkout_flow_test.dart\n```",
+      "zh-Hans": "```\ntest/\n├── unit/\n│   ├── domain/\n│   │   └── usecases/\n│   └── data/\n│       └── repositories/\n├── widget/\n│   └── presentation/\n│       └── pages/\n└── golden/\n    └── widgets/\n\nintegration_test/\n└── flows/\n    ├── login_flow_test.dart\n    └── checkout_flow_test.dart\n```"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 覆盖率"
+    },
+    {
+      "en-US": "- Target 80%+ line coverage for business logic (domain + state managers)\n- All state transitions must have tests: loading → success, loading → error, retry\n- Run `flutter test --coverage` and inspect `lcov.info` with a coverage reporter\n- Coverage failures should block CI when below threshold",
+      "zh-Hans": "* 业务逻辑（领域层 + 状态管理器）的目标行覆盖率应达到 80% 以上\n* 所有状态转换都必须有测试：加载 → 成功，加载 → 错误，重试\n* 运行 `flutter test --coverage` 并使用覆盖率报告工具检查 `lcov.info`\n* 当覆盖率低于阈值时，应阻止 CI 通过"
+    }
+  ]
+}

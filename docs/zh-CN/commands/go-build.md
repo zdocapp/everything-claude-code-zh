@@ -1,5 +1,5 @@
 ---
-description: 逐步修复Go构建错误、go vet警告和linter问题。调用go-build-resolver代理进行最小化、精确的修复。
+description: 逐步修复Go构建错误、go vet警告和linter问题。调用go-build-resolver代理进行最小化、精准的修复。
 ---
 
 # Go 构建与修复
@@ -11,8 +11,8 @@ description: 逐步修复Go构建错误、go vet警告和linter问题。调用go
 1. **运行诊断**：执行 `go build`、`go vet`、`staticcheck`
 2. **解析错误**：按文件分组并按严重性排序
 3. **增量修复**：一次修复一个错误
-4. **验证每次修复**：每次更改后重新运行构建
-5. **报告摘要**：显示已修复的内容和剩余问题
+4. **验证每个修复**：每次更改后重新运行构建
+5. **报告摘要**：显示已修复的内容和剩余的问题
 
 ## 何时使用
 
@@ -45,7 +45,10 @@ go mod tidy -v
 ## 示例会话
 
 ````text
-# Go Build 解析
+User: /go-build
+
+Agent:
+# Go 构建问题解决
 
 ## 初始诊断
 
@@ -54,7 +57,6 @@ $ go build ./...
 internal/service/user.go:25:15: undefined: UserRepository
 internal/handler/api.go:42:9: cannot use x (type string) as type int
 internal/handler/api.go:58:2: missing return at end of function
-
 ````
 
 发现错误：3
@@ -139,45 +141,47 @@ ok      project/internal/handler   0.023s
 | 已修改的文件 | 2 |
 | 剩余问题 | 0 |
 
-构建状态：PASS: 成功
+构建状态：PASS: SUCCESS
 
 ```
+
 ## 常见错误修复
 
-| 错误 | 典型修复 |
+| 错误 | 典型修复方法 |
 |-------|-------------|
 | `undefined: X` | 添加导入或修正拼写错误 |
 | `cannot use X as Y` | 类型转换或修正赋值 |
-| `missing return` | 添加返回语句 |
+| `missing return` | 添加 return 语句 |
 | `X does not implement Y` | 添加缺失的方法 |
 | `import cycle` | 重构包结构 |
 | `declared but not used` | 移除或使用变量 |
-| `cannot find package` | `go get` 或 `go mod tidy` |
+| `cannot find package` | 执行 `go get` 或 `go mod tidy` |
 
 ## 修复策略
 
-1. **优先处理构建错误** - 代码必须能够编译
+1. **优先修复构建错误** - 代码必须能编译
 2. **其次处理 vet 警告** - 修复可疑结构
-3. **再次处理 lint 警告** - 风格和最佳实践
-4. **一次修复一个问题** - 验证每个更改
-5. **最小化更改** - 不要重构，只修复
+3. **最后处理 lint 警告** - 优化风格和最佳实践
+4. **每次只修复一个** - 验证每个更改
+5. **最小化改动** - 只修复，不重构
 
 ## 停止条件
 
-在以下情况下，代理将停止并报告：
-- 相同错误经过 3 次尝试后仍然存在
+代理将在以下情况停止并报告：
+- 同一错误在 3 次尝试后仍然存在
 - 修复引入了更多错误
-- 需要架构性更改
+- 需要架构变更
 - 缺少外部依赖
 
 ## 相关命令
 
 - `/go-test` - 构建成功后运行测试
 - `/go-review` - 审查代码质量
-- `/verify` - 完整验证循环
+- `verification-loop` 技能 - 完整验证循环
 
 ## 相关
 
-- 代理: `agents/go-build-resolver.md`
-- 技能: `skills/golang-patterns/`
+- 代理：`agents/go-build-resolver.md`
+- 技能：`skills/golang-patterns/`
+
 ```

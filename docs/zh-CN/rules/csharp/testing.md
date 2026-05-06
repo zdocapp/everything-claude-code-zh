@@ -13,7 +13,7 @@ paths:
 
 * 单元测试和集成测试首选 **xUnit**
 * 使用 **FluentAssertions** 编写可读性强的断言
-* 使用 **Moq** 或 **NSubstitute** 来模拟依赖项
+* 使用 **Moq** 或 **NSubstitute** 模拟依赖项
 * 当集成测试需要真实基础设施时，使用 **Testcontainers**
 
 ## 测试组织
@@ -44,4 +44,4 @@ public sealed class OrderServiceTests
 
 * 目标行覆盖率 80% 以上
 * 将覆盖率重点放在领域逻辑、验证、身份验证和失败路径上
-* 在 CI 中运行 `dotnet test` 并启用覆盖率收集（在可用的情况下）
+* 在 CI 中运行 `dotnet test`，并在可用时启用覆盖率收集

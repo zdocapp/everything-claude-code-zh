@@ -1,0 +1,42 @@
+{
+  "sourceFile": "legacy-command-shims/commands/rules-distill.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the rules-distill skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于 rules-distill 技能的旧版斜杠入口填充。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Rules Distill (Legacy Shim)",
+      "zh-Hans": "# 规则蒸馏（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/rules-distill`. The maintained workflow lives in `skills/rules-distill/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/rules-distill` 时使用此文件。维护中的工作流位于 `skills/rules-distill/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范接口"
+    },
+    {
+      "en-US": "- Prefer the `rules-distill` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 优先直接使用 `rules-distill` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
+    },
+    {
+      "en-US": "Apply the `rules-distill` skill and follow its inventory, cross-read, and verdict workflow instead of duplicating that logic here.",
+      "zh-Hans": "应用 `rules-distill` 技能并遵循其清单、交叉审阅和裁决工作流，而非在此处重复该逻辑。"
+    }
+  ]
+}

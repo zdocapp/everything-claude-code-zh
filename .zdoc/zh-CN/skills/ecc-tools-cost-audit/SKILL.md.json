@@ -1,0 +1,198 @@
+{
+  "sourceFile": "skills/ecc-tools-cost-audit/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: ecc-tools-cost-audit\ndescription: Evidence-first ECC Tools burn and billing audit workflow. Use when investigating runaway PR creation, quota bypass, premium-model leakage, duplicate jobs, or GitHub App cost spikes in the ECC Tools repo.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: ecc-tools-cost-audit\ndescription: 证据优先的ECC工具烧录和计费审计工作流程。用于调查ECC工具仓库中的失控PR创建、配额绕过、高级模型泄漏、重复作业或GitHub应用成本激增。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# ECC Tools Cost Audit",
+      "zh-Hans": "# ECC 工具成本审计"
+    },
+    {
+      "en-US": "Use this skill when the user suspects the ECC Tools GitHub App is burning cost, over-creating PRs, bypassing usage limits, or routing free users into premium analysis paths.",
+      "zh-Hans": "当用户怀疑 ECC Tools GitHub 应用正在消耗成本、过度创建 PR、绕过使用限制或将免费用户路由到高级分析路径时，使用此技能。"
+    },
+    {
+      "en-US": "This is a focused operator workflow for the sibling [ECC-Tools](../../ECC-Tools) repo. It is not a generic billing skill and it is not a repo-wide code review pass.",
+      "zh-Hans": "这是针对兄弟仓库 [ECC-Tools](../../ECC-Tools) 的聚焦操作员工作流。它不是通用的计费技能，也不是仓库范围的代码审查。"
+    },
+    {
+      "en-US": "## Skill Stack",
+      "zh-Hans": "## 技能栈"
+    },
+    {
+      "en-US": "Pull these ECC-native skills into the workflow when relevant:",
+      "zh-Hans": "在相关时将以下 ECC 原生技能拉入工作流："
+    },
+    {
+      "en-US": "- `autonomous-loops` for bounded multi-step audits that cross webhooks, queues, billing, and retries\n- `agentic-engineering` for tracing the request path into discrete, provable units\n- `customer-billing-ops` when repo behavior and customer-impact math must be separated cleanly\n- `search-first` before inventing helpers or re-implementing repo-local utilities\n- `security-review` when auth, usage gates, entitlements, or secrets are touched\n- `verification-loop` for proving rerun safety and exact post-fix state\n- `tdd-workflow` when the fix needs regression coverage in the worker, router, or billing paths",
+      "zh-Hans": "* `autonomous-loops` 用于跨越 webhook、队列、计费和重试的有界多步骤审计\n* `agentic-engineering` 用于将请求路径追踪到离散、可证明的单元\n* `customer-billing-ops` 当需要清晰分离仓库行为和客户影响计算时\n* `search-first` 在发明辅助工具或重新实现仓库本地实用程序之前\n* `security-review` 当涉及身份验证、使用限制、授权或许可时\n* `verification-loop` 用于证明重新运行的安全性和修复后的确切状态\n* `tdd-workflow` 当修复需要在 worker、路由器或计费路径中进行回归覆盖时"
+    },
+    {
+      "en-US": "## When To Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- user says ECC Tools burn rate, PR recursion, over-created PRs, usage-limit bypass, or premium-model leakage\n- the task is in the sibling `ECC-Tools` repo and depends on webhook handlers, queue workers, usage reservation, PR creation logic, or paid-gate enforcement\n- a customer report says the app created too many PRs, billed incorrectly, or analyzed code without producing a usable result",
+      "zh-Hans": "* 用户提到 ECC Tools 消耗率、PR 递归、过度创建的 PR、使用限制绕过或高级模型泄漏\n* 任务在兄弟仓库 `ECC-Tools` 中，并且依赖于 webhook 处理器、队列 worker、使用量预留、PR 创建逻辑或付费网关强制执行\n* 客户报告称应用创建了过多 PR、计费不正确，或分析了代码但未产生可用结果"
+    },
+    {
+      "en-US": "## Scope Guardrails",
+      "zh-Hans": "## 范围护栏"
+    },
+    {
+      "en-US": "- work in the sibling `ECC-Tools` repo, not in `everything-claude-code`\n- start read-only unless the user clearly asked for a fix\n- do not mutate unrelated billing, checkout, or UI flows while tracing analysis burn\n- treat app-generated branches and app-generated PRs as red-flag recursion paths until proved otherwise\n- separate three things explicitly:\n  - repo-side burn root cause\n  - customer-facing billing impact\n  - product or entitlement gaps that need backlog follow-up",
+      "zh-Hans": "* 在兄弟仓库 `ECC-Tools` 中工作，而不是在 `everything-claude-code` 中\n* 除非用户明确要求修复，否则以只读模式开始\n* 在追踪分析消耗时，不要修改无关的计费、结账或 UI 流程\n* 在证明其合理性之前，将应用生成的分支和应用生成的 PR 视为危险递归路径\n* 明确区分以下三件事：\n  * 仓库侧的消耗根本原因\n  * 面向客户的计费影响\n  * 需要后续产品待办事项跟进的产品或授权差距"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流"
+    },
+    {
+      "en-US": "### 1. Freeze repo scope",
+      "zh-Hans": "### 1. 冻结仓库范围"
+    },
+    {
+      "en-US": "- switch into the sibling `ECC-Tools` repo\n- check branch and local diff first\n- identify the exact surface under audit:\n  - webhook router\n  - queue producer\n  - queue consumer\n  - PR creation path\n  - usage reservation / billing path\n  - model routing path",
+      "zh-Hans": "* 切换到兄弟仓库 `ECC-Tools`\n* 首先检查分支和本地差异\n* 确定审计的确切范围：\n  * webhook 路由器\n  * 队列生产者\n  * 队列消费者\n  * PR 创建路径\n  * 使用量预留 / 计费路径\n  * 模型路由路径"
+    },
+    {
+      "en-US": "### 2. Trace ingress before theorizing",
+      "zh-Hans": "### 2. 在理论化之前追踪入口"
+    },
+    {
+      "en-US": "- inspect `src/index.*` or the main entrypoint first\n- map every enqueue path before suggesting a fix\n- confirm which GitHub events share a queue type\n- confirm whether push, pull_request, synchronize, comment, or manual re-run events can converge on the same expensive path",
+      "zh-Hans": "* 首先检查 `src/index.*` 或主要入口点\n* 在建议修复之前，映射每个入队路径\n* 确认哪些 GitHub 事件共享队列类型\n* 确认推送、pull\\_request、同步、评论或手动重新运行事件是否可能汇聚到相同的高成本路径"
+    },
+    {
+      "en-US": "### 3. Trace the worker and side effects",
+      "zh-Hans": "### 3. 追踪 worker 和副作用"
+    },
+    {
+      "en-US": "- inspect the queue consumer or scheduled worker that handles analysis\n- confirm whether a queued analysis always ends in:\n  - PR creation\n  - branch creation\n  - file updates\n  - premium model calls\n  - usage increments\n- if analysis can spend tokens and then fail before output is persisted, classify it as burn-with-broken-output",
+      "zh-Hans": "* 检查处理分析的队列消费者或计划 worker\n* 确认排队的分析是否总是以以下方式结束：\n  * PR 创建\n  * 分支创建\n  * 文件更新\n  * 高级模型调用\n  * 使用量增加\n* 如果分析可以在输出持久化之前消耗令牌然后失败，则将其归类为\"消耗但输出损坏\""
+    },
+    {
+      "en-US": "### 4. Audit the high-signal burn paths",
+      "zh-Hans": "### 4. 审计高信号消耗路径"
+    },
+    {
+      "en-US": "#### PR multiplication",
+      "zh-Hans": "#### PR 倍增"
+    },
+    {
+      "en-US": "- inspect PR helpers and branch naming\n- check dedupe, synchronize-event handling, and existing-PR reuse\n- if app-generated branches can re-enter analysis, treat that as a priority-0 recursion risk",
+      "zh-Hans": "* 检查 PR 辅助函数和分支命名\n* 检查去重、同步事件处理和现有 PR 重用\n* 如果应用生成的分支可以重新进入分析，则将其视为优先级为 0 的递归风险"
+    },
+    {
+      "en-US": "#### Quota bypass",
+      "zh-Hans": "#### 配额绕过"
+    },
+    {
+      "en-US": "- inspect where quota is checked versus where usage is reserved or incremented\n- if quota is checked before enqueue but usage is charged only inside the worker, treat concurrent front-door passes as a real race",
+      "zh-Hans": "* 检查配额检查的位置与使用量预留或增加的位置\n* 如果在入队前检查配额，但仅在 worker 内部计费使用量，则将并发的前门通过视为真实的竞争条件"
+    },
+    {
+      "en-US": "#### Premium-model leakage",
+      "zh-Hans": "#### 高级模型泄漏"
+    },
+    {
+      "en-US": "- inspect model selection, tier branching, and provider routing\n- verify whether free or capped users can still hit premium analyzers when premium keys are present",
+      "zh-Hans": "* 检查模型选择、层级分支和提供商路由\n* 验证免费或受限制的用户在存在高级密钥时是否仍能访问高级分析器"
+    },
+    {
+      "en-US": "#### Retry burn",
+      "zh-Hans": "#### 重试消耗"
+    },
+    {
+      "en-US": "- inspect retry loops, duplicate queue jobs, and deterministic failure reruns\n- if the same non-transient error can spend analysis repeatedly, fix that before quality improvements",
+      "zh-Hans": "* 检查重试循环、重复队列作业和确定性失败重新运行\n* 如果相同的非暂时性错误可以重复消耗分析，则在质量改进之前修复此问题"
+    },
+    {
+      "en-US": "### 5. Fix in burn order",
+      "zh-Hans": "### 5. 按消耗顺序修复"
+    },
+    {
+      "en-US": "If the user asked for code changes, prioritize fixes in this order:",
+      "zh-Hans": "如果用户要求进行代码更改，请按以下顺序优先修复："
+    },
+    {
+      "en-US": "1. stop automatic PR multiplication\n2. stop quota bypass\n3. stop premium leakage\n4. stop duplicate-job fanout and pointless retries\n5. close rerun/update safety gaps",
+      "zh-Hans": "1. 停止自动 PR 倍增\n2. 停止配额绕过\n3. 停止高级模型泄漏\n4. 停止重复作业扇出和无意义的重试\n5. 关闭重新运行/更新的安全漏洞"
+    },
+    {
+      "en-US": "Keep the pass bounded to one to three direct fixes unless the same root cause clearly spans multiple files.",
+      "zh-Hans": "除非同一根本原因明显跨越多个文件，否则将此次修复限制在一到三个直接修复内。"
+    },
+    {
+      "en-US": "### 6. Verify with the smallest proving steps",
+      "zh-Hans": "### 6. 用最小的验证步骤进行验证"
+    },
+    {
+      "en-US": "- rerun only the targeted tests or integration slices that cover the changed path\n- verify whether the burn path is now:\n  - blocked\n  - deduped\n  - downgraded to cheaper analysis\n  - or rejected early\n- state the final status exactly:\n  - changed locally\n  - verified locally\n  - pushed\n  - deployed\n  - still blocked",
+      "zh-Hans": "* 仅重新运行覆盖更改路径的针对性测试或集成切片\n* 验证消耗路径现在是否：\n  * 被阻止\n  * 已去重\n  * 降级为更便宜的分析\n  * 或早期被拒绝\n* 准确说明最终状态：\n  * 本地已更改\n  * 本地已验证\n  * 已推送\n  * 已部署\n  * 仍被阻止"
+    },
+    {
+      "en-US": "## High-Signal Failure Patterns",
+      "zh-Hans": "## 高信号失败模式"
+    },
+    {
+      "en-US": "### 1. One queue type for all triggers",
+      "zh-Hans": "### 1. 所有触发器使用一种队列类型"
+    },
+    {
+      "en-US": "If pushes, PR syncs, and manual audits all enqueue the same job and the worker always creates a PR, analysis equals PR spam.",
+      "zh-Hans": "如果推送、PR 同步和手动审计都将同一作业入队，并且 worker 总是创建 PR，那么分析就等于 PR 垃圾邮件。"
+    },
+    {
+      "en-US": "### 2. Post-enqueue usage reservation",
+      "zh-Hans": "### 2. 入队后使用量预留"
+    },
+    {
+      "en-US": "If usage is checked at the front door but only incremented in the worker, concurrent requests can all pass the gate and exceed quota.",
+      "zh-Hans": "如果使用量在前门检查，但仅在 worker 内部增加，则并发请求可能全部通过网关并超出配额。"
+    },
+    {
+      "en-US": "### 3. Free tier on premium path",
+      "zh-Hans": "### 3. 免费层级进入高级路径"
+    },
+    {
+      "en-US": "If free queued jobs can still route into Anthropic or another premium provider when keys exist, that is real spend leakage even if the user never sees the premium result.",
+      "zh-Hans": "如果排队的免费作业在密钥存在时仍能路由到 Anthropic 或其他高级提供商，那么即使用户从未看到高级结果，这也是真实的支出泄漏。"
+    },
+    {
+      "en-US": "### 4. App-generated branches re-enter the webhook",
+      "zh-Hans": "### 4. 应用生成的分支重新进入 webhook"
+    },
+    {
+      "en-US": "If `pull_request.synchronize`, branch pushes, or comment-triggered runs fire on app-owned branches, the app can recursively analyze its own output.",
+      "zh-Hans": "如果 `pull_request.synchronize`、分支推送或评论触发的运行在应用拥有的分支上触发，则应用可以递归分析其自己的输出。"
+    },
+    {
+      "en-US": "### 5. Expensive work before persistence safety",
+      "zh-Hans": "### 5. 持久化安全之前的高成本工作"
+    },
+    {
+      "en-US": "If the system can spend tokens and then fail on PR creation, file update, or branch collision, it is burning cost without shipping value.",
+      "zh-Hans": "如果系统可以在 PR 创建、文件更新或分支冲突时消耗令牌然后失败，那么它就是在消耗成本而没有交付价值。"
+    },
+    {
+      "en-US": "## Pitfalls",
+      "zh-Hans": "## 陷阱"
+    },
+    {
+      "en-US": "- do not begin with broad repo wandering; settle webhook -> queue -> worker first\n- do not mix customer billing inference with code-backed product truth\n- do not fix lower-value quality issues before the highest-burn path is contained\n- do not claim burn is fixed until the narrow proving step was rerun\n- do not push or deploy unless the user asked\n- do not touch unrelated repo-local changes if they are already in progress",
+      "zh-Hans": "* 不要从广泛的仓库漫游开始；首先确定 webhook -> 队列 -> worker\n* 不要将客户计费推断与基于代码的产品事实混为一谈\n* 在最高消耗路径得到控制之前，不要修复低价值的质量问题\n* 在狭窄的验证步骤重新运行之前，不要声称消耗已修复\n* 除非用户要求，否则不要推送或部署\n* 如果无关的仓库本地更改已在进行中，请不要触碰"
+    },
+    {
+      "en-US": "## Verification",
+      "zh-Hans": "## 验证"
+    },
+    {
+      "en-US": "- root causes cite exact file paths and code areas\n- fixes are ordered by burn impact, not code neatness\n- proving commands are named\n- final status distinguishes local change, verification, push, and deployment",
+      "zh-Hans": "* 根本原因引用确切的文件路径和代码区域\n* 修复按消耗影响排序，而不是代码整洁度\n* 验证命令已命名\n* 最终状态区分本地更改、验证、推送和部署"
+    }
+  ]
+}

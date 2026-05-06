@@ -1,0 +1,262 @@
+{
+  "sourceFile": "skills/laravel-security/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: laravel-security\ndescription: Laravel security best practices for authn/authz, validation, CSRF, mass assignment, file uploads, secrets, rate limiting, and secure deployment.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: laravel-security\ndescription: Laravel 安全最佳实践，涵盖身份验证/授权、验证、CSRF、批量赋值、文件上传、密钥管理、速率限制和安全部署。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Laravel Security Best Practices",
+      "zh-Hans": "# Laravel 安全最佳实践"
+    },
+    {
+      "en-US": "Comprehensive security guidance for Laravel applications to protect against common vulnerabilities.",
+      "zh-Hans": "为 Laravel 应用程序提供全面的安全指导，以防范常见漏洞。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- Adding authentication or authorization\n- Handling user input and file uploads\n- Building new API endpoints\n- Managing secrets and environment settings\n- Hardening production deployments",
+      "zh-Hans": "* 添加身份验证或授权时\n* 处理用户输入和文件上传时\n* 构建新的 API 端点时\n* 管理密钥和环境设置时\n* 强化生产环境部署时"
+    },
+    {
+      "en-US": "## How It Works",
+      "zh-Hans": "## 工作原理"
+    },
+    {
+      "en-US": "- Middleware provides baseline protections (CSRF via `VerifyCsrfToken`, security headers via `SecurityHeaders`).\n- Guards and policies enforce access control (`auth:sanctum`, `$this->authorize`, policy middleware).\n- Form Requests validate and shape input (`UploadInvoiceRequest`) before it reaches services.\n- Rate limiting adds abuse protection (`RateLimiter::for('login')`) alongside auth controls.\n- Data safety comes from encrypted casts, mass-assignment guards, and signed routes (`URL::temporarySignedRoute` + `signed` middleware).",
+      "zh-Hans": "* 中间件提供基础防护（通过 `VerifyCsrfToken` 实现 CSRF 防护，通过 `SecurityHeaders` 设置安全头部）。\n* 守卫和策略强制执行访问控制（`auth:sanctum`、`$this->authorize`、策略中间件）。\n* 表单请求在数据到达服务层之前进行验证和整形（`UploadInvoiceRequest`）。\n* 速率限制在身份验证控制之外增加了滥用防护（`RateLimiter::for('login')`）。\n* 数据安全通过加密转换、批量赋值防护和签名路由实现（`URL::temporarySignedRoute` + `signed` 中间件）。"
+    },
+    {
+      "en-US": "## Core Security Settings",
+      "zh-Hans": "## 核心安全设置"
+    },
+    {
+      "en-US": "- `APP_DEBUG=false` in production\n- `APP_KEY` must be set and rotated on compromise\n- Set `SESSION_SECURE_COOKIE=true` and `SESSION_SAME_SITE=lax` (or `strict` for sensitive apps)\n- Configure trusted proxies for correct HTTPS detection",
+      "zh-Hans": "* 生产环境中设置 `APP_DEBUG=false`\n* `APP_KEY` 必须设置并在泄露时轮换\n* 设置 `SESSION_SECURE_COOKIE=true` 和 `SESSION_SAME_SITE=lax`（对于敏感应用，使用 `strict`）\n* 配置受信任的代理以正确检测 HTTPS"
+    },
+    {
+      "en-US": "## Session and Cookie Hardening",
+      "zh-Hans": "## 会话与 Cookie 强化"
+    },
+    {
+      "en-US": "- Set `SESSION_HTTP_ONLY=true` to prevent JavaScript access\n- Use `SESSION_SAME_SITE=strict` for high-risk flows\n- Regenerate sessions on login and privilege changes",
+      "zh-Hans": "* 设置 `SESSION_HTTP_ONLY=true` 以防止 JavaScript 访问\n* 高风险流程中使用 `SESSION_SAME_SITE=strict`\n* 登录和权限变更时重新生成会话"
+    },
+    {
+      "en-US": "## Authentication and Tokens",
+      "zh-Hans": "## 身份验证与令牌"
+    },
+    {
+      "en-US": "- Use Laravel Sanctum or Passport for API auth\n- Prefer short-lived tokens with refresh flows for sensitive data\n- Revoke tokens on logout and compromised accounts",
+      "zh-Hans": "* 使用 Laravel Sanctum 或 Passport 进行 API 身份验证\n* 对于敏感数据，优先使用带有刷新流程的短期令牌\n* 在注销和账户泄露时撤销令牌"
+    },
+    {
+      "en-US": "Example route protection:",
+      "zh-Hans": "路由保护示例："
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::middleware('auth:sanctum')->get('/me', function (Request $request) {\n    return $request->user();\n});\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::middleware('auth:sanctum')->get('/me', function (Request $request) {\n    return $request->user();\n});\n```"
+    },
+    {
+      "en-US": "## Password Security",
+      "zh-Hans": "## 密码安全"
+    },
+    {
+      "en-US": "- Hash passwords with `Hash::make()` and never store plaintext\n- Use Laravel's password broker for reset flows",
+      "zh-Hans": "* 使用 `Hash::make()` 哈希密码，切勿存储明文\n* 使用 Laravel 的密码代理处理重置流程"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Validation\\Rules\\Password;\n\n$validated = $request->validate([\n    'password' => ['required', 'string', Password::min(12)->letters()->mixedCase()->numbers()->symbols()],\n]);\n\n$user->update(['password' => Hash::make($validated['password'])]);\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Validation\\Rules\\Password;\n\n$validated = $request->validate([\n    'password' => ['required', 'string', Password::min(12)->letters()->mixedCase()->numbers()->symbols()],\n]);\n\n$user->update(['password' => Hash::make($validated['password'])]);\n```"
+    },
+    {
+      "en-US": "## Authorization: Policies and Gates",
+      "zh-Hans": "## 授权：策略与门面"
+    },
+    {
+      "en-US": "- Use policies for model-level authorization\n- Enforce authorization in controllers and services",
+      "zh-Hans": "* 使用策略进行模型级授权\n* 在控制器和服务中强制执行授权"
+    },
+    {
+      "en-US": "```php\n$this->authorize('update', $project);\n```",
+      "zh-Hans": "```php\n$this->authorize('update', $project);\n```"
+    },
+    {
+      "en-US": "Use policy middleware for route-level enforcement:",
+      "zh-Hans": "使用策略中间件进行路由级强制执行："
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::put('/projects/{project}', [ProjectController::class, 'update'])\n    ->middleware(['auth:sanctum', 'can:update,project']);\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::put('/projects/{project}', [ProjectController::class, 'update'])\n    ->middleware(['auth:sanctum', 'can:update,project']);\n```"
+    },
+    {
+      "en-US": "## Validation and Data Sanitization",
+      "zh-Hans": "## 验证与数据清理"
+    },
+    {
+      "en-US": "- Always validate inputs with Form Requests\n- Use strict validation rules and type checks\n- Never trust request payloads for derived fields",
+      "zh-Hans": "* 始终使用表单请求验证输入\n* 使用严格的验证规则和类型检查\n* 切勿信任请求负载中的派生字段"
+    },
+    {
+      "en-US": "## Mass Assignment Protection",
+      "zh-Hans": "## 批量赋值防护"
+    },
+    {
+      "en-US": "- Use `$fillable` or `$guarded` and avoid `Model::unguard()`\n- Prefer DTOs or explicit attribute mapping",
+      "zh-Hans": "* 使用 `$fillable` 或 `$guarded`，避免使用 `Model::unguard()`\n* 优先使用 DTO 或显式属性映射"
+    },
+    {
+      "en-US": "## SQL Injection Prevention",
+      "zh-Hans": "## SQL 注入防护"
+    },
+    {
+      "en-US": "- Use Eloquent or query builder parameter binding\n- Avoid raw SQL unless strictly necessary",
+      "zh-Hans": "* 使用 Eloquent 或查询构建器的参数绑定\n* 除非绝对必要，避免使用原生 SQL"
+    },
+    {
+      "en-US": "```php\nDB::select('select * from users where email = ?', [$email]);\n```",
+      "zh-Hans": "```php\nDB::select('select * from users where email = ?', [$email]);\n```"
+    },
+    {
+      "en-US": "## XSS Prevention",
+      "zh-Hans": "## XSS 防护"
+    },
+    {
+      "en-US": "- Blade escapes output by default (`{{ }}`)\n- Use `{!! !!}` only for trusted, sanitized HTML\n- Sanitize rich text with a dedicated library",
+      "zh-Hans": "* Blade 默认转义输出（`{{ }}`）\n* 仅对受信任且已清理的 HTML 使用 `{!! !!}`\n* 使用专用库清理富文本"
+    },
+    {
+      "en-US": "## CSRF Protection",
+      "zh-Hans": "## CSRF 防护"
+    },
+    {
+      "en-US": "- Keep `VerifyCsrfToken` middleware enabled\n- Include `@csrf` in forms and send XSRF tokens for SPA requests",
+      "zh-Hans": "* 保持 `VerifyCsrfToken` 中间件启用\n* 在表单中包含 `@csrf`，并为 SPA 请求发送 XSRF 令牌"
+    },
+    {
+      "en-US": "For SPA authentication with Sanctum, ensure stateful requests are configured:",
+      "zh-Hans": "对于使用 Sanctum 的 SPA 身份验证，确保配置有状态请求："
+    },
+    {
+      "en-US": "```php\n// config/sanctum.php\n'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost')),\n```",
+      "zh-Hans": "```php\n// config/sanctum.php\n'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost')),\n```"
+    },
+    {
+      "en-US": "## File Upload Safety",
+      "zh-Hans": "## 文件上传安全"
+    },
+    {
+      "en-US": "- Validate file size, MIME type, and extension\n- Store uploads outside the public path when possible\n- Scan files for malware if required",
+      "zh-Hans": "* 验证文件大小、MIME 类型和扩展名\n* 尽可能将上传文件存储在公共路径之外\n* 必要时扫描文件中的恶意软件"
+    },
+    {
+      "en-US": "```php\nfinal class UploadInvoiceRequest extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return (bool) $this->user()?->can('upload-invoice');\n    }\n\n    public function rules(): array\n    {\n        return [\n            'invoice' => ['required', 'file', 'mimes:pdf', 'max:5120'],\n        ];\n    }\n}\n```",
+      "zh-Hans": "```php\nfinal class UploadInvoiceRequest extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return (bool) $this->user()?->can('upload-invoice');\n    }\n\n    public function rules(): array\n    {\n        return [\n            'invoice' => ['required', 'file', 'mimes:pdf', 'max:5120'],\n        ];\n    }\n}\n```"
+    },
+    {
+      "en-US": "```php\n$path = $request->file('invoice')->store(\n    'invoices',\n    config('filesystems.private_disk', 'local') // set this to a non-public disk\n);\n```",
+      "zh-Hans": "```php\n$path = $request->file('invoice')->store(\n    'invoices',\n    config('filesystems.private_disk', 'local') // set this to a non-public disk\n);\n```"
+    },
+    {
+      "en-US": "## Rate Limiting",
+      "zh-Hans": "## 速率限制"
+    },
+    {
+      "en-US": "- Apply `throttle` middleware on auth and write endpoints\n- Use stricter limits for login, password reset, and OTP",
+      "zh-Hans": "* 在身份验证和写入端点应用 `throttle` 中间件\n* 对登录、密码重置和 OTP 使用更严格的限制"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Cache\\RateLimiting\\Limit;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\RateLimiter;\n\nRateLimiter::for('login', function (Request $request) {\n    return [\n        Limit::perMinute(5)->by($request->ip()),\n        Limit::perMinute(5)->by(strtolower((string) $request->input('email'))),\n    ];\n});\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Cache\\RateLimiting\\Limit;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\RateLimiter;\n\nRateLimiter::for('login', function (Request $request) {\n    return [\n        Limit::perMinute(5)->by($request->ip()),\n        Limit::perMinute(5)->by(strtolower((string) $request->input('email'))),\n    ];\n});\n```"
+    },
+    {
+      "en-US": "## Secrets and Credentials",
+      "zh-Hans": "## 密钥与凭据"
+    },
+    {
+      "en-US": "- Never commit secrets to source control\n- Use environment variables and secret managers\n- Rotate keys after exposure and invalidate sessions",
+      "zh-Hans": "* 切勿将密钥提交到源代码管理\n* 使用环境变量和密钥管理器\n* 密钥暴露后及时轮换并使会话失效"
+    },
+    {
+      "en-US": "## Encrypted Attributes",
+      "zh-Hans": "## 加密属性"
+    },
+    {
+      "en-US": "Use encrypted casts for sensitive columns at rest.",
+      "zh-Hans": "对静态存储的敏感列使用加密转换。"
+    },
+    {
+      "en-US": "```php\nprotected $casts = [\n    'api_token' => 'encrypted',\n];\n```",
+      "zh-Hans": "```php\nprotected $casts = [\n    'api_token' => 'encrypted',\n];\n```"
+    },
+    {
+      "en-US": "## Security Headers",
+      "zh-Hans": "## 安全头部"
+    },
+    {
+      "en-US": "- Add CSP, HSTS, and frame protection where appropriate\n- Use trusted proxy configuration to enforce HTTPS redirects",
+      "zh-Hans": "* 在适当位置添加 CSP、HSTS 和框架保护\n* 使用受信任的代理配置来强制执行 HTTPS 重定向"
+    },
+    {
+      "en-US": "Example middleware to set headers:",
+      "zh-Hans": "设置头部的中间件示例："
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Http\\Request;\nuse Symfony\\Component\\HttpFoundation\\Response;\n\nfinal class SecurityHeaders\n{\n    public function handle(Request $request, \\Closure $next): Response\n    {\n        $response = $next($request);\n\n        $response->headers->add([\n            'Content-Security-Policy' => \"default-src 'self'\",\n            'Strict-Transport-Security' => 'max-age=31536000', // add includeSubDomains/preload only when all subdomains are HTTPS\n            'X-Frame-Options' => 'DENY',\n            'X-Content-Type-Options' => 'nosniff',\n            'Referrer-Policy' => 'no-referrer',\n        ]);\n\n        return $response;\n    }\n}\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Http\\Request;\nuse Symfony\\Component\\HttpFoundation\\Response;\n\nfinal class SecurityHeaders\n{\n    public function handle(Request $request, \\Closure $next): Response\n    {\n        $response = $next($request);\n\n        $response->headers->add([\n            'Content-Security-Policy' => \"default-src 'self'\",\n            'Strict-Transport-Security' => 'max-age=31536000', // add includeSubDomains/preload only when all subdomains are HTTPS\n            'X-Frame-Options' => 'DENY',\n            'X-Content-Type-Options' => 'nosniff',\n            'Referrer-Policy' => 'no-referrer',\n        ]);\n\n        return $response;\n    }\n}\n```"
+    },
+    {
+      "en-US": "## CORS and API Exposure",
+      "zh-Hans": "## CORS 与 API 暴露"
+    },
+    {
+      "en-US": "- Restrict origins in `config/cors.php`\n- Avoid wildcard origins for authenticated routes",
+      "zh-Hans": "* 在 `config/cors.php` 中限制来源\n* 避免对已认证路由使用通配符来源"
+    },
+    {
+      "en-US": "```php\n// config/cors.php\nreturn [\n    'paths' => ['api/*', 'sanctum/csrf-cookie'],\n    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],\n    'allowed_origins' => ['https://app.example.com'],\n    'allowed_headers' => [\n        'Content-Type',\n        'Authorization',\n        'X-Requested-With',\n        'X-XSRF-TOKEN',\n        'X-CSRF-TOKEN',\n    ],\n    'supports_credentials' => true,\n];\n```",
+      "zh-Hans": "```php\n// config/cors.php\nreturn [\n    'paths' => ['api/*', 'sanctum/csrf-cookie'],\n    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],\n    'allowed_origins' => ['https://app.example.com'],\n    'allowed_headers' => [\n        'Content-Type',\n        'Authorization',\n        'X-Requested-With',\n        'X-XSRF-TOKEN',\n        'X-CSRF-TOKEN',\n    ],\n    'supports_credentials' => true,\n];\n```"
+    },
+    {
+      "en-US": "## Logging and PII",
+      "zh-Hans": "## 日志记录与 PII"
+    },
+    {
+      "en-US": "- Never log passwords, tokens, or full card data\n- Redact sensitive fields in structured logs",
+      "zh-Hans": "* 切勿记录密码、令牌或完整的卡片数据\n* 在结构化日志中编辑敏感字段"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Log;\n\nLog::info('User updated profile', [\n    'user_id' => $user->id,\n    'email' => '[REDACTED]',\n    'token' => '[REDACTED]',\n]);\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Log;\n\nLog::info('User updated profile', [\n    'user_id' => $user->id,\n    'email' => '[REDACTED]',\n    'token' => '[REDACTED]',\n]);\n```"
+    },
+    {
+      "en-US": "## Dependency Security",
+      "zh-Hans": "## 依赖项安全"
+    },
+    {
+      "en-US": "- Run `composer audit` regularly\n- Pin dependencies with care and update promptly on CVEs",
+      "zh-Hans": "* 定期运行 `composer audit`\n* 谨慎固定依赖项，并在出现 CVE 时及时更新"
+    },
+    {
+      "en-US": "## Signed URLs",
+      "zh-Hans": "## 签名 URL"
+    },
+    {
+      "en-US": "Use signed routes for temporary, tamper-proof links.",
+      "zh-Hans": "使用签名路由生成临时的、防篡改的链接。"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\URL;\n\n$url = URL::temporarySignedRoute(\n    'downloads.invoice',\n    now()->addMinutes(15),\n    ['invoice' => $invoice->id]\n);\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\URL;\n\n$url = URL::temporarySignedRoute(\n    'downloads.invoice',\n    now()->addMinutes(15),\n    ['invoice' => $invoice->id]\n);\n```"
+    },
+    {
+      "en-US": "```php\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::get('/invoices/{invoice}/download', [InvoiceController::class, 'download'])\n    ->name('downloads.invoice')\n    ->middleware('signed');\n```",
+      "zh-Hans": "```php\nuse Illuminate\\Support\\Facades\\Route;\n\nRoute::get('/invoices/{invoice}/download', [InvoiceController::class, 'download'])\n    ->name('downloads.invoice')\n    ->middleware('signed');\n```"
+    }
+  ]
+}

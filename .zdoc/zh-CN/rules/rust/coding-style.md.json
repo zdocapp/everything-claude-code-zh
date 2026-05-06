@@ -1,0 +1,118 @@
+{
+  "sourceFile": "rules/rust/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.rs\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.rs\"\n---"
+    },
+    {
+      "en-US": "# Rust Coding Style",
+      "zh-Hans": "# Rust 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with Rust-specific content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上，补充了 Rust 特有的内容。"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- **rustfmt** for enforcement — always run `cargo fmt` before committing\n- **clippy** for lints — `cargo clippy -- -D warnings` (treat warnings as errors)\n- 4-space indent (rustfmt default)\n- Max line width: 100 characters (rustfmt default)",
+      "zh-Hans": "* **rustfmt** 用于强制执行 — 提交前务必运行 `cargo fmt`\n* **clippy** 用于代码检查 — `cargo clippy -- -D warnings`（将警告视为错误）\n* 4 空格缩进（rustfmt 默认值）\n* 最大行宽：100 个字符（rustfmt 默认值）"
+    },
+    {
+      "en-US": "## Immutability",
+      "zh-Hans": "## 不可变性"
+    },
+    {
+      "en-US": "Rust variables are immutable by default — embrace this:",
+      "zh-Hans": "Rust 变量默认是不可变的 — 请遵循这一特性："
+    },
+    {
+      "en-US": "- Use `let` by default; only use `let mut` when mutation is required\n- Prefer returning new values over mutating in place\n- Use `Cow<'_, T>` when a function may or may not need to allocate",
+      "zh-Hans": "* 默认使用 `let`；仅在需要修改变量时才使用 `let mut`\n* 优先返回新值，而非原地修改\n* 当函数可能需要也可能不需要分配内存时，使用 `Cow<'_, T>`"
+    },
+    {
+      "en-US": "```rust\nuse std::borrow::Cow;\n\n// GOOD — immutable by default, new value returned\nfn normalize(input: &str) -> Cow<'_, str> {\n    if input.contains(' ') {\n        Cow::Owned(input.replace(' ', \"_\"))\n    } else {\n        Cow::Borrowed(input)\n    }\n}\n\n// BAD — unnecessary mutation\nfn normalize_bad(input: &mut String) {\n    *input = input.replace(' ', \"_\");\n}\n```",
+      "zh-Hans": "```rust\nuse std::borrow::Cow;\n\n// GOOD — immutable by default, new value returned\nfn normalize(input: &str) -> Cow<'_, str> {\n    if input.contains(' ') {\n        Cow::Owned(input.replace(' ', \"_\"))\n    } else {\n        Cow::Borrowed(input)\n    }\n}\n\n// BAD — unnecessary mutation\nfn normalize_bad(input: &mut String) {\n    *input = input.replace(' ', \"_\");\n}\n```"
+    },
+    {
+      "en-US": "## Naming",
+      "zh-Hans": "## 命名"
+    },
+    {
+      "en-US": "Follow standard Rust conventions:",
+      "zh-Hans": "遵循标准的 Rust 命名约定："
+    },
+    {
+      "en-US": "- `snake_case` for functions, methods, variables, modules, crates\n- `PascalCase` (UpperCamelCase) for types, traits, enums, type parameters\n- `SCREAMING_SNAKE_CASE` for constants and statics\n- Lifetimes: short lowercase (`'a`, `'de`) — descriptive names for complex cases (`'input`)",
+      "zh-Hans": "* `snake_case` 用于函数、方法、变量、模块、crate\n* `PascalCase`（UpperCamelCase）用于类型、特质、枚举、类型参数\n* `SCREAMING_SNAKE_CASE` 用于常量和静态变量\n* 生命周期：简短小写（`'a`，`'de`）— 复杂情况下使用描述性名称（`'input`）"
+    },
+    {
+      "en-US": "## Ownership and Borrowing",
+      "zh-Hans": "## 所有权与借用"
+    },
+    {
+      "en-US": "- Borrow (`&T`) by default; take ownership only when you need to store or consume\n- Never clone to satisfy the borrow checker without understanding the root cause\n- Accept `&str` over `String`, `&[T]` over `Vec<T>` in function parameters\n- Use `impl Into<String>` for constructors that need to own a `String`",
+      "zh-Hans": "* 默认使用借用（`&T`）；仅在需要存储或消耗数据时才获取所有权\n* 切勿在不理解根本原因的情况下，为了满足借用检查器而克隆数据\n* 在函数参数中，优先接受 `&str` 而非 `String`，优先接受 `&[T]` 而非 `Vec<T>`\n* 对于需要拥有 `String` 的构造函数，使用 `impl Into<String>`"
+    },
+    {
+      "en-US": "```rust\n// GOOD — borrows when ownership isn't needed\nfn word_count(text: &str) -> usize {\n    text.split_whitespace().count()\n}\n\n// GOOD — takes ownership in constructor via Into\nfn new(name: impl Into<String>) -> Self {\n    Self { name: name.into() }\n}\n\n// BAD — takes String when &str suffices\nfn word_count_bad(text: String) -> usize {\n    text.split_whitespace().count()\n}\n```",
+      "zh-Hans": "```rust\n// GOOD — borrows when ownership isn't needed\nfn word_count(text: &str) -> usize {\n    text.split_whitespace().count()\n}\n\n// GOOD — takes ownership in constructor via Into\nfn new(name: impl Into<String>) -> Self {\n    Self { name: name.into() }\n}\n\n// BAD — takes String when &str suffices\nfn word_count_bad(text: String) -> usize {\n    text.split_whitespace().count()\n}\n```"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Use `Result<T, E>` and `?` for propagation — never `unwrap()` in production code\n- **Libraries**: define typed errors with `thiserror`\n- **Applications**: use `anyhow` for flexible error context\n- Add context with `.with_context(|| format!(\"failed to ...\"))?`\n- Reserve `unwrap()` / `expect()` for tests and truly unreachable states",
+      "zh-Hans": "* 使用 `Result<T, E>` 和 `?` 进行错误传播 — 生产代码中切勿使用 `unwrap()`\n* **库**：使用 `thiserror` 定义类型化的错误\n* **应用程序**：使用 `anyhow` 以获得灵活的错误上下文\n* 使用 `.with_context(|| format!(\"failed to ...\"))?` 添加上下文信息\n* 将 `unwrap()` / `expect()` 保留用于测试和真正无法到达的状态"
+    },
+    {
+      "en-US": "```rust\n// GOOD — library error with thiserror\n#[derive(Debug, thiserror::Error)]\npub enum ConfigError {\n    #[error(\"failed to read config: {0}\")]\n    Io(#[from] std::io::Error),\n    #[error(\"invalid config format: {0}\")]\n    Parse(String),\n}\n\n// GOOD — application error with anyhow\nuse anyhow::Context;\n\nfn load_config(path: &str) -> anyhow::Result<Config> {\n    let content = std::fs::read_to_string(path)\n        .with_context(|| format!(\"failed to read {path}\"))?;\n    toml::from_str(&content)\n        .with_context(|| format!(\"failed to parse {path}\"))\n}\n```",
+      "zh-Hans": "```rust\n// GOOD — library error with thiserror\n#[derive(Debug, thiserror::Error)]\npub enum ConfigError {\n    #[error(\"failed to read config: {0}\")]\n    Io(#[from] std::io::Error),\n    #[error(\"invalid config format: {0}\")]\n    Parse(String),\n}\n\n// GOOD — application error with anyhow\nuse anyhow::Context;\n\nfn load_config(path: &str) -> anyhow::Result<Config> {\n    let content = std::fs::read_to_string(path)\n        .with_context(|| format!(\"failed to read {path}\"))?;\n    toml::from_str(&content)\n        .with_context(|| format!(\"failed to parse {path}\"))\n}\n```"
+    },
+    {
+      "en-US": "## Iterators Over Loops",
+      "zh-Hans": "## 迭代器优于循环"
+    },
+    {
+      "en-US": "Prefer iterator chains for transformations; use loops for complex control flow:",
+      "zh-Hans": "对于数据转换，优先使用迭代器链；对于复杂的控制流，使用循环："
+    },
+    {
+      "en-US": "```rust\n// GOOD — declarative and composable\nlet active_emails: Vec<&str> = users.iter()\n    .filter(|u| u.is_active)\n    .map(|u| u.email.as_str())\n    .collect();\n\n// GOOD — loop for complex logic with early returns\nfor user in &users {\n    if let Some(verified) = verify_email(&user.email)? {\n        send_welcome(&verified)?;\n    }\n}\n```",
+      "zh-Hans": "```rust\n// GOOD — declarative and composable\nlet active_emails: Vec<&str> = users.iter()\n    .filter(|u| u.is_active)\n    .map(|u| u.email.as_str())\n    .collect();\n\n// GOOD — loop for complex logic with early returns\nfor user in &users {\n    if let Some(verified) = verify_email(&user.email)? {\n        send_welcome(&verified)?;\n    }\n}\n```"
+    },
+    {
+      "en-US": "## Module Organization",
+      "zh-Hans": "## 模块组织"
+    },
+    {
+      "en-US": "Organize by domain, not by type:",
+      "zh-Hans": "按领域组织，而非按类型组织："
+    },
+    {
+      "en-US": "```text\nsrc/\n├── main.rs\n├── lib.rs\n├── auth/           # Domain module\n│   ├── mod.rs\n│   ├── token.rs\n│   └── middleware.rs\n├── orders/         # Domain module\n│   ├── mod.rs\n│   ├── model.rs\n│   └── service.rs\n└── db/             # Infrastructure\n    ├── mod.rs\n    └── pool.rs\n```",
+      "zh-Hans": "```text\nsrc/\n├── main.rs\n├── lib.rs\n├── auth/           # 领域模块\n│   ├── mod.rs\n│   ├── token.rs\n│   └── middleware.rs\n├── orders/         # 领域模块\n│   ├── mod.rs\n│   ├── model.rs\n│   └── service.rs\n└── db/             # 基础设施\n    ├── mod.rs\n    └── pool.rs\n```"
+    },
+    {
+      "en-US": "## Visibility",
+      "zh-Hans": "## 可见性"
+    },
+    {
+      "en-US": "- Default to private; use `pub(crate)` for internal sharing\n- Only mark `pub` what is part of the crate's public API\n- Re-export public API from `lib.rs`",
+      "zh-Hans": "* 默认设为私有；使用 `pub(crate)` 在内部共享\n* 仅将属于 crate 公共 API 的部分标记为 `pub`\n* 从 `lib.rs` 重新导出公共 API"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "See skill: `rust-patterns` for comprehensive Rust idioms and patterns.",
+      "zh-Hans": "有关全面的 Rust 惯用法和模式，请参阅技能：`rust-patterns`。"
+    }
+  ]
+}

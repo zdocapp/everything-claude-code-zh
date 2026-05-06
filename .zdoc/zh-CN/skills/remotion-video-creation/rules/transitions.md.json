@@ -1,0 +1,118 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/transitions.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: transitions\ndescription: Fullscreen scene transitions for Remotion.\nmetadata:\n  tags: transitions, fade, slide, wipe, scenes\n---",
+      "zh-Hans": "---\nname: transitions\ndescription: Remotion 的全屏场景过渡效果。\nmetadata:\n  tags: transitions, fade, slide, wipe, scenes\n---"
+    },
+    {
+      "en-US": "## Fullscreen transitions",
+      "zh-Hans": "## 全屏过渡"
+    },
+    {
+      "en-US": "Using `<TransitionSeries>` to animate between multiple scenes or clips.\nThis will absolutely position the children.",
+      "zh-Hans": "使用 `<TransitionSeries>` 在多个场景或片段之间进行动画过渡。\n这将绝对定位子元素。"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 前提条件"
+    },
+    {
+      "en-US": "First, the @remotion/transitions package needs to be installed.\nIf it is not, use the following command:",
+      "zh-Hans": "首先，需要安装 @remotion/transitions 包。\n如果尚未安装，请使用以下命令："
+    },
+    {
+      "en-US": "```bash\nnpx remotion add @remotion/transitions # If project uses npm\nbunx remotion add @remotion/transitions # If project uses bun\nyarn remotion add @remotion/transitions # If project uses yarn\npnpm exec remotion add @remotion/transitions # If project uses pnpm\n```",
+      "zh-Hans": "```bash\nnpx remotion add @remotion/transitions # If project uses npm\nbunx remotion add @remotion/transitions # If project uses bun\nyarn remotion add @remotion/transitions # If project uses yarn\npnpm exec remotion add @remotion/transitions # If project uses pnpm\n```"
+    },
+    {
+      "en-US": "## Example usage",
+      "zh-Hans": "## 使用示例"
+    },
+    {
+      "en-US": "```tsx\nimport {TransitionSeries, linearTiming} from '@remotion/transitions';\nimport {fade} from '@remotion/transitions/fade';\n\n<TransitionSeries>\n  <TransitionSeries.Sequence durationInFrames={60}>\n    <SceneA />\n  </TransitionSeries.Sequence>\n  <TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: 15})} />\n  <TransitionSeries.Sequence durationInFrames={60}>\n    <SceneB />\n  </TransitionSeries.Sequence>\n</TransitionSeries>;\n```",
+      "zh-Hans": "```tsx\nimport {TransitionSeries, linearTiming} from '@remotion/transitions';\nimport {fade} from '@remotion/transitions/fade';\n\n<TransitionSeries>\n  <TransitionSeries.Sequence durationInFrames={60}>\n    <SceneA />\n  </TransitionSeries.Sequence>\n  <TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: 15})} />\n  <TransitionSeries.Sequence durationInFrames={60}>\n    <SceneB />\n  </TransitionSeries.Sequence>\n</TransitionSeries>;\n```"
+    },
+    {
+      "en-US": "## Available Transition Types",
+      "zh-Hans": "## 可用的过渡类型"
+    },
+    {
+      "en-US": "Import transitions from their respective modules:",
+      "zh-Hans": "从各自的模块导入过渡效果："
+    },
+    {
+      "en-US": "```tsx\nimport {fade} from '@remotion/transitions/fade';\nimport {slide} from '@remotion/transitions/slide';\nimport {wipe} from '@remotion/transitions/wipe';\nimport {flip} from '@remotion/transitions/flip';\nimport {clockWipe} from '@remotion/transitions/clock-wipe';\n```",
+      "zh-Hans": "```tsx\nimport {fade} from '@remotion/transitions/fade';\nimport {slide} from '@remotion/transitions/slide';\nimport {wipe} from '@remotion/transitions/wipe';\nimport {flip} from '@remotion/transitions/flip';\nimport {clockWipe} from '@remotion/transitions/clock-wipe';\n```"
+    },
+    {
+      "en-US": "## Slide Transition with Direction",
+      "zh-Hans": "## 带方向的滑动过渡"
+    },
+    {
+      "en-US": "Specify slide direction for enter/exit animations.",
+      "zh-Hans": "为进入/退出动画指定滑动方向。"
+    },
+    {
+      "en-US": "```tsx\nimport {slide} from '@remotion/transitions/slide';\n\n<TransitionSeries.Transition presentation={slide({direction: 'from-left'})} timing={linearTiming({durationInFrames: 20})} />;\n```",
+      "zh-Hans": "```tsx\nimport {slide} from '@remotion/transitions/slide';\n\n<TransitionSeries.Transition presentation={slide({direction: 'from-left'})} timing={linearTiming({durationInFrames: 20})} />;\n```"
+    },
+    {
+      "en-US": "Directions: `\"from-left\"`, `\"from-right\"`, `\"from-top\"`, `\"from-bottom\"`",
+      "zh-Hans": "方向：`\"from-left\"`、`\"from-right\"`、`\"from-top\"`、`\"from-bottom\"`"
+    },
+    {
+      "en-US": "## Timing Options",
+      "zh-Hans": "## 时序选项"
+    },
+    {
+      "en-US": "```tsx\nimport {linearTiming, springTiming} from '@remotion/transitions';\n\n// Linear timing - constant speed\nlinearTiming({durationInFrames: 20});\n\n// Spring timing - organic motion\nspringTiming({config: {damping: 200}, durationInFrames: 25});\n```",
+      "zh-Hans": "```tsx\nimport {linearTiming, springTiming} from '@remotion/transitions';\n\n// Linear timing - constant speed\nlinearTiming({durationInFrames: 20});\n\n// Spring timing - organic motion\nspringTiming({config: {damping: 200}, durationInFrames: 25});\n```"
+    },
+    {
+      "en-US": "## Duration calculation",
+      "zh-Hans": "## 持续时间计算"
+    },
+    {
+      "en-US": "Transitions overlap adjacent scenes, so the total composition length is **shorter** than the sum of all sequence durations.",
+      "zh-Hans": "过渡会与相邻场景重叠，因此合成总长度**短于**所有序列持续时间之和。"
+    },
+    {
+      "en-US": "For example, with two 60-frame sequences and a 15-frame transition:",
+      "zh-Hans": "例如，有两个 60 帧的序列和一个 15 帧的过渡："
+    },
+    {
+      "en-US": "- Without transitions: `60 + 60 = 120` frames\n- With transition: `60 + 60 - 15 = 105` frames",
+      "zh-Hans": "* 无过渡：`60 + 60 = 120` 帧\n* 有过渡：`60 + 60 - 15 = 105` 帧"
+    },
+    {
+      "en-US": "The transition duration is subtracted because both scenes play simultaneously during the transition.",
+      "zh-Hans": "持续时间被减去是因为在过渡期间两个场景同时播放。"
+    },
+    {
+      "en-US": "### Getting the duration of a transition",
+      "zh-Hans": "### 获取过渡的持续时间"
+    },
+    {
+      "en-US": "Use the `getDurationInFrames()` method on the timing object:",
+      "zh-Hans": "在时序对象上使用 `getDurationInFrames()` 方法："
+    },
+    {
+      "en-US": "```tsx\nimport {linearTiming, springTiming} from '@remotion/transitions';\n\nconst linearDuration = linearTiming({durationInFrames: 20}).getDurationInFrames({fps: 30});\n// Returns 20\n\nconst springDuration = springTiming({config: {damping: 200}}).getDurationInFrames({fps: 30});\n// Returns calculated duration based on spring physics\n```",
+      "zh-Hans": "```tsx\nimport {linearTiming, springTiming} from '@remotion/transitions';\n\nconst linearDuration = linearTiming({durationInFrames: 20}).getDurationInFrames({fps: 30});\n// Returns 20\n\nconst springDuration = springTiming({config: {damping: 200}}).getDurationInFrames({fps: 30});\n// Returns calculated duration based on spring physics\n```"
+    },
+    {
+      "en-US": "For `springTiming` without an explicit `durationInFrames`, the duration depends on `fps` because it calculates when the spring animation settles.",
+      "zh-Hans": "对于没有显式指定 `durationInFrames` 的 `springTiming`，其持续时间取决于 `fps`，因为它计算的是弹簧动画何时稳定。"
+    },
+    {
+      "en-US": "### Calculating total composition duration",
+      "zh-Hans": "### 计算合成总持续时间"
+    },
+    {
+      "en-US": "```tsx\nimport {linearTiming} from '@remotion/transitions';\n\nconst scene1Duration = 60;\nconst scene2Duration = 60;\nconst scene3Duration = 60;\n\nconst timing1 = linearTiming({durationInFrames: 15});\nconst timing2 = linearTiming({durationInFrames: 20});\n\nconst transition1Duration = timing1.getDurationInFrames({fps: 30});\nconst transition2Duration = timing2.getDurationInFrames({fps: 30});\n\nconst totalDuration = scene1Duration + scene2Duration + scene3Duration - transition1Duration - transition2Duration;\n// 60 + 60 + 60 - 15 - 20 = 145 frames\n```",
+      "zh-Hans": "```tsx\nimport {linearTiming} from '@remotion/transitions';\n\nconst scene1Duration = 60;\nconst scene2Duration = 60;\nconst scene3Duration = 60;\n\nconst timing1 = linearTiming({durationInFrames: 15});\nconst timing2 = linearTiming({durationInFrames: 20});\n\nconst transition1Duration = timing1.getDurationInFrames({fps: 30});\nconst transition2Duration = timing2.getDurationInFrames({fps: 30});\n\nconst totalDuration = scene1Duration + scene2Duration + scene3Duration - transition1Duration - transition2Duration;\n// 60 + 60 + 60 - 15 - 20 = 145 frames\n```"
+    }
+  ]
+}

@@ -8,17 +8,17 @@ paths:
 
 # TypeScript/JavaScript 编码风格
 
-> 本文件基于 [common/coding-style.md](../common/coding-style.md) 扩展，包含 TypeScript/JavaScript 特定内容。
+> 本文档扩展了 [common/coding-style.md](../common/coding-style.md) 中关于 TypeScript/JavaScript 的特定内容。
 
 ## 类型与接口
 
-使用类型使公共 API、共享模型和组件属性显式化、可读且可复用。
+使用类型来使公共 API、共享模型和组件属性变得明确、可读且可重用。
 
 ### 公共 API
 
-* 为导出的函数、共享工具函数和公共类方法添加参数类型和返回类型
+* 为导出的函数、共享工具函数和公共类方法添加参数和返回类型
 * 让 TypeScript 推断明显的局部变量类型
-* 将重复的内联对象结构提取为命名类型或接口
+* 将重复的内联对象结构提取为命名的类型或接口
 
 ```typescript
 // WRONG: Exported function without explicit types
@@ -39,9 +39,9 @@ export function formatUser(user: User): string {
 
 ### 接口与类型别名
 
-* 使用 `interface` 定义可能被扩展或实现的对象结构
-* 使用 `type` 定义联合类型、交叉类型、元组、映射类型和工具类型
-* 优先使用字符串字面量联合类型而非 `enum`，除非需要 `enum` 以实现互操作性
+* 对于可能被扩展或实现的对象结构，使用 `interface`
+* 对于联合类型、交叉类型、元组、映射类型和工具类型，使用 `type`
+* 除非需要 `enum` 以实现互操作性，否则优先使用字符串字面量联合类型而非 `enum`
 
 ```typescript
 interface User {
@@ -55,11 +55,11 @@ type UserWithRole = User & {
 }
 ```
 
-### 避免使用 `any`
+### 避免 `any`
 
 * 在应用程序代码中避免使用 `any`
-* 对外部或不受信任的输入使用 `unknown`，然后安全地缩小其类型范围
-* 当值的类型依赖于调用者时，使用泛型
+* 对于外部或不受信任的输入，使用 `unknown`，然后安全地缩小其类型范围
+* 当值的类型取决于调用者时，使用泛型
 
 ```typescript
 // WRONG: any removes type safety
@@ -79,9 +79,9 @@ function getErrorMessage(error: unknown): string {
 
 ### React 属性
 
-* 使用命名的 `interface` 或 `type` 定义组件属性
-* 显式地定义回调属性类型
-* 除非有特定原因，否则不要使用 `React.FC`
+* 使用命名的 `interface` 或 `type` 来定义组件属性
+* 明确地键入回调属性
+* 除非有特定理由，否则不要使用 `React.FC`
 
 ```typescript
 interface User {
@@ -101,7 +101,7 @@ function UserCard({ user, onSelect }: UserCardProps) {
 
 ### JavaScript 文件
 
-* 在 `.js` 和 `.jsx` 文件中，当类型能提高清晰度且迁移到 TypeScript 不可行时，使用 JSDoc
+* 在 `.js` 和 `.jsx` 文件中，当类型能提高清晰度且迁移到 TypeScript 不切实际时，使用 JSDoc
 * 保持 JSDoc 与运行时行为一致
 
 ```javascript
@@ -141,7 +141,7 @@ function updateUser(user: Readonly<User>, name: string): User {
 
 ## 错误处理
 
-使用 async/await 配合 try-catch 并安全地缩小未知错误类型范围：
+使用 async/await 配合 try-catch，并安全地缩小未知错误的类型范围：
 
 ```typescript
 interface User {
@@ -195,6 +195,6 @@ const validated: UserInput = userSchema.parse(input)
 
 ## Console.log
 
-* 生产代码中不允许出现 `console.log` 语句
-* 请使用适当的日志库替代
-* 查看钩子以进行自动检测
+* 生产代码中不应出现 `console.log` 语句
+* 请使用适当的日志记录库替代
+* 有关自动检测，请参阅钩子

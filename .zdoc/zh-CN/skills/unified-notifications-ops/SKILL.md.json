@@ -1,0 +1,210 @@
+{
+  "sourceFile": "skills/unified-notifications-ops/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: unified-notifications-ops\ndescription: Operate notifications as one ECC-native workflow across GitHub, Linear, desktop alerts, hooks, and connected communication surfaces. Use when the real problem is alert routing, deduplication, escalation, or inbox collapse.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: unified-notifications-ops\ndescription: 在GitHub、Linear、桌面警报、钩子和连接的通信界面上，将通知操作作为统一的ECC原生工作流。适用于实际问题涉及警报路由、去重、升级或收件箱崩溃的情况。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Unified Notifications Ops",
+      "zh-Hans": "# 统一通知运维"
+    },
+    {
+      "en-US": "Use this skill when the real problem is not a missing ping. The real problem is a fragmented notification system.",
+      "zh-Hans": "当实际问题不是缺少通知时，使用此技能。实际问题是碎片化的通知系统。"
+    },
+    {
+      "en-US": "The job is to turn scattered events into one operator surface with:",
+      "zh-Hans": "这项工作的目标是将分散的事件转化为一个统一的运维界面，具备："
+    },
+    {
+      "en-US": "- clear severity\n- clear ownership\n- clear routing\n- clear follow-up action",
+      "zh-Hans": "* 清晰的严重性\n* 清晰的归属\n* 清晰的路由\n* 清晰的后续操作"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "- the user wants a unified notification lane across GitHub, Linear, local hooks, desktop alerts, chat, or email\n- CI failures, review requests, issue updates, and operator events are arriving in disconnected places\n- the current setup creates noise instead of action\n- the user wants to consolidate overlapping notification branches or backlog proposals into one ECC-native lane\n- the workspace already has hooks, MCPs, or connected tools, but no coherent notification policy",
+      "zh-Hans": "* 用户希望跨 GitHub、Linear、本地钩子、桌面提醒、聊天或电子邮件建立统一的通知通道\n* CI 失败、代码审查请求、问题更新和运维事件正到达互不关联的地方\n* 当前设置产生了噪音而非行动\n* 用户希望将重叠的通知分支或待办事项提案整合到一个 ECC 原生通道中\n* 工作区已有钩子、MCP 或连接的工具，但缺乏一致的通知策略"
+    },
+    {
+      "en-US": "## Preferred Surface",
+      "zh-Hans": "## 首选界面"
+    },
+    {
+      "en-US": "Start from what already exists:",
+      "zh-Hans": "从已存在的部分开始："
+    },
+    {
+      "en-US": "- GitHub issues, PRs, reviews, comments, and CI\n- Linear issue/project movement\n- local hook events and session lifecycle signals\n- desktop notification primitives\n- connected email/chat surfaces when they actually exist",
+      "zh-Hans": "* GitHub 问题、PR、审查、评论和 CI\n* Linear 问题/项目动态\n* 本地钩子事件和会话生命周期信号\n* 桌面通知原语\n* 已连接的电子邮件/聊天界面（当它们实际存在时）"
+    },
+    {
+      "en-US": "Prefer ECC-native orchestration over telling the user to adopt a separate notification product.",
+      "zh-Hans": "优先采用 ECC 原生编排，而非建议用户采用单独的通知产品。"
+    },
+    {
+      "en-US": "## Non-Negotiable Rules",
+      "zh-Hans": "## 不可协商的规则"
+    },
+    {
+      "en-US": "- never expose tokens, secrets, webhook secrets, or internal identifiers\n- separate:\n  - event source\n  - severity\n  - routing channel\n  - operator action\n- default to digest-first when interruption cost is unclear\n- do not fan out every event to every channel\n- if the real fix is better issue triage, hook policy, or project flow, say so explicitly",
+      "zh-Hans": "* 绝不暴露令牌、密钥、Webhook 密钥或内部标识符\n* 分离：\n  * 事件源\n  * 严重性\n  * 路由通道\n  * 运维操作\n* 当中断成本不明确时，默认优先采用摘要模式\n* 不要将每个事件都扇出到每个通道\n* 如果真正的解决方案是更好的问题分类、钩子策略或项目流程，请明确说明"
+    },
+    {
+      "en-US": "## Event Pipeline",
+      "zh-Hans": "## 事件流水线"
+    },
+    {
+      "en-US": "Treat the lane as:",
+      "zh-Hans": "将此通道视为："
+    },
+    {
+      "en-US": "1. **Capture** the event\n2. **Classify** urgency and owner\n3. **Route** to the correct channel\n4. **Collapse** duplicates and low-signal churn\n5. **Attach** the next operator action",
+      "zh-Hans": "1. **捕获** 事件\n2. **分类** 紧急程度和负责人\n3. **路由** 到正确的通道\n4. **合并** 重复项和低价值变更\n5. **附加** 下一个运维操作"
+    },
+    {
+      "en-US": "The goal is fewer, better notifications.",
+      "zh-Hans": "目标是更少、更好的通知。"
+    },
+    {
+      "en-US": "## Default Severity Model",
+      "zh-Hans": "## 默认严重性模型"
+    },
+    {
+      "en-US": "| Class | Examples | Default handling |\n| --- | --- | --- |\n| Critical | broken default-branch CI, security issue, blocked release, failed deploy | interrupt now |\n| High | review requested, failing PR, owner-blocking handoff | same-day alert |\n| Medium | issue state changes, notable comments, backlog movement | digest or queue |\n| Low | repeat successes, routine churn, redundant lifecycle markers | suppress or fold |",
+      "zh-Hans": "| 类别 | 示例 | 默认处理方式 |\n| --- | --- | --- |\n| 严重 | 默认分支 CI 损坏、安全问题、发布受阻、部署失败 | 立即中断 |\n| 高 | 审查请求、失败的 PR、负责人阻塞的交接 | 当日提醒 |\n| 中 | 问题状态变更、重要评论、待办事项动态 | 摘要或排队 |\n| 低 | 重复的成功、常规变更、冗余的生命周期标记 | 抑制或折叠 |"
+    },
+    {
+      "en-US": "If the workspace has no severity model, build one before proposing automation.",
+      "zh-Hans": "如果工作区没有严重性模型，在提议自动化之前先建立一个。"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "### 1. Inventory the current surface",
+      "zh-Hans": "### 1. 盘点当前界面"
+    },
+    {
+      "en-US": "List:",
+      "zh-Hans": "列出："
+    },
+    {
+      "en-US": "- event sources\n- current channels\n- existing hooks/scripts that emit alerts\n- duplicate paths for the same event\n- silent failure cases where important things are not being surfaced",
+      "zh-Hans": "* 事件源\n* 当前通道\n* 发出警报的现有钩子/脚本\n* 同一事件的重复路径\n* 重要事项未被呈现的静默失败情况"
+    },
+    {
+      "en-US": "Call out what ECC already owns.",
+      "zh-Hans": "指出 ECC 已拥有的部分。"
+    },
+    {
+      "en-US": "### 2. Decide what deserves interruption",
+      "zh-Hans": "### 2. 决定哪些值得中断"
+    },
+    {
+      "en-US": "For each event family, answer:",
+      "zh-Hans": "对于每个事件族，回答："
+    },
+    {
+      "en-US": "- who needs to know?\n- how fast do they need to know?\n- should this interrupt, batch, or just log?",
+      "zh-Hans": "* 谁需要知道？\n* 他们需要多快知道？\n* 这应该中断、批量处理还是仅记录？"
+    },
+    {
+      "en-US": "Use these defaults:",
+      "zh-Hans": "使用以下默认值："
+    },
+    {
+      "en-US": "- interrupt for release, CI, security, and owner-blocking events\n- digest for medium-signal updates\n- log-only for telemetry and low-signal lifecycle markers",
+      "zh-Hans": "* 对于发布、CI、安全和负责人阻塞事件，采用中断\n* 对于中等信号更新，采用摘要\n* 对于遥测和低价值生命周期标记，仅记录"
+    },
+    {
+      "en-US": "### 3. Collapse duplicates before adding channels",
+      "zh-Hans": "### 3. 在添加通道之前合并重复项"
+    },
+    {
+      "en-US": "Look for:",
+      "zh-Hans": "寻找："
+    },
+    {
+      "en-US": "- the same PR event appearing in GitHub, Linear, and local logs\n- repeated hook notifications for the same failure\n- comments or status churn that should be summarized instead of forwarded raw\n- channels that duplicate each other without adding a better action path",
+      "zh-Hans": "* 同一 PR 事件出现在 GitHub、Linear 和本地日志中\n* 针对同一失败的重复钩子通知\n* 应被总结而非原始转发的评论或状态变更\n* 彼此重复但未提供更好操作路径的通道"
+    },
+    {
+      "en-US": "Prefer:",
+      "zh-Hans": "优先选择："
+    },
+    {
+      "en-US": "- one canonical summary\n- one owner\n- one primary channel\n- one fallback path",
+      "zh-Hans": "* 一个规范摘要\n* 一个负责人\n* 一个主通道\n* 一个备用路径"
+    },
+    {
+      "en-US": "### 4. Design the ECC-native workflow",
+      "zh-Hans": "### 4. 设计 ECC 原生工作流"
+    },
+    {
+      "en-US": "For each real notification need, define:",
+      "zh-Hans": "对于每个真正的通知需求，定义："
+    },
+    {
+      "en-US": "- **source**\n- **gate**\n- **shape**: immediate alert, digest, queue, or dashboard-only\n- **channel**\n- **action**",
+      "zh-Hans": "* **来源**\n* **门控**\n* **形态**：即时警报、摘要、队列或仅仪表板\n* **通道**\n* **操作**"
+    },
+    {
+      "en-US": "If ECC already has the primitive, prefer:",
+      "zh-Hans": "如果 ECC 已有原语，优先选择："
+    },
+    {
+      "en-US": "- a skill for operator triage\n- a hook for automatic emission/enforcement\n- an agent for delegated classification\n- an MCP/connector only when a real bridge is missing",
+      "zh-Hans": "* 用于运维分类的技能\n* 用于自动发出/执行的钩子\n* 用于委托分类的代理\n* 仅当真正缺少桥梁时才使用 MCP/连接器"
+    },
+    {
+      "en-US": "### 5. Return an action-biased design",
+      "zh-Hans": "### 5. 返回一个偏向行动的设计"
+    },
+    {
+      "en-US": "End with:",
+      "zh-Hans": "以以下内容结束："
+    },
+    {
+      "en-US": "- what to keep\n- what to suppress\n- what to merge\n- what ECC should wrap next",
+      "zh-Hans": "* 保留什么\n* 抑制什么\n* 合并什么\n* ECC 接下来应该包装什么"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "```text\nCURRENT SURFACE\n- sources\n- channels\n- duplicates\n- gaps\n\nEVENT MODEL\n- critical\n- high\n- medium\n- low\n\nROUTING PLAN\n- source -> channel\n- why\n- operator owner\n\nCONSOLIDATION\n- suppress\n- merge\n- canonical summaries\n\nNEXT ECC MOVE\n- skill / hook / agent / MCP\n- exact workflow to build next\n```",
+      "zh-Hans": "```text\n当前表面\n- 来源\n- 渠道\n- 重复项\n- 缺口\n\n事件模型\n- 关键\n- 高\n- 中\n- 低\n\n路由计划\n- 来源 -> 渠道\n- 原因\n- 操作者所有者\n\n整合\n- 抑制\n- 合并\n- 规范摘要\n\n下一步 ECC 行动\n- 技能 / 钩子 / 代理 / MCP\n- 构建下一步的确切工作流程\n```"
+    },
+    {
+      "en-US": "## Recommendation Rules",
+      "zh-Hans": "## 推荐规则"
+    },
+    {
+      "en-US": "- prefer one strong lane over many weak ones\n- prefer digests for medium and low-signal updates\n- prefer hooks when the signal should emit automatically\n- prefer operator skills when the work is triage, routing, and review-first decision-making\n- prefer `project-flow-ops` when the root cause is backlog / PR coordination rather than alerts\n- prefer `workspace-surface-audit` when the user first needs a source inventory\n- if desktop notifications are enough, do not invent an unnecessary external bridge",
+      "zh-Hans": "* 优先选择一个强大的通道，而非多个弱小的通道\n* 对于中低价值信号更新，优先采用摘要\n* 当信号应自动发出时，优先采用钩子\n* 当工作是分类、路由和审查优先决策时，优先采用运维技能\n* 当根本原因是待办事项 / PR 协调而非警报时，优先采用 `project-flow-ops`\n* 当用户首先需要源清单时，优先采用 `workspace-surface-audit`\n* 如果桌面通知足够，不要发明不必要的外部桥梁"
+    },
+    {
+      "en-US": "## Good Use Cases",
+      "zh-Hans": "## 良好用例"
+    },
+    {
+      "en-US": "- \"We have GitHub, Linear, and local hook alerts, but no single operator flow\"\n- \"Our CI failures are noisy and people ignore them\"\n- \"I want one notification policy across Claude, OpenCode, and Codex surfaces\"\n- \"Figure out what should interrupt versus land in a digest\"\n- \"Collapse overlapping notification PR ideas into one canonical ECC lane\"",
+      "zh-Hans": "* \"我们有 GitHub、Linear 和本地钩子警报，但没有统一的运维流程\"\n* \"我们的 CI 失败很嘈杂，人们忽略了它们\"\n* \"我希望在 Claude、OpenCode 和 Codex 界面间有一个统一的通知策略\"\n* \"弄清楚哪些应该中断，哪些应该进入摘要\"\n* \"将重叠的通知 PR 想法合并到一个规范的 ECC 通道中\""
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `workspace-surface-audit`\n- `project-flow-ops`\n- `github-ops`\n- `knowledge-ops`\n- `customer-billing-ops` when the notification pain is billing/customer operations rather than engineering",
+      "zh-Hans": "* `workspace-surface-audit`\n* `project-flow-ops`\n* `github-ops`\n* `knowledge-ops`\n* `customer-billing-ops`（当通知痛点涉及计费/客户运营而非工程时）"
+    }
+  ]
+}

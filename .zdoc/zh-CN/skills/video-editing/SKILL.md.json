@@ -1,0 +1,326 @@
+{
+  "sourceFile": "skills/video-editing/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: video-editing\ndescription: AI-assisted video editing workflows for cutting, structuring, and augmenting real footage. Covers the full pipeline from raw capture through FFmpeg, Remotion, ElevenLabs, fal.ai, and final polish in Descript or CapCut. Use when the user wants to edit video, cut footage, create vlogs, or build video content.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: video-editing\ndescription: AI辅助的视频编辑工作流程，用于剪辑、结构化和增强实拍素材。涵盖从原始拍摄到FFmpeg、Remotion、ElevenLabs、fal.ai的完整流程，以及最终在Descript或CapCut中的润色。适用于用户想要编辑视频、剪辑素材、创建视频博客或制作视频内容时。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Video Editing",
+      "zh-Hans": "# 视频编辑"
+    },
+    {
+      "en-US": "AI-assisted editing for real footage. Not generation from prompts. Editing existing video fast.",
+      "zh-Hans": "AI辅助的真实素材编辑。非根据提示生成。快速编辑现有视频。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- User wants to edit, cut, or structure video footage\n- Turning long recordings into short-form content\n- Building vlogs, tutorials, or demo videos from raw capture\n- Adding overlays, subtitles, music, or voiceover to existing video\n- Reframing video for different platforms (YouTube, TikTok, Instagram)\n- User says \"edit video\", \"cut this footage\", \"make a vlog\", or \"video workflow\"",
+      "zh-Hans": "* 用户想要编辑、剪辑或组织视频素材\n* 将长录制内容转化为短视频内容\n* 从原始拍摄素材构建vlog、教程或演示视频\n* 为现有视频添加叠加层、字幕、音乐或画外音\n* 为不同平台（YouTube、TikTok、Instagram）重新构图视频\n* 用户提及\"编辑视频\"、\"剪辑这段素材\"、\"制作vlog\"或\"视频工作流\""
+    },
+    {
+      "en-US": "## Core Thesis",
+      "zh-Hans": "## 核心理念"
+    },
+    {
+      "en-US": "AI video editing is useful when you stop asking it to create the whole video and start using it to compress, structure, and augment real footage. The value is not generation. The value is compression.",
+      "zh-Hans": "当你不再要求AI创建整个视频，而是开始用它来压缩、组织和增强真实素材时，AI视频编辑才真正有用。其价值不在于生成，而在于压缩。"
+    },
+    {
+      "en-US": "## The Pipeline",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "```\nScreen Studio / raw footage\n  → Claude / Codex\n  → FFmpeg\n  → Remotion\n  → ElevenLabs / fal.ai\n  → Descript or CapCut\n```",
+      "zh-Hans": "```\nScreen Studio / 原始素材\n  → Claude / Codex\n  → FFmpeg\n  → Remotion\n  → ElevenLabs / fal.ai\n  → Descript 或 CapCut\n```"
+    },
+    {
+      "en-US": "Each layer has a specific job. Do not skip layers. Do not try to make one tool do everything.",
+      "zh-Hans": "每一层都有特定的任务。不要跳过任何层。不要试图让一个工具完成所有事情。"
+    },
+    {
+      "en-US": "## Layer 1: Capture (Screen Studio / Raw Footage)",
+      "zh-Hans": "## 第1层：采集（Screen Studio / 原始素材）"
+    },
+    {
+      "en-US": "Collect the source material:",
+      "zh-Hans": "收集源材料："
+    },
+    {
+      "en-US": "- **Screen Studio**: polished screen recordings for app demos, coding sessions, browser workflows\n- **Raw camera footage**: vlog footage, interviews, event recordings\n- **Desktop capture via VideoDB**: session recording with real-time context (see `videodb` skill)",
+      "zh-Hans": "* **Screen Studio**：用于应用演示、编码会话、浏览器工作流的精美屏幕录制\n* **原始摄像机素材**：vlog素材、访谈、活动录制\n* **通过VideoDB进行桌面捕获**：带有实时上下文的会话录制（参见 `videodb` 技能）"
+    },
+    {
+      "en-US": "Output: raw files ready for organization.",
+      "zh-Hans": "输出：准备就绪的原始文件，等待组织。"
+    },
+    {
+      "en-US": "## Layer 2: Organization (Claude / Codex)",
+      "zh-Hans": "## 第2层：组织（Claude / Codex）"
+    },
+    {
+      "en-US": "Use Claude Code or Codex to:",
+      "zh-Hans": "使用Claude Code或Codex来："
+    },
+    {
+      "en-US": "- **Transcribe and label**: generate transcript, identify topics and themes\n- **Plan structure**: decide what stays, what gets cut, what order works\n- **Identify dead sections**: find pauses, tangents, repeated takes\n- **Generate edit decision list**: timestamps for cuts, segments to keep\n- **Scaffold FFmpeg and Remotion code**: generate the commands and compositions",
+      "zh-Hans": "* **转录和标记**：生成转录稿，识别主题和要点\n* **规划结构**：决定保留什么、剪掉什么、何种顺序有效\n* **识别无效片段**：找出停顿、跑题、重复拍摄的部分\n* **生成剪辑决策列表**：剪辑的时间戳、需要保留的片段\n* **搭建FFmpeg和Remotion代码框架**：生成命令和合成代码"
+    },
+    {
+      "en-US": "```\nExample prompt:\n\"Here's the transcript of a 4-hour recording. Identify the 8 strongest segments\nfor a 24-minute vlog. Give me FFmpeg cut commands for each segment.\"\n```",
+      "zh-Hans": "```\n示例提示：\n\"这是一份4小时录音的文字记录。请找出最适合制作24分钟vlog的8个最强片段。\n为每个片段提供FFmpeg剪辑命令。\"\n```"
+    },
+    {
+      "en-US": "This layer is about structure, not final creative taste.",
+      "zh-Hans": "这一层关乎结构，而非最终的创意品味。"
+    },
+    {
+      "en-US": "## Layer 3: Deterministic Cuts (FFmpeg)",
+      "zh-Hans": "## 第3层：确定性剪辑（FFmpeg）"
+    },
+    {
+      "en-US": "FFmpeg handles the boring but critical work: splitting, trimming, concatenating, and preprocessing.",
+      "zh-Hans": "FFmpeg处理枯燥但关键的工作：分割、修剪、拼接和预处理。"
+    },
+    {
+      "en-US": "### Extract segment by timestamp",
+      "zh-Hans": "### 按时间戳提取片段"
+    },
+    {
+      "en-US": "```bash\nffmpeg -i raw.mp4 -ss 00:12:30 -to 00:15:45 -c copy segment_01.mp4\n```",
+      "zh-Hans": "```bash\nffmpeg -i raw.mp4 -ss 00:12:30 -to 00:15:45 -c copy segment_01.mp4\n```"
+    },
+    {
+      "en-US": "### Batch cut from edit decision list",
+      "zh-Hans": "### 根据剪辑决策列表批量剪辑"
+    },
+    {
+      "en-US": "```bash\n#!/bin/bash\n# cuts.txt: start,end,label\nwhile IFS=, read -r start end label; do\n  ffmpeg -i raw.mp4 -ss \"$start\" -to \"$end\" -c copy \"segments/${label}.mp4\"\ndone < cuts.txt\n```",
+      "zh-Hans": "```bash\n#!/bin/bash\n# cuts.txt: start,end,label\nwhile IFS=, read -r start end label; do\n  ffmpeg -i raw.mp4 -ss \"$start\" -to \"$end\" -c copy \"segments/${label}.mp4\"\ndone < cuts.txt\n```"
+    },
+    {
+      "en-US": "### Concatenate segments",
+      "zh-Hans": "### 拼接片段"
+    },
+    {
+      "en-US": "```bash\n# Create file list\nfor f in segments/*.mp4; do echo \"file '$f'\"; done > concat.txt\nffmpeg -f concat -safe 0 -i concat.txt -c copy assembled.mp4\n```",
+      "zh-Hans": "```bash\n# Create file list\nfor f in segments/*.mp4; do echo \"file '$f'\"; done > concat.txt\nffmpeg -f concat -safe 0 -i concat.txt -c copy assembled.mp4\n```"
+    },
+    {
+      "en-US": "### Create proxy for faster editing",
+      "zh-Hans": "### 创建代理文件以加速编辑"
+    },
+    {
+      "en-US": "```bash\nffmpeg -i raw.mp4 -vf \"scale=960:-2\" -c:v libx264 -preset ultrafast -crf 28 proxy.mp4\n```",
+      "zh-Hans": "```bash\nffmpeg -i raw.mp4 -vf \"scale=960:-2\" -c:v libx264 -preset ultrafast -crf 28 proxy.mp4\n```"
+    },
+    {
+      "en-US": "### Extract audio for transcription",
+      "zh-Hans": "### 提取音频用于转录"
+    },
+    {
+      "en-US": "```bash\nffmpeg -i raw.mp4 -vn -acodec pcm_s16le -ar 16000 audio.wav\n```",
+      "zh-Hans": "```bash\nffmpeg -i raw.mp4 -vn -acodec pcm_s16le -ar 16000 audio.wav\n```"
+    },
+    {
+      "en-US": "### Normalize audio levels",
+      "zh-Hans": "### 标准化音频电平"
+    },
+    {
+      "en-US": "```bash\nffmpeg -i segment.mp4 -af loudnorm=I=-16:TP=-1.5:LRA=11 -c:v copy normalized.mp4\n```",
+      "zh-Hans": "```bash\nffmpeg -i segment.mp4 -af loudnorm=I=-16:TP=-1.5:LRA=11 -c:v copy normalized.mp4\n```"
+    },
+    {
+      "en-US": "## Layer 4: Programmable Composition (Remotion)",
+      "zh-Hans": "## 第4层：可编程合成（Remotion）"
+    },
+    {
+      "en-US": "Remotion turns editing problems into composable code. Use it for things that traditional editors make painful:",
+      "zh-Hans": "Remotion将编辑问题转化为可组合的代码。用它来处理传统编辑器令人头疼的事情："
+    },
+    {
+      "en-US": "### When to use Remotion",
+      "zh-Hans": "### 何时使用Remotion"
+    },
+    {
+      "en-US": "- Overlays: text, images, branding, lower thirds\n- Data visualizations: charts, stats, animated numbers\n- Motion graphics: transitions, explainer animations\n- Composable scenes: reusable templates across videos\n- Product demos: annotated screenshots, UI highlights",
+      "zh-Hans": "* 叠加层：文本、图像、品牌标识、下三分之一字幕\n* 数据可视化：图表、统计数据、动画数字\n* 动态图形：转场、解说动画\n* 可组合场景：跨视频可复用的模板\n* 产品演示：带注释的截图、UI高亮"
+    },
+    {
+      "en-US": "### Basic Remotion composition",
+      "zh-Hans": "### 基本的Remotion合成"
+    },
+    {
+      "en-US": "```tsx\nimport { AbsoluteFill, Sequence, Video, useCurrentFrame } from \"remotion\";\n\nexport const VlogComposition: React.FC = () => {\n  const frame = useCurrentFrame();\n\n  return (\n    <AbsoluteFill>\n      {/* Main footage */}\n      <Sequence from={0} durationInFrames={300}>\n        <Video src=\"/segments/intro.mp4\" />\n      </Sequence>\n\n      {/* Title overlay */}\n      <Sequence from={30} durationInFrames={90}>\n        <AbsoluteFill style={{\n          justifyContent: \"center\",\n          alignItems: \"center\",\n        }}>\n          <h1 style={{\n            fontSize: 72,\n            color: \"white\",\n            textShadow: \"2px 2px 8px rgba(0,0,0,0.8)\",\n          }}>\n            The AI Editing Stack\n          </h1>\n        </AbsoluteFill>\n      </Sequence>\n\n      {/* Next segment */}\n      <Sequence from={300} durationInFrames={450}>\n        <Video src=\"/segments/demo.mp4\" />\n      </Sequence>\n    </AbsoluteFill>\n  );\n};\n```",
+      "zh-Hans": "```tsx\nimport { AbsoluteFill, Sequence, Video, useCurrentFrame } from \"remotion\";\n\nexport const VlogComposition: React.FC = () => {\n  const frame = useCurrentFrame();\n\n  return (\n    <AbsoluteFill>\n      {/* Main footage */}\n      <Sequence from={0} durationInFrames={300}>\n        <Video src=\"/segments/intro.mp4\" />\n      </Sequence>\n\n      {/* Title overlay */}\n      <Sequence from={30} durationInFrames={90}>\n        <AbsoluteFill style={{\n          justifyContent: \"center\",\n          alignItems: \"center\",\n        }}>\n          <h1 style={{\n            fontSize: 72,\n            color: \"white\",\n            textShadow: \"2px 2px 8px rgba(0,0,0,0.8)\",\n          }}>\n            The AI Editing Stack\n          </h1>\n        </AbsoluteFill>\n      </Sequence>\n\n      {/* Next segment */}\n      <Sequence from={300} durationInFrames={450}>\n        <Video src=\"/segments/demo.mp4\" />\n      </Sequence>\n    </AbsoluteFill>\n  );\n};\n```"
+    },
+    {
+      "en-US": "### Render output",
+      "zh-Hans": "### 渲染输出"
+    },
+    {
+      "en-US": "```bash\nnpx remotion render src/index.ts VlogComposition output.mp4\n```",
+      "zh-Hans": "```bash\nnpx remotion render src/index.ts VlogComposition output.mp4\n```"
+    },
+    {
+      "en-US": "See the [Remotion docs](https://www.remotion.dev/docs) for detailed patterns and API reference.",
+      "zh-Hans": "详细模式和API参考请参阅 [Remotion文档](https://www.remotion.dev/docs)。"
+    },
+    {
+      "en-US": "## Layer 5: Generated Assets (ElevenLabs / fal.ai)",
+      "zh-Hans": "## 第5层：生成资产（ElevenLabs / fal.ai）"
+    },
+    {
+      "en-US": "Generate only what you need. Do not generate the whole video.",
+      "zh-Hans": "只生成你需要的部分。不要生成整个视频。"
+    },
+    {
+      "en-US": "### Voiceover with ElevenLabs",
+      "zh-Hans": "### 使用ElevenLabs生成画外音"
+    },
+    {
+      "en-US": "```python\nimport os\nimport requests\n\nresp = requests.post(\n    f\"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}\",\n    headers={\n        \"xi-api-key\": os.environ[\"ELEVENLABS_API_KEY\"],\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"text\": \"Your narration text here\",\n        \"model_id\": \"eleven_turbo_v2_5\",\n        \"voice_settings\": {\"stability\": 0.5, \"similarity_boost\": 0.75}\n    }\n)\nwith open(\"voiceover.mp3\", \"wb\") as f:\n    f.write(resp.content)\n```",
+      "zh-Hans": "```python\nimport os\nimport requests\n\nresp = requests.post(\n    f\"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}\",\n    headers={\n        \"xi-api-key\": os.environ[\"ELEVENLABS_API_KEY\"],\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"text\": \"Your narration text here\",\n        \"model_id\": \"eleven_turbo_v2_5\",\n        \"voice_settings\": {\"stability\": 0.5, \"similarity_boost\": 0.75}\n    }\n)\nwith open(\"voiceover.mp3\", \"wb\") as f:\n    f.write(resp.content)\n```"
+    },
+    {
+      "en-US": "### Music and SFX with fal.ai",
+      "zh-Hans": "### 使用fal.ai生成音乐和音效"
+    },
+    {
+      "en-US": "Use the `fal-ai-media` skill for:",
+      "zh-Hans": "使用 `fal-ai-media` 技能处理："
+    },
+    {
+      "en-US": "- Background music generation\n- Sound effects (ThinkSound model for video-to-audio)\n- Transition sounds",
+      "zh-Hans": "* 背景音乐生成\n* 音效（使用ThinkSound模型进行视频到音频转换）\n* 转场音效"
+    },
+    {
+      "en-US": "### Generated visuals with fal.ai",
+      "zh-Hans": "### 使用fal.ai生成视觉效果"
+    },
+    {
+      "en-US": "Use for insert shots, thumbnails, or b-roll that doesn't exist:",
+      "zh-Hans": "用于生成不存在的插入镜头、缩略图或B-roll素材："
+    },
+    {
+      "en-US": "```\ngenerate(app_id: \"fal-ai/nano-banana-pro\", input_data: {\n  \"prompt\": \"professional thumbnail for tech vlog, dark background, code on screen\",\n  \"image_size\": \"landscape_16_9\"\n})\n```",
+      "zh-Hans": "```\ngenerate(app_id: \"fal-ai/nano-banana-pro\", input_data: {\n  \"prompt\": \"科技视频博客的专业缩略图，深色背景，屏幕上有代码\",\n  \"image_size\": \"landscape_16_9\"\n})\n```"
+    },
+    {
+      "en-US": "### VideoDB generative audio",
+      "zh-Hans": "### VideoDB生成式音频"
+    },
+    {
+      "en-US": "If VideoDB is configured:",
+      "zh-Hans": "如果配置了VideoDB："
+    },
+    {
+      "en-US": "```python\nvoiceover = coll.generate_voice(text=\"Narration here\", voice=\"alloy\")\nmusic = coll.generate_music(prompt=\"lo-fi background for coding vlog\", duration=120)\nsfx = coll.generate_sound_effect(prompt=\"subtle whoosh transition\")\n```",
+      "zh-Hans": "```python\nvoiceover = coll.generate_voice(text=\"Narration here\", voice=\"alloy\")\nmusic = coll.generate_music(prompt=\"lo-fi background for coding vlog\", duration=120)\nsfx = coll.generate_sound_effect(prompt=\"subtle whoosh transition\")\n```"
+    },
+    {
+      "en-US": "## Layer 6: Final Polish (Descript / CapCut)",
+      "zh-Hans": "## 第6层：最终润色（Descript / CapCut）"
+    },
+    {
+      "en-US": "The last layer is human. Use a traditional editor for:",
+      "zh-Hans": "最后一层是人工操作。使用传统编辑器进行："
+    },
+    {
+      "en-US": "- **Pacing**: adjust cuts that feel too fast or slow\n- **Captions**: auto-generated, then manually cleaned\n- **Color grading**: basic correction and mood\n- **Final audio mix**: balance voice, music, and SFX levels\n- **Export**: platform-specific formats and quality settings",
+      "zh-Hans": "* **节奏调整**：调整感觉太快或太慢的剪辑点\n* **字幕**：自动生成，然后手动清理\n* **色彩分级**：基本校正和氛围调整\n* **最终音频混音**：平衡人声、音乐和音效的电平\n* **导出**：平台特定的格式和质量设置"
+    },
+    {
+      "en-US": "This is where taste lives. AI clears the repetitive work. You make the final calls.",
+      "zh-Hans": "品味体现在这一层。AI负责清理重复性工作。你来做最终的创意决策。"
+    },
+    {
+      "en-US": "## Social Media Reframing",
+      "zh-Hans": "## 社交媒体重新构图"
+    },
+    {
+      "en-US": "Different platforms need different aspect ratios:",
+      "zh-Hans": "不同平台需要不同的宽高比："
+    },
+    {
+      "en-US": "| Platform | Aspect Ratio | Resolution |\n|----------|-------------|------------|\n| YouTube | 16:9 | 1920x1080 |\n| TikTok / Reels | 9:16 | 1080x1920 |\n| Instagram Feed | 1:1 | 1080x1080 |\n| X / Twitter | 16:9 or 1:1 | 1280x720 or 720x720 |",
+      "zh-Hans": "| 平台 | 宽高比 | 分辨率 |\n|----------|-------------|------------|\n| YouTube | 16:9 | 1920x1080 |\n| TikTok / Reels | 9:16 | 1080x1920 |\n| Instagram Feed | 1:1 | 1080x1080 |\n| X / Twitter | 16:9 或 1:1 | 1280x720 或 720x720 |"
+    },
+    {
+      "en-US": "### Reframe with FFmpeg",
+      "zh-Hans": "### 使用FFmpeg重新构图"
+    },
+    {
+      "en-US": "```bash\n# 16:9 to 9:16 (center crop)\nffmpeg -i input.mp4 -vf \"crop=ih*9/16:ih,scale=1080:1920\" vertical.mp4\n\n# 16:9 to 1:1 (center crop)\nffmpeg -i input.mp4 -vf \"crop=ih:ih,scale=1080:1080\" square.mp4\n```",
+      "zh-Hans": "```bash\n# 16:9 to 9:16 (center crop)\nffmpeg -i input.mp4 -vf \"crop=ih*9/16:ih,scale=1080:1920\" vertical.mp4\n\n# 16:9 to 1:1 (center crop)\nffmpeg -i input.mp4 -vf \"crop=ih:ih,scale=1080:1080\" square.mp4\n```"
+    },
+    {
+      "en-US": "### Reframe with VideoDB",
+      "zh-Hans": "### 使用VideoDB重新构图"
+    },
+    {
+      "en-US": "```python\nfrom videodb import ReframeMode\n\n# Smart reframe (AI-guided subject tracking)\nreframed = video.reframe(start=0, end=60, target=\"vertical\", mode=ReframeMode.smart)\n```",
+      "zh-Hans": "```python\nfrom videodb import ReframeMode\n\n# Smart reframe (AI-guided subject tracking)\nreframed = video.reframe(start=0, end=60, target=\"vertical\", mode=ReframeMode.smart)\n```"
+    },
+    {
+      "en-US": "## Scene Detection and Auto-Cut",
+      "zh-Hans": "## 场景检测与自动剪辑"
+    },
+    {
+      "en-US": "### FFmpeg scene detection",
+      "zh-Hans": "### FFmpeg场景检测"
+    },
+    {
+      "en-US": "```bash\n# Detect scene changes (threshold 0.3 = moderate sensitivity)\nffmpeg -i input.mp4 -vf \"select='gt(scene,0.3)',showinfo\" -vsync vfr -f null - 2>&1 | grep showinfo\n```",
+      "zh-Hans": "```bash\n# Detect scene changes (threshold 0.3 = moderate sensitivity)\nffmpeg -i input.mp4 -vf \"select='gt(scene,0.3)',showinfo\" -vsync vfr -f null - 2>&1 | grep showinfo\n```"
+    },
+    {
+      "en-US": "### Silence detection for auto-cut",
+      "zh-Hans": "### 用于自动剪辑的静音检测"
+    },
+    {
+      "en-US": "```bash\n# Find silent segments (useful for cutting dead air)\nffmpeg -i input.mp4 -af silencedetect=noise=-30dB:d=2 -f null - 2>&1 | grep silence\n```",
+      "zh-Hans": "```bash\n# Find silent segments (useful for cutting dead air)\nffmpeg -i input.mp4 -af silencedetect=noise=-30dB:d=2 -f null - 2>&1 | grep silence\n```"
+    },
+    {
+      "en-US": "### Highlight extraction",
+      "zh-Hans": "### 高光片段提取"
+    },
+    {
+      "en-US": "Use Claude to analyze transcript + scene timestamps:",
+      "zh-Hans": "使用Claude分析转录稿和场景时间戳："
+    },
+    {
+      "en-US": "```\n\"Given this transcript with timestamps and these scene change points,\nidentify the 5 most engaging 30-second clips for social media.\"\n```",
+      "zh-Hans": "```\n\"给定这份带时间戳的转录文本和这些场景切换点，\n为社交媒体识别出5个最具吸引力的30秒片段。\"\n```"
+    },
+    {
+      "en-US": "## What Each Tool Does Best",
+      "zh-Hans": "## 各工具最擅长之处"
+    },
+    {
+      "en-US": "| Tool | Strength | Weakness |\n|------|----------|----------|\n| Claude / Codex | Organization, planning, code generation | Not the creative taste layer |\n| FFmpeg | Deterministic cuts, batch processing, format conversion | No visual editing UI |\n| Remotion | Programmable overlays, composable scenes, reusable templates | Learning curve for non-devs |\n| Screen Studio | Polished screen recordings immediately | Only screen capture |\n| ElevenLabs | Voice, narration, music, SFX | Not the center of the workflow |\n| Descript / CapCut | Final pacing, captions, polish | Manual, not automatable |",
+      "zh-Hans": "| 工具 | 优势 | 劣势 |\n|------|----------|----------|\n| Claude / Codex | 组织、规划、代码生成 | 不是创意品味层 |\n| FFmpeg | 确定性剪辑、批量处理、格式转换 | 没有可视化编辑界面 |\n| Remotion | 可编程叠加层、可组合场景、可复用模板 | 对非开发者有学习曲线 |\n| Screen Studio | 即时获得精美的屏幕录制 | 仅限屏幕捕获 |\n| ElevenLabs | 语音、旁白、音乐、音效 | 不是工作流的核心 |\n| Descript / CapCut | 最终节奏调整、字幕、润色 | 手动操作，无法自动化 |"
+    },
+    {
+      "en-US": "## Key Principles",
+      "zh-Hans": "## 关键原则"
+    },
+    {
+      "en-US": "1. **Edit, don't generate.** This workflow is for cutting real footage, not creating from prompts.\n2. **Structure before style.** Get the story right in Layer 2 before touching anything visual.\n3. **FFmpeg is the backbone.** Boring but critical. Where long footage becomes manageable.\n4. **Remotion for repeatability.** If you'll do it more than once, make it a Remotion component.\n5. **Generate selectively.** Only use AI generation for assets that don't exist, not for everything.\n6. **Taste is the last layer.** AI clears repetitive work. You make the final creative calls.",
+      "zh-Hans": "1. **编辑，而非生成。** 此工作流用于剪辑真实素材，而非根据提示创建。\n2. **结构先于风格。** 在第2层先把故事结构理清，再处理视觉内容。\n3. **FFmpeg是骨干。** 枯燥但关键。长素材在此变得易于管理。\n4. **Remotion用于可重复性。** 如果你会做不止一次，就把它做成Remotion组件。\n5. **有选择地生成。** 仅对不存在的资产使用AI生成，而非所有内容。\n6. **品味是最后一层。** AI负责清理重复性工作。你来做最终的创意决策。"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `fal-ai-media` — AI image, video, and audio generation\n- `videodb` — Server-side video processing, indexing, and streaming\n- `content-engine` — Platform-native content distribution",
+      "zh-Hans": "* `fal-ai-media` — AI图像、视频和音频生成\n* `videodb` — 服务器端视频处理、索引和流式传输\n* `content-engine` — 平台原生内容分发"
+    }
+  ]
+}

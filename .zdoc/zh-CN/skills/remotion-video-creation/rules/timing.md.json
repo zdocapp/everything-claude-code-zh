@@ -1,0 +1,158 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/timing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: timing\ndescription: Interpolation curves in Remotion - linear, easing, spring animations\nmetadata:\n  tags: spring, bounce, easing, interpolation\n---",
+      "zh-Hans": "---\nname: timing\ndescription: Remotion 中的插值曲线 - 线性、缓动、弹簧动画\nmetadata:\n  tags: spring, bounce, easing, interpolation\n---"
+    },
+    {
+      "en-US": "A simple linear interpolation is done using the `interpolate` function.",
+      "zh-Hans": "简单的线性插值使用 `interpolate` 函数完成。"
+    },
+    {
+      "en-US": "```ts title=\"Going from 0 to 1 over 100 frames\"\nimport {interpolate} from 'remotion';\n\nconst opacity = interpolate(frame, [0, 100], [0, 1]);\n```",
+      "zh-Hans": "```ts title=\"Going from 0 to 1 over 100 frames\"\nimport {interpolate} from 'remotion';\n\nconst opacity = interpolate(frame, [0, 100], [0, 1]);\n```"
+    },
+    {
+      "en-US": "By default, the values are not clamped, so the value can go outside the range [0, 1].\nHere is how they can be clamped:",
+      "zh-Hans": "默认情况下，数值不会被钳制，因此值可以超出范围 \\[0, 1]。\n以下是如何进行钳制："
+    },
+    {
+      "en-US": "```ts title=\"Going from 0 to 1 over 100 frames with extrapolation\"\nconst opacity = interpolate(frame, [0, 100], [0, 1], {\n  extrapolateRight: 'clamp',\n  extrapolateLeft: 'clamp',\n});\n```",
+      "zh-Hans": "```ts title=\"Going from 0 to 1 over 100 frames with extrapolation\"\nconst opacity = interpolate(frame, [0, 100], [0, 1], {\n  extrapolateRight: 'clamp',\n  extrapolateLeft: 'clamp',\n});\n```"
+    },
+    {
+      "en-US": "## Spring animations",
+      "zh-Hans": "## 弹簧动画"
+    },
+    {
+      "en-US": "Spring animations have a more natural motion.\nThey go from 0 to 1 over time.",
+      "zh-Hans": "弹簧动画具有更自然的运动效果。\n它们会随时间从 0 变化到 1。"
+    },
+    {
+      "en-US": "```ts title=\"Spring animation from 0 to 1 over 100 frames\"\nimport {spring, useCurrentFrame, useVideoConfig} from 'remotion';\n\nconst frame = useCurrentFrame();\nconst {fps} = useVideoConfig();\n\nconst scale = spring({\n  frame,\n  fps,\n});\n```",
+      "zh-Hans": "```ts title=\"Spring animation from 0 to 1 over 100 frames\"\nimport {spring, useCurrentFrame, useVideoConfig} from 'remotion';\n\nconst frame = useCurrentFrame();\nconst {fps} = useVideoConfig();\n\nconst scale = spring({\n  frame,\n  fps,\n});\n```"
+    },
+    {
+      "en-US": "### Physical properties",
+      "zh-Hans": "### 物理属性"
+    },
+    {
+      "en-US": "The default configuration is: `mass: 1, damping: 10, stiffness: 100`.\nThis leads to the animation having a bit of bounce before it settles.",
+      "zh-Hans": "默认配置为：`mass: 1, damping: 10, stiffness: 100`。\n这会导致动画在稳定前有一些反弹。"
+    },
+    {
+      "en-US": "The config can be overwritten like this:",
+      "zh-Hans": "可以像这样覆盖配置："
+    },
+    {
+      "en-US": "```ts\nconst scale = spring({\n  frame,\n  fps,\n  config: {damping: 200},\n});\n```",
+      "zh-Hans": "```ts\nconst scale = spring({\n  frame,\n  fps,\n  config: {damping: 200},\n});\n```"
+    },
+    {
+      "en-US": "The recommended configuration for a natural motion without a bounce is: `{ damping: 200 }`.",
+      "zh-Hans": "推荐的无反弹自然运动配置为：`{ damping: 200 }`。"
+    },
+    {
+      "en-US": "Here are some common configurations:",
+      "zh-Hans": "以下是一些常见配置："
+    },
+    {
+      "en-US": "```tsx\nconst smooth = {damping: 200}; // Smooth, no bounce (subtle reveals)\nconst snappy = {damping: 20, stiffness: 200}; // Snappy, minimal bounce (UI elements)\nconst bouncy = {damping: 8}; // Bouncy entrance (playful animations)\nconst heavy = {damping: 15, stiffness: 80, mass: 2}; // Heavy, slow, small bounce\n```",
+      "zh-Hans": "```tsx\nconst smooth = {damping: 200}; // Smooth, no bounce (subtle reveals)\nconst snappy = {damping: 20, stiffness: 200}; // Snappy, minimal bounce (UI elements)\nconst bouncy = {damping: 8}; // Bouncy entrance (playful animations)\nconst heavy = {damping: 15, stiffness: 80, mass: 2}; // Heavy, slow, small bounce\n```"
+    },
+    {
+      "en-US": "### Delay",
+      "zh-Hans": "### 延迟"
+    },
+    {
+      "en-US": "The animation starts immediately by default.\nUse the `delay` parameter to delay the animation by a number of frames.",
+      "zh-Hans": "默认情况下，动画会立即开始。\n使用 `delay` 参数可以将动画延迟指定的帧数。"
+    },
+    {
+      "en-US": "```tsx\nconst entrance = spring({\n  frame: frame - ENTRANCE_DELAY,\n  fps,\n  delay: 20,\n});\n```",
+      "zh-Hans": "```tsx\nconst entrance = spring({\n  frame: frame - ENTRANCE_DELAY,\n  fps,\n  delay: 20,\n});\n```"
+    },
+    {
+      "en-US": "### Duration",
+      "zh-Hans": "### 持续时间"
+    },
+    {
+      "en-US": "A `spring()` has a natural duration based on the physical properties.\nTo stretch the animation to a specific duration, use the `durationInFrames` parameter.",
+      "zh-Hans": "`spring()` 具有基于物理属性的自然持续时间。\n要将动画拉伸到特定持续时间，请使用 `durationInFrames` 参数。"
+    },
+    {
+      "en-US": "```tsx\nconst spring = spring({\n  frame,\n  fps,\n  durationInFrames: 40,\n});\n```",
+      "zh-Hans": "```tsx\nconst spring = spring({\n  frame,\n  fps,\n  durationInFrames: 40,\n});\n```"
+    },
+    {
+      "en-US": "### Combining spring() with interpolate()",
+      "zh-Hans": "### 将 spring() 与 interpolate() 结合使用"
+    },
+    {
+      "en-US": "Map spring output (0-1) to custom ranges:",
+      "zh-Hans": "将弹簧输出（0-1）映射到自定义范围："
+    },
+    {
+      "en-US": "```tsx\nconst springProgress = spring({\n  frame,\n  fps,\n});\n\n// Map to rotation\nconst rotation = interpolate(springProgress, [0, 1], [0, 360]);\n\n<div style={{rotate: rotation + 'deg'}} />;\n```",
+      "zh-Hans": "```tsx\nconst springProgress = spring({\n  frame,\n  fps,\n});\n\n// Map to rotation\nconst rotation = interpolate(springProgress, [0, 1], [0, 360]);\n\n<div style={{rotate: rotation + 'deg'}} />;\n```"
+    },
+    {
+      "en-US": "### Adding springs",
+      "zh-Hans": "### 添加弹簧"
+    },
+    {
+      "en-US": "Springs return just numbers, so math can be performed:",
+      "zh-Hans": "弹簧仅返回数字，因此可以进行数学运算："
+    },
+    {
+      "en-US": "```tsx\nconst frame = useCurrentFrame();\nconst {fps, durationInFrames} = useVideoConfig();\n\nconst inAnimation = spring({\n  frame,\n  fps,\n});\nconst outAnimation = spring({\n  frame,\n  fps,\n  durationInFrames: 1 * fps,\n  delay: durationInFrames - 1 * fps,\n});\n\nconst scale = inAnimation - outAnimation;\n```",
+      "zh-Hans": "```tsx\nconst frame = useCurrentFrame();\nconst {fps, durationInFrames} = useVideoConfig();\n\nconst inAnimation = spring({\n  frame,\n  fps,\n});\nconst outAnimation = spring({\n  frame,\n  fps,\n  durationInFrames: 1 * fps,\n  delay: durationInFrames - 1 * fps,\n});\n\nconst scale = inAnimation - outAnimation;\n```"
+    },
+    {
+      "en-US": "## Easing",
+      "zh-Hans": "## 缓动"
+    },
+    {
+      "en-US": "Easing can be added to the `interpolate` function:",
+      "zh-Hans": "可以在 `interpolate` 函数中添加缓动效果："
+    },
+    {
+      "en-US": "```ts\nimport {interpolate, Easing} from 'remotion';\n\nconst value1 = interpolate(frame, [0, 100], [0, 1], {\n  easing: Easing.inOut(Easing.quad),\n  extrapolateLeft: 'clamp',\n  extrapolateRight: 'clamp',\n});\n```",
+      "zh-Hans": "```ts\nimport {interpolate, Easing} from 'remotion';\n\nconst value1 = interpolate(frame, [0, 100], [0, 1], {\n  easing: Easing.inOut(Easing.quad),\n  extrapolateLeft: 'clamp',\n  extrapolateRight: 'clamp',\n});\n```"
+    },
+    {
+      "en-US": "The default easing is `Easing.linear`.\nThere are various other convexities:",
+      "zh-Hans": "默认的缓动函数是 `Easing.linear`。\n还有其他各种凸度："
+    },
+    {
+      "en-US": "- `Easing.in` for starting slow and accelerating\n- `Easing.out` for starting fast and slowing down\n- `Easing.inOut`",
+      "zh-Hans": "* `Easing.in` 用于缓慢开始并加速\n* `Easing.out` 用于快速开始并减速\n* `Easing.inOut`"
+    },
+    {
+      "en-US": "and curves (sorted from most linear to most curved):",
+      "zh-Hans": "以及曲线（从最线性到最弯曲排序）："
+    },
+    {
+      "en-US": "- `Easing.quad`\n- `Easing.sin`\n- `Easing.exp`\n- `Easing.circle`",
+      "zh-Hans": "* `Easing.quad`\n* `Easing.sin`\n* `Easing.exp`\n* `Easing.circle`"
+    },
+    {
+      "en-US": "Convexities and curves need be combined for an easing function:",
+      "zh-Hans": "凸度和曲线需要组合以形成缓动函数："
+    },
+    {
+      "en-US": "```ts\nconst value1 = interpolate(frame, [0, 100], [0, 1], {\n  easing: Easing.inOut(Easing.quad),\n  extrapolateLeft: 'clamp',\n  extrapolateRight: 'clamp',\n});\n```",
+      "zh-Hans": "```ts\nconst value1 = interpolate(frame, [0, 100], [0, 1], {\n  easing: Easing.inOut(Easing.quad),\n  extrapolateLeft: 'clamp',\n  extrapolateRight: 'clamp',\n});\n```"
+    },
+    {
+      "en-US": "Cubic bezier curves are also supported:",
+      "zh-Hans": "也支持三次贝塞尔曲线："
+    },
+    {
+      "en-US": "```ts\nconst value1 = interpolate(frame, [0, 100], [0, 1], {\n  easing: Easing.bezier(0.8, 0.22, 0.96, 0.65),\n  extrapolateLeft: 'clamp',\n  extrapolateRight: 'clamp',\n});\n```",
+      "zh-Hans": "```ts\nconst value1 = interpolate(frame, [0, 100], [0, 1], {\n  easing: Easing.bezier(0.8, 0.22, 0.96, 0.65),\n  extrapolateLeft: 'clamp',\n  extrapolateRight: 'clamp',\n});\n```"
+    }
+  ]
+}

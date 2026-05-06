@@ -1,0 +1,130 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/images.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: images\ndescription: Embedding images in Remotion using the <Img> component\nmetadata:\n  tags: images, img, staticFile, png, jpg, svg, webp\n---",
+      "zh-Hans": "---\nname: images\ndescription: 在Remotion中使用<Img>组件嵌入图像\nmetadata:\n  tags: images, img, staticFile, png, jpg, svg, webp\n---"
+    },
+    {
+      "en-US": "# Using images in Remotion",
+      "zh-Hans": "# 在 Remotion 中使用图像"
+    },
+    {
+      "en-US": "## The `<Img>` component",
+      "zh-Hans": "## `<Img>` 组件"
+    },
+    {
+      "en-US": "Always use the `<Img>` component from `remotion` to display images:",
+      "zh-Hans": "始终使用来自 `remotion` 的 `<Img>` 组件来显示图像："
+    },
+    {
+      "en-US": "```tsx\nimport { Img, staticFile } from \"remotion\";\n\nexport const MyComposition = () => {\n  return <Img src={staticFile(\"photo.png\")} />;\n};\n```",
+      "zh-Hans": "```tsx\nimport { Img, staticFile } from \"remotion\";\n\nexport const MyComposition = () => {\n  return <Img src={staticFile(\"photo.png\")} />;\n};\n```"
+    },
+    {
+      "en-US": "## Important restrictions",
+      "zh-Hans": "## 重要限制"
+    },
+    {
+      "en-US": "**You MUST use the `<Img>` component from `remotion`.** Do not use:",
+      "zh-Hans": "**您必须使用来自 `remotion` 的 `<Img>` 组件。** 请勿使用："
+    },
+    {
+      "en-US": "- Native HTML `<img>` elements\n- Next.js `<Image>` component\n- CSS `background-image`",
+      "zh-Hans": "* 原生 HTML `<img>` 元素\n* Next.js `<Image>` 组件\n* CSS `background-image`"
+    },
+    {
+      "en-US": "The `<Img>` component ensures images are fully loaded before rendering, preventing flickering and blank frames during video export.",
+      "zh-Hans": "`<Img>` 组件确保图像在渲染前完全加载，防止视频导出时出现闪烁和空白帧。"
+    },
+    {
+      "en-US": "## Local images with staticFile()",
+      "zh-Hans": "## 使用 staticFile() 处理本地图像"
+    },
+    {
+      "en-US": "Place images in the `public/` folder and use `staticFile()` to reference them:",
+      "zh-Hans": "将图像放置在 `public/` 文件夹中，并使用 `staticFile()` 来引用它们："
+    },
+    {
+      "en-US": "```\nmy-video/\n├─ public/\n│  ├─ logo.png\n│  ├─ avatar.jpg\n│  └─ icon.svg\n├─ src/\n├─ package.json\n```",
+      "zh-Hans": "```\nmy-video/\n├─ public/\n│  ├─ logo.png\n│  ├─ avatar.jpg\n│  └─ icon.svg\n├─ src/\n├─ package.json\n```"
+    },
+    {
+      "en-US": "```tsx\nimport { Img, staticFile } from \"remotion\";\n\n<Img src={staticFile(\"logo.png\")} />\n```",
+      "zh-Hans": "```tsx\nimport { Img, staticFile } from \"remotion\";\n\n<Img src={staticFile(\"logo.png\")} />\n```"
+    },
+    {
+      "en-US": "## Remote images",
+      "zh-Hans": "## 远程图像"
+    },
+    {
+      "en-US": "Remote URLs can be used directly without `staticFile()`:",
+      "zh-Hans": "远程 URL 可以直接使用，无需 `staticFile()`："
+    },
+    {
+      "en-US": "```tsx\n<Img src=\"https://example.com/image.png\" />\n```",
+      "zh-Hans": "```tsx\n<Img src=\"https://example.com/image.png\" />\n```"
+    },
+    {
+      "en-US": "Ensure remote images have CORS enabled.",
+      "zh-Hans": "确保远程图像已启用 CORS。"
+    },
+    {
+      "en-US": "For animated GIFs, use the `<Gif>` component from `@remotion/gif` instead.",
+      "zh-Hans": "对于动画 GIF，请改用来自 `@remotion/gif` 的 `<Gif>` 组件。"
+    },
+    {
+      "en-US": "## Sizing and positioning",
+      "zh-Hans": "## 尺寸和定位"
+    },
+    {
+      "en-US": "Use the `style` prop to control size and position:",
+      "zh-Hans": "使用 `style` 属性来控制大小和位置："
+    },
+    {
+      "en-US": "```tsx\n<Img\n  src={staticFile(\"photo.png\")}\n  style={{\n    width: 500,\n    height: 300,\n    position: \"absolute\",\n    top: 100,\n    left: 50,\n    objectFit: \"cover\",\n  }}\n/>\n```",
+      "zh-Hans": "```tsx\n<Img\n  src={staticFile(\"photo.png\")}\n  style={{\n    width: 500,\n    height: 300,\n    position: \"absolute\",\n    top: 100,\n    left: 50,\n    objectFit: \"cover\",\n  }}\n/>\n```"
+    },
+    {
+      "en-US": "## Dynamic image paths",
+      "zh-Hans": "## 动态图像路径"
+    },
+    {
+      "en-US": "Use template literals for dynamic file references:",
+      "zh-Hans": "使用模板字面量进行动态文件引用："
+    },
+    {
+      "en-US": "```tsx\nimport { Img, staticFile, useCurrentFrame } from \"remotion\";\n\nconst frame = useCurrentFrame();\n\n// Image sequence\n<Img src={staticFile(`frames/frame${frame}.png`)} />\n\n// Selecting based on props\n<Img src={staticFile(`avatars/${props.userId}.png`)} />\n\n// Conditional images\n<Img src={staticFile(`icons/${isActive ? \"active\" : \"inactive\"}.svg`)} />\n```",
+      "zh-Hans": "```tsx\nimport { Img, staticFile, useCurrentFrame } from \"remotion\";\n\nconst frame = useCurrentFrame();\n\n// Image sequence\n<Img src={staticFile(`frames/frame${frame}.png`)} />\n\n// Selecting based on props\n<Img src={staticFile(`avatars/${props.userId}.png`)} />\n\n// Conditional images\n<Img src={staticFile(`icons/${isActive ? \"active\" : \"inactive\"}.svg`)} />\n```"
+    },
+    {
+      "en-US": "This pattern is useful for:",
+      "zh-Hans": "此模式适用于："
+    },
+    {
+      "en-US": "- Image sequences (frame-by-frame animations)\n- User-specific avatars or profile images\n- Theme-based icons\n- State-dependent graphics",
+      "zh-Hans": "* 图像序列（逐帧动画）\n* 用户特定的头像或个人资料图片\n* 基于主题的图标\n* 状态相关的图形"
+    },
+    {
+      "en-US": "## Getting image dimensions",
+      "zh-Hans": "## 获取图像尺寸"
+    },
+    {
+      "en-US": "Use `getImageDimensions()` to get the dimensions of an image:",
+      "zh-Hans": "使用 `getImageDimensions()` 获取图像的尺寸："
+    },
+    {
+      "en-US": "```tsx\nimport { getImageDimensions, staticFile } from \"remotion\";\n\nconst { width, height } = await getImageDimensions(staticFile(\"photo.png\"));\n```",
+      "zh-Hans": "```tsx\nimport { getImageDimensions, staticFile } from \"remotion\";\n\nconst { width, height } = await getImageDimensions(staticFile(\"photo.png\"));\n```"
+    },
+    {
+      "en-US": "This is useful for calculating aspect ratios or sizing compositions:",
+      "zh-Hans": "这对于计算宽高比或调整合成大小非常有用："
+    },
+    {
+      "en-US": "```tsx\nimport { getImageDimensions, staticFile, CalculateMetadataFunction } from \"remotion\";\n\nconst calculateMetadata: CalculateMetadataFunction = async () => {\n  const { width, height } = await getImageDimensions(staticFile(\"photo.png\"));\n  return {\n    width,\n    height,\n  };\n};\n```",
+      "zh-Hans": "```tsx\nimport { getImageDimensions, staticFile, CalculateMetadataFunction } from \"remotion\";\n\nconst calculateMetadata: CalculateMetadataFunction = async () => {\n  const { width, height } = await getImageDimensions(staticFile(\"photo.png\"));\n  return {\n    width,\n    height,\n  };\n};\n```"
+    }
+  ]
+}

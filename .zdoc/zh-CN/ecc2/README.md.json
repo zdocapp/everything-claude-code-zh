@@ -1,0 +1,114 @@
+{
+  "sourceFile": "ecc2/README.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# ECC 2.0 Alpha",
+      "zh-Hans": "# ECC 2.0 Alpha"
+    },
+    {
+      "en-US": "`ecc2/` is the current Rust-based ECC 2.0 control-plane scaffold.",
+      "zh-Hans": "`ecc2/` 是当前基于 Rust 的 ECC 2.0 控制平面脚手架。"
+    },
+    {
+      "en-US": "It is usable as an alpha for local experimentation, but it is **not** the finished ECC 2.0 product yet.",
+      "zh-Hans": "它可作为本地实验的 alpha 版本使用，但**尚不是**完整的 ECC 2.0 产品。"
+    },
+    {
+      "en-US": "## What Exists Today",
+      "zh-Hans": "## 当前已实现的功能"
+    },
+    {
+      "en-US": "- terminal UI dashboard\n- session store backed by SQLite\n- session start / stop / resume flows\n- background daemon mode\n- observability and risk-scoring primitives\n- worktree-aware session scaffolding\n- basic multi-session state and output tracking",
+      "zh-Hans": "* 终端 UI 仪表板\n* 由 SQLite 支持的会话存储\n* 会话启动 / 停止 / 恢复流程\n* 后台守护进程模式\n* 可观测性和风险评分基础功能\n* 工作树感知的会话脚手架\n* 基本的多会话状态和输出跟踪"
+    },
+    {
+      "en-US": "## What This Is For",
+      "zh-Hans": "## 用途说明"
+    },
+    {
+      "en-US": "ECC 2.0 is the layer above individual harness installs.",
+      "zh-Hans": "ECC 2.0 是位于各个工具安装之上的管理层。"
+    },
+    {
+      "en-US": "The goal is:",
+      "zh-Hans": "其目标是："
+    },
+    {
+      "en-US": "- manage many agent sessions from one surface\n- keep session state, output, and risk visible\n- add orchestration, worktree management, and review controls\n- support Claude Code first without blocking future harness interoperability",
+      "zh-Hans": "* 从一个界面管理多个代理会话\n* 保持会话状态、输出和风险的可见性\n* 增加编排、工作树管理和审查控制\n* 优先支持 Claude Code，同时不阻碍未来与其他工具的互操作性"
+    },
+    {
+      "en-US": "## Current Status",
+      "zh-Hans": "## 当前状态"
+    },
+    {
+      "en-US": "This directory should be treated as:",
+      "zh-Hans": "此目录应被视为："
+    },
+    {
+      "en-US": "- real code\n- alpha quality\n- valid to build and test locally\n- not yet a public GA release",
+      "zh-Hans": "* 真实可用的代码\n* alpha 质量\n* 可在本地构建和测试\n* 尚不是公开的正式发布版本"
+    },
+    {
+      "en-US": "Open issue clusters for the broader roadmap live in the main repo issue tracker under the `ecc-2.0` label.",
+      "zh-Hans": "更广泛路线图的开放议题集群位于主仓库的议题跟踪器中，标签为 `ecc-2.0`。"
+    },
+    {
+      "en-US": "## Run It",
+      "zh-Hans": "## 运行方法"
+    },
+    {
+      "en-US": "From the repo root:",
+      "zh-Hans": "从仓库根目录执行："
+    },
+    {
+      "en-US": "```bash\ncd ecc2\ncargo run\n```",
+      "zh-Hans": "```bash\ncd ecc2\ncargo run\n```"
+    },
+    {
+      "en-US": "Useful commands:",
+      "zh-Hans": "有用的命令："
+    },
+    {
+      "en-US": "```bash\n# Launch the dashboard\ncargo run -- dashboard\n\n# Start a new session\ncargo run -- start --task \"audit the repo and propose fixes\" --agent claude --worktree\n\n# List sessions\ncargo run -- sessions\n\n# Inspect a session\ncargo run -- status latest\n\n# Stop a session\ncargo run -- stop <session-id>\n\n# Resume a failed/stopped session\ncargo run -- resume <session-id>\n\n# Run the daemon loop\ncargo run -- daemon\n```",
+      "zh-Hans": "```bash\n# Launch the dashboard\ncargo run -- dashboard\n\n# Start a new session\ncargo run -- start --task \"audit the repo and propose fixes\" --agent claude --worktree\n\n# List sessions\ncargo run -- sessions\n\n# Inspect a session\ncargo run -- status latest\n\n# Stop a session\ncargo run -- stop <session-id>\n\n# Resume a failed/stopped session\ncargo run -- resume <session-id>\n\n# Run the daemon loop\ncargo run -- daemon\n```"
+    },
+    {
+      "en-US": "## Validate",
+      "zh-Hans": "## 验证"
+    },
+    {
+      "en-US": "```bash\ncd ecc2\ncargo test\n```",
+      "zh-Hans": "```bash\ncd ecc2\ncargo test\n```"
+    },
+    {
+      "en-US": "## What Is Still Missing",
+      "zh-Hans": "## 尚缺失的功能"
+    },
+    {
+      "en-US": "The alpha is missing the higher-level operator surface that defines ECC 2.0:",
+      "zh-Hans": "此 alpha 版本缺失定义 ECC 2.0 的更高层级操作界面："
+    },
+    {
+      "en-US": "- richer multi-agent orchestration\n- explicit agent-to-agent delegation and summaries\n- visual worktree / diff review surface\n- stronger external harness compatibility\n- deeper memory and roadmap-aware planning layers\n- release packaging and installer story",
+      "zh-Hans": "* 更丰富的多代理编排功能\n* 明确的代理间委托和摘要\n* 可视化的工作树 / 差异审查界面\n* 更强的外部工具兼容性\n* 更深层的记忆和路线图感知规划层\n* 发布打包和安装程序方案"
+    },
+    {
+      "en-US": "## Repo Rule",
+      "zh-Hans": "## 仓库规则"
+    },
+    {
+      "en-US": "Do not market `ecc2/` as done just because the scaffold builds.",
+      "zh-Hans": "不要因为脚手架可以构建就将 `ecc2/` 宣传为已完成。"
+    },
+    {
+      "en-US": "The right framing is:",
+      "zh-Hans": "正确的表述是："
+    },
+    {
+      "en-US": "- ECC 2.0 alpha exists\n- it is usable for internal/operator testing\n- it is not the complete release yet",
+      "zh-Hans": "* ECC 2.0 alpha 版本存在\n* 可用于内部/操作员测试\n* 它还不是完整的发布版本"
+    }
+  ]
+}

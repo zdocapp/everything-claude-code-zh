@@ -1,0 +1,138 @@
+{
+  "sourceFile": "rules/common/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Coding Style",
+      "zh-Hans": "# 编码风格"
+    },
+    {
+      "en-US": "## Immutability (CRITICAL)",
+      "zh-Hans": "## 不可变性（关键）"
+    },
+    {
+      "en-US": "ALWAYS create new objects, NEVER mutate existing ones:",
+      "zh-Hans": "始终创建新对象，切勿修改现有对象："
+    },
+    {
+      "en-US": "```\n// Pseudocode\nWRONG:  modify(original, field, value) → changes original in-place\nCORRECT: update(original, field, value) → returns new copy with change\n```",
+      "zh-Hans": "```\n// 伪代码\n错误：modify(original, field, value) → 原地修改 original\n正确：update(original, field, value) → 返回带有更改的新副本\n```"
+    },
+    {
+      "en-US": "Rationale: Immutable data prevents hidden side effects, makes debugging easier, and enables safe concurrency.",
+      "zh-Hans": "理由：不可变数据可以防止隐藏的副作用，使调试更容易，并实现安全的并发。"
+    },
+    {
+      "en-US": "## Core Principles",
+      "zh-Hans": "## 核心原则"
+    },
+    {
+      "en-US": "### KISS (Keep It Simple)",
+      "zh-Hans": "### KISS（保持简单）"
+    },
+    {
+      "en-US": "- Prefer the simplest solution that actually works\n- Avoid premature optimization\n- Optimize for clarity over cleverness",
+      "zh-Hans": "* 优先选择实际可行的最简单解决方案\n* 避免过早优化\n* 为清晰度而非巧妙性进行优化"
+    },
+    {
+      "en-US": "### DRY (Don't Repeat Yourself)",
+      "zh-Hans": "### DRY（不要重复自己）"
+    },
+    {
+      "en-US": "- Extract repeated logic into shared functions or utilities\n- Avoid copy-paste implementation drift\n- Introduce abstractions when repetition is real, not speculative",
+      "zh-Hans": "* 将重复的逻辑提取到共享函数或工具中\n* 避免复制粘贴导致的实现偏差\n* 当重复是真实存在而非推测时，才引入抽象"
+    },
+    {
+      "en-US": "### YAGNI (You Aren't Gonna Need It)",
+      "zh-Hans": "### YAGNI（你不需要它）"
+    },
+    {
+      "en-US": "- Do not build features or abstractions before they are needed\n- Avoid speculative generality\n- Start simple, then refactor when the pressure is real",
+      "zh-Hans": "* 不要构建尚未需要的功能或抽象\n* 避免推测性的通用性\n* 从简单开始，然后在真正有压力时进行重构"
+    },
+    {
+      "en-US": "## File Organization",
+      "zh-Hans": "## 文件组织"
+    },
+    {
+      "en-US": "MANY SMALL FILES > FEW LARGE FILES:",
+      "zh-Hans": "许多小文件 > 少数大文件："
+    },
+    {
+      "en-US": "- High cohesion, low coupling\n- 200-400 lines typical, 800 max\n- Extract utilities from large modules\n- Organize by feature/domain, not by type",
+      "zh-Hans": "* 高内聚，低耦合\n* 典型 200-400 行，最多 800 行\n* 从大型模块中提取工具函数\n* 按功能/领域组织，而非按类型"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "ALWAYS handle errors comprehensively:",
+      "zh-Hans": "始终全面处理错误："
+    },
+    {
+      "en-US": "- Handle errors explicitly at every level\n- Provide user-friendly error messages in UI-facing code\n- Log detailed error context on the server side\n- Never silently swallow errors",
+      "zh-Hans": "* 在每个层级都显式处理错误\n* 在面向用户的代码中提供友好的错误信息\n* 在服务器端记录详细的错误上下文\n* 切勿静默吞没错误"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "ALWAYS validate at system boundaries:",
+      "zh-Hans": "始终在系统边界进行验证："
+    },
+    {
+      "en-US": "- Validate all user input before processing\n- Use schema-based validation where available\n- Fail fast with clear error messages\n- Never trust external data (API responses, user input, file content)",
+      "zh-Hans": "* 在处理前验证所有用户输入\n* 在可用时使用基于模式的验证\n* 快速失败并提供清晰的错误信息\n* 切勿信任外部数据（API 响应、用户输入、文件内容）"
+    },
+    {
+      "en-US": "## Naming Conventions",
+      "zh-Hans": "## 命名约定"
+    },
+    {
+      "en-US": "- Variables and functions: `camelCase` with descriptive names\n- Booleans: prefer `is`, `has`, `should`, or `can` prefixes\n- Interfaces, types, and components: `PascalCase`\n- Constants: `UPPER_SNAKE_CASE`\n- Custom hooks: `camelCase` with a `use` prefix",
+      "zh-Hans": "* 变量和函数：`camelCase` 并使用描述性名称\n* 布尔值：优先使用 `is`、`has`、`should` 或 `can` 前缀\n* 接口、类型和组件：`PascalCase`\n* 常量：`UPPER_SNAKE_CASE`\n* 自定义钩子：`camelCase` 并带有 `use` 前缀"
+    },
+    {
+      "en-US": "## Code Smells to Avoid",
+      "zh-Hans": "## 需避免的代码异味"
+    },
+    {
+      "en-US": "### Deep Nesting",
+      "zh-Hans": "### 深层嵌套"
+    },
+    {
+      "en-US": "Prefer early returns over nested conditionals once the logic starts stacking.",
+      "zh-Hans": "一旦逻辑开始堆叠，优先使用提前返回而非嵌套条件语句。"
+    },
+    {
+      "en-US": "### Magic Numbers",
+      "zh-Hans": "### 魔法数字"
+    },
+    {
+      "en-US": "Use named constants for meaningful thresholds, delays, and limits.",
+      "zh-Hans": "对有意义的阈值、延迟和限制使用命名常量。"
+    },
+    {
+      "en-US": "### Long Functions",
+      "zh-Hans": "### 长函数"
+    },
+    {
+      "en-US": "Split large functions into focused pieces with clear responsibilities.",
+      "zh-Hans": "将大型函数拆分为职责明确、重点突出的部分。"
+    },
+    {
+      "en-US": "## Code Quality Checklist",
+      "zh-Hans": "## 代码质量检查清单"
+    },
+    {
+      "en-US": "Before marking work complete:",
+      "zh-Hans": "在标记工作完成前："
+    },
+    {
+      "en-US": "- [ ] Code is readable and well-named\n- [ ] Functions are small (<50 lines)\n- [ ] Files are focused (<800 lines)\n- [ ] No deep nesting (>4 levels)\n- [ ] Proper error handling\n- [ ] No hardcoded values (use constants or config)\n- [ ] No mutation (immutable patterns used)",
+      "zh-Hans": "* \\[ ] 代码可读且命名良好\n* \\[ ] 函数短小（<50 行）\n* \\[ ] 文件重点突出（<800 行）\n* \\[ ] 无深层嵌套（>4 层）\n* \\[ ] 正确的错误处理\n* \\[ ] 无硬编码值（使用常量或配置）\n* \\[ ] 无数据修改（使用不可变模式）"
+    }
+  ]
+}

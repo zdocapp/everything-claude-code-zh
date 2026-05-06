@@ -1,0 +1,98 @@
+{
+  "sourceFile": "commands/flutter-build.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Fix Dart analyzer errors and Flutter build failures incrementally. Invokes the dart-build-resolver agent for minimal, surgical fixes.\n---",
+      "zh-Hans": "---\ndescription: 逐步修复Dart分析器错误和Flutter构建失败。调用dart-build-resolver代理进行最小化、精准的修复。\n---"
+    },
+    {
+      "en-US": "# Flutter Build and Fix",
+      "zh-Hans": "# Flutter 构建与修复"
+    },
+    {
+      "en-US": "This command invokes the **dart-build-resolver** agent to incrementally fix Dart/Flutter build errors with minimal changes.",
+      "zh-Hans": "此命令调用 **dart-build-resolver** 代理，以最小的更改增量修复 Dart/Flutter 构建错误。"
+    },
+    {
+      "en-US": "## What This Command Does",
+      "zh-Hans": "## 此命令的作用"
+    },
+    {
+      "en-US": "1. **Run Diagnostics**: Execute `flutter analyze`, `flutter pub get`\n2. **Parse Errors**: Group by file and sort by severity\n3. **Fix Incrementally**: One error at a time\n4. **Verify Each Fix**: Re-run analysis after each change\n5. **Report Summary**: Show what was fixed and what remains",
+      "zh-Hans": "1. **运行诊断**：执行 `flutter analyze`、`flutter pub get`\n2. **解析错误**：按文件分组并按严重性排序\n3. **增量修复**：一次修复一个错误\n4. **验证每个修复**：每次更改后重新运行分析\n5. **报告摘要**：显示已修复的内容和剩余问题"
+    },
+    {
+      "en-US": "## When to Use",
+      "zh-Hans": "## 何时使用"
+    },
+    {
+      "en-US": "Use `/flutter-build` when:",
+      "zh-Hans": "在以下情况使用 `/flutter-build`："
+    },
+    {
+      "en-US": "- `flutter analyze` reports errors\n- `flutter build` fails for any platform\n- `dart pub get` / `flutter pub get` fails with version conflicts\n- `build_runner` fails to generate code\n- After pulling changes that break the build",
+      "zh-Hans": "* `flutter analyze` 报告错误\n* `flutter build` 在任何平台上失败\n* `dart pub get` / `flutter pub get` 因版本冲突而失败\n* `build_runner` 无法生成代码\n* 拉取更改后导致构建失败"
+    },
+    {
+      "en-US": "## Diagnostic Commands Run",
+      "zh-Hans": "## 运行的诊断命令"
+    },
+    {
+      "en-US": "```bash\n# Analysis\nflutter analyze 2>&1\n\n# Dependencies\nflutter pub get 2>&1\n\n# Code generation (if project uses build_runner)\ndart run build_runner build --delete-conflicting-outputs 2>&1\n\n# Platform builds\nflutter build apk 2>&1\nflutter build web 2>&1\n```",
+      "zh-Hans": "```bash\n# Analysis\nflutter analyze 2>&1\n\n# Dependencies\nflutter pub get 2>&1\n\n# Code generation (if project uses build_runner)\ndart run build_runner build --delete-conflicting-outputs 2>&1\n\n# Platform builds\nflutter build apk 2>&1\nflutter build web 2>&1\n```"
+    },
+    {
+      "en-US": "## Example Session",
+      "zh-Hans": "## 示例会话"
+    },
+    {
+      "en-US": "````text\nUser: /flutter-build\n\nAgent:\n# Flutter Build Resolution\n\n## Initial Diagnostics\n\n```\n$ flutter analyze\nAnalyzing project...\n\n  error • lib/features/user/data/user_repository_impl.dart:34:16 •\n    A value of type 'String?' can't be assigned to a variable of type 'String'. •\n    invalid_assignment\n\n  error • lib/features/cart/presentation/cart_page.dart:58:5 •\n    The method 'add' isn't defined for the type 'List<Item>'.\n    Try correcting the name to the name of an existing method, or defining a method named 'add'. •\n    undefined_method\n\n2 errors found.\n```\n\n## Fix 1: Null Safety\n\nFile: lib/features/user/data/user_repository_impl.dart:34\nError: A value of type 'String?' can't be assigned to type 'String'\n\nChanged:\n```dart\nfinal id = response.id;\n```\nTo:\n```dart\nfinal id = response.id ?? '';\n```\n\n```\n$ flutter analyze\n1 error found.\n```\n\n## Fix 2: Immutable List\n\nFile: lib/features/cart/presentation/cart_page.dart:58\nError: The method 'add' isn't defined for the type 'List<Item>'\nCause: State holds an unmodifiable list; mutation goes through Cubit\n\nChanged:\n```dart\nstate.items.add(item);\n```\nTo:\n```dart\ncontext.read<CartCubit>().addItem(item);\n// Note: Cubit exposes named methods (addItem, removeItem);\n// .add(event) is the BLoC event API — don't mix them.\n```\n\n```\n$ flutter analyze\nNo issues found!\n```\n\n## Final Verification\n\n```\n$ flutter test\nAll tests passed.\n```\n\n## Summary\n\n| Metric | Count |\n|--------|-------|\n| Analysis errors fixed | 2 |\n| Files modified | 2 |\n| Remaining issues | 0 |\n\nBuild Status: PASS ✓\n````",
+      "zh-Hans": "````text\nUser: /flutter-build\n\nAgent:\n# Flutter 构建问题解决\n\n## 初始诊断\n\n```\n$ flutter analyze\nAnalyzing project...\n\n  error • lib/features/user/data/user_repository_impl.dart:34:16 •\n    A value of type 'String?' can't be assigned to a variable of type 'String'. •\n    invalid_assignment\n\n  error • lib/features/cart/presentation/cart_page.dart:58:5 •\n    The method 'add' isn't defined for the type 'List<Item>'.\n    Try correcting the name to the name of an existing method, or defining a method named 'add'. •\n    undefined_method\n\n2 errors found.\n```\n\n## 修复 1: 空安全\n\n文件: lib/features/user/data/user_repository_impl.dart:34\n错误: 类型为 'String?' 的值不能赋值给类型 'String'\n\n修改:\n```dart\nfinal id = response.id;\n```\n为:\n```dart\nfinal id = response.id ?? '';\n```\n\n```\n$ flutter analyze\n1 error found.\n```\n\n## 修复 2: 不可变列表\n\n文件: lib/features/cart/presentation/cart_page.dart:58\n错误: 类型 'List<Item>' 未定义方法 'add'\n原因: State 持有一个不可修改的列表；变更需要通过 Cubit 进行\n\n修改:\n```dart\nstate.items.add(item);\n```\n为:\n```dart\ncontext.read<CartCubit>().addItem(item);\n// 注意: Cubit 暴露了命名方法 (addItem, removeItem);\n// .add(event) 是 BLoC 的事件 API — 不要混用它们。\n```\n\n```\n$ flutter analyze\nNo issues found!\n```\n\n## 最终验证\n\n```\n$ flutter test\nAll tests passed.\n```\n\n## 总结\n\n| 指标 | 数量 |\n|--------|-------|\n| 已修复的分析错误 | 2 |\n| 修改的文件 | 2 |\n| 剩余问题 | 0 |\n\n构建状态: 通过 ✓\n````"
+    },
+    {
+      "en-US": "## Common Errors Fixed",
+      "zh-Hans": "## 常见的已修复错误"
+    },
+    {
+      "en-US": "| Error | Typical Fix |\n|-------|-------------|\n| `A value of type 'X?' can't be assigned to 'X'` | Add `?? default` or null guard |\n| `The name 'X' isn't defined` | Add import or fix typo |\n| `Non-nullable instance field must be initialized` | Add initializer or `late` |\n| `Version solving failed` | Adjust version constraints in pubspec.yaml |\n| `Missing concrete implementation of 'X'` | Implement missing interface method |\n| `build_runner: Part of X expected` | Delete stale `.g.dart` and rebuild |",
+      "zh-Hans": "| 错误 | 典型修复方法 |\n|-------|-------------|\n| `A value of type 'X?' can't be assigned to 'X'` | 添加 `?? default` 或空值保护 |\n| `The name 'X' isn't defined` | 添加导入或修正拼写错误 |\n| `Non-nullable instance field must be initialized` | 添加初始化器或 `late` |\n| `Version solving failed` | 调整 pubspec.yaml 中的版本约束 |\n| `Missing concrete implementation of 'X'` | 实现缺失的接口方法 |\n| `build_runner: Part of X expected` | 删除过时的 `.g.dart` 并重新构建 |"
+    },
+    {
+      "en-US": "## Fix Strategy",
+      "zh-Hans": "## 修复策略"
+    },
+    {
+      "en-US": "1. **Analysis errors first** — code must be error-free\n2. **Warning triage second** — fix warnings that could cause runtime bugs\n3. **pub conflicts third** — fix dependency resolution\n4. **One fix at a time** — verify each change\n5. **Minimal changes** — don't refactor, just fix",
+      "zh-Hans": "1. **首先处理分析错误** — 代码必须无错误\n2. **其次处理警告分类** — 修复可能导致运行时错误的警告\n3. **第三处理 pub 冲突** — 修复依赖项解析问题\n4. **一次修复一个** — 验证每次更改\n5. **最小化更改** — 不进行重构，仅修复问题"
+    },
+    {
+      "en-US": "## Stop Conditions",
+      "zh-Hans": "## 停止条件"
+    },
+    {
+      "en-US": "The agent will stop and report if:",
+      "zh-Hans": "代理将在以下情况停止并报告："
+    },
+    {
+      "en-US": "- Same error persists after 3 attempts\n- Fix introduces more errors\n- Requires architectural changes\n- Package upgrade conflicts need user decision",
+      "zh-Hans": "* 同一错误在 3 次尝试后仍然存在\n* 修复引入了更多错误\n* 需要架构性更改\n* 包升级冲突需要用户决策"
+    },
+    {
+      "en-US": "## Related Commands",
+      "zh-Hans": "## 相关命令"
+    },
+    {
+      "en-US": "- `/flutter-test` — Run tests after build succeeds\n- `/flutter-review` — Review code quality\n- `verification-loop` skill — Full verification loop",
+      "zh-Hans": "* `/flutter-test` — 构建成功后运行测试\n* `/flutter-review` — 审查代码质量\n* `verification-loop` 技能 — 完整验证循环"
+    },
+    {
+      "en-US": "## Related",
+      "zh-Hans": "## 相关"
+    },
+    {
+      "en-US": "- Agent: `agents/dart-build-resolver.md`\n- Skill: `skills/flutter-dart-code-review/`",
+      "zh-Hans": "* 代理：`agents/dart-build-resolver.md`\n* 技能：`skills/flutter-dart-code-review/`"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "sourceFile": "rules/common/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Security Guidelines",
+      "zh-Hans": "# 安全指南"
+    },
+    {
+      "en-US": "## Mandatory Security Checks",
+      "zh-Hans": "## 强制性安全检查"
+    },
+    {
+      "en-US": "Before ANY commit:",
+      "zh-Hans": "在**任何**提交之前："
+    },
+    {
+      "en-US": "- [ ] No hardcoded secrets (API keys, passwords, tokens)\n- [ ] All user inputs validated\n- [ ] SQL injection prevention (parameterized queries)\n- [ ] XSS prevention (sanitized HTML)\n- [ ] CSRF protection enabled\n- [ ] Authentication/authorization verified\n- [ ] Rate limiting on all endpoints\n- [ ] Error messages don't leak sensitive data",
+      "zh-Hans": "* \\[ ] 无硬编码的机密信息（API密钥、密码、令牌）\n* \\[ ] 所有用户输入均已验证\n* \\[ ] SQL注入防护（参数化查询）\n* \\[ ] XSS防护（HTML已净化）\n* \\[ ] CSRF保护已启用\n* \\[ ] 身份验证/授权已验证\n* \\[ ] 所有端点均启用速率限制\n* \\[ ] 错误消息不泄露敏感数据"
+    },
+    {
+      "en-US": "## Secret Management",
+      "zh-Hans": "## 机密信息管理"
+    },
+    {
+      "en-US": "- NEVER hardcode secrets in source code\n- ALWAYS use environment variables or a secret manager\n- Validate that required secrets are present at startup\n- Rotate any secrets that may have been exposed",
+      "zh-Hans": "* **绝不**在源代码中硬编码机密信息\n* **始终**使用环境变量或机密信息管理器\n* 在启动时验证必需的机密信息是否存在\n* 轮换任何可能已暴露的机密信息"
+    },
+    {
+      "en-US": "## Security Response Protocol",
+      "zh-Hans": "## 安全响应流程"
+    },
+    {
+      "en-US": "If security issue found:",
+      "zh-Hans": "如果发现安全问题："
+    },
+    {
+      "en-US": "1. STOP immediately\n2. Use **security-reviewer** agent\n3. Fix CRITICAL issues before continuing\n4. Rotate any exposed secrets\n5. Review entire codebase for similar issues",
+      "zh-Hans": "1. **立即停止**\n2. 使用 **security-reviewer** 代理\n3. 在继续之前修复**关键**问题\n4. 轮换任何已暴露的机密信息\n5. 审查整个代码库中的类似问题"
+    }
+  ]
+}

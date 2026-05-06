@@ -1,0 +1,106 @@
+{
+  "sourceFile": "skills/agent-harness-construction/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: agent-harness-construction\ndescription: Design and optimize AI agent action spaces, tool definitions, and observation formatting for higher completion rates.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: agent-harness-construction\ndescription: 设计和优化AI代理的动作空间、工具定义和观察格式，以提高完成率。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Agent Harness Construction",
+      "zh-Hans": "# 智能体框架构建"
+    },
+    {
+      "en-US": "Use this skill when you are improving how an agent plans, calls tools, recovers from errors, and converges on completion.",
+      "zh-Hans": "当你在改进智能体如何规划、调用工具、从错误中恢复以及收敛至完成状态时，请使用此技能。"
+    },
+    {
+      "en-US": "## Core Model",
+      "zh-Hans": "## 核心模型"
+    },
+    {
+      "en-US": "Agent output quality is constrained by:",
+      "zh-Hans": "智能体输出质量受限于："
+    },
+    {
+      "en-US": "1. Action space quality\n2. Observation quality\n3. Recovery quality\n4. Context budget quality",
+      "zh-Hans": "1. 动作空间质量\n2. 观察质量\n3. 恢复质量\n4. 上下文预算质量"
+    },
+    {
+      "en-US": "## Action Space Design",
+      "zh-Hans": "## 动作空间设计"
+    },
+    {
+      "en-US": "1. Use stable, explicit tool names.\n2. Keep inputs schema-first and narrow.\n3. Return deterministic output shapes.\n4. Avoid catch-all tools unless isolation is impossible.",
+      "zh-Hans": "1. 使用稳定、明确的工具名称。\n2. 保持输入模式优先且范围狭窄。\n3. 返回确定性的输出结构。\n4. 除非无法隔离，否则避免使用全能型工具。"
+    },
+    {
+      "en-US": "## Granularity Rules",
+      "zh-Hans": "## 粒度规则"
+    },
+    {
+      "en-US": "- Use micro-tools for high-risk operations (deploy, migration, permissions).\n- Use medium tools for common edit/read/search loops.\n- Use macro-tools only when round-trip overhead is the dominant cost.",
+      "zh-Hans": "* 对高风险操作（部署、迁移、权限）使用微工具。\n* 对常见的编辑/读取/搜索循环使用中等工具。\n* 仅当往返开销是主要成本时，才使用宏工具。"
+    },
+    {
+      "en-US": "## Observation Design",
+      "zh-Hans": "## 观察设计"
+    },
+    {
+      "en-US": "Every tool response should include:",
+      "zh-Hans": "每个工具响应都应包含："
+    },
+    {
+      "en-US": "- `status`: success|warning|error\n- `summary`: one-line result\n- `next_actions`: actionable follow-ups\n- `artifacts`: file paths / IDs",
+      "zh-Hans": "* `status`: success|warning|error\n* `summary`: 单行结果\n* `next_actions`: 可操作的后续步骤\n* `artifacts`: 文件路径 / ID"
+    },
+    {
+      "en-US": "## Error Recovery Contract",
+      "zh-Hans": "## 错误恢复契约"
+    },
+    {
+      "en-US": "For every error path, include:",
+      "zh-Hans": "对于每个错误路径，应包括："
+    },
+    {
+      "en-US": "- root cause hint\n- safe retry instruction\n- explicit stop condition",
+      "zh-Hans": "* 根本原因提示\n* 安全重试指令\n* 明确的停止条件"
+    },
+    {
+      "en-US": "## Context Budgeting",
+      "zh-Hans": "## 上下文预算管理"
+    },
+    {
+      "en-US": "1. Keep system prompt minimal and invariant.\n2. Move large guidance into skills loaded on demand.\n3. Prefer references to files over inlining long documents.\n4. Compact at phase boundaries, not arbitrary token thresholds.",
+      "zh-Hans": "1. 保持系统提示词最小化且不变。\n2. 将大量指导内容移至按需加载的技能中。\n3. 优先引用文件，而非内联长文档。\n4. 在阶段边界处进行压缩，而非在任意令牌阈值处。"
+    },
+    {
+      "en-US": "## Architecture Pattern Guidance",
+      "zh-Hans": "## 架构模式指导"
+    },
+    {
+      "en-US": "- ReAct: best for exploratory tasks with uncertain path.\n- Function-calling: best for structured deterministic flows.\n- Hybrid (recommended): ReAct planning + typed tool execution.",
+      "zh-Hans": "* ReAct：最适合路径不确定的探索性任务。\n* 函数调用：最适合结构化的确定性流程。\n* 混合模式（推荐）：ReAct 规划 + 类型化工具执行。"
+    },
+    {
+      "en-US": "## Benchmarking",
+      "zh-Hans": "## 基准测试"
+    },
+    {
+      "en-US": "Track:",
+      "zh-Hans": "跟踪："
+    },
+    {
+      "en-US": "- completion rate\n- retries per task\n- pass@1 and pass@3\n- cost per successful task",
+      "zh-Hans": "* 完成率\n* 每项任务的重试次数\n* pass@1 和 pass@3\n* 每项成功任务的成本"
+    },
+    {
+      "en-US": "## Anti-Patterns",
+      "zh-Hans": "## 反模式"
+    },
+    {
+      "en-US": "- Too many tools with overlapping semantics.\n- Opaque tool output with no recovery hints.\n- Error-only output without next steps.\n- Context overloading with irrelevant references.",
+      "zh-Hans": "* 过多语义重叠的工具。\n* 工具输出不透明，没有恢复提示。\n* 仅输出错误，没有后续步骤。\n* 上下文过载，包含无关引用。"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "sourceFile": "commands/loop-status.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Inspect active loop state, progress, failure signals, and recommended intervention.\n---",
+      "zh-Hans": "---\ndescription: 检查活动循环状态、进度、故障信号以及建议的干预措施。\n---"
+    },
+    {
+      "en-US": "# Loop Status Command",
+      "zh-Hans": "# 循环状态命令"
+    },
+    {
+      "en-US": "Inspect active loop state, progress, and failure signals.",
+      "zh-Hans": "检查活动循环的状态、进度和故障信号。"
+    },
+    {
+      "en-US": "This slash command can only run after the current session dequeues it. If you\nneed to inspect a wedged or sibling session, run the packaged CLI from another\nterminal:",
+      "zh-Hans": "此斜杠命令仅在当前会话将其出队后才能运行。如需检查阻塞或兄弟会话，请从另一个终端运行打包的 CLI："
+    },
+    {
+      "en-US": "```bash\nnpx --package ecc-universal ecc loop-status --json\n```",
+      "zh-Hans": "```bash\nnpx --package ecc-universal ecc loop-status --json\n```"
+    },
+    {
+      "en-US": "The CLI scans local Claude transcript JSONL files under\n`~/.claude/projects/**` and reports stale `ScheduleWakeup` calls or `Bash`\ntool calls that have no matching `tool_result`.",
+      "zh-Hans": "CLI 会扫描 `~/.claude/projects/**` 下的本地 Claude 转录 JSONL 文件，并报告没有匹配 `tool_result` 的过期 `ScheduleWakeup` 调用或 `Bash` 工具调用。"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 用法"
+    },
+    {
+      "en-US": "`/loop-status [--watch]`",
+      "zh-Hans": "`/loop-status [--watch]`"
+    },
+    {
+      "en-US": "## What to Report",
+      "zh-Hans": "## 报告内容"
+    },
+    {
+      "en-US": "- active loop pattern\n- current phase and last successful checkpoint\n- failing checks (if any)\n- estimated time/cost drift\n- recommended intervention (continue/pause/stop)",
+      "zh-Hans": "* 活动循环模式\n* 当前阶段和最近一次成功的检查点\n* 失败的检查项（如果有）\n* 预估的时间/成本偏差\n* 建议的干预措施（继续/暂停/停止）"
+    },
+    {
+      "en-US": "## Cross-Session CLI",
+      "zh-Hans": "## 跨会话 CLI"
+    },
+    {
+      "en-US": "- `ecc loop-status --json` emits machine-readable status for recent local\n  Claude transcripts.\n- `ecc loop-status --home <dir>` scans a different home directory when\n  inspecting another local profile or mounted workspace.\n- `ecc loop-status --transcript <session.jsonl>` inspects one transcript\n  directly.\n- `ecc loop-status --bash-timeout-seconds 1800` adjusts the stale Bash\n  threshold.\n- `ecc loop-status --exit-code` exits `2` when stale loop or tool signals are\n  found, or `1` when transcripts cannot be scanned.\n- `--exit-code` with `--watch` requires `--watch-count` so watchdog scripts do\n  not wait forever for a process exit.\n- `ecc loop-status --watch` refreshes status until interrupted.\n- `ecc loop-status --watch --watch-count 3 --exit-code` refreshes a bounded\n  number of times, then exits with the highest status seen.\n- `ecc loop-status --watch --watch-count 3` emits a bounded watch stream for\n  scripts and handoffs.\n- `ecc loop-status --watch --write-dir ~/.claude/loops` maintains\n  `index.json` and per-session JSON snapshots for sibling terminals or\n  watchdog scripts.",
+      "zh-Hans": "* `ecc loop-status --json` 输出近期本地 Claude 转录的机器可读状态。\n* `ecc loop-status --home <dir>` 在检查其他本地配置文件或挂载的工作区时扫描不同的主目录。\n* `ecc loop-status --transcript <session.jsonl>` 直接检查单个转录。\n* `ecc loop-status --bash-timeout-seconds 1800` 调整过期 Bash 阈值。\n* `ecc loop-status --exit-code` 在发现过期循环或工具信号时以 `2` 退出，或在无法扫描转录时以 `1` 退出。\n* `--exit-code` 与 `--watch` 配合使用时需要 `--watch-count`，以便看门狗脚本不会无限等待进程退出。\n* `ecc loop-status --watch` 持续刷新状态直至中断。\n* `ecc loop-status --watch --watch-count 3 --exit-code` 刷新有限次数后退出，并返回所见的最高状态。\n* `ecc loop-status --watch --watch-count 3` 为脚本和交接输出有限次数的监控流。\n* `ecc loop-status --watch --write-dir ~/.claude/loops` 维护 `index.json` 和每个会话的 JSON 快照，供兄弟终端或看门狗脚本使用。"
+    },
+    {
+      "en-US": "## Watch Mode",
+      "zh-Hans": "## 监视模式"
+    },
+    {
+      "en-US": "When `--watch` is present, refresh status periodically. With `--json`, each\nrefresh is emitted as one JSON object per line so another terminal or script can\nconsume the stream.",
+      "zh-Hans": "当存在 `--watch` 时，定期刷新状态。使用 `--json` 时，每次刷新输出一行 JSON 对象，以便其他终端或脚本消费该流。"
+    },
+    {
+      "en-US": "## Snapshot Files",
+      "zh-Hans": "## 快照文件"
+    },
+    {
+      "en-US": "Use `--write-dir <dir>` when a separate process needs to inspect loop state\nwithout waiting for the current Claude session to dequeue `/loop-status`. The\nCLI writes:",
+      "zh-Hans": "当独立进程需要检查循环状态而不等待当前 Claude 会话将 `/loop-status` 出队时，请使用 `--write-dir <dir>`。CLI 会写入："
+    },
+    {
+      "en-US": "- `index.json` with one row per inspected session.\n- `<session-id>.json` with the full status payload for that session.",
+      "zh-Hans": "* `index.json`，每行对应一个被检查的会话。\n* `<session-id>.json`，包含该会话的完整状态负载。"
+    },
+    {
+      "en-US": "These files are snapshots of local transcript analysis. They do not control or\ntimeout Claude Code runtime tool calls.",
+      "zh-Hans": "这些文件是本地转录分析的快照。它们不会控制或超时 Claude Code 运行时工具调用。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS:",
+      "zh-Hans": "$ARGUMENTS:"
+    },
+    {
+      "en-US": "- `--watch` optional",
+      "zh-Hans": "* `--watch` 可选"
+    }
+  ]
+}

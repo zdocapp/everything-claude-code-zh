@@ -1,12 +1,12 @@
 ---
 name: laravel-security
-description: Laravel 安全最佳实践，涵盖认证/授权、验证、CSRF、批量赋值、文件上传、密钥管理、速率限制和安全部署。
+description: Laravel 安全最佳实践，涵盖身份验证/授权、验证、CSRF、批量赋值、文件上传、密钥管理、速率限制和安全部署。
 origin: ECC
 ---
 
 # Laravel 安全最佳实践
 
-针对 Laravel 应用程序的全面安全指导，以防范常见漏洞。
+为 Laravel 应用程序提供全面的安全指导，以防范常见漏洞。
 
 ## 何时启用
 
@@ -18,24 +18,24 @@ origin: ECC
 
 ## 工作原理
 
-* 中间件提供基础保护（通过 `VerifyCsrfToken` 实现 CSRF，通过 `SecurityHeaders` 实现安全标头）。
+* 中间件提供基础防护（通过 `VerifyCsrfToken` 实现 CSRF 防护，通过 `SecurityHeaders` 设置安全头部）。
 * 守卫和策略强制执行访问控制（`auth:sanctum`、`$this->authorize`、策略中间件）。
-* 表单请求在输入到达服务之前进行验证和整形（`UploadInvoiceRequest`）。
-* 速率限制在身份验证控制之外增加滥用保护（`RateLimiter::for('login')`）。
-* 数据安全来自加密转换、批量赋值保护以及签名路由（`URL::temporarySignedRoute` + `signed` 中间件）。
+* 表单请求在数据到达服务层之前进行验证和整形（`UploadInvoiceRequest`）。
+* 速率限制在身份验证控制之外增加了滥用防护（`RateLimiter::for('login')`）。
+* 数据安全通过加密转换、批量赋值防护和签名路由实现（`URL::temporarySignedRoute` + `signed` 中间件）。
 
 ## 核心安全设置
 
 * 生产环境中设置 `APP_DEBUG=false`
-* `APP_KEY` 必须设置，并在泄露时轮换
+* `APP_KEY` 必须设置并在泄露时轮换
 * 设置 `SESSION_SECURE_COOKIE=true` 和 `SESSION_SAME_SITE=lax`（对于敏感应用，使用 `strict`）
 * 配置受信任的代理以正确检测 HTTPS
 
-## 会话和 Cookie 强化
+## 会话与 Cookie 强化
 
 * 设置 `SESSION_HTTP_ONLY=true` 以防止 JavaScript 访问
-* 对高风险流程使用 `SESSION_SAME_SITE=strict`
-* 在登录和权限变更时重新生成会话
+* 高风险流程中使用 `SESSION_SAME_SITE=strict`
+* 登录和权限变更时重新生成会话
 
 ## 身份验证与令牌
 
@@ -57,7 +57,7 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
 ## 密码安全
 
 * 使用 `Hash::make()` 哈希密码，切勿存储明文
-* 使用 Laravel 的密码代理进行重置流程
+* 使用 Laravel 的密码代理处理重置流程
 
 ```php
 use Illuminate\Support\Facades\Hash;
@@ -94,12 +94,12 @@ Route::put('/projects/{project}', [ProjectController::class, 'update'])
 * 使用严格的验证规则和类型检查
 * 切勿信任请求负载中的派生字段
 
-## 批量赋值保护
+## 批量赋值防护
 
 * 使用 `$fillable` 或 `$guarded`，避免使用 `Model::unguard()`
-* 优先使用 DTO 或显式的属性映射
+* 优先使用 DTO 或显式属性映射
 
-## SQL 注入防范
+## SQL 注入防护
 
 * 使用 Eloquent 或查询构建器的参数绑定
 * 除非绝对必要，避免使用原生 SQL
@@ -108,18 +108,18 @@ Route::put('/projects/{project}', [ProjectController::class, 'update'])
 DB::select('select * from users where email = ?', [$email]);
 ```
 
-## XSS 防范
+## XSS 防护
 
 * Blade 默认转义输出（`{{ }}`）
-* 仅对可信的、已清理的 HTML 使用 `{!! !!}`
+* 仅对受信任且已清理的 HTML 使用 `{!! !!}`
 * 使用专用库清理富文本
 
-## CSRF 保护
+## CSRF 防护
 
 * 保持 `VerifyCsrfToken` 中间件启用
 * 在表单中包含 `@csrf`，并为 SPA 请求发送 XSRF 令牌
 
-对于使用 Sanctum 的 SPA 身份验证，确保配置了有状态请求：
+对于使用 Sanctum 的 SPA 身份验证，确保配置有状态请求：
 
 ```php
 // config/sanctum.php
@@ -129,8 +129,8 @@ DB::select('select * from users where email = ?', [$email]);
 ## 文件上传安全
 
 * 验证文件大小、MIME 类型和扩展名
-* 尽可能将上传文件存储在公开路径之外
-* 如果需要，扫描文件以查找恶意软件
+* 尽可能将上传文件存储在公共路径之外
+* 必要时扫描文件中的恶意软件
 
 ```php
 final class UploadInvoiceRequest extends FormRequest
@@ -178,11 +178,11 @@ RateLimiter::for('login', function (Request $request) {
 
 * 切勿将密钥提交到源代码管理
 * 使用环境变量和密钥管理器
-* 密钥暴露后及时轮换，并使会话失效
+* 密钥暴露后及时轮换并使会话失效
 
 ## 加密属性
 
-对静态的敏感列使用加密转换。
+对静态存储的敏感列使用加密转换。
 
 ```php
 protected $casts = [
@@ -190,12 +190,12 @@ protected $casts = [
 ];
 ```
 
-## 安全标头
+## 安全头部
 
-* 在适当的地方添加 CSP、HSTS 和框架保护
+* 在适当位置添加 CSP、HSTS 和框架保护
 * 使用受信任的代理配置来强制执行 HTTPS 重定向
 
-设置标头的中间件示例：
+设置头部的中间件示例：
 
 ```php
 use Illuminate\Http\Request;
@@ -223,7 +223,7 @@ final class SecurityHeaders
 ## CORS 与 API 暴露
 
 * 在 `config/cors.php` 中限制来源
-* 对于经过身份验证的路由，避免使用通配符来源
+* 避免对已认证路由使用通配符来源
 
 ```php
 // config/cors.php
@@ -260,7 +260,7 @@ Log::info('User updated profile', [
 ## 依赖项安全
 
 * 定期运行 `composer audit`
-* 谨慎固定依赖项版本，并在出现 CVE 时及时更新
+* 谨慎固定依赖项，并在出现 CVE 时及时更新
 
 ## 签名 URL
 

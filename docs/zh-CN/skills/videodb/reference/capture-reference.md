@@ -1,12 +1,12 @@
 # 捕获参考
 
-VideoDB 捕获会话的代码级详情。工作流程指南请参阅 [capture.md](capture.md)。
+VideoDB 捕获会话的代码级详细信息。工作流程指南请参阅 [capture.md](capture.md)。
 
 ***
 
 ## WebSocket 事件
 
-来自捕获会话和 AI 流水线的实时事件。无需 webhook 或轮询。
+来自捕获会话和 AI 管道的实时事件。无需 webhook 或轮询。
 
 使用 [scripts/ws\_listener.py](../../../../../skills/videodb/scripts/ws_listener.py) 连接并将事件转储到 `${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_events.jsonl`。
 
@@ -15,7 +15,7 @@ VideoDB 捕获会话的代码级详情。工作流程指南请参阅 [capture.md
 | 通道 | 来源 | 内容 |
 |---------|--------|---------|
 | `capture_session` | 会话生命周期 | 状态变更 |
-| `transcript` | `start_transcript()` | 语音转文字 |
+| `transcript` | `start_transcript()` | 语音转文本 |
 | `visual_index` / `scene_index` | `index_visuals()` | 视觉分析 |
 | `audio_index` | `index_audio()` | 音频分析 |
 | `alert` | `create_alert()` | 警报通知 |
@@ -80,7 +80,7 @@ VideoDB 捕获会话的代码级详情。工作流程指南请参阅 [capture.md
 }
 ```
 
-**会话激活事件：**
+**会话活跃事件：**
 
 ```json
 {
@@ -112,7 +112,7 @@ VideoDB 捕获会话的代码级详情。工作流程指南请参阅 [capture.md
 }
 ```
 
-> 有关最新详情，请参阅 [VideoDB 实时上下文文档](https://docs.videodb.io/pages/ingest/capture-sdks/realtime-context.md)。
+> 获取最新详细信息，请参阅 [VideoDB 实时上下文文档](https://docs.videodb.io/pages/ingest/capture-sdks/realtime-context.md)。
 
 ***
 
@@ -130,7 +130,7 @@ python scripts/ws_listener.py --clear &
 python scripts/ws_listener.py &
 ```
 
-或者指定自定义输出目录：
+或指定自定义输出目录：
 
 ```bash
 python scripts/ws_listener.py --clear /path/to/output &
@@ -157,7 +157,7 @@ kill "$(cat "${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_ws_pid")"
 | 函数 | 用途 |
 |----------|---------|
 | `conn.create_capture_session()` | 会话生命周期事件 |
-| RTStream 方法 | 参见 [rtstream-reference.md](rtstream-reference.md) |
+| RTStream 方法 | 请参阅 [rtstream-reference.md](rtstream-reference.md) |
 
 **输出文件**（位于输出目录中，默认为 `${XDG_STATE_HOME:-$HOME/.local/state}/videodb`）：
 
@@ -165,11 +165,11 @@ kill "$(cat "${VIDEODB_EVENTS_DIR:-$HOME/.local/state/videodb}/videodb_ws_pid")"
 * `videodb_events.jsonl` - 所有事件
 * `videodb_ws_pid` - 进程 ID，便于终止
 
-**特性：**
+**功能：**
 
-* `--clear` 标志，用于在启动时清除事件文件（用于新会话）
-* 连接断开时，使用指数退避自动重连
-* 在 SIGINT/SIGTERM 时优雅关闭
+* `--clear` 标志用于在启动时清除事件文件（用于新会话）
+* 连接断开时使用指数退避自动重连
+* 在 SIGINT/SIGTERM 信号下优雅关闭
 * 连接状态日志记录
 
 ### JSONL 格式
@@ -212,7 +212,7 @@ with events_path.open(encoding="utf-8") as handle:
 
 ## WebSocket 连接
 
-连接以接收来自转录和索引流水线的实时 AI 结果。
+连接以接收来自转录和索引管道的实时 AI 结果。
 
 ```python
 ws_wrapper = conn.connect_websocket()
@@ -222,7 +222,7 @@ ws_id = ws.connection_id
 
 | 属性 / 方法 | 类型 | 描述 |
 |-------------------|------|-------------|
-| `ws.connection_id` | `str` | 唯一连接 ID（传递给 AI 流水线方法） |
+| `ws.connection_id` | `str` | 唯一连接 ID（传递给 AI 管道方法） |
 | `ws.receive()` | `AsyncIterator[dict]` | 异步迭代器，产生实时消息 |
 
 ***
@@ -231,7 +231,7 @@ ws_id = ws.connection_id
 
 ### 连接方法
 
-| 方法 | 返回值 | 描述 |
+| 方法 | 返回 | 描述 |
 |--------|---------|-------------|
 | `conn.create_capture_session(end_user_id, collection_id, ws_connection_id, metadata)` | `CaptureSession` | 创建新的捕获会话 |
 | `conn.get_capture_session(capture_session_id)` | `CaptureSession` | 检索现有的捕获会话 |
@@ -253,7 +253,7 @@ session = conn.create_capture_session(
 print(f"Session ID: {session.id}")
 ```
 
-> **注意：** `end_user_id` 是必需的，用于标识发起捕获的用户。用于测试或演示目的时，任何唯一的字符串标识符都有效（例如 `"demo-user"`、`"test-123"`）。
+> **注意：** `end_user_id` 是必需的，用于标识发起捕获的用户。出于测试或演示目的，任何唯一的字符串标识符都有效（例如 `"demo-user"`、`"test-123"`）。
 
 ### CaptureSession 属性
 
@@ -263,7 +263,7 @@ print(f"Session ID: {session.id}")
 
 ### CaptureSession 方法
 
-| 方法 | 返回值 | 描述 |
+| 方法 | 返回 | 描述 |
 |--------|---------|-------------|
 | `session.get_rtstream(type)` | `list[RTStream]` | 按类型获取 RTStream：`"mic"`、`"screen"` 或 `"system_audio"` |
 
@@ -287,11 +287,11 @@ client = CaptureClient(client_token=token)
 
 ### CaptureClient 方法
 
-| 方法 | 返回值 | 描述 |
+| 方法 | 返回 | 描述 |
 |--------|---------|-------------|
 | `await client.request_permission(type)` | `None` | 请求设备权限（`"microphone"`、`"screen_capture"`） |
 | `await client.list_channels()` | `Channels` | 发现可用的音频/视频通道 |
-| `await client.start_capture_session(capture_session_id, channels, primary_video_channel_id)` | `None` | 开始流式传输选定的通道 |
+| `await client.start_capture_session(capture_session_id, channels, primary_video_channel_id)` | `None` | 开始流传输选定的通道 |
 | `await client.stop_capture()` | `None` | 优雅地停止捕获会话 |
 | `await client.shutdown()` | `None` | 清理客户端资源 |
 
@@ -360,15 +360,15 @@ system_audio = channels.system_audio.default
 | `ch.name` | `str` | 人类可读的通道名称 |
 | `ch.store` | `bool` | 是否持久化录制（设置为 `True` 以保存） |
 
-没有 `store = True`，流会实时处理但不保存。
+没有 `store = True`，流会实时处理但不会被保存。
 
 ***
 
-## RTStream 和 AI 流水线
+## RTStream 和 AI 管道
 
 会话激活后，使用 `session.get_rtstream()` 检索 RTStream 对象。
 
-关于 RTStream 方法（索引、转录、警报、批处理配置），请参阅 [rtstream-reference.md](rtstream-reference.md)。
+有关 RTStream 方法（索引、转录、警报、批处理配置），请参阅 [rtstream-reference.md](rtstream-reference.md)。
 
 ***
 
@@ -379,38 +379,38 @@ system_audio = channels.system_audio.default
           │
           v
   ┌───────────────┐
-  │    created     │
+  │    已创建      │
   └───────┬───────┘
           │  client.start_capture_session()
           v
   ┌───────────────┐     WebSocket: capture_session.starting
-  │   starting     │ ──> Capture channels connect
+  │    启动中      │ ──> 捕获通道连接
   └───────┬───────┘
           │
           v
   ┌───────────────┐     WebSocket: capture_session.active
-  │    active      │ ──> Start AI pipelines
+  │    活跃中      │ ──> 启动 AI 管道
   └───────┬──────────────┐
           │              │
           │              v
           │      ┌───────────────┐     WebSocket: capture_session.failed
-          │      │    failed      │ ──> Inspect error payload and retry setup
+          │      │     失败       │ ──> 检查错误负载并重试设置
           │      └───────────────┘
-          │      unrecoverable capture error
+          │      不可恢复的捕获错误
           │
           │  client.stop_capture()
           v
   ┌───────────────┐     WebSocket: capture_session.stopping
-  │   stopping     │ ──> Finalize streams
+  │    停止中      │ ──> 完成流处理
   └───────┬───────┘
           │
           v
   ┌───────────────┐     WebSocket: capture_session.stopped
-  │   stopped      │ ──> All streams finalized
+  │     已停止     │ ──> 所有流处理完成
   └───────┬───────┘
-          │  (if store=True)
+          │  (如果 store=True)
           v
   ┌───────────────┐     WebSocket: capture_session.exported
-  │   exported     │ ──> Access video_id, stream_url, player_url
+  │    已导出      │ ──> 访问 video_id, stream_url, player_url
   └───────────────┘
 ```

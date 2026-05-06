@@ -1,0 +1,170 @@
+{
+  "sourceFile": "skills/springboot-verification/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: springboot-verification\ndescription: \"Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\"\norigin: ECC\n---",
+      "zh-Hans": "---\nname: springboot-verification\ndescription: \"Spring Boot项目的验证循环：构建、静态分析、带覆盖率的测试、安全扫描，以及在发布或PR前的差异审查。\"\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Spring Boot Verification Loop",
+      "zh-Hans": "# Spring Boot 验证循环"
+    },
+    {
+      "en-US": "Run before PRs, after major changes, and pre-deploy.",
+      "zh-Hans": "在提交 PR 前、重大变更后以及部署前运行。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时激活"
+    },
+    {
+      "en-US": "- Before opening a pull request for a Spring Boot service\n- After major refactoring or dependency upgrades\n- Pre-deployment verification for staging or production\n- Running full build → lint → test → security scan pipeline\n- Validating test coverage meets thresholds",
+      "zh-Hans": "* 在为一个 Spring Boot 服务开启拉取请求之前\n* 在重大重构或依赖升级之后\n* 为预发布或生产环境进行部署前验证\n* 运行完整的构建 → 代码检查 → 测试 → 安全扫描流水线\n* 验证测试覆盖率是否达到阈值"
+    },
+    {
+      "en-US": "## Phase 1: Build",
+      "zh-Hans": "## 阶段 1：构建"
+    },
+    {
+      "en-US": "```bash\nmvn -T 4 clean verify -DskipTests\n# or\n./gradlew clean assemble -x test\n```",
+      "zh-Hans": "```bash\nmvn -T 4 clean verify -DskipTests\n# or\n./gradlew clean assemble -x test\n```"
+    },
+    {
+      "en-US": "If build fails, stop and fix.",
+      "zh-Hans": "如果构建失败，停止并修复。"
+    },
+    {
+      "en-US": "## Phase 2: Static Analysis",
+      "zh-Hans": "## 阶段 2：静态分析"
+    },
+    {
+      "en-US": "Maven (common plugins):",
+      "zh-Hans": "Maven（常用插件）："
+    },
+    {
+      "en-US": "```bash\nmvn -T 4 spotbugs:check pmd:check checkstyle:check\n```",
+      "zh-Hans": "```bash\nmvn -T 4 spotbugs:check pmd:check checkstyle:check\n```"
+    },
+    {
+      "en-US": "Gradle (if configured):",
+      "zh-Hans": "Gradle（如果已配置）："
+    },
+    {
+      "en-US": "```bash\n./gradlew checkstyleMain pmdMain spotbugsMain\n```",
+      "zh-Hans": "```bash\n./gradlew checkstyleMain pmdMain spotbugsMain\n```"
+    },
+    {
+      "en-US": "## Phase 3: Tests + Coverage",
+      "zh-Hans": "## 阶段 3：测试 + 覆盖率"
+    },
+    {
+      "en-US": "```bash\nmvn -T 4 test\nmvn jacoco:report   # verify 80%+ coverage\n# or\n./gradlew test jacocoTestReport\n```",
+      "zh-Hans": "```bash\nmvn -T 4 test\nmvn jacoco:report   # verify 80%+ coverage\n# or\n./gradlew test jacocoTestReport\n```"
+    },
+    {
+      "en-US": "Report:",
+      "zh-Hans": "报告："
+    },
+    {
+      "en-US": "- Total tests, passed/failed\n- Coverage % (lines/branches)",
+      "zh-Hans": "* 测试总数，通过/失败数\n* 覆盖率 %（行/分支）"
+    },
+    {
+      "en-US": "### Unit Tests",
+      "zh-Hans": "### 单元测试"
+    },
+    {
+      "en-US": "Test service logic in isolation with mocked dependencies:",
+      "zh-Hans": "使用模拟依赖项隔离测试服务逻辑："
+    },
+    {
+      "en-US": "```java\n@ExtendWith(MockitoExtension.class)\nclass UserServiceTest {\n\n  @Mock private UserRepository userRepository;\n  @InjectMocks private UserService userService;\n\n  @Test\n  void createUser_validInput_returnsUser() {\n    var dto = new CreateUserDto(\"Alice\", \"alice@example.com\");\n    var expected = new User(1L, \"Alice\", \"alice@example.com\");\n    when(userRepository.save(any(User.class))).thenReturn(expected);\n\n    var result = userService.create(dto);\n\n    assertThat(result.name()).isEqualTo(\"Alice\");\n    verify(userRepository).save(any(User.class));\n  }\n\n  @Test\n  void createUser_duplicateEmail_throwsException() {\n    var dto = new CreateUserDto(\"Alice\", \"existing@example.com\");\n    when(userRepository.existsByEmail(dto.email())).thenReturn(true);\n\n    assertThatThrownBy(() -> userService.create(dto))\n        .isInstanceOf(DuplicateEmailException.class);\n  }\n}\n```",
+      "zh-Hans": "```java\n@ExtendWith(MockitoExtension.class)\nclass UserServiceTest {\n\n  @Mock private UserRepository userRepository;\n  @InjectMocks private UserService userService;\n\n  @Test\n  void createUser_validInput_returnsUser() {\n    var dto = new CreateUserDto(\"Alice\", \"alice@example.com\");\n    var expected = new User(1L, \"Alice\", \"alice@example.com\");\n    when(userRepository.save(any(User.class))).thenReturn(expected);\n\n    var result = userService.create(dto);\n\n    assertThat(result.name()).isEqualTo(\"Alice\");\n    verify(userRepository).save(any(User.class));\n  }\n\n  @Test\n  void createUser_duplicateEmail_throwsException() {\n    var dto = new CreateUserDto(\"Alice\", \"existing@example.com\");\n    when(userRepository.existsByEmail(dto.email())).thenReturn(true);\n\n    assertThatThrownBy(() -> userService.create(dto))\n        .isInstanceOf(DuplicateEmailException.class);\n  }\n}\n```"
+    },
+    {
+      "en-US": "### Integration Tests with Testcontainers",
+      "zh-Hans": "### 使用 Testcontainers 进行集成测试"
+    },
+    {
+      "en-US": "Test against a real database instead of H2:",
+      "zh-Hans": "针对真实数据库进行测试，而非 H2："
+    },
+    {
+      "en-US": "```java\n@SpringBootTest\n@Testcontainers\nclass UserRepositoryIntegrationTest {\n\n  @Container\n  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(\"postgres:16-alpine\")\n      .withDatabaseName(\"testdb\");\n\n  @DynamicPropertySource\n  static void configureProperties(DynamicPropertyRegistry registry) {\n    registry.add(\"spring.datasource.url\", postgres::getJdbcUrl);\n    registry.add(\"spring.datasource.username\", postgres::getUsername);\n    registry.add(\"spring.datasource.password\", postgres::getPassword);\n  }\n\n  @Autowired private UserRepository userRepository;\n\n  @Test\n  void findByEmail_existingUser_returnsUser() {\n    userRepository.save(new User(\"Alice\", \"alice@example.com\"));\n\n    var found = userRepository.findByEmail(\"alice@example.com\");\n\n    assertThat(found).isPresent();\n    assertThat(found.get().getName()).isEqualTo(\"Alice\");\n  }\n}\n```",
+      "zh-Hans": "```java\n@SpringBootTest\n@Testcontainers\nclass UserRepositoryIntegrationTest {\n\n  @Container\n  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(\"postgres:16-alpine\")\n      .withDatabaseName(\"testdb\");\n\n  @DynamicPropertySource\n  static void configureProperties(DynamicPropertyRegistry registry) {\n    registry.add(\"spring.datasource.url\", postgres::getJdbcUrl);\n    registry.add(\"spring.datasource.username\", postgres::getUsername);\n    registry.add(\"spring.datasource.password\", postgres::getPassword);\n  }\n\n  @Autowired private UserRepository userRepository;\n\n  @Test\n  void findByEmail_existingUser_returnsUser() {\n    userRepository.save(new User(\"Alice\", \"alice@example.com\"));\n\n    var found = userRepository.findByEmail(\"alice@example.com\");\n\n    assertThat(found).isPresent();\n    assertThat(found.get().getName()).isEqualTo(\"Alice\");\n  }\n}\n```"
+    },
+    {
+      "en-US": "### API Tests with MockMvc",
+      "zh-Hans": "### 使用 MockMvc 进行 API 测试"
+    },
+    {
+      "en-US": "Test controller layer with full Spring context:",
+      "zh-Hans": "在完整的 Spring 上下文中测试控制器层："
+    },
+    {
+      "en-US": "```java\n@WebMvcTest(UserController.class)\nclass UserControllerTest {\n\n  @Autowired private MockMvc mockMvc;\n  @MockBean private UserService userService;\n\n  @Test\n  void createUser_validInput_returns201() throws Exception {\n    var user = new UserDto(1L, \"Alice\", \"alice@example.com\");\n    when(userService.create(any())).thenReturn(user);\n\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"alice@example.com\"}\n                \"\"\"))\n        .andExpect(status().isCreated())\n        .andExpect(jsonPath(\"$.name\").value(\"Alice\"));\n  }\n\n  @Test\n  void createUser_invalidEmail_returns400() throws Exception {\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"not-an-email\"}\n                \"\"\"))\n        .andExpect(status().isBadRequest());\n  }\n}\n```",
+      "zh-Hans": "```java\n@WebMvcTest(UserController.class)\nclass UserControllerTest {\n\n  @Autowired private MockMvc mockMvc;\n  @MockBean private UserService userService;\n\n  @Test\n  void createUser_validInput_returns201() throws Exception {\n    var user = new UserDto(1L, \"Alice\", \"alice@example.com\");\n    when(userService.create(any())).thenReturn(user);\n\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"alice@example.com\"}\n                \"\"\"))\n        .andExpect(status().isCreated())\n        .andExpect(jsonPath(\"$.name\").value(\"Alice\"));\n  }\n\n  @Test\n  void createUser_invalidEmail_returns400() throws Exception {\n    mockMvc.perform(post(\"/api/users\")\n            .contentType(MediaType.APPLICATION_JSON)\n            .content(\"\"\"\n                {\"name\": \"Alice\", \"email\": \"not-an-email\"}\n                \"\"\"))\n        .andExpect(status().isBadRequest());\n  }\n}\n```"
+    },
+    {
+      "en-US": "## Phase 4: Security Scan",
+      "zh-Hans": "## 阶段 4：安全扫描"
+    },
+    {
+      "en-US": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets in source\ngrep -rn \"password\\s*=\\s*\\\"\" src/ --include=\"*.java\" --include=\"*.yml\" --include=\"*.properties\"\ngrep -rn \"sk-\\|api_key\\|secret\" src/ --include=\"*.java\" --include=\"*.yml\"\n\n# Secrets (git history)\ngit secrets --scan  # if configured\n```",
+      "zh-Hans": "```bash\n# Dependency CVEs\nmvn org.owasp:dependency-check-maven:check\n# or\n./gradlew dependencyCheckAnalyze\n\n# Secrets in source\ngrep -rn \"password\\s*=\\s*\\\"\" src/ --include=\"*.java\" --include=\"*.yml\" --include=\"*.properties\"\ngrep -rn \"sk-\\|api_key\\|secret\" src/ --include=\"*.java\" --include=\"*.yml\"\n\n# Secrets (git history)\ngit secrets --scan  # if configured\n```"
+    },
+    {
+      "en-US": "### Common Security Findings",
+      "zh-Hans": "### 常见安全发现"
+    },
+    {
+      "en-US": "```\n# Check for System.out.println (use logger instead)\ngrep -rn \"System\\.out\\.print\" src/main/ --include=\"*.java\"\n\n# Check for raw exception messages in responses\ngrep -rn \"e\\.getMessage()\" src/main/ --include=\"*.java\"\n\n# Check for wildcard CORS\ngrep -rn \"allowedOrigins.*\\*\" src/main/ --include=\"*.java\"\n```",
+      "zh-Hans": "```\n# 检查 System.out.println（应使用日志记录器）\ngrep -rn \"System\\.out\\.print\" src/main/ --include=\"*.java\"\n\n# 检查响应中的原始异常消息\ngrep -rn \"e\\.getMessage()\" src/main/ --include=\"*.java\"\n\n# 检查通配符 CORS\ngrep -rn \"allowedOrigins.*\\*\" src/main/ --include=\"*.java\"\n```"
+    },
+    {
+      "en-US": "## Phase 5: Lint/Format (optional gate)",
+      "zh-Hans": "## 阶段 5：代码检查/格式化（可选关卡）"
+    },
+    {
+      "en-US": "```bash\nmvn spotless:apply   # if using Spotless plugin\n./gradlew spotlessApply\n```",
+      "zh-Hans": "```bash\nmvn spotless:apply   # if using Spotless plugin\n./gradlew spotlessApply\n```"
+    },
+    {
+      "en-US": "## Phase 6: Diff Review",
+      "zh-Hans": "## 阶段 6：差异审查"
+    },
+    {
+      "en-US": "```bash\ngit diff --stat\ngit diff\n```",
+      "zh-Hans": "```bash\ngit diff --stat\ngit diff\n```"
+    },
+    {
+      "en-US": "Checklist:",
+      "zh-Hans": "检查清单："
+    },
+    {
+      "en-US": "- No debugging logs left (`System.out`, `log.debug` without guards)\n- Meaningful errors and HTTP statuses\n- Transactions and validation present where needed\n- Config changes documented",
+      "zh-Hans": "* 没有遗留调试日志（`System.out`、`log.debug` 没有防护）\n* 有意义的错误信息和 HTTP 状态码\n* 在需要的地方存在事务和验证\n* 配置变更已记录"
+    },
+    {
+      "en-US": "## Output Template",
+      "zh-Hans": "## 输出模板"
+    },
+    {
+      "en-US": "```\nVERIFICATION REPORT\n===================\nBuild:     [PASS/FAIL]\nStatic:    [PASS/FAIL] (spotbugs/pmd/checkstyle)\nTests:     [PASS/FAIL] (X/Y passed, Z% coverage)\nSecurity:  [PASS/FAIL] (CVE findings: N)\nDiff:      [X files changed]\n\nOverall:   [READY / NOT READY]\n\nIssues to Fix:\n1. ...\n2. ...\n```",
+      "zh-Hans": "```\n验证报告\n===================\n构建:     [通过/失败]\n静态分析:    [通过/失败] (spotbugs/pmd/checkstyle)\n测试:     [通过/失败] (X/Y 通过, Z% 覆盖率)\n安全:  [通过/失败] (CVE 发现: N)\n差异:      [X 个文件变更]\n\n总体:   [就绪 / 未就绪]\n\n待修复问题:\n1. ...\n2. ...\n```"
+    },
+    {
+      "en-US": "## Continuous Mode",
+      "zh-Hans": "## 持续模式"
+    },
+    {
+      "en-US": "- Re-run phases on significant changes or every 30–60 minutes in long sessions\n- Keep a short loop: `mvn -T 4 test` + spotbugs for quick feedback",
+      "zh-Hans": "* 在发生重大变更时或长时间会话中每 30–60 分钟重新运行各阶段\n* 保持短循环：`mvn -T 4 test` + spotbugs 以获取快速反馈"
+    },
+    {
+      "en-US": "**Remember**: Fast feedback beats late surprises. Keep the gate strict—treat warnings as defects in production systems.",
+      "zh-Hans": "**记住**：快速反馈胜过后期意外。保持关卡严格——在生产系统中将警告视为缺陷。"
+    }
+  ]
+}

@@ -9,9 +9,9 @@ paths:
 
 # Perl 模式
 
-> 本文档在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 Perl 特定的内容。
+> 本文档扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 Perl 相关的部分。
 
-## 仓储模式
+## 仓库模式
 
 在接口背后使用 **DBI** 或 **DBIx::Class**：
 
@@ -28,9 +28,9 @@ sub find_by_id ($self, $id) {
 }
 ```
 
-## DTOs / 值对象
+## DTO / 值对象
 
-使用带有 **Types::Standard** 的 **Moo** 类（相当于 Python 的 dataclasses）：
+使用带有 **Types::Standard** 的 **Moo** 类（相当于 Python 的数据类）：
 
 ```perl
 package MyApp::DTO::User;
@@ -44,7 +44,7 @@ has age   => (is => 'ro', isa => Int);
 
 ## 资源管理
 
-* 始终使用 **三参数 open** 配合 `autodie`
+* 始终使用 **三参数 open** 并配合 `autodie`
 * 使用 **Path::Tiny** 进行文件操作
 
 ```perl
@@ -56,7 +56,7 @@ my $content = path('config.json')->slurp_utf8;
 
 ## 模块接口
 
-使用 `Exporter 'import'` 配合 `@EXPORT_OK` — 绝不使用 `@EXPORT`：
+使用 `Exporter 'import'` 配合 `@EXPORT_OK` —— 永远不要使用 `@EXPORT`：
 
 ```perl
 use Exporter 'import';

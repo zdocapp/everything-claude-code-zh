@@ -1,6 +1,6 @@
 ---
 name: django-security
-description: Django 安全最佳实践、认证、授权、CSRF 防护、SQL 注入预防、XSS 预防和安全部署配置。
+description: Django安全最佳实践、身份验证、授权、CSRF防护、SQL注入预防、XSS预防以及安全部署配置。
 origin: ECC
 ---
 
@@ -10,7 +10,7 @@ origin: ECC
 
 ## 何时启用
 
-* 设置 Django 认证和授权时
+* 设置 Django 身份验证和授权时
 * 实现用户权限和角色时
 * 配置生产环境安全设置时
 * 审查 Django 应用程序的安全问题时
@@ -70,7 +70,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 ```
 
-## 认证
+## 身份验证
 
 ### 自定义用户模型
 
@@ -414,7 +414,7 @@ class Document(models.Model):
     )
 ```
 
-### 安全的文件存储
+### 安全文件存储
 
 ```python
 # settings.py
@@ -459,7 +459,7 @@ class SustainedRateThrottle(UserRateThrottle):
     rate = '1000/day'
 ```
 
-### API 认证
+### API 身份验证
 
 ```python
 # settings.py
@@ -578,16 +578,16 @@ LOGGING = {
 | 检查项 | 描述 |
 |-------|-------------|
 | `DEBUG = False` | 切勿在生产环境中启用 DEBUG |
-| 仅限 HTTPS | 强制 SSL，使用安全 Cookie |
-| 强密钥 | 对 SECRET\_KEY 使用环境变量 |
+| 仅 HTTPS | 强制 SSL，使用安全 Cookie |
+| 强密钥 | 使用环境变量管理 SECRET\_KEY |
 | 密码验证 | 启用所有密码验证器 |
-| CSRF 防护 | 默认启用，不要禁用 |
-| XSS 防护 | Django 自动转义，不要在用户输入上使用 `&#124;safe` |
+| CSRF 防护 | 默认启用，切勿禁用 |
+| XSS 防护 | Django 自动转义，切勿对用户输入使用 `&#124;safe` |
 | SQL 注入 | 使用 ORM，切勿在查询中拼接字符串 |
 | 文件上传 | 验证文件类型和大小 |
-| 速率限制 | 限制 API 端点访问频率 |
+| 速率限制 | 对 API 端点进行限流 |
 | 安全头部 | CSP、X-Frame-Options、HSTS |
 | 日志记录 | 记录安全事件 |
-| 更新 | 保持 Django 及其依赖项为最新版本 |
+| 更新 | 保持 Django 及其依赖项更新 |
 
 请记住：安全是一个过程，而非产品。请定期审查并更新您的安全实践。

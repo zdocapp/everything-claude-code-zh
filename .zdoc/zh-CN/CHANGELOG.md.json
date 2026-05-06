@@ -1,0 +1,210 @@
+{
+  "sourceFile": "CHANGELOG.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Changelog",
+      "zh-Hans": "# 更新日志"
+    },
+    {
+      "en-US": "## 2.0.0-rc.1 - 2026-04-28",
+      "zh-Hans": "## 2.0.0-rc.1 - 2026-04-28"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Adds the public ECC 2.0 release-candidate surface for the Hermes operator story.\n- Documents ECC as the reusable cross-harness substrate across Claude Code, Codex, Cursor, OpenCode, and Gemini.\n- Adds a sanitized Hermes import skill surface instead of publishing private operator state.",
+      "zh-Hans": "* 为 Hermes 操作符故事线添加了公开的 ECC 2.0 发布候选版本表面。\n* 将 ECC 记录为跨 Claude Code、Codex、Cursor、OpenCode 和 Gemini 的可复用跨框架基础组件。\n* 添加了经过清理的 Hermes 导入技能表面，而非发布私有操作符状态。"
+    },
+    {
+      "en-US": "### Release Surface",
+      "zh-Hans": "### 发布界面"
+    },
+    {
+      "en-US": "- Updated package, plugin, marketplace, OpenCode, agent, and README metadata to `2.0.0-rc.1`.\n- Added `docs/releases/2.0.0-rc.1/` with release notes, social drafts, launch checklist, handoff notes, and demo prompts.\n- Added `docs/architecture/cross-harness.md` and regression coverage for the ECC/Hermes boundary.\n- Kept `ecc2/` versioning independent for now; it remains an alpha control-plane scaffold unless release engineering decides otherwise.",
+      "zh-Hans": "* 将包、插件、市场、OpenCode、代理和 README 元数据更新为 `2.0.0-rc.1`。\n* 添加了 `docs/releases/2.0.0-rc.1/`，包含发布说明、社交媒体草稿、发布清单、交接说明和演示提示。\n* 添加了 `docs/architecture/cross-harness.md` 以及针对 ECC/Hermes 边界的回归覆盖。\n* 暂时保持 `ecc2/` 版本控制独立；除非发布工程团队另有决定，它仍是一个 alpha 控制平面脚手架。"
+    },
+    {
+      "en-US": "### Notes",
+      "zh-Hans": "### 备注"
+    },
+    {
+      "en-US": "- This is a release candidate, not a GA claim for the full ECC 2.0 control-plane roadmap.\n- Prerelease npm publishing should use the `next` dist-tag unless release engineering explicitly chooses otherwise.",
+      "zh-Hans": "* 这是一个发布候选版本，并非对完整 ECC 2.0 控制平面路线图的 GA 声明。\n* 预发布 npm 发布应使用 `next` 分发标签，除非发布工程团队明确选择其他方式。"
+    },
+    {
+      "en-US": "## 1.10.0 - 2026-04-05",
+      "zh-Hans": "## 1.10.0 - 2026-04-05"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Public release surface synced to the live repo after multiple weeks of OSS growth and backlog merges.\n- Operator workflow lane expanded with voice, graph-ranking, billing, workspace, and outbound skills.\n- Media generation lane expanded with Manim and Remotion-first launch tooling.\n- ECC 2.0 alpha control-plane binary now builds locally from `ecc2/` and exposes the first usable CLI/TUI surface.",
+      "zh-Hans": "* 公开版本界面已与活跃仓库同步，经过数周的开源增长和积压合并。\n* 操作员工作流通道扩展，新增语音、图排序、计费、工作区和外发技能。\n* 媒体生成通道扩展，新增 Manim 和 Remotion-first 启动工具。\n* ECC 2.0 alpha 控制平面二进制文件现已可从 `ecc2/` 本地构建，并公开了首个可用的 CLI/TUI 界面。"
+    },
+    {
+      "en-US": "### Release Surface",
+      "zh-Hans": "### 发布界面"
+    },
+    {
+      "en-US": "- Updated plugin, marketplace, Codex, OpenCode, and agent metadata to `1.10.0`.\n- Synced published counts to the live OSS surface: 38 agents, 156 skills, 72 commands.\n- Refreshed top-level install-facing docs and marketplace descriptions to match current repo state.",
+      "zh-Hans": "* 将插件、市场、Codex、OpenCode 和代理元数据更新至 `1.10.0`。\n* 同步了已发布数量至活跃的开源界面：38 个代理，156 项技能，72 条命令。\n* 更新了面向安装的顶层文档和市场描述，以匹配当前仓库状态。"
+    },
+    {
+      "en-US": "### New Workflow Lanes",
+      "zh-Hans": "### 新工作流通道"
+    },
+    {
+      "en-US": "- `brand-voice` — canonical source-derived writing-style system.\n- `social-graph-ranker` — weighted warm-intro graph ranking primitive.\n- `connections-optimizer` — network pruning/addition workflow on top of graph ranking.\n- `customer-billing-ops`, `google-workspace-ops`, `project-flow-ops`, `workspace-surface-audit`.\n- `manim-video`, `remotion-video-creation`, `nestjs-patterns`.",
+      "zh-Hans": "* `brand-voice` — 源自规范源的写作风格系统。\n* `social-graph-ranker` — 加权暖介绍图排序原语。\n* `connections-optimizer` — 基于图排序的网络修剪/添加工作流。\n* `customer-billing-ops`, `google-workspace-ops`, `project-flow-ops`, `workspace-surface-audit`。\n* `manim-video`, `remotion-video-creation`, `nestjs-patterns`。"
+    },
+    {
+      "en-US": "### ECC 2.0 Alpha",
+      "zh-Hans": "### ECC 2.0 Alpha"
+    },
+    {
+      "en-US": "- `cargo build --manifest-path ecc2/Cargo.toml` passes on the repository baseline.\n- `ecc-tui` currently exposes `dashboard`, `start`, `sessions`, `status`, `stop`, `resume`, and `daemon`.\n- The alpha is real and usable for local experimentation, but the broader control-plane roadmap remains incomplete and should not be treated as GA.",
+      "zh-Hans": "* `cargo build --manifest-path ecc2/Cargo.toml` 通过了仓库基线测试。\n* `ecc-tui` 当前公开了 `dashboard`, `start`, `sessions`, `status`, `stop`, `resume`, 和 `daemon`。\n* 该 alpha 版本真实可用，可用于本地实验，但更广泛的控制平面路线图仍未完成，不应视为正式发布版本。"
+    },
+    {
+      "en-US": "### Notes",
+      "zh-Hans": "### 备注"
+    },
+    {
+      "en-US": "- The Claude plugin remains limited by platform-level rules distribution constraints; the selective install / OSS path is still the most reliable full install.\n- This release is a repo-surface correction and ecosystem sync, not a claim that the full ECC 2.0 roadmap is complete.",
+      "zh-Hans": "* Claude 插件仍受平台级规则分发限制；选择性安装 / 开源路径仍是最可靠的完整安装方式。\n* 此版本是仓库界面修正和生态系统同步，并非声称完整的 ECC 2.0 路线图已完成。"
+    },
+    {
+      "en-US": "## 1.9.0 - 2026-03-20",
+      "zh-Hans": "## 1.9.0 - 2026-03-20"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Selective install architecture with manifest-driven pipeline and SQLite state store.\n- Language coverage expanded to 10+ ecosystems with 6 new agents and language-specific rules.\n- Observer reliability hardened with memory throttling, sandbox fixes, and 5-layer loop guard.\n- Self-improving skills foundation with skill evolution and session adapters.",
+      "zh-Hans": "* 选择性安装架构，包含清单驱动的流水线和 SQLite 状态存储。\n* 语言覆盖范围扩展至 10+ 个生态系统，新增 6 个代理和特定语言规则。\n* 观察者可靠性增强，包含内存限制、沙箱修复和 5 层循环防护。\n* 自改进技能基础，包含技能演进和会话适配器。"
+    },
+    {
+      "en-US": "### New Agents",
+      "zh-Hans": "### 新代理"
+    },
+    {
+      "en-US": "- `typescript-reviewer` — TypeScript/JavaScript code review specialist (#647)\n- `pytorch-build-resolver` — PyTorch runtime, CUDA, and training error resolution (#549)\n- `java-build-resolver` — Maven/Gradle build error resolution (#538)\n- `java-reviewer` — Java and Spring Boot code review (#528)\n- `kotlin-reviewer` — Kotlin/Android/KMP code review (#309)\n- `kotlin-build-resolver` — Kotlin/Gradle build errors (#309)\n- `rust-reviewer` — Rust code review (#523)\n- `rust-build-resolver` — Rust build error resolution (#523)\n- `docs-lookup` — Documentation and API reference research (#529)",
+      "zh-Hans": "* `typescript-reviewer` — TypeScript/JavaScript 代码审查专家 (#647)\n* `pytorch-build-resolver` — PyTorch 运行时、CUDA 和训练错误解决 (#549)\n* `java-build-resolver` — Maven/Gradle 构建错误解决 (#538)\n* `java-reviewer` — Java 和 Spring Boot 代码审查 (#528)\n* `kotlin-reviewer` — Kotlin/Android/KMP 代码审查 (#309)\n* `kotlin-build-resolver` — Kotlin/Gradle 构建错误 (#309)\n* `rust-reviewer` — Rust 代码审查 (#523)\n* `rust-build-resolver` — Rust 构建错误解决 (#523)\n* `docs-lookup` — 文档和 API 参考研究 (#529)"
+    },
+    {
+      "en-US": "### New Skills",
+      "zh-Hans": "### 新技能"
+    },
+    {
+      "en-US": "- `pytorch-patterns` — PyTorch deep learning workflows (#550)\n- `documentation-lookup` — API reference and library doc research (#529)\n- `bun-runtime` — Bun runtime patterns (#529)\n- `nextjs-turbopack` — Next.js Turbopack workflows (#529)\n- `mcp-server-patterns` — MCP server design patterns (#531)\n- `data-scraper-agent` — AI-powered public data collection (#503)\n- `team-builder` — Team composition skill (#501)\n- `ai-regression-testing` — AI regression test workflows (#433)\n- `claude-devfleet` — Multi-agent orchestration (#505)\n- `blueprint` — Multi-session construction planning\n- `everything-claude-code` — Self-referential ECC skill (#335)\n- `prompt-optimizer` — Prompt optimization skill (#418)\n- 8 Evos operational domain skills (#290)\n- 3 Laravel skills (#420)\n- VideoDB skills (#301)",
+      "zh-Hans": "* `pytorch-patterns` — PyTorch 深度学习工作流 (#550)\n* `documentation-lookup` — API 参考和库文档研究 (#529)\n* `bun-runtime` — Bun 运行时模式 (#529)\n* `nextjs-turbopack` — Next.js Turbopack 工作流 (#529)\n* `mcp-server-patterns` — MCP 服务器设计模式 (#531)\n* `data-scraper-agent` — AI 驱动的公共数据收集 (#503)\n* `team-builder` — 团队组成技能 (#501)\n* `ai-regression-testing` — AI 回归测试工作流 (#433)\n* `claude-devfleet` — 多代理编排 (#505)\n* `blueprint` — 多会话构建规划\n* `everything-claude-code` — 自引用 ECC 技能 (#335)\n* `prompt-optimizer` — 提示优化技能 (#418)\n* 8 项 Evos 运营领域技能 (#290)\n* 3 项 Laravel 技能 (#420)\n* VideoDB 技能 (#301)"
+    },
+    {
+      "en-US": "### New Commands",
+      "zh-Hans": "### 新命令"
+    },
+    {
+      "en-US": "- `/docs` — Documentation lookup (#530)\n- `/aside` — Side conversation (#407)\n- `/prompt-optimize` — Prompt optimization (#418)\n- `/resume-session`, `/save-session` — Session management\n- `learn-eval` improvements with checklist-based holistic verdict",
+      "zh-Hans": "* `/docs` — 文档查找 (#530)\n* `/aside` — 侧边对话 (#407)\n* `/prompt-optimize` — 提示优化 (#418)\n* `/resume-session`, `/save-session` — 会话管理\n* `learn-eval` 改进，包含基于检查表的整体判定"
+    },
+    {
+      "en-US": "### New Rules",
+      "zh-Hans": "### 新规则"
+    },
+    {
+      "en-US": "- Java language rules (#645)\n- PHP rule pack (#389)\n- Perl language rules and skills (patterns, security, testing)\n- Kotlin/Android/KMP rules (#309)\n- C++ language support (#539)\n- Rust language support (#523)",
+      "zh-Hans": "* Java 语言规则 (#645)\n* PHP 规则包 (#389)\n* Perl 语言规则和技能（模式、安全、测试）\n* Kotlin/Android/KMP 规则 (#309)\n* C++ 语言支持 (#539)\n* Rust 语言支持 (#523)"
+    },
+    {
+      "en-US": "### Infrastructure",
+      "zh-Hans": "### 基础设施"
+    },
+    {
+      "en-US": "- Selective install architecture with manifest resolution (`install-plan.js`, `install-apply.js`) (#509, #512)\n- SQLite state store with query CLI for tracking installed components (#510)\n- Session adapters for structured session recording (#511)\n- Skill evolution foundation for self-improving skills (#514)\n- Orchestration harness with deterministic scoring (#524)\n- Catalog count enforcement in CI (#525)\n- Install manifest validation for all 109 skills (#537)\n- PowerShell installer wrapper (#532)\n- Antigravity IDE support via `--target antigravity` flag (#332)\n- Codex CLI customization scripts (#336)",
+      "zh-Hans": "* 选择性安装架构，包含清单解析 (`install-plan.js`, `install-apply.js`) (#509, #512)\n* SQLite 状态存储，包含用于跟踪已安装组件的查询 CLI (#510)\n* 用于结构化会话记录的会话适配器 (#511)\n* 用于自改进技能的技能演进基础 (#514)\n* 具有确定性评分的编排工具 (#524)\n* CI 中的目录计数强制执行 (#525)\n* 所有 109 项技能的安装清单验证 (#537)\n* PowerShell 安装程序包装器 (#532)\n* 通过 `--target antigravity` 标志支持 Antigravity IDE (#332)\n* Codex CLI 自定义脚本 (#336)"
+    },
+    {
+      "en-US": "### Bug Fixes",
+      "zh-Hans": "### 错误修复"
+    },
+    {
+      "en-US": "- Resolved 19 CI test failures across 6 files (#519)\n- Fixed 8 test failures in install pipeline, orchestrator, and repair (#564)\n- Observer memory explosion with throttling, re-entrancy guard, and tail sampling (#536)\n- Observer sandbox access fix for Haiku invocation (#661)\n- Worktree project ID mismatch fix (#665)\n- Observer lazy-start logic (#508)\n- Observer 5-layer loop prevention guard (#399)\n- Hook portability and Windows .cmd support\n- Biome hook optimization — eliminated npx overhead (#359)\n- InsAIts security hook made opt-in (#370)\n- Windows spawnSync export fix (#431)\n- UTF-8 encoding fix for instinct CLI (#353)\n- Secret scrubbing in hooks (#348)",
+      "zh-Hans": "* 解决了 6 个文件中的 19 个 CI 测试失败 (#519)\n* 修复了安装流水线、编排器和修复中的 8 个测试失败 (#564)\n* 观察者内存爆炸问题，通过限制、重入防护和尾部采样解决 (#536)\n* 观察者沙箱访问修复，用于 Haiku 调用 (#661)\n* 工作树项目 ID 不匹配修复 (#665)\n* 观察者延迟启动逻辑 (#508)\n* 观察者 5 层循环预防防护 (#399)\n* 钩子可移植性和 Windows .cmd 支持\n* Biome 钩子优化 — 消除了 npx 开销 (#359)\n* InsAIts 安全钩子设为可选 (#370)\n* Windows spawnSync 导出修复 (#431)\n* instinct CLI 的 UTF-8 编码修复 (#353)\n* 钩子中的密钥清理 (#348)"
+    },
+    {
+      "en-US": "### Translations",
+      "zh-Hans": "### 翻译"
+    },
+    {
+      "en-US": "- Korean (ko-KR) translation — README, agents, commands, skills, rules (#392)\n- Chinese (zh-CN) documentation sync (#428)",
+      "zh-Hans": "* 韩语 (ko-KR) 翻译 — README、代理、命令、技能、规则 (#392)\n* 中文 (zh-CN) 文档同步 (#428)"
+    },
+    {
+      "en-US": "### Credits",
+      "zh-Hans": "### 致谢"
+    },
+    {
+      "en-US": "- @ymdvsymd — observer sandbox and worktree fixes\n- @pythonstrup — biome hook optimization\n- @Nomadu27 — InsAIts security hook\n- @hahmee — Korean translation\n- @zdocapp — Chinese translation sync\n- @cookiee339 — Kotlin ecosystem\n- @pangerlkr — CI workflow fixes\n- @0xrohitgarg — VideoDB skills\n- @nocodemf — Evos operational skills\n- @swarnika-cmd — community contributions",
+      "zh-Hans": "* @ymdvsymd — 观察者沙箱和工作树修复\n* @pythonstrup — biome 钩子优化\n* @Nomadu27 — InsAIts 安全钩子\n* @hahmee — 韩语翻译\n* @zdocapp — 中文翻译同步\n* @cookiee339 — Kotlin 生态系统\n* @pangerlkr — CI 工作流修复\n* @0xrohitgarg — VideoDB 技能\n* @nocodemf — Evos 运营技能\n* @swarnika-cmd — 社区贡献"
+    },
+    {
+      "en-US": "## 1.8.0 - 2026-03-04",
+      "zh-Hans": "## 1.8.0 - 2026-03-04"
+    },
+    {
+      "en-US": "### Highlights",
+      "zh-Hans": "### 亮点"
+    },
+    {
+      "en-US": "- Harness-first release focused on reliability, eval discipline, and autonomous loop operations.\n- Hook runtime now supports profile-based control and targeted hook disabling.\n- NanoClaw v2 adds model routing, skill hot-load, branching, search, compaction, export, and metrics.",
+      "zh-Hans": "* 以工具链为首要的发布，专注于可靠性、评估纪律和自主循环操作。\n* 钩子运行时现在支持基于配置文件的控制和定向钩子禁用。\n* NanoClaw v2 增加了模型路由、技能热加载、分支、搜索、压缩、导出和指标。"
+    },
+    {
+      "en-US": "### Core",
+      "zh-Hans": "### 核心"
+    },
+    {
+      "en-US": "- Added new commands: `/harness-audit`, `/loop-start`, `/loop-status`, `/quality-gate`, `/model-route`.\n- Added new skills:\n  - `agent-harness-construction`\n  - `agentic-engineering`\n  - `ralphinho-rfc-pipeline`\n  - `ai-first-engineering`\n  - `enterprise-agent-ops`\n  - `nanoclaw-repl`\n  - `continuous-agent-loop`\n- Added new agents:\n  - `harness-optimizer`\n  - `loop-operator`",
+      "zh-Hans": "* 新增命令：`/harness-audit`, `/loop-start`, `/loop-status`, `/quality-gate`, `/model-route`。\n* 新增技能：\n* `agent-harness-construction`\n* `agentic-engineering`\n* `ralphinho-rfc-pipeline`\n* `ai-first-engineering`\n* `enterprise-agent-ops`\n* `nanoclaw-repl`\n* `continuous-agent-loop`\n* 新增代理：\n* `harness-optimizer`\n* `loop-operator`"
+    },
+    {
+      "en-US": "### Hook Reliability",
+      "zh-Hans": "### 钩子可靠性"
+    },
+    {
+      "en-US": "- Fixed SessionStart root resolution with robust fallback search.\n- Moved session summary persistence to `Stop` where transcript payload is available.\n- Added quality-gate and cost-tracker hooks.\n- Replaced fragile inline hook one-liners with dedicated script files.\n- Added `ECC_HOOK_PROFILE` and `ECC_DISABLED_HOOKS` controls.",
+      "zh-Hans": "* 通过健壮的回退搜索修复了 SessionStart 根目录解析。\n* 将会话摘要持久化移至 `Stop`，此处可获得转录负载。\n* 增加了质量门和成本跟踪器钩子。\n* 将脆弱的单行内联钩子替换为专用脚本文件。\n* 增加了 `ECC_HOOK_PROFILE` 和 `ECC_DISABLED_HOOKS` 控制。"
+    },
+    {
+      "en-US": "### Cross-Platform",
+      "zh-Hans": "### 跨平台"
+    },
+    {
+      "en-US": "- Improved Windows-safe path handling in doc warning logic.\n- Hardened observer loop behavior to avoid non-interactive hangs.",
+      "zh-Hans": "* 改进了文档警告逻辑中 Windows 安全的路径处理。\n* 强化了观察者循环行为，以避免非交互式挂起。"
+    },
+    {
+      "en-US": "### Notes",
+      "zh-Hans": "### 备注"
+    },
+    {
+      "en-US": "- `autonomous-loops` is kept as a compatibility alias for one release; `continuous-agent-loop` is the canonical name.",
+      "zh-Hans": "* `autonomous-loops` 作为一个兼容性别名保留一个版本；`continuous-agent-loop` 是规范名称。"
+    },
+    {
+      "en-US": "### Credits",
+      "zh-Hans": "### 致谢"
+    },
+    {
+      "en-US": "- inspired by [zarazhangrui](https://github.com/zarazhangrui)\n- homunculus-inspired by [humanplane](https://github.com/humanplane)",
+      "zh-Hans": "* 灵感来自 [zarazhangrui](https://github.com/zarazhangrui)\n* 灵感来自 [humanplane](https://github.com/humanplane) 的 homunculus"
+    }
+  ]
+}

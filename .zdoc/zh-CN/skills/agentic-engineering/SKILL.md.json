@@ -1,0 +1,94 @@
+{
+  "sourceFile": "skills/agentic-engineering/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: agentic-engineering\ndescription: Operate as an agentic engineer using eval-first execution, decomposition, and cost-aware model routing.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: agentic-engineering\ndescription: 作为代理工程师，采用评估优先执行、分解和成本感知模型路由进行操作。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Agentic Engineering",
+      "zh-Hans": "# 智能体工程"
+    },
+    {
+      "en-US": "Use this skill for engineering workflows where AI agents perform most implementation work and humans enforce quality and risk controls.",
+      "zh-Hans": "将此技能用于工程工作流，其中AI智能体执行大部分实现工作，而人类负责执行质量和风险控制。"
+    },
+    {
+      "en-US": "## Operating Principles",
+      "zh-Hans": "## 操作原则"
+    },
+    {
+      "en-US": "1. Define completion criteria before execution.\n2. Decompose work into agent-sized units.\n3. Route model tiers by task complexity.\n4. Measure with evals and regression checks.",
+      "zh-Hans": "1. 在执行前定义完成标准。\n2. 将工作分解为适合智能体处理的单元。\n3. 根据任务复杂性路由模型层级。\n4. 使用评估和回归检查进行度量。"
+    },
+    {
+      "en-US": "## Eval-First Loop",
+      "zh-Hans": "## 评估优先循环"
+    },
+    {
+      "en-US": "1. Define capability eval and regression eval.\n2. Run baseline and capture failure signatures.\n3. Execute implementation.\n4. Re-run evals and compare deltas.",
+      "zh-Hans": "1. 定义能力评估和回归评估。\n2. 运行基线并捕获失败特征。\n3. 执行实现。\n4. 重新运行评估并比较差异。"
+    },
+    {
+      "en-US": "## Task Decomposition",
+      "zh-Hans": "## 任务分解"
+    },
+    {
+      "en-US": "Apply the 15-minute unit rule:",
+      "zh-Hans": "应用15分钟单元规则："
+    },
+    {
+      "en-US": "- each unit should be independently verifiable\n- each unit should have a single dominant risk\n- each unit should expose a clear done condition",
+      "zh-Hans": "* 每个单元应可独立验证\n* 每个单元应具有单一主导风险\n* 每个单元应暴露明确的完成条件"
+    },
+    {
+      "en-US": "## Model Routing",
+      "zh-Hans": "## 模型路由"
+    },
+    {
+      "en-US": "- Haiku: classification, boilerplate transforms, narrow edits\n- Sonnet: implementation and refactors\n- Opus: architecture, root-cause analysis, multi-file invariants",
+      "zh-Hans": "* Haiku：分类、样板转换、局部编辑\n* Sonnet：实现和重构\n* Opus：架构、根因分析、多文件不变式"
+    },
+    {
+      "en-US": "## Session Strategy",
+      "zh-Hans": "## 会话策略"
+    },
+    {
+      "en-US": "- Continue session for closely-coupled units.\n- Start fresh session after major phase transitions.\n- Compact after milestone completion, not during active debugging.",
+      "zh-Hans": "* 对于紧密耦合的单元，继续使用同一会话。\n* 在主要阶段转换后，启动新会话。\n* 在里程碑完成后进行压缩，而非在主动调试期间。"
+    },
+    {
+      "en-US": "## Review Focus for AI-Generated Code",
+      "zh-Hans": "## AI生成代码的审查重点"
+    },
+    {
+      "en-US": "Prioritize:",
+      "zh-Hans": "优先审查："
+    },
+    {
+      "en-US": "- invariants and edge cases\n- error boundaries\n- security and auth assumptions\n- hidden coupling and rollout risk",
+      "zh-Hans": "* 不变式和边界情况\n* 错误边界\n* 安全和身份验证假设\n* 隐藏的耦合和部署风险"
+    },
+    {
+      "en-US": "Do not waste review cycles on style-only disagreements when automated format/lint already enforce style.",
+      "zh-Hans": "当自动格式化/代码检查工具已强制执行代码风格时，不要在仅涉及风格的分歧上浪费审查周期。"
+    },
+    {
+      "en-US": "## Cost Discipline",
+      "zh-Hans": "## 成本纪律"
+    },
+    {
+      "en-US": "Track per task:",
+      "zh-Hans": "按任务跟踪："
+    },
+    {
+      "en-US": "- model\n- token estimate\n- retries\n- wall-clock time\n- success/failure",
+      "zh-Hans": "* 模型\n* 令牌估算\n* 重试次数\n* 挂钟时间\n* 成功/失败"
+    },
+    {
+      "en-US": "Escalate model tier only when lower tier fails with a clear reasoning gap.",
+      "zh-Hans": "仅当较低层级模型失败且存在明显的推理差距时，才升级模型层级。"
+    }
+  ]
+}

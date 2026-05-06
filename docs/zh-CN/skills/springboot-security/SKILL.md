@@ -1,6 +1,6 @@
 ---
 name: springboot-security
-description: Java Spring Boot 服务中认证/授权、验证、CSRF、密钥、标头、速率限制和依赖安全性的 Spring Security 最佳实践。
+description: Java Spring Boot 服务中关于认证/授权、验证、CSRF、密钥、头部、速率限制和依赖安全的 Spring Security 最佳实践。
 origin: ECC
 ---
 
@@ -11,8 +11,8 @@ origin: ECC
 ## 何时激活
 
 * 添加身份验证（JWT、OAuth2、基于会话）
-* 实现授权（@PreAuthorize、基于角色的访问控制）
-* 验证用户输入（Bean Validation、自定义验证器）
+* 实现授权（@PreAuthorize、基于角色的访问）
+* 验证用户输入（Bean 验证、自定义验证器）
 * 配置 CORS、CSRF 或安全标头
 * 管理密钥（Vault、环境变量）
 * 添加速率限制或暴力破解防护
@@ -20,7 +20,7 @@ origin: ECC
 
 ## 身份验证
 
-* 优先使用无状态 JWT 或带有撤销列表的不透明令牌
+* 首选无状态 JWT 或带有吊销列表的不透明令牌
 * 对于会话，使用 `httpOnly`、`Secure`、`SameSite=Strict` cookie
 * 使用 `OncePerRequestFilter` 或资源服务器验证令牌
 
@@ -51,7 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 * 启用方法安全：`@EnableMethodSecurity`
 * 使用 `@PreAuthorize("hasRole('ADMIN')")` 或 `@PreAuthorize("@authz.canEdit(#id)")`
-* 默认拒绝；仅公开必需的 scope
+* 默认拒绝；仅公开必需的权限范围
 
 ```java
 @RestController
@@ -77,7 +77,7 @@ public class AdminController {
 
 * 在控制器上使用带有 `@Valid` 的 Bean 验证
 * 在 DTO 上应用约束：`@NotBlank`、`@Email`、`@Size`、自定义验证器
-* 在渲染之前使用白名单清理任何 HTML
+* 在渲染前使用白名单清理任何 HTML
 
 ```java
 // BAD: No validation
@@ -100,7 +100,7 @@ public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto dto)
 }
 ```
 
-## SQL 注入预防
+## SQL 注入防护
 
 * 使用 Spring Data 存储库或参数化查询
 * 对于原生查询，使用 `:param` 绑定；切勿拼接字符串
@@ -119,8 +119,8 @@ List<User> findByEmailAndActiveTrue(String email);
 
 ## 密码编码
 
-* 始终使用 BCrypt 或 Argon2 哈希密码——切勿存储明文
-* 使用 `PasswordEncoder` Bean，而非手动哈希
+* 始终使用 BCrypt 或 Argon2 哈希密码 — 切勿存储明文
+* 使用 `PasswordEncoder` bean，而非手动哈希
 
 ```java
 @Bean
@@ -135,9 +135,9 @@ public User register(CreateUserDto dto) {
 }
 ```
 
-## CSRF 保护
+## CSRF 防护
 
-* 对于浏览器会话应用程序，保持 CSRF 启用；在表单/头中包含令牌
+* 对于浏览器会话应用，保持 CSRF 启用；在表单/标头中包含令牌
 * 对于使用 Bearer 令牌的纯 API，禁用 CSRF 并依赖无状态身份验证
 
 ```java
@@ -148,8 +148,8 @@ http
 
 ## 密钥管理
 
-* 源代码中不包含密钥；从环境变量或 vault 加载
-* 保持 `application.yml` 不包含凭据；使用占位符
+* 源代码中不包含密钥；从环境变量或 Vault 加载
+* 保持 `application.yml` 不含凭据；使用占位符
 * 定期轮换令牌和数据库凭据
 
 ```yaml
@@ -171,7 +171,7 @@ spring:
       token: ${VAULT_TOKEN}
 ```
 
-## 安全头
+## 安全标头
 
 ```java
 http
@@ -185,8 +185,8 @@ http
 
 ## CORS 配置
 
-* 在安全过滤器级别配置 CORS，而非按控制器配置
-* 限制允许的来源——在生产环境中切勿使用 `*`
+* 在安全过滤器级别配置 CORS，而非每个控制器
+* 限制允许的来源 — 生产环境中切勿使用 `*`
 
 ```java
 @Bean
@@ -209,8 +209,8 @@ http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
 ## 速率限制
 
-* 在昂贵的端点上应用 Bucket4j 或网关级限制
-* 记录突发流量并告警；返回 429 并提供重试提示
+* 在开销大的端点上应用 Bucket4j 或网关级限制
+* 记录并告警突发流量；返回 429 并提供重试提示
 
 ```java
 // Using Bucket4j for per-endpoint rate limiting
@@ -242,31 +242,31 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
 ## 依赖项安全
 
-* 在 CI 中运行 OWASP Dependency Check / Snyk
-* 保持 Spring Boot 和 Spring Security 在受支持的版本
+* 在 CI 中运行 OWASP 依赖项检查 / Snyk
+* 保持 Spring Boot 和 Spring Security 使用受支持的版本
 * 对已知 CVE 使构建失败
 
-## 日志记录和 PII
+## 日志记录与 PII
 
 * 切勿记录密钥、令牌、密码或完整的 PAN 数据
-* 擦除敏感字段；使用结构化 JSON 日志记录
+* 对敏感字段进行脱敏；使用结构化 JSON 日志记录
 
 ## 文件上传
 
 * 验证大小、内容类型和扩展名
-* 存储在 Web 根目录之外；如果需要则进行扫描
+* 存储在 Web 根目录之外；必要时进行扫描
 
 ## 发布前检查清单
 
-* \[ ] 身份验证令牌已验证并正确过期
-* \[ ] 每个敏感路径都有授权守卫
-* \[ ] 所有输入都已验证和清理
+* \[ ] 身份验证令牌已验证且正确过期
+* \[ ] 每个敏感路径都有授权防护
+* \[ ] 所有输入均已验证和清理
 * \[ ] 没有字符串拼接的 SQL
-* \[ ] CSRF 策略适用于应用程序类型
+* \[ ] CSRF 策略与应用类型匹配
 * \[ ] 密钥已外部化；未提交任何密钥
-* \[ ] 安全头已配置
-* \[ ] API 有速率限制
+* \[ ] 安全标头已配置
+* \[ ] API 已启用速率限制
 * \[ ] 依赖项已扫描并保持最新
 * \[ ] 日志不包含敏感数据
 
-**记住**：默认拒绝、验证输入、最小权限、优先采用安全配置。
+**记住**：默认拒绝、验证输入、最小权限、优先通过配置实现安全。

@@ -1,0 +1,46 @@
+{
+  "sourceFile": "commands/eval.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the eval-harness skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于eval-harness技能的旧版斜杠入口垫片。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Eval Command (Legacy Shim)",
+      "zh-Hans": "# Eval 命令（旧版适配器）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/eval`. The maintained workflow lives in `skills/eval-harness/SKILL.md`.",
+      "zh-Hans": "仅当你仍调用 `/eval` 时使用此命令。维护中的工作流位于 `skills/eval-harness/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范使用方式"
+    },
+    {
+      "en-US": "- Prefer the `eval-harness` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 首选直接使用 `eval-harness` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
+    },
+    {
+      "en-US": "Apply the `eval-harness` skill.",
+      "zh-Hans": "应用 `eval-harness` 技能。"
+    },
+    {
+      "en-US": "- Support the same user intents as before: define, check, report, list, and cleanup.\n- Keep evals capability-first, regression-backed, and evidence-based.\n- Use the skill as the canonical evaluator instead of maintaining a separate command-specific playbook.",
+      "zh-Hans": "* 支持与之前相同的用户意图：定义、检查、报告、列出和清理。\n* 保持评估以能力为先、有回归测试支持且基于证据。\n* 使用该技能作为规范的评估器，而非维护一个独立的命令特定操作手册。"
+    }
+  ]
+}

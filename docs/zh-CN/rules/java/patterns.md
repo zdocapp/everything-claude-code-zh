@@ -5,9 +5,9 @@ paths:
 
 # Java 模式
 
-> 本文档扩展了 [common/patterns.md](../common/patterns.md) 中的内容，增加了 Java 特有的部分。
+> 本文档扩展了 [common/patterns.md](../common/patterns.md) 的内容，增加了 Java 相关的具体内容。
 
-## 仓储模式
+## 仓库模式
 
 将数据访问封装在接口之后：
 
@@ -20,11 +20,11 @@ public interface OrderRepository {
 }
 ```
 
-具体的实现类处理存储细节（JPA、JDBC、用于测试的内存存储等）。
+具体实现处理存储细节（JPA、JDBC、用于测试的内存存储）。
 
 ## 服务层
 
-业务逻辑放在服务类中；保持控制器和仓储层的精简：
+业务逻辑放在服务类中；保持控制器和仓库的简洁：
 
 ```java
 public class OrderService {
@@ -68,7 +68,7 @@ public class NotificationService {
 
 ## DTO 映射
 
-使用记录（record）作为 DTO。在服务层/控制器边界进行映射：
+使用记录类作为 DTO。在服务/控制器边界进行映射：
 
 ```java
 public record OrderResponse(Long id, String customer, BigDecimal total) {
@@ -111,7 +111,7 @@ public class SearchCriteria {
 }
 ```
 
-## 使用密封类型构建领域模型
+## 用于领域模型的密封类型
 
 ```java
 public sealed interface PaymentResult permits PaymentSuccess, PaymentFailure {
@@ -128,7 +128,7 @@ String message = switch (result) {
 
 ## API 响应封装
 
-统一的 API 响应格式：
+一致的 API 响应：
 
 ```java
 public record ApiResponse<T>(boolean success, T data, String error) {
@@ -143,5 +143,5 @@ public record ApiResponse<T>(boolean success, T data, String error) {
 
 ## 参考
 
-有关 Spring Boot 架构模式，请参见技能：`springboot-patterns`。
-有关实体设计和查询优化，请参见技能：`jpa-patterns`。
+查看技能：`springboot-patterns` 以了解 Spring Boot 架构模式。
+查看技能：`jpa-patterns` 以了解实体设计和查询优化。

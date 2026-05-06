@@ -1,25 +1,25 @@
 ---
 name: golang-patterns
-description: 用于构建健壮、高效且可维护的Go应用程序的惯用Go模式、最佳实践和约定。
+description: 构建稳健、高效且可维护的Go应用程序的惯用Go模式、最佳实践和约定。
 origin: ECC
 ---
 
 # Go 开发模式
 
-用于构建健壮、高效和可维护应用程序的惯用 Go 模式与最佳实践。
+构建健壮、高效且可维护应用程序的惯用 Go 模式与最佳实践。
 
-## 何时激活
+## 何时启用
 
-* 编写新的 Go 代码时
-* 审查 Go 代码时
-* 重构现有 Go 代码时
-* 设计 Go 包/模块时
+* 编写新的 Go 代码
+* 评审 Go 代码
+* 重构现有 Go 代码
+* 设计 Go 包/模块
 
 ## 核心原则
 
 ### 1. 简洁与清晰
 
-Go 推崇简洁而非精巧。代码应该显而易见且易于阅读。
+Go 崇尚简洁而非巧妙。代码应显而易见且易于阅读。
 
 ```go
 // Good: Clear and direct
@@ -43,7 +43,7 @@ func GetUser(id string) (*User, error) {
 }
 ```
 
-### 2. 让零值变得有用
+### 2. 让零值有用
 
 设计类型时，应使其零值无需初始化即可立即使用。
 
@@ -72,7 +72,7 @@ type BadCounter struct {
 
 ### 3. 接受接口，返回结构体
 
-函数应该接受接口参数并返回具体类型。
+函数应接受接口参数并返回具体类型。
 
 ```go
 // Good: Accepts interface, returns concrete type
@@ -237,7 +237,7 @@ func GracefulShutdown(server *http.Server) {
 }
 ```
 
-### 用于协调 Goroutine 的 errgroup
+### 使用 errgroup 协调 Goroutine
 
 ```go
 import "golang.org/x/sync/errgroup"
@@ -297,7 +297,7 @@ func safeFetch(ctx context.Context, url string) <-chan []byte {
 
 ## 接口设计
 
-### 小而专注的接口
+### 小巧、专注的接口
 
 ```go
 // Good: Single-method interfaces
@@ -341,7 +341,7 @@ type Service struct {
 // It doesn't need to know about this interface
 ```
 
-### 使用类型断言实现可选行为
+### 通过类型断言实现可选行为
 
 ```go
 type Flusher interface {
@@ -378,8 +378,8 @@ myproject/
 ├── pkg/
 │   └── client/               # 公共 API 客户端
 ├── api/
-│   └── v1/                   # API 定义（proto, OpenAPI）
-├── testdata/                 # 测试夹具
+│   └── v1/                   # API 定义 (proto, OpenAPI)
+├── testdata/                 # 测试固件
 ├── go.mod
 ├── go.sum
 └── Makefile
@@ -463,7 +463,7 @@ server := NewServer(":8080",
 )
 ```
 
-### 使用嵌入实现组合
+### 通过嵌入实现组合
 
 ```go
 type Logger struct {
@@ -493,7 +493,7 @@ s.Log("Starting...") // Calls embedded Logger.Log
 
 ## 内存与性能
 
-### 当大小已知时预分配切片
+### 已知大小时预分配切片
 
 ```go
 // Bad: Grows slice multiple times
@@ -515,7 +515,7 @@ func processItems(items []Item) []Result {
 }
 ```
 
-### 为频繁分配使用 sync.Pool
+### 频繁分配时使用 sync.Pool
 
 ```go
 var bufferPool = sync.Pool{
@@ -628,12 +628,12 @@ issues:
 |-------|-------------|
 | 接受接口，返回结构体 | 函数接受接口参数，返回具体类型 |
 | 错误即值 | 将错误视为一等值，而非异常 |
-| 不要通过共享内存来通信 | 使用通道在 goroutine 之间进行协调 |
-| 让零值变得有用 | 类型应无需显式初始化即可工作 |
+| 不要通过共享内存来通信 | 使用通道在 goroutine 间协调 |
+| 让零值有用 | 类型应无需显式初始化即可工作 |
 | 少量复制优于少量依赖 | 避免不必要的外部依赖 |
-| 清晰优于精巧 | 优先考虑可读性而非精巧性 |
-| gofmt 虽非最爱，但却是每个人的朋友 | 始终使用 gofmt/goimports 格式化代码 |
-| 提前返回 | 先处理错误，保持主逻辑路径无缩进 |
+| 清晰优于巧妙 | 优先考虑可读性而非巧妙性 |
+| gofmt 无人最爱但人人皆友 | 始终使用 gofmt/goimports 格式化 |
+| 尽早返回 | 先处理错误，保持主路径无缩进 |
 
 ## 应避免的反模式
 
@@ -671,4 +671,4 @@ func (c *Counter) Increment() { c.n++ }        // Pointer receiver
 // Pick one style and be consistent
 ```
 
-**记住**：Go 代码应该以最好的方式显得“乏味”——可预测、一致且易于理解。如有疑问，保持简单。
+**请记住**：Go 代码应以最佳方式显得“乏味”——可预测、一致且易于理解。如有疑问，保持简单。

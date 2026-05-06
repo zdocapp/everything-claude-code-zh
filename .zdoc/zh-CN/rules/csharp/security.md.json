@@ -1,0 +1,74 @@
+{
+  "sourceFile": "rules/csharp/security.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.cs\"\n  - \"**/*.csx\"\n  - \"**/*.csproj\"\n  - \"**/appsettings*.json\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.cs\"\n  - \"**/*.csx\"\n  - \"**/*.csproj\"\n  - \"**/appsettings*.json\"\n---"
+    },
+    {
+      "en-US": "# C# Security",
+      "zh-Hans": "# C# 安全"
+    },
+    {
+      "en-US": "> This file extends [common/security.md](../common/security.md) with C#-specific content.",
+      "zh-Hans": "> 本文档在 [common/security.md](../common/security.md) 的基础上扩展了 C# 相关的内容。"
+    },
+    {
+      "en-US": "## Secret Management",
+      "zh-Hans": "## 密钥管理"
+    },
+    {
+      "en-US": "- Never hardcode API keys, tokens, or connection strings in source code\n- Use environment variables, user secrets for local development, and a secret manager in production\n- Keep `appsettings.*.json` free of real credentials",
+      "zh-Hans": "* 切勿在源代码中硬编码 API 密钥、令牌或连接字符串\n* 在本地开发中使用环境变量、用户机密，在生产环境中使用密钥管理器\n* 确保 `appsettings.*.json` 不包含真实的凭据"
+    },
+    {
+      "en-US": "```csharp\n// BAD\nconst string ApiKey = \"sk-live-123\";\n\n// GOOD\nvar apiKey = builder.Configuration[\"OpenAI:ApiKey\"]\n    ?? throw new InvalidOperationException(\"OpenAI:ApiKey is not configured.\");\n```",
+      "zh-Hans": "```csharp\n// BAD\nconst string ApiKey = \"sk-live-123\";\n\n// GOOD\nvar apiKey = builder.Configuration[\"OpenAI:ApiKey\"]\n    ?? throw new InvalidOperationException(\"OpenAI:ApiKey is not configured.\");\n```"
+    },
+    {
+      "en-US": "## SQL Injection Prevention",
+      "zh-Hans": "## SQL 注入防护"
+    },
+    {
+      "en-US": "- Always use parameterized queries with ADO.NET, Dapper, or EF Core\n- Never concatenate user input into SQL strings\n- Validate sort fields and filter operators before using dynamic query composition",
+      "zh-Hans": "* 始终使用 ADO.NET、Dapper 或 EF Core 的参数化查询\n* 切勿将用户输入拼接到 SQL 字符串中\n* 在使用动态查询组合前，验证排序字段和筛选运算符"
+    },
+    {
+      "en-US": "```csharp\nconst string sql = \"SELECT * FROM Orders WHERE CustomerId = @customerId\";\nawait connection.QueryAsync<Order>(sql, new { customerId });\n```",
+      "zh-Hans": "```csharp\nconst string sql = \"SELECT * FROM Orders WHERE CustomerId = @customerId\";\nawait connection.QueryAsync<Order>(sql, new { customerId });\n```"
+    },
+    {
+      "en-US": "## Input Validation",
+      "zh-Hans": "## 输入验证"
+    },
+    {
+      "en-US": "- Validate DTOs at the application boundary\n- Use data annotations, FluentValidation, or explicit guard clauses\n- Reject invalid model state before running business logic",
+      "zh-Hans": "* 在应用程序边界验证 DTO\n* 使用数据注解、FluentValidation 或显式的守卫子句\n* 在执行业务逻辑前拒绝无效的模型状态"
+    },
+    {
+      "en-US": "## Authentication and Authorization",
+      "zh-Hans": "## 身份验证与授权"
+    },
+    {
+      "en-US": "- Prefer framework auth handlers instead of custom token parsing\n- Enforce authorization policies at endpoint or handler boundaries\n- Never log raw tokens, passwords, or PII",
+      "zh-Hans": "* 优先使用框架的身份验证处理器，而非自定义令牌解析\n* 在端点或处理器边界强制执行授权策略\n* 切勿记录原始令牌、密码或个人身份信息"
+    },
+    {
+      "en-US": "## Error Handling",
+      "zh-Hans": "## 错误处理"
+    },
+    {
+      "en-US": "- Return safe client-facing messages\n- Log detailed exceptions with structured context server-side\n- Do not expose stack traces, SQL text, or filesystem paths in API responses",
+      "zh-Hans": "* 返回面向客户端的、安全的错误信息\n* 在服务器端记录带有结构化上下文的详细异常\n* 不要在 API 响应中暴露堆栈跟踪、SQL 文本或文件系统路径"
+    },
+    {
+      "en-US": "## References",
+      "zh-Hans": "## 参考资料"
+    },
+    {
+      "en-US": "See skill: `security-review` for broader application security review checklists.",
+      "zh-Hans": "有关更广泛的应用安全检查清单，请参阅技能：`security-review`。"
+    }
+  ]
+}

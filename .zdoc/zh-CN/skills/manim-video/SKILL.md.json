@@ -1,0 +1,114 @@
+{
+  "sourceFile": "skills/manim-video/SKILL.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: manim-video\ndescription: Build reusable Manim explainers for technical concepts, graphs, system diagrams, and product walkthroughs, then hand off to the wider ECC video stack if needed. Use when the user wants a clean animated explainer rather than a generic talking-head script.\norigin: ECC\n---",
+      "zh-Hans": "---\nname: manim-video\ndescription: 构建可重用的Manim解释器，用于技术概念、图表、系统示意图和产品演示，然后根据需要移交至更广泛的ECC视频堆栈。当用户需要简洁的动画解释器而非通用的头部讲解脚本时使用。\norigin: ECC\n---"
+    },
+    {
+      "en-US": "# Manim Video",
+      "zh-Hans": "# Manim 视频"
+    },
+    {
+      "en-US": "Use Manim for technical explainers where motion, structure, and clarity matter more than photorealism.",
+      "zh-Hans": "当运动、结构和清晰度比照片级真实感更重要时，使用 Manim 制作技术解说动画。"
+    },
+    {
+      "en-US": "## When to Activate",
+      "zh-Hans": "## 何时启用"
+    },
+    {
+      "en-US": "- the user wants a technical explainer animation\n- the concept is a graph, workflow, architecture, metric progression, or system diagram\n- the user wants a short product or launch explainer for X or a landing page\n- the visual should feel precise instead of generically cinematic",
+      "zh-Hans": "* 用户想要一个技术解说动画\n* 概念涉及图表、工作流、架构、指标进展或系统图\n* 用户想要一个简短的 X 产品或发布解说视频，或用于落地页\n* 视觉上应感觉精确，而非通用的电影感"
+    },
+    {
+      "en-US": "## Tool Requirements",
+      "zh-Hans": "## 工具要求"
+    },
+    {
+      "en-US": "- `manim` CLI for scene rendering\n- `ffmpeg` for post-processing if needed\n- `video-editing` for final assembly or polish\n- `remotion-video-creation` when the final package needs composited UI, captions, or additional motion layers",
+      "zh-Hans": "* `manim` CLI 用于场景渲染\n* `ffmpeg` 用于后期处理（如果需要）\n* `video-editing` 用于最终组装或润色\n* `remotion-video-creation` 当最终成品需要合成 UI、字幕或额外的运动图层时"
+    },
+    {
+      "en-US": "## Default Output",
+      "zh-Hans": "## 默认输出"
+    },
+    {
+      "en-US": "- short 16:9 MP4\n- one thumbnail or poster frame\n- storyboard plus scene plan",
+      "zh-Hans": "* 简短的 16:9 MP4 视频\n* 一张缩略图或海报帧\n* 故事板加场景计划"
+    },
+    {
+      "en-US": "## Workflow",
+      "zh-Hans": "## 工作流程"
+    },
+    {
+      "en-US": "1. Define the core visual thesis in one sentence.\n2. Break the concept into 3 to 6 scenes.\n3. Decide what each scene proves.\n4. Write the scene outline before writing Manim code.\n5. Render the smallest working version first.\n6. Tighten typography, spacing, color, and pacing after the render works.\n7. Hand off to the wider video stack only if it adds value.",
+      "zh-Hans": "1. 用一句话定义核心视觉主题。\n2. 将概念分解为 3 到 6 个场景。\n3. 决定每个场景要证明什么。\n4. 在编写 Manim 代码之前，先写好场景大纲。\n5. 首先渲染最小可行版本。\n6. 在渲染成功后，优化排版、间距、色彩和节奏。\n7. 仅在能增加价值时，才移交到更广泛的视频制作流程。"
+    },
+    {
+      "en-US": "## Scene Planning Rules",
+      "zh-Hans": "## 场景规划规则"
+    },
+    {
+      "en-US": "- each scene should prove one thing\n- avoid overstuffed diagrams\n- prefer progressive reveal over full-screen clutter\n- use motion to explain state change, not just to keep the screen busy\n- title cards should be short and loaded with meaning",
+      "zh-Hans": "* 每个场景应证明一件事\n* 避免图表信息过载\n* 倾向于渐进式揭示，而非满屏杂乱\n* 使用运动来解释状态变化，而不仅仅是为了让屏幕保持忙碌\n* 标题卡应简短且富有意义"
+    },
+    {
+      "en-US": "## Network Graph Default",
+      "zh-Hans": "## 网络图默认设置"
+    },
+    {
+      "en-US": "For social-graph and network-optimization explainers:",
+      "zh-Hans": "对于社交图和网络优化解说："
+    },
+    {
+      "en-US": "- show the current graph before showing the optimized graph\n- distinguish low-signal follow clutter from high-signal bridges\n- highlight warm-path nodes and target clusters\n- if useful, add a final scene showing the self-improvement lineage that informed the skill",
+      "zh-Hans": "* 在展示优化后的图之前，先展示当前图\n* 区分低信号关注的杂乱连接与高信号的桥梁连接\n* 高亮显示热路径节点和目标集群\n* 如果有用，可以添加一个最终场景，展示影响该技能形成的自我提升脉络"
+    },
+    {
+      "en-US": "## Render Conventions",
+      "zh-Hans": "## 渲染约定"
+    },
+    {
+      "en-US": "- default to 16:9 landscape unless the user asks for vertical\n- start with a low-quality smoke test render\n- only push to higher quality after composition and timing are stable\n- export one clean thumbnail frame that reads at social size",
+      "zh-Hans": "* 默认使用 16:9 横屏，除非用户要求竖屏\n* 从低质量冒烟测试渲染开始\n* 仅在构图和时序稳定后，才提升到更高质量\n* 导出一张清晰、在社交媒体尺寸下易于阅读的缩略图帧"
+    },
+    {
+      "en-US": "## Reusable Starter",
+      "zh-Hans": "## 可复用起点"
+    },
+    {
+      "en-US": "Use [assets/network_graph_scene.py](assets/network_graph_scene.py) as a starting point for network-graph explainers.",
+      "zh-Hans": "使用 [assets/network\\_graph\\_scene.py](assets/network_graph_scene.py) 作为网络图解说的起点。"
+    },
+    {
+      "en-US": "Example smoke test:",
+      "zh-Hans": "示例冒烟测试："
+    },
+    {
+      "en-US": "```bash\nmanim -ql assets/network_graph_scene.py NetworkGraphExplainer\n```",
+      "zh-Hans": "```bash\nmanim -ql assets/network_graph_scene.py NetworkGraphExplainer\n```"
+    },
+    {
+      "en-US": "## Output Format",
+      "zh-Hans": "## 输出格式"
+    },
+    {
+      "en-US": "Return:",
+      "zh-Hans": "返回："
+    },
+    {
+      "en-US": "- core visual thesis\n- storyboard\n- scene outline\n- render plan\n- any follow-on polish recommendations",
+      "zh-Hans": "* 核心视觉主题\n* 故事板\n* 场景大纲\n* 渲染计划\n* 任何后续的润色建议"
+    },
+    {
+      "en-US": "## Related Skills",
+      "zh-Hans": "## 相关技能"
+    },
+    {
+      "en-US": "- `video-editing` for final polish\n- `remotion-video-creation` for motion-heavy post-processing or compositing\n- `content-engine` when the animation is part of a broader launch",
+      "zh-Hans": "* `video-editing` 用于最终润色\n* `remotion-video-creation` 用于运动密集的后期处理或合成\n* `content-engine` 当动画是更广泛发布活动的一部分时"
+    }
+  ]
+}

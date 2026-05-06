@@ -1,0 +1,82 @@
+{
+  "sourceFile": "skills/videodb/reference/rtstream.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# RTStream Guide",
+      "zh-Hans": "# RTStream 指南"
+    },
+    {
+      "en-US": "## Overview",
+      "zh-Hans": "## 概述"
+    },
+    {
+      "en-US": "RTStream enables real-time ingestion of live video streams (RTSP/RTMP) and desktop capture sessions. Once connected, you can record, index, search, and export content from live sources.",
+      "zh-Hans": "RTStream 支持实时摄取直播视频流（RTSP/RTMP）和桌面捕获会话。连接后，您可以录制、索引、搜索和导出直播源的内容。"
+    },
+    {
+      "en-US": "For code-level details (SDK methods, parameters, examples), see [rtstream-reference.md](rtstream-reference.md).",
+      "zh-Hans": "有关代码级详细信息（SDK 方法、参数、示例），请参阅 [rtstream-reference.md](rtstream-reference.md)。"
+    },
+    {
+      "en-US": "## Use Cases",
+      "zh-Hans": "## 使用场景"
+    },
+    {
+      "en-US": "- **Security & Monitoring**: Connect RTSP cameras, detect events, trigger alerts\n- **Live Broadcasts**: Ingest RTMP streams, index in real-time, enable instant search\n- **Meeting Recording**: Capture desktop screen and audio, transcribe live, export recordings\n- **Event Processing**: Monitor live feeds, run AI analysis, respond to detected content",
+      "zh-Hans": "* **安全与监控**：连接 RTSP 摄像头，检测事件，触发警报\n* **直播广播**：摄取 RTMP 流，实时索引，实现即时搜索\n* **会议录制**：捕获桌面屏幕和音频，实时转录，导出录制内容\n* **事件处理**：监控直播源，运行 AI 分析，响应检测到的内容"
+    },
+    {
+      "en-US": "## Quick Start",
+      "zh-Hans": "## 快速开始"
+    },
+    {
+      "en-US": "1. **Connect to a live stream** (RTSP/RTMP URL) or get RTStream from a capture session\n\n2. **Start ingestion** to begin recording the live content\n\n3. **Start AI pipelines** for real-time indexing (audio, visual, transcription)\n\n4. **Monitor events** via WebSocket for live AI results and alerts\n\n5. **Stop ingestion** when done\n\n6. **Export to video** for permanent storage and further processing\n\n7. **Search the recording** to find specific moments",
+      "zh-Hans": "1. **连接到直播流**（RTSP/RTMP URL）或从捕获会话获取 RTStream\n2. **开始摄取**以开始录制直播内容\n3. **启动 AI 流水线**以进行实时索引（音频、视觉、转录）\n4. **通过 WebSocket 监控事件**以获取实时 AI 结果和警报\n5. **完成时停止摄取**\n6. **导出为视频**以进行永久存储和进一步处理\n7. **搜索录制内容**以查找特定时刻"
+    },
+    {
+      "en-US": "## RTStream Sources",
+      "zh-Hans": "## RTStream 来源"
+    },
+    {
+      "en-US": "### From RTSP/RTMP Streams",
+      "zh-Hans": "### 来自 RTSP/RTMP 流"
+    },
+    {
+      "en-US": "Connect directly to a live video source:",
+      "zh-Hans": "直接连接到实时视频源："
+    },
+    {
+      "en-US": "```python\nrtstream = coll.connect_rtstream(\n    url=\"rtmp://your-stream-server/live/stream-key\",\n    name=\"My Live Stream\",\n)\n```",
+      "zh-Hans": "```python\nrtstream = coll.connect_rtstream(\n    url=\"rtmp://your-stream-server/live/stream-key\",\n    name=\"My Live Stream\",\n)\n```"
+    },
+    {
+      "en-US": "### From Capture Sessions",
+      "zh-Hans": "### 来自捕获会话"
+    },
+    {
+      "en-US": "Get RTStreams from desktop capture (mic, screen, system audio):",
+      "zh-Hans": "从桌面捕获（麦克风、屏幕、系统音频）获取 RTStream："
+    },
+    {
+      "en-US": "```python\nsession = conn.get_capture_session(session_id)\n\nmics = session.get_rtstream(\"mic\")\ndisplays = session.get_rtstream(\"screen\")\nsystem_audios = session.get_rtstream(\"system_audio\")\n```",
+      "zh-Hans": "```python\nsession = conn.get_capture_session(session_id)\n\nmics = session.get_rtstream(\"mic\")\ndisplays = session.get_rtstream(\"screen\")\nsystem_audios = session.get_rtstream(\"system_audio\")\n```"
+    },
+    {
+      "en-US": "For capture session workflow, see [capture.md](capture.md).",
+      "zh-Hans": "有关捕获会话工作流程，请参阅 [capture.md](capture.md)。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Scripts",
+      "zh-Hans": "## 脚本"
+    },
+    {
+      "en-US": "| Script | Description |\n|--------|-------------|\n| `scripts/ws_listener.py` | WebSocket event listener for real-time AI results |",
+      "zh-Hans": "| 脚本 | 描述 |\n|--------|-------------|\n| `scripts/ws_listener.py` | 用于实时 AI 结果的 WebSocket 事件监听器 |"
+    }
+  ]
+}

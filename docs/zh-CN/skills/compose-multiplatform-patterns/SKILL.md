@@ -1,26 +1,26 @@
 ---
 name: compose-multiplatform-patterns
-description: KMP项目中的Compose Multiplatform和Jetpack Compose模式——状态管理、导航、主题化、性能优化和平台特定UI。
+description: 适用于KMP项目的Compose Multiplatform和Jetpack Compose模式——状态管理、导航、主题、性能以及平台特定UI。
 origin: ECC
 ---
 
 # Compose 多平台模式
 
-使用 Compose Multiplatform 和 Jetpack Compose 构建跨 Android、iOS、桌面和 Web 的共享 UI 的模式。涵盖状态管理、导航、主题和性能。
+使用 Compose 多平台和 Jetpack Compose 构建跨 Android、iOS、桌面和 Web 的共享 UI 的模式。涵盖状态管理、导航、主题和性能。
 
 ## 何时启用
 
-* 构建 Compose UI（Jetpack Compose 或 Compose Multiplatform）
+* 构建 Compose UI（Jetpack Compose 或 Compose 多平台）
 * 使用 ViewModel 和 Compose 状态管理 UI 状态
 * 在 KMP 或 Android 项目中实现导航
-* 设计可复用的可组合项和设计系统
+* 设计可重用的可组合项和设计系统
 * 优化重组和渲染性能
 
 ## 状态管理
 
 ### ViewModel + 单一状态对象
 
-使用单个数据类表示屏幕状态。将其暴露为 `StateFlow` 并在 Compose 中收集：
+使用单一数据类表示屏幕状态。将其作为 `StateFlow` 暴露并在 Compose 中收集：
 
 ```kotlin
 data class ItemListState(
@@ -77,7 +77,7 @@ private fun ItemListContent(
 
 ### 事件接收器模式
 
-对于复杂屏幕，使用密封接口表示事件，而非多个回调 lambda：
+对于复杂屏幕，使用密封接口表示事件，而不是多个回调 lambda：
 
 ```kotlin
 sealed interface ItemListEvent {
@@ -128,9 +128,9 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
 }
 ```
 
-### 对话框和底部抽屉导航
+### 对话框和底部导航栏导航
 
-使用 `dialog()` 和覆盖层模式，而非命令式的显示/隐藏：
+使用 `dialog()` 和覆盖层模式，而不是命令式的显示/隐藏：
 
 ```kotlin
 NavHost(navController, startDestination = HomeRoute) {
@@ -148,9 +148,9 @@ NavHost(navController, startDestination = HomeRoute) {
 
 ## 可组合项设计
 
-### 基于槽位的 API
+### 基于插槽的 API
 
-使用槽位参数设计可组合项以获得灵活性：
+设计具有插槽参数的可组合项以提高灵活性：
 
 ```kotlin
 @Composable
@@ -172,7 +172,7 @@ fun AppCard(
 
 ### 修饰符顺序
 
-修饰符顺序很重要 —— 按此顺序应用：
+修饰符的顺序很重要 — 按此顺序应用：
 
 ```kotlin
 Text(
@@ -246,7 +246,7 @@ val showScrollToTop by remember {
 }
 ```
 
-### 避免在重组中分配内存
+### 避免在重组中进行分配
 
 ```kotlin
 // BAD — new lambda and list every recomposition
@@ -288,12 +288,12 @@ fun AppTheme(
 ## 应避免的反模式
 
 * 在 ViewModel 中使用 `mutableStateOf`，而 `MutableStateFlow` 配合 `collectAsStateWithLifecycle` 对生命周期更安全
-* 将 `NavController` 深入传递到可组合项中 —— 应传递 lambda 回调
-* 在 `@Composable` 函数中进行繁重计算 —— 应移至 ViewModel 或 `remember {}`
-* 使用 `LaunchedEffect(Unit)` 作为 ViewModel 初始化的替代 —— 在某些设置中，它会在配置更改时重新运行
-* 在可组合项参数中创建新的对象实例 —— 会导致不必要的重组
+* 将 `NavController` 深入传递到可组合项中 — 应传递 lambda 回调
+* 在 `@Composable` 函数中进行繁重计算 — 应移至 ViewModel 或 `remember {}`
+* 使用 `LaunchedEffect(Unit)` 作为 ViewModel 初始化的替代 — 在某些设置中，它会在配置更改时重新运行
+* 在可组合项参数中创建新的对象实例 — 会导致不必要的重组
 
-## 参考资料
+## 参考
 
 查看技能：`android-clean-architecture` 了解模块结构和分层。
 查看技能：`kotlin-coroutines-flows` 了解协程和 Flow 模式。

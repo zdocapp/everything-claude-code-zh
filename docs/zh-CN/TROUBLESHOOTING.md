@@ -5,7 +5,7 @@ Everything Claude Code (ECC) 插件的常见问题与解决方案。
 ## 目录
 
 * [内存与上下文问题](#内存与上下文问题)
-* [代理工具故障](#代理工具故障)
+* [智能体框架故障](#智能体框架故障)
 * [钩子与工作流错误](#钩子与工作流错误)
 * [安装与设置](#安装与设置)
 * [性能问题](#性能问题)
@@ -24,7 +24,7 @@ Everything Claude Code (ECC) 插件的常见问题与解决方案。
 
 * 上传的大文件超出令牌限制
 * 累积的对话历史记录
-* 单次会话中包含多个大型工具输出
+* 单次会话中多个大型工具输出
 
 **解决方案：**
 
@@ -45,11 +45,11 @@ head -n 50 large-file.txt
 
 ### 内存持久化失败
 
-**症状：** 代理不记得先前的上下文或观察结果
+**症状：** 智能体不记得之前的上下文或观察结果
 
 **原因：**
 
-* 连续学习钩子被禁用
+* 禁用了持续学习钩子
 * 观察文件损坏
 * 项目检测失败
 
@@ -86,16 +86,16 @@ grep -r "observe" ~/.claude/settings.json
 
 ***
 
-## 代理工具故障
+## 智能体框架故障
 
-### 未找到代理
+### 未找到智能体
 
-**症状：** 出现"代理未加载"或"未知代理"错误
+**症状：** 出现"智能体未加载"或"未知智能体"错误
 
 **原因：**
 
 * 插件未正确安装
-* 代理路径配置错误
+* 智能体路径配置错误
 * 市场安装与手动安装不匹配
 
 **解决方案：**
@@ -116,13 +116,13 @@ ls ~/.claude/agents/  # Custom agents only
 
 ### 工作流执行挂起
 
-**症状：** 代理启动但从未完成
+**症状：** 智能体启动但永不完成
 
 **原因：**
 
-* 代理逻辑中存在无限循环
+* 智能体逻辑中存在无限循环
 * 等待用户输入时被阻塞
-* 等待 API 响应时网络超时
+* 等待 API 时网络超时
 
 **解决方案：**
 
@@ -142,7 +142,7 @@ curl -I https://api.anthropic.com
 
 ### 工具使用错误
 
-**症状：** 出现"工具执行失败"或权限被拒绝
+**症状：** "工具执行失败"或权限被拒绝
 
 **原因：**
 
@@ -196,7 +196,7 @@ bash ~/.claude/plugins/cache/*/hooks/pre-bash.sh <<< '{"command":"echo test"}'
 
 ### Python/Node 版本不匹配
 
-**症状：** 出现"未找到 python3"或"node: 命令未找到"
+**症状：** "未找到 python3" 或 "node: command not found"
 
 **原因：**
 
@@ -232,7 +232,7 @@ python --version
 
 **原因：**
 
-* Heredoc 内容触发模式匹配
+* 触发模式匹配的 Heredoc 内容
 * 参数中包含"dev"的非开发命令
 
 **解决方案：**
@@ -262,10 +262,18 @@ tmux attach -t dev
 * 市场缓存未更新
 * Claude Code 版本不兼容
 * 插件文件损坏
+* 本地 Claude 设置被清除或重置
 
 **解决方案：**
 
 ```bash
+# First inspect what ECC still knows about this machine
+ecc list-installed
+ecc doctor
+ecc repair
+
+# Only reinstall if doctor/repair cannot restore the missing files
+
 # Inspect the plugin cache before changing it
 ls -la ~/.claude/plugins/cache/
 
@@ -276,6 +284,8 @@ mkdir -p ~/.claude/plugins/cache
 # Reinstall from marketplace
 # Claude Code → Extensions → Everything Claude Code → Uninstall
 # Then reinstall from marketplace
+
+# If the issue is marketplace/account access, use ECC Tools billing/account recovery separately; do not use reinstall as a proxy for account recovery
 
 # Check Claude Code version
 claude --version
@@ -288,13 +298,13 @@ cp -r everything-claude-code ~/.claude/plugins/ecc
 
 ### 包管理器检测失败
 
-**症状：** 使用了错误的包管理器（用 npm 而不是 pnpm）
+**症状：** 使用了错误的包管理器（例如用 npm 而不是 pnpm）
 
 **原因：**
 
-* 没有 lock 文件
+* 不存在锁文件
 * 未设置 CLAUDE\_PACKAGE\_MANAGER
-* 多个 lock 文件导致检测混乱
+* 多个锁文件导致检测混乱
 
 **解决方案：**
 
@@ -319,13 +329,13 @@ rm package-lock.json  # If using pnpm/yarn/bun
 
 ## 性能问题
 
-### 响应时间缓慢
+### 响应时间慢
 
-**症状：** 代理需要 30 秒以上才能响应
+**症状：** 智能体需要 30 秒以上才能响应
 
 **原因：**
 
-* 大型观察文件
+* 观察文件过大
 * 活动钩子过多
 * 到 API 的网络延迟
 
@@ -357,7 +367,7 @@ find ~/.claude/homunculus/projects -name "observations.jsonl" -size +10M -exec s
 **原因：**
 
 * 无限观察循环
-* 对大型目录的文件监视
+* 对大目录进行文件监视
 * 钩子中的内存泄漏
 
 **解决方案：**
@@ -418,7 +428,7 @@ find ~/.claude/plugins -name "*.sh" -exec dos2unix {} \;
 
 ## 获取帮助
 
-如果您仍然遇到问题：
+如果问题仍然存在：
 
 1. **检查 GitHub Issues**：[github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)
 2. **启用调试日志记录**：
@@ -434,7 +444,7 @@ find ~/.claude/plugins -name "*.sh" -exec dos2unix {} \;
    echo $CLAUDE_PACKAGE_MANAGER
    ls -la ~/.claude/plugins/cache/
    ```
-4. **提交 Issue**：包括调试日志、错误信息和诊断信息
+4. **提交 Issue**：包含调试日志、错误信息和诊断信息
 
 ***
 

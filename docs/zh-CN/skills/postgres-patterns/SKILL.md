@@ -1,22 +1,22 @@
 ---
 name: postgres-patterns
-description: 用于查询优化、模式设计、索引和安全性的PostgreSQL数据库模式。基于Supabase最佳实践。
+description: PostgreSQL数据库模式，用于查询优化、模式设计、索引和安全。基于Supabase最佳实践。
 origin: ECC
 ---
 
 # PostgreSQL 模式
 
-PostgreSQL 最佳实践快速参考。如需详细指导，请使用 `database-reviewer` 智能体。
+PostgreSQL 最佳实践速查表。如需详细指导，请使用 `database-reviewer` 智能体。
 
 ## 何时激活
 
 * 编写 SQL 查询或迁移时
 * 设计数据库模式时
 * 排查慢查询时
-* 实施行级安全性时
+* 实现行级安全时
 * 设置连接池时
 
-## 快速参考
+## 速查表
 
 ### 索引速查表
 
@@ -29,7 +29,7 @@ PostgreSQL 最佳实践快速参考。如需详细指导，请使用 `database-r
 | `WHERE tsv @@ query` | GIN | `CREATE INDEX idx ON t USING gin (col)` |
 | 时间序列范围查询 | BRIN | `CREATE INDEX idx ON t USING brin (col)` |
 
-### 数据类型快速参考
+### 数据类型速查表
 
 | 使用场景 | 正确类型 | 避免使用 |
 |----------|-------------|-------|
@@ -39,7 +39,7 @@ PostgreSQL 最佳实践快速参考。如需详细指导，请使用 `database-r
 | 货币 | `numeric(10,2)` | `float` |
 | 标志位 | `boolean` | `varchar`，`int` |
 
-### 常见模式
+### 常用模式
 
 **复合索引顺序：**
 
@@ -97,7 +97,7 @@ WHERE id = (
 ) RETURNING *;
 ```
 
-### 反模式检测\*\*
+### 反模式检测
 
 ```sql
 -- Find unindexed foreign keys
@@ -151,4 +151,4 @@ SELECT pg_reload_conf();
 
 ***
 
-*基于 Supabase 代理技能（致谢：Supabase 团队）（MIT 许可证）*
+*基于 Supabase 智能体技能（致谢：Supabase 团队）（MIT 许可证）*

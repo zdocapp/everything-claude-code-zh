@@ -6,17 +6,17 @@ origin: ECC
 
 # Django 验证循环
 
-在发起 PR 之前、进行重大更改之后以及部署之前运行，以确保 Django 应用程序的质量和安全性。
+在提交 PR 前、进行重大更改后以及部署前运行，以确保 Django 应用程序的质量和安全性。
 
 ## 何时激活
 
-* 在为一个 Django 项目开启拉取请求之前
-* 在重大模型变更、迁移更新或依赖升级之后
+* 在 Django 项目开启拉取请求之前
+* 在重大模型更改、迁移更新或依赖项升级之后
 * 用于暂存或生产环境的预部署验证
-* 运行完整的环境 → 代码检查 → 测试 → 安全 → 部署就绪流水线时
-* 验证迁移安全性和测试覆盖率时
+* 运行完整的环境 → 代码检查 → 测试 → 安全 → 部署就绪性流水线
+* 验证迁移安全性和测试覆盖率
 
-## 阶段 1: 环境检查
+## 阶段 1：环境检查
 
 ```bash
 # Verify Python version
@@ -32,7 +32,7 @@ python -c "import os; import environ; print('DJANGO_SECRET_KEY set' if os.enviro
 
 如果环境配置错误，请停止并修复。
 
-## 阶段 2: 代码质量与格式化
+## 阶段 2：代码质量与格式化
 
 ```bash
 # Type checking
@@ -58,9 +58,9 @@ python manage.py check --deploy
 * 公共函数缺少类型提示
 * 违反 PEP 8 格式规范
 * 导入未排序
-* 生产配置中遗留调试设置
+* 生产配置中遗留了调试设置
 
-## 阶段 3: 数据库迁移
+## 阶段 3：迁移
 
 ```bash
 # Check for unapplied migrations
@@ -81,11 +81,11 @@ python manage.py makemigrations --merge  # Only if conflicts exist
 
 报告：
 
-* 待应用的迁移数量
+* 待处理迁移的数量
 * 任何迁移冲突
 * 模型更改未生成迁移
 
-## 阶段 4: 测试与覆盖率
+## 阶段 4：测试 + 覆盖率
 
 ```bash
 # Run all tests with pytest
@@ -118,7 +118,7 @@ open htmlcov/index.html
 | 服务 | 90%+ |
 | 总体 | 80%+ |
 
-## 阶段 5: 安全扫描
+## 阶段 5：安全扫描
 
 ```bash
 # Dependency vulnerabilities
@@ -140,12 +140,12 @@ python -c "from django.core.exceptions import ImproperlyConfigured; from django.
 
 报告：
 
-* 发现易受攻击的依赖项
+* 发现存在漏洞的依赖项
 * 安全配置问题
 * 检测到硬编码的密钥
-* DEBUG 模式状态（生产环境中应为 False）
+* DEBUG 模式状态（在生产环境中应为 False）
 
-## 阶段 6: Django 管理命令
+## 阶段 6：Django 管理命令
 
 ```bash
 # Check for model issues
@@ -164,7 +164,7 @@ python manage.py check --database default
 python -c "from django.core.cache import cache; cache.set('test', 'value', 10); print(cache.get('test'))"
 ```
 
-## 阶段 7: 性能检查
+## 阶段 7：性能检查
 
 ```bash
 # Django Debug Toolbar output (check for N+1 queries)
@@ -185,11 +185,11 @@ EOF
 
 报告：
 
-* 每页查询次数（典型页面应 < 50）
+* 每个页面的查询数量（典型页面应 < 50）
 * 缺少数据库索引
 * 检测到重复查询
 
-## 阶段 8: 静态资源
+## 阶段 8：静态资源
 
 ```bash
 # Check for npm dependencies (if using npm)
@@ -204,7 +204,7 @@ ls -la staticfiles/
 python manage.py findstatic css/style.css
 ```
 
-## 阶段 9: 配置审查
+## 阶段 9：配置审查
 
 ```python
 # Run in Python shell to verify settings
@@ -228,7 +228,7 @@ for check, result in checks.items():
 EOF
 ```
 
-## 阶段 10: 日志配置
+## 阶段 10：日志配置
 
 ```bash
 # Test logging output
@@ -243,7 +243,7 @@ EOF
 tail -f /var/log/django/django.log
 ```
 
-## 阶段 11: API 文档（如果使用 DRF）
+## 阶段 11：API 文档（如果使用 DRF）
 
 ```bash
 # Generate schema
@@ -257,7 +257,7 @@ python -c "import json; json.load(open('schema.json'))"
 # Visit http://localhost:8000/swagger/ in browser
 ```
 
-## 阶段 12: 差异审查
+## 阶段 12：差异审查
 
 ```bash
 # Show diff statistics
@@ -278,13 +278,13 @@ git diff | grep "import pdb"  # Debugger
 
 检查清单：
 
-* 无调试语句（print, pdb, breakpoint()）
-* 关键代码中无 TODO/FIXME 注释
-* 无硬编码的密钥或凭证
+* 没有调试语句（print, pdb, breakpoint()）
+* 关键代码中没有 TODO/FIXME 注释
+* 没有硬编码的密钥或凭据
 * 模型更改包含数据库迁移
 * 配置更改已记录
 * 外部调用存在错误处理
-* 需要时已进行事务管理
+* 需要时使用了事务管理
 
 ## 输出模板
 
@@ -292,55 +292,55 @@ git diff | grep "import pdb"  # Debugger
 DJANGO 验证报告
 ==========================
 
-阶段 1：环境检查
+阶段 1: 环境检查
   ✓ Python 3.11.5
   ✓ 虚拟环境已激活
   ✓ 所有环境变量已设置
 
-阶段 2：代码质量
+阶段 2: 代码质量
   ✓ mypy: 无类型错误
-  ✗ ruff: 发现 3 个问题（已自动修复）
+  ✗ ruff: 发现 3 个问题 (已自动修复)
   ✓ black: 无格式问题
   ✓ isort: 导入已正确排序
   ✓ manage.py check: 无问题
 
-阶段 3：数据库迁移
+阶段 3: 数据库迁移
   ✓ 无未应用的迁移
   ✓ 无迁移冲突
-  ✓ 所有模型均有对应的迁移文件
+  ✓ 所有模型均有迁移文件
 
-阶段 4：测试与覆盖率
-  测试：247 通过，0 失败，5 跳过
-  覆盖率：
-    总计：87%
+阶段 4: 测试 + 覆盖率
+  测试: 247 通过, 0 失败, 5 跳过
+  覆盖率:
+    总体: 87%
     users: 92%
     products: 89%
     orders: 85%
     payments: 91%
 
-阶段 5：安全扫描
-  ✗ pip-audit: 发现 2 个漏洞（需要修复）
+阶段 5: 安全扫描
+  ✗ pip-audit: 发现 2 个漏洞 (需要修复)
   ✓ safety check: 无问题
   ✓ bandit: 无安全问题
-  ✓ 未检测到密钥泄露
+  ✓ 未检测到密钥
   ✓ DEBUG = False
 
-阶段 6：Django 命令
+阶段 6: Django 命令
   ✓ collectstatic 完成
   ✓ 数据库完整性正常
-  ✓ 缓存后端可访问
+  ✓ 缓存后端可达
 
-阶段 7：性能
+阶段 7: 性能
   ✓ 未检测到 N+1 查询
   ✓ 数据库索引已配置
   ✓ 查询数量可接受
 
-阶段 8：静态资源
+阶段 8: 静态资源
   ✓ npm audit: 无漏洞
   ✓ 资源构建成功
   ✓ 静态文件已收集
 
-阶段 9：配置
+阶段 9: 配置
   ✓ DEBUG = False
   ✓ SECRET_KEY 已配置
   ✓ ALLOWED_HOSTS 已设置
@@ -348,24 +348,24 @@ DJANGO 验证报告
   ✓ HSTS 已启用
   ✓ 数据库已配置
 
-阶段 10：日志
-  ✓ 日志配置完成
-  ✓ 日志文件可写入
+阶段 10: 日志
+  ✓ 日志已配置
+  ✓ 日志文件可写
 
-阶段 11：API 文档
+阶段 11: API 文档
   ✓ 架构已生成
   ✓ Swagger UI 可访问
 
-阶段 12：差异审查
-  文件变更：12
-  行数变化：+450, -120
+阶段 12: 差异审查
+  文件变更: 12
+  +450, -120 行
   ✓ 无调试语句
   ✓ 无硬编码密钥
   ✓ 包含迁移文件
 
-建议：WARNING: 部署前修复 pip-audit 发现的漏洞
+建议: 警告: 部署前请修复 pip-audit 发现的漏洞
 
-后续步骤：
+后续步骤:
 1. 更新存在漏洞的依赖项
 2. 重新运行安全扫描
 3. 部署到预发布环境进行最终测试
@@ -376,17 +376,17 @@ DJANGO 验证报告
 * \[ ] 所有测试通过
 * \[ ] 覆盖率 ≥ 80%
 * \[ ] 无安全漏洞
-* \[ ] 无未应用的迁移
+* \[ ] 没有未应用的迁移
 * \[ ] 生产设置中 DEBUG = False
-* \[ ] SECRET\_KEY 已正确配置
+* \[ ] SECRET\_KEY 配置正确
 * \[ ] ALLOWED\_HOSTS 设置正确
 * \[ ] 数据库备份已启用
-* \[ ] 静态文件已收集并提供服务
-* \[ ] 日志配置正常且有效
+* \[ ] 静态文件已收集并可访问
+* \[ ] 日志配置完成且正常工作
 * \[ ] 错误监控（Sentry 等）已配置
-* \[ ] CDN 已配置（如果适用）
+* \[ ] CDN 已配置（如适用）
 * \[ ] Redis/缓存后端已配置
-* \[ ] Celery 工作进程正在运行（如果适用）
+* \[ ] Celery 工作进程正在运行（如适用）
 * \[ ] HTTPS/SSL 已配置
 * \[ ] 环境变量已记录
 
@@ -472,4 +472,4 @@ jobs:
 | 收集静态文件 | `python manage.py collectstatic --noinput` |
 | 差异统计 | `git diff --stat` |
 
-请记住：自动化验证可以发现常见问题，但不能替代在预发布环境中的手动代码审查和测试。
+请记住：自动化验证可以发现常见问题，但不能替代在暂存环境中进行的手动代码审查和测试。

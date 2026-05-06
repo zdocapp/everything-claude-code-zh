@@ -1,6 +1,6 @@
 ---
 name: docker-patterns
-description: 用于本地开发的Docker和Docker Compose模式，包括容器安全、网络、卷策略和多服务编排。
+description: 适用于本地开发的Docker和Docker Compose模式，包括容器安全、网络、卷策略和多服务编排。
 origin: ECC
 ---
 
@@ -78,7 +78,7 @@ volumes:
   redisdata:
 ```
 
-### 开发与生产 Dockerfile
+### 开发版与生产版 Dockerfile
 
 ```dockerfile
 # Stage: dependencies
@@ -153,7 +153,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 ### 服务发现
 
-同一 Compose 网络中的服务可通过服务名解析：
+同一 Compose 网络中的服务可通过服务名称解析：
 
 ```
 # 从 "app" 容器：
@@ -345,21 +345,21 @@ docker network inspect <project>_default
 ## 反模式
 
 ```
-# 错误做法：在生产环境中使用 docker compose 而不进行编排
-# 生产环境多容器工作负载应使用 Kubernetes、ECS 或 Docker Swarm
+# BAD: 在生产环境中使用 docker compose 而不进行编排
+# 对于生产环境的多容器工作负载，请使用 Kubernetes、ECS 或 Docker Swarm
 
-# 错误做法：在容器内存储数据而不使用卷
-# 容器是临时性的——不使用卷时，重启会导致所有数据丢失
+# BAD: 将数据存储在容器中而不使用卷
+# 容器是临时的——不使用卷时，所有数据在重启后都会丢失
 
-# 错误做法：以 root 用户身份运行
+# BAD: 以 root 身份运行
 # 始终创建并使用非 root 用户
 
-# 错误做法：使用 :latest 标签
-# 固定到特定版本以实现可复现的构建
+# BAD: 使用 :latest 标签
+# 固定到特定版本以实现可重现的构建
 
-# 错误做法：将所有服务放入一个巨型容器
-# 关注点分离：每个容器运行一个进程
+# BAD: 一个包含所有服务的巨型容器
+# 关注点分离：每个容器一个进程
 
-# 错误做法：将密钥放入 docker-compose.yml
-# 使用 .env 文件（在 git 中忽略）或 Docker secrets
+# BAD: 将密钥放在 docker-compose.yml 中
+# 使用 .env 文件（已 gitignore）或 Docker secrets
 ```

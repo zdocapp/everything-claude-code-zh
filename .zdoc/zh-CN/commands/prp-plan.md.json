@@ -1,0 +1,286 @@
+{
+  "sourceFile": "commands/prp-plan.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Create comprehensive feature implementation plan with codebase analysis and pattern extraction\nargument-hint: <feature description | path/to/prd.md>\n---",
+      "zh-Hans": "---\ndescription: 创建全面的功能实施计划，包括代码库分析和模式提取\nargument-hint: <feature description | path/to/prd.md>\n---"
+    },
+    {
+      "en-US": "> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.",
+      "zh-Hans": "> 改编自 Wirasm 的 PRPs-agentic-eng。PRP 工作流系列的一部分。"
+    },
+    {
+      "en-US": "# PRP Plan",
+      "zh-Hans": "# PRP 计划"
+    },
+    {
+      "en-US": "Create a detailed, self-contained implementation plan that captures all codebase patterns, conventions, and context needed to implement a feature in a single pass.",
+      "zh-Hans": "创建一个详细、自包含的实现计划，该计划应捕获所有代码库模式、约定和上下文，以便一次性实现某个功能。"
+    },
+    {
+      "en-US": "**Core Philosophy**: A great plan contains everything needed to implement without asking further questions. Every pattern, every convention, every gotcha — captured once, referenced throughout.",
+      "zh-Hans": "**核心理念**：一个优秀的计划应包含实现所需的一切，无需再提出更多问题。每一个模式、每一个约定、每一个陷阱——现在捕获，全程引用。"
+    },
+    {
+      "en-US": "**Golden Rule**: If you would need to search the codebase during implementation, capture that knowledge NOW in the plan.",
+      "zh-Hans": "**黄金法则**：如果你在实现过程中需要搜索代码库，那么现在就将这些知识捕获到计划中。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 0 — DETECT",
+      "zh-Hans": "## 阶段 0 — 检测"
+    },
+    {
+      "en-US": "Determine input type from `$ARGUMENTS`:",
+      "zh-Hans": "根据 `$ARGUMENTS` 确定输入类型："
+    },
+    {
+      "en-US": "| Input Pattern | Detection | Action |\n|---|---|---|\n| Path ending in `.prd.md` | File path to PRD | Parse PRD, find next pending phase |\n| Path to `.md` with \"Implementation Phases\" | PRD-like document | Parse phases, find next pending |\n| Path to any other file | Reference file | Read file for context, treat as free-form |\n| Free-form text | Feature description | Proceed directly to Phase 1 |\n| Empty / blank | No input | Ask user what feature to plan |",
+      "zh-Hans": "| 输入模式 | 检测 | 操作 |\n|---|---|---|\n| 以 `.prd.md` 结尾的路径 | PRD 文件路径 | 解析 PRD，找到下一个待处理阶段 |\n| 指向包含\"实施阶段\"的 `.md` 的路径 | 类 PRD 文档 | 解析阶段，找到下一个待处理阶段 |\n| 指向任何其他文件的路径 | 参考文件 | 读取文件以获取上下文，视为自由格式 |\n| 自由格式文本 | 功能描述 | 直接进入阶段 1 |\n| 空/空白 | 无输入 | 询问用户要计划什么功能 |"
+    },
+    {
+      "en-US": "### PRD Parsing (when input is a PRD)",
+      "zh-Hans": "### PRD 解析（当输入是 PRD 时）"
+    },
+    {
+      "en-US": "1. Read the PRD file with `cat \"$PRD_PATH\"`\n2. Parse the **Implementation Phases** section\n3. Find phases by status:\n   - Look for `pending` phases\n   - Check dependency chains (a phase may depend on prior phases being `complete`)\n   - Select the **next eligible pending phase**\n4. Extract from the selected phase:\n   - Phase name and description\n   - Acceptance criteria\n   - Dependencies on prior phases\n   - Any scope notes or constraints\n5. Use the phase description as the feature to plan",
+      "zh-Hans": "1. 使用 `cat \"$PRD_PATH\"` 读取 PRD 文件\n2. 解析 **实施阶段** 部分\n3. 按状态查找阶段：\n   * 查找 `pending` 阶段\n   * 检查依赖链（一个阶段可能依赖于先前阶段处于 `complete` 状态）\n   * 选择 **下一个符合条件的待处理阶段**\n4. 从选定的阶段中提取：\n   * 阶段名称和描述\n   * 验收标准\n   * 对先前阶段的依赖\n   * 任何范围说明或约束\n5. 使用阶段描述作为要计划的功能"
+    },
+    {
+      "en-US": "If no pending phases remain, report that all phases are complete.",
+      "zh-Hans": "如果没有剩余的待处理阶段，则报告所有阶段已完成。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 1 — PARSE",
+      "zh-Hans": "## 阶段 1 — 解析"
+    },
+    {
+      "en-US": "Extract and clarify the feature requirements.",
+      "zh-Hans": "提取并澄清功能需求。"
+    },
+    {
+      "en-US": "### Feature Understanding",
+      "zh-Hans": "### 功能理解"
+    },
+    {
+      "en-US": "From the input (PRD phase or free-form description), identify:",
+      "zh-Hans": "从输入（PRD 阶段或自由格式描述）中识别："
+    },
+    {
+      "en-US": "- **What** is being built (concrete deliverable)\n- **Why** it matters (user value)\n- **Who** uses it (target user/system)\n- **Where** it fits (which part of the codebase)",
+      "zh-Hans": "* **构建什么**（具体交付物）\n* **为什么重要**（用户价值）\n* **谁使用它**（目标用户/系统）\n* **它适合哪里**（代码库的哪个部分）"
+    },
+    {
+      "en-US": "### User Story",
+      "zh-Hans": "### 用户故事"
+    },
+    {
+      "en-US": "Format as:",
+      "zh-Hans": "格式如下："
+    },
+    {
+      "en-US": "```\nAs a [type of user],\nI want [capability],\nSo that [benefit].\n```",
+      "zh-Hans": "```\n作为一名 [用户类型]，\n我希望 [具备能力]，\n以便 [获得收益]。\n```"
+    },
+    {
+      "en-US": "### Complexity Assessment",
+      "zh-Hans": "### 复杂度评估"
+    },
+    {
+      "en-US": "| Level | Indicators | Typical Scope |\n|---|---|---|\n| **Small** | Single file, isolated change, no new dependencies | 1-3 files, <100 lines |\n| **Medium** | Multiple files, follows existing patterns, minor new concepts | 3-10 files, 100-500 lines |\n| **Large** | Cross-cutting concerns, new patterns, external integrations | 10+ files, 500+ lines |\n| **XL** | Architectural changes, new subsystems, migration needed | 20+ files, consider splitting |",
+      "zh-Hans": "| 级别 | 指标 | 典型范围 |\n|---|---|---|\n| **小型** | 单个文件，独立更改，无新依赖 | 1-3 个文件，<100 行 |\n| **中型** | 多个文件，遵循现有模式，引入次要新概念 | 3-10 个文件，100-500 行 |\n| **大型** | 跨领域关注点，新模式，外部集成 | 10+ 个文件，500+ 行 |\n| **超大** | 架构变更，新子系统，需要迁移 | 20+ 个文件，考虑拆分 |"
+    },
+    {
+      "en-US": "### Ambiguity Gate",
+      "zh-Hans": "### 模糊性关卡"
+    },
+    {
+      "en-US": "If any of these are unclear, **STOP and ask the user** before proceeding:",
+      "zh-Hans": "如果以下任何一项不明确，**请停止并询问用户**后再继续："
+    },
+    {
+      "en-US": "- The core deliverable is vague\n- Success criteria are undefined\n- There are multiple valid interpretations\n- Technical approach has major unknowns",
+      "zh-Hans": "* 核心交付物模糊\n* 成功标准未定义\n* 存在多种有效解释\n* 技术方法存在重大未知因素"
+    },
+    {
+      "en-US": "Do NOT guess. Ask. A plan built on assumptions fails during implementation.",
+      "zh-Hans": "不要猜测。要询问。基于假设制定的计划会在实施过程中失败。"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 2 — EXPLORE",
+      "zh-Hans": "## 阶段 2 — 探索"
+    },
+    {
+      "en-US": "Gather deep codebase intelligence. Search the codebase directly for each category below.",
+      "zh-Hans": "收集深入的代码库情报。直接搜索代码库以获取以下每个类别。"
+    },
+    {
+      "en-US": "### Codebase Search (8 Categories)",
+      "zh-Hans": "### 代码库搜索（8 个类别）"
+    },
+    {
+      "en-US": "For each category, search using grep, find, and file reading:",
+      "zh-Hans": "对于每个类别，使用 grep、find 和文件读取进行搜索："
+    },
+    {
+      "en-US": "1. **Similar Implementations** — Find existing features that resemble the planned one. Look for analogous patterns, endpoints, components, or modules.\n\n2. **Naming Conventions** — Identify how files, functions, variables, classes, and exports are named in the relevant area of the codebase.\n\n3. **Error Handling** — Find how errors are caught, propagated, logged, and returned to users in similar code paths.\n\n4. **Logging Patterns** — Identify what gets logged, at what level, and in what format.\n\n5. **Type Definitions** — Find relevant types, interfaces, schemas, and how they're organized.\n\n6. **Test Patterns** — Find how similar features are tested. Note test file locations, naming, setup/teardown patterns, and assertion styles.\n\n7. **Configuration** — Find relevant config files, environment variables, and feature flags.\n\n8. **Dependencies** — Identify packages, imports, and internal modules used by similar features.",
+      "zh-Hans": "1. **类似实现** — 查找与计划功能相似的现有功能。寻找类似的模式、端点、组件或模块。\n2. **命名约定** — 识别代码库相关区域中文件、函数、变量、类和导出的命名方式。\n3. **错误处理** — 查找在类似代码路径中如何捕获、传播、记录错误以及如何返回给用户。\n4. **日志记录模式** — 识别记录什么内容、在什么级别记录以及以什么格式记录。\n5. **类型定义** — 查找相关类型、接口、模式以及它们的组织方式。\n6. **测试模式** — 查找类似功能的测试方式。注意测试文件位置、命名、设置/拆卸模式和断言风格。\n7. **配置** — 查找相关配置文件、环境变量和功能标志。\n8. **依赖项** — 识别类似功能使用的包、导入和内部模块。"
+    },
+    {
+      "en-US": "### Codebase Analysis (5 Traces)",
+      "zh-Hans": "### 代码库分析（5 个追踪）"
+    },
+    {
+      "en-US": "Read relevant files to trace:",
+      "zh-Hans": "读取相关文件以追踪："
+    },
+    {
+      "en-US": "1. **Entry Points** — How does a request/action enter the system and reach the area you're modifying?\n2. **Data Flow** — How does data move through the relevant code paths?\n3. **State Changes** — What state is modified and where?\n4. **Contracts** — What interfaces, APIs, or protocols must be honored?\n5. **Patterns** — What architectural patterns are used (repository, service, controller, etc.)?",
+      "zh-Hans": "1. **入口点** — 请求/操作如何进入系统并到达你正在修改的区域？\n2. **数据流** — 数据如何在相关代码路径中移动？\n3. **状态变更** — 什么状态被修改，在哪里修改？\n4. **契约** — 必须遵守哪些接口、API 或协议？\n5. **模式** — 使用了哪些架构模式（仓库、服务、控制器等）？"
+    },
+    {
+      "en-US": "### Unified Discovery Table",
+      "zh-Hans": "### 统一发现表"
+    },
+    {
+      "en-US": "Compile findings into a single reference:",
+      "zh-Hans": "将发现结果编译成单一参考："
+    },
+    {
+      "en-US": "| Category | File:Lines | Pattern | Key Snippet |\n|---|---|---|---|\n| Naming | `src/services/userService.ts:1-5` | camelCase services, PascalCase types | `export class UserService` |\n| Error | `src/middleware/errorHandler.ts:10-25` | Custom AppError class | `throw new AppError(...)` |\n| ... | ... | ... | ... |",
+      "zh-Hans": "| 类别 | 文件:行号 | 模式 | 关键代码片段 |\n|---|---|---|---|\n| 命名 | `src/services/userService.ts:1-5` | 驼峰式服务，帕斯卡式类型 | `export class UserService` |\n| 错误 | `src/middleware/errorHandler.ts:10-25` | 自定义 AppError 类 | `throw new AppError(...)` |\n| ... | ... | ... | ... |"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 3 — RESEARCH",
+      "zh-Hans": "## 阶段 3 — 研究"
+    },
+    {
+      "en-US": "If the feature involves external libraries, APIs, or unfamiliar technology:",
+      "zh-Hans": "如果功能涉及外部库、API 或不熟悉的技术："
+    },
+    {
+      "en-US": "1. Search the web for official documentation\n2. Find usage examples and best practices\n3. Identify version-specific gotchas",
+      "zh-Hans": "1. 搜索网络以获取官方文档\n2. 查找使用示例和最佳实践\n3. 识别特定版本的陷阱"
+    },
+    {
+      "en-US": "Format each finding as:",
+      "zh-Hans": "将每个发现格式化为："
+    },
+    {
+      "en-US": "```\nKEY_INSIGHT: [what you learned]\nAPPLIES_TO: [which part of the plan this affects]\nGOTCHA: [any warnings or version-specific issues]\n```",
+      "zh-Hans": "```\nKEY_INSIGHT: [你学到的内容]\nAPPLIES_TO: [此内容影响计划的哪个部分]\nGOTCHA: [任何警告或版本特定问题]\n```"
+    },
+    {
+      "en-US": "If the feature uses only well-understood internal patterns, skip this phase and note: \"No external research needed — feature uses established internal patterns.\"",
+      "zh-Hans": "如果功能仅使用内部熟知的模式，则跳过此阶段并注明：\"无需外部研究 — 功能使用已建立的内部模式。\""
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 4 — DESIGN",
+      "zh-Hans": "## 阶段 4 — 设计"
+    },
+    {
+      "en-US": "### UX Transformation (if applicable)",
+      "zh-Hans": "### UX 转换（如适用）"
+    },
+    {
+      "en-US": "Document the before/after user experience:",
+      "zh-Hans": "记录用户体验的前后对比："
+    },
+    {
+      "en-US": "**Before:**",
+      "zh-Hans": "**之前：**"
+    },
+    {
+      "en-US": "```\n┌─────────────────────────────┐\n│  [Current user experience]  │\n│  Show the current flow,     │\n│  what the user sees/does    │\n└─────────────────────────────┘\n```",
+      "zh-Hans": "```\n┌─────────────────────────────┐\n│  [当前用户体验]             │\n│  展示当前流程，             │\n│  用户看到/操作的内容        │\n└─────────────────────────────┘\n```"
+    },
+    {
+      "en-US": "**After:**",
+      "zh-Hans": "**之后：**"
+    },
+    {
+      "en-US": "```\n┌─────────────────────────────┐\n│  [New user experience]      │\n│  Show the improved flow,    │\n│  what changes for the user  │\n└─────────────────────────────┘\n```",
+      "zh-Hans": "```\n┌─────────────────────────────┐\n│  [新用户体验]                │\n│  展示优化后的流程，          │\n│  用户将看到哪些变化          │\n└─────────────────────────────┘\n```"
+    },
+    {
+      "en-US": "### Interaction Changes",
+      "zh-Hans": "### 交互变更"
+    },
+    {
+      "en-US": "| Touchpoint | Before | After | Notes |\n|---|---|---|---|\n| ... | ... | ... | ... |",
+      "zh-Hans": "| 接触点 | 之前 | 之后 | 备注 |\n|---|---|---|---|\n| ... | ... | ... | ... |"
+    },
+    {
+      "en-US": "If the feature is purely backend/internal with no UX change, note: \"Internal change — no user-facing UX transformation.\"",
+      "zh-Hans": "如果功能是纯后端/内部且没有 UX 变更，则注明：\"内部变更 — 无面向用户的 UX 转换。\""
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 5 — ARCHITECT",
+      "zh-Hans": "## 阶段 5 — 架构"
+    },
+    {
+      "en-US": "### Strategic Design",
+      "zh-Hans": "### 战略设计"
+    },
+    {
+      "en-US": "Define the implementation approach:",
+      "zh-Hans": "定义实施方法："
+    },
+    {
+      "en-US": "- **Approach**: High-level strategy (e.g., \"Add new service layer following existing repository pattern\")\n- **Alternatives Considered**: What other approaches were evaluated and why they were rejected\n- **Scope**: Concrete boundaries of what WILL be built\n- **NOT Building**: Explicit list of what is OUT OF SCOPE (prevents scope creep during implementation)",
+      "zh-Hans": "* **方法**：高层策略（例如，\"遵循现有仓库模式添加新的服务层\"）\n* **考虑的替代方案**：评估了哪些其他方法以及为何拒绝它们\n* **范围**：将要构建的具体边界\n* **不构建**：明确列出超出范围的内容（防止实施过程中范围蔓延）"
+    },
+    {
+      "en-US": "---",
+      "zh-Hans": "***"
+    },
+    {
+      "en-US": "## Phase 6 — GENERATE",
+      "zh-Hans": "## 阶段 6 — 生成"
+    },
+    {
+      "en-US": "Write the full plan document using the template below. Save to `.claude/PRPs/plans/{kebab-case-feature-name}.plan.md`.",
+      "zh-Hans": "使用下面的模板编写完整的计划文档。保存到 `.claude/PRPs/plans/{kebab-case-feature-name}.plan.md`。"
+    },
+    {
+      "en-US": "Create the directory if it doesn't exist:",
+      "zh-Hans": "如果目录不存在，则创建它："
+    },
+    {
+      "en-US": "```bash\nmkdir -p .claude/PRPs/plans\n```",
+      "zh-Hans": "```bash\nmkdir -p .claude/PRPs/plans\n```"
+    },
+    {
+      "en-US": "### Plan Template",
+      "zh-Hans": "### 计划模板"
+    },
+    {
+      "en-US": "````markdown\n# Plan: [Feature Name]\n\n## Summary\n[2-3 sentence overview]\n\n## User Story\nAs a [user], I want [capability], so that [benefit].\n\n## Problem → Solution\n[Current state] → [Desired state]\n\n## Metadata\n- **Complexity**: [Small | Medium | Large | XL]\n- **Source PRD**: [path or \"N/A\"]\n- **PRD Phase**: [phase name or \"N/A\"]\n- **Estimated Files**: [count]\n\n---\n\n## UX Design\n\n### Before\n[ASCII diagram or \"N/A — internal change\"]\n\n### After\n[ASCII diagram or \"N/A — internal change\"]\n\n### Interaction Changes\n| Touchpoint | Before | After | Notes |\n|---|---|---|---|\n\n---\n\n## Mandatory Reading\n\nFiles that MUST be read before implementing:\n\n| Priority | File | Lines | Why |\n|---|---|---|---|\n| P0 (critical) | `path/to/file` | 1-50 | Core pattern to follow |\n| P1 (important) | `path/to/file` | 10-30 | Related types |\n| P2 (reference) | `path/to/file` | all | Similar implementation |\n\n## External Documentation\n\n| Topic | Source | Key Takeaway |\n|---|---|---|\n| ... | ... | ... |\n\n---\n\n## Patterns to Mirror\n\nCode patterns discovered in the codebase. Follow these exactly.\n\n### NAMING_CONVENTION\n// SOURCE: [file:lines]\n[actual code snippet showing the naming pattern]\n\n### ERROR_HANDLING\n// SOURCE: [file:lines]\n[actual code snippet showing error handling]\n\n### LOGGING_PATTERN\n// SOURCE: [file:lines]\n[actual code snippet showing logging]\n\n### REPOSITORY_PATTERN\n// SOURCE: [file:lines]\n[actual code snippet showing data access]\n\n### SERVICE_PATTERN\n// SOURCE: [file:lines]\n[actual code snippet showing service layer]\n\n### TEST_STRUCTURE\n// SOURCE: [file:lines]\n[actual code snippet showing test setup]\n\n---\n\n## Files to Change\n\n| File | Action | Justification |\n|---|---|---|\n| `path/to/file.ts` | CREATE | New service for feature |\n| `path/to/existing.ts` | UPDATE | Add new method |\n\n## NOT Building\n\n- [Explicit item 1 that is out of scope]\n- [Explicit item 2 that is out of scope]\n\n---\n\n## Step-by-Step Tasks\n\n### Task 1: [Name]\n- **ACTION**: [What to do]\n- **IMPLEMENT**: [Specific code/logic to write]\n- **MIRROR**: [Pattern from Patterns to Mirror section to follow]\n- **IMPORTS**: [Required imports]\n- **GOTCHA**: [Known pitfall to avoid]\n- **VALIDATE**: [How to verify this task is correct]\n\n### Task 2: [Name]\n- **ACTION**: ...\n- **IMPLEMENT**: ...\n- **MIRROR**: ...\n- **IMPORTS**: ...\n- **GOTCHA**: ...\n- **VALIDATE**: ...\n\n[Continue for all tasks...]\n\n---\n\n## Testing Strategy\n\n### Unit Tests\n\n| Test | Input | Expected Output | Edge Case? |\n|---|---|---|---|\n| ... | ... | ... | ... |\n\n### Edge Cases Checklist\n- [ ] Empty input\n- [ ] Maximum size input\n- [ ] Invalid types\n- [ ] Concurrent access\n- [ ] Network failure (if applicable)\n- [ ] Permission denied\n\n---\n\n## Validation Commands\n\n### Static Analysis\n```bash\n# Run type checker\n[project-specific type check command]\n```\nEXPECT: Zero type errors\n\n### Unit Tests\n```bash\n# Run tests for affected area\n[project-specific test command]\n```\nEXPECT: All tests pass\n\n### Full Test Suite\n```bash\n# Run complete test suite\n[project-specific full test command]\n```\nEXPECT: No regressions\n\n### Database Validation (if applicable)\n```bash\n# Verify schema/migrations\n[project-specific db command]\n```\nEXPECT: Schema up to date\n\n### Browser Validation (if applicable)\n```bash\n# Start dev server and verify\n[project-specific dev server command]\n```\nEXPECT: Feature works as designed\n\n### Manual Validation\n- [ ] [Step-by-step manual verification checklist]\n\n---\n\n## Acceptance Criteria\n- [ ] All tasks completed\n- [ ] All validation commands pass\n- [ ] Tests written and passing\n- [ ] No type errors\n- [ ] No lint errors\n- [ ] Matches UX design (if applicable)\n\n## Completion Checklist\n- [ ] Code follows discovered patterns\n- [ ] Error handling matches codebase style\n- [ ] Logging follows codebase conventions\n- [ ] Tests follow test patterns\n- [ ] No hardcoded values\n- [ ] Documentation updated (if needed)\n- [ ] No unnecessary scope additions\n- [ ] Self-contained — no questions needed during implementation\n\n## Risks\n| Risk | Likelihood | Impact | Mitigation |\n|---|---|---|---|\n| ... | ... | ... | ... |\n\n## Notes\n[Any additional context, decisions, or observations]\n```\n\n---\n\n## Output\n\n### Save the Plan\n\nWrite the generated plan to:\n```\n.claude/PRPs/plans/{kebab-case-feature-name}.plan.md\n```\n\n### Update PRD (if input was a PRD)\n\nIf this plan was generated from a PRD phase:\n1. Update the phase status from `pending` to `in-progress`\n2. Add the plan file path as a reference in the phase\n\n### Report to User\n\n```\n## Plan Created\n\n- **File**: .claude/PRPs/plans/{kebab-case-feature-name}.plan.md\n- **Source PRD**: [path or \"N/A\"]\n- **Phase**: [phase name or \"standalone\"]\n- **Complexity**: [level]\n- **Scope**: [N files, M tasks]\n- **Key Patterns**: [top 3 discovered patterns]\n- **External Research**: [topics researched or \"none needed\"]\n- **Risks**: [top risk or \"none identified\"]\n- **Confidence Score**: [1-10] — likelihood of single-pass implementation\n\n> Next step: Run `/prp-implement .claude/PRPs/plans/{name}.plan.md` to execute this plan.\n```\n\n---\n\n## Verification\n\nBefore finalizing, verify the plan against these checklists:\n\n### Context Completeness\n- [ ] All relevant files discovered and documented\n- [ ] Naming conventions captured with examples\n- [ ] Error handling patterns documented\n- [ ] Test patterns identified\n- [ ] Dependencies listed\n\n### Implementation Readiness\n- [ ] Every task has ACTION, IMPLEMENT, MIRROR, and VALIDATE\n- [ ] No task requires additional codebase searching\n- [ ] Import paths are specified\n- [ ] GOTCHAs documented where applicable\n\n### Pattern Faithfulness\n- [ ] Code snippets are actual codebase examples (not invented)\n- [ ] SOURCE references point to real files and line numbers\n- [ ] Patterns cover naming, errors, logging, data access, and tests\n- [ ] New code will be indistinguishable from existing code\n\n### Validation Coverage\n- [ ] Static analysis commands specified\n- [ ] Test commands specified\n- [ ] Build verification included\n\n### UX Clarity\n- [ ] Before/after states documented (or marked N/A)\n- [ ] Interaction changes listed\n- [ ] Edge cases for UX identified\n\n### No Prior Knowledge Test\nA developer unfamiliar with this codebase should be able to implement the feature using ONLY this plan, without searching the codebase or asking questions. If not, add the missing context.\n\n---\n\n## Next Steps\n\n- Run `/prp-implement <plan-path>` to execute this plan\n- Run `/plan` for quick conversational planning without artifacts\n- Run `/prp-prd` to create a PRD first if scope is unclear\n````",
+      "zh-Hans": "````markdown\n# 计划：[功能名称]\n\n## 摘要\n[2-3 句概述]\n\n## 用户故事\n作为一名[用户]，我想要[能力]，以便[获益]。\n\n## 问题 → 解决方案\n[当前状态] → [期望状态]\n\n## 元数据\n- **复杂度**：[小 | 中 | 大 | 特大]\n- **来源 PRD**：[路径或\"N/A\"]\n- **PRD 阶段**：[阶段名称或\"N/A\"]\n- **预估文件数**：[数量]\n\n---\n\n## UX 设计\n\n### 之前\n[ASCII 图表或\"N/A — 内部变更\"]\n\n### 之后\n[ASCII 图表或\"N/A — 内部变更\"]\n\n### 交互变更\n| 接触点 | 之前 | 之后 | 备注 |\n|---|---|---|---|\n\n---\n\n## 必读内容\n\n实施前必须阅读的文件：\n\n| 优先级 | 文件 | 行号 | 原因 |\n|---|---|---|---|\n| P0 (关键) | `path/to/file` | 1-50 | 需遵循的核心模式 |\n| P1 (重要) | `path/to/file` | 10-30 | 相关类型 |\n| P2 (参考) | `path/to/file` | 全部 | 类似实现 |\n\n## 外部文档\n\n| 主题 | 来源 | 关键要点 |\n|---|---|---|---|\n| ... | ... | ... |\n\n---\n\n## 需遵循的模式\n\n在代码库中发现的代码模式。请严格遵循这些模式。\n\n### NAMING_CONVENTION\n// 来源：[文件:行号]\n[显示命名模式的实际代码片段]\n\n### ERROR_HANDLING\n// 来源：[文件:行号]\n[显示错误处理的实际代码片段]\n\n### LOGGING_PATTERN\n// 来源：[文件:行号]\n[显示日志记录的实际代码片段]\n\n### REPOSITORY_PATTERN\n// 来源：[文件:行号]\n[显示数据访问的实际代码片段]\n\n### SERVICE_PATTERN\n// 来源：[文件:行号]\n[显示服务层的实际代码片段]\n\n### TEST_STRUCTURE\n// 来源：[文件:行号]\n[显示测试设置的实际代码片段]\n\n---\n\n## 需修改的文件\n\n| 文件 | 操作 | 理由 |\n|---|---|---|---|\n| `path/to/file.ts` | 创建 | 为功能创建新服务 |\n| `path/to/existing.ts` | 更新 | 添加新方法 |\n\n## 不构建的内容\n\n- [明确排除在范围外的项目 1]\n- [明确排除在范围外的项目 2]\n\n---\n\n## 分步任务\n\n### 任务 1：[名称]\n- **操作**：[要做什么]\n- **实现**：[要编写的具体代码/逻辑]\n- **遵循模式**：[需遵循的\"需遵循的模式\"部分中的模式]\n- **导入**：[所需的导入]\n- **注意事项**：[需避免的已知陷阱]\n- **验证**：[如何验证此任务正确完成]\n\n### 任务 2：[名称]\n- **操作**：...\n- **实现**：...\n- **遵循模式**：...\n- **导入**：...\n- **注意事项**：...\n- **验证**：...\n\n[为所有任务继续...]\n\n---\n\n## 测试策略\n\n### 单元测试\n\n| 测试 | 输入 | 预期输出 | 边界情况？ |\n|---|---|---|---|\n| ... | ... | ... | ... |\n\n### 边界情况检查清单\n- [ ] 空输入\n- [ ] 最大尺寸输入\n- [ ] 无效类型\n- [ ] 并发访问\n- [ ] 网络故障（如适用）\n- [ ] 权限被拒绝\n\n---\n\n## 验证命令\n\n### 静态分析\n```bash\n# Run type checker\n[project-specific type check command]\n```\n预期：零类型错误\n\n### 单元测试\n```bash\n# Run tests for affected area\n[project-specific test command]\n```\n预期：所有测试通过\n\n### 完整测试套件\n```bash\n# Run complete test suite\n[project-specific full test command]\n```\n预期：无回归\n\n### 数据库验证（如适用）\n```bash\n# Verify schema/migrations\n[project-specific db command]\n```\n预期：模式已更新\n\n### 浏览器验证（如适用）\n```bash\n# Start dev server and verify\n[project-specific dev server command]\n```\n预期：功能按设计工作\n\n### 手动验证\n- [ ] [逐步手动验证检查清单]\n\n---\n\n## 验收标准\n- [ ] 所有任务完成\n- [ ] 所有验证命令通过\n- [ ] 测试已编写并通过\n- [ ] 无类型错误\n- [ ] 无代码检查错误\n- [ ] 符合 UX 设计（如适用）\n\n## 完成检查清单\n- [ ] 代码遵循已发现的模式\n- [ ] 错误处理符合代码库风格\n- [ ] 日志记录遵循代码库约定\n- [ ] 测试遵循测试模式\n- [ ] 无硬编码值\n- [ ] 文档已更新（如需要）\n- [ ] 无不必要的范围添加\n- [ ] 自包含 — 实施期间无需提问\n\n## 风险\n| 风险 | 可能性 | 影响 | 缓解措施 |\n|---|---|---|---|\n| ... | ... | ... | ... |\n\n## 备注\n[任何额外的上下文、决策或观察]\n```\n\n---\n\n## Output\n\n### Save the Plan\n\nWrite the generated plan to:\n```\n.claude/PRPs/plans/{kebab-case-feature-name}.plan.md\n```\n\n### Update PRD (if input was a PRD)\n\nIf this plan was generated from a PRD phase:\n1. Update the phase status from `pending` to `in-progress`\n2. Add the plan file path as a reference in the phase\n\n### Report to User\n\n```\n## 计划已创建\n\n- **文件**：.claude/PRPs/plans/{kebab-case-feature-name}.plan.md\n- **来源 PRD**：[路径或\"N/A\"]\n- **阶段**：[阶段名称或\"独立\"]\n- **复杂度**：[级别]\n- **范围**：[N 个文件，M 个任务]\n- **关键模式**：[前 3 个已发现的模式]\n- **外部研究**：[已研究的主题或\"无需\"]\n- **风险**：[主要风险或\"未识别\"]\n- **置信度评分**：[1-10] — 一次性实施成功的可能性\n\n> 下一步：运行 `/prp-implement .claude/PRPs/plans/{name}.plan.md` 来执行此计划。\n```\n\n---\n\n## 验证\n\n在最终确定之前，请根据以下检查清单验证计划：\n\n### 上下文完整性\n- [ ] 所有相关文件已发现并记录\n- [ ] 命名约定已捕获并附有示例\n- [ ] 错误处理模式已记录\n- [ ] 测试模式已识别\n- [ ] 依赖项已列出\n\n### 实施准备情况\n- [ ] 每个任务都有操作、实现、遵循模式和验证\n- [ ] 没有任务需要额外搜索代码库\n- [ ] 导入路径已指定\n- [ ] 注意事项已记录（如适用）\n\n### 模式忠实度\n- [ ] 代码片段是代码库的实际示例（非虚构）\n- [ ] 来源引用指向真实的文件和行号\n- [ ] 模式涵盖命名、错误、日志记录、数据访问和测试\n- [ ] 新代码将与现有代码无法区分\n\n### 验证覆盖范围\n- [ ] 静态分析命令已指定\n- [ ] 测试命令已指定\n- [ ] 构建验证已包含\n\n### UX 清晰度\n- [ ] 之前/之后状态已记录（或标记为 N/A）\n- [ ] 交互变更已列出\n- [ ] UX 边界情况已识别\n\n### 无需先验知识测试\n不熟悉此代码库的开发人员应能仅使用此计划实施功能，而无需搜索代码库或提问。如果不能，请添加缺失的上下文。\n\n---\n\n## 后续步骤\n\n- 运行 `/prp-implement <plan-path>` 来执行此计划\n- 运行 `/plan` 进行无需产出的快速对话式规划\n- 如果范围不明确，先运行 `/prp-prd` 创建 PRD\n````"
+    }
+  ]
+}

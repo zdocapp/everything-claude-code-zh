@@ -1,6 +1,6 @@
 ---
 name: android-clean-architecture
-description: 适用于Android和Kotlin多平台项目的Clean Architecture模式——模块结构、依赖规则、用例、仓库以及数据层模式。
+description: 适用于Android和Kotlin多平台项目的Clean Architecture模式——模块结构、依赖规则、用例、仓库和数据层模式。
 origin: ECC
 ---
 
@@ -10,11 +10,11 @@ origin: ECC
 
 ## 何时启用
 
-* 构建 Android 或 KMP 项目模块结构
-* 实现 UseCases、Repositories 或 DataSources
-* 设计各层（领域层、数据层、表示层）之间的数据流
-* 使用 Koin 或 Hilt 设置依赖注入
-* 在分层架构中使用 Room、SQLDelight 或 Ktor
+* 构建 Android 或 KMP 项目模块结构时
+* 实现 UseCases、Repositories 或 DataSources 时
+* 设计各层（领域层、数据层、表现层）之间的数据流时
+* 使用 Koin 或 Hilt 设置依赖注入时
+* 在分层架构中使用 Room、SQLDelight 或 Ktor 时
 
 ## 模块结构
 
@@ -22,13 +22,13 @@ origin: ECC
 
 ```
 project/
-├── app/                  # Android 入口点，DI 装配，Application 类
+├── app/                  # Android 入口点，依赖注入配置，Application 类
 ├── core/                 # 共享工具类，基类，错误类型
 ├── domain/               # 用例，领域模型，仓库接口（纯 Kotlin）
 ├── data/                 # 仓库实现，数据源，数据库，网络
 ├── presentation/         # 界面，ViewModel，UI 模型，导航
 ├── design-system/        # 可复用的 Compose 组件，主题，排版
-└── feature/              # 功能模块（可选，用于大型项目）
+└── feature/              # 功能模块（可选，适用于大型项目）
     ├── auth/
     ├── settings/
     └── profile/
@@ -41,16 +41,16 @@ app → presentation, domain, data, core
 presentation → domain, design-system, core
 data → domain, core
 domain → core (或无依赖)
-core → (无依赖)
+core → (无)
 ```
 
-**关键**：`domain` 绝不能依赖 `data`、`presentation` 或任何框架。它仅包含纯 Kotlin 代码。
+**关键**：`domain` 绝不能依赖 `data`、`presentation` 或任何框架。它只包含纯 Kotlin 代码。
 
 ## 领域层
 
 ### UseCase 模式
 
-每个 UseCase 代表一个业务操作。使用 `operator fun invoke` 以获得简洁的调用点：
+每个 UseCase 代表一个业务操作。使用 `operator fun invoke` 以获得清晰的调用点：
 
 ```kotlin
 class GetItemsByCategoryUseCase(
@@ -73,7 +73,7 @@ class ObserveUserProgressUseCase(
 
 ### 领域模型
 
-领域模型是普通的 Kotlin 数据类——没有框架注解：
+领域模型是纯 Kotlin 数据类——没有框架注解：
 
 ```kotlin
 data class Item(
@@ -274,7 +274,7 @@ class ItemListViewModel @Inject constructor(
 
 ### Result/Try 模式
 
-使用 `Result<T>` 或自定义密封类型进行错误传播：
+使用 `Result<T>` 或自定义的密封类型进行错误传播：
 
 ```kotlin
 sealed interface Try<out T> {
@@ -335,5 +335,5 @@ plugins { id("kmp-library") }
 
 ## 参考
 
-查看技能：`compose-multiplatform-patterns` 了解 UI 模式。
-查看技能：`kotlin-coroutines-flows` 了解异步模式。
+查看技能：`compose-multiplatform-patterns` 以了解 UI 模式。
+查看技能：`kotlin-coroutines-flows` 以了解异步模式。

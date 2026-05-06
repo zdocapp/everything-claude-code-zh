@@ -6,7 +6,7 @@ command: true
 
 # 项目命令
 
-列出项目注册条目以及每个项目的本能/观察计数，适用于 continuous-learning-v2。
+列出项目注册表条目以及每个项目的本能/观察计数，用于 continuous-learning-v2。
 
 ## 实现
 

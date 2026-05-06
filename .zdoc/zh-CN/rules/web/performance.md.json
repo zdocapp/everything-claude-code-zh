@@ -1,0 +1,74 @@
+{
+  "sourceFile": "rules/web/performance.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "> This file extends [common/performance.md](../common/performance.md) with web-specific performance content.",
+      "zh-Hans": "> 本文件在 [common/performance.md](../common/performance.md) 的基础上扩展了特定于 Web 的性能内容。"
+    },
+    {
+      "en-US": "# Web Performance Rules",
+      "zh-Hans": "# Web 性能规则"
+    },
+    {
+      "en-US": "## Core Web Vitals Targets",
+      "zh-Hans": "## 核心 Web 指标目标"
+    },
+    {
+      "en-US": "| Metric | Target |\n|--------|--------|\n| LCP | < 2.5s |\n| INP | < 200ms |\n| CLS | < 0.1 |\n| FCP | < 1.5s |\n| TBT | < 200ms |",
+      "zh-Hans": "| 指标 | 目标 |\n|--------|--------|\n| LCP | < 2.5s |\n| INP | < 200ms |\n| CLS | < 0.1 |\n| FCP | < 1.5s |\n| TBT | < 200ms |"
+    },
+    {
+      "en-US": "## Bundle Budget",
+      "zh-Hans": "## 包预算"
+    },
+    {
+      "en-US": "| Page Type | JS Budget (gzipped) | CSS Budget |\n|-----------|---------------------|------------|\n| Landing page | < 150kb | < 30kb |\n| App page | < 300kb | < 50kb |\n| Microsite | < 80kb | < 15kb |",
+      "zh-Hans": "| 页面类型 | JS 预算 (gzipped) | CSS 预算 |\n|-----------|---------------------|------------|\n| 着陆页 | < 150kb | < 30kb |\n| 应用页面 | < 300kb | < 50kb |\n| 微型网站 | < 80kb | < 15kb |"
+    },
+    {
+      "en-US": "## Loading Strategy",
+      "zh-Hans": "## 加载策略"
+    },
+    {
+      "en-US": "1. Inline critical above-the-fold CSS where justified\n2. Preload the hero image and primary font only\n3. Defer non-critical CSS or JS\n4. Dynamically import heavy libraries",
+      "zh-Hans": "1. 在合理的情况下，内联首屏关键 CSS\n2. 仅预加载首屏英雄图像和主要字体\n3. 延迟加载非关键 CSS 或 JS\n4. 动态导入重型库"
+    },
+    {
+      "en-US": "```js\nconst gsapModule = await import('gsap');\nconst { ScrollTrigger } = await import('gsap/ScrollTrigger');\n```",
+      "zh-Hans": "```js\nconst gsapModule = await import('gsap');\nconst { ScrollTrigger } = await import('gsap/ScrollTrigger');\n```"
+    },
+    {
+      "en-US": "## Image Optimization",
+      "zh-Hans": "## 图像优化"
+    },
+    {
+      "en-US": "- Explicit `width` and `height`\n- `loading=\"eager\"` plus `fetchpriority=\"high\"` for hero media only\n- `loading=\"lazy\"` for below-the-fold assets\n- Prefer AVIF or WebP with fallbacks\n- Never ship source images far beyond rendered size",
+      "zh-Hans": "* 显式指定 `width` 和 `height`\n* 仅对英雄媒体使用 `loading=\"eager\"` 加 `fetchpriority=\"high\"`\n* 对首屏以下资源使用 `loading=\"lazy\"`\n* 优先使用 AVIF 或 WebP 格式并提供回退方案\n* 切勿提供远超渲染尺寸的源图像"
+    },
+    {
+      "en-US": "## Font Loading",
+      "zh-Hans": "## 字体加载"
+    },
+    {
+      "en-US": "- Max two font families unless there is a clear exception\n- `font-display: swap`\n- Subset where possible\n- Preload only the truly critical weight/style",
+      "zh-Hans": "* 最多使用两种字体系列，除非有明确例外\n* `font-display: swap`\n* 尽可能使用子集字体\n* 仅预加载真正关键的字体粗细/样式"
+    },
+    {
+      "en-US": "## Animation Performance",
+      "zh-Hans": "## 动画性能"
+    },
+    {
+      "en-US": "- Animate compositor-friendly properties only\n- Use `will-change` narrowly and remove it when done\n- Prefer CSS for simple transitions\n- Use `requestAnimationFrame` or established animation libraries for JS motion\n- Avoid scroll handler churn; use IntersectionObserver or well-behaved libraries",
+      "zh-Hans": "* 仅对合成器友好的属性进行动画处理\n* 谨慎使用 `will-change`，并在完成后移除\n* 对于简单过渡，优先使用 CSS\n* 对于 JS 动画，使用 `requestAnimationFrame` 或成熟的动画库\n* 避免滚动处理程序频繁触发；使用 IntersectionObserver 或行为良好的库"
+    },
+    {
+      "en-US": "## Performance Checklist",
+      "zh-Hans": "## 性能检查清单"
+    },
+    {
+      "en-US": "- [ ] All images have explicit dimensions\n- [ ] No accidental render-blocking resources\n- [ ] No layout shifts from dynamic content\n- [ ] Motion stays on compositor-friendly properties\n- [ ] Third-party scripts load async/defer and only when needed",
+      "zh-Hans": "* \\[ ] 所有图像都有明确的尺寸\n* \\[ ] 没有意外的渲染阻塞资源\n* \\[ ] 动态内容不会导致布局偏移\n* \\[ ] 动画保持在合成器友好的属性上\n* \\[ ] 第三方脚本异步/延迟加载，且仅在需要时加载"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "sourceFile": "legacy-command-shims/commands/context-budget.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the context-budget skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 用于上下文预算技能的旧版斜杠入口填充程序。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Context Budget Optimizer (Legacy Shim)",
+      "zh-Hans": "# 上下文预算优化器（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still invoke `/context-budget`. The maintained workflow lives in `skills/context-budget/SKILL.md`.",
+      "zh-Hans": "仅当您仍调用 `/context-budget` 时使用此功能。维护的工作流位于 `skills/context-budget/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 标准接口"
+    },
+    {
+      "en-US": "- Prefer the `context-budget` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 优先直接使用 `context-budget` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "$ARGUMENTS",
+      "zh-Hans": "$ARGUMENTS"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
+    },
+    {
+      "en-US": "Apply the `context-budget` skill.",
+      "zh-Hans": "应用 `context-budget` 技能。"
+    },
+    {
+      "en-US": "- Pass through `--verbose` if the user supplied it.\n- Assume a 200K context window unless the user specified otherwise.\n- Return the skill's inventory, issue detection, and prioritized savings report without re-implementing the scan here.",
+      "zh-Hans": "* 如果用户提供了 `--verbose`，则透传该参数。\n* 除非用户另有指定，否则默认采用 200K 上下文窗口。\n* 返回该技能的清单、问题检测及优先级排序的节省报告，无需在此处重新实现扫描逻辑。"
+    }
+  ]
+}

@@ -6,14 +6,14 @@ paths:
 
 # Python 编码风格
 
-> 本文件在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Python 特定的内容。
+> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Python 相关内容。
 
 ## 标准
 
 * 遵循 **PEP 8** 规范
-* 在所有函数签名上使用 **类型注解**
+* 在所有函数签名中使用 **类型注解**
 
-## 不变性
+## 不可变性
 
 优先使用不可变数据结构：
 
@@ -40,4 +40,4 @@ class Point(NamedTuple):
 
 ## 参考
 
-查看技能：`python-patterns` 以获取全面的 Python 惯用法和模式。
+有关全面的 Python 惯用法和模式，请参阅技能：`python-patterns`。

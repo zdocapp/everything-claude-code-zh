@@ -1,6 +1,6 @@
 ---
 name: kotlin-ktor-patterns
-description: Ktor 服务器模式，包括路由 DSL、插件、身份验证、Koin DI、kotlinx.serialization、WebSockets 和 testApplication 测试。
+description: Ktor 服务器模式包括路由 DSL、插件、身份验证、Koin 依赖注入、kotlinx.serialization、WebSockets 和 testApplication 测试。
 origin: ECC
 ---
 
@@ -8,14 +8,14 @@ origin: ECC
 
 使用 Kotlin 协程构建健壮、可维护的 HTTP 服务器的综合 Ktor 模式。
 
-## 何时启用
+## 何时激活
 
 * 构建 Ktor HTTP 服务器
 * 配置 Ktor 插件（Auth、CORS、ContentNegotiation、StatusPages）
 * 使用 Ktor 实现 REST API
 * 使用 Koin 设置依赖注入
 * 使用 testApplication 编写 Ktor 集成测试
-* 在 Ktor 中使用 WebSocket
+* 在 Ktor 中使用 WebSockets
 
 ## 应用程序结构
 
@@ -130,7 +130,7 @@ fun Route.userRoutes() {
 }
 ```
 
-### 使用认证路由组织路由
+### 使用认证路由进行路由组织
 
 ```kotlin
 fun Route.userRoutes() {
@@ -221,9 +221,9 @@ object InstantSerializer : KSerializer<Instant> {
 }
 ```
 
-## 身份验证
+## 认证
 
-### JWT 身份验证
+### JWT 认证
 
 ```kotlin
 // plugins/Authentication.kt
@@ -468,7 +468,7 @@ fun CreateUserRequest.validate() {
 }
 ```
 
-## WebSocket
+## WebSockets
 
 ```kotlin
 fun Application.configureWebSockets() {
@@ -681,9 +681,9 @@ fun Application.configureDI() {
 | `call.respond(status, body)` | 发送带状态的响应 |
 | `call.parameters["id"]` | 读取路径参数 |
 | `call.request.queryParameters["q"]` | 读取查询参数 |
-| `install(Plugin) { }` | 安装并配置插件 |
-| `authenticate("name") { }` | 使用身份验证保护路由 |
+| `install(Plugin) { }` | 安装和配置插件 |
+| `authenticate("name") { }` | 使用认证保护路由 |
 | `by inject<T>()` | Koin 依赖注入 |
 | `testApplication { }` | 集成测试 |
 
-**记住**：Ktor 是围绕 Kotlin 协程和 DSL 设计的。保持路由精简，将逻辑推送到服务层，并使用 Koin 进行依赖注入。使用 `testApplication` 进行测试以获得完整的集成覆盖。
+**记住**：Ktor 围绕 Kotlin 协程和 DSL 设计。保持路由精简，将逻辑推送到服务层，并使用 Koin 进行依赖注入。使用 `testApplication` 进行测试以获得完整的集成覆盖。

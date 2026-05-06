@@ -1,0 +1,46 @@
+{
+  "sourceFile": "legacy-command-shims/commands/docs.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\ndescription: Legacy slash-entry shim for the documentation-lookup skill. Prefer the skill directly.\n---",
+      "zh-Hans": "---\ndescription: 文档查找技能的旧版斜杠入口填充程序。建议直接使用该技能。\n---"
+    },
+    {
+      "en-US": "# Docs Command (Legacy Shim)",
+      "zh-Hans": "# Docs 命令（旧版兼容层）"
+    },
+    {
+      "en-US": "Use this only if you still reach for `/docs`. The maintained workflow lives in `skills/documentation-lookup/SKILL.md`.",
+      "zh-Hans": "仅在你仍使用 `/docs` 时使用此命令。维护的工作流位于 `skills/documentation-lookup/SKILL.md`。"
+    },
+    {
+      "en-US": "## Canonical Surface",
+      "zh-Hans": "## 规范接口"
+    },
+    {
+      "en-US": "- Prefer the `documentation-lookup` skill directly.\n- Keep this file only as a compatibility entry point.",
+      "zh-Hans": "* 优先直接使用 `documentation-lookup` 技能。\n* 仅将此文件保留为兼容性入口点。"
+    },
+    {
+      "en-US": "## Arguments",
+      "zh-Hans": "## 参数"
+    },
+    {
+      "en-US": "`$ARGUMENTS`",
+      "zh-Hans": "`$ARGUMENTS`"
+    },
+    {
+      "en-US": "## Delegation",
+      "zh-Hans": "## 委托"
+    },
+    {
+      "en-US": "Apply the `documentation-lookup` skill.",
+      "zh-Hans": "应用 `documentation-lookup` 技能。"
+    },
+    {
+      "en-US": "- If the library or the question is missing, ask for the missing part.\n- Use live documentation through Context7 instead of training data.\n- Return only the current answer and the minimum code/example surface needed.",
+      "zh-Hans": "* 如果缺少库或问题，请询问缺失部分。\n* 通过 Context7 使用实时文档，而非训练数据。\n* 仅返回当前答案及所需的最小代码/示例接口。"
+    }
+  ]
+}

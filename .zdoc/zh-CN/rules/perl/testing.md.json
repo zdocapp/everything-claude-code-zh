@@ -1,0 +1,78 @@
+{
+  "sourceFile": "rules/perl/testing.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.pl\"\n  - \"**/*.pm\"\n  - \"**/*.t\"\n  - \"**/*.psgi\"\n  - \"**/*.cgi\"\n---"
+    },
+    {
+      "en-US": "# Perl Testing",
+      "zh-Hans": "# Perl 测试"
+    },
+    {
+      "en-US": "> This file extends [common/testing.md](../common/testing.md) with Perl-specific content.",
+      "zh-Hans": "> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Perl 相关的内容。"
+    },
+    {
+      "en-US": "## Framework",
+      "zh-Hans": "## 测试框架"
+    },
+    {
+      "en-US": "Use **Test2::V0** for new projects (not Test::More):",
+      "zh-Hans": "对于新项目，请使用 **Test2::V0**（而非 Test::More）："
+    },
+    {
+      "en-US": "```perl\nuse Test2::V0;\n\nis($result, 42, 'answer is correct');\n\ndone_testing;\n```",
+      "zh-Hans": "```perl\nuse Test2::V0;\n\nis($result, 42, 'answer is correct');\n\ndone_testing;\n```"
+    },
+    {
+      "en-US": "## Runner",
+      "zh-Hans": "## 测试运行器"
+    },
+    {
+      "en-US": "```bash\nprove -l t/              # adds lib/ to @INC\nprove -lr -j8 t/         # recursive, 8 parallel jobs\n```",
+      "zh-Hans": "```bash\nprove -l t/              # adds lib/ to @INC\nprove -lr -j8 t/         # recursive, 8 parallel jobs\n```"
+    },
+    {
+      "en-US": "Always use `-l` to ensure `lib/` is on `@INC`.",
+      "zh-Hans": "务必使用 `-l` 以确保 `lib/` 位于 `@INC` 上。"
+    },
+    {
+      "en-US": "## Coverage",
+      "zh-Hans": "## 测试覆盖率"
+    },
+    {
+      "en-US": "Use **Devel::Cover** — target 80%+:",
+      "zh-Hans": "使用 **Devel::Cover** —— 覆盖率目标为 80% 以上："
+    },
+    {
+      "en-US": "```bash\ncover -test\n```",
+      "zh-Hans": "```bash\ncover -test\n```"
+    },
+    {
+      "en-US": "## Mocking",
+      "zh-Hans": "## 模拟"
+    },
+    {
+      "en-US": "- **Test::MockModule** — mock methods on existing modules\n- **Test::MockObject** — create test doubles from scratch",
+      "zh-Hans": "* **Test::MockModule** —— 模拟现有模块的方法\n* **Test::MockObject** —— 从头创建测试替身"
+    },
+    {
+      "en-US": "## Pitfalls",
+      "zh-Hans": "## 常见陷阱"
+    },
+    {
+      "en-US": "- Always end test files with `done_testing`\n- Never forget the `-l` flag with `prove`",
+      "zh-Hans": "* 测试文件末尾务必加上 `done_testing`\n* 使用 `prove` 时，切勿忘记 `-l` 标志"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `perl-testing` for detailed Perl TDD patterns with Test2::V0, prove, and Devel::Cover.",
+      "zh-Hans": "有关使用 Test2::V0、prove 和 Devel::Cover 的详细 Perl TDD 模式，请参阅技能：`perl-testing`。"
+    }
+  ]
+}

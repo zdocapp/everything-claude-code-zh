@@ -1,13 +1,13 @@
 # RTStream 参考
 
-RTStream 操作的代码级详情。工作流程指南请参阅 [rtstream.md](rtstream.md)。
-有关使用指导和流程选择，请从 [../SKILL.md](../SKILL.md) 开始。
+RTStream 操作的代码级详细信息。工作流程指南请参阅 [rtstream.md](rtstream.md)。
+关于使用指导和流程选择，请从 [../SKILL.md](../SKILL.md) 开始。
 
 基于 [docs.videodb.io](https://docs.videodb.io/pages/ingest/live-streams/realtime-apis.md)。
 
 ***
 
-## Collection RTStream 方法
+## 集合 RTStream 方法
 
 `Collection` 上用于管理 RTStream 的方法：
 
@@ -58,7 +58,7 @@ for rts in rtstreams:
     print(f"{rts.id}: {rts.name} - {rts.status}")
 ```
 
-### 从捕获会话获取
+### 从捕获会话
 
 捕获会话激活后，检索 RTStream 对象：
 
@@ -70,7 +70,7 @@ displays = session.get_rtstream("screen")
 system_audios = session.get_rtstream("system_audio")
 ```
 
-或使用 `capture_session.active` WebSocket 事件中的 `rtstreams` 数据：
+或者使用 `capture_session.active` WebSocket 事件中的 `rtstreams` 数据：
 
 ```python
 for rts in rtstreams:
@@ -87,10 +87,10 @@ for rts in rtstreams:
 | `rtstream.stop()` | `None` | 停止摄取 |
 | `rtstream.generate_stream(start, end)` | `str` | 流式传输录制的片段（Unix 时间戳） |
 | `rtstream.export(name=None)` | `RTStreamExportResult` | 导出为永久视频 |
-| `rtstream.index_visuals(prompt, ...)` | `RTStreamSceneIndex` | 创建带 AI 分析的视觉索引 |
-| `rtstream.index_audio(prompt, ...)` | `RTStreamSceneIndex` | 创建带 LLM 摘要的音频索引 |
+| `rtstream.index_visuals(prompt, ...)` | `RTStreamSceneIndex` | 创建带有 AI 分析的视觉索引 |
+| `rtstream.index_audio(prompt, ...)` | `RTStreamSceneIndex` | 创建带有 LLM 摘要的音频索引 |
 | `rtstream.list_scene_indexes()` | `List[RTStreamSceneIndex]` | 列出流上的所有场景索引 |
-| `rtstream.get_scene_index(index_id)` | `RTStreamSceneIndex` | 获取特定场景索引 |
+| `rtstream.get_scene_index(index_id)` | `RTStreamSceneIndex` | 获取特定的场景索引 |
 | `rtstream.search(query, ...)` | `RTStreamSearchResult` | 搜索索引内容 |
 | `rtstream.start_transcript(ws_connection_id, engine)` | `dict` | 开始实时转录 |
 | `rtstream.get_transcript(page, page_size, start, end, since)` | `dict` | 获取转录页面 |
@@ -114,7 +114,7 @@ rtstream.stop()
 
 ## 生成流
 
-使用 Unix 时间戳（而非秒数偏移）从录制内容生成播放流：
+使用 Unix 时间戳（而非秒偏移量）从录制内容生成播放流：
 
 ```python
 import time
@@ -156,7 +156,7 @@ print(f"Duration: {export_result.duration}s")
 | `stream_url` | `str` | HLS 流 URL |
 | `player_url` | `str` | Web 播放器 URL |
 | `name` | `str` | 视频名称 |
-| `duration` | `float` | 时长（秒） |
+| `duration` | `float` | 持续时间（秒） |
 
 ***
 
@@ -168,12 +168,12 @@ AI 管道处理实时流并通过 WebSocket 发送结果。
 
 | 方法 | 返回 | 描述 |
 |--------|---------|-------------|
-| `rtstream.index_audio(prompt, batch_config, ...)` | `RTStreamSceneIndex` | 开始带 LLM 摘要的音频索引 |
-| `rtstream.index_visuals(prompt, batch_config, ...)` | `RTStreamSceneIndex` | 开始屏幕内容的视觉索引 |
+| `rtstream.index_audio(prompt, batch_config, ...)` | `RTStreamSceneIndex` | 启动带有 LLM 摘要的音频索引 |
+| `rtstream.index_visuals(prompt, batch_config, ...)` | `RTStreamSceneIndex` | 启动屏幕内容的视觉索引 |
 
 ### 音频索引
 
-以一定间隔生成音频内容的 LLM 摘要：
+以固定间隔生成音频内容的 LLM 摘要：
 
 ```python
 audio_index = rtstream.index_audio(
@@ -201,7 +201,7 @@ audio_index = rtstream.index_audio(
 {"type": "time", "value": 30}      # every 30 seconds
 ```
 
-结果通过 `audio_index` WebSocket 通道送达。
+结果通过 `audio_index` WebSocket 通道到达。
 
 ### 视觉索引
 
@@ -223,7 +223,7 @@ scene_index = rtstream.index_visuals(
 |-----------|------|-------------|
 | `prompt` | `str` | AI 模型的指令（支持结构化 JSON 输出） |
 | `batch_config` | `dict` | 控制帧采样（见下文） |
-| `model_name` | `str` | 模型层级：`"mini"`、`"basic"`、`"pro"`、`"ultra"` |
+| `model_name` | `str` | 模型层级：`"mini"`, `"basic"`, `"pro"`, `"ultra"` |
 | `name` | `str` | 索引名称（可选） |
 | `ws_connection_id` | `str` | 用于接收结果的 WebSocket 连接 ID |
 
@@ -231,7 +231,7 @@ scene_index = rtstream.index_visuals(
 
 | 键 | 类型 | 描述 |
 |-----|------|-------------|
-| `type` | `str` | 仅 `"time"` 支持视觉索引 |
+| `type` | `str` | 视觉仅支持 `"time"` |
 | `value` | `int` | 窗口大小（秒） |
 | `frame_count` | `int` | 每个窗口提取的帧数 |
 
@@ -239,7 +239,7 @@ scene_index = rtstream.index_visuals(
 
 **结构化 JSON 输出：**
 
-使用请求 JSON 格式的提示语以获得结构化响应：
+使用请求 JSON 格式的提示来获取结构化响应：
 
 ```python
 scene_index = rtstream.index_visuals(
@@ -258,15 +258,15 @@ Return only valid JSON.""",
 )
 ```
 
-结果通过 `scene_index` WebSocket 通道送达。
+结果通过 `scene_index` WebSocket 通道到达。
 
 ***
 
-## 批处理配置摘要
+## Batch Config 摘要
 
 | 索引类型 | `type` 选项 | `value` | 额外键 |
 |---------------|----------------|---------|------------|
-| **音频** | `"word"`、`"sentence"`、`"time"` | words/sentences/seconds | - |
+| **音频** | `"word"`, `"sentence"`, `"time"` | words/sentences/seconds | - |
 | **视觉** | 仅 `"time"` | seconds | `frame_count` |
 
 示例：
@@ -309,13 +309,13 @@ transcript = rtstream.get_transcript(
 rtstream.stop_transcript(engine=None)
 ```
 
-转录结果通过 `transcript` WebSocket 通道送达。
+转录结果通过 `transcript` WebSocket 通道到达。
 
 ***
 
 ## RTStreamSceneIndex
 
-当您调用 `index_audio()` 或 `index_visuals()` 时，该方法返回一个 `RTStreamSceneIndex` 对象。此对象表示正在运行的索引，并提供用于管理场景和警报的方法。
+当你调用 `index_audio()` 或 `index_visuals()` 时，该方法返回一个 `RTStreamSceneIndex` 对象。此对象代表正在运行的索引，并提供管理场景和警报的方法。
 
 ```python
 # index_visuals returns an RTStreamSceneIndex
@@ -339,15 +339,15 @@ audio_index = rtstream.index_audio(
 | `rtstream_id` | `str` | 父 RTStream 的 ID |
 | `extraction_type` | `str` | 提取类型（`time` 或 `transcript`） |
 | `extraction_config` | `dict` | 提取配置 |
-| `prompt` | `str` | 用于分析的提示语 |
+| `prompt` | `str` | 用于分析的提示 |
 | `name` | `str` | 索引名称 |
-| `status` | `str` | 状态（`connected`、`stopped`） |
+| `status` | `str` | 状态（`connected`, `stopped`） |
 
 ### RTStreamSceneIndex 方法
 
 | 方法 | 返回 | 描述 |
 |--------|---------|-------------|
-| `index.get_scenes(start, end, page, page_size)` | `dict` | 获取已索引的场景 |
+| `index.get_scenes(start, end, page, page_size)` | `dict` | 获取索引场景 |
 | `index.start()` | `None` | 启动/恢复索引 |
 | `index.stop()` | `None` | 停止索引 |
 | `index.create_alert(event_id, callback_url, ws_connection_id)` | `str` | 创建事件检测警报 |
@@ -357,7 +357,7 @@ audio_index = rtstream.index_audio(
 
 ### 获取场景
 
-从索引轮询已索引的场景：
+从索引轮询索引场景：
 
 ```python
 result = scene_index.get_scenes(
@@ -395,7 +395,7 @@ scene_index.start()
 
 ## 事件
 
-事件是可重用的检测规则。创建一次，即可通过警报附加到任何索引。
+事件是可重用的检测规则。创建一次，通过警报附加到任何索引。
 
 ### 连接事件方法
 
@@ -425,7 +425,7 @@ for event in events:
 
 ## 警报
 
-警报将事件连接到索引以实现实时通知。当 AI 检测到与事件描述匹配的内容时，会发送警报。
+警报将事件连接到索引以进行实时通知。当 AI 检测到与事件描述匹配的内容时，会发送警报。
 
 ### 创建警报
 
@@ -444,7 +444,7 @@ alert_id = scene_index.create_alert(
 )
 ```
 
-**注意：** `callback_url` 是必需的。如果仅使用 WebSocket 交付，请传递空字符串 `""`。
+**注意：** `callback_url` 是必需的。如果仅使用 WebSocket 传递，请传递空字符串 `""`。
 
 ### 管理警报
 
@@ -457,12 +457,12 @@ scene_index.disable_alert(alert_id)
 scene_index.enable_alert(alert_id)
 ```
 
-### 警报交付
+### 警报传递
 
 | 方法 | 延迟 | 使用场景 |
 |--------|---------|----------|
-| WebSocket | 实时 | 仪表板、实时 UI |
-| Webhook | < 1 秒 | 服务器到服务器、自动化 |
+| WebSocket | 实时 | 仪表板，实时 UI |
+| Webhook | < 1 秒 | 服务器到服务器，自动化 |
 
 ### WebSocket 警报事件
 
@@ -498,7 +498,7 @@ scene_index.enable_alert(alert_id)
 
 ## WebSocket 集成
 
-所有实时 AI 结果均通过 WebSocket 交付。将 `ws_connection_id` 传递给：
+所有实时 AI 结果都通过 WebSocket 传递。将 `ws_connection_id` 传递给：
 
 * `rtstream.start_transcript()`
 * `rtstream.index_audio()`
@@ -514,7 +514,7 @@ scene_index.enable_alert(alert_id)
 | `audio_index` | `index_audio()` | 音频分析结果 |
 | `alert` | `create_alert()` | 警报通知 |
 
-有关 WebSocket 事件结构和 ws\_listener 用法，请参阅 [capture-reference.md](capture-reference.md)。
+关于 WebSocket 事件结构和 ws\_listener 用法，请参阅 [capture-reference.md](capture-reference.md)。
 
 ***
 

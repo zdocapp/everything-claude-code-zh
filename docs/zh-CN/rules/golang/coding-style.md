@@ -7,11 +7,11 @@ paths:
 
 # Go 编码风格
 
-> 本文件在 [common/coding-style.md](../common/coding-style.md) 的基础上，扩展了 Go 语言的特定内容。
+> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上，补充了 Go 语言特有的内容。
 
 ## 格式化
 
-* **gofmt** 和 **goimports** 是强制性的 —— 无需进行风格辩论
+* **gofmt** 和 **goimports** 是强制要求 —— 无需进行风格辩论
 
 ## 设计原则
 
@@ -20,7 +20,7 @@ paths:
 
 ## 错误处理
 
-始终用上下文包装错误：
+始终使用上下文包装错误：
 
 ```go
 if err != nil {
@@ -30,4 +30,4 @@ if err != nil {
 
 ## 参考
 
-查看技能：`golang-patterns` 以获取全面的 Go 语言惯用法和模式。
+有关全面的 Go 语言惯用法和模式，请参阅技能：`golang-patterns`。

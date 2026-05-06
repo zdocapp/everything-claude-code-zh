@@ -8,7 +8,7 @@ paths:
 
 # TypeScript/JavaScript 安全
 
-> 本文档扩展了 [common/security.md](../common/security.md)，包含了 TypeScript/JavaScript 特定的内容。
+> 本文档在 [common/security.md](../common/security.md) 的基础上扩展了 TypeScript/JavaScript 相关的内容。
 
 ## 密钥管理
 

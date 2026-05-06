@@ -1,17 +1,17 @@
 ---
 name: kotlin-coroutines-flows
-description: Kotlin协程与Flow在Android和KMP中的模式——结构化并发、Flow操作符、StateFlow、错误处理和测试。
+description: Kotlin协程与Flow模式在Android和KMP中的应用——结构化并发、Flow操作符、StateFlow、错误处理与测试。
 origin: ECC
 ---
 
 # Kotlin 协程与 Flow
 
-适用于 Android 和 Kotlin 多平台项目的结构化并发模式、基于 Flow 的响应式流以及协程测试。
+适用于 Android 和 Kotlin 多平台项目中结构化并发、基于 Flow 的响应式流以及协程测试的模式。
 
 ## 何时启用
 
 * 使用 Kotlin 协程编写异步代码
-* 使用 Flow、StateFlow 或 SharedFlow 实现响应式数据
+* 使用 Flow、StateFlow 或 SharedFlow 处理响应式数据
 * 处理并发操作（并行加载、防抖、重试）
 * 测试协程和 Flow
 * 管理协程作用域与取消
@@ -28,7 +28,7 @@ Application
               └── async { } (并发任务)
 ```
 
-始终使用结构化并发——绝不使用 `GlobalScope`：
+始终使用结构化并发 —— 切勿使用 `GlobalScope`：
 
 ```kotlin
 // BAD
@@ -60,7 +60,7 @@ suspend fun loadDashboard(): Dashboard = coroutineScope {
 
 ### SupervisorScope
 
-当子协程失败不应取消同级协程时，使用 `supervisorScope`：
+当子协程失败不应取消兄弟协程时，使用 `supervisorScope`：
 
 ```kotlin
 suspend fun syncAll() = supervisorScope {
@@ -98,7 +98,7 @@ class DashboardViewModel(
 }
 ```
 
-`WhileSubscribed(5_000)` 会在最后一个订阅者离开后，保持上游活动 5 秒——可在配置更改时存活而无需重启。
+`WhileSubscribed(5_000)` 会在最后一个订阅者离开后，保持上游活跃 5 秒 —— 可在配置变更时存活而无需重启。
 
 ### 组合多个 Flow
 
@@ -179,7 +179,7 @@ withContext(Dispatchers.IO) { database.query() }
 withContext(Dispatchers.Main) { updateUi() }
 ```
 
-在 KMP 中，使用 `Dispatchers.Default` 和 `Dispatchers.Main`（在所有平台上可用）。`Dispatchers.IO` 仅适用于 JVM/Android——在其他平台上使用 `Dispatchers.Default` 或通过依赖注入提供。
+在 KMP 中，使用 `Dispatchers.Default` 和 `Dispatchers.Main`（在所有平台上可用）。`Dispatchers.IO` 仅限 JVM/Android —— 在其他平台上使用 `Dispatchers.Default` 或通过依赖注入提供。
 
 ## 取消
 
@@ -271,14 +271,14 @@ class FakeItemRepository : ItemRepository {
 
 ## 应避免的反模式
 
-* 使用 `GlobalScope`——会导致协程泄漏，且无法结构化取消
-* 在没有作用域的情况下于 `init {}` 中收集 Flow——应使用 `viewModelScope.launch`
-* 将 `MutableStateFlow` 与可变集合一起使用——始终使用不可变副本：`_state.update { it.copy(list = it.list + newItem) }`
-* 捕获 `CancellationException`——应让其传播以实现正确的取消
-* 使用 `flowOn(Dispatchers.Main)` 进行收集——收集调度器是调用方的调度器
-* 在 `@Composable` 中创建 `Flow` 而不使用 `remember`——每次重组都会重新创建 Flow
+* 使用 `GlobalScope` —— 会导致协程泄漏，且无法结构化取消
+* 在没有作用域的情况下在 `init {}` 中收集 Flow —— 应使用 `viewModelScope.launch`
+* 将 `MutableStateFlow` 与可变集合一起使用 —— 始终使用不可变副本：`_state.update { it.copy(list = it.list + newItem) }`
+* 捕获 `CancellationException` —— 应让其传播以实现正确的取消
+* 使用 `flowOn(Dispatchers.Main)` 进行收集 —— 收集调度器是调用者的调度器
+* 在没有 `remember` 的情况下，在 `@Composable` 中创建 `Flow` —— 每次重组都会重新创建 flow
 
 ## 参考
 
-关于 Flow 在 UI 层的消费，请参阅技能：`compose-multiplatform-patterns`。
-关于协程在各层中的适用位置，请参阅技能：`android-clean-architecture`。
+关于 Flow 的 UI 层消费，请参阅技能：`compose-multiplatform-patterns`。
+关于协程在各层中的定位，请参阅技能：`android-clean-architecture`。

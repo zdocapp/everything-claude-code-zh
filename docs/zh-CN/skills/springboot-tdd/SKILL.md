@@ -4,24 +4,24 @@ description: 使用JUnit 5、Mockito、MockMvc、Testcontainers和JaCoCo进行Sp
 origin: ECC
 ---
 
-# Spring Boot TDD 工作流程
+# Spring Boot TDD 工作流
 
-适用于 Spring Boot 服务、覆盖率 80%+（单元 + 集成）的 TDD 指南。
+适用于 Spring Boot 服务的 TDD 指南，要求 80% 以上的覆盖率（单元 + 集成）。
 
 ## 何时使用
 
-* 新功能或端点
+* 新功能或新端点
 * 错误修复或重构
 * 添加数据访问逻辑或安全规则
 
-## 工作流程
+## 工作流
 
 1. 先写测试（它们应该失败）
-2. 实现最小代码以通过测试
-3. 在测试通过后进行重构
-4. 强制覆盖率（JaCoCo）
+2. 实现最少的代码以通过测试
+3. 在测试通过的情况下进行重构
+4. 强制执行覆盖率（JaCoCo）
 
-## 单元测试 (JUnit 5 + Mockito)
+## 单元测试（JUnit 5 + Mockito）
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -44,11 +44,11 @@ class MarketServiceTest {
 
 模式：
 
-* Arrange-Act-Assert
+* 准备-执行-断言
 * 避免部分模拟；优先使用显式桩
 * 使用 `@ParameterizedTest` 处理变体
 
-## Web 层测试 (MockMvc)
+## Web 层测试（MockMvc）
 
 ```java
 @WebMvcTest(MarketController.class)
@@ -67,7 +67,7 @@ class MarketControllerTest {
 }
 ```
 
-## 集成测试 (SpringBootTest)
+## 集成测试（SpringBootTest）
 
 ```java
 @SpringBootTest
@@ -88,7 +88,7 @@ class MarketIntegrationTest {
 }
 ```
 
-## 持久层测试 (DataJpaTest)
+## 持久层测试（DataJpaTest）
 
 ```java
 @DataJpaTest
@@ -111,12 +111,12 @@ class MarketRepositoryTest {
 
 ## Testcontainers
 
-* 对 Postgres/Redis 使用可复用的容器以镜像生产环境
+* 使用可复用的容器（如 Postgres/Redis）来镜像生产环境
 * 通过 `@DynamicPropertySource` 连接，将 JDBC URL 注入 Spring 上下文
 
-## 覆盖率 (JaCoCo)
+## 覆盖率（JaCoCo）
 
-Maven 片段：
+Maven 代码片段：
 
 ```xml
 <plugin>
@@ -138,7 +138,7 @@ Maven 片段：
 
 ## 断言
 
-* 为可读性，优先使用 AssertJ (`assertThat`)
+* 为提升可读性，优先使用 AssertJ (`assertThat`)
 * 对于 JSON 响应，使用 `jsonPath`
 * 对于异常：`assertThatThrownBy(...)`
 
@@ -157,4 +157,4 @@ class MarketBuilder {
 * Maven: `mvn -T 4 test` 或 `mvn verify`
 * Gradle: `./gradlew test jacocoTestReport`
 
-**记住**：保持测试快速、隔离且确定。测试行为，而非实现细节。
+**记住**：保持测试快速、隔离且具有确定性。测试行为，而非实现细节。

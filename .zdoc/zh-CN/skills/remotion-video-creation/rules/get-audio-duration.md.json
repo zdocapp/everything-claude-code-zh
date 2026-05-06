@@ -1,0 +1,54 @@
+{
+  "sourceFile": "skills/remotion-video-creation/rules/get-audio-duration.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\nname: get-audio-duration\ndescription: Getting the duration of an audio file in seconds with Mediabunny\nmetadata:\n  tags: duration, audio, length, time, seconds, mp3, wav\n---",
+      "zh-Hans": "---\nname: get-audio-duration\ndescription: 使用Mediabunny获取音频文件的时长（以秒为单位）\nmetadata:\n  tags: duration, audio, length, time, seconds, mp3, wav\n---"
+    },
+    {
+      "en-US": "# Getting audio duration with Mediabunny",
+      "zh-Hans": "# 使用 Mediabunny 获取音频时长"
+    },
+    {
+      "en-US": "Mediabunny can extract the duration of an audio file. It works in browser, Node.js, and Bun environments.",
+      "zh-Hans": "Mediabunny 可以提取音频文件的时长。它适用于浏览器、Node.js 和 Bun 环境。"
+    },
+    {
+      "en-US": "## Getting audio duration",
+      "zh-Hans": "## 获取音频时长"
+    },
+    {
+      "en-US": "```tsx\nimport { Input, ALL_FORMATS, UrlSource } from \"mediabunny\";\n\nexport const getAudioDuration = async (src: string) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src, {\n      getRetryDelay: () => null,\n    }),\n  });\n\n  const durationInSeconds = await input.computeDuration();\n  return durationInSeconds;\n};\n```",
+      "zh-Hans": "```tsx\nimport { Input, ALL_FORMATS, UrlSource } from \"mediabunny\";\n\nexport const getAudioDuration = async (src: string) => {\n  const input = new Input({\n    formats: ALL_FORMATS,\n    source: new UrlSource(src, {\n      getRetryDelay: () => null,\n    }),\n  });\n\n  const durationInSeconds = await input.computeDuration();\n  return durationInSeconds;\n};\n```"
+    },
+    {
+      "en-US": "## Usage",
+      "zh-Hans": "## 使用方法"
+    },
+    {
+      "en-US": "```tsx\nconst duration = await getAudioDuration(\"https://remotion.media/audio.mp3\");\nconsole.log(duration); // e.g. 180.5 (seconds)\n```",
+      "zh-Hans": "```tsx\nconst duration = await getAudioDuration(\"https://remotion.media/audio.mp3\");\nconsole.log(duration); // e.g. 180.5 (seconds)\n```"
+    },
+    {
+      "en-US": "## Using with local files",
+      "zh-Hans": "## 使用本地文件"
+    },
+    {
+      "en-US": "For local files, use `FileSource` instead of `UrlSource`:",
+      "zh-Hans": "对于本地文件，请使用 `FileSource` 而非 `UrlSource`："
+    },
+    {
+      "en-US": "```tsx\nimport { Input, ALL_FORMATS, FileSource } from \"mediabunny\";\n\nconst input = new Input({\n  formats: ALL_FORMATS,\n  source: new FileSource(file), // File object from input or drag-drop\n});\n\nconst durationInSeconds = await input.computeDuration();\n```",
+      "zh-Hans": "```tsx\nimport { Input, ALL_FORMATS, FileSource } from \"mediabunny\";\n\nconst input = new Input({\n  formats: ALL_FORMATS,\n  source: new FileSource(file), // File object from input or drag-drop\n});\n\nconst durationInSeconds = await input.computeDuration();\n```"
+    },
+    {
+      "en-US": "## Using with staticFile in Remotion",
+      "zh-Hans": "## 在 Remotion 中使用 staticFile"
+    },
+    {
+      "en-US": "```tsx\nimport { staticFile } from \"remotion\";\n\nconst duration = await getAudioDuration(staticFile(\"audio.mp3\"));\n```",
+      "zh-Hans": "```tsx\nimport { staticFile } from \"remotion\";\n\nconst duration = await getAudioDuration(staticFile(\"audio.mp3\"));\n```"
+    }
+  ]
+}

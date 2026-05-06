@@ -1,28 +1,29 @@
-# 为 Everything Claude Code 做贡献
+# 为 Everything Claude Code 贡献
 
-感谢您想要贡献！这个仓库是 Claude Code 用户的社区资源。
+感谢您想要做出贡献！本仓库是 Claude Code 用户的社区资源。
 
 ## 目录
 
-* [我们寻找的内容](#我们寻找什么)
+* [我们寻找的内容](#我们寻找的内容)
 * [快速开始](#快速开始)
 * [贡献技能](#贡献技能)
+* [技能适配政策](#技能适配政策)
 * [贡献智能体](#贡献智能体)
 * [贡献钩子](#贡献钩子)
 * [贡献命令](#贡献命令)
 * [MCP 和文档（例如 Context7）](#mcp-和文档例如-context7)
-* [跨工具链和翻译](#跨平台与翻译)
+* [跨平台和翻译](#跨平台和翻译)
 * [拉取请求流程](#拉取请求流程)
 
 ***
 
-## 我们寻找什么
+## 我们寻找的内容
 
 ### 智能体
 
-能够很好地处理特定任务的新智能体：
+擅长处理特定任务的新智能体：
 
-* 语言特定的审查员（Python、Go、Rust）
+* 特定语言审查员（Python、Go、Rust）
 * 框架专家（Django、Rails、Laravel、Spring）
 * DevOps 专家（Kubernetes、Terraform、CI/CD）
 * 领域专家（ML 流水线、数据工程、移动端）
@@ -81,6 +82,14 @@ git add . && git commit -m "feat: add my-skill" && git push -u origin feat/my-co
 
 技能是 Claude Code 根据上下文加载的知识模块。
 
+> **综合指南：** 关于创建有效技能的详细指导，请参阅[技能开发指南](../SKILL-DEVELOPMENT-GUIDE.md)。它涵盖：
+>
+> * 技能架构和类别
+> * 编写带示例的有效内容
+> * 最佳实践和常见模式
+> * 测试和验证
+> * 完整示例库
+
 ### 目录结构
 
 ```
@@ -91,10 +100,10 @@ skills/
 
 ### SKILL.md 模板
 
-````markdown
+```markdown
 ---
 name: your-skill-name
-description: Brief description shown in skill list
+description: Brief description shown in skill list and used for auto-activation
 origin: ECC
 ---
 
@@ -102,35 +111,82 @@ origin: ECC
 
 简要概述此技能涵盖的内容。
 
+## 何时激活
+
+描述Claude应使用此技能的场景。这对自动激活至关重要。
+
 ## 核心概念
 
 解释关键模式和指导原则。
 
 ## 代码示例
 
-```typescript
+\`\`\`typescript
 // 包含实用、经过测试的示例
 function example() {
-  // 注释良好的代码
+  // 注释详尽的代码
 }
-````
+\`\`\`
+
+## 反模式
+
+通过示例展示不应采取的做法。
+
+## 最佳实践
+
+- 可操作的指导原则
+- 应做与不应做的事项
+- 需避免的常见陷阱
+
+## 相关技能
+
+链接到互补技能（例如，`related-skill-1`，`related-skill-2`）。
+```
+
+### 技能类别
+
+| 类别 | 目的 | 示例 |
+|----------|---------|----------|
+| **语言标准** | 惯用法、约定、最佳实践 | `python-patterns`, `golang-patterns` |
+| **框架模式** | 框架特定指导 | `django-patterns`, `nextjs-patterns` |
+| **工作流** | 逐步流程 | `tdd-workflow`, `refactoring-workflow` |
+| **领域知识** | 专业领域 | `security-review`, `api-design` |
+| **工具集成** | 工具/库使用 | `docker-patterns`, `supabase-patterns` |
+| **模板** | 项目特定技能模板 | `docs/examples/project-guidelines-template.md` |
+
+### 技能适配政策
+
+如果您正在从其他仓库、插件、平台或个人提示包移植一个想法，请在打开 PR 前阅读[技能适配政策](../skill-adaptation-policy.md)。
+
+简短版本：
+
+* 复制底层想法，而非外部产品标识
+* 当 ECC 实质性更改或扩展范围时，重命名技能
+* 优先使用 ECC 原生规则、技能、脚本和 MCP，而非新的默认第三方依赖
+* 不要发布其主要价值是告诉用户安装未经审查的包的技能
 
 ### 技能清单
 
-* \[ ] 专注于一个领域/技术
-* \[ ] 包含实用的代码示例
-* \[ ] 少于 500 行
+* \[ ] 专注于一个领域/技术（不过于宽泛）
+* \[ ] 包含用于自动激活的“何时激活”部分
+* \[ ] 包含实用、可复制粘贴的代码示例
+* \[ ] 展示反模式（不应做什么）
+* \[ ] 少于 500 行（最多 800 行）
 * \[ ] 使用清晰的章节标题
-* \[ ] 已通过 Claude Code 测试
+* \[ ] 已使用 Claude Code 测试
+* \[ ] 链接到相关技能
+* \[ ] 无敏感数据（API 密钥、令牌、路径）
 
-### 技能示例
+### 示例技能
 
-| 技能 | 目的 |
-|-------|---------|
-| `coding-standards/` | TypeScript/JavaScript 模式 |
-| `frontend-patterns/` | React 和 Next.js 最佳实践 |
-| `backend-patterns/` | API 和数据库模式 |
-| `security-review/` | 安全检查清单 |
+| 技能 | 类别 | 目的 |
+|-------|----------|---------|
+| `coding-standards/` | 语言标准 | TypeScript/JavaScript 模式 |
+| `frontend-patterns/` | 框架模式 | React 和 Next.js 最佳实践 |
+| `backend-patterns/` | 框架模式 | API 和数据库模式 |
+| `security-review/` | 领域知识 | 安全检查清单 |
+| `tdd-workflow/` | 工作流 | 测试驱动开发流程 |
+| `docs/examples/project-guidelines-template.md` | 模板 | 项目特定技能模板 |
 
 ***
 
@@ -148,13 +204,13 @@ agents/your-agent-name.md
 
 ```markdown
 ---
-name: 你的代理名称
-description: 该代理的作用以及 Claude 应在何时调用它。请具体说明！
+name: your-agent-name
+description: What this agent does and when Claude should invoke it. Be specific!
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
 
-你是一名 [角色] 专家。
+你是一位[角色]专家。
 
 ## 你的角色
 
@@ -165,7 +221,7 @@ model: sonnet
 ## 工作流程
 
 ### 步骤 1：理解
-你如何着手处理任务。
+你如何着手任务。
 
 ### 步骤 2：执行
 你如何开展工作。
@@ -181,21 +237,20 @@ model: sonnet
 
 ### 示例：[场景]
 输入：[用户提供的内容]
-操作：[你做了什么]
+操作：[你的处理方式]
 输出：[你返回的内容]
-
 ```
 
 ### 智能体字段
 
 | 字段 | 描述 | 选项 |
 |-------|-------------|---------|
-| `name` | 小写，连字符连接 | `code-reviewer` |
-| `description` | 用于决定何时调用 | 请具体说明！ |
-| `tools` | 仅包含必需内容 | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task`，或当智能体使用 MCP 时的 MCP 工具名称（例如 `mcp__context7__resolve-library-id`, `mcp__context7__query-docs`） |
+| `name` | 小写，连字符分隔 | `code-reviewer` |
+| `description` | 用于决定何时调用 | 要具体！ |
+| `tools` | 仅包含所需内容 | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task`，或当智能体使用 MCP 时的 MCP 工具名称（例如 `mcp__context7__resolve-library-id`, `mcp__context7__query-docs`） |
 | `model` | 复杂度级别 | `haiku`（简单），`sonnet`（编码），`opus`（复杂） |
 
-### 智能体示例
+### 示例智能体
 
 | 智能体 | 目的 |
 |-------|---------|
@@ -218,7 +273,7 @@ hooks/hooks.json
 
 ### 钩子类型
 
-| 类型 | 触发条件 | 用例 |
+| 类型 | 触发器 | 用例 |
 |------|---------|----------|
 | `PreToolUse` | 工具运行前 | 验证、警告、阻止 |
 | `PostToolUse` | 工具运行后 | 格式化、检查、通知 |
@@ -291,7 +346,7 @@ tool == "Bash" && tool_input.command matches "git push"
 
 * \[ ] 匹配器具体（不过于宽泛）
 * \[ ] 包含清晰的错误/信息消息
-* \[ ] 使用正确的退出代码 (`exit 1` 阻止, `exit 0` 允许)
+* \[ ] 使用正确的退出代码（`exit 1` 阻止，`exit 0` 允许）
 * \[ ] 经过充分测试
 * \[ ] 有描述
 
@@ -311,7 +366,7 @@ commands/your-command.md
 
 ```markdown
 ---
-description: 在 /help 中显示的简要描述
+description: Brief description shown in /help
 ---
 
 # 命令名称
@@ -322,11 +377,9 @@ description: 在 /help 中显示的简要描述
 
 ## 用法
 
-```
-
+\`\`\`
 /your-command [args]
-```
-
+\`\`\`
 
 ## 工作流程
 
@@ -336,11 +389,10 @@ description: 在 /help 中显示的简要描述
 
 ## 输出
 
-用户将收到的内容。
-
+用户接收到的内容。
 ```
 
-### 命令示例
+### 示例命令
 
 | 命令 | 目的 |
 |---------|---------|
@@ -353,35 +405,35 @@ description: 在 /help 中显示的简要描述
 
 ## MCP 和文档（例如 Context7）
 
-技能和智能体可以使用 **MCP（模型上下文协议）** 工具来获取最新数据，而不仅仅是依赖训练数据。这对于文档尤其有用。
+技能和智能体可以使用 **MCP（模型上下文协议）** 工具来拉取最新数据，而不仅仅依赖训练数据。这对于文档尤其有用。
 
-* **Context7** 是一个暴露 `resolve-library-id` 和 `query-docs` 的 MCP 服务器。当用户询问库、框架或 API 时，请使用它，以便答案能反映最新的文档和代码示例。
-* 在贡献依赖于实时文档的**技能**时（例如设置、API 使用），请描述如何使用相关的 MCP 工具（例如，解析库 ID，然后查询文档），并指向 `documentation-lookup` 技能或 Context7 作为参考模式。
-* 在贡献能回答文档/API 问题的**智能体**时，请在智能体的工具中包含 Context7 MCP 工具名称（例如 `mcp__context7__resolve-library-id`, `mcp__context7__query-docs`），并记录解析 → 查询的工作流程。
-* **mcp-configs/mcp-servers.json** 包含一个 Context7 条目；用户在其工具链（例如 Claude Code, Cursor）中启用它，以使用文档查找技能（位于 `skills/documentation-lookup/`）和 `/docs` 命令。
+* **Context7** 是一个暴露 `resolve-library-id` 和 `query-docs` 的 MCP 服务器。当用户询问库、框架或 API 时使用它，以便答案反映当前文档和代码示例。
+* 当贡献依赖实时文档的**技能**时（例如设置、API 使用），描述如何使用相关的 MCP 工具（例如解析库 ID，然后查询文档），并指向 `documentation-lookup` 技能或 Context7 作为模式。
+* 当贡献回答文档/API 问题的**智能体**时，在智能体的工具中包含 Context7 MCP 工具名称（例如 `mcp__context7__resolve-library-id`, `mcp__context7__query-docs`），并记录解析 → 查询的工作流。
+* **mcp-configs/mcp-servers.json** 包含一个 Context7 条目；用户在其平台（例如 Claude Code, Cursor）中启用它以使用文档查找技能（位于 `skills/documentation-lookup/`）和 `/docs` 命令。
 
 ***
 
-## 跨平台与翻译
+## 跨平台和翻译
 
-### 技能子集 (Codex 和 Cursor)
+### 技能子集（Codex 和 Cursor）
 
-ECC 为其他平台提供了技能子集：
+ECC 为其他平台提供技能子集：
 
-* **Codex:** `.agents/skills/` — `agents/openai.yaml` 中列出的技能会被 Codex 加载。
-* **Cursor:** `.cursor/skills/` — 为 Cursor 打包了一个技能子集。
+* **Codex:** `.agents/skills/` — `agents/openai.yaml` 中列出的技能由 Codex 加载。
+* **Cursor:** `.cursor/skills/` — 为 Cursor 捆绑了一个技能子集。
 
-当您**添加一个新技能**，并且希望它在 Codex 或 Cursor 上可用时：
+当您**添加一个新技能**并希望其在 Codex 或 Cursor 上可用时：
 
-1. 像往常一样，在 `skills/your-skill-name/` 下添加该技能。
-2. 如果它应该在 **Codex** 上可用，请将其添加到 `.agents/skills/`（复制技能目录或添加引用），并在需要时确保它在 `agents/openai.yaml` 中被引用。
-3. 如果它应该在 **Cursor** 上可用，请根据 Cursor 的布局，将其添加到 `.cursor/skills/` 下。
+1. 照常将技能添加到 `skills/your-skill-name/` 下。
+2. 如果它应该在 **Codex** 上可用，将其添加到 `.agents/skills/`（复制技能目录或添加引用），并确保如果需要，它在 `agents/openai.yaml` 中被引用。
+3. 如果它应该在 **Cursor** 上可用，根据 Cursor 的布局将其添加到 `.cursor/skills/` 下。
 
-请参考这些目录中现有技能的结构。保持这些子集同步是手动操作；如果您更新了它们，请在您的 PR 中说明。
+检查这些目录中的现有技能以了解预期结构。保持这些子集同步是手动的；如果您更新了它们，请在 PR 中提及。
 
 ### 翻译
 
-翻译文件位于 `docs/` 下（例如 `docs/zh-CN`、`docs/zh-TW`、`docs/ja-JP`）。如果您更改了已被翻译的智能体、命令或技能，请考虑更新相应的翻译文件，或创建一个问题，以便维护者或翻译人员可以更新它们。
+翻译位于 `docs/` 下（例如 `docs/zh-CN`, `docs/zh-TW`, `docs/ja-JP`）。如果您更改了已翻译的智能体、命令或技能，请考虑更新相应的翻译文件或打开一个问题，以便维护者或翻译者可以更新它们。
 
 ***
 
@@ -390,18 +442,18 @@ ECC 为其他平台提供了技能子集：
 ### 1. PR 标题格式
 
 ```
-feat(skills): 新增 Rust 模式技能
-feat(agents): 新增 API 设计器代理
-feat(hooks): 新增自动格式化钩子
+feat(skills): 新增 rust-patterns 技能
+feat(agents): 新增 api-designer 代理
+feat(hooks): 新增 auto-format 钩子
 fix(skills): 更新 React 模式
-docs: 完善贡献指南
+docs: 改进贡献指南
 ```
 
 ### 2. PR 描述
 
 ```markdown
-## 摘要
-你正在添加什么以及为什么添加。
+## 概述
+您添加的内容及其原因。
 
 ## 类型
 - [ ] 技能
@@ -410,14 +462,13 @@ docs: 完善贡献指南
 - [ ] 命令
 
 ## 测试
-你是如何测试这个的。
+您是如何测试的。
 
 ## 检查清单
 - [ ] 遵循格式指南
-- [ ] 已使用 Claude Code 进行测试
+- [ ] 已使用 Claude Code 测试
 - [ ] 无敏感信息（API 密钥、路径）
 - [ ] 描述清晰
-
 ```
 
 ### 3. 审查流程
@@ -428,17 +479,17 @@ docs: 完善贡献指南
 
 ***
 
-## 指导原则
+## 指南
 
-### 应该做的
+### 应该做
 
-* 保持贡献内容专注和模块化
+* 保持贡献专注和模块化
 * 包含清晰的描述
 * 提交前进行测试
 * 遵循现有模式
 * 记录依赖项
 
-### 不应该做的
+### 不应该做
 
 * 包含敏感数据（API 密钥、令牌、路径）
 * 添加过于复杂或小众的配置
@@ -449,8 +500,8 @@ docs: 完善贡献指南
 
 ## 文件命名
 
-* 使用小写和连字符：`python-reviewer.md`
-* 描述性要强：`tdd-workflow.md` 而不是 `workflow.md`
+* 使用小写字母和连字符：`python-reviewer.md`
+* 描述性强：`tdd-workflow.md` 而非 `workflow.md`
 * 名称与文件名匹配
 
 ***
@@ -462,4 +513,4 @@ docs: 完善贡献指南
 
 ***
 
-感谢您的贡献！让我们共同构建一个出色的资源。
+感谢您的贡献！让我们一起构建一个伟大的资源。

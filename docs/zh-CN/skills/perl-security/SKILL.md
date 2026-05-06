@@ -1,31 +1,31 @@
 ---
 name: perl-security
-description: 全面的Perl安全指南，涵盖污染模式、输入验证、安全进程执行、DBI参数化查询、Web安全（XSS/SQLi/CSRF）以及perlcritic安全策略。
+description: 全面的Perl安全覆盖，包括污染模式、输入验证、安全进程执行、DBI参数化查询、Web安全（XSS/SQLi/CSRF）以及perlcritic安全策略。
 origin: ECC
 ---
 
 # Perl 安全模式
 
-涵盖输入验证、注入预防和安全编码实践的 Perl 应用程序全面安全指南。
+涵盖输入验证、注入防护和安全编码实践的 Perl 应用程序综合安全指南。
 
 ## 何时启用
 
-* 处理 Perl 应用程序中的用户输入时
-* 构建 Perl Web 应用程序时（CGI、Mojolicious、Dancer2、Catalyst）
-* 审查 Perl 代码中的安全漏洞时
+* 在 Perl 应用程序中处理用户输入时
+* 构建 Perl Web 应用程序（CGI、Mojolicious、Dancer2、Catalyst）时
+* 审查 Perl 代码以查找安全漏洞时
 * 使用用户提供的路径执行文件操作时
 * 从 Perl 执行系统命令时
 * 编写 DBI 数据库查询时
 
 ## 工作原理
 
-从污染感知的输入边界开始，然后向外扩展：验证并净化输入，保持文件系统和进程执行受限，并处处使用参数化的 DBI 查询。下面的示例展示了在交付涉及用户输入、shell 或网络的 Perl 代码之前，此技能期望您应用的安全默认做法。
+从污点感知的输入边界开始，然后向外扩展：验证并净化输入，保持文件系统和进程执行受限，并在任何地方使用参数化的 DBI 查询。下面的示例展示了在交付涉及用户输入、shell 或网络的 Perl 代码之前，本技能期望您应用的安全默认设置。
 
-## 污染模式
+## 污点模式
 
-Perl 的污染模式（`-T`）跟踪来自外部源的数据，并防止其在未经明确验证的情况下用于不安全操作。
+Perl 的污点模式（`-T`）跟踪来自外部源的数据，并防止其在未经明确验证的情况下用于不安全操作。
 
-### 启用污染模式
+### 启用污点模式
 
 ```perl
 #!/usr/bin/perl -T
@@ -106,7 +106,7 @@ sub bad_validate($input) {
 }
 ```
 
-### 长度约束
+### 长度限制
 
 ```perl
 use v5.36;
@@ -120,9 +120,9 @@ sub validate_comment($text) {
 
 ## 安全正则表达式
 
-### 防止正则表达式拒绝服务
+### 防止 ReDoS
 
-嵌套的量词应用于重叠模式时会发生灾难性回溯。
+嵌套的量词作用于重叠模式时会发生灾难性回溯。
 
 ```perl
 use v5.36;
@@ -156,7 +156,7 @@ sub safe_match($string, $pattern, $timeout = 2) {
 }
 ```
 
-## 安全的文件操作
+## 安全文件操作
 
 ### 三参数 Open
 
@@ -180,7 +180,7 @@ sub bad_read($path) {
 }
 ```
 
-### 防止检查时使用时间和路径遍历
+### TOCTOU 预防和路径遍历
 
 ```perl
 use v5.36;
@@ -208,7 +208,7 @@ sub safe_path($base_dir, $user_path) {
 
 使用 `File::Temp` 处理临时文件（`tempfile(UNLINK => 1)`），并使用 `flock(LOCK_EX)` 防止竞态条件。
 
-## 安全的进程执行
+## 安全进程执行
 
 ### 列表形式的 system 和 exec
 
@@ -243,7 +243,7 @@ sub bad_search($pattern) {
 my $output = `ls $user_dir`;   # Shell injection risk
 ```
 
-也可以使用 `Capture::Tiny` 安全地捕获外部命令的标准输出和标准错误。
+同时使用 `Capture::Tiny` 来安全地捕获外部命令的 stdout/stderr。
 
 ## SQL 注入预防
 
@@ -360,7 +360,7 @@ sub bad_html($input) {
 }
 ```
 
-### CSRF 保护
+### CSRF 防护
 
 ```perl
 use v5.36;
@@ -372,7 +372,7 @@ sub generate_csrf_token() {
 }
 ```
 
-验证令牌时使用恒定时间比较。大多数 Web 框架（Mojolicious、Dancer2、Catalyst）都提供内置的 CSRF 保护——优先使用这些而非自行实现的解决方案。
+验证令牌时使用恒定时间比较。大多数 Web 框架（Mojolicious、Dancer2、Catalyst）都提供内置的 CSRF 防护——优先使用这些，而不是手动实现的解决方案。
 
 ### 会话和标头安全
 
@@ -399,8 +399,8 @@ $app->hook(after_dispatch => sub ($c) {
 ## CPAN 模块安全
 
 * **固定版本** 在 cpanfile 中：`requires 'DBI', '== 1.643';`
-* **优先使用维护中的模块**：在 MetaCPAN 上检查最新发布版本
-* **最小化依赖项**：每个依赖项都是一个攻击面
+* **优先选择维护中的模块**：在 MetaCPAN 上检查最近的发布
+* **最小化依赖**：每个依赖都是一个攻击面
 
 ## 安全工具
 
@@ -456,18 +456,18 @@ perlcritic --severity 4 --theme security --quiet lib/ || exit 1
 
 ## 快速安全检查清单
 
-| 检查项 | 需验证的内容 |
+| 检查项 | 需要验证的内容 |
 |---|---|
-| 污染模式 | CGI/web 脚本上使用 `-T` 标志 |
+| 污点模式 | CGI/Web 脚本上启用 `-T` 标志 |
 | 输入验证 | 允许列表模式，长度限制 |
 | 文件操作 | 三参数 open，路径遍历检查 |
 | 进程执行 | 列表形式的 system，无 shell 插值 |
 | SQL 查询 | DBI 占位符，绝不插值 |
 | HTML 输出 | `encode_entities()`，模板自动转义 |
-| CSRF 令牌 | 生成令牌，并在状态更改请求时验证 |
+| CSRF 令牌 | 生成令牌，并在状态变更请求时验证 |
 | 会话配置 | 安全、HttpOnly、SameSite Cookie |
 | HTTP 标头 | CSP、X-Frame-Options、HSTS |
-| 依赖项 | 固定版本，已审计模块 |
+| 依赖项 | 固定版本，审计过的模块 |
 | 正则表达式安全 | 无嵌套量词，锚定模式 |
 | 错误消息 | 不向用户泄露堆栈跟踪或路径 |
 
@@ -500,4 +500,4 @@ print "<div>Welcome, $username!</div>";  # XSS
 print $cgi->redirect($user_url);         # Open redirect
 ```
 
-**请记住**：Perl 的灵活性很强大，但需要纪律。对面向 Web 的代码使用污染模式，使用允许列表验证所有输入，对每个查询使用 DBI 占位符，并根据上下文对所有输出进行编码。纵深防御——绝不依赖单一防护层。
+**请记住**：Perl 的灵活性很强大，但需要纪律。对面向 Web 的代码使用污点模式，使用允许列表验证所有输入，对每个查询使用 DBI 占位符，并根据上下文对所有输出进行编码。纵深防御——绝不依赖单一防护层。

@@ -1,0 +1,230 @@
+{
+  "sourceFile": "skills/videodb/reference/search.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "# Search & Indexing Guide",
+      "zh-Hans": "# 搜索与索引指南"
+    },
+    {
+      "en-US": "Search allows you to find specific moments inside videos using natural language queries, exact keywords, or visual scene descriptions.",
+      "zh-Hans": "搜索功能允许您使用自然语言查询、精确关键词或视觉场景描述来查找视频中的特定时刻。"
+    },
+    {
+      "en-US": "## Prerequisites",
+      "zh-Hans": "## 前提条件"
+    },
+    {
+      "en-US": "Videos **must be indexed** before they can be searched. Indexing is a one-time operation per video per index type.",
+      "zh-Hans": "视频**必须被索引**后才能进行搜索。索引是每种索引类型针对每个视频的一次性操作。"
+    },
+    {
+      "en-US": "## Indexing",
+      "zh-Hans": "## 索引"
+    },
+    {
+      "en-US": "### Spoken Word Index",
+      "zh-Hans": "### 口语词索引"
+    },
+    {
+      "en-US": "Index the transcribed speech content of a video for semantic and keyword search:",
+      "zh-Hans": "索引视频的转录语音内容，用于语义搜索和关键词搜索："
+    },
+    {
+      "en-US": "```python\nvideo = coll.get_video(video_id)\n\n# force=True makes indexing idempotent — skips if already indexed\nvideo.index_spoken_words(force=True)\n```",
+      "zh-Hans": "```python\nvideo = coll.get_video(video_id)\n\n# force=True makes indexing idempotent — skips if already indexed\nvideo.index_spoken_words(force=True)\n```"
+    },
+    {
+      "en-US": "This transcribes the audio track and builds a searchable index over the spoken content. Required for semantic search and keyword search.",
+      "zh-Hans": "此操作会转录音轨，并在口语内容上构建可搜索的索引。这是进行语义搜索和关键词搜索所必需的。"
+    },
+    {
+      "en-US": "**Parameters:**",
+      "zh-Hans": "**参数：**"
+    },
+    {
+      "en-US": "| Parameter | Type | Default | Description |\n|-----------|------|---------|-------------|\n| `language_code` | `str\\|None` | `None` | Language code of the video |\n| `segmentation_type` | `SegmentationType` | `SegmentationType.sentence` | Segmentation type (`sentence` or `llm`) |\n| `force` | `bool` | `False` | Set to `True` to skip if already indexed (avoids \"already exists\" error) |\n| `callback_url` | `str\\|None` | `None` | Webhook URL for async notification |",
+      "zh-Hans": "| 参数 | 类型 | 默认值 | 描述 |\n|-----------|------|---------|-------------|\n| `language_code` | `str\\|None` | `None` | 视频的语言代码 |\n| `segmentation_type` | `SegmentationType` | `SegmentationType.sentence` | 分段类型 (`sentence` 或 `llm`) |\n| `force` | `bool` | `False` | 设置为 `True` 以在已索引时跳过（避免\"已存在\"错误） |\n| `callback_url` | `str\\|None` | `None` | 用于异步通知的 Webhook URL |"
+    },
+    {
+      "en-US": "### Scene Index",
+      "zh-Hans": "### 场景索引"
+    },
+    {
+      "en-US": "Index visual content by generating AI descriptions of scenes. Like spoken word indexing, this raises an error if a scene index already exists. Extract the existing `scene_index_id` from the error message.",
+      "zh-Hans": "通过生成场景的 AI 描述来索引视觉内容。与口语词索引类似，如果场景索引已存在，此操作会引发错误。从错误消息中提取现有的 `scene_index_id`。"
+    },
+    {
+      "en-US": "```python\nimport re\nfrom videodb import SceneExtractionType\n\ntry:\n    scene_index_id = video.index_scenes(\n        extraction_type=SceneExtractionType.shot_based,\n        prompt=\"Describe the visual content, objects, actions, and setting in this scene.\",\n    )\nexcept Exception as e:\n    match = re.search(r\"id\\s+([a-f0-9]+)\", str(e))\n    if match:\n        scene_index_id = match.group(1)\n    else:\n        raise\n```",
+      "zh-Hans": "```python\nimport re\nfrom videodb import SceneExtractionType\n\ntry:\n    scene_index_id = video.index_scenes(\n        extraction_type=SceneExtractionType.shot_based,\n        prompt=\"Describe the visual content, objects, actions, and setting in this scene.\",\n    )\nexcept Exception as e:\n    match = re.search(r\"id\\s+([a-f0-9]+)\", str(e))\n    if match:\n        scene_index_id = match.group(1)\n    else:\n        raise\n```"
+    },
+    {
+      "en-US": "**Extraction types:**",
+      "zh-Hans": "**提取类型：**"
+    },
+    {
+      "en-US": "| Type | Description | Best For |\n|------|-------------|----------|\n| `SceneExtractionType.shot_based` | Splits on visual shot boundaries | General purpose, action content |\n| `SceneExtractionType.time_based` | Splits at fixed intervals | Uniform sampling, long static content |\n| `SceneExtractionType.transcript` | Splits based on transcript segments | Speech-driven scene boundaries |",
+      "zh-Hans": "| 类型 | 描述 | 最佳适用场景 |\n|------|-------------|----------|\n| `SceneExtractionType.shot_based` | 基于视觉镜头边界分割 | 通用目的，动作内容 |\n| `SceneExtractionType.time_based` | 按固定间隔分割 | 均匀采样，长静态内容 |\n| `SceneExtractionType.transcript` | 基于转录片段分割 | 语音驱动的场景边界 |"
+    },
+    {
+      "en-US": "**Parameters for `time_based`:**",
+      "zh-Hans": "**`time_based` 的参数：**"
+    },
+    {
+      "en-US": "```python\nvideo.index_scenes(\n    extraction_type=SceneExtractionType.time_based,\n    extraction_config={\"time\": 5, \"select_frames\": [\"first\", \"last\"]},\n    prompt=\"Describe what is happening in this scene.\",\n)\n```",
+      "zh-Hans": "```python\nvideo.index_scenes(\n    extraction_type=SceneExtractionType.time_based,\n    extraction_config={\"time\": 5, \"select_frames\": [\"first\", \"last\"]},\n    prompt=\"Describe what is happening in this scene.\",\n)\n```"
+    },
+    {
+      "en-US": "## Search Types",
+      "zh-Hans": "## 搜索类型"
+    },
+    {
+      "en-US": "### Semantic Search",
+      "zh-Hans": "### 语义搜索"
+    },
+    {
+      "en-US": "Natural language queries matched against spoken content:",
+      "zh-Hans": "自然语言查询与口语内容进行匹配："
+    },
+    {
+      "en-US": "```python\nfrom videodb import SearchType\n\nresults = video.search(\n    query=\"explaining the benefits of machine learning\",\n    search_type=SearchType.semantic,\n)\n```",
+      "zh-Hans": "```python\nfrom videodb import SearchType\n\nresults = video.search(\n    query=\"explaining the benefits of machine learning\",\n    search_type=SearchType.semantic,\n)\n```"
+    },
+    {
+      "en-US": "Returns ranked segments where the spoken content semantically matches the query.",
+      "zh-Hans": "返回口语内容在语义上与查询匹配的排序片段。"
+    },
+    {
+      "en-US": "### Keyword Search",
+      "zh-Hans": "### 关键词搜索"
+    },
+    {
+      "en-US": "Exact term matching in transcribed speech:",
+      "zh-Hans": "在转录语音中进行精确术语匹配："
+    },
+    {
+      "en-US": "```python\nresults = video.search(\n    query=\"artificial intelligence\",\n    search_type=SearchType.keyword,\n)\n```",
+      "zh-Hans": "```python\nresults = video.search(\n    query=\"artificial intelligence\",\n    search_type=SearchType.keyword,\n)\n```"
+    },
+    {
+      "en-US": "Returns segments containing the exact keyword or phrase.",
+      "zh-Hans": "返回包含精确关键词或短语的片段。"
+    },
+    {
+      "en-US": "### Scene Search",
+      "zh-Hans": "### 场景搜索"
+    },
+    {
+      "en-US": "Visual content queries matched against indexed scene descriptions. Requires a prior `index_scenes()` call.",
+      "zh-Hans": "视觉内容查询与已索引的场景描述进行匹配。需要事先调用 `index_scenes()`。"
+    },
+    {
+      "en-US": "`index_scenes()` returns a `scene_index_id`. Pass it to `video.search()` to target a specific scene index (especially important when a video has multiple scene indexes):",
+      "zh-Hans": "`index_scenes()` 返回一个 `scene_index_id`。将其传递给 `video.search()` 以定位特定的场景索引（当视频有多个场景索引时尤其重要）："
+    },
+    {
+      "en-US": "```python\nfrom videodb import SearchType, IndexType\nfrom videodb.exceptions import InvalidRequestError\n\n# Search using semantic search against the scene index.\n# Use score_threshold to filter low-relevance noise (recommended: 0.3+).\ntry:\n    results = video.search(\n        query=\"person writing on a whiteboard\",\n        search_type=SearchType.semantic,\n        index_type=IndexType.scene,\n        scene_index_id=scene_index_id,\n        score_threshold=0.3,\n    )\n    shots = results.get_shots()\nexcept InvalidRequestError as e:\n    if \"No results found\" in str(e):\n        shots = []\n    else:\n        raise\n```",
+      "zh-Hans": "```python\nfrom videodb import SearchType, IndexType\nfrom videodb.exceptions import InvalidRequestError\n\n# Search using semantic search against the scene index.\n# Use score_threshold to filter low-relevance noise (recommended: 0.3+).\ntry:\n    results = video.search(\n        query=\"person writing on a whiteboard\",\n        search_type=SearchType.semantic,\n        index_type=IndexType.scene,\n        scene_index_id=scene_index_id,\n        score_threshold=0.3,\n    )\n    shots = results.get_shots()\nexcept InvalidRequestError as e:\n    if \"No results found\" in str(e):\n        shots = []\n    else:\n        raise\n```"
+    },
+    {
+      "en-US": "**Important notes:**",
+      "zh-Hans": "**重要说明：**"
+    },
+    {
+      "en-US": "- Use `SearchType.semantic` with `index_type=IndexType.scene` — this is the most reliable combination and works on all plans.\n- `SearchType.scene` exists but may not be available on all plans (e.g. Free tier). Prefer `SearchType.semantic` with `IndexType.scene`.\n- The `scene_index_id` parameter is optional. If omitted, the search runs against all scene indexes on the video. Pass it to target a specific index.\n- You can create multiple scene indexes per video (with different prompts or extraction types) and search them independently using `scene_index_id`.",
+      "zh-Hans": "* 将 `SearchType.semantic` 与 `index_type=IndexType.scene` 结合使用——这是最可靠的组合，适用于所有套餐。\n* `SearchType.scene` 存在，但可能并非在所有套餐中都可用（例如免费层）。建议优先使用 `SearchType.semantic` 与 `IndexType.scene`。\n* `scene_index_id` 参数是可选的。如果省略，搜索将针对视频上的所有场景索引运行。传递此参数以定位特定索引。\n* 您可以为每个视频创建多个场景索引（使用不同的提示或提取类型），并使用 `scene_index_id` 独立搜索它们。"
+    },
+    {
+      "en-US": "### Scene Search with Metadata Filtering",
+      "zh-Hans": "### 带元数据过滤的场景搜索"
+    },
+    {
+      "en-US": "When indexing scenes with custom metadata, you can combine semantic search with metadata filters:",
+      "zh-Hans": "当使用自定义元数据索引场景时，您可以将语义搜索与元数据过滤器结合："
+    },
+    {
+      "en-US": "```python\nfrom videodb import SearchType, IndexType\n\nresults = video.search(\n    query=\"a skillful chasing scene\",\n    search_type=SearchType.semantic,\n    index_type=IndexType.scene,\n    scene_index_id=scene_index_id,\n    filter=[{\"camera_view\": \"road_ahead\"}, {\"action_type\": \"chasing\"}],\n)\n```",
+      "zh-Hans": "```python\nfrom videodb import SearchType, IndexType\n\nresults = video.search(\n    query=\"a skillful chasing scene\",\n    search_type=SearchType.semantic,\n    index_type=IndexType.scene,\n    scene_index_id=scene_index_id,\n    filter=[{\"camera_view\": \"road_ahead\"}, {\"action_type\": \"chasing\"}],\n)\n```"
+    },
+    {
+      "en-US": "See the [scene_level_metadata_indexing cookbook](https://github.com/video-db/videodb-cookbook/blob/main/quickstart/scene_level_metadata_indexing.ipynb) for a full example of custom metadata indexing and filtered search.",
+      "zh-Hans": "有关自定义元数据索引和过滤搜索的完整示例，请参阅 [scene\\_level\\_metadata\\_indexing 示例库](https://github.com/video-db/videodb-cookbook/blob/main/quickstart/scene_level_metadata_indexing.ipynb)。"
+    },
+    {
+      "en-US": "## Working with Results",
+      "zh-Hans": "## 处理结果"
+    },
+    {
+      "en-US": "### Get Shots",
+      "zh-Hans": "### 获取镜头"
+    },
+    {
+      "en-US": "Access individual result segments:",
+      "zh-Hans": "访问单个结果片段："
+    },
+    {
+      "en-US": "```python\nresults = video.search(\"your query\")\n\nfor shot in results.get_shots():\n    print(f\"Video: {shot.video_id}\")\n    print(f\"Start: {shot.start:.2f}s\")\n    print(f\"End: {shot.end:.2f}s\")\n    print(f\"Text: {shot.text}\")\n    print(\"---\")\n```",
+      "zh-Hans": "```python\nresults = video.search(\"your query\")\n\nfor shot in results.get_shots():\n    print(f\"Video: {shot.video_id}\")\n    print(f\"Start: {shot.start:.2f}s\")\n    print(f\"End: {shot.end:.2f}s\")\n    print(f\"Text: {shot.text}\")\n    print(\"---\")\n```"
+    },
+    {
+      "en-US": "### Play Compiled Results",
+      "zh-Hans": "### 播放编译结果"
+    },
+    {
+      "en-US": "Stream all matching segments as a single compiled video:",
+      "zh-Hans": "将所有匹配片段作为单个编译视频流式传输："
+    },
+    {
+      "en-US": "```python\nresults = video.search(\"your query\")\nstream_url = results.compile()\nresults.play()  # opens compiled stream in browser\n```",
+      "zh-Hans": "```python\nresults = video.search(\"your query\")\nstream_url = results.compile()\nresults.play()  # opens compiled stream in browser\n```"
+    },
+    {
+      "en-US": "### Extract Clips",
+      "zh-Hans": "### 提取剪辑"
+    },
+    {
+      "en-US": "Download or stream specific result segments:",
+      "zh-Hans": "下载或流式传输特定的结果片段："
+    },
+    {
+      "en-US": "```python\nfor shot in results.get_shots():\n    stream_url = shot.generate_stream()\n    print(f\"Clip: {stream_url}\")\n```",
+      "zh-Hans": "```python\nfor shot in results.get_shots():\n    stream_url = shot.generate_stream()\n    print(f\"Clip: {stream_url}\")\n```"
+    },
+    {
+      "en-US": "## Cross-Collection Search",
+      "zh-Hans": "## 跨集合搜索"
+    },
+    {
+      "en-US": "Search across all videos in a collection:",
+      "zh-Hans": "跨集合中的所有视频进行搜索："
+    },
+    {
+      "en-US": "```python\ncoll = conn.get_collection()\n\n# Search across all videos in the collection\nresults = coll.search(\n    query=\"product demo\",\n    search_type=SearchType.semantic,\n)\n\nfor shot in results.get_shots():\n    print(f\"Video: {shot.video_id} [{shot.start:.1f}s - {shot.end:.1f}s]\")\n```",
+      "zh-Hans": "```python\ncoll = conn.get_collection()\n\n# Search across all videos in the collection\nresults = coll.search(\n    query=\"product demo\",\n    search_type=SearchType.semantic,\n)\n\nfor shot in results.get_shots():\n    print(f\"Video: {shot.video_id} [{shot.start:.1f}s - {shot.end:.1f}s]\")\n```"
+    },
+    {
+      "en-US": "> **Note:** Collection-level search only supports `SearchType.semantic`. Using `SearchType.keyword` or `SearchType.scene` with `coll.search()` will raise `NotImplementedError`. For keyword or scene search, use `video.search()` on individual videos instead.",
+      "zh-Hans": "> **注意：** 集合级别的搜索仅支持 `SearchType.semantic`。将 `SearchType.keyword` 或 `SearchType.scene` 与 `coll.search()` 一起使用将引发 `NotImplementedError`。要进行关键词或场景搜索，请改为在单个视频上使用 `video.search()`。"
+    },
+    {
+      "en-US": "## Search + Compile",
+      "zh-Hans": "## 搜索 + 编译"
+    },
+    {
+      "en-US": "Index, search, and compile matching segments into a single playable stream:",
+      "zh-Hans": "索引、搜索并将匹配片段编译成单个可播放的流："
+    },
+    {
+      "en-US": "```python\nvideo.index_spoken_words(force=True)\nresults = video.search(query=\"your query\", search_type=SearchType.semantic)\nstream_url = results.compile()\nprint(stream_url)\n```",
+      "zh-Hans": "```python\nvideo.index_spoken_words(force=True)\nresults = video.search(query=\"your query\", search_type=SearchType.semantic)\nstream_url = results.compile()\nprint(stream_url)\n```"
+    },
+    {
+      "en-US": "## Tips",
+      "zh-Hans": "## 提示"
+    },
+    {
+      "en-US": "- **Index once, search many times**: Indexing is the expensive operation. Once indexed, searches are fast.\n- **Combine index types**: Index both spoken words and scenes to enable all search types on the same video.\n- **Refine queries**: Semantic search works best with descriptive, natural language phrases rather than single keywords.\n- **Use keyword search for precision**: When you need exact term matches, keyword search avoids semantic drift.\n- **Handle \"No results found\"**: `video.search()` raises `InvalidRequestError` when no results match. Always wrap search calls in try/except and treat `\"No results found\"` as an empty result set.\n- **Filter scene search noise**: Semantic scene search can return low-relevance results for vague queries. Use `score_threshold=0.3` (or higher) to filter noise.\n- **Idempotent indexing**: Use `index_spoken_words(force=True)` to safely re-index. `index_scenes()` has no `force` parameter — wrap it in try/except and extract the existing `scene_index_id` from the error message with `re.search(r\"id\\s+([a-f0-9]+)\", str(e))`.",
+      "zh-Hans": "* **一次索引，多次搜索**：索引是昂贵的操作。一旦索引完成，搜索速度很快。\n* **组合索引类型**：同时索引口语词和场景，以便在同一视频上启用所有搜索类型。\n* **优化查询**：语义搜索最适合描述性的自然语言短语，而不是单个关键词。\n* **使用关键词搜索提高精确度**：当您需要精确的术语匹配时，关键词搜索可以避免语义漂移。\n* **处理\"未找到结果\"**：`video.search()` 在没有结果匹配时会引发 `InvalidRequestError`。始终将搜索调用包装在 try/except 中，并将 `\"No results found\"` 视为空结果集。\n* **过滤场景搜索噪声**：语义场景搜索可能会为模糊查询返回低相关性的结果。使用 `score_threshold=0.3`（或更高值）来过滤噪声。\n* **幂等索引**：使用 `index_spoken_words(force=True)` 来安全地重新索引。`index_scenes()` 没有 `force` 参数——将其包装在 try/except 中，并使用 `re.search(r\"id\\s+([a-f0-9]+)\", str(e))` 从错误消息中提取现有的 `scene_index_id`。"
+    }
+  ]
+}

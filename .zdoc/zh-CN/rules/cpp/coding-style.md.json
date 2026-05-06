@@ -1,0 +1,58 @@
+{
+  "sourceFile": "rules/cpp/coding-style.md",
+  "sourceLanguage": "en-US",
+  "entries": [
+    {
+      "en-US": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---",
+      "zh-Hans": "---\npaths:\n  - \"**/*.cpp\"\n  - \"**/*.hpp\"\n  - \"**/*.cc\"\n  - \"**/*.hh\"\n  - \"**/*.cxx\"\n  - \"**/*.h\"\n  - \"**/CMakeLists.txt\"\n---"
+    },
+    {
+      "en-US": "# C++ Coding Style",
+      "zh-Hans": "# C++ 编码风格"
+    },
+    {
+      "en-US": "> This file extends [common/coding-style.md](../common/coding-style.md) with C++ specific content.",
+      "zh-Hans": "> 本文档在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 C++ 特有的内容。"
+    },
+    {
+      "en-US": "## Modern C++ (C++17/20/23)",
+      "zh-Hans": "## 现代 C++ (C++17/20/23)"
+    },
+    {
+      "en-US": "- Prefer **modern C++ features** over C-style constructs\n- Use `auto` when the type is obvious from context\n- Use `constexpr` for compile-time constants\n- Use structured bindings: `auto [key, value] = map_entry;`",
+      "zh-Hans": "* 优先使用**现代 C++ 特性**，而非 C 风格结构\n* 当类型从上下文显而易见时，使用 `auto`\n* 对于编译时常量，使用 `constexpr`\n* 使用结构化绑定：`auto [key, value] = map_entry;`"
+    },
+    {
+      "en-US": "## Resource Management",
+      "zh-Hans": "## 资源管理"
+    },
+    {
+      "en-US": "- **RAII everywhere** — no manual `new`/`delete`\n- Use `std::unique_ptr` for exclusive ownership\n- Use `std::shared_ptr` only when shared ownership is truly needed\n- Use `std::make_unique` / `std::make_shared` over raw `new`",
+      "zh-Hans": "* **处处使用 RAII** — 不要手动 `new`/`delete`\n* 使用 `std::unique_ptr` 表示独占所有权\n* 仅在确实需要共享所有权时使用 `std::shared_ptr`\n* 使用 `std::make_unique` / `std::make_shared` 而非原始 `new`"
+    },
+    {
+      "en-US": "## Naming Conventions",
+      "zh-Hans": "## 命名约定"
+    },
+    {
+      "en-US": "- Types/Classes: `PascalCase`\n- Functions/Methods: `snake_case` or `camelCase` (follow project convention)\n- Constants: `kPascalCase` or `UPPER_SNAKE_CASE`\n- Namespaces: `lowercase`\n- Member variables: `snake_case_` (trailing underscore) or `m_` prefix",
+      "zh-Hans": "* 类型/类：`PascalCase`\n* 函数/方法：`snake_case` 或 `camelCase` (遵循项目约定)\n* 常量：`kPascalCase` 或 `UPPER_SNAKE_CASE`\n* 命名空间：`lowercase`\n* 成员变量：`snake_case_` (尾随下划线) 或 `m_` 前缀"
+    },
+    {
+      "en-US": "## Formatting",
+      "zh-Hans": "## 格式化"
+    },
+    {
+      "en-US": "- Use **clang-format** — no style debates\n- Run `clang-format -i <file>` before committing",
+      "zh-Hans": "* 使用 **clang-format** — 无需风格争论\n* 提交前运行 `clang-format -i <file>`"
+    },
+    {
+      "en-US": "## Reference",
+      "zh-Hans": "## 参考"
+    },
+    {
+      "en-US": "See skill: `cpp-coding-standards` for comprehensive C++ coding standards and guidelines.",
+      "zh-Hans": "有关全面的 C++ 编码标准和指南，请参阅技能：`cpp-coding-standards`。"
+    }
+  ]
+}
